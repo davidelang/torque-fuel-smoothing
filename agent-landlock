@@ -441,6 +441,21 @@ def resolve_grants(
     sandbox = _sandbox_paths(worktree, project, landlock)
     profiles = _load_profile_paths(landlock_path, worktree)
 
+    # Grok (and similar CLIs) always need to mutate their session/config home.
+    # Without this, "trust this directory" / session creation fails with EACCES
+    # under Landlock even when the worktree grant is correct.
+    home = os.environ.get("HOME") or ""
+    if home:
+        dirs.append(str(Path(home) / ".grok"))
+        # Optional caches some CLIs use
+        for sub in (".cache/grok", ".local/share/grok"):
+            cand = Path(home) / sub
+            if cand.is_dir():
+                dirs.append(str(cand.resolve()))
+    xdg_rt = os.environ.get("XDG_RUNTIME_DIR") or ""
+    if xdg_rt and os.path.isdir(xdg_rt):
+        dirs.append(str(Path(xdg_rt).resolve()))
+
     if role == "planner":
         dirs.extend(sandbox)
         # Planner may only mutate TODO.md + ENGINEERING_LOG.md at worktree root
