@@ -1,0 +1,31 @@
+#!/bin/bash
+# todo-close
+# Controlled helper to mark TODO items as done [x] or remove.
+# Use after a turn completes the item. Do not bulk-edit or git reset the file.
+
+set -euo pipefail
+
+# Ensure group-writable files in multi-user environment
+umask 007
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TODOFILE="$SCRIPT_DIR/TODO.md"
+
+if [ $# -eq 0 ]; then
+  echo "Usage: $(basename "$0") 'exact text of the item to close or - [x] pattern'"
+  exit 1
+fi
+
+PATTERN="$*"
+
+# Very conservative: only allow marking [ ] to [x] or removing specific lines.
+# Production would parse and edit precisely.
+if sed -i "s/\[ \] \($PATTERN\)/[x] \1/" "$TODOFILE" 2>/dev/null; then
+  echo "Marked item done in TODO.md (if matched)."
+else
+  # Fallback: comment it out as closed
+  sed -i "s/^\(- .*${PATTERN}.*\)/# CLOSED: \1/" "$TODOFILE" 2>/dev/null || true
+  echo "Closed/marked item (check file)."
+fi
+
+echo "TODO closed. Do not commit bulk changes to the file."

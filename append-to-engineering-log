@@ -1,0 +1,67 @@
+#!/bin/bash
+# append-to-engineering-log
+# Controlled wrapper for appending ONLY to ENGINEERING_LOG.md.
+# Agents MUST use this (never direct edits or >>).
+# chattr +a on the log prevents modification of existing lines even if someone
+# has write permission.
+
+set -euo pipefail
+
+# Ensure group-writable files in multi-user environment
+umask 007
+
+# Locate the worktree root reliably.
+if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  ROOT=$(git rev-parse --show-toplevel)
+else
+  ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+fi
+
+LOGFILE="$ROOT/ENGINEERING_LOG.md"
+if [ ! -f "$LOGFILE" ]; then
+  echo "ERROR: $LOGFILE not found" >&2
+  exit 1
+fi
+
+if [ $# -eq 0 ]; then
+  echo "Usage: $(basename "$0") '## YYYY-MM-DD - Title\n\n- bullet ...'" >&2
+  echo "   or: $(basename "$0") @file-with-entry.txt" >&2
+  exit 1
+fi
+
+if [[ "$1" == @* ]]; then
+  f="${1#@}"
+  if [ -f "$f" ]; then
+    ENTRY=$(cat "$f")
+  else
+    echo "ERROR: $f not found" >&2
+    exit 1
+  fi
+else
+  ENTRY="$*"
+fi
+
+# Enforce the required dated header format.
+if [[ ! $ENTRY =~ ^##\ [0-9]{4}- ]]; then
+  echo "ERROR: Entry must start with '## YYYY-MM-DD - ...'" >&2
+  exit 1
+fi
+
+do_append() {
+  if printf '\n%s\n' "$ENTRY" >> "$LOGFILE" 2>/dev/null; then
+    return 0
+  fi
+
+  if [ "$EUID" -ne 0 ]; then
+    SCRIPT_PATH=$(readlink -f "$0" 2>/dev/null || realpath "$0" 2>/dev/null || echo "$0")
+    echo "Direct append denied for $(id -un); retrying as root via sudo (allowed by policy)..." >&2
+    exec sudo -n -- "$SCRIPT_PATH" "$@"
+  fi
+
+  echo "ERROR: cannot append to $LOGFILE even as root" >&2
+  exit 1
+}
+
+do_append "$@"
+
+echo "Appended entry to ENGINEERING_LOG.md"

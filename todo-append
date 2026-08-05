@@ -1,0 +1,48 @@
+#!/bin/bash
+# todo-append
+# Controlled append-only helper for TODO.md additions.
+# Additions are RARE: only when you identify a problem and *explicitly decide*
+# to defer it to a future turn (not per-commit noise).
+# Use this instead of direct edits or git add/commit on the whole file.
+
+set -euo pipefail
+
+# Ensure group-writable files in multi-user environment
+umask 007
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TODOFILE="$SCRIPT_DIR/TODO.md"
+
+if [ $# -eq 0 ]; then
+  echo "Usage: $(basename "$0") '## Future work item or - bullet under Future work'"
+  echo "   or: $(basename "$0") @file-with-item.txt"
+  exit 1
+fi
+
+if [[ "$1" == @* ]]; then
+  f="${1#@}"
+  if [ -f "$f" ]; then
+    ITEM=$(cat "$f")
+  else
+    echo "ERROR: $f not found" >&2
+    exit 1
+  fi
+else
+  ITEM="$*"
+fi
+
+# Enforce high-level only, no execution transcripts.
+if [[ $ITEM =~ (##|###|Phase|forensic|build gate|commit) ]]; then
+  echo "ERROR: TODO additions must be high-level future items only. Details go in the plan + ENGINEERING_LOG." >&2
+  exit 1
+fi
+
+# Append under # Future work if not present, else just append at end.
+if grep -q '^# Future work' "$TODOFILE"; then
+  # Simple append after the section (production version would be smarter)
+  printf '\n%s\n' "$ITEM" >> "$TODOFILE"
+else
+  printf '\n# Future work\n\n%s\n' "$ITEM" >> "$TODOFILE"
+fi
+
+echo "Appended (rare) item to TODO.md. Remember: keep it small and high-level only."

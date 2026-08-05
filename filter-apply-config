@@ -1,0 +1,63 @@
+#!/bin/bash
+# filter-apply-config
+# Git smudge filter for manage-configs.
+# Populates @@TOKEN@@ with real values from project.config on checkout.
+# Supports multiple types; dumb replace for now.
+# Run: git config filter.manage-configs.smudge './filter-apply-config'
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONFIG="$SCRIPT_DIR/project.config"
+
+if [ ! -f "$CONFIG" ]; then
+  echo "WARNING: project.config not found; leaving tokens as-is (dumb pass-through)" >&2
+  cat
+  exit 0
+fi
+
+# Parse
+while IFS='=' read -r key val; do
+  if [[ "$key" =~ ^[a-z_]+$ && -n "$val" ]]; then
+    export "CONF_${key^^}=$val"
+  fi
+done < "$CONFIG"
+
+declare -A TOKENS=(
+  [sandbox_path]="@@SANDBOX_PATH@@"
+  [planning_user]="@@PLANNING_USER@@"
+  [coder_user]="@@CODER_USER@@"
+  [orchestrator_user]="@@ORCHESTRATOR_USER@@"
+  [code_group]="@@CODE_GROUP@@"
+  [sandbox_group]="@@SANDBOX_GROUP@@"
+  [shared_group]="@@SHARED_GROUP@@"
+  [grok_bin_default]="@@GROK_BIN_DEFAULT@@"
+  [gemini_bin_default]="@@GEMINI_BIN_DEFAULT@@"
+  # Absolute path to sibling git hosts (e.g. /home/you/git). NOT ~/git —
+  # agent users have different $HOME; landlock/open need a concrete path.
+  [git_home]="@@GIT_HOME@@"
+  [primary_user]="@@PRIMARY_USER@@"
+  [antigravity_bin]="@@ANTIGRAVITY_BIN@@"
+)
+
+apply() {
+  local content
+  content=$(cat)
+  for var in "${!TOKENS[@]}"; do
+    token="${TOKENS[$var]}"
+    confvar="CONF_${var^^}"
+    val="${!confvar:-}"
+    if [ -n "$val" ]; then
+      content="${content//$token/$val}"
+    fi
+  done
+  echo "$content"
+}
+
+apply
+
+# Notes: 
+# - Dumb string replace for now.
+# - Shell files may use ${VAR} or direct after population.
+# - For future smart: compare to committed (HEAD) to decide replaces.
+# - See permissions-bootstrap-execution/ for full logs and rationale.

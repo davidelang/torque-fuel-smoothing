@@ -1,0 +1,565 @@
+#!/bin/bash
+# fix-perms: Unified recovery script for permissions.
+#
+# Usage:
+#   sudo ./fix-perms                 # from orchestration root: all worktrees + sandbox
+#   sudo ./fix-perms --all           # same
+#   sudo ./fix-perms /path/to/agent-N   # specific worktree only (from anywhere)
+#
+# Run from inside a worktree with no arg: fixes only current worktree (skips sandbox).
+#
+# This is a recovery tool for when things went badly wrong.
+# Not for daily use (setup_agent.sh handles creation).
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CURRENT_DIR="$(pwd)"
+
+SKIP_SUDOERS=false
+VERBOSE=false
+DO_ALL=false
+TARGET_SPECIFIC=""
+SUDO_USER=${SUDO_USER:-}
+SUDO_USER_VAL=${SUDO_USER:-}
+
+# Detect orchestration root
+if [ -f "$SCRIPT_DIR/update-rules.sh" ]; then
+  AT_ORCHESTRATION=true
+else
+  AT_ORCHESTRATION=false
+fi
+
+TARGET_SPECIFIC=""
+
+# Parse args and flags
+FORWARD_ARGS=""
+for arg in "$@"; do
+  case "$arg" in
+    --all)
+      DO_ALL=true
+      ;;
+    --skip-sudoers)
+      SKIP_SUDOERS=true
+      FORWARD_ARGS="$FORWARD_ARGS $arg"
+      ;;
+    --quiet)
+      FORWARD_ARGS="$FORWARD_ARGS $arg"
+      ;;
+    --verbose)
+      VERBOSE=true
+      FORWARD_ARGS="$FORWARD_ARGS $arg"
+      ;;
+    *)
+      if [ -z "$TARGET_SPECIFIC" ] && [ -d "$arg" ]; then
+        TARGET_SPECIFIC="$arg"
+      fi
+      ;;
+  esac
+done
+
+if ! $VERBOSE; then
+  # Default: no output if everything works (Unix style).
+  # Errors/warnings still go to stderr.
+  exec 1>/dev/null
+fi
+
+# Load config (from project.config if present)
+if [ -f "$SCRIPT_DIR/project.config" ]; then
+  . <(sed 's/=/ /; s/^/export /' "$SCRIPT_DIR/project.config" | grep -E '^(code_group|shared_group|sandbox_group|primary_user|planning_user|coder_user|orchestrator_user|sandbox_path)')
+fi
+
+CODE_GROUP=${code_group:-ai-code}
+SHARED_GROUP=${shared_group:-ai-shared}
+SANDBOX_GROUP=${sandbox_group:-ai-sandbox}
+PRIMARY_USER=${primary_user:-dlang}
+PLANNING_USER=${planning_user:-ai-planner}
+CODER_USER=${coder_user:-ai-coder}
+ORCHESTRATOR_USER=${orchestrator_user:-ai-orchestrator}
+SANDBOX=${sandbox_path:-dev-ai-interaction}
+
+# Canonical wrapper (pure Unix, setgid 2755)
+CANONICAL_APPEND_WRAPPER=$(cat << 'WRAPPER_EOF'
+#!/bin/bash
+# append-to-engineering-log
+# Controlled wrapper for appending ONLY to ENGINEERING_LOG.md.
+# Agents MUST use this (never direct edits or >>).
+# chattr +a on the log prevents modification of existing lines even if someone
+# has write permission.
+
+set -euo pipefail
+
+# Ensure group-writable files in multi-user environment
+umask 007
+
+# Locate the worktree root reliably.
+if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  ROOT=$(git rev-parse --show-toplevel)
+else
+  ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+fi
+
+LOGFILE="$ROOT/ENGINEERING_LOG.md"
+if [ ! -f "$LOGFILE" ]; then
+  echo "ERROR: $LOGFILE not found" >&2
+  exit 1
+fi
+
+if [ $# -eq 0 ]; then
+  echo "Usage: $(basename "$0") '## YYYY-MM-DD - Title\n\n- bullet ...'" >&2
+  echo "   or: $(basename "$0") @file-with-entry.txt" >&2
+  exit 1
+fi
+
+if [[ "$1" == @* ]]; then
+  f="${1#@}"
+  if [ -f "$f" ]; then
+    ENTRY=$(cat "$f")
+  else
+    echo "ERROR: $f not found" >&2
+    exit 1
+  fi
+else
+  ENTRY="$*"
+fi
+
+# Enforce the required dated header format.
+if [[ ! $ENTRY =~ ^##\ [0-9]{4}- ]]; then
+  echo "ERROR: Entry must start with '## YYYY-MM-DD - ...'" >&2
+  exit 1
+fi
+
+do_append() {
+  if printf '\n%s\n' "$ENTRY" >> "$LOGFILE" 2>/dev/null; then
+    return 0
+  fi
+
+  if [ "$EUID" -ne 0 ]; then
+    SCRIPT_PATH=$(readlink -f "$0" 2>/dev/null || realpath "$0" 2>/dev/null || echo "$0")
+    echo "Direct append denied for $(id -un); retrying as root via sudo (allowed by policy)..." >&2
+    exec sudo -n -- "$SCRIPT_PATH" "$@"
+  fi
+
+  echo "ERROR: cannot append to $LOGFILE even as root" >&2
+  exit 1
+}
+
+do_append "$@"
+
+echo "Appended entry to ENGINEERING_LOG.md"
+WRAPPER_EOF
+)
+
+# --- Helper functions (integrated from set-*-perms and fix-eng-log) ---
+
+git_config_as_primary() {
+  # Never run git config as root: it leaves .git/config root-owned and breaks
+  # non-root users when supplementary group membership is not active in the shell.
+  local repo_path="$1"
+  shift
+  if [ "$EUID" -eq 0 ]; then
+    sudo -u "$PRIMARY_USER" git -C "$repo_path" "$@" 2>/dev/null || true
+  else
+    git -C "$repo_path" "$@" 2>/dev/null || true
+  fi
+}
+
+fix_main_git_config_ownership() {
+  local cfg="$SCRIPT_DIR/.git/config"
+  [ -f "$cfg" ] || return 0
+  chown "$PRIMARY_USER:$SHARED_GROUP" "$cfg" 2>/dev/null || true
+  chmod 660 "$cfg" 2>/dev/null || true
+}
+
+ensure_shared_build_homes() {
+  local target_root="$SCRIPT_DIR"
+  if [ "$AT_ORCHESTRATION" = false ]; then
+    target_root="$(cd "$SCRIPT_DIR/.." && pwd)"
+  fi
+  GRADLE_SHARED="$target_root/.gradle-shared"
+  mkdir -p "$GRADLE_SHARED"
+  chown -R "$PRIMARY_USER:$SHARED_GROUP" "$GRADLE_SHARED" 2>/dev/null || true
+  find "$GRADLE_SHARED" -type d -exec chmod 2770 {} + 2>/dev/null || true
+  chmod -R ug+rwX,o-rwx "$GRADLE_SHARED" 2>/dev/null || true
+
+  ANDROID_SHARED="$target_root/.android-shared"
+  mkdir -p "$ANDROID_SHARED/cache"
+  if [ ! -f "$ANDROID_SHARED/debug.keystore" ] && \
+     [ -f "/home/$PRIMARY_USER/.android/debug.keystore" ]; then
+    cp "/home/$PRIMARY_USER/.android/debug.keystore" "$ANDROID_SHARED/"
+    cp "/home/$PRIMARY_USER/.android/debug.keystore.lock" "$ANDROID_SHARED/" 2>/dev/null || true
+  fi
+  chown -R "$PRIMARY_USER:$SHARED_GROUP" "$ANDROID_SHARED" 2>/dev/null || true
+  find "$ANDROID_SHARED" -type d -exec chmod 2770 {} + 2>/dev/null || true
+  chmod -R ug+rwX,o-rwx "$ANDROID_SHARED" 2>/dev/null || true
+
+  # Unify every role user's ~/.android/debug.keystore with the shared key so
+  # accidental raw gradlew / Studio installs cannot mint a foreign cert.
+  if [ -x "$SCRIPT_DIR/sync-debug-keystores" ]; then
+    if $VERBOSE; then echo "  sync-debug-keystores (unify role debug keys)..."; fi
+    "$SCRIPT_DIR/sync-debug-keystores" || true
+  fi
+}
+
+ensure_groups() {
+  if $VERBOSE; then
+    echo "Ensuring group memberships for $SHARED_GROUP ..."
+  fi
+  for u in dlang "$PLANNING_USER" "$CODER_USER" "$ORCHESTRATOR_USER"; do
+    if id "$u" >/dev/null 2>&1; then
+      usermod -aG "$SHARED_GROUP" "$u" 2>/dev/null || true
+      if $VERBOSE; then echo "  + $u -> $SHARED_GROUP"; fi
+    fi
+  done
+  gpasswd -d "$PLANNING_USER" "$CODE_GROUP" 2>/dev/null || true
+  # dlang needs sandbox access too (for reading/interacting with plans)
+  if id "$PRIMARY_USER" >/dev/null 2>&1; then
+    usermod -aG "$SANDBOX_GROUP" "$PRIMARY_USER" 2>/dev/null || true
+  fi
+  # Clean up rogue build caches from planner (should never build)
+  if [ -d "/home/$PLANNING_USER/.gradle" ]; then
+    echo "WARNING: $PLANNING_USER has ~/.gradle (should never build). Removing."
+    rm -rf "/home/$PLANNING_USER/.gradle"
+  fi
+}
+
+install_sudoers_if_needed() {
+  if $SKIP_SUDOERS; then return; fi
+  SUDOERS_FILE=/etc/sudoers.d/vehicle-permissions
+  if [ -f "$SUDOERS_FILE" ]; then
+    if $VERBOSE; then echo "sudoers rules for append wrapper elevation already present."; fi
+    return
+  fi
+  echo "Installing sudoers rules for append wrapper elevation..."
+  cat > "$SUDOERS_FILE" << 'SUDOEOF'
+# VehicleExpenses multi-agent sudoers (generated by fix-perms)
+# Allows:
+# - dlang to run the grok binary as ai-* users (for run-grok-*, run-grok-planner etc.) without password
+# - ai-* users and dlang to run the append wrapper (and some fix scripts) as root without password
+
+dlang ALL=(ai-planner,ai-coder,ai-orchestrator) NOPASSWD: /home/dlang/git/grok/bin/grok
+
+ai-planner,ai-coder,ai-orchestrator ALL=(root) NOPASSWD: /home/dlang/git/VehicleExpenses-automated/append-to-engineering-log
+ai-planner,ai-coder,ai-orchestrator ALL=(root) NOPASSWD: /home/dlang/git/VehicleExpenses-automated/*/append-to-engineering-log
+ai-planner,ai-coder,ai-orchestrator ALL=(root) NOPASSWD: /home/dlang/git/VehicleExpenses-automated/*/*/append-to-engineering-log
+
+dlang ALL=(root) NOPASSWD: /home/dlang/git/VehicleExpenses-automated/append-to-engineering-log
+dlang ALL=(root) NOPASSWD: /home/dlang/git/VehicleExpenses-automated/*/append-to-engineering-log
+dlang ALL=(root) NOPASSWD: /home/dlang/git/VehicleExpenses-automated/*/*/append-to-engineering-log
+SUDOEOF
+
+  chmod 440 "$SUDOERS_FILE"
+  if visudo -c >/dev/null 2>&1; then
+    echo "  sudoers installed and validated."
+  else
+    echo "  WARNING: sudoers written but visudo -c reported an issue. Check $SUDOERS_FILE"
+  fi
+}
+
+# Git hooks must remain executable. Blanket "chmod 660 all .git files" (group
+# sharing for multi-user) strips +x and causes: "hook was ignored because it's
+# not set as executable". Restore after every such pass. Skip *.sample.
+ensure_git_hooks_executable() {
+  local hooks_dir
+  for hooks_dir in "$@"; do
+    [ -d "$hooks_dir" ] || continue
+    if $VERBOSE; then echo "  Ensuring git hooks executable under $hooks_dir"; fi
+    # Active hooks only (not the stock *.sample templates)
+    find "$hooks_dir" -maxdepth 1 -type f ! -name '*.sample' -exec chmod 775 {} + 2>/dev/null || true
+    chown :"$SHARED_GROUP" "$hooks_dir"/* 2>/dev/null || true
+  done
+}
+
+# Worktree scripts humans/agents run by path (./deploy, ./build_app, …).
+# After update-rules `cp` (non-preserving): file is often 664 owned by the sync user
+# (e.g. ai-orchestrator). dlang then needs group+x or o+x — and g+s alone is not enough.
+ensure_worktree_scripts_executable() {
+  local wt="$1"
+  local f
+  # setgid + rwx for owner/group so primary and ai-code can run; other r-x for stale sessions
+  local scripts=(
+    build_app deploy setup_agent.sh remove_worktree.sh
+    get-builds-tag.sh update-rules.sh install-merge-drivers.sh merge-branch-into-master.sh
+    generate_pr.sh cleanup_pr.sh sync_infrastructure.sh
+    filter-apply-config filter-clean-config setup-project
+    set-worktree-perms set-sandbox-perms
+    run-grok run-grok-master run-grok-planner run-grok-coder run-grok-orchestrator
+    run-antigravity run-gemini
+  )
+  for f in "${scripts[@]}"; do
+    if [ -f "$wt/$f" ]; then
+      chown "$PRIMARY_USER:$CODE_GROUP" "$wt/$f" 2>/dev/null || true
+      chmod 2775 "$wt/$f" 2>/dev/null || chmod 775 "$wt/$f" 2>/dev/null || true
+    fi
+  done
+  # Shell helpers under git-merge-drivers/
+  if [ -d "$wt/git-merge-drivers" ]; then
+    find "$wt/git-merge-drivers" -type f -exec chown "$PRIMARY_USER:$CODE_GROUP" {} + 2>/dev/null || true
+    find "$wt/git-merge-drivers" -type f -exec chmod 775 {} + 2>/dev/null || true
+  fi
+  # Named *.sh at worktree root
+  find "$wt" -maxdepth 1 -type f -name '*.sh' -exec chown "$PRIMARY_USER:$CODE_GROUP" {} + 2>/dev/null || true
+  find "$wt" -maxdepth 1 -type f -name '*.sh' -exec chmod 2775 {} + 2>/dev/null || true
+}
+
+fix_worktree() {
+  local wt="$1"
+  if [ ! -d "$wt" ]; then return; fi
+  if $VERBOSE; then echo "  Applying to worktree: $wt"; fi
+
+  # chown to code group (or primary if sudo)
+  if [ -n "$SUDO_USER" ] && [ "$SUDO_USER" != "root" ]; then
+    TARGET_OWNER="$SUDO_USER"
+    chown -R "$TARGET_OWNER:$CODE_GROUP" "$wt" 2>/dev/null || true
+  else
+    chown -R :$CODE_GROUP "$wt" 2>/dev/null || true
+  fi
+
+  # Re-apply sandbox if present
+  if [ -d "$wt/$SANDBOX" ]; then
+    chown -R :$SANDBOX_GROUP "$wt/$SANDBOX" 2>/dev/null || true
+    find "$wt/$SANDBOX" -type d -exec chmod u+rwx,g+rwxs,o+rx {} + 2>/dev/null || true
+  fi
+
+  git_config_as_primary "$wt" config core.sharedRepository group
+
+  # Log
+  if [ -f "$wt/ENGINEERING_LOG.md" ]; then
+    chattr -a "$wt/ENGINEERING_LOG.md" 2>/dev/null || true
+    chown root:$SHARED_GROUP "$wt/ENGINEERING_LOG.md" 2>/dev/null || true
+    chmod 660 "$wt/ENGINEERING_LOG.md" 2>/dev/null || true
+    chattr +a "$wt/ENGINEERING_LOG.md" 2>/dev/null || true
+  fi
+
+  # Wrapper
+  if [ -f "$wt/append-to-engineering-log" ]; then
+    chown root:$SHARED_GROUP "$wt/append-to-engineering-log" 2>/dev/null || true
+    chmod 2755 "$wt/append-to-engineering-log" 2>/dev/null || true
+  fi
+
+  # Broad Unix perms (source readable by planner)
+  find "$wt" -type f -exec chmod u+rw,g+rw,o+r {} + 2>/dev/null || true
+  find "$wt" -type d -exec chmod u+rwx,g+rwxs,o+rx {} + 2>/dev/null || true
+
+  # 666 for TODO/facts (planner writable)
+  chmod 666 "$wt/TODO.md" 2>/dev/null || true
+  chmod 666 "$wt/project-facts.md" 2>/dev/null || true
+
+  # .git handling (works for both normal clones and git worktrees).
+  # In worktrees the "$wt/.git" is a *file* ("gitdir: ..."), real state is in
+  # main-repo/.git/worktrees/<wtname>/. We fix both the pointer and the admin area.
+  if [ -e "$wt/.git" ]; then
+    chown :$SHARED_GROUP "$wt/.git" 2>/dev/null || true
+    chmod 660 "$wt/.git" 2>/dev/null || true
+  fi
+  # Fix the *per-worktree* git admin area under the main .git (shared across users).
+  WT_GITDIR=""
+  if [ -f "$wt/.git" ]; then
+    WT_GITDIR=$(sed -n 's/^gitdir: //p' "$wt/.git" 2>/dev/null | head -1)
+  fi
+  if [ -n "$WT_GITDIR" ] && [ -d "$WT_GITDIR" ]; then
+    chown -R :$SHARED_GROUP "$WT_GITDIR" 2>/dev/null || true
+    find "$WT_GITDIR" -type d -exec chmod 2770 {} + 2>/dev/null || true
+    find "$WT_GITDIR" -type f -exec chmod 660 {} + 2>/dev/null || true
+    ensure_git_hooks_executable "$WT_GITDIR/hooks"
+  fi
+  # Fallback/old-style (bare .git dir inside wt)
+  if [ -d "$wt/.git" ]; then
+    chown -R :$SHARED_GROUP "$wt/.git" 2>/dev/null || true
+    find "$wt/.git" -type d -exec chmod 2770 {} + 2>/dev/null || true
+    find "$wt/.git" -type f -exec chmod 660 {} + 2>/dev/null || true
+    ensure_git_hooks_executable "$wt/.git/hooks"
+  fi
+  # Common-dir hooks (shared by all worktrees) — always restore after any .git chmod
+  local common_hooks
+  common_hooks=$(git -C "$wt" rev-parse --git-common-dir 2>/dev/null || true)
+  if [ -n "$common_hooks" ]; then
+    # rev-parse may return relative path
+    case "$common_hooks" in
+      /*) ;;
+      *) common_hooks="$wt/$common_hooks" ;;
+    esac
+    ensure_git_hooks_executable "$common_hooks/hooks"
+  fi
+
+  # build run-as if needed
+  if [ -f "$wt/run-as-primary.c" ] && [ ! -x "$wt/run-as-primary" ]; then
+    if $VERBOSE; then echo "  Compiling run-as-primary in $wt ..."; fi
+    (cd "$wt" && gcc -O2 -Wall -o run-as-primary run-as-primary.c 2>/dev/null && chmod 4755 run-as-primary && chown "$PRIMARY_USER:$CODE_GROUP" run-as-primary) || true
+  fi
+  if [ -f "$wt/run-as-primary" ]; then
+    chown "$PRIMARY_USER:$CODE_GROUP" "$wt/run-as-primary" 2>/dev/null || true
+    chmod 4755 "$wt/run-as-primary" 2>/dev/null || true
+  fi
+
+  # refresh-shell: setuid root per worktree (binary not in git; .c is tracked).
+  # Prefer shared installer; never leave setuid on non-root owner.
+  if [ -x "$SCRIPT_DIR/install-refresh-shell.sh" ]; then
+    if $VERBOSE; then echo "  install-refresh-shell for $wt"; fi
+    "$SCRIPT_DIR/install-refresh-shell.sh" "$wt" 2>/dev/null || true
+  else
+    if [ -f "$wt/refresh-shell.c" ]; then
+      if $VERBOSE; then echo "  Compiling refresh-shell in $wt ..."; fi
+      (cd "$wt" && gcc -O2 -Wall -o refresh-shell refresh-shell.c 2>/dev/null) || true
+    fi
+    if [ -f "$wt/refresh-shell" ]; then
+      if chown root:root "$wt/refresh-shell" 2>/dev/null; then
+        chmod 4755 "$wt/refresh-shell" 2>/dev/null || true
+      else
+        chmod 755 "$wt/refresh-shell" 2>/dev/null || true
+        if $VERBOSE; then
+          echo "  WARN: could not chown refresh-shell root (need sudo); left non-setuid"
+        fi
+      fi
+    fi
+  fi
+
+  # Critical agent/human scripts: must be executable by primary + ai-code after any
+  # update-rules cp (often creates 664 owned by whoever ran sync) and after the
+  # broad "chmod u+rw,g+rw,o+r" pass (does not strip x, but never *adds* it).
+  # Only g+s without u+x/g+x leaves 2664 (rw-rwSr--) → dlang cannot ./deploy when
+  # owner is ai-orchestrator and session groups are stale/missing.
+  ensure_worktree_scripts_executable "$wt"
+
+  # gradlew executable only by ai-code group (prevents planner)
+  if [ -f "$wt/gradlew" ]; then
+    chown "$PRIMARY_USER:$CODE_GROUP" "$wt/gradlew" 2>/dev/null || true
+    chmod 2750 "$wt/gradlew" 2>/dev/null || true
+  fi
+
+  # Build config must stay group-readable (Gradle wrapper opens as deploying user)
+  if [ -f "$wt/gradle.properties" ]; then
+    chown "$PRIMARY_USER:$CODE_GROUP" "$wt/gradle.properties" 2>/dev/null || true
+    chmod 664 "$wt/gradle.properties" 2>/dev/null || true
+  fi
+
+  # .gradle etc (basic)
+  if [ -d "$wt/.gradle" ]; then
+    find "$wt/.gradle" -type d -exec chmod 2770 {} + 2>/dev/null || true
+    find "$wt/.gradle" -type f -exec chmod u+rw,g+rw,o-rwx {} + 2>/dev/null || true
+  fi
+
+  # app/build (gradle, cxx/CMake logs, etc.) - aggressively fix to prevent permission thrashing
+  if [ -d "$wt/app/build" ]; then
+    if $VERBOSE; then echo "    Fixing app/build for $PRIMARY_USER:$CODE_GROUP"; fi
+    chown -R "$PRIMARY_USER:$CODE_GROUP" "$wt/app/build" 2>/dev/null || true
+    find "$wt/app/build" -type d -exec chmod 2770 {} + 2>/dev/null || true
+    find "$wt/app/build" -type f -exec chmod 660 {} + 2>/dev/null || true
+    # Also clean bad cxx state if present
+    rm -rf "$wt/app/build/intermediates/cxx" 2>/dev/null || true
+  fi
+}
+
+fix_sandbox() {
+  if [ ! -d "$SCRIPT_DIR/$SANDBOX" ]; then return; fi
+  if $VERBOSE; then echo "  Applying to sandbox: $SANDBOX (group=$SANDBOX_GROUP)"; fi
+  chown -R :$SANDBOX_GROUP "$SCRIPT_DIR/$SANDBOX" 2>/dev/null || true
+  chmod -R g+rwX "$SCRIPT_DIR/$SANDBOX" 2>/dev/null || true
+  find "$SCRIPT_DIR/$SANDBOX" -type d -exec chmod u+rwx,g+rwxs,o+rx {} + 2>/dev/null || true
+  # NOTE: Do NOT chown to ai-shared here. The sandbox group is ai-sandbox.
+  # ai-shared is for AI engine configs (.gemini/, .grok/), not for sandbox files.
+}
+
+fix_log_wrapper() {
+  local wt="$1"
+  if [ ! -d "$wt" ]; then return; fi
+
+  # Wrapper
+  WRAPPER="$wt/append-to-engineering-log"
+  if [ -d "$wt" ]; then
+    printf '%s' "$CANONICAL_APPEND_WRAPPER" > "$WRAPPER"
+    chown root:"$SHARED_GROUP" "$WRAPPER" 2>/dev/null || true
+    chattr -a "$WRAPPER" 2>/dev/null || true
+    setfacl -b "$WRAPPER" 2>/dev/null || true
+    chmod 2755 "$WRAPPER" 2>/dev/null || true
+    chmod +x "$WRAPPER" 2>/dev/null || true
+    if $VERBOSE; then
+      echo "    wrapper: installed + root:$SHARED_GROUP 2755 (pure Unix, no ACLs)"
+    fi
+  fi
+
+  # Log
+  LOG="$wt/ENGINEERING_LOG.md"
+  if [ -f "$LOG" ] || [ ! -e "$LOG" ]; then
+    if [ ! -f "$LOG" ]; then
+      touch "$LOG"
+      if [ ! -s "$LOG" ]; then
+        printf "## (log initialized by fix-perms)\n\n" > "$LOG"
+      fi
+    fi
+    chattr -a "$LOG" 2>/dev/null || true
+    chown root:"$SHARED_GROUP" "$LOG" 2>/dev/null || true
+    chmod 660 "$LOG" 2>/dev/null || true
+    setfacl -b "$LOG" 2>/dev/null || true
+    chattr +a "$LOG" 2>/dev/null || true
+    if $VERBOSE; then
+      echo "    log: root:$SHARED_GROUP 660 + chattr +a (pure Unix, no ACLs)"
+    fi
+  fi
+}
+
+# --- Main dispatch ---
+
+ensure_groups
+
+install_sudoers_if_needed
+
+if [ -n "$TARGET_SPECIFIC" ]; then
+  fix_worktree "$TARGET_SPECIFIC"
+  fix_log_wrapper "$TARGET_SPECIFIC"
+elif $AT_ORCHESTRATION; then
+  ensure_shared_build_homes
+  mapfile -t WORKTREES < <(git worktree list --porcelain 2>/dev/null | awk '/^worktree / {print $2}')
+  for wt in "${WORKTREES[@]}"; do
+    fix_worktree "$wt"
+    fix_log_wrapper "$wt"
+  done
+  fix_sandbox
+
+  # Fix the main repository .git (and all worktree admin areas under it).
+  # This must be done from the orchestration root so that git (rev-parse, describe,
+  # tag, status ...) works reliably for dlang + all ai-* users in every worktree.
+  if [ -d "$SCRIPT_DIR/.git" ]; then
+    if $VERBOSE; then echo "  Fixing main .git + worktree metadata under ai-shared..."; fi
+    chown -R :$SHARED_GROUP "$SCRIPT_DIR/.git" 2>/dev/null || true
+    find "$SCRIPT_DIR/.git" -type d -exec chmod 2770 {} + 2>/dev/null || true
+    find "$SCRIPT_DIR/.git" -type f -exec chmod 660 {} + 2>/dev/null || true
+    if [ -d "$SCRIPT_DIR/.git/worktrees" ]; then
+      find "$SCRIPT_DIR/.git/worktrees" -type d -exec chmod 2770 {} + 2>/dev/null || true
+      find "$SCRIPT_DIR/.git/worktrees" -type f -exec chmod 660 {} + 2>/dev/null || true
+      # Per-worktree hooks dirs (if present) after blanket 660
+      find "$SCRIPT_DIR/.git/worktrees" -type d -name hooks 2>/dev/null | while read -r hd; do
+        ensure_git_hooks_executable "$hd"
+      done
+    fi
+    # Fix refs area (loose refs are frequently written by different ai-* users; broken zero-hash
+    # refs have been observed when group perms or owners drift).
+    if [ -d "$SCRIPT_DIR/.git/refs" ]; then
+      find "$SCRIPT_DIR/.git/refs" -type d -exec chmod 2770 {} + 2>/dev/null || true
+      find "$SCRIPT_DIR/.git/refs" -type f -exec chmod 660 {} + 2>/dev/null || true
+      chown -R :$SHARED_GROUP "$SCRIPT_DIR/.git/refs" 2>/dev/null || true
+    fi
+    if [ -f "$SCRIPT_DIR/.git/packed-refs" ]; then
+      chown :$SHARED_GROUP "$SCRIPT_DIR/.git/packed-refs" 2>/dev/null || true
+      chmod 660 "$SCRIPT_DIR/.git/packed-refs" 2>/dev/null || true
+    fi
+    # CRITICAL: re-apply +x on active hooks (blanket 660 above strips them)
+    ensure_git_hooks_executable "$SCRIPT_DIR/.git/hooks"
+    git_config_as_primary "$SCRIPT_DIR" config core.sharedRepository group
+    fix_main_git_config_ownership
+  fi
+else
+  fix_worktree "$CURRENT_DIR"
+  fix_log_wrapper "$CURRENT_DIR"
+fi
+
+if $VERBOSE; then
+  echo
+  echo "Recovery complete. Suggested verification:"
+  echo "  ls -l ENGINEERING_LOG.md append-to-engineering-log run-as-primary"
+  echo "  getfacl -s ENGINEERING_LOG.md append-to-engineering-log"
+  echo "  lsattr ENGINEERING_LOG.md"
+  echo "  ./append-to-engineering-log '## test entry'"
+  echo
+  echo "Re-run from orchestration root after major breakage."
+fi

@@ -1,0 +1,68 @@
+#!/bin/bash
+# run-antigravity — primary Antigravity launcher (orchestrator user by default).
+# Machine paths via project.config + manage-configs smudge (@@ tokens).
+
+set -euo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR" || exit 1
+
+# Stamped defaults (smudge replaces @@…@@ from project.config)
+sandbox_path=@@SANDBOX_PATH@@
+antigravity_bin=@@ANTIGRAVITY_BIN@@
+orchestrator_user=@@ORCHESTRATOR_USER@@
+
+if [ -f project.config ]; then
+  while IFS= read -r line || [ -n "$line" ]; do
+    line="${line%%#*}"
+    line="${line#"${line%%[![:space:]]*}"}"
+    [[ -z "$line" ]] && continue
+    [[ "$line" =~ ^[a-zA-Z_][a-zA-Z0-9_]*= ]] || continue
+    export "$line"
+  done < project.config || true
+fi
+
+# Prefer project.config; fall back to stamp if still unsmudged use layout name
+SANDBOX_REL="${sandbox_dir:-${sandbox_path:-}}"
+if [[ -z "$SANDBOX_REL" || "$SANDBOX_REL" == @@* ]]; then
+  if [[ -d "$SCRIPT_DIR/dev-ai-interaction" || -L "$SCRIPT_DIR/dev-ai-interaction" ]]; then
+    SANDBOX_REL="dev-ai-interaction"
+  elif [[ -d "$SCRIPT_DIR/sandbox" || -L "$SCRIPT_DIR/sandbox" ]]; then
+    SANDBOX_REL="sandbox"
+  else
+    SANDBOX_REL="dev-ai-interaction"
+  fi
+fi
+SANDBOX_DIR="$SCRIPT_DIR/$SANDBOX_REL"
+
+ORCHESTRATOR_USER="${orchestrator_user:-ai-orchestrator}"
+if [[ "$ORCHESTRATOR_USER" == @@* ]]; then ORCHESTRATOR_USER=ai-orchestrator; fi
+
+ANTIGRAVITY_BIN="${ANTIGRAVITY_BIN:-${antigravity_bin:-}}"
+if [[ -z "$ANTIGRAVITY_BIN" || "$ANTIGRAVITY_BIN" == @@* ]]; then
+  ANTIGRAVITY_BIN="${HOME}/git/antigravity/agy"
+fi
+# expand $HOME in value if literal
+ANTIGRAVITY_BIN="${ANTIGRAVITY_BIN//\$HOME/$HOME}"
+
+umask 002
+
+echo "Launching Antigravity agent in $(pwd)..."
+echo "Antigravity binary: $ANTIGRAVITY_BIN"
+echo "Sandbox path: $SANDBOX_DIR"
+echo "Running as: $ORCHESTRATOR_USER (via sudo -u)"
+echo "Tip: Ctrl+M or /multiline for multi-line input."
+
+EXTRA_ARGS=()
+FOUND_DD=0
+for arg in "$@"; do
+  if [ "$FOUND_DD" -eq 1 ]; then
+    EXTRA_ARGS+=("$arg")
+  elif [ "$arg" = "--" ]; then
+    FOUND_DD=1
+  fi
+done
+
+exec sudo -u "$ORCHESTRATOR_USER" "$ANTIGRAVITY_BIN" \
+    -i "You are starting a fresh session in this multi-agent project. As your very first action, read the file new_agent_prompt in the current working directory (use your Read tool if needed) and follow its instructions to the letter. This includes immediately reading AGENT_CONTEXT.md and your CLI thin overlay (GROK.md or GEMINI.md), providing the required brief Mandate Acknowledgment report (overrides, barrier, verification, geography with Role+Branch, plans directory rule, etc.), and then waiting. Do not read TODO.md, search for other files, or begin any other task until the user provides a specific directive after your report. Your only mission right now is to introduce yourself via the report and wait." \
+    --add-dir "$SANDBOX_DIR" \
+    "${EXTRA_ARGS[@]}"
