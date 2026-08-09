@@ -266,6 +266,32 @@ launch_grok_with_prompt() {
   fi
   echo "Tip: Ctrl+M or /multiline for multi-line input."
 
+  # Optional free-form damage limits (primary/orch; any role if env set).
+  # GROK_SANDBOX=workspace|strict|read-only|off  → pass --sandbox to grok (Grok 1.0 OS sandbox).
+  # GROK_WORKTREE=1|true|name  → pass --worktree[=name] (interactive only; headless -p ignores).
+  # Also pass any args after "--" on the launcher (EXTRA_ARGS).
+  # Does NOT enable native plan mode or personas.
+  local freeform_args=()
+  case "${ROLE_KEY:-}" in
+    primary|orchestrator)
+      if [[ -z "${GROK_SANDBOX:-}" && "${GROK_SANDBOX_DEFAULT:-}" != "" ]]; then
+        GROK_SANDBOX="${GROK_SANDBOX_DEFAULT}"
+      fi
+      ;;
+  esac
+  if [[ -n "${GROK_SANDBOX:-}" && "${GROK_SANDBOX}" != "off" && "${GROK_SANDBOX}" != "0" ]]; then
+    freeform_args+=(--sandbox "${GROK_SANDBOX}")
+    echo "Grok sandbox: ${GROK_SANDBOX}"
+  fi
+  if [[ -n "${GROK_WORKTREE:-}" && "${GROK_WORKTREE}" != "0" && "${GROK_WORKTREE}" != "false" ]]; then
+    if [[ "${GROK_WORKTREE}" == "1" || "${GROK_WORKTREE}" == "true" || "${GROK_WORKTREE}" == "yes" ]]; then
+      freeform_args+=(--worktree)
+    else
+      freeform_args+=(--worktree="${GROK_WORKTREE}")
+    fi
+    echo "Grok worktree: ${GROK_WORKTREE}"
+  fi
+
   # Mutation-only Landlock (agent-landlock) as the role user, immediately before grok.
   # AGENT_LANDLOCK_DISABLE=1 skips; missing ABI warns and continues (helper soft-fail).
   local landlock_helper="${SCRIPT_DIR}/agent-landlock"
@@ -295,6 +321,7 @@ launch_grok_with_prompt() {
       ${MODEL_ARGS[@]+"${MODEL_ARGS[@]}"} \
       ${TODO_GATE_FLAGS[@]+"${TODO_GATE_FLAGS[@]}"} \
       --no-alt-screen \
+      ${freeform_args[@]+"${freeform_args[@]}"} \
       ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"}
 }
 

@@ -188,7 +188,8 @@ CODER_DENY+=("$HOME_DENY")
 # lib .git allow when present — only if OS-writable under landlock grant.
 # If OS denies, record SKIP (not Landlock failure).
 if [[ -n "$LIB_GIT" && -e "$LIB_GIT" ]]; then
-  if [[ -w "$LIB_GIT" ]] || touch "$LIB_GIT/.landlock-os-writecheck" 2>/dev/null; then
+  # Must actually create a file (directory -w is not sufficient under sticky DAC).
+  if touch "$LIB_GIT/.landlock-os-writecheck" 2>/dev/null; then
     rm -f "$LIB_GIT/.landlock-os-writecheck" 2>/dev/null || true
     CODER_ALLOW+=("$LIB_GIT")
   else
