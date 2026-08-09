@@ -147,9 +147,16 @@ install_live_hook() {
   esac
   live="$common/hooks/post-checkout"
   mkdir -p "$(dirname "$live")" 2>/dev/null || true
-  if cp -a --no-preserve=timestamps "$template" "$live" 2>/dev/null || cp -a "$template" "$live" 2>/dev/null; then
+  # Prefer content-only copy (not -a): template is often dlang:ai-code; live must be
+  # ai-shared or fix-multiuser-git-hosts --audit-only reports NEEDS_FIX for one path.
+  if cp --no-preserve=mode,ownership,timestamps "$template" "$live" 2>/dev/null \
+     || cp "$template" "$live" 2>/dev/null; then
     chmod 775 "$live" 2>/dev/null || true
-    echo "  live hook → $live"
+    # Multi-user git model: everything under common .git is group ai-shared
+    chown :ai-shared "$live" 2>/dev/null \
+      || chown "$(id -un):ai-shared" "$live" 2>/dev/null \
+      || echo "  WARN: could not chown :ai-shared $live (run as dlang or fix-multiuser)"
+    echo "  live hook → $live ($(stat -c '%a %U:%G' "$live" 2>/dev/null || echo '?'))"
   else
     echo "  WARN: could not install live hook at $live"
   fi
