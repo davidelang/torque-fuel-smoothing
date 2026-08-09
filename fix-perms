@@ -270,6 +270,57 @@ ensure_git_hooks_executable() {
   done
 }
 
+# Resolve absolute common git directory for a worktree/repo root.
+# Multi-user DAC model: this store must stay SHARED_GROUP (ai-shared), never CODE_GROUP.
+resolve_common_gitdir() {
+  local base="$1"
+  local g
+  [ -n "$base" ] && [ -d "$base" ] || return 0
+  g=$(git -C "$base" rev-parse --git-common-dir 2>/dev/null || true)
+  case "$g" in
+    /*) printf '%s\n' "$g" ;;
+    "")
+      if [ -d "$base/.git" ]; then
+        printf '%s\n' "$base/.git"
+      fi
+      ;;
+    *) printf '%s\n' "$base/$g" ;;
+  esac
+}
+
+# Repair common/core .git store only (objects/refs/HEAD/config/hooks/worktrees).
+# Never use CODE_GROUP here. Never chmod 660 on the top directory before descend.
+repair_common_gitdir() {
+  local gdir="$1"
+  [ -d "$gdir" ] || return 0
+  if $VERBOSE; then echo "  Repairing common git dir under $SHARED_GROUP: $gdir"; fi
+  # Ensure top dir is searchable before recursive ops (legacy bug: chmod 660 stripped +x).
+  chown :"$SHARED_GROUP" "$gdir" 2>/dev/null || true
+  chmod 2770 "$gdir" 2>/dev/null || true
+  chown -R :"$SHARED_GROUP" "$gdir" 2>/dev/null || true
+  find "$gdir" -type d -exec chmod 2770 {} + 2>/dev/null || true
+  find "$gdir" -type f -exec chmod 660 {} + 2>/dev/null || true
+  if [ -d "$gdir/worktrees" ]; then
+    find "$gdir/worktrees" -type d -name hooks 2>/dev/null | while read -r hd; do
+      ensure_git_hooks_executable "$hd"
+    done
+  fi
+  ensure_git_hooks_executable "$gdir/hooks"
+  if [ -f "$gdir/config" ]; then
+    chown "$PRIMARY_USER:$SHARED_GROUP" "$gdir/config" 2>/dev/null || true
+    chmod 660 "$gdir/config" 2>/dev/null || true
+  fi
+}
+
+# chown worktree tree to CODE_GROUP without ever assigning CODE_GROUP to common .git.
+chown_worktree_code_group() {
+  local wt="$1"
+  local spec="$2" # "user:group" or ":group"
+  # Top-level entries except .git (directory = common store; file = gitdir pointer)
+  find "$wt" -mindepth 1 -maxdepth 1 ! -name '.git' -exec chown -R $spec {} + 2>/dev/null || true
+  # Linked worktree: leave .git file for SHARED_GROUP handling below (do not CODE_GROUP it)
+}
+
 # Worktree scripts humans/agents run by path (./deploy, ./build_app, …).
 # After update-rules `cp` (non-preserving): file is often 664 owned by the sync user
 # (e.g. ai-orchestrator). dlang then needs group+x or o+x — and g+s alone is not enough.
@@ -307,12 +358,13 @@ fix_worktree() {
   if [ ! -d "$wt" ]; then return; fi
   if $VERBOSE; then echo "  Applying to worktree: $wt"; fi
 
-  # chown to code group (or primary if sudo)
+  # chown worktree to code group — NEVER assign CODE_GROUP to common .git store
+  # (chown -R on main worktree used to poison objects/refs/HEAD → planner lockout).
   if [ -n "$SUDO_USER" ] && [ "$SUDO_USER" != "root" ]; then
     TARGET_OWNER="$SUDO_USER"
-    chown -R "$TARGET_OWNER:$CODE_GROUP" "$wt" 2>/dev/null || true
+    chown_worktree_code_group "$wt" "$TARGET_OWNER:$CODE_GROUP"
   else
-    chown -R :$CODE_GROUP "$wt" 2>/dev/null || true
+    chown_worktree_code_group "$wt" ":$CODE_GROUP"
   fi
 
   # Re-apply sandbox if present
@@ -337,48 +389,37 @@ fix_worktree() {
     chmod 2755 "$wt/append-to-engineering-log" 2>/dev/null || true
   fi
 
-  # Broad Unix perms (source readable by planner)
-  find "$wt" -type f -exec chmod u+rw,g+rw,o+r {} + 2>/dev/null || true
-  find "$wt" -type d -exec chmod u+rwx,g+rwxs,o+rx {} + 2>/dev/null || true
+  # Broad Unix perms on worktree only — prune .git so we never chmod common store here
+  find "$wt" -name .git -prune -o -type f -exec chmod u+rw,g+rw,o+r {} + 2>/dev/null || true
+  find "$wt" -name .git -prune -o -type d -exec chmod u+rwx,g+rwxs,o+rx {} + 2>/dev/null || true
 
   # 666 for TODO/facts (planner writable)
   chmod 666 "$wt/TODO.md" 2>/dev/null || true
   chmod 666 "$wt/project-facts.md" 2>/dev/null || true
 
-  # .git handling (works for both normal clones and git worktrees).
-  # In worktrees the "$wt/.git" is a *file* ("gitdir: ..."), real state is in
-  # main-repo/.git/worktrees/<wtname>/. We fix both the pointer and the admin area.
-  if [ -e "$wt/.git" ]; then
-    chown :$SHARED_GROUP "$wt/.git" 2>/dev/null || true
-    chmod 660 "$wt/.git" 2>/dev/null || true
-  fi
-  # Fix the *per-worktree* git admin area under the main .git (shared across users).
+  # .git handling (linked worktree file vs main common dir).
+  # NEVER chmod 660 a .git *directory* (strips search bit → recursive heal cannot descend).
   WT_GITDIR=""
   if [ -f "$wt/.git" ]; then
+    # Pointer file only
+    chown :$SHARED_GROUP "$wt/.git" 2>/dev/null || true
+    chmod 660 "$wt/.git" 2>/dev/null || true
     WT_GITDIR=$(sed -n 's/^gitdir: //p' "$wt/.git" 2>/dev/null | head -1)
+    if [ -n "$WT_GITDIR" ] && [ -d "$WT_GITDIR" ]; then
+      # Per-worktree admin under common .git/worktrees/<name> only (not objects/refs)
+      chown -R :$SHARED_GROUP "$WT_GITDIR" 2>/dev/null || true
+      find "$WT_GITDIR" -type d -exec chmod 2770 {} + 2>/dev/null || true
+      find "$WT_GITDIR" -type f -exec chmod 660 {} + 2>/dev/null || true
+      ensure_git_hooks_executable "$WT_GITDIR/hooks"
+    fi
+  elif [ -d "$wt/.git" ]; then
+    # Main worktree: repair common store with SHARED_GROUP only
+    repair_common_gitdir "$wt/.git"
   fi
-  if [ -n "$WT_GITDIR" ] && [ -d "$WT_GITDIR" ]; then
-    chown -R :$SHARED_GROUP "$WT_GITDIR" 2>/dev/null || true
-    find "$WT_GITDIR" -type d -exec chmod 2770 {} + 2>/dev/null || true
-    find "$WT_GITDIR" -type f -exec chmod 660 {} + 2>/dev/null || true
-    ensure_git_hooks_executable "$WT_GITDIR/hooks"
-  fi
-  # Fallback/old-style (bare .git dir inside wt)
-  if [ -d "$wt/.git" ]; then
-    chown -R :$SHARED_GROUP "$wt/.git" 2>/dev/null || true
-    find "$wt/.git" -type d -exec chmod 2770 {} + 2>/dev/null || true
-    find "$wt/.git" -type f -exec chmod 660 {} + 2>/dev/null || true
-    ensure_git_hooks_executable "$wt/.git/hooks"
-  fi
-  # Common-dir hooks (shared by all worktrees) — always restore after any .git chmod
+  # Hook +x on common store (shared by all worktrees)
   local common_hooks
-  common_hooks=$(git -C "$wt" rev-parse --git-common-dir 2>/dev/null || true)
-  if [ -n "$common_hooks" ]; then
-    # rev-parse may return relative path
-    case "$common_hooks" in
-      /*) ;;
-      *) common_hooks="$wt/$common_hooks" ;;
-    esac
+  common_hooks=$(resolve_common_gitdir "$wt")
+  if [ -n "$common_hooks" ] && [ -d "$common_hooks/hooks" ]; then
     ensure_git_hooks_executable "$common_hooks/hooks"
   fi
 
@@ -392,23 +433,23 @@ fix_worktree() {
     chmod 4755 "$wt/run-as-primary" 2>/dev/null || true
   fi
 
-  # refresh-shell: setuid root per worktree (binary not in git; .c is tracked).
+  # ve-refresh-shell: setuid root per worktree (binary not in git; .c is tracked).
   # Prefer shared installer; never leave setuid on non-root owner.
-  if [ -x "$SCRIPT_DIR/install-refresh-shell.sh" ]; then
-    if $VERBOSE; then echo "  install-refresh-shell for $wt"; fi
-    "$SCRIPT_DIR/install-refresh-shell.sh" "$wt" 2>/dev/null || true
+  if [ -x "$SCRIPT_DIR/install-ve-refresh-shell.sh" ]; then
+    if $VERBOSE; then echo "  install-ve-refresh-shell for $wt"; fi
+    "$SCRIPT_DIR/install-ve-refresh-shell.sh" "$wt" 2>/dev/null || true
   else
-    if [ -f "$wt/refresh-shell.c" ]; then
-      if $VERBOSE; then echo "  Compiling refresh-shell in $wt ..."; fi
-      (cd "$wt" && gcc -O2 -Wall -o refresh-shell refresh-shell.c 2>/dev/null) || true
+    if [ -f "$wt/ve-refresh-shell.c" ]; then
+      if $VERBOSE; then echo "  Compiling ve-refresh-shell in $wt ..."; fi
+      (cd "$wt" && gcc -O2 -Wall -o ve-refresh-shell ve-refresh-shell.c 2>/dev/null) || true
     fi
-    if [ -f "$wt/refresh-shell" ]; then
-      if chown root:root "$wt/refresh-shell" 2>/dev/null; then
-        chmod 4755 "$wt/refresh-shell" 2>/dev/null || true
+    if [ -f "$wt/ve-refresh-shell" ]; then
+      if chown root:root "$wt/ve-refresh-shell" 2>/dev/null; then
+        chmod 4755 "$wt/ve-refresh-shell" 2>/dev/null || true
       else
-        chmod 755 "$wt/refresh-shell" 2>/dev/null || true
+        chmod 755 "$wt/ve-refresh-shell" 2>/dev/null || true
         if $VERBOSE; then
-          echo "  WARN: could not chown refresh-shell root (need sudo); left non-setuid"
+          echo "  WARN: could not chown ve-refresh-shell root (need sudo); left non-setuid"
         fi
       fi
     fi
@@ -516,41 +557,31 @@ elif $AT_ORCHESTRATION; then
   done
   fix_sandbox
 
-  # Fix the main repository .git (and all worktree admin areas under it).
-  # This must be done from the orchestration root so that git (rev-parse, describe,
-  # tag, status ...) works reliably for dlang + all ai-* users in every worktree.
-  if [ -d "$SCRIPT_DIR/.git" ]; then
-    if $VERBOSE; then echo "  Fixing main .git + worktree metadata under ai-shared..."; fi
-    chown -R :$SHARED_GROUP "$SCRIPT_DIR/.git" 2>/dev/null || true
-    find "$SCRIPT_DIR/.git" -type d -exec chmod 2770 {} + 2>/dev/null || true
-    find "$SCRIPT_DIR/.git" -type f -exec chmod 660 {} + 2>/dev/null || true
-    if [ -d "$SCRIPT_DIR/.git/worktrees" ]; then
-      find "$SCRIPT_DIR/.git/worktrees" -type d -exec chmod 2770 {} + 2>/dev/null || true
-      find "$SCRIPT_DIR/.git/worktrees" -type f -exec chmod 660 {} + 2>/dev/null || true
-      # Per-worktree hooks dirs (if present) after blanket 660
-      find "$SCRIPT_DIR/.git/worktrees" -type d -name hooks 2>/dev/null | while read -r hd; do
-        ensure_git_hooks_executable "$hd"
-      done
-    fi
-    # Fix refs area (loose refs are frequently written by different ai-* users; broken zero-hash
-    # refs have been observed when group perms or owners drift).
-    if [ -d "$SCRIPT_DIR/.git/refs" ]; then
-      find "$SCRIPT_DIR/.git/refs" -type d -exec chmod 2770 {} + 2>/dev/null || true
-      find "$SCRIPT_DIR/.git/refs" -type f -exec chmod 660 {} + 2>/dev/null || true
-      chown -R :$SHARED_GROUP "$SCRIPT_DIR/.git/refs" 2>/dev/null || true
-    fi
-    if [ -f "$SCRIPT_DIR/.git/packed-refs" ]; then
-      chown :$SHARED_GROUP "$SCRIPT_DIR/.git/packed-refs" 2>/dev/null || true
-      chmod 660 "$SCRIPT_DIR/.git/packed-refs" 2>/dev/null || true
-    fi
-    # CRITICAL: re-apply +x on active hooks (blanket 660 above strips them)
-    ensure_git_hooks_executable "$SCRIPT_DIR/.git/hooks"
+  # Common/core .git: SHARED_GROUP only. Resolve via --git-common-dir so a run from
+  # a linked worktree (SCRIPT_DIR/.git is a file) still repairs the real store.
+  # Prefer multiuser script for host-wide DAC; this path is intentional recovery.
+  COMMON_GDIR=$(resolve_common_gitdir "$SCRIPT_DIR")
+  if [ -z "$COMMON_GDIR" ] || [ ! -d "$COMMON_GDIR" ]; then
+    COMMON_GDIR=$(resolve_common_gitdir "$CURRENT_DIR")
+  fi
+  if [ -n "$COMMON_GDIR" ] && [ -d "$COMMON_GDIR" ]; then
+    if $VERBOSE; then echo "  Fixing common git dir under ai-shared: $COMMON_GDIR"; fi
+    repair_common_gitdir "$COMMON_GDIR"
     git_config_as_primary "$SCRIPT_DIR" config core.sharedRepository group
-    fix_main_git_config_ownership
+    # config ownership on common store
+    if [ -f "$COMMON_GDIR/config" ]; then
+      chown "$PRIMARY_USER:$SHARED_GROUP" "$COMMON_GDIR/config" 2>/dev/null || true
+      chmod 660 "$COMMON_GDIR/config" 2>/dev/null || true
+    fi
   fi
 else
   fix_worktree "$CURRENT_DIR"
   fix_log_wrapper "$CURRENT_DIR"
+  # Even single-worktree recovery: heal common store if resolvable (never CODE_GROUP)
+  COMMON_GDIR=$(resolve_common_gitdir "$CURRENT_DIR")
+  if [ -n "$COMMON_GDIR" ] && [ -d "$COMMON_GDIR" ]; then
+    repair_common_gitdir "$COMMON_GDIR"
+  fi
 fi
 
 if $VERBOSE; then

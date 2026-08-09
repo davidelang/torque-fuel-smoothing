@@ -1,35 +1,105 @@
 #!/bin/bash
 # post-checkout hook — install as .git/hooks/post-checkout (chmod 775)
-# Re-apply perms after checkout/reset. project.config is gitignored and seeded
-# by setup_agent; missing config during worktree populate is normal.
+#
+# Checkout must NOT:
+#   - run fix-perms / fix-perms --all (or legacy whole-tree set-*-perms)
+#   - chown/chmod the common/core git store (objects, refs, HEAD, config, …)
+#
+# Checkout MAY (branch switch only):
+#   - best-effort light modes on worktree paths that actually changed
+#     (git diff --name-only old new), so umask 007 does not leave files
+#     unreadable to other roles via o+r
+#
+# File checkout (3rd arg = 0): no permission walk — path list is not passed
+# to the hook; parent setgid + launcher umask / explicit recovery apply.
+#
+# Common .git DAC repair is explicit only:
+#   ./fix-multiuser-git-hosts.sh   (or ./fix-ve-git-shared.sh)
+#
+# project.config is gitignored and seeded by setup_agent; missing config
+# during worktree populate is normal.
 
 set -euo pipefail
 
-# setup_agent sets this so we do not double-run heavy fix-perms --all (sudo thrash)
-# and do not warn about project.config before seed_smudge_inputs.
+# setup_agent: no hook work mid-setup (avoid thrash before seed_smudge_inputs).
 if [ "${VE_SETUP_AGENT:-}" = "1" ]; then
   exit 0
 fi
 
+PREV_HEAD="${1:-}"
+NEW_HEAD="${2:-}"
+# 1 = branch checkout, 0 = file checkout
+CHECKOUT_TYPE="${3:-1}"
+
 GIT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
 cd "$GIT_ROOT" || exit 0
 
-# Best-effort perms recovery (quiet). Prefer fix-perms; fall back to legacy scripts.
-if [ -x ./fix-perms ]; then
-  ./fix-perms --all 2>/dev/null || sudo -n ./fix-perms --all 2>/dev/null || true
-elif [ -x ./set-worktree-perms ]; then
-  ./set-worktree-perms --all 2>/dev/null || true
-  [ -x ./set-sandbox-perms ] && ./set-sandbox-perms 2>/dev/null || true
+# Absolute common git directory (never touch DAC under this path).
+COMMON_GITDIR=$(git rev-parse --git-common-dir 2>/dev/null || true)
+case "${COMMON_GITDIR:-}" in
+  /*) ;;
+  "") COMMON_GITDIR="" ;;
+  *) COMMON_GITDIR="$GIT_ROOT/$COMMON_GITDIR" ;;
+esac
+# Normalize trailing slash for prefix checks
+if [ -n "$COMMON_GITDIR" ]; then
+  COMMON_GITDIR="${COMMON_GITDIR%/}"
 fi
+
+path_under_common_git() {
+  local p="$1"
+  [ -n "$COMMON_GITDIR" ] || return 1
+  case "$p" in
+    "$COMMON_GITDIR"|"$COMMON_GITDIR"/*) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+# Soft cap so huge branch switches stay cheap (no full-tree find).
+MAX_SCOPED_PATHS=500
+
+scoped_mode_fix_changed_paths() {
+  local old="$1" new="$2"
+  local list path n=0
+
+  [ -n "$old" ] && [ -n "$new" ] || return 0
+  [ "$old" != "$new" ] || return 0
+
+  list=$(git diff --name-only "$old" "$new" 2>/dev/null || true)
+  [ -n "$list" ] || return 0
+
+  while IFS= read -r path; do
+    [ -n "$path" ] || continue
+    n=$((n + 1))
+    if [ "$n" -gt "$MAX_SCOPED_PATHS" ]; then
+      break
+    fi
+    # Worktree-relative paths only; never touch common .git
+    case "$path" in
+      .git|.git/*) continue ;;
+    esac
+    if path_under_common_git "$GIT_ROOT/$path" || path_under_common_git "$path"; then
+      continue
+    fi
+    if [ -d "$path" ]; then
+      # Keep setgid if present; ensure ug+rwx (no recursive chown)
+      chmod ug+rwx "$path" 2>/dev/null || true
+    elif [ -f "$path" ] || [ -L "$path" ]; then
+      # PERMISSIONS_MODEL: planner-readable via o+r when group is ai-code
+      chmod ug+rw,o+r "$path" 2>/dev/null || true
+    fi
+  done <<< "$list"
+}
+
+# Branch checkout only — never whole-tree recovery, never common .git DAC.
+if [ "$CHECKOUT_TYPE" = "1" ]; then
+  scoped_mode_fix_changed_paths "$PREV_HEAD" "$NEW_HEAD"
+fi
+# File checkout ($CHECKOUT_TYPE=0): intentional no-op for modes.
 
 # project.config is intentionally gitignored (local machine secrets/paths).
 # Only warn if stamped launchers still contain unsubstituted @@ tokens.
-if [ ! -f "$GIT_ROOT/project.config" ]; then
-  # Soft note once; not a failure. setup_agent / human copies project.config.example → project.config
-  if [ -z "${VE_QUIET_HOOK:-}" ]; then
-    : # silent — missing config is normal for fresh clones until configured
-  fi
-else
+if [ -f "$GIT_ROOT/project.config" ]; then
   for f in run-grok run-grok-master ve-env; do
     if [ -f "$GIT_ROOT/$f" ] && grep -q '@@' "$GIT_ROOT/$f" 2>/dev/null; then
       echo "WARNING: unsubstituted @@ tokens in $f (smudge/filter may need project.config + filter-apply-config)."
