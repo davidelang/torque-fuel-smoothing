@@ -429,10 +429,18 @@ def resolve_grants(
     if git_home.startswith("@@"):
         git_home = ""
 
+    orch_root = os.environ.get("ORCH_ROOT") or project.get("orch_root") or ""
+    orch_root = _expand_path(orch_root)
+    if orch_root.startswith("@@") or not orch_root:
+        orch_root = ""
+    elif not os.path.isdir(orch_root):
+        orch_root = ""
+
     meta = {
         "role": role,
         "worktree": str(worktree),
         "git_home": git_home,
+        "orch_root": orch_root,
         "abi": str(landlock_abi_version() or "unavailable"),
     }
 
@@ -488,10 +496,20 @@ def resolve_grants(
         gradle = worktree / ".gradle"
         if gradle.is_dir():
             dirs.append(str(gradle.resolve()))
+        if orch_root:
+            for name in (".gradle-shared", ".android-shared"):
+                cand = Path(orch_root) / name
+                if cand.is_dir():
+                    dirs.append(str(cand.resolve()))
     elif role == "orchestrator":
         dirs.append(str(worktree))
         dirs.extend(sandbox)
         dirs.extend([p for p in profiles if os.path.isdir(p)])
+        if orch_root:
+            for name in (".gradle-shared", ".android-shared"):
+                cand = Path(orch_root) / name
+                if cand.is_dir():
+                    dirs.append(str(cand.resolve()))
     elif role == "primary":
         if git_home and os.path.isdir(git_home):
             dirs.append(str(Path(git_home).resolve()))
@@ -572,6 +590,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         print(f"worktree={meta['worktree']}")
         print(f"abi={meta['abi']}")
         print(f"git_home={meta.get('git_home', '')}")
+        print(f"orch_root={meta.get('orch_root', '')}")
         for d in dirs:
             print(f"dir:{d}")
         for f in files:

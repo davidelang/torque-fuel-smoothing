@@ -23,11 +23,27 @@ TARGET_SPECIFIC=""
 SUDO_USER=${SUDO_USER:-}
 SUDO_USER_VAL=${SUDO_USER:-}
 
-# Detect orchestration root
-if [ -f "$SCRIPT_DIR/update-rules.sh" ]; then
-  AT_ORCHESTRATION=true
+# Orchestration root is project.config orch_root (via ve-resolve-orch).
+# Do NOT treat "update-rules.sh exists" as orch — every full worktree has that file.
+if [ -f "$SCRIPT_DIR/ve-resolve-orch" ]; then
+  # shellcheck source=/dev/null
+  . "$SCRIPT_DIR/ve-resolve-orch"
+elif [ -f "$CURRENT_DIR/ve-resolve-orch" ]; then
+  # shellcheck source=/dev/null
+  . "$CURRENT_DIR/ve-resolve-orch"
 else
-  AT_ORCHESTRATION=false
+  echo "ERROR: ve-resolve-orch missing; cannot locate orch_root." >&2
+  echo "  Run ./update-rules.sh from the orchestration root." >&2
+  exit 1
+fi
+if ! ve_resolve_orch "$SCRIPT_DIR"; then
+  if ! ve_resolve_orch "$CURRENT_DIR"; then
+    exit 1
+  fi
+fi
+AT_ORCHESTRATION=false
+if [ "$(cd "$SCRIPT_DIR" && pwd)" = "$ORCH_ROOT" ]; then
+  AT_ORCHESTRATION=true
 fi
 
 TARGET_SPECIFIC=""
@@ -172,9 +188,12 @@ fix_main_git_config_ownership() {
 }
 
 ensure_shared_build_homes() {
-  local target_root="$SCRIPT_DIR"
-  if [ "$AT_ORCHESTRATION" = false ]; then
-    target_root="$(cd "$SCRIPT_DIR/.." && pwd)"
+  # Shared artifact/keystore homes live only at orch. Never mkdir $WT/.gradle-shared.
+  local target_root="${ORCH_ROOT:-}"
+  if [ -z "$target_root" ] || [ ! -d "$target_root" ]; then
+    echo "ERROR: orch_root not resolved; cannot create shared build homes." >&2
+    echo "  Run ./update-rules.sh from the orchestration root." >&2
+    return 1
   fi
   GRADLE_SHARED="$target_root/.gradle-shared"
   mkdir -p "$GRADLE_SHARED"
@@ -330,7 +349,7 @@ ensure_worktree_scripts_executable() {
   # setgid + rwx for owner/group so primary and ai-code can run; other r-x for stale sessions
   local scripts=(
     build_app deploy setup_agent.sh remove_worktree.sh
-    get-builds-tag.sh update-rules.sh install-merge-drivers.sh merge-branch-into-master.sh
+    get-builds-tag.sh update-rules.sh ve-resolve-orch install-merge-drivers.sh merge-branch-into-master.sh
     generate_pr.sh cleanup_pr.sh sync_infrastructure.sh
     filter-apply-config filter-clean-config setup-project
     set-worktree-perms set-sandbox-perms
@@ -548,7 +567,7 @@ install_sudoers_if_needed
 if [ -n "$TARGET_SPECIFIC" ]; then
   fix_worktree "$TARGET_SPECIFIC"
   fix_log_wrapper "$TARGET_SPECIFIC"
-elif $AT_ORCHESTRATION; then
+elif $DO_ALL || $AT_ORCHESTRATION; then
   ensure_shared_build_homes
   mapfile -t WORKTREES < <(git worktree list --porcelain 2>/dev/null | awk '/^worktree / {print $2}')
   for wt in "${WORKTREES[@]}"; do

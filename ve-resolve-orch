@@ -1,0 +1,109 @@
+#!/bin/bash
+# ve-resolve-orch — resolve the absolute orchestration root.
+#
+# Source from a worktree helper (does not set -e; returns 1 on failure):
+#   . "$(dirname "$0")/ve-resolve-orch"   # uses this script's directory as worktree
+#   ve_resolve_orch [worktree]            # sets ORCH_ROOT
+#
+# Exec:
+#   ./ve-resolve-orch [worktree-dir]      # prints absolute path; exit 1 if missing
+#
+# Order: $ORCH_ROOT if it is a directory; else orch_root= from that tree's
+# project.config (absolute, existing directory, not @@TOKEN@@). Never walk to
+# ../.gradle-shared. Fail loud — run ./update-rules.sh from the orchestration root.
+
+ve_resolve_orch_worktree() {
+  if [ -n "${1:-}" ]; then
+    (cd "$1" && pwd)
+    return
+  fi
+  if [ -n "${VE_RESOLVE_ORCH_WT:-}" ]; then
+    (cd "$VE_RESOLVE_ORCH_WT" && pwd)
+    return
+  fi
+  (cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+}
+
+ve_read_orch_root_from_config() {
+  local cfg="$1"
+  local val=""
+  [ -f "$cfg" ] || return 1
+  val=$(sed -n 's/^orch_root=//p' "$cfg" | tr -d '\r' | head -1)
+  [ -n "$val" ] || return 1
+  case "$val" in
+    @@*) return 1 ;;
+    /*) ;;
+    *) return 1 ;;
+  esac
+  [ -d "$val" ] || return 1
+  (cd "$val" && pwd)
+}
+
+# Sets ORCH_ROOT. Optional arg: worktree directory (default: this script's dir).
+ve_resolve_orch() {
+  local wt
+  wt="$(ve_resolve_orch_worktree "${1:-}")" || return 1
+  if [ -n "${ORCH_ROOT:-}" ] && [ -d "${ORCH_ROOT}" ]; then
+    ORCH_ROOT="$(cd "$ORCH_ROOT" && pwd)"
+    return 0
+  fi
+  ORCH_ROOT="$(ve_read_orch_root_from_config "$wt/project.config")" || {
+    echo "ERROR: orch_root unset or invalid in $wt/project.config." >&2
+    echo "  Run ./update-rules.sh from the orchestration root to stamp orch_root=." >&2
+    return 1
+  }
+  return 0
+}
+
+ve_upsert_project_config_key() {
+  local file="$1" key="$2" val="$3"
+  local tmp
+  mkdir -p "$(dirname "$file")"
+  if [ ! -f "$file" ]; then
+    printf '%s=%s\n' "$key" "$val" > "$file"
+    return 0
+  fi
+  if grep -q "^${key}=" "$file"; then
+    tmp="${file}.tmp.$$"
+    sed "s|^${key}=.*|${key}=${val}|" "$file" > "$tmp"
+    mv "$tmp" "$file"
+  else
+    printf '%s=%s\n' "$key" "$val" >> "$file"
+  fi
+}
+
+# Seed/refresh WT project.config: always set orch_root; copy missing keys from orch.
+ve_seed_worktree_project_config() {
+  local wt="$1"
+  local orch="$2"
+  local orch_cfg="${3:-$orch/project.config}"
+  local pc="$wt/project.config"
+  local k v
+  if [ ! -f "$pc" ]; then
+    if [ -f "$orch_cfg" ]; then
+      cp "$orch_cfg" "$pc"
+    elif [ -f "$orch/project.config.example" ]; then
+      cp "$orch/project.config.example" "$pc"
+    else
+      : > "$pc"
+    fi
+  fi
+  ve_upsert_project_config_key "$pc" orch_root "$orch"
+  if [ -f "$orch_cfg" ]; then
+    while IFS='=' read -r k v || [ -n "${k:-}" ]; do
+      k="${k%%#*}"
+      k="${k#"${k%%[![:space:]]*}"}"
+      [[ "$k" =~ ^[a-z_]+$ ]] || continue
+      [ -n "${v:-}" ] || continue
+      if ! grep -q "^${k}=" "$pc"; then
+        printf '%s=%s\n' "$k" "$v" >> "$pc"
+      fi
+    done < "$orch_cfg"
+  fi
+}
+
+if [ "${BASH_SOURCE[0]}" = "$0" ]; then
+  set -euo pipefail
+  ve_resolve_orch "${1:-}" || exit 1
+  printf '%s\n' "$ORCH_ROOT"
+fi
