@@ -331,6 +331,12 @@ FILES=(
     "merge-branch-into-master.sh"
     "hooks/post-checkout"
     "install-refresh-shell.sh"
+  filter-apply-config
+  filter-clean-config
+  project.config.example
+  landlock.config
+  landlock.config.example
+  .gitattributes
 )
 
 # Note: AGENT_CONTEXT.md.template is intentionally NOT synced (per-agent instances are created once by setup_agent).

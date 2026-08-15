@@ -1,37 +1,12 @@
-# Permission filters (smudge/clean for @@ tokens in stamped files)
 # Do NOT apply to the filter scripts themselves to avoid circular "no such file" during initial checkout.
-setup-project filter=manage-configs
-set-worktree-perms filter=manage-configs
-set-sandbox-perms filter=manage-configs
-project.config.example filter=manage-configs
-landlock.config filter=manage-configs
-landlock.config.example filter=manage-configs
 
 # Grok launchers + shared common (pack stack; tokens where present)
-run-grok filter=manage-configs
-run-grok-master filter=manage-configs
-run-grok-planner filter=manage-configs
-run-grok-coder filter=manage-configs
-run-grok-orchestrator filter=manage-configs
-.grok/lib/grok-launch-common.sh filter=manage-configs
 
 # Antigravity launchers (when using @@ / machine paths)
-run-antigravity filter=manage-configs
-run-antigravity-master filter=manage-configs
-run-antigravity-planner filter=manage-configs
-run-antigravity-coder filter=manage-configs
-run-antigravity-orchestrator filter=manage-configs
 
 # third_party pin tooling (paths may include @@GIT_HOME@@)
-third_party/fetch-deps filter=manage-configs
-third_party/get-artifacts filter=manage-configs
-third_party/libpin-landlock filter=manage-configs
-third_party/libpin-bwrap filter=manage-configs
-third_party/libpin-sandbox filter=manage-configs
 
 # Explicitly disable filters on the filter implementation scripts (prevents checkout-time "No such file" errors)
-filter-apply-config !filter
-filter-clean-config !filter
 
 # Special-file merge drivers (install via ./install-merge-drivers.sh / update-rules)
 # ve-englog: append branch tail via append-to-engineering-log (third-version result)
@@ -39,3 +14,29 @@ filter-clean-config !filter
 ENGINEERING_LOG.md merge=ve-englog
 TODO.md merge=ve-special-ours
 project-facts.md merge=ve-special-ours
+
+# manage-configs (smudge/clean @@ tokens) — maintained by deploy-manage-configs-to-libs.sh
+setup-project filter=manage-configs
+set-worktree-perms filter=manage-configs
+set-sandbox-perms filter=manage-configs
+project.config.example filter=manage-configs
+landlock.config filter=manage-configs
+landlock.config.example filter=manage-configs
+run-grok filter=manage-configs
+run-grok-master filter=manage-configs
+run-grok-planner filter=manage-configs
+run-grok-coder filter=manage-configs
+run-grok-orchestrator filter=manage-configs
+.grok/lib/grok-launch-common.sh filter=manage-configs
+run-antigravity filter=manage-configs
+run-antigravity-master filter=manage-configs
+run-antigravity-planner filter=manage-configs
+run-antigravity-coder filter=manage-configs
+run-antigravity-orchestrator filter=manage-configs
+third_party/fetch-deps filter=manage-configs
+third_party/get-artifacts filter=manage-configs
+third_party/libpin-landlock filter=manage-configs
+third_party/libpin-bwrap filter=manage-configs
+third_party/libpin-sandbox filter=manage-configs
+filter-apply-config !filter
+filter-clean-config !filter

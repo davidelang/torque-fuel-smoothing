@@ -90,11 +90,16 @@ fi
 [[ -x "$COMPOSE" ]] || chmod +x "$COMPOSE" 2>/dev/null || true
 
 ANDROID_SHARED=""
-if [[ -d "$SCRIPT_DIR/.android-shared" ]]; then
-  ANDROID_SHARED="$SCRIPT_DIR/.android-shared"
-elif [[ -d "$SCRIPT_DIR/../.android-shared" ]]; then
-  ANDROID_SHARED="$(cd "$SCRIPT_DIR/.." && pwd)/.android-shared"
+if [[ ! -f "$SCRIPT_DIR/ve-resolve-orch" ]]; then
+  echo "ERROR: missing $SCRIPT_DIR/ve-resolve-orch (run ./update-rules.sh from orchestration root)." >&2
+  exit 1
 fi
+# shellcheck source=/dev/null
+. "$SCRIPT_DIR/ve-resolve-orch"
+ve_resolve_orch "$SCRIPT_DIR" || exit 1
+ANDROID_SHARED="$ORCH_ROOT/.android-shared"
+export ORCH_ROOT
+export GRADLE_USER_HOME="$ORCH_ROOT/.gradle-shared"
 
 umask "${umask_launch:-002}"
 
@@ -271,6 +276,31 @@ launch_grok_with_prompt() {
   # GROK_WORKTREE=1|true|name  → pass --worktree[=name] (interactive only; headless -p ignores).
   # Also pass any args after "--" on the launcher (EXTRA_ARGS).
   # Does NOT enable native plan mode or personas.
+  #
+  # Grok 4.6 / Build 1.0: workflows and subagents default ON in the product.
+  # Planner: force both off unless already set (GROK_SUBAGENTS=1 / GROK_WORKFLOWS=1 to override).
+  # Coder: force workflows off only (subagents allowed after approved execute).
+  # Orch / primary / master: leave unset.
+  # sudo -u env does not inherit the parent — must pass these on the env line.
+  case "${ROLE_KEY:-}" in
+    planner)
+      : "${GROK_SUBAGENTS:=0}"
+      : "${GROK_WORKFLOWS:=0}"
+      ;;
+    coder)
+      : "${GROK_WORKFLOWS:=0}"
+      ;;
+  esac
+  local grok_role_env=()
+  if [[ -n "${GROK_SUBAGENTS:-}" ]]; then
+    grok_role_env+=(GROK_SUBAGENTS="${GROK_SUBAGENTS}")
+    echo "GROK_SUBAGENTS=${GROK_SUBAGENTS}"
+  fi
+  if [[ -n "${GROK_WORKFLOWS:-}" ]]; then
+    grok_role_env+=(GROK_WORKFLOWS="${GROK_WORKFLOWS}")
+    echo "GROK_WORKFLOWS=${GROK_WORKFLOWS}"
+  fi
+
   local freeform_args=()
   case "${ROLE_KEY:-}" in
     primary|orchestrator)
@@ -312,8 +342,11 @@ launch_grok_with_prompt() {
   # shellcheck disable=SC2086
   exec sudo -u "$run_user" -- env \
     ${ANDROID_SHARED:+ANDROID_USER_HOME="$ANDROID_SHARED"} \
+    ${ORCH_ROOT:+ORCH_ROOT="$ORCH_ROOT"} \
+    ${GRADLE_USER_HOME:+GRADLE_USER_HOME="$GRADLE_USER_HOME"} \
     GROK_PROMPT_ROOT="$SCRIPT_DIR" \
     GIT_HOME="${GIT_HOME:-}" \
+    ${grok_role_env[@]+"${grok_role_env[@]}"} \
     bash -c 'umask '"${umask_launch:-002}"'; exec "$@"' bash \
       ${landlock_args[@]+"${landlock_args[@]}"} \
       "$GROK_BIN" \
@@ -321,6 +354,7 @@ launch_grok_with_prompt() {
       ${MODEL_ARGS[@]+"${MODEL_ARGS[@]}"} \
       ${TODO_GATE_FLAGS[@]+"${TODO_GATE_FLAGS[@]}"} \
       --no-alt-screen \
+      --minimal \
       ${freeform_args[@]+"${freeform_args[@]}"} \
       ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"}
 }

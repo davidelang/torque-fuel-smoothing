@@ -25,6 +25,11 @@ primary_user=@@PRIMARY_USER@@
 # landlock.config (tracked) is smudged from the same git_home= / @@SANDBOX_PATH@@_path=.
 git_home=@@GIT_HOME@@
 
+# Absolute orchestration root (managing tree). Worktrees do not guess via
+# ../.gradle-shared. update-rules.sh / setup_agent.sh write the real path into
+# gitignored project.config. Runtime: ./ve-resolve-orch or source it.
+orch_root=@@ORCH_ROOT@@
+
 # Special @@SANDBOX_PATH@@ paths (for setup-project to create)
 @@SANDBOX_PATH@@_special_paths=plans,historical-plans,implementation-failure-logs,PRs,research
 
