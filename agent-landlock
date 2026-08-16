@@ -486,21 +486,16 @@ def resolve_grants(
             meta["git_common_dir"] = gcd
         dirs.extend(_libpin_host_gits(worktree, git_home))
         # Only grant profile/build homes that already exist (do not create them).
+        # Worktree homes only — do not grant orch live caches
+        # (Landlock is mutation-only; orch writes from a worktree are unsupported).
         dirs.extend([p for p in profiles if os.path.isdir(p)])
         for cand in (
             worktree / ".android-shared",
-            worktree.parent / ".android-shared",
+            worktree / ".gradle",
+            worktree / ".gradle-home",
         ):
             if cand.is_dir():
                 dirs.append(str(cand.resolve()))
-        gradle = worktree / ".gradle"
-        if gradle.is_dir():
-            dirs.append(str(gradle.resolve()))
-        if orch_root:
-            for name in (".gradle-shared", ".android-shared"):
-                cand = Path(orch_root) / name
-                if cand.is_dir():
-                    dirs.append(str(cand.resolve()))
     elif role == "orchestrator":
         dirs.append(str(worktree))
         dirs.extend(sandbox)
