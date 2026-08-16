@@ -18,4 +18,4 @@ Plans must **cite this file by path** (one line). Do **not** paste this block in
   then `results ready to test (new tag: ...)`.  
   Product-intent chat is human/planner; master Compliance Checker is **optional**. Do not claim product-intent PASS as coder.
 
-- **Standing rules:** `AGENT_MANDATES.md`, `MULTI_AGENT_USER_INSTRUCTIONS.md`, role pack in `AGENTS.md` (re-read on launch, compaction, new cycle — not every turn).
+- **Standing rules:** `AGENT_MANDATES.md`, `MULTI_AGENT_USER_INSTRUCTIONS.md`, role pack in `AGENTS.md` (re-read on launch, **`/compact` or auto-compact**, new cycle, execute start). “Not every turn” never cancels those events.

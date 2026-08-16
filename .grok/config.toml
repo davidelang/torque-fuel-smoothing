@@ -154,14 +154,14 @@ rules = [
   { action = "allow", tool = "write", pattern = "**/project-facts.md" },
   { action = "allow", tool = "write", pattern = "**/current-state.md" },
   { action = "allow", tool = "write", pattern = "**/.agent-state/**" },
+  { action = "allow", tool = "bash", pattern = "./third_party/fetch-deps*" },
+  { action = "allow", tool = "bash", pattern = "./checkifclean*" },
+  { action = "allow", tool = "bash", pattern = "./execute-third-party-plan.sh*" },
 ]
 
 # Project .grok/hooks/ (PreToolUse) provide additional hard enforcement for plan-mode restrictions
 # (path traversal deny outside dev-ai-interaction/, sandbox-only writes in plan, etc.).
 # See .grok/hooks/ for the actual hook implementation(s).
-  { action = "allow", tool = "bash", pattern = "./third_party/fetch-deps*" },
-  { action = "allow", tool = "bash", pattern = "./checkifclean*" },
-  { action = "allow", tool = "bash", pattern = "./execute-third-party-plan.sh*" },
 
 # Project skill policy (startup-rules cleanup 2026-07-13)
 [skills]

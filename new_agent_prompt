@@ -10,7 +10,7 @@ You are in a **Multi-Agent Orchestration** environment.
 4. Confirm `pwd` once. Never prefix helpers with `cd … &&`.
 5. Read the rest of your **role pack** from `AGENTS.md` (planner/coder/master extras).
 
-Do **not** re-read the full pack every turn. After `/compact`, re-read the pack.
+Do **not** re-read the full pack every ordinary turn. After **`/compact` or auto-compact**, re-read the pack on that next turn **before other work** — mid-process is not an exception (`AGENT_MANDATES.md` §10).
 
 **Brief report:**
 

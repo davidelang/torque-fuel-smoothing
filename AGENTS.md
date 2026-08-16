@@ -4,7 +4,7 @@ This file (AGENTS.md) is the entry point for agent CLIs in this multi-agent Vehi
 
 ## Immediate reads (session start / after compact / new cycle)
 
-**Role pack** (full read — not every message):
+**Role pack** (full read on each **event** below — law: `AGENT_MANDATES.md` §10):
 
 1. `./AGENT_CONTEXT.md` — identity, branch/role, sandbox.
 2. CLI overlay: `./GROK.md` or `./GEMINI.md`.
@@ -16,7 +16,11 @@ This file (AGENTS.md) is the entry point for agent CLIs in this multi-agent Vehi
 8. **Master / orch after handoff:** also `MULTI_AGENT_USER_INSTRUCTIONS.md`.
 9. Confirm **`pwd` once** — never `cd … && ./helper` (breaks allow-lists).
 
-**Do not** re-read the full pack every turn. Critical rules are not optional “on demand if you guess.”
+**Events (re-read is mandatory, even mid-process):** launch; **`/compact` or auto-compact** (first turn after); new planning cycle; execute start.
+
+**Skip** only ordinary turns *between* events. “Don’t re-read every turn” **never** cancels a compact. Compacted memory of the pack is untrusted.
+
+Critical rules are not optional “on demand if you guess.”
 
 When **spawning** planner/executor roles, load the full file under `.grok/prompts/` (see AGENT_MANDATES).
 
@@ -36,9 +40,22 @@ When **spawning** planner/executor roles, load the full file under `.grok/prompt
 
 | Enabled (project) | Disabled (do not use for app multi-agent) |
 |-------------------|------------------------------------------|
-| `prepare-local-pr`, `master-merge` | `pr-babysit`, `execute-plan`, `design`, `check-work`, **`implement`** |
+| `prepare-local-pr`, `master-merge`, `rebase-on-master` | `pr-babysit`, `execute-plan`, `design`, `check-work`, **`implement`** |
 
 `/code-review` only when user explicitly wants ambitious restructure (separate planned turn).
+
+## Grok 4.6 / Build 1.0 — VE wins (see `AGENT_MANDATES.md` §3.5a)
+
+| Built-in default | VE |
+|------------------|-----|
+| “Do clear reversible work without asking” | No tracked non-sandbox edits without named-plan magic approval |
+| Native plan **`a`** / `exit_plan_mode` starts building | Not execute. Work plan is only `dev-ai-interaction/plans/…-plan.md` |
+| Subagents on (incl. during planning) | Planner: `GROK_SUBAGENTS=0`. No spawn while planning |
+| Workflows / `/goal` on | Planner + coder: `GROK_WORKFLOWS=0`. Orch/bare may opt in |
+| Shift+Tab → Plan / always-approve | Launchers stay ask. Do not cycle modes on role sessions |
+| `grok -c` uses new default model | `-c` keeps **stored** model; `/model grok-4.6` to switch |
+
+`ask_user_question` stays on; answers are not approval.
 
 ## Key file disambiguation
 

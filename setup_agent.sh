@@ -1,26 +1,47 @@
 #!/bin/bash
 # setup_agent.sh: Automate creation of agent worktrees
 # Usage (from orchestration root):
-#   ./setup_agent.sh branch-name
-#   source ./setup_agent.sh branch-name   # same end state
+#   ./setup_agent.sh [--force] branch-name
+#   source ./setup_agent.sh [--force] branch-name   # same end state
+# --force: overwrite dest tracked seed files that differ from orch.
 #
 # On success: exec a new interactive shell in the new worktree with project
-# environment (umask 002 + full groups via refresh-shell, same as env).
+# environment (umask 002 + full groups via ve-refresh-shell, same as ve-env).
 # That replaces this terminal only (other GUI apps stay open).
 #
 # Always run from the orchestration root.
 # Ensures the new worktree is fully permissioned (setgid dirs, log/wrapper,
-# run-as-primary, refresh-shell, etc.) so agents can start immediately.
+# run-as-primary, ve-refresh-shell, etc.) so agents can start immediately.
 
-BRANCH_NAME=$1
+SETUP_FORCE=0
+BRANCH_NAME=""
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -f|--force) SETUP_FORCE=1; shift ;;
+        -h|--help)
+            echo "Usage: ./setup_agent.sh [--force] branch-name"
+            echo "  --force  overwrite dest seed files that differ from orch"
+            return 1 2>/dev/null || exit 1
+            ;;
+        *)
+            if [ -z "$BRANCH_NAME" ]; then
+                BRANCH_NAME="$1"
+            else
+                echo "Error: unexpected argument: $1"
+                return 1 2>/dev/null || exit 1
+            fi
+            shift
+            ;;
+    esac
+done
 
 if [ -z "$BRANCH_NAME" ]; then
-    echo "Usage: source ./setup_agent.sh branch-name   # or: ./setup_agent.sh branch-name"
+    echo "Usage: source ./setup_agent.sh [--force] branch-name   # or: ./setup_agent.sh [--force] branch-name"
     # When sourced, exit would kill the shell — use return if possible
     return 1 2>/dev/null || exit 1
 fi
 
-# So post-checkout does not run fix-perms --all mid-setup or warn about gitignored project.config
+# So post-checkout is a no-op mid-setup (hook no longer runs fix-perms; still skip until seeded)
 export VE_SETUP_AGENT=1
 # shellcheck disable=SC2064
 trap 'unset VE_SETUP_AGENT' EXIT
@@ -102,7 +123,7 @@ fi
 ORCH_ROOT="$(pwd)"
 
 # Ensure shared git hooks are executable BEFORE worktree add / checkout.
-# fix-perms historically chmod 660'd all of .git (strips +x); post-checkout must run.
+# fix-perms must not assign ai-code to common .git; hooks no longer re-run fix-perms.
 ensure_common_hooks_executable() {
   local common hooks
   common=$(git rev-parse --git-common-dir 2>/dev/null || echo .git)
@@ -169,20 +190,49 @@ fi
 # Files that use filter=manage-configs (see .gitattributes). Smudge substitutes @@ tokens.
 STAMPED_FILES=(
   run-grok run-grok-master run-grok-planner run-grok-coder run-grok-orchestrator
-  env
+  ve-env
   setup-project set-worktree-perms set-sandbox-perms
 )
+
+# Copy orch seed only if dest missing, identical, or SETUP_FORCE=1.
+# After checkout, dest is the branch file — do not silently clobber worktree-ahead.
+copy_orch_seed_file() {
+  local src="$1" dest="$2"
+  if [ ! -f "$src" ]; then
+    return 0
+  fi
+  if [ ! -f "$dest" ]; then
+    cp "$src" "$dest"
+    return 0
+  fi
+  if cmp -s "$src" "$dest"; then
+    return 0
+  fi
+  if [ "${SETUP_FORCE:-0}" -eq 1 ]; then
+    echo "  seed: FORCE overwrite $dest"
+    cp "$src" "$dest"
+    return 0
+  fi
+  echo "  SKIP seed $dest — differs from orch (pass --force to overwrite)"
+}
 
 seed_smudge_inputs() {
   local orch_root="$1"
   if [ -f "$orch_root/project.config" ]; then
     cp "$orch_root/project.config" ./project.config
   fi
-  for f in filter-apply-config filter-clean-config; do
-    if [ -f "$orch_root/$f" ]; then
-      cp "$orch_root/$f" "./$f"
-    fi
+  for f in filter-apply-config filter-clean-config ve-resolve-orch; do
+    copy_orch_seed_file "$orch_root/$f" "./$f"
   done
+  if [ -f ./ve-resolve-orch ]; then
+    # shellcheck source=/dev/null
+    . ./ve-resolve-orch
+    ve_upsert_project_config_key ./project.config orch_root "$orch_root"
+  elif [ -f "$orch_root/ve-resolve-orch" ]; then
+    # shellcheck source=/dev/null
+    . "$orch_root/ve-resolve-orch"
+    ve_upsert_project_config_key ./project.config orch_root "$orch_root"
+  fi
 }
 
 re_smudge_stamped_files() {
@@ -211,7 +261,7 @@ re_smudge_stamped_files() {
     mv "$tmp" "$f"
     mode=$(git ls-tree HEAD "$f" | awk '{print $1}')
     case "$mode" in
-      100755|100775) chmod +x "$f" ;;
+      100755|100775) chmod a+x "$f" ;;
     esac
   done
 }
@@ -251,7 +301,7 @@ seed_smudge_inputs "$ORCH_ROOT"
 
 # After --no-checkout the index is empty; 'git checkout .' matches nothing.
 # Bypass git smudge on bulk checkout — feature branches may carry broken filter scripts.
-# VE_SETUP_AGENT=1 makes post-checkout a no-op (avoids mid-setup sudo fix-perms --all).
+# VE_SETUP_AGENT=1 makes post-checkout a no-op during worktree populate.
 if ! git -c filter.manage-configs.smudge=cat -c filter.manage-configs.clean=cat checkout HEAD -- .; then
   echo "Error: Failed to populate worktree (git checkout HEAD -- .)."
   cd ..
@@ -324,16 +374,14 @@ PARENT_ROOT=".."
 
 # Copy latest authoritative copies of key permission/infra files from orchestration root
 # (ensures even if the branch tip was slightly behind, the tree is current)
-for f in append-to-engineering-log run-as-primary.c env refresh-shell.c; do
-  if [ -f "$PARENT_ROOT/$f" ]; then
-    cp -p "$PARENT_ROOT/$f" "$AGENT_ABS/$f" 2>/dev/null || true
-  fi
+for f in append-to-engineering-log run-as-primary.c ve-env ve-refresh-shell.c; do
+  copy_orch_seed_file "$PARENT_ROOT/$f" "$AGENT_ABS/$f"
 done
 # Launchers often live only on orchestration until update-rules; seed common ones
 for f in run-grok-coder run-grok-orchestrator run-grok-master run-grok-planner; do
   if [ -f "$PARENT_ROOT/$f" ] && [ ! -f "$AGENT_ABS/$f" ]; then
     cp -p "$PARENT_ROOT/$f" "$AGENT_ABS/$f" 2>/dev/null || true
-    chmod +x "$AGENT_ABS/$f" 2>/dev/null || true
+    chmod a+x "$AGENT_ABS/$f" 2>/dev/null || true
   fi
 done
 
@@ -352,7 +400,7 @@ cd "$ORCH_ROOT" || cd "$PARENT_ROOT" || true
 # Use unified fix-perms for the new tree (pass --skip-sudoers so sudoers rules
 # are only (re)installed at true initial setup-project time).
 # Silent on success (no output if it works).
-# Note: fix-perms blanket-chmods .git then restores hook +x (ensure_git_hooks_executable).
+# Scoped recovery for the new worktree only (fix-perms excludes common .git from ai-code chown).
 sudo ./fix-perms --skip-sudoers "$AGENT_ABS" 2>/dev/null || true
 
 # Re-lock setuid binaries silently (in case not covered).
@@ -361,24 +409,24 @@ if [ -f "$AGENT_ABS/run-as-primary" ]; then
   chmod 4755 "$AGENT_ABS/run-as-primary" 2>/dev/null || true
 fi
 
-# refresh-shell: build + setuid-root in orch AND this agent worktree (not in git).
+# ve-refresh-shell: build + setuid-root in orch AND this agent worktree (not in git).
 # One sudo password may be requested. Never leave setuid on non-root owner.
-if [ -x "$ORCH_ROOT/install-refresh-shell.sh" ]; then
-  echo "Installing refresh-shell (setuid root) in orch + worktree..."
-  "$ORCH_ROOT/install-refresh-shell.sh" "$ORCH_ROOT" 2>/dev/null || \
-    sudo "$ORCH_ROOT/install-refresh-shell.sh" "$ORCH_ROOT" 2>/dev/null || true
-  "$ORCH_ROOT/install-refresh-shell.sh" "$AGENT_ABS" 2>/dev/null || \
-    sudo "$ORCH_ROOT/install-refresh-shell.sh" "$AGENT_ABS" 2>/dev/null || true
+if [ -x "$ORCH_ROOT/install-ve-refresh-shell.sh" ]; then
+  echo "Installing ve-refresh-shell (setuid root) in orch + worktree..."
+  "$ORCH_ROOT/install-ve-refresh-shell.sh" "$ORCH_ROOT" 2>/dev/null || \
+    sudo "$ORCH_ROOT/install-ve-refresh-shell.sh" "$ORCH_ROOT" 2>/dev/null || true
+  "$ORCH_ROOT/install-ve-refresh-shell.sh" "$AGENT_ABS" 2>/dev/null || \
+    sudo "$ORCH_ROOT/install-ve-refresh-shell.sh" "$AGENT_ABS" 2>/dev/null || true
 else
   # Fallback inline install
   for _dest in "$ORCH_ROOT" "$AGENT_ABS"; do
-    [ -f "$_dest/refresh-shell.c" ] || continue
-    (cd "$_dest" && gcc -O2 -Wall -o refresh-shell refresh-shell.c) 2>/dev/null || true
-    if [ -f "$_dest/refresh-shell" ]; then
-      if sudo chown root:root "$_dest/refresh-shell" 2>/dev/null; then
-        sudo chmod 4755 "$_dest/refresh-shell" 2>/dev/null || true
+    [ -f "$_dest/ve-refresh-shell.c" ] || continue
+    (cd "$_dest" && gcc -O2 -Wall -o ve-refresh-shell ve-refresh-shell.c) 2>/dev/null || true
+    if [ -f "$_dest/ve-refresh-shell" ]; then
+      if sudo chown root:root "$_dest/ve-refresh-shell" 2>/dev/null; then
+        sudo chmod 4755 "$_dest/ve-refresh-shell" 2>/dev/null || true
       else
-        chmod 755 "$_dest/refresh-shell" 2>/dev/null || true
+        chmod 755 "$_dest/ve-refresh-shell" 2>/dev/null || true
       fi
     fi
   done
@@ -391,7 +439,19 @@ ensure_common_hooks_executable
 if [ -x "$ORCH_ROOT/install-merge-drivers.sh" ]; then
   (cd "$ORCH_ROOT" && ./install-merge-drivers.sh >/dev/null) || true
 fi
-chmod +x "$AGENT_ABS/git-merge-drivers/"* "$AGENT_ABS/install-merge-drivers.sh" "$AGENT_ABS/merge-branch-into-master.sh" 2>/dev/null || true
+chmod a+x "$AGENT_ABS/git-merge-drivers/"* "$AGENT_ABS/install-merge-drivers.sh" "$AGENT_ABS/merge-branch-into-master.sh" 2>/dev/null || true
+if ! type ve_ensure_tracked_exec_other_x >/dev/null 2>&1; then
+  if [ -f "$ORCH_ROOT/ve-resolve-orch" ]; then
+    # shellcheck source=/dev/null
+    . "$ORCH_ROOT/ve-resolve-orch"
+  elif [ -f "$AGENT_ABS/ve-resolve-orch" ]; then
+    # shellcheck source=/dev/null
+    . "$AGENT_ABS/ve-resolve-orch"
+  fi
+fi
+if type ve_ensure_tracked_exec_other_x >/dev/null 2>&1; then
+  ve_ensure_tracked_exec_other_x "$AGENT_ABS"
+fi
 
 # CRITICAL: seed/smudge/copy of tracked files must not leave the agent worktree dirty,
 # or ./build_app will refuse (uncommitted tracked files gate). Commit if needed.
@@ -402,7 +462,7 @@ chmod +x "$AGENT_ABS/git-merge-drivers/"* "$AGENT_ABS/install-merge-drivers.sh" 
     git add -u 2>/dev/null || true
     # Newly copied tracked scripts may be untracked if not on branch tip yet
     git add -A -- \
-      env deploy build_app setup_agent.sh fix-perms update-rules.sh \
+      ve-env deploy build_app setup_agent.sh fix-perms update-rules.sh \
       append-to-engineering-log get-builds-tag.sh install-*.sh \
       git-merge-drivers hooks AGENT_MANDATES.md AGENTS.md GROK.md \
       standard-plan-compliance-block.md project-facts.md 2>/dev/null || true
@@ -412,23 +472,23 @@ chmod +x "$AGENT_ABS/git-merge-drivers/"* "$AGENT_ABS/install-merge-drivers.sh" 
   fi
 )
 
-# --- Enter new worktree shell (env semantics) ---
+# --- Enter new worktree shell (ve-env semantics) ---
 # Replace this process with an interactive shell in AGENT_ABS, umask 002, full
-# project groups when refresh-shell is installed setuid (same as source ./env).
+# project groups when ve-refresh-shell is installed setuid (same as source ./ve-env).
 unset VE_SETUP_AGENT
 trap - EXIT
 
 echo "Worktree ready: $AGENT_ABS"
 echo "Branch: $BRANCH_NAME  Agent ID: $AGENT_ID"
 echo "Next: run a launcher from here, e.g.  ../run-grok-coder   or   ../run-grok-planner"
-echo "Entering worktree shell (umask 002 + project groups via env helper)..."
+echo "Entering worktree shell (umask 002 + project groups via ve-env helper)..."
 
-export ENV_CWD="$AGENT_ABS"
+export VE_ENV_CWD="$AGENT_ABS"
 umask 002
 
-# Prefer setuid-root helper only (setuid+non-root owner is unsafe — see env)
+# Prefer setuid-root helper only (setuid+non-root owner is unsafe — see ve-env)
 REFRESH=""
-for _vrs in "$ORCH_ROOT/refresh-shell" "$AGENT_ABS/refresh-shell"; do
+for _vrs in "$ORCH_ROOT/ve-refresh-shell" "$AGENT_ABS/ve-refresh-shell"; do
   if [ -x "$_vrs" ] && [ -u "$_vrs" ] && [ "$(stat -c '%U' "$_vrs" 2>/dev/null)" = "root" ]; then
     REFRESH="$_vrs"
     break
@@ -440,9 +500,9 @@ if [ -n "$REFRESH" ]; then
 fi
 
 # Fallback: interactive shell in worktree with umask 002 (groups may still be stale)
-echo "NOTE: refresh-shell not setuid yet — shell may lack project groups."
-echo "  One-time: gcc -O2 -Wall -o refresh-shell refresh-shell.c && sudo chown root:root refresh-shell && sudo chmod 4755 refresh-shell"
-echo "  Then: source ./env"
+echo "NOTE: ve-refresh-shell not setuid yet — shell may lack project groups."
+echo "  One-time: gcc -O2 -Wall -o ve-refresh-shell ve-refresh-shell.c && sudo chown root:root ve-refresh-shell && sudo chmod 4755 ve-refresh-shell"
+echo "  Then: source ./ve-env"
 cd "$AGENT_ABS" || {
   echo "ERROR: cannot cd to $AGENT_ABS"
   return 1 2>/dev/null || exit 1

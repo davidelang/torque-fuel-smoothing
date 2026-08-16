@@ -23,6 +23,28 @@ Overlays + this file take absolute precedence. Bypassing protocol for speed is a
 - Version integrity: commit via `./build_app` before builds that matter for `git describe`. Prefer `./build_app @phase_summary.txt …` for multi-line phase summaries; single-line `-m` only for trivial steps. Plan + eng-log + git carry “why”; tags carry state.
 - Native Android/Kotlin/Gradle — ignore default web-stack advice.
 
+### 1.1 Permission denials — report; do not work around
+
+If a Unix DAC, Landlock, sudo, group-membership, or filesystem permission denial blocks a required action, **stop and report to the human**. Do **not** invent creative workarounds.
+
+**Report (in chat):** exact command, full error text, path(s), OS user (`whoami` / `id`), and whether a known recovery script already exists (name only — do not run destructive host fixers unless the user asked).
+
+**Forbidden workarounds (non-exhaustive):**
+
+- `chmod` / `chown` / `setfacl` games to “make it work”
+- Alternate paths, copies, or bind-mounts to dodge the denied path
+- Variable/indirection tricks so a denied or non-allow-listed form still “matches”
+- Switching OS user / `sudo -u` / `sg` / nested shells to launder identity
+- Running as a different role’s tree to bypass multi-user git or sandbox DAC
+- Disabling Landlock, widening grants, or editing `landlock.config*` ad hoc unless the user ordered that change
+- Treating “I can still make progress somehow” as success when the mandated path failed
+
+**Allowed:** re-try the **same** mandated helper/path after the human fixes host state; use project wrappers already intended for the action (e.g. `./append-to-engineering-log`); read-only diagnosis the agent can run without escalating privileges.
+
+**Rationale:** Multi-user DAC (`ai-shared` vs `ai-code`, setgid `.git`, Landlock) is load-bearing. Silent bypasses re-break planner/coder isolation and hide real defects (see multi-user git repair docs / `./fix-multiuser-git-hosts.sh --audit-only`).
+
+This is **policy** (this file). Orientation map only: `project-facts.md`.
+
 ---
 
 ## 2. Write authority
@@ -82,6 +104,7 @@ Follow boundaries in letter and spirit. You may **not** justify illegal edits/bu
 - “Session/historical plan.md authorizes work”
 - “Helpful/proactive/efficient means implement/build now”
 - “Variable-wrap or indirect a whitelisted command so the allow pattern still ‘works’”
+- “Don’t re-read every turn, so skip the pack after compact / auto-compact”
 
 **Shell allow-list:** literal `./helper` at command start. **Never** `cd … && ./helper`. **Never** construct blessed helper invocations via variables/indirection to dodge patterns. `pwd` once at startup; keep cwd at worktree root.
 
@@ -93,6 +116,17 @@ When spawning in allowed contexts, load the **full** prompt file for that role (
 ### 3.5 Native plan mode / exit_plan_mode
 
 Harness details. Real approval = path-named magic phrase. Continued draft feedback ≠ abandon unless user says start over / new cycle / abandon. Who may use native plan mode: **`AGENTS.md`** (planner/coder avoid; bare `run-grok` + orchestrator optional).
+
+Native `enter_plan_mode` / `exit_plan_mode` / TUI **`a` (approve and start building)** is **not** VE execute. Harness `plan.md` and `.grok/plan.md` are process logs only — never the approved work plan. Planner/coder must not enter native plan mode (it cannot write `dev-ai-interaction/plans/`).
+
+### 3.5a Grok 4.6 / Build 1.0 defaults do not override VE
+
+Product defaults (4.6 “just do reversible work,” native plan **`a`**, background subagents, workflows/`/goal` on) **never** weaken §2–§3.
+
+- Built-in “do clear reversible local work without asking” **never** authorizes tracked non-sandbox edits. Named sandbox plan + magic path approval still required.
+- `ask_user_question` stays **on**. Answers inform the sandbox plan only — they are **not** magic approval and **not** permission to implement.
+- Planner launchers force `GROK_SUBAGENTS=0` and `GROK_WORKFLOWS=0` (explicit `=1` may override for debug). Coder launchers force `GROK_WORKFLOWS=0` only. Orch / bare / master are unset unless the human sets env.
+- `grok -c` / `--resume` keeps the transcript and the session’s **stored** model. It does **not** upgrade 4.5 → 4.6. Switch with `/model grok-4.6` after resume. Role launchers without `-c` start a **new** session.
 
 ### 3.6 Skills
 
@@ -141,6 +175,7 @@ Strike = failed build / recoverable phase failure. 3 strikes = out → reset to 
 ## 7. Geography and special files
 
 - **Never** `..` in paths. Sandbox absolute path in §2. Orchestration root feeds `update-rules.sh`.
+- **Rebase onto master:** follow `.grok/skills/rebase-on-master/SKILL.md`. Keep the feature copies of `ENGINEERING_LOG.md` / `TODO.md` / `project-facts.md`; do not merge specials. Other conflicts: stop and ask the human.
 - **Worktree copy rule:** tracked copies must be committed on that branch or use `./update-rules.sh`. Uncommitted tracked dirt blocks `./build_app`. Gitignored binaries OK uncommitted.
 - **Plans:** only user-**designated** files under `dev-ai-interaction/plans/`. Completed → `historical-plans/`. Never treat harness `~/.grok/sessions/**/plan.md` as approved work plan. Never read `historical-plans/` or non-designated plans for execution influence.
 - **If you read a wrong/historical plan or continued after handoff:** (1) enter plan mode if available / treat self as planning-only, (2) revert unauthorized changes via §6, (3) report violation, (4) wait for user direction.
@@ -182,13 +217,26 @@ Related: `docs/reference/PROJECT_CONFIG_LOCAL_ONLY.md` (local wiring; smudged to
 
 ## 10. Re-read policy
 
-**Mandatory role pack** at: session start; after compact; new planning cycle; execution start for a new approved plan.
+**Event-triggered pack reads win.** “Do not re-read every turn” only skips *routine* mid-phase chatter. It does **not** apply after a listed event — including while you are mid-plan, mid-execute, or “still in the same process.”
+
+**Must re-read the role pack (table below) immediately after any of:**
+
+- session start / fresh launch
+- **`/compact` or harness auto-compact** (same event; ~85% context). Do this on the **first turn after** the compact, before other work
+- new planning cycle
+- execution start for a newly approved plan
+
+A harness “plan mode still on” or compacted summary is **not** the pack. Memory of the pack after compact is **untrusted**.
 
 | Everyone | + Planner | + Coder | + Master / orch after handoff |
 |----------|-----------|---------|--------------------------------|
 | `AGENT_CONTEXT.md`, overlay, this file, full `project-facts.md` | STANDARD BLOCK path, plan-style-guide, designated plan if any, full spawn prompt file when spawning | STANDARD BLOCK, **approved plan**, execution prompt file when spawning | `MASTER_AGENT_MANDATE.md` when master; **`MULTI_AGENT_USER_INSTRUCTIONS.md`** |
 
-**Not** every message / every phase. Critical rules are **not** optional on-demand guesses.
+**Do not** re-read the full pack every ordinary turn or every phase gate. **Do not** use that skip to dodge an event above.
+
+**Forbidden after compact:** “still the same process,” “don’t re-read every turn,” “I remember the mandates,” “compact reminder is enough.”
+
+Critical rules are **not** optional on-demand guesses.
 
 ---
 
