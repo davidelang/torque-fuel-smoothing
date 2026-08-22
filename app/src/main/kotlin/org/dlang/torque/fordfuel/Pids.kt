@@ -3,6 +3,7 @@ package org.dlang.torque.fordfuel
 import org.prowl.torque.remote.ITorqueService
 
 internal object Pids {
+    const val PREFIX = "org.dlang.torque.fordfuel."
     const val FORD_FUEL_NAME = "[FORD]Fuel Level"
     const val FORD_FUEL_STORED = "2234049"
     const val SPEED = "0d"

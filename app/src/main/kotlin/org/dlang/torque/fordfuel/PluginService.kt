@@ -18,14 +18,20 @@ import org.prowl.torque.remote.ITorqueService
 class PluginService : Service() {
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var sessions: SessionStore
+    private val math = FuelMath()
     private var torque: ITorqueService? = null
     private var bound = false
     private var fordPid: String? = null
     private var speedPid: String? = null
     private var fuelUsedPid: String? = null
     private var fuelUsedUnit: String = "gal"
+    private var mpgPid: String? = null
+    private var mpgUnit: String = "mpg"
     private var lastRawPct: Double? = null
+    private var lastAuthPct: Double? = null
+    private var lastSliderPct: Double? = null
     private var lastEcuConnected: Boolean? = null
+    private var sliderWritable: Boolean? = null
 
     private val poll = object : Runnable {
         override fun run() {
@@ -107,9 +113,14 @@ class PluginService : Service() {
             val info = runCatching { t.getPIDInformation(arrayOf(id))?.firstOrNull() }.getOrNull()
             fuelUsedUnit = Pids.csvUnit(info)
         }
+        mpgPid = runCatching { Pids.pickExisting(t, Pids.LONG_TERM_MPG) }.getOrNull() ?: Pids.LONG_TERM_MPG
+        mpgPid?.let { id ->
+            val info = runCatching { t.getPIDInformation(arrayOf(id))?.firstOrNull() }.getOrNull()
+            mpgUnit = Pids.csvUnit(info)
+        }
         Log.i(
             TAG,
-            "pids ford=${fordPid ?: "UNRESOLVED"} speed=$speedPid fuelUsed=$fuelUsedPid unit=$fuelUsedUnit",
+            "pids ford=${fordPid ?: "UNRESOLVED"} speed=$speedPid fuelUsed=$fuelUsedPid unit=$fuelUsedUnit mpg=$mpgPid",
         )
     }
 
@@ -130,7 +141,7 @@ class PluginService : Service() {
         if (sessions.isOpen) {
             val absUsed = fuelUsedPid?.let { readDouble(t, it) }
             val relUsed = if (absUsed == null) {
-                sessions.fuelUsedOriginGal?.let { 0.0 } ?: 0.0
+                0.0
             } else {
                 sessions.relativeFuelUsed(Units.toGallons(absUsed, fuelUsedUnit))
             }
@@ -144,17 +155,15 @@ class PluginService : Service() {
                 ),
             )
         }
-        runCatching {
-            t.setPIDInformation(
-                Pids.PLUGIN_FORD,
-                "PFord",
-                "%",
-                100f,
-                0f,
-                raw.toFloat(),
-                null,
-            )
-        }
+        val smoothed = math.smooth(raw)
+        val auth = math.mappedPct(smoothed, emptyList())
+        lastAuthPct = auth
+        val remain = math.remainingGal(auth, emptyList())
+        val mpgRaw = mpgPid?.let { readDouble(t, it) }
+        val mpg = mpgRaw?.let { FuelMath.mpgFrom(it, mpgUnit) } ?: 0.0
+        val dte = math.dteMiles(remain, mpg)
+        publish(t, raw, smoothed, auth, remain, dte)
+        maybeSyncSlider(t, auth)
         goForeground(statusText())
     }
 
@@ -168,8 +177,44 @@ class PluginService : Service() {
         }
     }
 
+    private fun publish(
+        t: ITorqueService,
+        raw: Double,
+        smoothed: Double,
+        auth: Double,
+        remain: Double,
+        dte: Double,
+    ) {
+        runCatching {
+            t.setPIDInformation(Pids.PLUGIN_FORD, "PFord", "%", 100f, 0f, raw.toFloat(), null)
+            t.setPIDInformation(Pids.PLUGIN_SMOOTHED, "SmFuel", "%", 100f, 0f, smoothed.toFloat(), null)
+            t.setPIDInformation(Pids.PLUGIN_REMAINING, "GalLeft", "gal", Units.TANK_GAL.toFloat(), 0f, remain.toFloat(), null)
+            t.setPIDInformation(Pids.PLUGIN_DTE, "pDTE", "mi", 500f, 0f, dte.toFloat(), null)
+            t.setPIDInformation(Pids.FORD_FUEL_NAME, "Fuel", "%", 100f, 0f, auth.toFloat(), null)
+        }
+    }
+
+    private fun maybeSyncSlider(t: ITorqueService, auth: Double) {
+        if (!FuelMath.crossedOnePercent(lastSliderPct, auth)) return
+        lastSliderPct = auth
+        runCatching {
+            t.storeInProfile("${Pids.PREFIX}authoritativePct", auth.toString(), true)
+        }
+        val rc = runCatching { t.storeInProfile("tankUsed", auth.toString(), true) }.getOrNull()
+        if (sliderWritable == null) {
+            sliderWritable = rc == 0
+            Log.i(
+                TAG,
+                "tankUsed storeInProfile rc=$rc writable=$sliderWritable " +
+                    "(public API historically cannot write Torque's slider; Overrides PID + setPIDInformation is the DTE path)",
+            )
+        }
+    }
+
     private fun openSession() {
         if (sessions.isOpen) closeSession()
+        math.reset()
+        lastSliderPct = null
         val id = sessions.open()
         Log.i(TAG, "session open $id files=${sessions.sessionCount()}")
     }
@@ -192,7 +237,7 @@ class PluginService : Service() {
         val sid = sessions.sessionId
         return buildString {
             if (p == null) append("Waiting for [FORD]Fuel Level")
-            else append("Ford FLI ${"%.1f".format(p)}%")
+            else append("Ford ${"%.1f".format(p)}% auth ${"%.1f".format(lastAuthPct ?: p)}%")
             if (sid != null) append(" sess ${sid.takeLast(8)}")
         }
     }
