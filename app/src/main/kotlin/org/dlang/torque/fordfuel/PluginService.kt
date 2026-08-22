@@ -17,10 +17,15 @@ import org.prowl.torque.remote.ITorqueService
 
 class PluginService : Service() {
     private val handler = Handler(Looper.getMainLooper())
+    private lateinit var sessions: SessionStore
     private var torque: ITorqueService? = null
     private var bound = false
     private var fordPid: String? = null
+    private var speedPid: String? = null
+    private var fuelUsedPid: String? = null
+    private var fuelUsedUnit: String = "gal"
     private var lastRawPct: Double? = null
+    private var lastEcuConnected: Boolean? = null
 
     private val poll = object : Runnable {
         override fun run() {
@@ -40,7 +45,9 @@ class PluginService : Service() {
 
         override fun onServiceDisconnected(name: ComponentName?) {
             Log.w(TAG, "Torque disconnected")
+            closeSession()
             torque = null
+            lastEcuConnected = null
             handler.removeCallbacks(poll)
             handler.postDelayed({ bindTorque() }, 2000)
         }
@@ -48,12 +55,17 @@ class PluginService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        sessions = SessionStore(this)
         ensureChannel()
         goForeground("Binding to Torque…")
         bindTorque()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        when (intent?.action) {
+            ACTION_OBD_CONNECTED -> onEcu(true)
+            ACTION_OBD_DISCONNECTED -> onEcu(false)
+        }
         goForeground(statusText())
         if (!bound) bindTorque()
         return START_STICKY
@@ -61,6 +73,7 @@ class PluginService : Service() {
 
     override fun onDestroy() {
         handler.removeCallbacks(poll)
+        closeSession()
         if (bound) {
             runCatching { unbindService(connection) }
             bound = false
@@ -86,16 +99,51 @@ class PluginService : Service() {
     private fun resolvePids() {
         val t = torque ?: return
         fordPid = runCatching { Pids.resolveFordFuel(t) }.getOrNull()
-        Log.i(TAG, "Ford FLI pid=${fordPid ?: "UNRESOLVED"}")
+        speedPid = runCatching { Pids.pickExisting(t, Pids.SPEED) }.getOrNull() ?: Pids.SPEED
+        fuelUsedPid = runCatching {
+            Pids.pickExisting(t, Pids.FUEL_USED_TRIP, Pids.FUEL_USED_SESSION)
+        }.getOrNull()
+        fuelUsedPid?.let { id ->
+            val info = runCatching { t.getPIDInformation(arrayOf(id))?.firstOrNull() }.getOrNull()
+            fuelUsedUnit = Pids.csvUnit(info)
+        }
+        Log.i(
+            TAG,
+            "pids ford=${fordPid ?: "UNRESOLVED"} speed=$speedPid fuelUsed=$fuelUsedPid unit=$fuelUsedUnit",
+        )
     }
 
     private fun sampleOnce() {
         val t = torque ?: return
+        val ecu = runCatching { t.isConnectedToECU }.getOrNull()
+        if (ecu != null && ecu != lastEcuConnected) {
+            onEcu(ecu)
+        }
         if (fordPid == null) resolvePids()
         val pid = fordPid ?: return
         val raw = readDouble(t, pid) ?: return
         if (raw < 0.0 || raw > 100.0) return
         lastRawPct = raw
+        if (ecu == true && !sessions.isOpen) {
+            openSession()
+        }
+        if (sessions.isOpen) {
+            val absUsed = fuelUsedPid?.let { readDouble(t, it) }
+            val relUsed = if (absUsed == null) {
+                sessions.fuelUsedOriginGal?.let { 0.0 } ?: 0.0
+            } else {
+                sessions.relativeFuelUsed(Units.toGallons(absUsed, fuelUsedUnit))
+            }
+            val speed = speedPid?.let { readDouble(t, it) } ?: 0.0
+            sessions.append(
+                Sample(
+                    t = System.currentTimeMillis(),
+                    rawPct = raw,
+                    fuelUsedGal = relUsed,
+                    speed = speed,
+                ),
+            )
+        }
         runCatching {
             t.setPIDInformation(
                 Pids.PLUGIN_FORD,
@@ -107,7 +155,29 @@ class PluginService : Service() {
                 null,
             )
         }
-        goForeground("Ford FLI ${"%.1f".format(raw)}%")
+        goForeground(statusText())
+    }
+
+    private fun onEcu(connected: Boolean) {
+        if (lastEcuConnected == connected) return
+        lastEcuConnected = connected
+        if (connected) {
+            openSession()
+        } else {
+            closeSession()
+        }
+    }
+
+    private fun openSession() {
+        if (sessions.isOpen) closeSession()
+        val id = sessions.open()
+        Log.i(TAG, "session open $id files=${sessions.sessionCount()}")
+    }
+
+    private fun closeSession() {
+        if (!sessions.isOpen) return
+        val n = sessions.close().size
+        Log.i(TAG, "session close samples=$n files=${sessions.sessionCount()}")
     }
 
     private fun readDouble(t: ITorqueService, pid: String): Double? {
@@ -119,7 +189,12 @@ class PluginService : Service() {
 
     private fun statusText(): String {
         val p = lastRawPct
-        return if (p == null) "Waiting for [FORD]Fuel Level" else "Ford FLI ${"%.1f".format(p)}%"
+        val sid = sessions.sessionId
+        return buildString {
+            if (p == null) append("Waiting for [FORD]Fuel Level")
+            else append("Ford FLI ${"%.1f".format(p)}%")
+            if (sid != null) append(" sess ${sid.takeLast(8)}")
+        }
     }
 
     private fun ensureChannel() {
@@ -158,5 +233,7 @@ class PluginService : Service() {
         private const val CHANNEL_ID = "fordfuel"
         private const val NOTIF_ID = 350
         private const val POLL_MS = 1000L
+        const val ACTION_OBD_CONNECTED = "org.prowl.torque.OBD_CONNECTED"
+        const val ACTION_OBD_DISCONNECTED = "org.prowl.torque.OBD_DISCONNECTED"
     }
 }
