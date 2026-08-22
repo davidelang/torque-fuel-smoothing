@@ -1,7 +1,8 @@
-# project-facts.md — orchestration-example
+# project-facts.md — torque-ford-gas-tracking
 
-- Host: pure multi-agent orchestration template (no app)
-- Sandbox: `sandbox/`
-- git_home: set in project.config to absolute path (e.g. /home/dlang/git)
+- Host: multi-agent host cloned from orchestration-example
+- Sandbox: `sandbox/` (absolute: /home/dlang/git/torque-ford-gas-tracking/sandbox/)
+- Layout: `/home/dlang/git/torque-ford-gas-tracking/` branch `orchestration`; `/home/dlang/git/torque-ford-gas-tracking/master/` branch `master`
+- git_home: /home/dlang/git
 - Launch: `./run-grok-*` via `.grok/lib/grok-launch-common.sh` + `agent-landlock`
 - Groups: source `./env` (refresh-shell setuid)
