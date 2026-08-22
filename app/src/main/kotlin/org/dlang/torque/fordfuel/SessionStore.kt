@@ -1,6 +1,7 @@
 package org.dlang.torque.fordfuel
 
 import android.content.Context
+import android.util.Log
 import org.json.JSONObject
 import java.io.File
 import java.util.UUID
@@ -15,6 +16,12 @@ internal data class Sample(
 internal class SessionStore(context: Context) {
     private val dir = File(context.filesDir, "sessions").apply { mkdirs() }
     private val snapshotFile = File(context.filesDir, "last-session-end.json")
+
+    init {
+        if (snapshotFile.isFile) {
+            Log.i(TAG, "last session-end snapshot (debug only): ${snapshotFile.readText()}")
+        }
+    }
     private var file: File? = null
     var sessionId: String? = null
         private set
@@ -82,6 +89,10 @@ internal class SessionStore(context: Context) {
     }
 
     fun sessionCount(): Int = dir.listFiles { _, name -> name.endsWith(".jsonl") }?.size ?: 0
+
+    companion object {
+        private const val TAG = "FordFuel"
+    }
 }
 
 internal object Units {

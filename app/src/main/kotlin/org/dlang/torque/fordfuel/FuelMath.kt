@@ -25,19 +25,18 @@ internal class FuelMath {
 
     fun remainingGal(pct: Double, bins: List<Bin>): Double {
         val p = pct.coerceIn(0.0, 100.0)
-        if (bins.isEmpty()) return p / 100.0 * Units.TANK_GAL
-        var gal = 0.0
-        var cursor = 0.0
-        while (cursor < p) {
-            val next = minOf(p, cursor + STEP)
-            gal += galPerPct((cursor + next) / 2.0, bins) * (next - cursor)
-            cursor = next
-        }
-        return gal
+        val hit = covering(p, bins)
+        if (hit.isEmpty()) return p / 100.0 * Units.TANK_GAL
+        return hit.map { b ->
+            val span = (b.hi - b.lo).coerceAtLeast(1e-6)
+            val frac = ((p - b.lo) / span).coerceIn(0.0, 1.0)
+            b.lo / 100.0 * Units.TANK_GAL + frac * b.gal
+        }.average()
     }
 
     fun mappedPct(smoothed: Double, bins: List<Bin>): Double {
         if (bins.isEmpty()) return smoothed
+        if (covering(smoothed, bins).isEmpty()) return smoothed
         return (remainingGal(smoothed, bins) / Units.TANK_GAL * 100.0).coerceIn(0.0, 100.0)
     }
 
@@ -48,12 +47,9 @@ internal class FuelMath {
 
     companion object {
         const val ALPHA = 0.25
-        private const val STEP = 1.0
 
-        fun galPerPct(p: Double, bins: List<Bin>): Double {
-            val covering = bins.filter { b -> p >= b.lo && p < b.hi || (p == 100.0 && p == b.hi) }
-            if (covering.isEmpty()) return Units.TANK_GAL / 100.0
-            return covering.map { it.gal / (it.hi - it.lo).coerceAtLeast(1e-6) }.average()
+        fun covering(p: Double, bins: List<Bin>): List<Bin> {
+            return bins.filter { b -> p >= b.lo && p < b.hi || (p == 100.0 && p == b.hi) }
         }
 
         fun observationsFrom(samples: List<Sample>): List<Bin> {
