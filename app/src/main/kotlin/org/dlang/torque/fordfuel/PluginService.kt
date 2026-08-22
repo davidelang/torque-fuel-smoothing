@@ -18,6 +18,7 @@ import org.prowl.torque.remote.ITorqueService
 class PluginService : Service() {
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var sessions: SessionStore
+    private lateinit var binStore: BinStore
     private val math = FuelMath()
     private var torque: ITorqueService? = null
     private var bound = false
@@ -45,6 +46,7 @@ class PluginService : Service() {
             torque = ITorqueService.Stub.asInterface(service)
             Log.i(TAG, "bound Torque API ${runCatching { torque?.version }.getOrNull()}")
             resolvePids()
+            runCatching { binStore.loadFromProfile(torque!!) }
             handler.removeCallbacks(poll)
             handler.post(poll)
         }
@@ -62,6 +64,7 @@ class PluginService : Service() {
     override fun onCreate() {
         super.onCreate()
         sessions = SessionStore(this)
+        binStore = BinStore(this)
         ensureChannel()
         goForeground("Binding to Torque…")
         bindTorque()
@@ -156,9 +159,10 @@ class PluginService : Service() {
             )
         }
         val smoothed = math.smooth(raw)
-        val auth = math.mappedPct(smoothed, emptyList())
+        val bins = binStore.bins.toList()
+        val auth = math.mappedPct(smoothed, bins)
         lastAuthPct = auth
-        val remain = math.remainingGal(auth, emptyList())
+        val remain = math.remainingGal(smoothed, bins)
         val mpgRaw = mpgPid?.let { readDouble(t, it) }
         val mpg = mpgRaw?.let { FuelMath.mpgFrom(it, mpgUnit) } ?: 0.0
         val dte = math.dteMiles(remain, mpg)
@@ -221,8 +225,14 @@ class PluginService : Service() {
 
     private fun closeSession() {
         if (!sessions.isOpen) return
-        val n = sessions.close().size
-        Log.i(TAG, "session close samples=$n files=${sessions.sessionCount()}")
+        val closed = sessions.close()
+        val obs = FuelMath.observationsFrom(closed)
+        binStore.add(obs)
+        binStore.persist(torque)
+        Log.i(
+            TAG,
+            "session close samples=${closed.size} obs=${obs.size} bins=${binStore.bins.size} files=${sessions.sessionCount()}",
+        )
     }
 
     private fun readDouble(t: ITorqueService, pid: String): Double? {
