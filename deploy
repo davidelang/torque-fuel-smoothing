@@ -1,0 +1,177 @@
+#!/bin/bash
+
+# Human-only install. Agents must not run this file (no adb install / deploy).
+# Usage: ./deploy [options] [device-alias|device-id ...] [-- gradle-flags...]
+#
+# Default: adb install -r last app-debug.apk (no compile).
+#   --rebuild  → ./build_app then install
+#   --clean    → uninstall first
+#
+# Aliases: tablet / emulator → emulator-5554
+#          phone             → project.config deploy_serial= (gitignored; fail if unset)
+
+PACKAGE_NAME="org.dlang.torque.fordfuel"
+APK="app/build/outputs/apk/debug/app-debug.apk"
+
+deploy_usage() {
+  cat <<'EOF'
+Usage: ./deploy [options] [device-alias|device-id ...] [-- gradle-flags...]
+
+Install the debug APK. Default uses the last produced APK from ./build_app
+(no recompile). With no device arguments, all connected online devices
+are targeted.
+
+Options:
+  -h, --help     Show this help and exit
+      --rebuild  Run ./build_app then install
+      --clean    Uninstall before install (signature recovery)
+
+Device aliases:
+  tablet, emulator  → emulator-5554
+  phone             → deploy_serial= in gitignored project.config
+  Any other arg     → adb device id
+
+Gradle passthrough (with --rebuild only):
+  ./deploy --rebuild [devices...] -- --info --stacktrace
+EOF
+}
+
+REBUILD=false
+UNINSTALL_FIRST=false
+GRADLE_ARGS=()
+DEVICE_ARGS=()
+SEEN_DASHDASH=false
+
+for arg in "$@"; do
+  if [ "$SEEN_DASHDASH" = true ]; then
+    GRADLE_ARGS+=("$arg")
+    continue
+  fi
+  case "$arg" in
+    --) SEEN_DASHDASH=true ;;
+    -h|--help) deploy_usage; exit 0 ;;
+    --rebuild) REBUILD=true ;;
+    --clean) UNINSTALL_FIRST=true ;;
+    --preserve-data|--backup|--fetch-data|--restore-data|--install-data|--push-vehicle-refs|--push-test-data)
+      echo "ERROR: $arg is a VehicleExpenses flag; this host only supports --rebuild and --clean." >&2
+      exit 1
+      ;;
+    *) DEVICE_ARGS+=("$arg") ;;
+  esac
+done
+
+if [ "${REBUILD:-}" = "1" ]; then REBUILD=true; fi
+if [ "${UNINSTALL_FIRST:-}" = "1" ]; then UNINSTALL_FIRST=true; fi
+
+PRIMARY_USER=$(sed -n 's/^primary_user=//p' project.config 2>/dev/null | tr -d '\r' | head -1)
+if [ -z "$PRIMARY_USER" ]; then
+  echo "ERROR: primary_user unset in project.config" >&2
+  exit 1
+fi
+if [ "$EUID" -eq 0 ]; then
+  echo "Re-executing as $PRIMARY_USER (not root)..."
+  exec sudo -E -u "$PRIMARY_USER" "$0" "$@"
+fi
+
+umask 002
+
+MISSING=""
+for grp in ai-shared ai-code; do
+  if ! id -nG | grep -qw "$grp"; then MISSING="$MISSING $grp"; fi
+done
+if [ -n "$MISSING" ]; then
+  echo "ERROR: this shell is missing project group(s):$MISSING" >&2
+  echo "  Fix:  source ./env" >&2
+  exit 1
+fi
+
+PLANNING_USER=$(sed -n 's/^planning_user=//p' project.config 2>/dev/null | tr -d '\r' | head -1)
+PLANNING_USER=${PLANNING_USER:-ai-planner}
+if [ "$(id -un)" = "$PLANNING_USER" ]; then
+  echo "ERROR: Planning agents must not run deploy. Policy violation." >&2
+  exit 1
+fi
+
+_DEP_HERE="$(cd "$(dirname "$0")" && pwd)"
+if [ ! -f "$_DEP_HERE/ve-resolve-orch" ]; then
+  echo "ERROR: missing $_DEP_HERE/ve-resolve-orch" >&2
+  exit 1
+fi
+# shellcheck source=/dev/null
+. "$_DEP_HERE/ve-resolve-orch"
+ve_resolve_orch "$_DEP_HERE" || exit 1
+ve_setup_worktree_build_homes "$_DEP_HERE" || exit 1
+ve_reset_gradle_daemon_dir || exit 1
+unset GRADLE_OPTS
+
+PHONE_SERIAL=$(sed -n 's/^deploy_serial=//p' project.config 2>/dev/null | tr -d '\r' | head -1)
+
+resolve_device() {
+  local a=$1
+  case "$a" in
+    tablet|emulator) printf '%s\n' "emulator-5554" ;;
+    phone)
+      if [ -z "$PHONE_SERIAL" ]; then
+        echo "ERROR: alias 'phone' requires deploy_serial= in gitignored project.config" >&2
+        return 1
+      fi
+      printf '%s\n' "$PHONE_SERIAL"
+      ;;
+    *) printf '%s\n' "$a" ;;
+  esac
+}
+
+list_online_devices() {
+  adb devices | awk 'NR>1 && $2=="device" {print $1}'
+}
+
+TARGETS=()
+if [ ${#DEVICE_ARGS[@]} -eq 0 ]; then
+  while IFS= read -r d; do
+    [ -n "$d" ] && TARGETS+=("$d")
+  done < <(list_online_devices)
+  if [ ${#TARGETS[@]} -eq 0 ]; then
+    echo "ERROR: no online adb devices. Pass a serial or alias (tablet/emulator/phone)." >&2
+    exit 1
+  fi
+else
+  for a in "${DEVICE_ARGS[@]}"; do
+    resolved=$(resolve_device "$a") || exit 1
+    TARGETS+=("$resolved")
+  done
+fi
+
+if [ "$REBUILD" = true ]; then
+  echo " --rebuild: ./build_app then install"
+  if [ ${#GRADLE_ARGS[@]} -gt 0 ]; then
+    ./build_app -- "${GRADLE_ARGS[@]}"
+  else
+    ./build_app
+  fi
+fi
+
+if [ ! -f "$APK" ]; then
+  echo "ERROR: No last-built APK at $APK" >&2
+  echo "  Run ./build_app first (or ./deploy --rebuild)." >&2
+  exit 1
+fi
+
+FAIL=0
+for DEV in "${TARGETS[@]}"; do
+  echo "Deploying $PACKAGE_NAME to $DEV"
+  if [ "$UNINSTALL_FIRST" = true ]; then
+    echo "  adb -s $DEV uninstall $PACKAGE_NAME"
+    adb -s "$DEV" uninstall "$PACKAGE_NAME" || true
+  fi
+  echo "  adb -s $DEV install -r $APK ($(du -h "$APK" | awk '{print $1}'))"
+  if ! adb -s "$DEV" install -r "$APK"; then
+    echo "ERROR: install failed on $DEV" >&2
+    FAIL=1
+  fi
+done
+
+if [ "$FAIL" -ne 0 ]; then
+  exit 1
+fi
+echo "Deploy complete."
+exit 0

@@ -40,6 +40,9 @@ orch_root=@@ORCH_ROOT@@
 # @@SANDBOX_PATH@@_dir=dev-ai-interaction
 # @@SANDBOX_PATH@@_dir=@@SANDBOX_PATH@@
 
+# Optional adb serial for ./deploy phone (Pixel example is local-only; do not hardcode).
+# deploy_serial=
+
 # Optional build gate for master-merge on non-Android hosts:
 # build_command=./build
 

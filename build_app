@@ -1,0 +1,194 @@
+#!/bin/bash
+
+# THE ONLY WAY TO BUILD OR COMPILE.
+# Usage: ./build_app ["Commit Message" | "@msg_file.txt"] [file1 file2 ...] [-- gradle-flag ...]
+#
+# NEVER run gradlew, gradlew.bat, or direct gradle commands (forbidden; this is the enforced gateway).
+# Pass gradle options after -- (e.g. build_app "msg" file.kt -- --info --stacktrace).
+
+PRIMARY_USER=$(sed -n 's/^primary_user=//p' project.config 2>/dev/null | tr -d '\r' | head -1)
+if [ -z "$PRIMARY_USER" ]; then
+  echo "ERROR: primary_user unset in project.config" >&2
+  echo "  Stamp project.config from project.config.example (or source ./env after setup)." >&2
+  exit 1
+fi
+
+# Re-exec as PRIMARY_USER if root so the debug keystore matches human deploys.
+if [ "$EUID" -eq 0 ]; then
+  echo "Re-executing as $PRIMARY_USER (not root)..."
+  exec sudo -E -u "$PRIMARY_USER" "$0" "$@"
+fi
+
+umask 002
+
+MISSING=""
+for grp in ai-shared ai-code; do
+  if ! id -nG | grep -qw "$grp"; then MISSING="$MISSING $grp"; fi
+done
+if [ -n "$MISSING" ]; then
+  echo "ERROR: this shell is missing project group(s):$MISSING" >&2
+  echo "  Fix:  source ./env   (or use a setup_agent worktree shell)" >&2
+  exit 1
+fi
+
+if [ "$#" -ge 1 ]; then
+    MSG_ARG="$1"
+    shift
+
+    if [ "$MSG_ARG" = "--" ]; then
+        set -- -- "$@"
+        COMMIT_MSG=""
+        ADDED_COUNT=0
+    else
+        if [[ "$MSG_ARG" == @* ]]; then
+            MSG_FILE="${MSG_ARG#@}"
+            if [ -f "$MSG_FILE" ]; then
+                COMMIT_MSG=$(cat "$MSG_FILE")
+            else
+                echo "Error: Message file '$MSG_FILE' not found."
+                exit 1
+            fi
+        else
+            COMMIT_MSG="$MSG_ARG"
+        fi
+
+        ADDED_COUNT=0
+        for file in "$@"; do
+            if [ "$file" = "--" ]; then
+                break
+            fi
+            if [ -e "$file" ]; then
+                git add "$file"
+                ADDED_COUNT=$((ADDED_COUNT + 1))
+            else
+                echo "Warning: File '$file' not found. Skipping."
+            fi
+        done
+    fi
+
+    STAGED_CHANGES=$(git diff --cached --name-only)
+    if [ -n "$STAGED_CHANGES" ]; then
+        if [ -n "$COMMIT_MSG" ]; then
+            git commit -m "$COMMIT_MSG"
+            if [ $? -ne 0 ]; then
+                echo "Error: Git commit failed."
+                exit 1
+            fi
+        else
+            echo "Error: Staged changes exist but no commit message provided."
+            exit 1
+        fi
+    else
+        if [ "$ADDED_COUNT" -gt 0 ]; then
+            echo "Error: Files provided but nothing to commit (already matches repo?)."
+            exit 1
+        fi
+        echo "Info: No new changes to commit. Proceeding to integrity check."
+    fi
+else
+    echo "Info: No arguments provided. Skipping commit phase."
+fi
+
+DIRTY_FILES=$(git status --porcelain -uno)
+if [ -n "$DIRTY_FILES" ]; then
+    echo "CRITICAL ERROR: Uncommitted tracked files detected:"
+    echo "$DIRTY_FILES"
+    echo "------------------------------------------------------------------"
+    echo "Every modified file MUST be explicitly added to the build command."
+    echo "Compile aborted to ensure accurate 'git describe' versioning."
+    exit 1
+fi
+
+if [ ! -x ./gradlew ]; then
+    echo "ERROR: ./gradlew not found or not executable (this tree is an Android app; compile is required)." >&2
+    exit 1
+fi
+
+GRADLE_ARGS=()
+SEEN_DASHDASH=false
+for arg in "$@"; do
+  if [ "$SEEN_DASHDASH" = true ]; then
+    GRADLE_ARGS+=("$arg")
+  elif [ "$arg" = "--" ]; then
+    SEEN_DASHDASH=true
+  fi
+done
+if [ ${#GRADLE_ARGS[@]} -gt 0 ]; then
+  echo "Passing gradle flags: ${GRADLE_ARGS[*]}"
+fi
+
+_BA_HERE="$(cd "$(dirname "$0")" && pwd)"
+if [ ! -f "$_BA_HERE/ve-resolve-orch" ]; then
+  echo "ERROR: missing $_BA_HERE/ve-resolve-orch (run ./update-rules.sh from orchestration root)." >&2
+  exit 1
+fi
+# shellcheck source=/dev/null
+. "$_BA_HERE/ve-resolve-orch"
+ve_resolve_orch "$_BA_HERE" || exit 1
+ve_setup_worktree_build_homes "$_BA_HERE" || exit 1
+_AAPT2=$(ve_aapt2_from_sdk "$_BA_HERE") || exit 1
+if [ -n "${GRADLE_USER_HOME:-}" ] && [ -d "$GRADLE_USER_HOME" ]; then
+  find "$GRADLE_USER_HOME" -type f -name aapt2 -exec chmod u+rx,g+rx {} + 2>/dev/null || true
+fi
+ve_reset_gradle_daemon_dir || exit 1
+ve_wipe_foreign_app_build_outputs || exit 1
+unset GRADLE_OPTS
+PLANNING_USER=$(sed -n 's/^planning_user=//p' project.config 2>/dev/null | tr -d '\r' | head -1)
+PLANNING_USER=${PLANNING_USER:-ai-planner}
+if [ "$(id -un)" = "$PLANNING_USER" ]; then
+  echo "ERROR: Planning agents must not run Gradle builds. Policy violation."
+  exit 1
+fi
+
+GRADLE_CMD=( "${GRADLE_ARGS[@]}" assembleDebug )
+(umask 007; ./gradlew --no-daemon --no-configuration-cache \
+  -Pandroid.aapt2FromMavenOverride="$_AAPT2" \
+  -Pkotlin.compiler.execution.strategy=in-process \
+  -Dkotlin.compiler.execution.strategy=in-process "${GRADLE_CMD[@]}")
+RET_VAL=$?
+ve_reset_gradle_daemon_dir || exit 1
+
+for gdir in .gradle app/build; do
+  if [ -d "$gdir" ]; then
+    echo "Quick $gdir permission repair (group sync + setgid + ug+rwX)..."
+    chgrp -R ai-code "$gdir" 2>/dev/null || true
+    find "$gdir" -type d -exec chmod 2770 {} + 2>/dev/null || true
+    chmod -R ug+rwX,o-rwx "$gdir" 2>/dev/null || true
+  fi
+done
+
+if [ -d app/build ]; then
+  BAD_DIRS=$(find app/build -type d ! -perm -g+w 2>/dev/null | head -20)
+  if [ -n "$BAD_DIRS" ]; then
+    echo "Re-applying group-write on non-group-writable app/build dirs..."
+    echo "$BAD_DIRS" | while read -r d; do chmod g+rwX "$d" 2>/dev/null || true; done
+    find app/build -type d -exec chmod 2770 {} + 2>/dev/null || true
+  fi
+fi
+
+if [ -d app/src ]; then
+  find app/src -type d -exec chmod 2775 {} + 2>/dev/null || true
+  find app/src -type f -exec chmod 664 {} + 2>/dev/null || true
+fi
+
+if [ $RET_VAL -ne 0 ]; then
+    echo "Build failed."
+    exit 1
+fi
+
+APK="app/build/outputs/apk/debug/app-debug.apk"
+if [ ! -f "$APK" ]; then
+    echo "ERROR: Gradle succeeded but expected APK missing: $APK" >&2
+    exit 1
+fi
+
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+if [ "$CURRENT_BRANCH" == "master" ]; then
+    TAG_NAME="builds"
+else
+    TAG_NAME="${CURRENT_BRANCH}/builds"
+fi
+echo "Build successful. Updating '$TAG_NAME' tag."
+git tag -f "$TAG_NAME"
+git describe --tags --match "${CURRENT_BRANCH}-start" 2>/dev/null || git describe
+exit 0

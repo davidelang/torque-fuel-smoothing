@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <queries>
+        <package android:name="org.prowl.torque" />
+        <intent>
+            <action android:name="org.prowl.torque.PID_QUERY" />
+        </intent>
+        <intent>
+            <action android:name="org.prowl.torque.ACTIVITY_PLUGIN" />
+        </intent>
+    </queries>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@android:style/Theme.DeviceDefault">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.prowl.torque.ACTIVITY_PLUGIN" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name=".PluginReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="org.prowl.torque.PID_QUERY" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.prowl.torque.PID_PLUGIN" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.prowl.torque.OBD_CONNECTED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.prowl.torque.OBD_DISCONNECTED" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".PluginService"
+            android:exported="false"
+            android:foregroundServiceType="connectedDevice" />
+    </application>
+</manifest>

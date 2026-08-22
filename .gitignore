@@ -2,3 +2,26 @@ project.config
 refresh-shell
 sandbox/.planning-agent-prompt.txt
 *.local
+
+# Gradle / Android
+.gradle
+.gradle-home/
+.android-shared/
+build/
+local.properties
+*.iml
+app/build/
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.ap_
+*.dex
+.kotlin/
+.kotlinc/
+
+# Keystores (never commit)
+*.jks
+*.keystore
+keystore.properties
+
