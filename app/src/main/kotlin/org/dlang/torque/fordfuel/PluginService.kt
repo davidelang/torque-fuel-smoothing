@@ -51,12 +51,8 @@ class PluginService : Service() {
             bound = true
             bindRequested = true
             Log.i(TAG, "bound Torque API ${runCatching { torque?.version }.getOrNull()}")
-            resolvePids()
-            runCatching { binStore.loadFromProfile(torque!!) }
-            nameplateGal = TankSeed.seed(torque!!)
-            registerPluginPids(torque!!)
             handler.removeCallbacks(poll)
-            handler.post(poll)
+            handler.post { afterBindWork() }
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
@@ -131,26 +127,26 @@ class PluginService : Service() {
         return Intent().setClassName("org.prowl.torque", "org.prowl.torque.remote.TorqueService")
     }
 
+    private fun afterBindWork() {
+        val t = torque ?: return
+        resolvePids()
+        runCatching { binStore.loadFromProfile(t) }
+        nameplateGal = TankSeed.seed(t)
+        registerPluginPids(t)
+        handler.removeCallbacks(poll)
+        handler.post(poll)
+    }
+
     private fun resolvePids() {
         val t = torque ?: return
-        fordPid = runCatching { Pids.resolveFordFuel(t) }.getOrNull()
-        speedPid = runCatching { Pids.pickExisting(t, Pids.SPEED) }.getOrNull() ?: Pids.SPEED
-        speedPid?.let { id ->
-            val info = runCatching { t.getPIDInformation(arrayOf(id))?.firstOrNull() }.getOrNull()
-            speedUnit = Pids.csvUnit(info)
-        }
-        fuelUsedPid = runCatching {
-            Pids.pickExisting(t, Pids.FUEL_USED_TRIP, Pids.FUEL_USED_SESSION)
-        }.getOrNull()
-        fuelUsedPid?.let { id ->
-            val info = runCatching { t.getPIDInformation(arrayOf(id))?.firstOrNull() }.getOrNull()
-            fuelUsedUnit = Pids.csvUnit(info)
-        }
-        mpgPid = runCatching { Pids.pickExisting(t, Pids.LONG_TERM_MPG) }.getOrNull() ?: Pids.LONG_TERM_MPG
-        mpgPid?.let { id ->
-            val info = runCatching { t.getPIDInformation(arrayOf(id))?.firstOrNull() }.getOrNull()
-            mpgUnit = Pids.csvUnit(info)
-        }
+        val r = runCatching { Pids.resolve(t) }.getOrNull() ?: return
+        fordPid = r.ford
+        speedPid = r.speed
+        if (r.speedUnit.isNotEmpty()) speedUnit = r.speedUnit
+        fuelUsedPid = r.fuelUsed
+        if (r.fuelUsedUnit.isNotEmpty()) fuelUsedUnit = r.fuelUsedUnit
+        mpgPid = r.mpg
+        if (r.mpgUnit.isNotEmpty()) mpgUnit = r.mpgUnit
         Log.i(
             TAG,
             "pids ford=${fordPid ?: "UNRESOLVED"} speed=$speedPid fuelUsed=$fuelUsedPid unit=$fuelUsedUnit mpg=$mpgPid",

@@ -28,36 +28,54 @@ internal object Pids {
         return if (parts.size >= 3) parts[2].trim() else ""
     }
 
-    fun findByName(torque: ITorqueService, wanted: String): String? {
-        val all = torque.listAllPIDs() ?: return null
-        if (all.isEmpty()) return null
-        val infos = torque.getPIDInformation(all) ?: return null
+    data class Resolved(
+        val ford: String?,
+        val speed: String,
+        val fuelUsed: String?,
+        val mpg: String,
+        val speedUnit: String,
+        val fuelUsedUnit: String,
+        val mpgUnit: String,
+    )
+
+    fun resolve(torque: ITorqueService): Resolved {
+        val all = torque.listAllPIDs() ?: emptyArray()
+        val infos = if (all.isEmpty()) emptyArray() else torque.getPIDInformation(all) ?: emptyArray()
         val n = minOf(all.size, infos.size)
+        var fordByName: String? = null
         for (i in 0 until n) {
-            if (csvName(infos[i]).equals(wanted, ignoreCase = false)) {
-                return all[i]
+            if (csvName(infos[i]) == FORD_FUEL_NAME) {
+                fordByName = all[i]
+                break
             }
         }
-        return null
-    }
-
-    fun resolveFordFuel(torque: ITorqueService): String? {
-        findByName(torque, FORD_FUEL_NAME)?.let { return it }
-        val all = torque.listAllPIDs() ?: return null
-        if (all.any { it.equals(FORD_FUEL_STORED, ignoreCase = true) }) {
-            return FORD_FUEL_STORED
+        val storedPrefix = FORD_FUEL_STORED.lowercase()
+        val ford = fordByName
+            ?: all.firstOrNull { it.equals(FORD_FUEL_STORED, ignoreCase = true) || it.lowercase().startsWith(storedPrefix) }
+        fun pick(vararg ids: String): String? {
+            val lower = all.map { it.lowercase() }
+            for (id in ids) {
+                val i = lower.indexOfFirst { it == id.lowercase() || it.startsWith(id.lowercase()) }
+                if (i >= 0) return all[i]
+            }
+            return null
         }
-        val prefix = FORD_FUEL_STORED.lowercase()
-        return all.firstOrNull { it.lowercase().startsWith(prefix) }
-    }
-
-    fun pickExisting(torque: ITorqueService, vararg ids: String): String? {
-        val all = torque.listAllPIDs() ?: return null
-        val lower = all.map { it.lowercase() }
-        for (id in ids) {
-            val i = lower.indexOfFirst { it == id.lowercase() || it.startsWith(id.lowercase()) }
-            if (i >= 0) return all[i]
+        fun unitOf(id: String?): String {
+            if (id == null) return ""
+            val i = all.indexOfFirst { it == id }
+            return if (i >= 0 && i < infos.size) csvUnit(infos[i]) else ""
         }
-        return null
+        val speed = pick(SPEED) ?: SPEED
+        val fuelUsed = pick(FUEL_USED_TRIP, FUEL_USED_SESSION)
+        val mpg = pick(LONG_TERM_MPG) ?: LONG_TERM_MPG
+        return Resolved(
+            ford = ford,
+            speed = speed,
+            fuelUsed = fuelUsed,
+            mpg = mpg,
+            speedUnit = unitOf(speed),
+            fuelUsedUnit = unitOf(fuelUsed),
+            mpgUnit = unitOf(mpg),
+        )
     }
 }
