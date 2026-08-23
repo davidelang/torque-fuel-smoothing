@@ -13,18 +13,33 @@ internal data class SessionObs(
     val reserveGal: Double,
 )
 
+internal enum class TrackMode { HOLD, SKEW, FILL }
+
 internal class FuelMath {
-    var ema: Double? = null
+    var smoothed: Double? = null
+        private set
+    var mode: TrackMode = TrackMode.HOLD
         private set
 
-    fun reset() {
-        ema = null
+    fun isValidSample(raw: Double?, ecuConnected: Boolean?): Boolean {
+        if (ecuConnected == false) return false
+        if (raw == null || !raw.isFinite()) return false
+        if (raw > 100.0 || raw < 0.0) return false
+        if (raw == 0.0) {
+            val s = smoothed
+            return s != null && s <= NEAR_EMPTY_PCT
+        }
+        return raw > 0.0 && raw <= 100.0
     }
 
-    fun smooth(raw: Double, alpha: Double = ALPHA): Double {
-        val prev = ema
+    fun hold() {
+        mode = TrackMode.HOLD
+    }
+
+    fun ingestEma(raw: Double, alpha: Double = ALPHA): Double {
+        val prev = smoothed
         val y = if (prev == null) raw else alpha * raw + (1.0 - alpha) * prev
-        ema = y
+        smoothed = y
         return y
     }
 
@@ -55,6 +70,7 @@ internal class FuelMath {
     companion object {
         const val ALPHA = 0.25
         const val PINNED_ZERO = 0.5
+        const val NEAR_EMPTY_PCT = 5.0
         private const val STEP = 1.0
 
         fun covering(p: Double, bins: List<Bin>): List<Bin> {

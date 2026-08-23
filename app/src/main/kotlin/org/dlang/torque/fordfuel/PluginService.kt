@@ -140,12 +140,23 @@ class PluginService : Service() {
         }
         if (fordPid == null) resolvePids()
         val pid = fordPid ?: return
-        val raw = readDouble(t, pid) ?: return
-        if (raw < 0.0 || raw > 100.0) return
-        lastRawPct = raw
+        val raw = readDouble(t, pid)
+        val valid = math.isValidSample(raw, ecu)
+        if (!valid) {
+            math.hold()
+            val held = math.smoothed
+            if (held != null) {
+                publishHeld(t, raw, held)
+            }
+            Log.i(TAG, "track mode=hold raw=$raw smoothed=$held ecu=$ecu")
+            return
+        }
+        val live = raw!!
+        lastRawPct = live
         if (ecu == true && !sessions.isOpen) {
             openSession()
         }
+        val speed = speedPid?.let { readDouble(t, it) } ?: 0.0
         if (sessions.isOpen) {
             val absUsed = fuelUsedPid?.let { readDouble(t, it) }
             val relUsed = if (absUsed == null) {
@@ -153,17 +164,25 @@ class PluginService : Service() {
             } else {
                 sessions.relativeFuelUsed(Units.toGallons(absUsed, fuelUsedUnit))
             }
-            val speed = speedPid?.let { readDouble(t, it) } ?: 0.0
             sessions.append(
                 Sample(
                     t = System.currentTimeMillis(),
-                    rawPct = raw,
+                    rawPct = live,
                     fuelUsedGal = relUsed,
                     speed = speed,
                 ),
             )
         }
-        val smoothed = math.smooth(raw)
+        val smoothed = math.ingestEma(live)
+        publishFromSmoothed(t, live, smoothed)
+        Log.i(TAG, "track mode=${math.mode} raw=$live smoothed=$smoothed")
+    }
+
+    private fun publishHeld(t: ITorqueService, raw: Double?, held: Double) {
+        publishFromSmoothed(t, raw ?: held, held)
+    }
+
+    private fun publishFromSmoothed(t: ITorqueService, raw: Double, smoothed: Double) {
         val bins = binStore.bins.toList()
         val auth = smoothed
         lastAuthPct = auth
@@ -232,7 +251,6 @@ class PluginService : Service() {
 
     private fun openSession() {
         if (sessions.isOpen) closeSession()
-        math.reset()
         lastSliderPct = null
         val id = sessions.open()
         Log.i(TAG, "session open $id files=${sessions.sessionCount()}")

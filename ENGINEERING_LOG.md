@@ -30,3 +30,9 @@
 - On Torque bind, probe `getSettingString` / `getSettingInt` / `retrieveProfileData` for `tankCapacity` and `profileTankCapacity` (liters if >80, else gal).
 - Persist `org.dlang.torque.fordfuel.nameplateGal` if a key works.
 - Runtime result is logcat `FordFuel` line `tank seed gal=… from …` or `tank seed none` (not known until human deploy).
+
+## 2026-08-23 - Execute start: old-ford-fuel-smooth-skew-fill-20260823-1509-plan.md
+
+- Magic-approved plan: `sandbox/plans/old-ford-fuel-smooth-skew-fill-20260823-1509-plan.md`
+- Scope: display smoother only — hold-on-missing, 0.05 %/s skew cap, fill snap at speed 0. Do not change mapping bins, gal/hr, dual-name publish, or docs.
+- No `./deploy` / `adb install` by coder; compile only via `./build_app`.
