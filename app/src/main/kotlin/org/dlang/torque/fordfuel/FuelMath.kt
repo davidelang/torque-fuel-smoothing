@@ -8,6 +8,11 @@ internal data class Bin(
     val gal: Double,
 )
 
+internal data class SessionObs(
+    val bins: List<Bin>,
+    val reserveGal: Double,
+)
+
 internal class FuelMath {
     var ema: Double? = null
         private set
@@ -23,21 +28,23 @@ internal class FuelMath {
         return y
     }
 
-    fun remainingGal(pct: Double, bins: List<Bin>): Double {
+    fun remainingGal(
+        pct: Double,
+        bins: List<Bin>,
+        nameplateGal: Double?,
+        reserveGal: Double,
+    ): Double {
         val p = pct.coerceIn(0.0, 100.0)
-        val hit = covering(p, bins)
-        if (hit.isEmpty()) return p / 100.0 * Units.TANK_GAL
-        return hit.map { b ->
-            val span = (b.hi - b.lo).coerceAtLeast(1e-6)
-            val frac = ((p - b.lo) / span).coerceIn(0.0, 1.0)
-            b.lo / 100.0 * Units.TANK_GAL + frac * b.gal
-        }.average()
-    }
-
-    fun mappedPct(smoothed: Double, bins: List<Bin>): Double {
-        if (bins.isEmpty()) return smoothed
-        if (covering(smoothed, bins).isEmpty()) return smoothed
-        return (remainingGal(smoothed, bins) / Units.TANK_GAL * 100.0).coerceIn(0.0, 100.0)
+        var gal = 0.0
+        var cursor = 0.0
+        while (cursor < p) {
+            val next = minOf(p, cursor + STEP)
+            val mid = (cursor + next) / 2.0
+            gal += galPerPercent(mid, bins, nameplateGal) * (next - cursor)
+            cursor = next
+        }
+        if (p <= PINNED_ZERO) gal += reserveGal.coerceAtLeast(0.0)
+        return gal
     }
 
     fun dteMiles(remainingGal: Double, mpg: Double): Double {
@@ -47,29 +54,46 @@ internal class FuelMath {
 
     companion object {
         const val ALPHA = 0.25
+        const val PINNED_ZERO = 0.5
+        private const val STEP = 1.0
 
         fun covering(p: Double, bins: List<Bin>): List<Bin> {
             return bins.filter { b -> p >= b.lo && p < b.hi || (p == 100.0 && p == b.hi) }
         }
 
-        fun observationsFrom(samples: List<Sample>): List<Bin> {
-            if (samples.size < 2) return emptyList()
+        fun galPerPercent(p: Double, bins: List<Bin>, nameplateGal: Double?): Double {
+            val hit = covering(p, bins)
+            if (hit.isNotEmpty()) {
+                return hit.map { it.gal / (it.hi - it.lo).coerceAtLeast(1e-6) }.average()
+            }
+            if (nameplateGal != null && nameplateGal > 0.0) return nameplateGal / 100.0
+            return 0.0
+        }
+
+        fun observationsFrom(samples: List<Sample>): SessionObs {
+            if (samples.size < 2) return SessionObs(emptyList(), 0.0)
             val out = mutableListOf<Bin>()
+            var reserve = 0.0
             var a = 0
             for (b in 1 until samples.size) {
+                val used = samples[b].fuelUsedGal - samples[a].fuelUsedGal
+                if (samples[a].rawPct <= PINNED_ZERO && samples[b].rawPct <= PINNED_ZERO && used >= 0.05) {
+                    reserve += used
+                    a = b
+                    continue
+                }
                 val rise = samples[b].rawPct - samples[b - 1].rawPct
                 if (rise > 2.0) {
                     a = b
                     continue
                 }
                 val drop = samples[a].rawPct - samples[b].rawPct
-                val used = samples[b].fuelUsedGal - samples[a].fuelUsedGal
                 if (drop >= 1.0 && used >= 0.05) {
                     out.add(Bin(lo = samples[b].rawPct, hi = samples[a].rawPct, gal = used))
                     a = b
                 }
             }
-            return out
+            return SessionObs(out, reserve)
         }
 
         fun mpgFrom(value: Double, unit: String): Double {

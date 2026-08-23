@@ -96,8 +96,6 @@ internal class SessionStore(context: Context) {
 }
 
 internal object Units {
-    const val TANK_GAL = 35.0
-
     fun toGallons(value: Double, unit: String): Double {
         val u = unit.lowercase()
         return when {

@@ -165,9 +165,9 @@ class PluginService : Service() {
         }
         val smoothed = math.smooth(raw)
         val bins = binStore.bins.toList()
-        val auth = math.mappedPct(smoothed, bins)
+        val auth = smoothed
         lastAuthPct = auth
-        val remain = math.remainingGal(smoothed, bins)
+        val remain = math.remainingGal(smoothed, bins, nameplateGal, binStore.reserveGal)
         val mpgRaw = mpgPid?.let { readDouble(t, it) }
         val mpg = mpgRaw?.let { FuelMath.mpgFrom(it, mpgUnit) } ?: 0.0
         val dte = math.dteMiles(remain, mpg)
@@ -190,7 +190,7 @@ class PluginService : Service() {
         runCatching {
             t.setPIDInformation(Pids.PLUGIN_FORD, "PFord", "%", 100f, 0f, 0f, null)
             t.setPIDInformation(Pids.PLUGIN_SMOOTHED, "SmFuel", "%", 100f, 0f, 0f, null)
-            t.setPIDInformation(Pids.PLUGIN_REMAINING, "GalLeft", "gal", Units.TANK_GAL.toFloat(), 0f, 0f, null)
+            t.setPIDInformation(Pids.PLUGIN_REMAINING, "GalLeft", "gal", remainingMax(), 0f, 0f, null)
             t.setPIDInformation(Pids.PLUGIN_DTE, "pDTE", "mi", 500f, 0f, 0f, null)
         }.onFailure { Log.w(TAG, "registerPluginPids: ${it.message}") }
         Log.i(TAG, "registered ${Pids.PLUGIN_SMOOTHED}, ${Pids.PLUGIN_REMAINING}, ${Pids.PLUGIN_DTE}, ${Pids.PLUGIN_FORD}")
@@ -207,7 +207,7 @@ class PluginService : Service() {
         runCatching {
             t.setPIDInformation(Pids.PLUGIN_FORD, "PFord", "%", 100f, 0f, raw.toFloat(), null)
             t.setPIDInformation(Pids.PLUGIN_SMOOTHED, "SmFuel", "%", 100f, 0f, smoothed.toFloat(), null)
-            t.setPIDInformation(Pids.PLUGIN_REMAINING, "GalLeft", "gal", Units.TANK_GAL.toFloat(), 0f, remain.toFloat(), null)
+            t.setPIDInformation(Pids.PLUGIN_REMAINING, "GalLeft", "gal", remainingMax(), 0f, remain.toFloat(), null)
             t.setPIDInformation(Pids.PLUGIN_DTE, "pDTE", "mi", 500f, 0f, dte.toFloat(), null)
             t.setPIDInformation(Pids.FORD_FUEL_NAME, "Fuel", "%", 100f, 0f, auth.toFloat(), null)
         }
@@ -246,8 +246,14 @@ class PluginService : Service() {
         binStore.persist(torque)
         Log.i(
             TAG,
-            "session close samples=${closed.size} obs=${obs.size} bins=${binStore.bins.size} files=${sessions.sessionCount()}",
+            "session close samples=${closed.size} obs=${obs.bins.size} reserve+=${obs.reserveGal} " +
+                "bins=${binStore.bins.size} reserve=${binStore.reserveGal} files=${sessions.sessionCount()}",
         )
+    }
+
+    private fun remainingMax(): Float {
+        val n = nameplateGal
+        return if (n != null && n > 0.0) n.toFloat() else 50f
     }
 
     private fun readDouble(t: ITorqueService, pid: String): Double? {

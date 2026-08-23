@@ -10,6 +10,8 @@ import java.io.File
 internal class BinStore(context: Context) {
     private val file = File(context.filesDir, "bins.json")
     val bins: MutableList<Bin> = mutableListOf()
+    var reserveGal: Double = 0.0
+        private set
 
     init {
         loadFile()
@@ -19,16 +21,18 @@ internal class BinStore(context: Context) {
         val s = runCatching { torque.retrieveProfileData("${Pids.PREFIX}bins") }.getOrNull()
         if (s.isNullOrBlank()) return
         val parsed = parse(s)
-        if (parsed.isNotEmpty()) {
+        if (parsed.bins.isNotEmpty() || parsed.reserveGal > 0.0) {
             bins.clear()
-            bins.addAll(parsed)
+            bins.addAll(parsed.bins)
+            reserveGal = parsed.reserveGal
             saveFile()
         }
     }
 
-    fun add(obs: List<Bin>) {
-        if (obs.isEmpty()) return
-        bins.addAll(obs)
+    fun add(obs: SessionObs) {
+        if (obs.bins.isEmpty() && obs.reserveGal <= 0.0) return
+        bins.addAll(obs.bins)
+        if (obs.reserveGal > 0.0) reserveGal += obs.reserveGal
         saveFile()
     }
 
@@ -44,8 +48,9 @@ internal class BinStore(context: Context) {
         if (!file.isFile) return
         val parsed = parse(file.readText())
         bins.clear()
-        bins.addAll(parsed)
-        Log.i(TAG, "loaded ${bins.size} bins from ${file.absolutePath}")
+        bins.addAll(parsed.bins)
+        reserveGal = parsed.reserveGal
+        Log.i(TAG, "loaded ${bins.size} bins reserve=$reserveGal from ${file.absolutePath}")
     }
 
     private fun saveFile() {
@@ -57,24 +62,36 @@ internal class BinStore(context: Context) {
         for (b in bins) {
             arr.put(JSONObject().put("lo", b.lo).put("hi", b.hi).put("gal", b.gal))
         }
-        return arr.toString()
+        return JSONObject().put("bins", arr).put("reserve", reserveGal).toString()
     }
 
     companion object {
         private const val TAG = "FordFuel"
 
-        fun parse(s: String): List<Bin> {
+        data class Parsed(val bins: List<Bin>, val reserveGal: Double)
+
+        fun parse(s: String): Parsed {
             return runCatching {
-                val arr = JSONArray(s)
-                (0 until arr.length()).mapNotNull { i ->
-                    val o = arr.optJSONObject(i) ?: return@mapNotNull null
-                    val lo = o.optDouble("lo", Double.NaN)
-                    val hi = o.optDouble("hi", Double.NaN)
-                    val gal = o.optDouble("gal", Double.NaN)
-                    if (lo.isNaN() || hi.isNaN() || gal.isNaN() || hi <= lo) null
-                    else Bin(lo, hi, gal)
+                val trimmed = s.trim()
+                if (trimmed.startsWith("[")) {
+                    Parsed(parseArray(JSONArray(trimmed)), 0.0)
+                } else {
+                    val o = JSONObject(trimmed)
+                    val arr = o.optJSONArray("bins") ?: JSONArray()
+                    Parsed(parseArray(arr), o.optDouble("reserve", 0.0).coerceAtLeast(0.0))
                 }
-            }.getOrDefault(emptyList())
+            }.getOrDefault(Parsed(emptyList(), 0.0))
+        }
+
+        private fun parseArray(arr: JSONArray): List<Bin> {
+            return (0 until arr.length()).mapNotNull { i ->
+                val o = arr.optJSONObject(i) ?: return@mapNotNull null
+                val lo = o.optDouble("lo", Double.NaN)
+                val hi = o.optDouble("hi", Double.NaN)
+                val gal = o.optDouble("gal", Double.NaN)
+                if (lo.isNaN() || hi.isNaN() || gal.isNaN() || hi <= lo) null
+                else Bin(lo, hi, gal)
+            }
         }
     }
 }
