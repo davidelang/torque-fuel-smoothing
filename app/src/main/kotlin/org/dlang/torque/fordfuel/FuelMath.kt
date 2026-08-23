@@ -21,6 +21,9 @@ internal class FuelMath {
     var mode: TrackMode = TrackMode.HOLD
         private set
     private var lastIngestMs: Long? = null
+    private var fillPeak: Double = 0.0
+    private var fillBandCenter: Double = 0.0
+    private var fillBandStartMs: Long = 0L
 
     fun isValidSample(raw: Double?, ecuConnected: Boolean?): Boolean {
         if (ecuConnected == false) return false
@@ -37,7 +40,7 @@ internal class FuelMath {
         mode = TrackMode.HOLD
     }
 
-    fun ingest(raw: Double, nowMs: Long = System.currentTimeMillis()): Double {
+    fun ingest(raw: Double, speedMph: Double, nowMs: Long = System.currentTimeMillis()): Double {
         val prev = smoothed
         val last = lastIngestMs
         lastIngestMs = nowMs
@@ -46,9 +49,19 @@ internal class FuelMath {
             mode = TrackMode.SKEW
             return raw
         }
-        if (mode == TrackMode.FILL) {
+        if (mode != TrackMode.FILL &&
+            speedMph <= FILL_ENTER_SPEED_MPH &&
+            raw - prev >= FILL_JUMP_PCT
+        ) {
+            mode = TrackMode.FILL
             smoothed = raw
+            fillPeak = raw
+            fillBandCenter = raw
+            fillBandStartMs = nowMs
             return raw
+        }
+        if (mode == TrackMode.FILL) {
+            return followFill(raw, speedMph, nowMs)
         }
         val dtSec = if (last == null) 1.0 else ((nowMs - last).coerceAtLeast(0L) / 1000.0).coerceAtLeast(0.001)
         val maxStep = SKEW_PCT_PER_SEC * dtSec
@@ -56,6 +69,25 @@ internal class FuelMath {
         smoothed = y
         mode = TrackMode.SKEW
         return y
+    }
+
+    private fun followFill(raw: Double, speedMph: Double, nowMs: Long): Double {
+        smoothed = raw
+        if (raw > fillPeak) fillPeak = raw
+        val stable = abs(raw - fillBandCenter) <= FILL_STABLE_BAND_PCT
+        if (stable) {
+            if ((nowMs - fillBandStartMs) / 1000.0 >= FILL_STABLE_SEC) {
+                mode = TrackMode.SKEW
+                return raw
+            }
+        } else {
+            fillBandCenter = raw
+            fillBandStartMs = nowMs
+        }
+        if (raw < fillPeak - FILL_DROP_PT || speedMph > FILL_EXIT_SPEED_MPH) {
+            mode = TrackMode.SKEW
+        }
+        return raw
     }
 
     fun remainingGal(
@@ -86,6 +118,17 @@ internal class FuelMath {
         const val SKEW_PCT_PER_SEC = 0.05
         const val PINNED_ZERO = 0.5
         const val NEAR_EMPTY_PCT = 5.0
+        const val FILL_JUMP_PCT = 25.0
+        const val FILL_ENTER_SPEED_MPH = 3.0
+        const val FILL_EXIT_SPEED_MPH = 5.0
+        const val FILL_DROP_PT = 2.5
+        const val FILL_STABLE_SEC = 12.0
+        const val FILL_STABLE_BAND_PCT = 2.0
+
+        fun toMph(value: Double, unit: String): Double {
+            val u = unit.lowercase()
+            return if (u.contains("km")) value * 0.621371 else value
+        }
         private const val STEP = 1.0
 
         fun covering(p: Double, bins: List<Bin>): List<Bin> {

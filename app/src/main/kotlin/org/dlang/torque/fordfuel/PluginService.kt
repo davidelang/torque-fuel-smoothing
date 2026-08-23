@@ -26,6 +26,7 @@ class PluginService : Service() {
     private var speedPid: String? = null
     private var fuelUsedPid: String? = null
     private var fuelUsedUnit: String = "gal"
+    private var speedUnit: String = "mph"
     private var mpgPid: String? = null
     private var mpgUnit: String = "mpg"
     private var lastRawPct: Double? = null
@@ -114,6 +115,10 @@ class PluginService : Service() {
         val t = torque ?: return
         fordPid = runCatching { Pids.resolveFordFuel(t) }.getOrNull()
         speedPid = runCatching { Pids.pickExisting(t, Pids.SPEED) }.getOrNull() ?: Pids.SPEED
+        speedPid?.let { id ->
+            val info = runCatching { t.getPIDInformation(arrayOf(id))?.firstOrNull() }.getOrNull()
+            speedUnit = Pids.csvUnit(info)
+        }
         fuelUsedPid = runCatching {
             Pids.pickExisting(t, Pids.FUEL_USED_TRIP, Pids.FUEL_USED_SESSION)
         }.getOrNull()
@@ -156,7 +161,8 @@ class PluginService : Service() {
         if (ecu == true && !sessions.isOpen) {
             openSession()
         }
-        val speed = speedPid?.let { readDouble(t, it) } ?: 0.0
+        val speedRaw = speedPid?.let { readDouble(t, it) } ?: 0.0
+        val speedMph = FuelMath.toMph(speedRaw, speedUnit)
         if (sessions.isOpen) {
             val absUsed = fuelUsedPid?.let { readDouble(t, it) }
             val relUsed = if (absUsed == null) {
@@ -169,13 +175,22 @@ class PluginService : Service() {
                     t = System.currentTimeMillis(),
                     rawPct = live,
                     fuelUsedGal = relUsed,
-                    speed = speed,
+                    speed = speedRaw,
                 ),
             )
         }
-        val smoothed = math.ingest(live)
+        val before = math.smoothed
+        val prevMode = math.mode
+        val smoothed = math.ingest(live, speedMph)
+        if (math.mode == TrackMode.FILL && prevMode != TrackMode.FILL) {
+            val delta = live - (before ?: live)
+            Log.i(TAG, "fill start Δ=${"%.1f".format(delta)} raw=$live smoothedWas=${before} speedMph=${"%.1f".format(speedMph)}")
+        }
+        if (prevMode == TrackMode.FILL && math.mode != TrackMode.FILL) {
+            Log.i(TAG, "fill end raw=$live smoothed=$smoothed speedMph=${"%.1f".format(speedMph)}")
+        }
         publishFromSmoothed(t, live, smoothed)
-        Log.i(TAG, "track mode=${math.mode} raw=$live smoothed=$smoothed")
+        Log.i(TAG, "track mode=${math.mode} raw=$live smoothed=$smoothed speedMph=${"%.1f".format(speedMph)}")
     }
 
     private fun publishHeld(t: ITorqueService, raw: Double?, held: Double) {
