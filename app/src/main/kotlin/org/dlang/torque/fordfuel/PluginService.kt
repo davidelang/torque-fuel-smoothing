@@ -263,11 +263,17 @@ class PluginService : Service() {
     }
 
     private fun goForeground(text: String) {
-        val n = notification(text)
-        if (Build.VERSION.SDK_INT >= 29) {
-            startForeground(NOTIF_ID, n, ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE)
-        } else {
-            startForeground(NOTIF_ID, n)
+        try {
+            val n = notification(text)
+            when {
+                Build.VERSION.SDK_INT >= 34 ->
+                    startForeground(NOTIF_ID, n, ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
+                Build.VERSION.SDK_INT >= 29 ->
+                    startForeground(NOTIF_ID, n, 0)
+                else -> startForeground(NOTIF_ID, n)
+            }
+        } catch (t: Throwable) {
+            Log.w(TAG, "goForeground ignored: ${t.javaClass.simpleName} ${t.message}")
         }
     }
 
