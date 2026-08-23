@@ -33,6 +33,7 @@ class PluginService : Service() {
     private var lastSliderPct: Double? = null
     private var lastEcuConnected: Boolean? = null
     private var sliderWritable: Boolean? = null
+    private var nameplateGal: Double? = null
 
     private val poll = object : Runnable {
         override fun run() {
@@ -47,6 +48,7 @@ class PluginService : Service() {
             Log.i(TAG, "bound Torque API ${runCatching { torque?.version }.getOrNull()}")
             resolvePids()
             runCatching { binStore.loadFromProfile(torque!!) }
+            nameplateGal = TankSeed.seed(torque!!)
             registerPluginPids(torque!!)
             handler.removeCallbacks(poll)
             handler.post(poll)

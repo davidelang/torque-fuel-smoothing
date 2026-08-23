@@ -24,3 +24,9 @@
 - Magic-approved plan: `sandbox/plans/old-ford-fuel-usable-from-map-20260822-2055-plan.md`
 - Scope: rename to Old Ford Fuel / `[OldFord]`; no tank UI; remaining gallons from map (not %/100×35). Exclude FGS/insets already at 79d6573.
 - No `./deploy` / `adb install` by coder; compile only via `./build_app`.
+
+## 2026-08-22 - Phase 2: tank nameplate seed (no UI, no hardcoded 35)
+
+- On Torque bind, probe `getSettingString` / `getSettingInt` / `retrieveProfileData` for `tankCapacity` and `profileTankCapacity` (liters if >80, else gal).
+- Persist `org.dlang.torque.fordfuel.nameplateGal` if a key works.
+- Runtime result is logcat `FordFuel` line `tank seed gal=… from …` or `tank seed none` (not known until human deploy).
