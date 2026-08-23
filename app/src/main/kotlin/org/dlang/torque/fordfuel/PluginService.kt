@@ -173,7 +173,7 @@ class PluginService : Service() {
                 ),
             )
         }
-        val smoothed = math.ingestEma(live)
+        val smoothed = math.ingest(live)
         publishFromSmoothed(t, live, smoothed)
         Log.i(TAG, "track mode=${math.mode} raw=$live smoothed=$smoothed")
     }

@@ -20,6 +20,7 @@ internal class FuelMath {
         private set
     var mode: TrackMode = TrackMode.HOLD
         private set
+    private var lastIngestMs: Long? = null
 
     fun isValidSample(raw: Double?, ecuConnected: Boolean?): Boolean {
         if (ecuConnected == false) return false
@@ -36,10 +37,24 @@ internal class FuelMath {
         mode = TrackMode.HOLD
     }
 
-    fun ingestEma(raw: Double, alpha: Double = ALPHA): Double {
+    fun ingest(raw: Double, nowMs: Long = System.currentTimeMillis()): Double {
         val prev = smoothed
-        val y = if (prev == null) raw else alpha * raw + (1.0 - alpha) * prev
+        val last = lastIngestMs
+        lastIngestMs = nowMs
+        if (prev == null) {
+            smoothed = raw
+            mode = TrackMode.SKEW
+            return raw
+        }
+        if (mode == TrackMode.FILL) {
+            smoothed = raw
+            return raw
+        }
+        val dtSec = if (last == null) 1.0 else ((nowMs - last).coerceAtLeast(0L) / 1000.0).coerceAtLeast(0.001)
+        val maxStep = SKEW_PCT_PER_SEC * dtSec
+        val y = prev + (raw - prev).coerceIn(-maxStep, maxStep)
         smoothed = y
+        mode = TrackMode.SKEW
         return y
     }
 
@@ -68,7 +83,7 @@ internal class FuelMath {
     }
 
     companion object {
-        const val ALPHA = 0.25
+        const val SKEW_PCT_PER_SEC = 0.05
         const val PINNED_ZERO = 0.5
         const val NEAR_EMPTY_PCT = 5.0
         private const val STEP = 1.0
