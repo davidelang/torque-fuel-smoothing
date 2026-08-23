@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowInsets
 import android.widget.TextView
 
 class MainActivity : Activity() {
@@ -15,8 +16,25 @@ class MainActivity : Activity() {
             "\n\nEnable this plugin in Torque → Settings → Plugins.\n" +
             "Then set extra PID [FORD]Fuel Level as Overrides PID for Fuel Level (From Engine ECU)."
         tv.textSize = 16f
-        tv.setPadding(48, 48, 48, 48)
+        tv.setPadding(PAD, PAD, PAD, PAD)
+        tv.setOnApplyWindowInsetsListener { v, insets ->
+            if (Build.VERSION.SDK_INT >= 30) {
+                val types = WindowInsets.Type.statusBars() or WindowInsets.Type.captionBar()
+                val bars = insets.getInsets(types)
+                v.setPadding(PAD + bars.left, PAD + bars.top, PAD + bars.right, PAD + bars.bottom)
+            } else {
+                @Suppress("DEPRECATION")
+                v.setPadding(
+                    PAD + insets.systemWindowInsetLeft,
+                    PAD + insets.systemWindowInsetTop,
+                    PAD + insets.systemWindowInsetRight,
+                    PAD + insets.systemWindowInsetBottom,
+                )
+            }
+            insets
+        }
         setContentView(tv)
+        tv.requestApplyInsets()
     }
 
     override fun onStart() {
@@ -35,5 +53,6 @@ class MainActivity : Activity() {
 
     companion object {
         private const val TAG = "FordFuel"
+        private const val PAD = 48
     }
 }

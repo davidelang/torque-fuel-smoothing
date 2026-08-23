@@ -12,10 +12,10 @@ internal object Pids {
     const val LONG_TERM_MPG = "ff5201"
     const val DTE = "ff126a"
 
-    const val PLUGIN_FORD = "Plugin Ford Fuel"
-    const val PLUGIN_SMOOTHED = "Smoothed Fuel Level"
-    const val PLUGIN_REMAINING = "Ford Fuel Remaining"
-    const val PLUGIN_DTE = "Plugin DTE"
+    const val PLUGIN_FORD = "[E350] Plugin Ford Fuel"
+    const val PLUGIN_SMOOTHED = "[E350] Smoothed Fuel Level"
+    const val PLUGIN_REMAINING = "[E350] Ford Fuel Remaining"
+    const val PLUGIN_DTE = "[E350] Plugin DTE"
 
     fun csvName(info: String?): String {
         if (info.isNullOrEmpty()) return ""

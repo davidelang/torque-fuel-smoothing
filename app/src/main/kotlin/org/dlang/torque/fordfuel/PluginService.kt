@@ -47,6 +47,7 @@ class PluginService : Service() {
             Log.i(TAG, "bound Torque API ${runCatching { torque?.version }.getOrNull()}")
             resolvePids()
             runCatching { binStore.loadFromProfile(torque!!) }
+            registerPluginPids(torque!!)
             handler.removeCallbacks(poll)
             handler.post(poll)
         }
@@ -181,6 +182,16 @@ class PluginService : Service() {
         } else {
             closeSession()
         }
+    }
+
+    private fun registerPluginPids(t: ITorqueService) {
+        runCatching {
+            t.setPIDInformation(Pids.PLUGIN_FORD, "PFord", "%", 100f, 0f, 0f, null)
+            t.setPIDInformation(Pids.PLUGIN_SMOOTHED, "SmFuel", "%", 100f, 0f, 0f, null)
+            t.setPIDInformation(Pids.PLUGIN_REMAINING, "GalLeft", "gal", Units.TANK_GAL.toFloat(), 0f, 0f, null)
+            t.setPIDInformation(Pids.PLUGIN_DTE, "pDTE", "mi", 500f, 0f, 0f, null)
+        }.onFailure { Log.w(TAG, "registerPluginPids: ${it.message}") }
+        Log.i(TAG, "registered ${Pids.PLUGIN_SMOOTHED}, ${Pids.PLUGIN_REMAINING}, ${Pids.PLUGIN_DTE}, ${Pids.PLUGIN_FORD}")
     }
 
     private fun publish(
