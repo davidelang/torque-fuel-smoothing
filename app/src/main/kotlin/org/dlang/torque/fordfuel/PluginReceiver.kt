@@ -3,18 +3,20 @@ package org.dlang.torque.fordfuel
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.util.Log
 
 class PluginReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
-        val action = intent?.action ?: return
-        Log.i(TAG, "onReceive $action")
-        val start = Intent(context, PluginService::class.java).setAction(action)
-        if (Build.VERSION.SDK_INT >= 26) {
-            context.startForegroundService(start)
-        } else {
-            context.startService(start)
+        try {
+            val action = intent?.action ?: return
+            Log.i(TAG, "onReceive $action")
+            if (!PluginService.isRunning) {
+                Log.i(TAG, "PluginService not running; skip start (open Ford E-350 Fuel once)")
+                return
+            }
+            context.startService(Intent(context, PluginService::class.java).setAction(action))
+        } catch (t: Throwable) {
+            Log.w(TAG, "onReceive ignored: ${t.javaClass.simpleName} ${t.message}")
         }
     }
 

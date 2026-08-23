@@ -63,6 +63,7 @@ class PluginService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        isRunning = true
         sessions = SessionStore(this)
         binStore = BinStore(this)
         ensureChannel()
@@ -88,6 +89,7 @@ class PluginService : Service() {
             bound = false
         }
         torque = null
+        isRunning = false
         super.onDestroy()
     }
 
@@ -290,5 +292,8 @@ class PluginService : Service() {
         private const val POLL_MS = 1000L
         const val ACTION_OBD_CONNECTED = "org.prowl.torque.OBD_CONNECTED"
         const val ACTION_OBD_DISCONNECTED = "org.prowl.torque.OBD_DISCONNECTED"
+
+        @Volatile
+        var isRunning: Boolean = false
     }
 }
