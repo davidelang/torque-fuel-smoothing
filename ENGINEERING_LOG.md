@@ -36,3 +36,9 @@
 - Magic-approved plan: `sandbox/plans/old-ford-fuel-smooth-skew-fill-20260823-1509-plan.md`
 - Scope: display smoother only — hold-on-missing, 0.05 %/s skew cap, fill snap at speed 0. Do not change mapping bins, gal/hr, dual-name publish, or docs.
 - No `./deploy` / `adb install` by coder; compile only via `./build_app`.
+
+## 2026-08-23 - Execute start: old-ford-fuel-bind-no-autocreate-20260823-1558-plan.md
+
+- Magic-approved plan: `sandbox/plans/old-ford-fuel-bind-no-autocreate-20260823-1558-plan.md`
+- Scope: ANR fix only — never BIND_AUTO_CREATE Torque; no create-retry loop; bound = onServiceConnected; PID resolve off bind callback. Do not change smoother/mapping/dual-name/docs.
+- No `./deploy` / `adb install` by coder; compile only via `./build_app`.

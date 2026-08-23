@@ -21,7 +21,9 @@ class PluginService : Service() {
     private lateinit var binStore: BinStore
     private val math = FuelMath()
     private var torque: ITorqueService? = null
+    /** True only after onServiceConnected, not merely bindService returning true. */
     private var bound = false
+    private var bindRequested = false
     private var fordPid: String? = null
     private var speedPid: String? = null
     private var fuelUsedPid: String? = null
@@ -46,6 +48,8 @@ class PluginService : Service() {
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             torque = ITorqueService.Stub.asInterface(service)
+            bound = true
+            bindRequested = true
             Log.i(TAG, "bound Torque API ${runCatching { torque?.version }.getOrNull()}")
             resolvePids()
             runCatching { binStore.loadFromProfile(torque!!) }
@@ -56,12 +60,13 @@ class PluginService : Service() {
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
-            Log.w(TAG, "Torque disconnected")
+            Log.w(TAG, "Torque disconnected; not auto-creating")
             closeSession()
             torque = null
+            bound = false
+            bindRequested = false
             lastEcuConnected = null
             handler.removeCallbacks(poll)
-            handler.postDelayed({ bindTorque() }, 2000)
         }
     }
 
@@ -77,21 +82,28 @@ class PluginService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when (intent?.action) {
-            ACTION_OBD_CONNECTED -> onEcu(true)
+            ACTION_OBD_CONNECTED -> {
+                onEcu(true)
+                bindTorque()
+            }
+            ACTION_PID_QUERY, ACTION_PID_PLUGIN -> bindTorque()
             ACTION_OBD_DISCONNECTED -> onEcu(false)
         }
         goForeground(statusText())
-        if (!bound) bindTorque()
+        if (intent?.action.isNullOrEmpty()) {
+            bindTorque()
+        }
         return START_STICKY
     }
 
     override fun onDestroy() {
         handler.removeCallbacks(poll)
         closeSession()
-        if (bound) {
+        if (bindRequested) {
             runCatching { unbindService(connection) }
-            bound = false
         }
+        bindRequested = false
+        bound = false
         torque = null
         isRunning = false
         super.onDestroy()
@@ -100,15 +112,23 @@ class PluginService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     private fun bindTorque() {
-        val intent = Intent().setClassName("org.prowl.torque", "org.prowl.torque.remote.TorqueService")
+        if (bound || bindRequested) return
+        val flags = 0
+        Log.i(TAG, "bindTorque flags=$flags (no BIND_AUTO_CREATE)")
         val ok = runCatching {
-            bindService(intent, connection, BIND_AUTO_CREATE)
+            bindService(intentForTorque(), connection, flags)
         }.getOrDefault(false)
-        bound = ok
-        if (!ok) {
-            Log.w(TAG, "bindService failed; retry")
-            handler.postDelayed({ bindTorque() }, 3000)
+        if (ok) {
+            bindRequested = true
+            Log.i(TAG, "bindService ok (waiting onServiceConnected; flags=$flags)")
+        } else {
+            bindRequested = false
+            Log.i(TAG, "bindService fail flags=$flags (Torque not running; will not create)")
         }
+    }
+
+    private fun intentForTorque(): Intent {
+        return Intent().setClassName("org.prowl.torque", "org.prowl.torque.remote.TorqueService")
     }
 
     private fun resolvePids() {
@@ -350,6 +370,8 @@ class PluginService : Service() {
         private const val POLL_MS = 1000L
         const val ACTION_OBD_CONNECTED = "org.prowl.torque.OBD_CONNECTED"
         const val ACTION_OBD_DISCONNECTED = "org.prowl.torque.OBD_DISCONNECTED"
+        const val ACTION_PID_QUERY = "org.prowl.torque.PID_QUERY"
+        const val ACTION_PID_PLUGIN = "org.prowl.torque.PID_PLUGIN"
 
         @Volatile
         var isRunning: Boolean = false
