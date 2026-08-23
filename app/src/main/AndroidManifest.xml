@@ -60,7 +60,7 @@
             android:foregroundServiceType="specialUse">
             <property
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
-                android:value="Poll Torque Pro AIDL for E-350 fuel PIDs" />
+                android:value="Poll Torque Pro AIDL for Old Ford Fuel PIDs" />
         </service>
     </application>
 </manifest>

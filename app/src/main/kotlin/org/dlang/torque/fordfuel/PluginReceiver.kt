@@ -11,7 +11,7 @@ class PluginReceiver : BroadcastReceiver() {
             val action = intent?.action ?: return
             Log.i(TAG, "onReceive $action")
             if (!PluginService.isRunning) {
-                Log.i(TAG, "PluginService not running; skip start (open Ford E-350 Fuel once)")
+                Log.i(TAG, "PluginService not running; skip start (open Old Ford Fuel once)")
                 return
             }
             context.startService(Intent(context, PluginService::class.java).setAction(action))
