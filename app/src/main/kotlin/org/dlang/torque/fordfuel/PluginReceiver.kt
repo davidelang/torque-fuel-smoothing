@@ -45,7 +45,10 @@ class PluginReceiver : BroadcastReceiver() {
         private fun shouldStartFgs(action: String): Boolean {
             return action == PluginService.ACTION_PID_QUERY ||
                 action == PluginService.ACTION_PID_PLUGIN ||
-                action == PluginService.ACTION_OBD_CONNECTED
+                action == PluginService.ACTION_OBD_CONNECTED ||
+                action == Intent.ACTION_BOOT_COMPLETED ||
+                action == Intent.ACTION_LOCKED_BOOT_COMPLETED ||
+                action == Intent.ACTION_MY_PACKAGE_REPLACED
         }
     }
 }
