@@ -1,8 +1,13 @@
 package org.dlang.torque.fordfuel
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.util.Log
 
 class PluginReceiver : BroadcastReceiver() {
@@ -10,11 +15,25 @@ class PluginReceiver : BroadcastReceiver() {
         try {
             val action = intent?.action ?: return
             Log.i(TAG, "onReceive $action")
-            if (!PluginService.isRunning) {
-                Log.i(TAG, "PluginService not running; skip start (open Old Ford Fuel once)")
+            val start = Intent(context, PluginService::class.java).setAction(action)
+            if (PluginService.isRunning) {
+                context.startService(start)
                 return
             }
-            context.startService(Intent(context, PluginService::class.java).setAction(action))
+            if (!shouldStartFgs(action)) {
+                Log.i(TAG, "service not running; skip $action")
+                return
+            }
+            try {
+                if (Build.VERSION.SDK_INT >= 26) {
+                    context.startForegroundService(start)
+                } else {
+                    context.startService(start)
+                }
+            } catch (t: IllegalStateException) {
+                Log.w(TAG, "FGS start denied: ${t.javaClass.simpleName} ${t.message}")
+                TapStartNotice.post(context)
+            }
         } catch (t: Throwable) {
             Log.w(TAG, "onReceive ignored: ${t.javaClass.simpleName} ${t.message}")
         }
@@ -22,5 +41,53 @@ class PluginReceiver : BroadcastReceiver() {
 
     companion object {
         private const val TAG = "FordFuel"
+
+        private fun shouldStartFgs(action: String): Boolean {
+            return action == PluginService.ACTION_PID_QUERY ||
+                action == PluginService.ACTION_PID_PLUGIN ||
+                action == PluginService.ACTION_OBD_CONNECTED
+        }
+    }
+}
+
+internal object TapStartNotice {
+    const val CHANNEL_ID = "fordfuel_tap"
+    const val NOTIF_ID = 351
+
+    fun post(context: Context) {
+        val nm = context.getSystemService(NotificationManager::class.java) ?: return
+        if (Build.VERSION.SDK_INT >= 26) {
+            nm.createNotificationChannel(
+                NotificationChannel(
+                    CHANNEL_ID,
+                    "Old Ford Fuel start",
+                    NotificationManager.IMPORTANCE_HIGH,
+                ),
+            )
+        }
+        val launch = Intent(context, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        val pi = PendingIntent.getActivity(
+            context,
+            0,
+            launch,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+        )
+        val b = if (Build.VERSION.SDK_INT >= 26) {
+            Notification.Builder(context, CHANNEL_ID)
+        } else {
+            @Suppress("DEPRECATION")
+            Notification.Builder(context)
+        }
+        val n = b.setContentTitle(context.getString(R.string.tap_to_start))
+            .setContentText(context.getString(R.string.tap_to_start_text))
+            .setSmallIcon(R.drawable.ic_launcher)
+            .setContentIntent(pi)
+            .setAutoCancel(true)
+            .build()
+        nm.notify(NOTIF_ID, n)
+    }
+
+    fun cancel(context: Context) {
+        context.getSystemService(NotificationManager::class.java)?.cancel(NOTIF_ID)
     }
 }

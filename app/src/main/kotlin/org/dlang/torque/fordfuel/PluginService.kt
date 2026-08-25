@@ -72,6 +72,7 @@ class PluginService : Service() {
         sessions = SessionStore(this)
         binStore = BinStore(this)
         ensureChannel()
+        TapStartNotice.cancel(this)
         goForeground("Binding to Torque…")
         bindTorque()
     }
@@ -340,6 +341,7 @@ class PluginService : Service() {
                     startForeground(NOTIF_ID, n, 0)
                 else -> startForeground(NOTIF_ID, n)
             }
+            TapStartNotice.cancel(this)
         } catch (t: Throwable) {
             Log.w(TAG, "goForeground ignored: ${t.javaClass.simpleName} ${t.message}")
         }
