@@ -42,3 +42,9 @@
 - Magic-approved plan: `sandbox/plans/old-ford-fuel-bind-no-autocreate-20260823-1558-plan.md`
 - Scope: ANR fix only — never BIND_AUTO_CREATE Torque; no create-retry loop; bound = onServiceConnected; PID resolve off bind callback. Do not change smoother/mapping/dual-name/docs.
 - No `./deploy` / `adb install` by coder; compile only via `./build_app`.
+
+## 2026-08-25 - Execute start: old-ford-fuel-autostart-fgs-20260825-1349-plan.md
+
+- Magic-approved plan: `sandbox/plans/old-ford-fuel-autostart-fgs-20260825-1349-plan.md`
+- Scope: auto-start FGS after first install (grants, Torque broadcasts, boot/replace). Do not change smoother/mapping/gal/hr/dual-name/docs. Keep no BIND_AUTO_CREATE Torque.
+- No `./deploy` / `adb install` by coder; compile only via `./build_app`.
