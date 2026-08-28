@@ -222,8 +222,9 @@ class PluginService : Service() {
         val mpgRaw = mpgPid?.let { readDouble(t, it) }
         val mpg = mpgRaw?.let { FuelMath.mpgFrom(it, mpgUnit) } ?: 0.0
         val dte = math.dteMiles(remain, mpg)
-        publish(t, raw, smoothed, auth, remain, dte)
-        maybeSyncSlider(t, auth)
+        val corrected = smoothed
+        publish(t, raw, smoothed, corrected, remain, dte)
+        maybeSyncSlider(t, corrected)
         goForeground(statusText())
     }
 
@@ -239,29 +240,38 @@ class PluginService : Service() {
 
     private fun registerPluginPids(t: ITorqueService) {
         runCatching {
-            t.setPIDInformation(Pids.PLUGIN_FORD, "PFord", "%", 100f, 0f, 0f, null)
-            t.setPIDInformation(Pids.PLUGIN_SMOOTHED, "SmFuel", "%", 100f, 0f, 0f, null)
-            t.setPIDInformation(Pids.PLUGIN_REMAINING, "GalLeft", "gal", remainingMax(), 0f, 0f, null)
-            t.setPIDInformation(Pids.PLUGIN_DTE, "pDTE", "mi", 500f, 0f, 0f, null)
+            publishFour(t, 0.0, 0.0, 0.0, 0.0)
         }.onFailure { Log.w(TAG, "registerPluginPids: ${it.message}") }
-        Log.i(TAG, "registered ${Pids.PLUGIN_SMOOTHED}, ${Pids.PLUGIN_REMAINING}, ${Pids.PLUGIN_DTE}, ${Pids.PLUGIN_FORD}")
+        Log.i(TAG, "registered ${Pids.PLUGIN_SMOOTHED}, ${Pids.PLUGIN_CORRECTED}, ${Pids.PLUGIN_REMAINING}, ${Pids.PLUGIN_DTE}")
     }
 
     private fun publish(
         t: ITorqueService,
         raw: Double,
         smoothed: Double,
-        auth: Double,
+        corrected: Double,
         remain: Double,
         dte: Double,
     ) {
-        runCatching {
-            t.setPIDInformation(Pids.PLUGIN_FORD, "PFord", "%", 100f, 0f, raw.toFloat(), null)
-            t.setPIDInformation(Pids.PLUGIN_SMOOTHED, "SmFuel", "%", 100f, 0f, smoothed.toFloat(), null)
-            t.setPIDInformation(Pids.PLUGIN_REMAINING, "GalLeft", "gal", remainingMax(), 0f, remain.toFloat(), null)
-            t.setPIDInformation(Pids.PLUGIN_DTE, "pDTE", "mi", 500f, 0f, dte.toFloat(), null)
-            t.setPIDInformation(Pids.FORD_FUEL_NAME, "Fuel", "%", 100f, 0f, auth.toFloat(), null)
-        }
+        runCatching { publishFour(t, smoothed, corrected, remain, dte) }
+    }
+
+    private fun publishFour(
+        t: ITorqueService,
+        smoothed: Double,
+        corrected: Double,
+        remain: Double,
+        dte: Double,
+    ) {
+        val rmax = remainingMax()
+        t.setPIDInformation(Pids.PLUGIN_SMOOTHED, "SmFuel", "%", 100f, 0f, smoothed.toFloat(), null)
+        t.setPIDInformation(Pids.PLUGIN_CORRECTED, "CorrFuel", "%", 100f, 0f, corrected.toFloat(), null)
+        t.setPIDInformation(Pids.PLUGIN_REMAINING, "GalLeft", "gal", rmax, 0f, remain.toFloat(), null)
+        t.setPIDInformation(Pids.PLUGIN_DTE, "pDTE", "mi", 500f, 0f, dte.toFloat(), null)
+        t.setPIDInformation(Pids.ALIAS_SMOOTHED, "SmFuel", "%", 100f, 0f, smoothed.toFloat(), null)
+        t.setPIDInformation(Pids.ALIAS_FORD, "PFord", "%", 100f, 0f, corrected.toFloat(), null)
+        t.setPIDInformation(Pids.ALIAS_REMAINING, "GalLeft", "gal", rmax, 0f, remain.toFloat(), null)
+        t.setPIDInformation(Pids.ALIAS_DTE, "pDTE", "mi", 500f, 0f, dte.toFloat(), null)
     }
 
     private fun maybeSyncSlider(t: ITorqueService, auth: Double) {
@@ -317,8 +327,8 @@ class PluginService : Service() {
         val p = lastRawPct
         val sid = sessions.sessionId
         return buildString {
-            if (p == null) append("Waiting for [FORD]Fuel Level")
-            else append("Ford ${"%.1f".format(p)}% auth ${"%.1f".format(lastAuthPct ?: p)}%")
+            if (p == null) append("Waiting for fuel source")
+            else append("raw ${"%.1f".format(p)}% corr ${"%.1f".format(lastAuthPct ?: p)}%")
             if (sid != null) append(" sess ${sid.takeLast(8)}")
         }
     }
@@ -327,7 +337,7 @@ class PluginService : Service() {
         if (Build.VERSION.SDK_INT < 26) return
         val nm = getSystemService(NotificationManager::class.java) ?: return
         nm.createNotificationChannel(
-            NotificationChannel(CHANNEL_ID, "Ford fuel plugin", NotificationManager.IMPORTANCE_LOW),
+            NotificationChannel(CHANNEL_ID, "Fix Fuel", NotificationManager.IMPORTANCE_LOW),
         )
     }
 

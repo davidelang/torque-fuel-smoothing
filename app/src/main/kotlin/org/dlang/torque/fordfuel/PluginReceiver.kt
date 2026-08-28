@@ -63,7 +63,7 @@ internal object TapStartNotice {
             nm.createNotificationChannel(
                 NotificationChannel(
                     CHANNEL_ID,
-                    "Old Ford Fuel start",
+                    "Fix Fuel start",
                     NotificationManager.IMPORTANCE_HIGH,
                 ),
             )

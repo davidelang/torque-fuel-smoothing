@@ -48,3 +48,9 @@
 - Magic-approved plan: `sandbox/plans/old-ford-fuel-autostart-fgs-20260825-1349-plan.md`
 - Scope: auto-start FGS after first install (grants, Torque broadcasts, boot/replace). Do not change smoother/mapping/gal/hr/dual-name/docs. Keep no BIND_AUTO_CREATE Torque.
 - No `./deploy` / `adb install` by coder; compile only via `./build_app`.
+
+## 2026-08-28 - Execute start: fix-fuel-config-sources-20260828-1301-plan.md
+
+- Magic-approved plan: `sandbox/plans/fix-fuel-config-sources-20260828-1301-plan.md`
+- Scope: rename to Fix Fuel; config page; vendor sources; 012F collect-without-loop; corrected % identity until bins; map from smoothed vs gal/hr. No docs/, no autostart/battery work.
+- No `./deploy` / `adb install` by coder; compile only via `./build_app`.

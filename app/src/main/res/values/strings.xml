@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Old Ford Fuel (torque plugin)</string>
-    <string name="help_body">Enable this plugin in Torque → Settings → Plugins.\nSet extra PID [FORD]Fuel Level as Overrides PID for Fuel Level (From Engine ECU).\n\nAllow notifications and Unrestricted battery when asked, then leave this app alone. Torque start / adapter / reboot will keep the plugin notice up.\n\nForce stop (App info) puts the app in Android stopped state until you open it once — that is OS, not avoidable.</string>
-    <string name="tap_to_start">Tap to start Old Ford Fuel</string>
+    <string name="app_name">Fix Fuel</string>
+    <string name="help_body">Enable this plugin in Torque → Settings → Plugins.\n\nClear any Ford extra-PID override. Set Overrides PID for Fuel Level (From Engine ECU) to [FixFuel] Corrected Fuel Level (or [FixFuel] Smoothed Fuel Level). Keep Use vehicle fuel level sensor. Do not override 012F with the Ford extra PID; Ford 16C1 is a source, not the override target.\n\nAllow notifications and Unrestricted battery when asked, then leave this app alone. Torque start / adapter / reboot will keep the plugin notice up.\n\nForce stop (App info) puts the app in Android stopped state until you open it once — that is OS, not avoidable.</string>
+    <string name="tap_to_start">Tap to start Fix Fuel</string>
     <string name="tap_to_start_text">Battery/background start was denied. Open once so the plugin can run with Torque.</string>
 </resources>
