@@ -37,6 +37,17 @@ class PluginService : Service() {
     private var lastEcuConnected: Boolean? = null
     private var sliderWritable: Boolean? = null
     private var nameplateGal: Double? = null
+    private var cfg: FixFuelConfig = FixFuelConfig(
+        sourceId = FixFuelPrefs.DEFAULT_SOURCE,
+        customName = "",
+        tauSec = FixFuelPrefs.DEFAULT_TAU,
+        skewPctPerSec = FixFuelPrefs.DEFAULT_SKEW,
+        jumpPct = FixFuelPrefs.DEFAULT_JUMP,
+        tankGal = null,
+        learnedUsable = null,
+        tankEstimated = false,
+        sourceStatus = "",
+    )
 
     private val poll = object : Runnable {
         override fun run() {
@@ -155,6 +166,8 @@ class PluginService : Service() {
     }
 
     private fun sampleOnce() {
+        cfg = FixFuelPrefs.load(this)
+        nameplateGal = cfg.learnedUsable ?: cfg.tankGal
         val t = torque ?: return
         val ecu = runCatching { t.isConnectedToECU }.getOrNull()
         if (ecu != null && ecu != lastEcuConnected) {
@@ -198,7 +211,7 @@ class PluginService : Service() {
         }
         val before = math.smoothed
         val prevMode = math.mode
-        val smoothed = math.ingest(live, speedMph)
+        val smoothed = math.ingest(live, speedMph, tauSec = cfg.tauSec, skewPctPerSec = cfg.skewPctPerSec, jumpPct = cfg.jumpPct)
         if (math.mode == TrackMode.FILL && prevMode != TrackMode.FILL) {
             val delta = live - (before ?: live)
             Log.i(TAG, "fill start Δ=${"%.1f".format(delta)} raw=$live smoothedWas=${before} speedMph=${"%.1f".format(speedMph)}")
@@ -207,7 +220,9 @@ class PluginService : Service() {
             Log.i(TAG, "fill end raw=$live smoothed=$smoothed speedMph=${"%.1f".format(speedMph)}")
         }
         publishFromSmoothed(t, live, smoothed)
-        Log.i(TAG, "track mode=${math.mode} raw=$live smoothed=$smoothed speedMph=${"%.1f".format(speedMph)}")
+        val line = "track mode=${math.mode} raw=$live smoothed=$smoothed speedMph=${"%.1f".format(speedMph)}"
+        Log.i(TAG, line)
+        FixFuelPrefs.setLive(this, line)
     }
 
     private fun publishHeld(t: ITorqueService, raw: Double?, held: Double) {

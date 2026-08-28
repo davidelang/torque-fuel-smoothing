@@ -40,7 +40,14 @@ internal class FuelMath {
         mode = TrackMode.HOLD
     }
 
-    fun ingest(raw: Double, speedMph: Double, nowMs: Long = System.currentTimeMillis()): Double {
+    fun ingest(
+        raw: Double,
+        speedMph: Double,
+        nowMs: Long = System.currentTimeMillis(),
+        tauSec: Double = 0.0,
+        skewPctPerSec: Double = SKEW_PCT_PER_SEC,
+        jumpPct: Double = FILL_JUMP_PCT,
+    ): Double {
         val prev = smoothed
         val last = lastIngestMs
         lastIngestMs = nowMs
@@ -51,7 +58,7 @@ internal class FuelMath {
         }
         if (mode != TrackMode.FILL &&
             speedMph <= FILL_ENTER_SPEED_MPH &&
-            raw - prev >= FILL_JUMP_PCT
+            raw - prev >= jumpPct
         ) {
             mode = TrackMode.FILL
             smoothed = raw
@@ -64,8 +71,14 @@ internal class FuelMath {
             return followFill(raw, speedMph, nowMs)
         }
         val dtSec = if (last == null) 1.0 else ((nowMs - last).coerceAtLeast(0L) / 1000.0).coerceAtLeast(0.001)
-        val maxStep = SKEW_PCT_PER_SEC * dtSec
-        val y = prev + (raw - prev).coerceIn(-maxStep, maxStep)
+        val ema = if (tauSec <= 0.0) {
+            raw
+        } else {
+            val a = dtSec / (tauSec + dtSec)
+            a * raw + (1.0 - a) * prev
+        }
+        val maxStep = skewPctPerSec.coerceAtLeast(0.0) * dtSec
+        val y = prev + (ema - prev).coerceIn(-maxStep, maxStep)
         smoothed = y
         mode = TrackMode.SKEW
         return y
