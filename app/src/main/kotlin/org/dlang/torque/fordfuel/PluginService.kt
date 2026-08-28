@@ -37,6 +37,7 @@ class PluginService : Service() {
     private var lastEcuConnected: Boolean? = null
     private var sliderWritable: Boolean? = null
     private var nameplateGal: Double? = null
+    private var pidNames: Map<String, String> = emptyMap()
     private var cfg: FixFuelConfig = FixFuelConfig(
         sourceId = FixFuelPrefs.DEFAULT_SOURCE,
         customName = "",
@@ -159,9 +160,10 @@ class PluginService : Service() {
         if (r.fuelUsedUnit.isNotEmpty()) fuelUsedUnit = r.fuelUsedUnit
         mpgPid = r.mpg
         if (r.mpgUnit.isNotEmpty()) mpgUnit = r.mpgUnit
+        pidNames = r.names
         Log.i(
             TAG,
-            "pids ford=${fordPid ?: "UNRESOLVED"} speed=$speedPid fuelUsed=$fuelUsedPid unit=$fuelUsedUnit mpg=$mpgPid",
+            "pids ford=${fordPid ?: "UNRESOLVED"} speed=$speedPid fuelUsed=$fuelUsedPid unit=$fuelUsedUnit mpg=$mpgPid names=${pidNames.size}",
         )
     }
 
@@ -173,17 +175,21 @@ class PluginService : Service() {
         if (ecu != null && ecu != lastEcuConnected) {
             onEcu(ecu)
         }
-        if (fordPid == null) resolvePids()
-        val pid = fordPid ?: return
-        val raw = readDouble(t, pid)
-        val valid = math.isValidSample(raw, ecu)
+        if (pidNames.isEmpty()) resolvePids()
+        val src = FuelSources.read(t, cfg, pidNames) { id -> readDouble(t, id) }
+        if (src.how != cfg.sourceStatus) {
+            FixFuelPrefs.setSourceStatus(this, src.how)
+        }
+        Log.i(TAG, "source ${cfg.sourceId} ${src.how}")
+        val raw = src.pct
+        val valid = math.isValidSample(raw, ecu) && !src.missing
         if (!valid) {
             math.hold()
             val held = math.smoothed
             if (held != null) {
                 publishHeld(t, raw, held)
             }
-            Log.i(TAG, "track mode=hold raw=$raw smoothed=$held ecu=$ecu")
+            Log.i(TAG, "track mode=hold raw=$raw smoothed=$held ecu=$ecu src=${src.how}")
             return
         }
         val live = raw!!

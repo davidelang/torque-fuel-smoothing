@@ -29,4 +29,77 @@ internal object FuelSources {
         val i = catalog.indexOfFirst { it.id == id }
         return if (i >= 0) i else catalog.indexOfFirst { it.id == "ford_16c1" }
     }
+
+    data class Read(
+        val pct: Double?,
+        val how: String,
+        val missing: Boolean,
+    )
+
+    fun read(
+        torque: org.prowl.torque.remote.ITorqueService,
+        cfg: FixFuelConfig,
+        names: Map<String, String>,
+        getValue: (String) -> Double?,
+    ): Read {
+        val src = byId(cfg.sourceId)
+        if (src.id == "sae_012f") {
+            val resp = bus(torque, "", "012F") ?: bus(torque, "", "01 2F")
+            val a = parseAAfter(resp, "412F")
+            val pct = a?.let { it * 100.0 / 255.0 }
+            return if (pct != null) Read(pct, "bus 012F A*100/255", false)
+            else Read(null, "missing bus 012F (add extra PID set or ECU has no 012F)", true)
+        }
+        if (src.id == "custom_name") {
+            val want = cfg.customName.trim()
+            if (want.isEmpty()) return Read(null, "set custom long name", true)
+            val id = names[want] ?: names.entries.firstOrNull { it.key.equals(want, ignoreCase = true) }?.value
+            val v = id?.let(getValue)
+            return if (v != null) Read(v, "name $want", false)
+            else Read(null, "add extra PID set named $want", true)
+        }
+        src.longName?.let { ln ->
+            val id = names[ln]
+            val v = id?.let(getValue)
+            if (v != null) return Read(v, "name $ln", false)
+        }
+        val cmd = src.modePid
+        if (cmd != null) {
+            val resp = bus(torque, src.header ?: "", cmd)
+            val marker = positiveMarker(cmd)
+            val a = parseAAfter(resp, marker)
+            if (a != null) {
+                var pct = a * 100.0 / 255.0
+                if (src.litersToPct) {
+                    val tank = cfg.tankGal ?: cfg.learnedUsable
+                    pct = if (tank != null && tank > 0.0) a / tank * 100.0 else Double.NaN
+                    if (pct.isNaN()) return Read(null, "toyota liters need tank gal", true)
+                }
+                return Read(pct, "bus ${src.header ?: ""} $cmd", false)
+            }
+            return Read(null, "add extra PID set ${src.label}", true)
+        }
+        return Read(null, "missing ${src.label}", true)
+    }
+
+    private fun bus(t: org.prowl.torque.remote.ITorqueService, header: String, command: String): Array<String>? {
+        return runCatching { t.sendCommandGetResponse(header, command) }.getOrNull()
+    }
+
+    private fun positiveMarker(modePid: String): String {
+        val hex = modePid.replace(" ", "").uppercase()
+        if (hex.startsWith("01") && hex.length >= 4) return "41" + hex.substring(2)
+        if (hex.startsWith("22") && hex.length >= 6) return "62" + hex.substring(2)
+        if (hex.startsWith("21") && hex.length >= 4) return "61" + hex.substring(2)
+        return hex
+    }
+
+    private fun parseAAfter(resp: Array<String>?, marker: String): Int? {
+        if (resp == null || resp.isEmpty()) return null
+        val joined = resp.joinToString("") { it.replace(" ", "").uppercase() }
+        val m = marker.replace(" ", "").uppercase()
+        val i = joined.indexOf(m)
+        if (i < 0 || i + m.length + 2 > joined.length) return null
+        return joined.substring(i + m.length, i + m.length + 2).toIntOrNull(16)
+    }
 }

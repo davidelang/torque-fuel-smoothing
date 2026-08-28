@@ -40,18 +40,19 @@ internal object Pids {
         val speedUnit: String,
         val fuelUsedUnit: String,
         val mpgUnit: String,
+        val names: Map<String, String>,
     )
 
     fun resolve(torque: ITorqueService): Resolved {
         val all = torque.listAllPIDs() ?: emptyArray()
         val infos = if (all.isEmpty()) emptyArray() else torque.getPIDInformation(all) ?: emptyArray()
         val n = minOf(all.size, infos.size)
+        val names = LinkedHashMap<String, String>()
         var fordByName: String? = null
         for (i in 0 until n) {
-            if (csvName(infos[i]) == FORD_FUEL_NAME) {
-                fordByName = all[i]
-                break
-            }
+            val nm = csvName(infos[i])
+            if (nm.isNotEmpty()) names[nm] = all[i]
+            if (nm == FORD_FUEL_NAME) fordByName = all[i]
         }
         val storedPrefix = FORD_FUEL_STORED.lowercase()
         val ford = fordByName
@@ -80,6 +81,7 @@ internal object Pids {
             speedUnit = unitOf(speed),
             fuelUsedUnit = unitOf(fuelUsed),
             mpgUnit = unitOf(mpg),
+            names = names,
         )
     }
 }
