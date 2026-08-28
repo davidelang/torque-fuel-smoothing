@@ -14,19 +14,12 @@ internal class BinStore(context: Context) {
         private set
 
     init {
+        clearLegacyOnce(context)
         loadFile()
     }
 
     fun loadFromProfile(torque: ITorqueService) {
-        val s = runCatching { torque.retrieveProfileData("${Pids.PREFIX}bins") }.getOrNull()
-        if (s.isNullOrBlank()) return
-        val parsed = parse(s)
-        if (parsed.bins.isNotEmpty() || parsed.reserveGal > 0.0) {
-            bins.clear()
-            bins.addAll(parsed.bins)
-            reserveGal = parsed.reserveGal
-            saveFile()
-        }
+        // v2 mapping starts empty; do not load raw×trip bins from profile.
     }
 
     fun add(obs: SessionObs) {
@@ -67,6 +60,18 @@ internal class BinStore(context: Context) {
 
     companion object {
         private const val TAG = "FordFuel"
+        private const val KEY_V2 = "bins_v2"
+
+        fun clearLegacyOnce(ctx: Context) {
+            val p = FixFuelPrefs.prefs(ctx)
+            if (p.getBoolean(KEY_V2, false)) return
+            val f = File(ctx.filesDir, "bins.json")
+            if (f.isFile) {
+                val ok = f.delete()
+                Log.i(TAG, "unlinked legacy bins.json ok=$ok")
+            }
+            p.edit().putBoolean(KEY_V2, true).apply()
+        }
 
         data class Parsed(val bins: List<Bin>, val reserveGal: Double)
 

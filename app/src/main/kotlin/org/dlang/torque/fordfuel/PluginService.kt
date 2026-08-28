@@ -28,6 +28,10 @@ class PluginService : Service() {
     private var speedPid: String? = null
     private var fuelUsedPid: String? = null
     private var fuelUsedUnit: String = "gal"
+    private var galHrPid: String? = null
+    private var galMinPid: String? = null
+    private var sessionUsedGal: Double = 0.0
+    private var lastRateMs: Long? = null
     private var speedUnit: String = "mph"
     private var mpgPid: String? = null
     private var mpgUnit: String = "mpg"
@@ -158,6 +162,8 @@ class PluginService : Service() {
         if (r.speedUnit.isNotEmpty()) speedUnit = r.speedUnit
         fuelUsedPid = r.fuelUsed
         if (r.fuelUsedUnit.isNotEmpty()) fuelUsedUnit = r.fuelUsedUnit
+        galHrPid = r.galHr ?: Pids.GAL_PER_HOUR
+        galMinPid = r.galMin ?: Pids.GAL_PER_MIN
         mpgPid = r.mpg
         if (r.mpgUnit.isNotEmpty()) mpgUnit = r.mpgUnit
         pidNames = r.names
@@ -199,31 +205,29 @@ class PluginService : Service() {
         }
         val speedRaw = speedPid?.let { readDouble(t, it) } ?: 0.0
         val speedMph = FuelMath.toMph(speedRaw, speedUnit)
-        if (sessions.isOpen) {
-            val absUsed = fuelUsedPid?.let { readDouble(t, it) }
-            val relUsed = if (absUsed == null) {
-                0.0
-            } else {
-                sessions.relativeFuelUsed(Units.toGallons(absUsed, fuelUsedUnit))
-            }
-            sessions.append(
-                Sample(
-                    t = System.currentTimeMillis(),
-                    rawPct = live,
-                    fuelUsedGal = relUsed,
-                    speed = speedRaw,
-                ),
-            )
-        }
+        val now = System.currentTimeMillis()
         val before = math.smoothed
         val prevMode = math.mode
-        val smoothed = math.ingest(live, speedMph, tauSec = cfg.tauSec, skewPctPerSec = cfg.skewPctPerSec, jumpPct = cfg.jumpPct)
+        val smoothed = math.ingest(live, speedMph, nowMs = now, tauSec = cfg.tauSec, skewPctPerSec = cfg.skewPctPerSec, jumpPct = cfg.jumpPct)
         if (math.mode == TrackMode.FILL && prevMode != TrackMode.FILL) {
             val delta = live - (before ?: live)
             Log.i(TAG, "fill start Δ=${"%.1f".format(delta)} raw=$live smoothedWas=${before} speedMph=${"%.1f".format(speedMph)}")
         }
         if (prevMode == TrackMode.FILL && math.mode != TrackMode.FILL) {
             Log.i(TAG, "fill end raw=$live smoothed=$smoothed speedMph=${"%.1f".format(speedMph)}")
+        }
+        if (sessions.isOpen) {
+            integrateGalHr(t, now)
+            sessions.append(
+                Sample(
+                    t = now,
+                    rawPct = live,
+                    smoothedPct = smoothed,
+                    fuelUsedGal = sessionUsedGal,
+                    speed = speedRaw,
+                    fill = math.mode == TrackMode.FILL,
+                ),
+            )
         }
         publishFromSmoothed(t, live, smoothed)
         val line = "track mode=${math.mode} raw=$live smoothed=$smoothed speedMph=${"%.1f".format(speedMph)}"
@@ -237,13 +241,13 @@ class PluginService : Service() {
 
     private fun publishFromSmoothed(t: ITorqueService, raw: Double, smoothed: Double) {
         val bins = binStore.bins.toList()
-        val auth = smoothed
-        lastAuthPct = auth
-        val remain = math.remainingGal(smoothed, bins, nameplateGal, binStore.reserveGal)
+        val usable = cfg.learnedUsable ?: cfg.tankGal
+        val remain = math.remainingGal(smoothed, bins, usable, binStore.reserveGal)
+        val corrected = math.correctedPct(smoothed, remain, usable, bins.isEmpty())
+        lastAuthPct = corrected
         val mpgRaw = mpgPid?.let { readDouble(t, it) }
         val mpg = mpgRaw?.let { FuelMath.mpgFrom(it, mpgUnit) } ?: 0.0
         val dte = math.dteMiles(remain, mpg)
-        val corrected = smoothed
         publish(t, raw, smoothed, corrected, remain, dte)
         maybeSyncSlider(t, corrected)
         goForeground(statusText())
@@ -315,6 +319,8 @@ class PluginService : Service() {
     private fun openSession() {
         if (sessions.isOpen) closeSession()
         lastSliderPct = null
+        sessionUsedGal = 0.0
+        lastRateMs = null
         val id = sessions.open()
         Log.i(TAG, "session open $id files=${sessions.sessionCount()}")
     }
@@ -325,11 +331,39 @@ class PluginService : Service() {
         val obs = FuelMath.observationsFrom(closed)
         binStore.add(obs)
         binStore.persist(torque)
+        maybeLearnUsable()
         Log.i(
             TAG,
             "session close samples=${closed.size} obs=${obs.bins.size} reserve+=${obs.reserveGal} " +
                 "bins=${binStore.bins.size} reserve=${binStore.reserveGal} files=${sessions.sessionCount()}",
         )
+    }
+
+    private fun integrateGalHr(t: ITorqueService, now: Long) {
+        val last = lastRateMs
+        lastRateMs = now
+        if (last == null) return
+        val dtSec = ((now - last).coerceAtLeast(0L) / 1000.0).coerceAtLeast(0.001)
+        val hr = readDouble(t, galHrPid ?: Pids.GAL_PER_HOUR)
+        val gph = if (hr != null && hr.isFinite() && hr >= 0.0) {
+            hr
+        } else {
+            val gmin = readDouble(t, galMinPid ?: Pids.GAL_PER_MIN)
+            if (gmin != null && gmin.isFinite() && gmin >= 0.0) gmin * 60.0 else return
+        }
+        sessionUsedGal += gph * (dtSec / 3600.0)
+    }
+
+    private fun maybeLearnUsable() {
+        val bins = binStore.bins.toList()
+        val span = FuelMath.coverageSpan(bins)
+        if (bins.size < 2 || span < 20.0) return
+        val usable = math.remainingGal(100.0, bins, cfg.tankGal, binStore.reserveGal)
+        if (usable <= 0.0) return
+        FixFuelPrefs.setLearnedUsable(this, usable)
+        cfg = FixFuelPrefs.load(this)
+        nameplateGal = cfg.learnedUsable ?: cfg.tankGal
+        Log.i(TAG, "learned usable gal=$usable coverageSpan=$span")
     }
 
     private fun remainingMax(): Float {

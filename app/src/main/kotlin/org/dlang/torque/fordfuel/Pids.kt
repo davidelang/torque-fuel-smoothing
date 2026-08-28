@@ -9,6 +9,8 @@ internal object Pids {
     const val SPEED = "0d"
     const val FUEL_USED_TRIP = "ff125c"
     const val FUEL_USED_SESSION = "ff1271"
+    const val GAL_PER_HOUR = "ff125d"
+    const val GAL_PER_MIN = "ff125a"
     const val LONG_TERM_MPG = "ff5201"
     const val DTE = "ff126a"
 
@@ -36,6 +38,8 @@ internal object Pids {
         val ford: String?,
         val speed: String,
         val fuelUsed: String?,
+        val galHr: String?,
+        val galMin: String?,
         val mpg: String,
         val speedUnit: String,
         val fuelUsedUnit: String,
@@ -72,11 +76,15 @@ internal object Pids {
         }
         val speed = pick(SPEED) ?: SPEED
         val fuelUsed = pick(FUEL_USED_TRIP, FUEL_USED_SESSION)
+        val galHr = pick(GAL_PER_HOUR)
+        val galMin = pick(GAL_PER_MIN)
         val mpg = pick(LONG_TERM_MPG) ?: LONG_TERM_MPG
         return Resolved(
             ford = ford,
             speed = speed,
             fuelUsed = fuelUsed,
+            galHr = galHr,
+            galMin = galMin,
             mpg = mpg,
             speedUnit = unitOf(speed),
             fuelUsedUnit = unitOf(fuelUsed),

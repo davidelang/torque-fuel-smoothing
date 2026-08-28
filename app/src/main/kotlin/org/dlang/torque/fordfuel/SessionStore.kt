@@ -9,8 +9,10 @@ import java.util.UUID
 internal data class Sample(
     val t: Long,
     val rawPct: Double,
+    val smoothedPct: Double,
     val fuelUsedGal: Double,
     val speed: Double,
+    val fill: Boolean = false,
 )
 
 internal class SessionStore(context: Context) {
@@ -59,8 +61,10 @@ internal class SessionStore(context: Context) {
         val o = JSONObject()
             .put("t", sample.t)
             .put("rawPct", sample.rawPct)
+            .put("smoothedPct", sample.smoothedPct)
             .put("fuelUsedGal", sample.fuelUsedGal)
             .put("speed", sample.speed)
+            .put("fill", sample.fill)
         f.appendText(o.toString() + "\n")
     }
 

@@ -127,6 +127,11 @@ internal class FuelMath {
         return remainingGal * mpg
     }
 
+    fun correctedPct(smoothed: Double, remain: Double, usable: Double?, binsEmpty: Boolean): Double {
+        if (binsEmpty || usable == null || usable <= 0.0) return smoothed
+        return (100.0 * remain / usable).coerceIn(0.0, 100.0)
+    }
+
     companion object {
         const val SKEW_PCT_PER_SEC = 0.05
         const val PINNED_ZERO = 0.5
@@ -158,29 +163,52 @@ internal class FuelMath {
         }
 
         fun observationsFrom(samples: List<Sample>): SessionObs {
-            if (samples.size < 2) return SessionObs(emptyList(), 0.0)
+            val pts = samples.filter { !it.fill }
+            if (pts.size < 2) return SessionObs(emptyList(), 0.0)
             val out = mutableListOf<Bin>()
             var reserve = 0.0
             var a = 0
-            for (b in 1 until samples.size) {
-                val used = samples[b].fuelUsedGal - samples[a].fuelUsedGal
-                if (samples[a].rawPct <= PINNED_ZERO && samples[b].rawPct <= PINNED_ZERO && used >= 0.05) {
+            for (b in 1 until pts.size) {
+                val used = pts[b].fuelUsedGal - pts[a].fuelUsedGal
+                val sa = pts[a].smoothedPct
+                val sb = pts[b].smoothedPct
+                if (sa <= PINNED_ZERO && sb <= PINNED_ZERO && used >= 0.05) {
                     reserve += used
                     a = b
                     continue
                 }
-                val rise = samples[b].rawPct - samples[b - 1].rawPct
+                val rise = pts[b].smoothedPct - pts[b - 1].smoothedPct
                 if (rise > 2.0) {
                     a = b
                     continue
                 }
-                val drop = samples[a].rawPct - samples[b].rawPct
+                val drop = sa - sb
                 if (drop >= 1.0 && used >= 0.05) {
-                    out.add(Bin(lo = samples[b].rawPct, hi = samples[a].rawPct, gal = used))
+                    out.add(Bin(lo = sb, hi = sa, gal = used))
                     a = b
                 }
             }
             return SessionObs(out, reserve)
+        }
+
+        fun coverageSpan(bins: List<Bin>): Double {
+            if (bins.isEmpty()) return 0.0
+            val sorted = bins.sortedBy { it.lo }
+            var span = 0.0
+            var curLo = sorted[0].lo
+            var curHi = sorted[0].hi
+            for (i in 1 until sorted.size) {
+                val b = sorted[i]
+                if (b.lo <= curHi) {
+                    curHi = maxOf(curHi, b.hi)
+                } else {
+                    span += curHi - curLo
+                    curLo = b.lo
+                    curHi = b.hi
+                }
+            }
+            span += curHi - curLo
+            return span
         }
 
         fun mpgFrom(value: Double, unit: String): Double {
