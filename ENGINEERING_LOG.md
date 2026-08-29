@@ -54,3 +54,9 @@
 - Magic-approved plan: `sandbox/plans/fix-fuel-config-sources-20260828-1301-plan.md`
 - Scope: rename to Fix Fuel; config page; vendor sources; 012F collect-without-loop; corrected % identity until bins; map from smoothed vs gal/hr. No docs/, no autostart/battery work.
 - No `./deploy` / `adb install` by coder; compile only via `./build_app`.
+
+## 2026-08-29 - Execute start: fix-fuel-second-tank-20260828-1409-plan.md
+
+- Magic-approved plan: `sandbox/plans/fix-fuel-second-tank-20260828-1409-plan.md`
+- Scope: optional second independent tank (config, tracker, PIDs, active-tank gal/hr). Tank 1 defaults/autostart/gal-hr unchanged. Copy hardware doc to docs/.
+- No `./deploy` / `adb install` by coder; compile only via `./build_app`.
