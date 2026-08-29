@@ -47,6 +47,7 @@ internal class FuelMath {
         tauSec: Double = 0.0,
         skewPctPerSec: Double = SKEW_PCT_PER_SEC,
         jumpPct: Double = FILL_JUMP_PCT,
+        ignoreFill: Boolean = false,
     ): Double {
         val prev = smoothed
         val last = lastIngestMs
@@ -56,7 +57,8 @@ internal class FuelMath {
             mode = TrackMode.SKEW
             return raw
         }
-        if (mode != TrackMode.FILL &&
+        if (!ignoreFill &&
+            mode != TrackMode.FILL &&
             speedMph <= FILL_ENTER_SPEED_MPH &&
             raw - prev >= jumpPct
         ) {

@@ -7,14 +7,19 @@ import org.json.JSONObject
 import org.prowl.torque.remote.ITorqueService
 import java.io.File
 
-internal class BinStore(context: Context) {
-    private val file = File(context.filesDir, "bins.json")
+internal class BinStore(
+    context: Context,
+    fileName: String = "bins.json",
+    private val profileKey: String = "${Pids.PREFIX}bins",
+    clearLegacy: Boolean = true,
+) {
+    private val file = File(context.filesDir, fileName)
     val bins: MutableList<Bin> = mutableListOf()
     var reserveGal: Double = 0.0
         private set
 
     init {
-        clearLegacyOnce(context)
+        if (clearLegacy) clearLegacyOnce(context)
         loadFile()
     }
 
@@ -33,7 +38,7 @@ internal class BinStore(context: Context) {
         saveFile()
         val body = serialize()
         if (torque != null) {
-            runCatching { torque.storeInProfile("${Pids.PREFIX}bins", body, true) }
+            runCatching { torque.storeInProfile(profileKey, body, true) }
         }
     }
 

@@ -65,3 +65,10 @@
 
 - Continue `sandbox/plans/fix-fuel-second-tank-20260828-1409-plan.md` after compact.
 - Phase 2 already in worktree (`math2` + four `[FixFuel] Tank2 *` PIDs; no 012F/Ford write). Forensic then `./build_app` before Phase 3 (active tank, bins-t2, fill debounce).
+
+## 2026-08-29 - Phase 3: active tank, bins-t2, fill debounce
+
+- `sandbox/plans/fix-fuel-second-tank-20260828-1409-plan.md`
+- Gal/hr integrates only into the active tank session (`tank1` / `tank2` / `from_pid`).
+- Tank 2 sessions under `sessions-t2/` with `tank=2`; maps in `bins-t2.json`.
+- Fill-snap ignored for 5s after active-tank switch. Tank 2 remaining uses tank-2 gallons (identity until bins).
