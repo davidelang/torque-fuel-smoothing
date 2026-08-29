@@ -22,6 +22,10 @@ internal object Pids {
     const val ALIAS_SMOOTHED = "[OldFord] Smoothed Fuel Level"
     const val ALIAS_REMAINING = "[OldFord] Fuel Remaining"
     const val ALIAS_DTE = "[OldFord] Plugin DTE"
+    const val PLUGIN_T2_SMOOTHED = "[FixFuel] Tank2 Smoothed"
+    const val PLUGIN_T2_CORRECTED = "[FixFuel] Tank2 Corrected"
+    const val PLUGIN_T2_REMAINING = "[FixFuel] Tank2 Remaining"
+    const val PLUGIN_T2_DTE = "[FixFuel] Tank2 DTE"
 
     fun csvName(info: String?): String {
         if (info.isNullOrEmpty()) return ""

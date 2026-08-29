@@ -20,6 +20,7 @@ class PluginService : Service() {
     private lateinit var sessions: SessionStore
     private lateinit var binStore: BinStore
     private val math = FuelMath()
+    private val math2 = FuelMath()
     private var torque: ITorqueService? = null
     /** True only after onServiceConnected, not merely bindService returning true. */
     private var bound = false
@@ -146,6 +147,7 @@ class PluginService : Service() {
 
     private fun afterBindWork() {
         val t = torque ?: return
+        cfg = FixFuelPrefs.load(this)
         resolvePids()
         runCatching { binStore.loadFromProfile(t) }
         nameplateGal = TankSeed.seed(t)
@@ -196,6 +198,7 @@ class PluginService : Service() {
                 publishHeld(t, raw, held)
             }
             Log.i(TAG, "track mode=hold raw=$raw smoothed=$held ecu=$ecu src=${src.how}")
+            sampleTank2(t, ecu, 0.0, System.currentTimeMillis())
             return
         }
         val live = raw!!
@@ -230,6 +233,7 @@ class PluginService : Service() {
             )
         }
         publishFromSmoothed(t, live, smoothed)
+        sampleTank2(t, ecu, speedMph, now)
         val line = "track mode=${math.mode} raw=$live smoothed=$smoothed speedMph=${"%.1f".format(speedMph)}"
         Log.i(TAG, line)
         FixFuelPrefs.setLive(this, line)
@@ -266,8 +270,71 @@ class PluginService : Service() {
     private fun registerPluginPids(t: ITorqueService) {
         runCatching {
             publishFour(t, 0.0, 0.0, 0.0, 0.0)
+            if (cfg.tank2Enabled) publishTank2(t, 0.0, 0.0, 0.0, 0.0)
         }.onFailure { Log.w(TAG, "registerPluginPids: ${it.message}") }
         Log.i(TAG, "registered ${Pids.PLUGIN_SMOOTHED}, ${Pids.PLUGIN_CORRECTED}, ${Pids.PLUGIN_REMAINING}, ${Pids.PLUGIN_DTE}")
+    }
+
+    private fun sampleTank2(t: ITorqueService, ecu: Boolean?, speedMph: Double, now: Long) {
+        if (!cfg.tank2Enabled) return
+        val cfg2 = cfg.copy(
+            sourceId = cfg.sourceId2,
+            customName = cfg.customName2,
+            tankGal = cfg.tankGal2,
+            learnedUsable = cfg.learnedUsable2,
+        )
+        val src2 = FuelSources.read(t, cfg2, pidNames) { id -> readDouble(t, id) }
+        if (src2.how != cfg.sourceStatus2) {
+            FixFuelPrefs.setSourceStatus2(this, src2.how)
+        }
+        val raw = src2.pct
+        val valid = math2.isValidSample(raw, ecu) && !src2.missing
+        if (!valid) {
+            math2.hold()
+            val held = math2.smoothed
+            if (held != null) {
+                val usable = cfg.learnedUsable2 ?: cfg.tankGal2
+                val remain = math2.remainingGal(held, emptyList(), usable, 0.0)
+                val corr = math2.correctedPct(held, remain, usable, true)
+                val mpgRaw = mpgPid?.let { readDouble(t, it) }
+                val mpg = mpgRaw?.let { FuelMath.mpgFrom(it, mpgUnit) } ?: 0.0
+                publishTank2(t, held, corr, remain, math2.dteMiles(remain, mpg))
+            }
+            Log.i(TAG, "tank2 hold raw=$raw src=${src2.how}")
+            return
+        }
+        val live = raw!!
+        val sm = math2.ingest(
+            live,
+            speedMph,
+            nowMs = now,
+            tauSec = cfg.tauSec,
+            skewPctPerSec = cfg.skewPctPerSec,
+            jumpPct = cfg.jumpPct,
+        )
+        val usable = cfg.learnedUsable2 ?: cfg.tankGal2
+        val remain = math2.remainingGal(sm, emptyList(), usable, 0.0)
+        val corr = math2.correctedPct(sm, remain, usable, true)
+        val mpgRaw = mpgPid?.let { readDouble(t, it) }
+        val mpg = mpgRaw?.let { FuelMath.mpgFrom(it, mpgUnit) } ?: 0.0
+        publishTank2(t, sm, corr, remain, math2.dteMiles(remain, mpg))
+        Log.i(TAG, "tank2 mode=${math2.mode} raw=$live smoothed=$sm src=${src2.how}")
+    }
+
+    private fun publishTank2(
+        t: ITorqueService,
+        smoothed: Double,
+        corrected: Double,
+        remain: Double,
+        dte: Double,
+    ) {
+        val rmax = (cfg.learnedUsable2 ?: cfg.tankGal2)?.toFloat()?.takeIf { it > 0f } ?: 50f
+        runCatching {
+            t.setPIDInformation(Pids.PLUGIN_T2_SMOOTHED, "T2Sm", "%", 100f, 0f, smoothed.toFloat(), null)
+            t.setPIDInformation(Pids.PLUGIN_T2_CORRECTED, "T2Corr", "%", 100f, 0f, corrected.toFloat(), null)
+            t.setPIDInformation(Pids.PLUGIN_T2_REMAINING, "T2Gal", "gal", rmax, 0f, remain.toFloat(), null)
+            t.setPIDInformation(Pids.PLUGIN_T2_DTE, "T2DTE", "mi", 500f, 0f, dte.toFloat(), null)
+        }
     }
 
     private fun publish(
