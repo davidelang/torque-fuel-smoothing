@@ -2,6 +2,18 @@ package org.dlang.torque.fordfuel
 
 import android.content.Context
 import android.content.SharedPreferences
+import org.json.JSONArray
+import org.json.JSONObject
+
+internal data class ExtraTank(
+    val id: Int,
+    val sourceId: String = FixFuelPrefs.DEFAULT_SOURCE_T2,
+    val customName: String = "",
+    val tankGal: Double? = null,
+    val learnedUsable: Double? = null,
+    val tankEstimated: Boolean = false,
+    val sourceStatus: String = "",
+)
 
 internal data class FixFuelConfig(
     val sourceId: String,
@@ -13,16 +25,21 @@ internal data class FixFuelConfig(
     val learnedUsable: Double?,
     val tankEstimated: Boolean,
     val sourceStatus: String,
-    val tank2Enabled: Boolean = false,
-    val sourceId2: String = FixFuelPrefs.DEFAULT_SOURCE_T2,
-    val customName2: String = "",
-    val tankGal2: Double? = null,
-    val learnedUsable2: Double? = null,
-    val tankEstimated2: Boolean = false,
-    val sourceStatus2: String = "",
+    val extras: List<ExtraTank> = emptyList(),
     val activeTank: String = FixFuelPrefs.ACTIVE_TANK1,
     val selectPidName: String = "",
-)
+) {
+    val tank2Enabled: Boolean get() = extras.any { it.id == 2 }
+    private val extra2: ExtraTank? get() = extras.firstOrNull { it.id == 2 }
+    val sourceId2: String get() = extra2?.sourceId ?: FixFuelPrefs.DEFAULT_SOURCE_T2
+    val customName2: String get() = extra2?.customName ?: ""
+    val tankGal2: Double? get() = extra2?.tankGal
+    val learnedUsable2: Double? get() = extra2?.learnedUsable
+    val tankEstimated2: Boolean get() = extra2?.tankEstimated ?: false
+    val sourceStatus2: String get() = extra2?.sourceStatus ?: ""
+
+    fun extra(id: Int): ExtraTank? = extras.firstOrNull { it.id == id }
+}
 
 internal object FixFuelPrefs {
     const val PREFS = "fixfuel_prefs"
@@ -45,20 +62,24 @@ internal object FixFuelPrefs {
     const val KEY_STATUS2 = "source_status_2"
     const val KEY_ACTIVE = "active_tank"
     const val KEY_SELECT_PID = "select_pid_name"
+    const val KEY_EXTRAS = "extra_tanks"
+    const val KEY_EXTRAS_MIGRATED = "extra_tanks_migrated"
 
     const val DEFAULT_SOURCE = "ford_16c1"
     const val DEFAULT_SOURCE_T2 = "custom_name"
-    const val ACTIVE_TANK1 = "tank1"
-    const val ACTIVE_TANK2 = "tank2"
+    const val ACTIVE_TANK1 = "1"
+    const val ACTIVE_TANK2 = "2"
     const val ACTIVE_FROM_PID = "from_pid"
     const val DEFAULT_TAU = 0.0
     const val DEFAULT_SKEW = 0.05
     const val DEFAULT_JUMP = 25.0
+    const val MAX_TANKS = 8
 
     fun prefs(ctx: Context): SharedPreferences = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
     fun load(ctx: Context): FixFuelConfig {
         val p = prefs(ctx)
+        migrateOnce(p)
         val tankRaw = p.getString(KEY_TANK, "") ?: ""
         val tank = tankRaw.toDoubleOrNull()?.takeIf { it > 0.0 }
         val learnedRaw = p.getString(KEY_LEARNED, "") ?: ""
@@ -73,14 +94,8 @@ internal object FixFuelPrefs {
             learnedUsable = learned,
             tankEstimated = p.getBoolean(KEY_ESTIMATED, false),
             sourceStatus = p.getString(KEY_STATUS, "") ?: "",
-            tank2Enabled = p.getBoolean(KEY_T2_ON, false),
-            sourceId2 = p.getString(KEY_SOURCE2, DEFAULT_SOURCE_T2) ?: DEFAULT_SOURCE_T2,
-            customName2 = p.getString(KEY_CUSTOM2, "") ?: "",
-            tankGal2 = (p.getString(KEY_TANK2, "") ?: "").toDoubleOrNull()?.takeIf { it > 0.0 },
-            learnedUsable2 = (p.getString(KEY_LEARNED2, "") ?: "").toDoubleOrNull()?.takeIf { it > 0.0 },
-            tankEstimated2 = p.getBoolean(KEY_ESTIMATED2, false),
-            sourceStatus2 = p.getString(KEY_STATUS2, "") ?: "",
-            activeTank = p.getString(KEY_ACTIVE, ACTIVE_TANK1) ?: ACTIVE_TANK1,
+            extras = parseExtras(p.getString(KEY_EXTRAS, "[]") ?: "[]"),
+            activeTank = normalizeActive(p.getString(KEY_ACTIVE, ACTIVE_TANK1) ?: ACTIVE_TANK1),
             selectPidName = p.getString(KEY_SELECT_PID, "") ?: "",
         )
     }
@@ -93,10 +108,7 @@ internal object FixFuelPrefs {
         skewPctPerSec: Double,
         jumpPct: Double,
         tankGal: Double?,
-        tank2Enabled: Boolean = false,
-        sourceId2: String = DEFAULT_SOURCE_T2,
-        customName2: String = "",
-        tankGal2: Double? = null,
+        extras: List<ExtraTank>,
         activeTank: String = ACTIVE_TANK1,
         selectPidName: String = "",
     ) {
@@ -108,14 +120,16 @@ internal object FixFuelPrefs {
             .putString(KEY_JUMP, jumpPct.toString())
         if (tankGal != null && tankGal > 0.0) e.putString(KEY_TANK, tankGal.toString())
         else e.putString(KEY_TANK, "")
-        e.putBoolean(KEY_T2_ON, tank2Enabled)
-            .putString(KEY_SOURCE2, sourceId2)
-            .putString(KEY_CUSTOM2, customName2)
-        if (tankGal2 != null && tankGal2 > 0.0) e.putString(KEY_TANK2, tankGal2.toString())
-        else e.putString(KEY_TANK2, "")
-        e.putString(KEY_ACTIVE, activeTank)
+        e.putString(KEY_EXTRAS, extrasToJson(extras))
+            .putString(KEY_ACTIVE, normalizeActive(activeTank))
             .putString(KEY_SELECT_PID, selectPidName)
+            .putBoolean(KEY_EXTRAS_MIGRATED, true)
         e.apply()
+    }
+
+    fun nextExtraId(extras: List<ExtraTank>): Int {
+        val maxId = extras.maxOfOrNull { it.id } ?: 1
+        return maxOf(maxId, 1) + 1
     }
 
     fun setLive(ctx: Context, line: String) {
@@ -137,14 +151,106 @@ internal object FixFuelPrefs {
     }
 
     fun setLearnedUsable2(ctx: Context, gal: Double) {
-        prefs(ctx).edit()
-            .putString(KEY_LEARNED2, gal.toString())
-            .putString(KEY_TANK2, gal.toString())
-            .putBoolean(KEY_ESTIMATED2, true)
-            .apply()
+        setLearnedUsableExtra(ctx, 2, gal)
     }
 
     fun setSourceStatus2(ctx: Context, status: String) {
-        prefs(ctx).edit().putString(KEY_STATUS2, status).apply()
+        setExtraSourceStatus(ctx, 2, status)
+    }
+
+    fun setLearnedUsableExtra(ctx: Context, id: Int, gal: Double) {
+        if (id <= 1) {
+            setLearnedUsable(ctx, gal)
+            return
+        }
+        val p = prefs(ctx)
+        val extras = parseExtras(p.getString(KEY_EXTRAS, "[]") ?: "[]").map { t ->
+            if (t.id == id) t.copy(learnedUsable = gal, tankGal = gal, tankEstimated = true) else t
+        }
+        p.edit().putString(KEY_EXTRAS, extrasToJson(extras)).apply()
+    }
+
+    fun setExtraSourceStatus(ctx: Context, id: Int, status: String) {
+        if (id <= 1) {
+            setSourceStatus(ctx, status)
+            return
+        }
+        val p = prefs(ctx)
+        val extras = parseExtras(p.getString(KEY_EXTRAS, "[]") ?: "[]").map { t ->
+            if (t.id == id) t.copy(sourceStatus = status) else t
+        }
+        p.edit().putString(KEY_EXTRAS, extrasToJson(extras)).apply()
+    }
+
+    fun extrasToJson(list: List<ExtraTank>): String {
+        val arr = JSONArray()
+        for (t in list.sortedBy { it.id }) {
+            val o = JSONObject()
+                .put("id", t.id)
+                .put("sourceId", t.sourceId)
+                .put("customName", t.customName)
+                .put("estimated", t.tankEstimated)
+                .put("sourceStatus", t.sourceStatus)
+            if (t.tankGal != null && t.tankGal > 0.0) o.put("tankGal", t.tankGal)
+            else o.put("tankGal", "")
+            if (t.learnedUsable != null && t.learnedUsable > 0.0) o.put("learnedUsable", t.learnedUsable)
+            else o.put("learnedUsable", "")
+            arr.put(o)
+        }
+        return arr.toString()
+    }
+
+    fun parseExtras(raw: String): List<ExtraTank> {
+        return runCatching {
+            val arr = JSONArray(raw)
+            (0 until arr.length()).mapNotNull { i ->
+                val o = arr.optJSONObject(i) ?: return@mapNotNull null
+                val id = o.optInt("id", 0)
+                if (id < 2 || id > MAX_TANKS) return@mapNotNull null
+                ExtraTank(
+                    id = id,
+                    sourceId = o.optString("sourceId", DEFAULT_SOURCE_T2).ifBlank { DEFAULT_SOURCE_T2 },
+                    customName = o.optString("customName", ""),
+                    tankGal = o.optString("tankGal", "").toDoubleOrNull()?.takeIf { it > 0.0 }
+                        ?: o.optDouble("tankGal", Double.NaN).takeIf { it.isFinite() && it > 0.0 },
+                    learnedUsable = o.optString("learnedUsable", "").toDoubleOrNull()?.takeIf { it > 0.0 }
+                        ?: o.optDouble("learnedUsable", Double.NaN).takeIf { it.isFinite() && it > 0.0 },
+                    tankEstimated = o.optBoolean("estimated", false),
+                    sourceStatus = o.optString("sourceStatus", ""),
+                )
+            }.distinctBy { it.id }.sortedBy { it.id }
+        }.getOrDefault(emptyList())
+    }
+
+    fun normalizeActive(raw: String): String {
+        return when (raw) {
+            "tank1", ACTIVE_TANK1 -> ACTIVE_TANK1
+            "tank2", ACTIVE_TANK2 -> ACTIVE_TANK2
+            ACTIVE_FROM_PID -> ACTIVE_FROM_PID
+            else -> raw.toIntOrNull()?.takeIf { it in 1..MAX_TANKS }?.toString() ?: ACTIVE_TANK1
+        }
+    }
+
+    private fun migrateOnce(p: SharedPreferences) {
+        if (p.getBoolean(KEY_EXTRAS_MIGRATED, false)) return
+        val extras = mutableListOf<ExtraTank>()
+        if (p.getBoolean(KEY_T2_ON, false)) {
+            extras.add(
+                ExtraTank(
+                    id = 2,
+                    sourceId = p.getString(KEY_SOURCE2, DEFAULT_SOURCE_T2) ?: DEFAULT_SOURCE_T2,
+                    customName = p.getString(KEY_CUSTOM2, "") ?: "",
+                    tankGal = (p.getString(KEY_TANK2, "") ?: "").toDoubleOrNull()?.takeIf { it > 0.0 },
+                    learnedUsable = (p.getString(KEY_LEARNED2, "") ?: "").toDoubleOrNull()?.takeIf { it > 0.0 },
+                    tankEstimated = p.getBoolean(KEY_ESTIMATED2, false),
+                    sourceStatus = p.getString(KEY_STATUS2, "") ?: "",
+                ),
+            )
+        }
+        p.edit()
+            .putString(KEY_EXTRAS, extrasToJson(extras))
+            .putString(KEY_ACTIVE, normalizeActive(p.getString(KEY_ACTIVE, "tank1") ?: "tank1"))
+            .putBoolean(KEY_EXTRAS_MIGRATED, true)
+            .apply()
     }
 }

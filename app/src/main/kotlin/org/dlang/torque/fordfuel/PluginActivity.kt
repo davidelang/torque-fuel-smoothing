@@ -17,7 +17,7 @@ import android.view.View
 import android.view.WindowInsets
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.CheckBox
+import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ScrollView
@@ -33,13 +33,24 @@ class PluginActivity : Activity() {
     private lateinit var tank: EditText
     private lateinit var live: TextView
     private lateinit var estimated: TextView
-    private lateinit var tank2On: CheckBox
-    private lateinit var source2Spinner: Spinner
-    private lateinit var customName2: EditText
-    private lateinit var tank2: EditText
-    private lateinit var estimated2: TextView
+    private lateinit var extrasCol: LinearLayout
+    private lateinit var addBtn: Button
     private lateinit var activeSpinner: Spinner
     private lateinit var selectPid: EditText
+    private val extraCards = mutableListOf<ExtraCard>()
+    private val watch = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        override fun afterTextChanged(s: Editable?) {
+            if (!loading) persist()
+        }
+    }
+    private val spinListen = object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            if (!loading) persist()
+        }
+        override fun onNothingSelected(parent: AdapterView<*>?) {}
+    }
     private var loading = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,76 +104,37 @@ class PluginActivity : Activity() {
         live.textSize = 14f
         col.addView(live)
 
-        val t2help = TextView(this)
-        t2help.text = getString(R.string.tank2_help)
-        t2help.textSize = 14f
-        t2help.setPadding(0, 32, 0, 8)
-        col.addView(t2help)
+        val extraHelp = TextView(this)
+        extraHelp.text = getString(R.string.tank2_help)
+        extraHelp.textSize = 14f
+        extraHelp.setPadding(0, 32, 0, 8)
+        col.addView(extraHelp)
 
-        tank2On = CheckBox(this)
-        tank2On.text = "Enable tank 2 (independent sender / extra PID)"
-        col.addView(tank2On)
+        extrasCol = LinearLayout(this)
+        extrasCol.orientation = LinearLayout.VERTICAL
+        col.addView(extrasCol)
 
-        col.addView(label("Tank 2 fuel source"))
-        source2Spinner = Spinner(this)
-        source2Spinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, FuelSources.labels())
-        col.addView(source2Spinner)
-
-        col.addView(label("Tank 2 custom long name (e.g. [FixFuel] Tank2 Level)"))
-        customName2 = edit(InputType.TYPE_CLASS_TEXT)
-        col.addView(customName2)
-
-        col.addView(label("Tank 2 gallons"))
-        tank2 = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
-        col.addView(tank2)
-
-        estimated2 = TextView(this)
-        estimated2.textSize = 14f
-        col.addView(estimated2)
+        addBtn = Button(this)
+        addBtn.text = "Add additional tank"
+        addBtn.setOnClickListener { addExtra() }
+        col.addView(addBtn)
 
         col.addView(label("Active tank (gal/hr charged here)"))
         activeSpinner = Spinner(this)
-        activeSpinner.adapter = ArrayAdapter(
-            this,
-            android.R.layout.simple_spinner_dropdown_item,
-            arrayOf("Tank 1", "Tank 2", "From PID"),
-        )
         col.addView(activeSpinner)
 
-        col.addView(label("Select-PID long name (0/1) if active = From PID"))
+        col.addView(label("Select-PID long name (1-based tank id) if active = From PID"))
         selectPid = edit(InputType.TYPE_CLASS_TEXT)
         col.addView(selectPid)
 
-        val watch = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable?) {
-                if (!loading) persist()
-            }
-        }
         customName.addTextChangedListener(watch)
         tau.addTextChangedListener(watch)
         skew.addTextChangedListener(watch)
         jump.addTextChangedListener(watch)
         tank.addTextChangedListener(watch)
-        customName2.addTextChangedListener(watch)
-        tank2.addTextChangedListener(watch)
         selectPid.addTextChangedListener(watch)
-        tank2On.setOnCheckedChangeListener { _, _ -> if (!loading) persist() }
-        sourceSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                if (!loading) persist()
-            }
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
-        val spin2 = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                if (!loading) persist()
-            }
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
-        source2Spinner.onItemSelectedListener = spin2
-        activeSpinner.onItemSelectedListener = spin2
+        sourceSpinner.onItemSelectedListener = spinListen
+        activeSpinner.onItemSelectedListener = spinListen
 
         scroll.addView(col)
         scroll.setOnApplyWindowInsetsListener { v, insets ->
@@ -215,20 +187,148 @@ class PluginActivity : Activity() {
         val st = c.sourceStatus
         val lv = FixFuelPrefs.live(this)
         live.text = listOf(st, lv).filter { it.isNotBlank() }.joinToString("\n")
-        tank2On.isChecked = c.tank2Enabled
-        source2Spinner.setSelection(FuelSources.indexOf(c.sourceId2))
-        if (customName2.text.toString() != c.customName2) customName2.setText(c.customName2)
-        val t2 = c.tankGal2?.toString() ?: ""
-        if (tank2.text.toString() != t2 && !tank2.isFocused) tank2.setText(t2)
-        estimated2.text = if (c.tankEstimated2) "Tank 2 shown is estimated usable from mapping." else ""
-        activeSpinner.setSelection(
-            when (c.activeTank) {
-                FixFuelPrefs.ACTIVE_TANK2 -> 1
-                FixFuelPrefs.ACTIVE_FROM_PID -> 2
-                else -> 0
-            },
-        )
+        syncExtraCards(c.extras)
+        refreshActiveSpinner(c.activeTank)
         if (selectPid.text.toString() != c.selectPidName) selectPid.setText(c.selectPidName)
+        refreshAddBtn()
+    }
+
+    private fun syncExtraCards(extras: List<ExtraTank>) {
+        val want = extras.sortedBy { it.id }.map { it.id }
+        val have = extraCards.map { it.id }
+        if (want != have) {
+            extrasCol.removeAllViews()
+            extraCards.clear()
+            for (t in extras.sortedBy { it.id }) extraCards.add(buildCard(t))
+        } else {
+            extras.sortedBy { it.id }.forEachIndexed { i, t -> bindCard(extraCards[i], t) }
+        }
+    }
+
+    private fun buildCard(t: ExtraTank): ExtraCard {
+        val root = LinearLayout(this)
+        root.orientation = LinearLayout.VERTICAL
+        root.setPadding(0, 16, 0, 8)
+        val head = LinearLayout(this)
+        head.orientation = LinearLayout.HORIZONTAL
+        val title = TextView(this)
+        title.text = "Tank ${t.id}"
+        title.textSize = 16f
+        title.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        val remove = Button(this)
+        remove.text = "Remove"
+        head.addView(title)
+        head.addView(remove)
+        root.addView(head)
+        root.addView(label("Tank ${t.id} fuel source"))
+        val source = Spinner(this)
+        source.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, FuelSources.labels())
+        root.addView(source)
+        root.addView(label("Tank ${t.id} custom long name (e.g. [FixFuel] Tank${t.id} Level)"))
+        val name = edit(InputType.TYPE_CLASS_TEXT)
+        root.addView(name)
+        root.addView(label("Tank ${t.id} gallons"))
+        val gal = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
+        root.addView(gal)
+        val est = TextView(this)
+        est.textSize = 14f
+        root.addView(est)
+        val card = ExtraCard(t.id, root, source, name, gal, est)
+        bindCard(card, t)
+        name.addTextChangedListener(watch)
+        gal.addTextChangedListener(watch)
+        source.onItemSelectedListener = spinListen
+        remove.setOnClickListener { removeExtra(card) }
+        extrasCol.addView(root)
+        return card
+    }
+
+    private fun bindCard(card: ExtraCard, t: ExtraTank) {
+        card.source.setSelection(FuelSources.indexOf(t.sourceId))
+        if (card.customName.text.toString() != t.customName) card.customName.setText(t.customName)
+        val g = t.tankGal?.toString() ?: ""
+        if (card.tank.text.toString() != g && !card.tank.isFocused) card.tank.setText(g)
+        card.estimated.text = if (t.tankEstimated) "Tank ${t.id} shown is estimated usable from mapping." else ""
+    }
+
+    private fun addExtra() {
+        if (!canAddExtra()) return
+        val id = FixFuelPrefs.nextExtraId(extraCards.map { ExtraTank(id = it.id) })
+        extraCards.add(buildCard(ExtraTank(id = id)))
+        refreshAddBtn()
+        refreshActiveSpinner(id.toString())
+        persist()
+    }
+
+    private fun canAddExtra(): Boolean {
+        if (1 + extraCards.size >= FixFuelPrefs.MAX_TANKS) return false
+        val id = FixFuelPrefs.nextExtraId(extraCards.map { ExtraTank(id = it.id) })
+        return id in 2..FixFuelPrefs.MAX_TANKS
+    }
+
+    private fun removeExtra(card: ExtraCard) {
+        extrasCol.removeView(card.root)
+        extraCards.removeAll { it.id == card.id }
+        val keep = if (activeTankFromSpinner() == card.id.toString()) FixFuelPrefs.ACTIVE_TANK1 else activeTankFromSpinner()
+        refreshAddBtn()
+        refreshActiveSpinner(keep)
+        persist()
+    }
+
+    private fun refreshAddBtn() {
+        addBtn.visibility = if (canAddExtra()) View.VISIBLE else View.GONE
+    }
+
+    private fun refreshActiveSpinner(selected: String) {
+        val labels = activeLabels()
+        activeSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, labels)
+        val idx = when {
+            selected == FixFuelPrefs.ACTIVE_FROM_PID -> labels.lastIndex
+            selected == FixFuelPrefs.ACTIVE_TANK1 -> 0
+            else -> {
+                val id = selected.toIntOrNull()
+                val extras = extraCards.sortedBy { it.id }
+                val i = extras.indexOfFirst { it.id == id }
+                if (i >= 0) i + 1 else 0
+            }
+        }
+        activeSpinner.setSelection(idx.coerceIn(0, labels.lastIndex))
+        activeSpinner.onItemSelectedListener = spinListen
+    }
+
+    private fun activeLabels(): Array<String> {
+        val names = mutableListOf("Tank 1")
+        extraCards.sortedBy { it.id }.forEach { names.add("Tank ${it.id}") }
+        names.add("From PID")
+        return names.toTypedArray()
+    }
+
+    private fun activeTankFromSpinner(): String {
+        val labels = activeLabels()
+        val pos = activeSpinner.selectedItemPosition
+        return when {
+            pos < 0 || pos >= labels.size -> FixFuelPrefs.ACTIVE_TANK1
+            pos == labels.lastIndex -> FixFuelPrefs.ACTIVE_FROM_PID
+            pos == 0 -> FixFuelPrefs.ACTIVE_TANK1
+            else -> extraCards.sortedBy { it.id }.getOrNull(pos - 1)?.id?.toString() ?: FixFuelPrefs.ACTIVE_TANK1
+        }
+    }
+
+    private fun extrasFromCards(): List<ExtraTank> {
+        val prev = FixFuelPrefs.load(this).extras.associateBy { it.id }
+        return extraCards.sortedBy { it.id }.map { card ->
+            val old = prev[card.id]
+            ExtraTank(
+                id = card.id,
+                sourceId = FuelSources.catalog.getOrNull(card.source.selectedItemPosition)?.id
+                    ?: FixFuelPrefs.DEFAULT_SOURCE_T2,
+                customName = card.customName.text.toString().trim(),
+                tankGal = card.tank.text.toString().toDoubleOrNull(),
+                learnedUsable = old?.learnedUsable,
+                tankEstimated = old?.tankEstimated ?: false,
+                sourceStatus = old?.sourceStatus ?: "",
+            )
+        }
     }
 
     private fun setIfBlankOrInit(e: EditText, v: String) {
@@ -248,15 +348,8 @@ class PluginActivity : Activity() {
             skewPctPerSec = skew.text.toString().toDoubleOrNull() ?: FixFuelPrefs.DEFAULT_SKEW,
             jumpPct = jump.text.toString().toDoubleOrNull() ?: FixFuelPrefs.DEFAULT_JUMP,
             tankGal = tank.text.toString().toDoubleOrNull(),
-            tank2Enabled = tank2On.isChecked,
-            sourceId2 = FuelSources.catalog.getOrNull(source2Spinner.selectedItemPosition)?.id ?: FixFuelPrefs.DEFAULT_SOURCE_T2,
-            customName2 = customName2.text.toString().trim(),
-            tankGal2 = tank2.text.toString().toDoubleOrNull(),
-            activeTank = when (activeSpinner.selectedItemPosition) {
-                1 -> FixFuelPrefs.ACTIVE_TANK2
-                2 -> FixFuelPrefs.ACTIVE_FROM_PID
-                else -> FixFuelPrefs.ACTIVE_TANK1
-            },
+            extras = extrasFromCards(),
+            activeTank = activeTankFromSpinner(),
             selectPidName = selectPid.text.toString().trim(),
         )
     }
@@ -298,6 +391,15 @@ class PluginActivity : Activity() {
             }
         }
     }
+
+    private data class ExtraCard(
+        val id: Int,
+        val root: LinearLayout,
+        val source: Spinner,
+        val customName: EditText,
+        val tank: EditText,
+        val estimated: TextView,
+    )
 
     companion object {
         private const val TAG = "FordFuel"

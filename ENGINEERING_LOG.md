@@ -78,3 +78,9 @@
 - Magic-approved plan: `sandbox/plans/fix-fuel-n-tanks-pluginactivity-20260831-0959-plan.md`
 - Scope: N extra tanks (Add additional tank, stable ids, cap 8); Torque ACTIVITY_PLUGIN + DEFAULT via PluginActivity; migrate tank2_enabled; From PID = 1-based tank id. Tank 1 defaults/autostart/gal-hr unchanged.
 - No `./deploy` / `adb install` by coder; compile only via `./build_app`.
+
+## 2026-08-31 - Phase 2: extra tanks list + Add additional tank UI
+
+- Persist extras as JSON; migrate `tank2_enabled` once → extra id 2. No enable checkbox.
+- Add additional tank / Remove (stable ids, cap 8). Active spinner = Tank 1 + extras + From PID.
+- `tank2Enabled` derived from extra id 2 so existing dual runtime still sees tank 2 until Phase 3.
