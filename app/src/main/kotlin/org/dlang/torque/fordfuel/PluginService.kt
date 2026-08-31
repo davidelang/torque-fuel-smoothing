@@ -14,15 +14,21 @@ import android.os.IBinder
 import android.os.Looper
 import android.util.Log
 import org.prowl.torque.remote.ITorqueService
+import kotlin.math.roundToInt
 
 class PluginService : Service() {
+    private class TankRt(
+        val id: Int,
+        val math: FuelMath = FuelMath(),
+        val sessions: SessionStore,
+        val bins: BinStore,
+    ) {
+        var usedGal: Double = 0.0
+        var lastRateMs: Long? = null
+    }
+
     private val handler = Handler(Looper.getMainLooper())
-    private lateinit var sessions: SessionStore
-    private lateinit var sessions2: SessionStore
-    private lateinit var binStore: BinStore
-    private lateinit var binStore2: BinStore
-    private val math = FuelMath()
-    private val math2 = FuelMath()
+    private val tanks = mutableMapOf<Int, TankRt>()
     private var torque: ITorqueService? = null
     /** True only after onServiceConnected, not merely bindService returning true. */
     private var bound = false
@@ -33,10 +39,6 @@ class PluginService : Service() {
     private var fuelUsedUnit: String = "gal"
     private var galHrPid: String? = null
     private var galMinPid: String? = null
-    private var sessionUsedGal: Double = 0.0
-    private var lastRateMs: Long? = null
-    private var sessionUsedGal2: Double = 0.0
-    private var lastRateMs2: Long? = null
     private var lastActive: String = FixFuelPrefs.ACTIVE_TANK1
     private var suppressFillUntilMs: Long = 0L
     private var speedUnit: String = "mph"
@@ -92,15 +94,7 @@ class PluginService : Service() {
     override fun onCreate() {
         super.onCreate()
         isRunning = true
-        sessions = SessionStore(this)
-        sessions2 = SessionStore(this, tank = 2)
-        binStore = BinStore(this)
-        binStore2 = BinStore(
-            this,
-            fileName = "bins-t2.json",
-            profileKey = "${Pids.PREFIX}bins_t2",
-            clearLegacy = false,
-        )
+        tanks[1] = makeRuntime(1)
         ensureChannel()
         TapStartNotice.cancel(this)
         goForeground("Binding to Torque…")
@@ -161,13 +155,10 @@ class PluginService : Service() {
     private fun afterBindWork() {
         val t = torque ?: return
         cfg = FixFuelPrefs.load(this)
-        lastActive = when {
-            !cfg.tank2Enabled -> FixFuelPrefs.ACTIVE_TANK1
-            cfg.activeTank == FixFuelPrefs.ACTIVE_TANK2 -> FixFuelPrefs.ACTIVE_TANK2
-            else -> FixFuelPrefs.ACTIVE_TANK1
-        }
+        ensureRuntimes()
+        lastActive = resolveStoredActive()
         resolvePids()
-        runCatching { binStore.loadFromProfile(t) }
+        runCatching { tanks[1]?.bins?.loadFromProfile(t) }
         nameplateGal = TankSeed.seed(t)
         registerPluginPids(t)
         handler.removeCallbacks(poll)
@@ -196,6 +187,7 @@ class PluginService : Service() {
     private fun sampleOnce() {
         cfg = FixFuelPrefs.load(this)
         nameplateGal = cfg.learnedUsable ?: cfg.tankGal
+        ensureRuntimes()
         val t = torque ?: return
         val ecu = runCatching { t.isConnectedToECU }.getOrNull()
         if (pidNames.isEmpty()) resolvePids()
@@ -209,60 +201,93 @@ class PluginService : Service() {
         applyActiveTank(active, now)
         if (ecu == true) ensureActiveSession()
         val skipFill = now < suppressFillUntilMs
-        val src = FuelSources.read(t, cfg, pidNames) { id -> readDouble(t, id) }
-        if (src.how != cfg.sourceStatus) {
-            FixFuelPrefs.setSourceStatus(this, src.how)
+        sampleTank(1, t, ecu, speedMph, now, speedRaw, skipFill)
+        for (extra in cfg.extras) {
+            sampleTank(extra.id, t, ecu, speedMph, now, speedRaw, skipFill)
         }
-        Log.i(TAG, "source ${cfg.sourceId} ${src.how} active=$active")
-        val raw = src.pct
-        val valid = math.isValidSample(raw, ecu) && !src.missing
-        if (!valid) {
-            math.hold()
-            val held = math.smoothed
-            if (held != null) {
-                publishHeld(t, raw, held)
-            }
-            Log.i(TAG, "track mode=hold raw=$raw smoothed=$held ecu=$ecu src=${src.how}")
+    }
+
+    private fun sampleTank(
+        id: Int,
+        t: ITorqueService,
+        ecu: Boolean?,
+        speedMph: Double,
+        now: Long,
+        speedRaw: Double,
+        skipFill: Boolean,
+    ) {
+        val rt = tanks[id] ?: return
+        val srcCfg = if (id == 1) {
+            cfg
         } else {
-            val live = raw!!
-            lastRawPct = live
-            val before = math.smoothed
-            val prevMode = math.mode
-            val smoothed = math.ingest(
-                live,
-                speedMph,
-                nowMs = now,
-                tauSec = cfg.tauSec,
-                skewPctPerSec = cfg.skewPctPerSec,
-                jumpPct = cfg.jumpPct,
-                ignoreFill = skipFill,
+            val extra = cfg.extra(id) ?: return
+            cfg.copy(
+                sourceId = extra.sourceId,
+                customName = extra.customName,
+                tankGal = extra.tankGal,
+                learnedUsable = extra.learnedUsable,
             )
-            if (math.mode == TrackMode.FILL && prevMode != TrackMode.FILL) {
-                val delta = live - (before ?: live)
-                Log.i(TAG, "fill start Δ=${"%.1f".format(delta)} raw=$live smoothedWas=${before} speedMph=${"%.1f".format(speedMph)}")
+        }
+        val src = FuelSources.read(t, srcCfg, pidNames) { pid -> readDouble(t, pid) }
+        if (id == 1) {
+            if (src.how != cfg.sourceStatus) FixFuelPrefs.setSourceStatus(this, src.how)
+        } else if (src.how != (cfg.extra(id)?.sourceStatus ?: "")) {
+            FixFuelPrefs.setExtraSourceStatus(this, id, src.how)
+        }
+        if (id == 1) Log.i(TAG, "source ${cfg.sourceId} ${src.how} active=$lastActive")
+        val raw = src.pct
+        val valid = rt.math.isValidSample(raw, ecu) && !src.missing
+        if (!valid) {
+            rt.math.hold()
+            val held = rt.math.smoothed
+            if (held != null) {
+                if (id == 1) publishHeld(t, raw, held) else publishExtraFrom(t, id, rt, held)
             }
-            if (prevMode == TrackMode.FILL && math.mode != TrackMode.FILL) {
-                Log.i(TAG, "fill end raw=$live smoothed=$smoothed speedMph=${"%.1f".format(speedMph)}")
-            }
-            if (sessions.isOpen && lastActive != FixFuelPrefs.ACTIVE_TANK2) {
-                integrateGalHr(t, now, tank2 = false)
-                sessions.append(
-                    Sample(
-                        t = now,
-                        rawPct = live,
-                        smoothedPct = smoothed,
-                        fuelUsedGal = sessionUsedGal,
-                        speed = speedRaw,
-                        fill = math.mode == TrackMode.FILL,
-                    ),
-                )
-            }
+            Log.i(TAG, "tank$id hold raw=$raw src=${src.how}")
+            return
+        }
+        val live = raw!!
+        if (id == 1) lastRawPct = live
+        val before = rt.math.smoothed
+        val prevMode = rt.math.mode
+        val smoothed = rt.math.ingest(
+            live,
+            speedMph,
+            nowMs = now,
+            tauSec = cfg.tauSec,
+            skewPctPerSec = cfg.skewPctPerSec,
+            jumpPct = cfg.jumpPct,
+            ignoreFill = skipFill,
+        )
+        if (rt.math.mode == TrackMode.FILL && prevMode != TrackMode.FILL) {
+            val delta = live - (before ?: live)
+            Log.i(TAG, "tank$id fill start Δ=${"%.1f".format(delta)} raw=$live speedMph=${"%.1f".format(speedMph)}")
+        }
+        if (prevMode == TrackMode.FILL && rt.math.mode != TrackMode.FILL) {
+            Log.i(TAG, "tank$id fill end raw=$live smoothed=$smoothed")
+        }
+        if (rt.sessions.isOpen && lastActive == id.toString()) {
+            integrateGalHr(t, now, rt)
+            rt.sessions.append(
+                Sample(
+                    t = now,
+                    rawPct = live,
+                    smoothedPct = smoothed,
+                    fuelUsedGal = rt.usedGal,
+                    speed = speedRaw,
+                    fill = rt.math.mode == TrackMode.FILL,
+                ),
+            )
+        }
+        if (id == 1) {
             publishFromSmoothed(t, live, smoothed)
-            val line = "track mode=${math.mode} raw=$live smoothed=$smoothed speedMph=${"%.1f".format(speedMph)}"
+            val line = "track mode=${rt.math.mode} raw=$live smoothed=$smoothed speedMph=${"%.1f".format(speedMph)}"
             Log.i(TAG, line)
             FixFuelPrefs.setLive(this, line)
+        } else {
+            publishExtraFrom(t, id, rt, smoothed)
+            Log.i(TAG, "tank$id mode=${rt.math.mode} raw=$live smoothed=$smoothed src=${src.how}")
         }
-        sampleTank2(t, ecu, speedMph, now, speedRaw, skipFill)
     }
 
     private fun publishHeld(t: ITorqueService, raw: Double?, held: Double) {
@@ -270,17 +295,29 @@ class PluginService : Service() {
     }
 
     private fun publishFromSmoothed(t: ITorqueService, raw: Double, smoothed: Double) {
-        val bins = binStore.bins.toList()
+        val rt = tanks[1] ?: return
+        val bins = rt.bins.bins.toList()
         val usable = cfg.learnedUsable ?: cfg.tankGal
-        val remain = math.remainingGal(smoothed, bins, usable, binStore.reserveGal)
-        val corrected = math.correctedPct(smoothed, remain, usable, bins.isEmpty())
+        val remain = rt.math.remainingGal(smoothed, bins, usable, rt.bins.reserveGal)
+        val corrected = rt.math.correctedPct(smoothed, remain, usable, bins.isEmpty())
         lastAuthPct = corrected
         val mpgRaw = mpgPid?.let { readDouble(t, it) }
         val mpg = mpgRaw?.let { FuelMath.mpgFrom(it, mpgUnit) } ?: 0.0
-        val dte = math.dteMiles(remain, mpg)
+        val dte = rt.math.dteMiles(remain, mpg)
         publish(t, raw, smoothed, corrected, remain, dte)
         maybeSyncSlider(t, corrected)
         goForeground(statusText())
+    }
+
+    private fun publishExtraFrom(t: ITorqueService, id: Int, rt: TankRt, smoothed: Double) {
+        val extra = cfg.extra(id)
+        val bins = rt.bins.bins.toList()
+        val usable = extra?.learnedUsable ?: extra?.tankGal
+        val remain = rt.math.remainingGal(smoothed, bins, usable, rt.bins.reserveGal)
+        val corr = rt.math.correctedPct(smoothed, remain, usable, bins.isEmpty())
+        val mpgRaw = mpgPid?.let { readDouble(t, it) }
+        val mpg = mpgRaw?.let { FuelMath.mpgFrom(it, mpgUnit) } ?: 0.0
+        publishExtra(t, id, smoothed, corr, remain, rt.math.dteMiles(remain, mpg), usable)
     }
 
     private fun onEcu(connected: Boolean) {
@@ -296,91 +333,29 @@ class PluginService : Service() {
     private fun registerPluginPids(t: ITorqueService) {
         runCatching {
             publishFour(t, 0.0, 0.0, 0.0, 0.0)
-            if (cfg.tank2Enabled) publishTank2(t, 0.0, 0.0, 0.0, 0.0)
-        }.onFailure { Log.w(TAG, "registerPluginPids: ${it.message}") }
-        Log.i(TAG, "registered ${Pids.PLUGIN_SMOOTHED}, ${Pids.PLUGIN_CORRECTED}, ${Pids.PLUGIN_REMAINING}, ${Pids.PLUGIN_DTE}")
-    }
-
-    private fun sampleTank2(
-        t: ITorqueService,
-        ecu: Boolean?,
-        speedMph: Double,
-        now: Long,
-        speedRaw: Double,
-        skipFill: Boolean,
-    ) {
-        if (!cfg.tank2Enabled) return
-        val cfg2 = cfg.copy(
-            sourceId = cfg.sourceId2,
-            customName = cfg.customName2,
-            tankGal = cfg.tankGal2,
-            learnedUsable = cfg.learnedUsable2,
-        )
-        val src2 = FuelSources.read(t, cfg2, pidNames) { id -> readDouble(t, id) }
-        if (src2.how != cfg.sourceStatus2) {
-            FixFuelPrefs.setSourceStatus2(this, src2.how)
-        }
-        val raw = src2.pct
-        val valid = math2.isValidSample(raw, ecu) && !src2.missing
-        val bins = binStore2.bins.toList()
-        val usable = cfg.learnedUsable2 ?: cfg.tankGal2
-        if (!valid) {
-            math2.hold()
-            val held = math2.smoothed
-            if (held != null) {
-                val remain = math2.remainingGal(held, bins, usable, binStore2.reserveGal)
-                val corr = math2.correctedPct(held, remain, usable, bins.isEmpty())
-                val mpgRaw = mpgPid?.let { readDouble(t, it) }
-                val mpg = mpgRaw?.let { FuelMath.mpgFrom(it, mpgUnit) } ?: 0.0
-                publishTank2(t, held, corr, remain, math2.dteMiles(remain, mpg))
+            for (extra in cfg.extras) {
+                publishExtra(t, extra.id, 0.0, 0.0, 0.0, 0.0, extra.learnedUsable ?: extra.tankGal)
             }
-            Log.i(TAG, "tank2 hold raw=$raw src=${src2.how}")
-            return
-        }
-        val live = raw!!
-        val sm = math2.ingest(
-            live,
-            speedMph,
-            nowMs = now,
-            tauSec = cfg.tauSec,
-            skewPctPerSec = cfg.skewPctPerSec,
-            jumpPct = cfg.jumpPct,
-            ignoreFill = skipFill,
-        )
-        val remain = math2.remainingGal(sm, bins, usable, binStore2.reserveGal)
-        val corr = math2.correctedPct(sm, remain, usable, bins.isEmpty())
-        val mpgRaw = mpgPid?.let { readDouble(t, it) }
-        val mpg = mpgRaw?.let { FuelMath.mpgFrom(it, mpgUnit) } ?: 0.0
-        if (sessions2.isOpen && lastActive == FixFuelPrefs.ACTIVE_TANK2) {
-            integrateGalHr(t, now, tank2 = true)
-            sessions2.append(
-                Sample(
-                    t = now,
-                    rawPct = live,
-                    smoothedPct = sm,
-                    fuelUsedGal = sessionUsedGal2,
-                    speed = speedRaw,
-                    fill = math2.mode == TrackMode.FILL,
-                ),
-            )
-        }
-        publishTank2(t, sm, corr, remain, math2.dteMiles(remain, mpg))
-        Log.i(TAG, "tank2 mode=${math2.mode} raw=$live smoothed=$sm src=${src2.how}")
+        }.onFailure { Log.w(TAG, "registerPluginPids: ${it.message}") }
+        Log.i(TAG, "registered tank1 PIDs extras=${cfg.extras.map { it.id }}")
     }
 
-    private fun publishTank2(
+    private fun publishExtra(
         t: ITorqueService,
+        id: Int,
         smoothed: Double,
         corrected: Double,
         remain: Double,
         dte: Double,
+        usable: Double?,
     ) {
-        val rmax = (cfg.learnedUsable2 ?: cfg.tankGal2)?.toFloat()?.takeIf { it > 0f } ?: 50f
+        val names = Pids.extraPidNames(id)
+        val rmax = usable?.toFloat()?.takeIf { it > 0f } ?: 50f
         runCatching {
-            t.setPIDInformation(Pids.PLUGIN_T2_SMOOTHED, "T2Sm", "%", 100f, 0f, smoothed.toFloat(), null)
-            t.setPIDInformation(Pids.PLUGIN_T2_CORRECTED, "T2Corr", "%", 100f, 0f, corrected.toFloat(), null)
-            t.setPIDInformation(Pids.PLUGIN_T2_REMAINING, "T2Gal", "gal", rmax, 0f, remain.toFloat(), null)
-            t.setPIDInformation(Pids.PLUGIN_T2_DTE, "T2DTE", "mi", 500f, 0f, dte.toFloat(), null)
+            t.setPIDInformation(names.smoothed, names.shortSm, "%", 100f, 0f, smoothed.toFloat(), null)
+            t.setPIDInformation(names.corrected, names.shortCorr, "%", 100f, 0f, corrected.toFloat(), null)
+            t.setPIDInformation(names.remaining, names.shortGal, "gal", rmax, 0f, remain.toFloat(), null)
+            t.setPIDInformation(names.dte, names.shortDte, "mi", 500f, 0f, dte.toFloat(), null)
         }
     }
 
@@ -430,98 +405,84 @@ class PluginService : Service() {
         }
     }
 
+    private fun configuredIds(): Set<Int> = setOf(1) + cfg.extras.map { it.id }.toSet()
+
+    private fun isConfigured(id: Int): Boolean = id == 1 || cfg.extras.any { it.id == id }
+
+    private fun resolveStoredActive(): String {
+        val id = cfg.activeTank.toIntOrNull()
+        return if (id != null && isConfigured(id)) id.toString() else FixFuelPrefs.ACTIVE_TANK1
+    }
+
     private fun resolveActiveTank(t: ITorqueService): String {
-        if (!cfg.tank2Enabled) return FixFuelPrefs.ACTIVE_TANK1
-        return when (cfg.activeTank) {
-            FixFuelPrefs.ACTIVE_TANK2 -> FixFuelPrefs.ACTIVE_TANK2
-            FixFuelPrefs.ACTIVE_FROM_PID -> {
-                val want = cfg.selectPidName.trim()
-                if (want.isEmpty()) {
-                    FixFuelPrefs.ACTIVE_TANK1
-                } else {
-                    val id = pidNames[want]
-                        ?: pidNames.entries.firstOrNull { it.key.equals(want, ignoreCase = true) }?.value
-                    val v = id?.let { readDouble(t, it) }
-                    if (v != null && v.isFinite() && v >= 0.5) FixFuelPrefs.ACTIVE_TANK2
-                    else FixFuelPrefs.ACTIVE_TANK1
-                }
+        val wanted = if (cfg.activeTank == FixFuelPrefs.ACTIVE_FROM_PID) {
+            val want = cfg.selectPidName.trim()
+            if (want.isEmpty()) {
+                null
+            } else {
+                val pid = pidNames[want]
+                    ?: pidNames.entries.firstOrNull { it.key.equals(want, ignoreCase = true) }?.value
+                val v = pid?.let { readDouble(t, it) }
+                if (v != null && v.isFinite()) v.roundToInt() else null
             }
-            else -> FixFuelPrefs.ACTIVE_TANK1
+        } else {
+            cfg.activeTank.toIntOrNull()
         }
+        if (wanted != null && isConfigured(wanted)) return wanted.toString()
+        val last = lastActive.toIntOrNull()
+        if (last != null && isConfigured(last)) return last.toString()
+        return FixFuelPrefs.ACTIVE_TANK1
     }
 
     private fun applyActiveTank(active: String, now: Long) {
-        val want = if (cfg.tank2Enabled) active else FixFuelPrefs.ACTIVE_TANK1
+        val want = if (isConfigured(active.toIntOrNull() ?: -1)) active else FixFuelPrefs.ACTIVE_TANK1
         if (want == lastActive) return
         Log.i(TAG, "active tank $lastActive -> $want (fill-snap ignored ${FILL_SWITCH_DEBOUNCE_MS}ms)")
-        if (lastActive == FixFuelPrefs.ACTIVE_TANK2) closeSession2() else closeSession1()
+        closeTankSession(lastActive.toIntOrNull() ?: 1)
         lastActive = want
         suppressFillUntilMs = now + FILL_SWITCH_DEBOUNCE_MS
     }
 
     private fun ensureActiveSession() {
-        if (cfg.tank2Enabled && lastActive == FixFuelPrefs.ACTIVE_TANK2) {
-            if (sessions.isOpen) closeSession1()
-            if (!sessions2.isOpen) openSession2()
-        } else {
-            if (sessions2.isOpen) closeSession2()
-            if (!sessions.isOpen) openSession1()
+        val id = lastActive.toIntOrNull() ?: 1
+        for (tid in tanks.keys.toList()) {
+            if (tid != id) closeTankSession(tid)
         }
+        openTankSession(id)
     }
 
-    private fun openSession1() {
-        if (sessions.isOpen) closeSession1()
-        lastSliderPct = null
-        sessionUsedGal = 0.0
-        lastRateMs = null
-        val id = sessions.open()
-        Log.i(TAG, "session open tank=1 $id files=${sessions.sessionCount()}")
+    private fun openTankSession(id: Int) {
+        val rt = tanks[id] ?: return
+        if (rt.sessions.isOpen) return
+        if (id == 1) lastSliderPct = null
+        rt.usedGal = 0.0
+        rt.lastRateMs = null
+        val sid = rt.sessions.open()
+        Log.i(TAG, "session open tank=$id $sid files=${rt.sessions.sessionCount()}")
     }
 
-    private fun openSession2() {
-        if (sessions2.isOpen) closeSession2()
-        sessionUsedGal2 = 0.0
-        lastRateMs2 = null
-        val id = sessions2.open()
-        Log.i(TAG, "session open tank=2 $id files=${sessions2.sessionCount()}")
-    }
-
-    private fun closeSession1() {
-        if (!sessions.isOpen) return
-        val closed = sessions.close()
+    private fun closeTankSession(id: Int) {
+        val rt = tanks[id] ?: return
+        if (!rt.sessions.isOpen) return
+        val closed = rt.sessions.close()
         val obs = FuelMath.observationsFrom(closed)
-        binStore.add(obs)
-        binStore.persist(torque)
-        maybeLearnUsable()
+        rt.bins.add(obs)
+        rt.bins.persist(torque)
+        maybeLearnUsable(id)
         Log.i(
             TAG,
-            "session close tank=1 samples=${closed.size} obs=${obs.bins.size} reserve+=${obs.reserveGal} " +
-                "bins=${binStore.bins.size} reserve=${binStore.reserveGal} files=${sessions.sessionCount()}",
-        )
-    }
-
-    private fun closeSession2() {
-        if (!sessions2.isOpen) return
-        val closed = sessions2.close()
-        val obs = FuelMath.observationsFrom(closed)
-        binStore2.add(obs)
-        binStore2.persist(torque)
-        maybeLearnUsable2()
-        Log.i(
-            TAG,
-            "session close tank=2 samples=${closed.size} obs=${obs.bins.size} reserve+=${obs.reserveGal} " +
-                "bins=${binStore2.bins.size} reserve=${binStore2.reserveGal} files=${sessions2.sessionCount()}",
+            "session close tank=$id samples=${closed.size} obs=${obs.bins.size} reserve+=${obs.reserveGal} " +
+                "bins=${rt.bins.bins.size} reserve=${rt.bins.reserveGal} files=${rt.sessions.sessionCount()}",
         )
     }
 
     private fun closeSession() {
-        closeSession1()
-        closeSession2()
+        for (id in tanks.keys.toList()) closeTankSession(id)
     }
 
-    private fun integrateGalHr(t: ITorqueService, now: Long, tank2: Boolean) {
-        val last = if (tank2) lastRateMs2 else lastRateMs
-        if (tank2) lastRateMs2 = now else lastRateMs = now
+    private fun integrateGalHr(t: ITorqueService, now: Long, rt: TankRt) {
+        val last = rt.lastRateMs
+        rt.lastRateMs = now
         if (last == null) return
         val dtSec = ((now - last).coerceAtLeast(0L) / 1000.0).coerceAtLeast(0.001)
         val hr = readDouble(t, galHrPid ?: Pids.GAL_PER_HOUR)
@@ -531,31 +492,60 @@ class PluginService : Service() {
             val gmin = readDouble(t, galMinPid ?: Pids.GAL_PER_MIN)
             if (gmin != null && gmin.isFinite() && gmin >= 0.0) gmin * 60.0 else return
         }
-        val add = gph * (dtSec / 3600.0)
-        if (tank2) sessionUsedGal2 += add else sessionUsedGal += add
+        rt.usedGal += gph * (dtSec / 3600.0)
     }
 
-    private fun maybeLearnUsable() {
-        val bins = binStore.bins.toList()
+    private fun maybeLearnUsable(id: Int) {
+        val rt = tanks[id] ?: return
+        val bins = rt.bins.bins.toList()
         val span = FuelMath.coverageSpan(bins)
         if (bins.size < 2 || span < 20.0) return
-        val usable = math.remainingGal(100.0, bins, cfg.tankGal, binStore.reserveGal)
+        val nameplate = if (id == 1) cfg.tankGal else cfg.extra(id)?.tankGal
+        val usable = rt.math.remainingGal(100.0, bins, nameplate, rt.bins.reserveGal)
         if (usable <= 0.0) return
-        FixFuelPrefs.setLearnedUsable(this, usable)
+        if (id == 1) {
+            FixFuelPrefs.setLearnedUsable(this, usable)
+            nameplateGal = usable
+        } else {
+            FixFuelPrefs.setLearnedUsableExtra(this, id, usable)
+        }
         cfg = FixFuelPrefs.load(this)
-        nameplateGal = cfg.learnedUsable ?: cfg.tankGal
-        Log.i(TAG, "learned usable gal=$usable coverageSpan=$span")
+        Log.i(TAG, "learned usable tank=$id gal=$usable coverageSpan=$span")
     }
 
-    private fun maybeLearnUsable2() {
-        val bins = binStore2.bins.toList()
-        val span = FuelMath.coverageSpan(bins)
-        if (bins.size < 2 || span < 20.0) return
-        val usable = math2.remainingGal(100.0, bins, cfg.tankGal2, binStore2.reserveGal)
-        if (usable <= 0.0) return
-        FixFuelPrefs.setLearnedUsable2(this, usable)
-        cfg = FixFuelPrefs.load(this)
-        Log.i(TAG, "learned usable2 gal=$usable coverageSpan=$span")
+    private fun makeRuntime(id: Int): TankRt {
+        return if (id <= 1) {
+            TankRt(
+                id = 1,
+                sessions = SessionStore(this, 1),
+                bins = BinStore(this),
+            )
+        } else {
+            TankRt(
+                id = id,
+                sessions = SessionStore(this, id),
+                bins = BinStore(
+                    this,
+                    fileName = "bins-t$id.json",
+                    profileKey = "${Pids.PREFIX}bins_t$id",
+                    clearLegacy = false,
+                ),
+            )
+        }
+    }
+
+    private fun ensureRuntimes() {
+        if (tanks[1] == null) tanks[1] = makeRuntime(1)
+        val keep = configuredIds()
+        for (id in keep) {
+            if (tanks[id] == null) tanks[id] = makeRuntime(id)
+        }
+        for (id in tanks.keys.toList()) {
+            if (id !in keep) {
+                closeTankSession(id)
+                tanks.remove(id)
+            }
+        }
     }
 
     private fun remainingMax(): Float {
@@ -572,7 +562,7 @@ class PluginService : Service() {
 
     private fun statusText(): String {
         val p = lastRawPct
-        val sid = sessions.sessionId
+        val sid = tanks[1]?.sessions?.sessionId
         return buildString {
             if (p == null) append("Waiting for fuel source")
             else append("raw ${"%.1f".format(p)}% corr ${"%.1f".format(lastAuthPct ?: p)}%")

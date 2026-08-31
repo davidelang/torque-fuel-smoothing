@@ -27,6 +27,43 @@ internal object Pids {
     const val PLUGIN_T2_REMAINING = "[FixFuel] Tank2 Remaining"
     const val PLUGIN_T2_DTE = "[FixFuel] Tank2 DTE"
 
+    data class ExtraPidNames(
+        val smoothed: String,
+        val corrected: String,
+        val remaining: String,
+        val dte: String,
+        val shortSm: String,
+        val shortCorr: String,
+        val shortGal: String,
+        val shortDte: String,
+    )
+
+    fun extraPidNames(id: Int): ExtraPidNames {
+        check(id >= 2) { "extra PIDs start at tank 2" }
+        if (id == 2) {
+            return ExtraPidNames(
+                PLUGIN_T2_SMOOTHED,
+                PLUGIN_T2_CORRECTED,
+                PLUGIN_T2_REMAINING,
+                PLUGIN_T2_DTE,
+                "T2Sm",
+                "T2Corr",
+                "T2Gal",
+                "T2DTE",
+            )
+        }
+        return ExtraPidNames(
+            "[FixFuel] Tank${id} Smoothed",
+            "[FixFuel] Tank${id} Corrected",
+            "[FixFuel] Tank${id} Remaining",
+            "[FixFuel] Tank${id} DTE",
+            "T${id}Sm",
+            "T${id}Corr",
+            "T${id}Gal",
+            "T${id}DTE",
+        )
+    }
+
     fun csvName(info: String?): String {
         if (info.isNullOrEmpty()) return ""
         return info.split(',').firstOrNull()?.trim().orEmpty()

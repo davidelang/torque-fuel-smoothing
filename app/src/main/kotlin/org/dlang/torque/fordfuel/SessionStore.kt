@@ -16,10 +16,13 @@ internal data class Sample(
 )
 
 internal class SessionStore(context: Context, private val tank: Int = 1) {
-    private val dir = File(context.filesDir, if (tank == 2) "sessions-t2" else "sessions").apply { mkdirs() }
+    private val dir = File(
+        context.filesDir,
+        if (tank <= 1) "sessions" else "sessions-t$tank",
+    ).apply { mkdirs() }
     private val snapshotFile = File(
         context.filesDir,
-        if (tank == 2) "last-session-end-t2.json" else "last-session-end.json",
+        if (tank <= 1) "last-session-end.json" else "last-session-end-t$tank.json",
     )
 
     init {

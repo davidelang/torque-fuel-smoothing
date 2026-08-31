@@ -84,3 +84,9 @@
 - Persist extras as JSON; migrate `tank2_enabled` once → extra id 2. No enable checkbox.
 - Add additional tank / Remove (stable ids, cap 8). Active spinner = Tank 1 + extras + From PID.
 - `tank2Enabled` derived from extra id 2 so existing dual runtime still sees tank 2 until Phase 3.
+
+## 2026-08-31 - Phase 3: N-tank runtimes + hardware doc copy
+
+- Map of tank runtimes by id; gal/hr only into the active id session; extras register only listed Tank{N} PIDs (id 2 keeps Tank2 names).
+- Session/bin paths `sessions-t{N}/` and `bins-t{N}.json`. From PID is 1-based tank id; fill-snap debounce on switch.
+- Copied N-tank hardware wording to `docs/fix-fuel-second-tank.md`.
