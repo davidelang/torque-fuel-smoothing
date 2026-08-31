@@ -72,3 +72,9 @@
 - Gal/hr integrates only into the active tank session (`tank1` / `tank2` / `from_pid`).
 - Tank 2 sessions under `sessions-t2/` with `tank=2`; maps in `bins-t2.json`.
 - Fill-snap ignored for 5s after active-tank switch. Tank 2 remaining uses tank-2 gallons (identity until bins).
+
+## 2026-08-31 - Execute start: fix-fuel-n-tanks-pluginactivity-20260831-0959-plan.md
+
+- Magic-approved plan: `sandbox/plans/fix-fuel-n-tanks-pluginactivity-20260831-0959-plan.md`
+- Scope: N extra tanks (Add additional tank, stable ids, cap 8); Torque ACTIVITY_PLUGIN + DEFAULT via PluginActivity; migrate tank2_enabled; From PID = 1-based tank id. Tank 1 defaults/autostart/gal-hr unchanged.
+- No `./deploy` / `adb install` by coder; compile only via `./build_app`.

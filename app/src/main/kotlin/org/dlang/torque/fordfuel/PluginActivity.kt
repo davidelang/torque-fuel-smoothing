@@ -24,7 +24,7 @@ import android.widget.ScrollView
 import android.widget.Spinner
 import android.widget.TextView
 
-class MainActivity : Activity() {
+class PluginActivity : Activity() {
     private lateinit var sourceSpinner: Spinner
     private lateinit var customName: EditText
     private lateinit var tau: EditText

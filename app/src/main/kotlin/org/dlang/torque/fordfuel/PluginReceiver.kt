@@ -68,7 +68,7 @@ internal object TapStartNotice {
                 ),
             )
         }
-        val launch = Intent(context, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        val launch = Intent(context, PluginActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         val pi = PendingIntent.getActivity(
             context,
             0,
