@@ -7,7 +7,7 @@ android {
     compileSdk = 36
     defaultConfig {
         applicationId = "org.dlang.torque.fordfuel"
-        minSdk = 26
+        minSdk = 21
         targetSdk = 36
         versionCode = 1
         val rawVersion = providers.exec {

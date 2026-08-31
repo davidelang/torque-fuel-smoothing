@@ -90,3 +90,15 @@
 - Map of tank runtimes by id; gal/hr only into the active id session; extras register only listed Tank{N} PIDs (id 2 keeps Tank2 names).
 - Session/bin paths `sessions-t{N}/` and `bins-t{N}.json`. From PID is 1-based tank id; fill-snap debounce on switch.
 - Copied N-tank hardware wording to `docs/fix-fuel-second-tank.md`.
+
+## 2026-08-31 - Execute start: fix-fuel-backcompat-notice-20260831-1240-plan.md
+
+- Magic-approved plan: `sandbox/plans/fix-fuel-backcompat-notice-20260831-1240-plan.md`
+- Scope: minSdk 21; API-branched FGS vs startService; optional fuel-level shade notice (default on); AIDL getPIDValues/setPIDData fallbacks. No mapping/sources/tanks/bind-flag changes.
+- No `./deploy` / `adb install` by coder; compile only via `./build_app`.
+
+## 2026-08-31 - Phase 1: minSdk 21, FGS/notice branches, AIDL fallbacks
+
+- `minSdk = 21`; API 21–25 `startService` (optional live notice); API 26–33 FGS without specialUse type; API 34+ `specialUse`.
+- Checkbox `show_fuel_notification` default on; off uses `fordfuel_quiet` / static text on 26+, no shade notice on 21–25.
+- Battery dialog only API 31+; `getPIDValues`/`setPIDData` fallbacks; Class `getSystemService` and `FLAG_IMMUTABLE` guarded ≥23.

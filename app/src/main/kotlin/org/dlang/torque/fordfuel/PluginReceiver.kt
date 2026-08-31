@@ -32,7 +32,7 @@ class PluginReceiver : BroadcastReceiver() {
                 }
             } catch (t: IllegalStateException) {
                 Log.w(TAG, "FGS start denied: ${t.javaClass.simpleName} ${t.message}")
-                TapStartNotice.post(context)
+                if (Build.VERSION.SDK_INT >= 26) TapStartNotice.post(context)
             }
         } catch (t: Throwable) {
             Log.w(TAG, "onReceive ignored: ${t.javaClass.simpleName} ${t.message}")
@@ -58,22 +58,23 @@ internal object TapStartNotice {
     const val NOTIF_ID = 351
 
     fun post(context: Context) {
-        val nm = context.getSystemService(NotificationManager::class.java) ?: return
-        if (Build.VERSION.SDK_INT >= 26) {
-            nm.createNotificationChannel(
-                NotificationChannel(
-                    CHANNEL_ID,
-                    "Fix Fuel start",
-                    NotificationManager.IMPORTANCE_HIGH,
-                ),
-            )
-        }
+        if (Build.VERSION.SDK_INT < 26) return
+        val nm = notificationManager(context) ?: return
+        nm.createNotificationChannel(
+            NotificationChannel(
+                CHANNEL_ID,
+                "Fix Fuel start",
+                NotificationManager.IMPORTANCE_HIGH,
+            ),
+        )
         val launch = Intent(context, PluginActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        val piFlags = PendingIntent.FLAG_UPDATE_CURRENT or
+            if (Build.VERSION.SDK_INT >= 23) PendingIntent.FLAG_IMMUTABLE else 0
         val pi = PendingIntent.getActivity(
             context,
             0,
             launch,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+            piFlags,
         )
         val b = if (Build.VERSION.SDK_INT >= 26) {
             Notification.Builder(context, CHANNEL_ID)
@@ -91,6 +92,15 @@ internal object TapStartNotice {
     }
 
     fun cancel(context: Context) {
-        context.getSystemService(NotificationManager::class.java)?.cancel(NOTIF_ID)
+        notificationManager(context)?.cancel(NOTIF_ID)
+    }
+
+    private fun notificationManager(context: Context): NotificationManager? {
+        return if (Build.VERSION.SDK_INT >= 23) {
+            context.getSystemService(NotificationManager::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
+        }
     }
 }

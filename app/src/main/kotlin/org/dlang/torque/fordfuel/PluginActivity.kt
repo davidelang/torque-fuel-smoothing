@@ -18,6 +18,7 @@ import android.view.WindowInsets
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ScrollView
@@ -35,6 +36,7 @@ class PluginActivity : Activity() {
     private lateinit var estimated: TextView
     private lateinit var extrasCol: LinearLayout
     private lateinit var addBtn: Button
+    private lateinit var showNotice: CheckBox
     private lateinit var activeSpinner: Spinner
     private lateinit var selectPid: EditText
     private val extraCards = mutableListOf<ExtraCard>()
@@ -70,6 +72,10 @@ class PluginActivity : Activity() {
         help.text = getString(R.string.help_body)
         help.textSize = 14f
         col.addView(help)
+
+        showNotice = CheckBox(this)
+        showNotice.text = getString(R.string.show_fuel_notification)
+        col.addView(showNotice)
 
         col.addView(label("Fuel source"))
         sourceSpinner = Spinner(this)
@@ -135,6 +141,7 @@ class PluginActivity : Activity() {
         selectPid.addTextChangedListener(watch)
         sourceSpinner.onItemSelectedListener = spinListen
         activeSpinner.onItemSelectedListener = spinListen
+        showNotice.setOnCheckedChangeListener { _, _ -> if (!loading) persist() }
 
         scroll.addView(col)
         scroll.setOnApplyWindowInsetsListener { v, insets ->
@@ -190,6 +197,7 @@ class PluginActivity : Activity() {
         syncExtraCards(c.extras)
         refreshActiveSpinner(c.activeTank)
         if (selectPid.text.toString() != c.selectPidName) selectPid.setText(c.selectPidName)
+        showNotice.isChecked = c.showFuelNotification
         refreshAddBtn()
     }
 
@@ -351,6 +359,7 @@ class PluginActivity : Activity() {
             extras = extrasFromCards(),
             activeTank = activeTankFromSpinner(),
             selectPidName = selectPid.text.toString().trim(),
+            showFuelNotification = showNotice.isChecked,
         )
     }
 
@@ -375,6 +384,7 @@ class PluginActivity : Activity() {
                 requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), REQ_NOTIF)
             }
         }
+        if (Build.VERSION.SDK_INT < 31) return
         val pm = getSystemService(PowerManager::class.java)
         val ignoring = pm != null && pm.isIgnoringBatteryOptimizations(packageName)
         if (!ignoring) {

@@ -51,6 +51,8 @@ class PluginService : Service() {
     private var sliderWritable: Boolean? = null
     private var nameplateGal: Double? = null
     private var pidNames: Map<String, String> = emptyMap()
+    private var lastNoticeText: String? = null
+    private var lastNoticeChannel: String? = null
     private var cfg: FixFuelConfig = FixFuelConfig(
         sourceId = FixFuelPrefs.DEFAULT_SOURCE,
         customName = "",
@@ -94,10 +96,11 @@ class PluginService : Service() {
     override fun onCreate() {
         super.onCreate()
         isRunning = true
+        cfg = FixFuelPrefs.load(this)
         tanks[1] = makeRuntime(1)
         ensureChannel()
         TapStartNotice.cancel(this)
-        goForeground("Binding to Torque…")
+        updatePresence("Binding to Torque…")
         bindTorque()
     }
 
@@ -110,7 +113,7 @@ class PluginService : Service() {
             ACTION_PID_QUERY, ACTION_PID_PLUGIN -> bindTorque()
             ACTION_OBD_DISCONNECTED -> onEcu(false)
         }
-        goForeground(statusText())
+        updatePresence(statusText())
         if (intent?.action.isNullOrEmpty()) {
             bindTorque()
         }
@@ -167,7 +170,9 @@ class PluginService : Service() {
 
     private fun resolvePids() {
         val t = torque ?: return
-        val r = runCatching { Pids.resolve(t) }.getOrNull() ?: return
+        val r = runCatching { Pids.resolve(t) }
+            .onFailure { Log.w(TAG, "listAllPIDs/getPIDInformation: ${it.message}") }
+            .getOrNull() ?: return
         fordPid = r.ford
         speedPid = r.speed
         if (r.speedUnit.isNotEmpty()) speedUnit = r.speedUnit
@@ -306,7 +311,7 @@ class PluginService : Service() {
         val dte = rt.math.dteMiles(remain, mpg)
         publish(t, raw, smoothed, corrected, remain, dte)
         maybeSyncSlider(t, corrected)
-        goForeground(statusText())
+        updatePresence(statusText())
     }
 
     private fun publishExtraFrom(t: ITorqueService, id: Int, rt: TankRt, smoothed: Double) {
@@ -351,12 +356,10 @@ class PluginService : Service() {
     ) {
         val names = Pids.extraPidNames(id)
         val rmax = usable?.toFloat()?.takeIf { it > 0f } ?: 50f
-        runCatching {
-            t.setPIDInformation(names.smoothed, names.shortSm, "%", 100f, 0f, smoothed.toFloat(), null)
-            t.setPIDInformation(names.corrected, names.shortCorr, "%", 100f, 0f, corrected.toFloat(), null)
-            t.setPIDInformation(names.remaining, names.shortGal, "gal", rmax, 0f, remain.toFloat(), null)
-            t.setPIDInformation(names.dte, names.shortDte, "mi", 500f, 0f, dte.toFloat(), null)
-        }
+        setPid(t, names.smoothed, names.shortSm, "%", rmax = 100f, value = smoothed.toFloat())
+        setPid(t, names.corrected, names.shortCorr, "%", rmax = 100f, value = corrected.toFloat())
+        setPid(t, names.remaining, names.shortGal, "gal", rmax = rmax, value = remain.toFloat())
+        setPid(t, names.dte, names.shortDte, "mi", rmax = 500f, value = dte.toFloat())
     }
 
     private fun publish(
@@ -378,14 +381,29 @@ class PluginService : Service() {
         dte: Double,
     ) {
         val rmax = remainingMax()
-        t.setPIDInformation(Pids.PLUGIN_SMOOTHED, "SmFuel", "%", 100f, 0f, smoothed.toFloat(), null)
-        t.setPIDInformation(Pids.PLUGIN_CORRECTED, "CorrFuel", "%", 100f, 0f, corrected.toFloat(), null)
-        t.setPIDInformation(Pids.PLUGIN_REMAINING, "GalLeft", "gal", rmax, 0f, remain.toFloat(), null)
-        t.setPIDInformation(Pids.PLUGIN_DTE, "pDTE", "mi", 500f, 0f, dte.toFloat(), null)
-        t.setPIDInformation(Pids.ALIAS_SMOOTHED, "SmFuel", "%", 100f, 0f, smoothed.toFloat(), null)
-        t.setPIDInformation(Pids.ALIAS_FORD, "PFord", "%", 100f, 0f, corrected.toFloat(), null)
-        t.setPIDInformation(Pids.ALIAS_REMAINING, "GalLeft", "gal", rmax, 0f, remain.toFloat(), null)
-        t.setPIDInformation(Pids.ALIAS_DTE, "pDTE", "mi", 500f, 0f, dte.toFloat(), null)
+        setPid(t, Pids.PLUGIN_SMOOTHED, "SmFuel", "%", rmax = 100f, value = smoothed.toFloat())
+        setPid(t, Pids.PLUGIN_CORRECTED, "CorrFuel", "%", rmax = 100f, value = corrected.toFloat())
+        setPid(t, Pids.PLUGIN_REMAINING, "GalLeft", "gal", rmax = rmax, value = remain.toFloat())
+        setPid(t, Pids.PLUGIN_DTE, "pDTE", "mi", rmax = 500f, value = dte.toFloat())
+        setPid(t, Pids.ALIAS_SMOOTHED, "SmFuel", "%", rmax = 100f, value = smoothed.toFloat())
+        setPid(t, Pids.ALIAS_FORD, "PFord", "%", rmax = 100f, value = corrected.toFloat())
+        setPid(t, Pids.ALIAS_REMAINING, "GalLeft", "gal", rmax = rmax, value = remain.toFloat())
+        setPid(t, Pids.ALIAS_DTE, "pDTE", "mi", rmax = 500f, value = dte.toFloat())
+    }
+
+    private fun setPid(
+        t: ITorqueService,
+        name: String,
+        shortName: String,
+        unit: String,
+        rmax: Float,
+        value: Float,
+    ) {
+        val info = runCatching { t.setPIDInformation(name, shortName, unit, rmax, 0f, value, null) }
+        if (info.isSuccess) return
+        Log.w(TAG, "setPIDInformation $name: ${info.exceptionOrNull()?.message}")
+        runCatching { t.setPIDData(name, shortName, unit, rmax, 0f, value) }
+            .onFailure { Log.w(TAG, "setPIDData $name: ${it.message}") }
     }
 
     private fun maybeSyncSlider(t: ITorqueService, auth: Double) {
@@ -554,10 +572,21 @@ class PluginService : Service() {
     }
 
     private fun readDouble(t: ITorqueService, pid: String): Double? {
-        val v = runCatching { t.getPIDValuesAsDouble(arrayOf(pid)) }.getOrNull()
-        val d = v?.firstOrNull() ?: return null
-        if (d.isNaN() || d.isInfinite()) return null
-        return d
+        val asDouble = runCatching { t.getPIDValuesAsDouble(arrayOf(pid)) }
+        if (asDouble.isSuccess) {
+            val d = asDouble.getOrNull()?.firstOrNull() ?: return null
+            if (d.isNaN() || d.isInfinite()) return null
+            return d
+        }
+        Log.w(TAG, "getPIDValuesAsDouble: ${asDouble.exceptionOrNull()?.message}")
+        val asFloat = runCatching { t.getPIDValues(arrayOf(pid)) }
+        if (asFloat.isFailure) {
+            Log.w(TAG, "getPIDValues: ${asFloat.exceptionOrNull()?.message}")
+            return null
+        }
+        val f = asFloat.getOrNull()?.firstOrNull() ?: return null
+        if (f.isNaN() || f.isInfinite()) return null
+        return f.toDouble()
     }
 
     private fun statusText(): String {
@@ -572,15 +601,49 @@ class PluginService : Service() {
 
     private fun ensureChannel() {
         if (Build.VERSION.SDK_INT < 26) return
-        val nm = getSystemService(NotificationManager::class.java) ?: return
+        val nm = notificationManager() ?: return
         nm.createNotificationChannel(
             NotificationChannel(CHANNEL_ID, "Fix Fuel", NotificationManager.IMPORTANCE_LOW),
         )
+        nm.createNotificationChannel(
+            NotificationChannel(CHANNEL_QUIET, "Fix Fuel quiet", NotificationManager.IMPORTANCE_MIN),
+        )
     }
 
-    private fun goForeground(text: String) {
+    private fun updatePresence(liveText: String) {
+        cfg = FixFuelPrefs.load(this)
+        val showPct = cfg.showFuelNotification
+        if (Build.VERSION.SDK_INT >= 26) {
+            val channel = if (showPct) CHANNEL_ID else CHANNEL_QUIET
+            val body = if (showPct) liveText else getString(R.string.running_quiet)
+            if (body == lastNoticeText && channel == lastNoticeChannel) return
+            lastNoticeText = body
+            lastNoticeChannel = channel
+            startAsForeground(body, channel)
+            return
+        }
+        if (!showPct) {
+            if (lastNoticeChannel != null) {
+                notificationManager()?.cancel(NOTIF_ID)
+                lastNoticeText = null
+                lastNoticeChannel = null
+            }
+            return
+        }
+        if (liveText == lastNoticeText && lastNoticeChannel == CHANNEL_ID) return
+        lastNoticeText = liveText
+        lastNoticeChannel = CHANNEL_ID
         try {
-            val n = notification(text)
+            notificationManager()?.notify(NOTIF_ID, notification(liveText, CHANNEL_ID))
+        } catch (t: Throwable) {
+            Log.w(TAG, "notify ignored: ${t.javaClass.simpleName} ${t.message}")
+        }
+    }
+
+    private fun startAsForeground(text: String, channelId: String) {
+        if (Build.VERSION.SDK_INT < 26) return
+        try {
+            val n = notification(text, channelId)
             when {
                 Build.VERSION.SDK_INT >= 34 ->
                     startForeground(NOTIF_ID, n, ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
@@ -590,13 +653,13 @@ class PluginService : Service() {
             }
             TapStartNotice.cancel(this)
         } catch (t: Throwable) {
-            Log.w(TAG, "goForeground ignored: ${t.javaClass.simpleName} ${t.message}")
+            Log.w(TAG, "startForeground ignored: ${t.javaClass.simpleName} ${t.message}")
         }
     }
 
-    private fun notification(text: String): Notification {
+    private fun notification(text: String, channelId: String): Notification {
         val b = if (Build.VERSION.SDK_INT >= 26) {
-            Notification.Builder(this, CHANNEL_ID)
+            Notification.Builder(this, channelId)
         } else {
             @Suppress("DEPRECATION")
             Notification.Builder(this)
@@ -608,9 +671,19 @@ class PluginService : Service() {
             .build()
     }
 
+    private fun notificationManager(): NotificationManager? {
+        return if (Build.VERSION.SDK_INT >= 23) {
+            getSystemService(NotificationManager::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            getSystemService(NOTIFICATION_SERVICE) as? NotificationManager
+        }
+    }
+
     companion object {
         private const val TAG = "FordFuel"
         private const val CHANNEL_ID = "fordfuel"
+        private const val CHANNEL_QUIET = "fordfuel_quiet"
         private const val NOTIF_ID = 350
         private const val POLL_MS = 1000L
         private const val FILL_SWITCH_DEBOUNCE_MS = 5000L

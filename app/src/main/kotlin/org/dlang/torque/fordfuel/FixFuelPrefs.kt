@@ -28,6 +28,7 @@ internal data class FixFuelConfig(
     val extras: List<ExtraTank> = emptyList(),
     val activeTank: String = FixFuelPrefs.ACTIVE_TANK1,
     val selectPidName: String = "",
+    val showFuelNotification: Boolean = true,
 ) {
     val tank2Enabled: Boolean get() = extras.any { it.id == 2 }
     private val extra2: ExtraTank? get() = extras.firstOrNull { it.id == 2 }
@@ -64,6 +65,7 @@ internal object FixFuelPrefs {
     const val KEY_SELECT_PID = "select_pid_name"
     const val KEY_EXTRAS = "extra_tanks"
     const val KEY_EXTRAS_MIGRATED = "extra_tanks_migrated"
+    const val KEY_SHOW_NOTICE = "show_fuel_notification"
 
     const val DEFAULT_SOURCE = "ford_16c1"
     const val DEFAULT_SOURCE_T2 = "custom_name"
@@ -97,6 +99,7 @@ internal object FixFuelPrefs {
             extras = parseExtras(p.getString(KEY_EXTRAS, "[]") ?: "[]"),
             activeTank = normalizeActive(p.getString(KEY_ACTIVE, ACTIVE_TANK1) ?: ACTIVE_TANK1),
             selectPidName = p.getString(KEY_SELECT_PID, "") ?: "",
+            showFuelNotification = p.getBoolean(KEY_SHOW_NOTICE, true),
         )
     }
 
@@ -111,6 +114,7 @@ internal object FixFuelPrefs {
         extras: List<ExtraTank>,
         activeTank: String = ACTIVE_TANK1,
         selectPidName: String = "",
+        showFuelNotification: Boolean = true,
     ) {
         val e = prefs(ctx).edit()
             .putString(KEY_SOURCE, sourceId)
@@ -123,6 +127,7 @@ internal object FixFuelPrefs {
         e.putString(KEY_EXTRAS, extrasToJson(extras))
             .putString(KEY_ACTIVE, normalizeActive(activeTank))
             .putString(KEY_SELECT_PID, selectPidName)
+            .putBoolean(KEY_SHOW_NOTICE, showFuelNotification)
             .putBoolean(KEY_EXTRAS_MIGRATED, true)
         e.apply()
     }
