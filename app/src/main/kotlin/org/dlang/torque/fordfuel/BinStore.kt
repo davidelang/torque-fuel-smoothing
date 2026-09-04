@@ -49,7 +49,7 @@ internal class BinStore(
         val sessionDir = sessionDirForBins()
         bins.clear()
         reserveGal = 0.0
-        val files = sessionDir.listFiles { _, name -> name.endsWith(".jsonl") }?.sortedBy { it.name } ?: emptyArray()
+        val files = sessionDir.listFiles { _, name -> name.endsWith(".jsonl") }?.sortedBy { it.name }.orEmpty()
         var n = 0
         for (f in files) {
             val samples = SessionStore.loadSmoothedSamples(f) ?: continue
