@@ -108,15 +108,62 @@ internal class SessionStore(context: Context, private val tank: Int = 1) {
 
     companion object {
         private const val TAG = "FordFuel"
+        private const val LITER_GPH = 0.264172052
+        private const val LITER_MEAN_GPH = 8.0
+
+        fun loadSmoothedSamples(file: File): List<Sample>? {
+            if (!file.isFile) return null
+            val samples = mutableListOf<Sample>()
+            var sawSmoothed = false
+            runCatching {
+                file.forEachLine { line ->
+                    if (line.isBlank()) return@forEachLine
+                    val o = JSONObject(line)
+                    if (o.has("event") || !o.has("t")) return@forEachLine
+                    if (o.has("smoothedPct")) sawSmoothed = true
+                    val raw = o.optDouble("rawPct", Double.NaN)
+                    val sm = o.optDouble("smoothedPct", raw)
+                    if (!sm.isFinite()) return@forEachLine
+                    samples.add(
+                        Sample(
+                            t = o.optLong("t"),
+                            rawPct = if (raw.isFinite()) raw else sm,
+                            smoothedPct = sm,
+                            fuelUsedGal = o.optDouble("fuelUsedGal", 0.0),
+                            speed = o.optDouble("speed", 0.0),
+                            fill = o.optBoolean("fill", false),
+                        ),
+                    )
+                }
+            }.onFailure { Log.w(TAG, "jsonl ${file.name}: ${it.message}") }
+            if (!sawSmoothed || samples.size < 2) return null
+            return scaleIfLiterSession(samples)
+        }
+
+        private fun scaleIfLiterSession(samples: List<Sample>): List<Sample> {
+            val first = samples.first()
+            val last = samples.last()
+            val hours = (last.t - first.t) / 3_600_000.0
+            if (hours < 1.0 / 60.0) return samples
+            val used = last.fuelUsedGal - first.fuelUsedGal
+            if (used <= 0.0) return samples
+            val gph = used / hours
+            if (gph <= LITER_MEAN_GPH) return samples
+            Log.i(TAG, "jsonl liter-scale meanGph=${"%.2f".format(gph)} × $LITER_GPH")
+            return samples.map { it.copy(fuelUsedGal = it.fuelUsedGal * LITER_GPH) }
+        }
     }
 }
 
 internal object Units {
     fun toGallons(value: Double, unit: String): Double {
-        val u = unit.lowercase()
+        val u = unit.lowercase().replace(" ", "")
         return when {
             u.contains("gal") -> value
-            u == "l" || u == "liter" || u == "litre" || u.contains("lit") -> value * 0.264172052
+            u.contains("cc") || u.contains("ml") -> value * 0.000264172052
+            u.contains("l/h") || u.contains("lph") || u.contains("l/min") || u.contains("lpm") ||
+                u == "l" || u.contains("liter") || u.contains("litre") || u.contains("lit") ->
+                value * 0.264172052
             else -> value
         }
     }

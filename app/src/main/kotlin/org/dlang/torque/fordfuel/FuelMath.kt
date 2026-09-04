@@ -155,13 +155,61 @@ internal class FuelMath {
             return bins.filter { b -> p >= b.lo && p < b.hi || (p == 100.0 && p == b.hi) }
         }
 
+        fun density(b: Bin): Double = b.gal / (b.hi - b.lo).coerceAtLeast(1e-6)
+
+        fun median(xs: List<Double>): Double {
+            if (xs.isEmpty()) return 0.0
+            val s = xs.sorted()
+            val n = s.size
+            return if (n % 2 == 1) s[n / 2] else 0.5 * (s[n / 2 - 1] + s[n / 2])
+        }
+
+        fun filterOutliers(bins: List<Bin>, currentUsable: Double?): List<Bin> {
+            if (bins.isEmpty()) return emptyList()
+            val dens = bins.map { density(it) }
+            val med = median(dens)
+            if (med <= 0.0) return bins.filter { density(it) > 0.0 }
+            var limit = med * 3.0
+            val usableCap = currentUsable?.takeIf { it > 0.0 }?.div(100.0)?.times(3.0)
+            if (usableCap != null) limit = minOf(limit, usableCap)
+            return bins.filter { b ->
+                val d = density(b)
+                d > 0.0 && d <= limit
+            }
+        }
+
         fun galPerPercent(p: Double, bins: List<Bin>, nameplateGal: Double?): Double {
             val hit = covering(p, bins)
             if (hit.isNotEmpty()) {
-                return hit.map { it.gal / (it.hi - it.lo).coerceAtLeast(1e-6) }.average()
+                val kept = filterOutliers(hit, nameplateGal)
+                if (kept.isNotEmpty()) return kept.map { density(it) }.average()
             }
             if (nameplateGal != null && nameplateGal > 0.0) return nameplateGal / 100.0
             return 0.0
+        }
+
+        fun mappedGallons(bins: List<Bin>, currentUsable: Double?): Double {
+            var gal = 0.0
+            var cursor = 0.0
+            while (cursor < 100.0) {
+                val next = minOf(100.0, cursor + STEP)
+                val mid = (cursor + next) / 2.0
+                val hit = covering(mid, bins)
+                if (hit.isNotEmpty()) {
+                    val kept = filterOutliers(hit, currentUsable)
+                    if (kept.isNotEmpty()) gal += kept.map { density(it) }.average() * (next - cursor)
+                }
+                cursor = next
+            }
+            return gal
+        }
+
+        fun estimateUsable(bins: List<Bin>, currentUsable: Double?): Double? {
+            val span = coverageSpan(bins)
+            if (bins.size < 2 || span < 20.0) return null
+            val mapped = mappedGallons(bins, currentUsable)
+            if (mapped <= 0.0) return null
+            return 100.0 * mapped / span
         }
 
         fun observationsFrom(samples: List<Sample>): SessionObs {

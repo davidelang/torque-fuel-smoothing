@@ -84,6 +84,8 @@ internal object Pids {
         val mpg: String,
         val speedUnit: String,
         val fuelUsedUnit: String,
+        val galHrUnit: String,
+        val galMinUnit: String,
         val mpgUnit: String,
         val names: Map<String, String>,
     )
@@ -129,6 +131,8 @@ internal object Pids {
             mpg = mpg,
             speedUnit = unitOf(speed),
             fuelUsedUnit = unitOf(fuelUsed),
+            galHrUnit = unitOf(galHr),
+            galMinUnit = unitOf(galMin),
             mpgUnit = unitOf(mpg),
             names = names,
         )

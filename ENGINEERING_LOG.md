@@ -102,3 +102,15 @@
 - `minSdk = 21`; API 21–25 `startService` (optional live notice); API 26–33 FGS without specialUse type; API 34+ `specialUse`.
 - Checkbox `show_fuel_notification` default on; off uses `fordfuel_quiet` / static text on 26+, no shade notice on 21–25.
 - Battery dialog only API 31+; `getPIDValues`/`setPIDData` fallbacks; Class `getSystemService` and `FLAG_IMMUTABLE` guarded ≥23.
+
+## 2026-09-03 - Execute start: fix-fuel-chunk-usable-units-20260903-2109-plan.md
+
+- Magic-approved plan: `sandbox/plans/fix-fuel-chunk-usable-units-20260903-2109-plan.md`
+- Scope: L/hr→gal in integrateGalHr; usable = robust 100×mappedGal/span; identity holes; rebuild bins.json from smoothed jsonl once. No autostart/N-tanks/notice/012F-help changes.
+- No `./deploy` / `adb install` by coder; compile only via `./build_app`.
+
+## 2026-09-03 - Phase 1: L/hr units, chunk usable, ECU-down jsonl rebuild
+
+- `integrateGalHr` uses `Units.toGallons` from PID unit (L/hr, cc/min, gal/hr, gal/min); log unit once.
+- Usable = 100×mappedGallons/span after 3× density outlier drop; holes identity usable/100.
+- Rebuild bins from smoothed jsonl only on ECU-down (`onEcuAway`), then `maybeLearnUsable` so existing >20pt sessions yield a first estimate without another drive.

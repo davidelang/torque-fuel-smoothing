@@ -39,6 +39,9 @@ class PluginService : Service() {
     private var fuelUsedUnit: String = "gal"
     private var galHrPid: String? = null
     private var galMinPid: String? = null
+    private var galHrUnit: String = "gal/h"
+    private var galMinUnit: String = "gal/min"
+    private var loggedFlowUnit: Boolean = false
     private var lastActive: String = FixFuelPrefs.ACTIVE_TANK1
     private var suppressFillUntilMs: Long = 0L
     private var speedUnit: String = "mph"
@@ -84,7 +87,7 @@ class PluginService : Service() {
 
         override fun onServiceDisconnected(name: ComponentName?) {
             Log.w(TAG, "Torque disconnected; not auto-creating")
-            closeSession()
+            onEcuAway()
             torque = null
             bound = false
             bindRequested = false
@@ -180,12 +183,15 @@ class PluginService : Service() {
         if (r.fuelUsedUnit.isNotEmpty()) fuelUsedUnit = r.fuelUsedUnit
         galHrPid = r.galHr ?: Pids.GAL_PER_HOUR
         galMinPid = r.galMin ?: Pids.GAL_PER_MIN
+        if (r.galHrUnit.isNotEmpty()) galHrUnit = r.galHrUnit
+        if (r.galMinUnit.isNotEmpty()) galMinUnit = r.galMinUnit
         mpgPid = r.mpg
         if (r.mpgUnit.isNotEmpty()) mpgUnit = r.mpgUnit
         pidNames = r.names
         Log.i(
             TAG,
-            "pids ford=${fordPid ?: "UNRESOLVED"} speed=$speedPid fuelUsed=$fuelUsedPid unit=$fuelUsedUnit mpg=$mpgPid names=${pidNames.size}",
+            "pids ford=${fordPid ?: "UNRESOLVED"} speed=$speedPid fuelUsed=$fuelUsedPid unit=$fuelUsedUnit " +
+                "galHr=$galHrPid $galHrUnit galMin=$galMinPid $galMinUnit mpg=$mpgPid names=${pidNames.size}",
         )
     }
 
@@ -331,7 +337,17 @@ class PluginService : Service() {
         if (connected) {
             ensureActiveSession()
         } else {
-            closeSession()
+            onEcuAway()
+        }
+    }
+
+    private fun onEcuAway() {
+        closeSession()
+        if (tanks[1] == null) tanks[1] = makeRuntime(1)
+        for (id in tanks.keys.toList()) {
+            val rt = tanks[id] ?: continue
+            rt.bins.rebuildFromJsonlOnce()
+            maybeLearnUsable(id)
         }
     }
 
@@ -505,22 +521,34 @@ class PluginService : Service() {
         val dtSec = ((now - last).coerceAtLeast(0L) / 1000.0).coerceAtLeast(0.001)
         val hr = readDouble(t, galHrPid ?: Pids.GAL_PER_HOUR)
         val gph = if (hr != null && hr.isFinite() && hr >= 0.0) {
-            hr
+            logFlowUnitOnce("galHr")
+            Units.toGallons(hr, galHrUnit)
         } else {
             val gmin = readDouble(t, galMinPid ?: Pids.GAL_PER_MIN)
-            if (gmin != null && gmin.isFinite() && gmin >= 0.0) gmin * 60.0 else return
+            if (gmin != null && gmin.isFinite() && gmin >= 0.0) {
+                logFlowUnitOnce("galMin")
+                Units.toGallons(gmin, galMinUnit) * 60.0
+            } else {
+                return
+            }
         }
         rt.usedGal += gph * (dtSec / 3600.0)
+    }
+
+    private fun logFlowUnitOnce(which: String) {
+        if (loggedFlowUnit) return
+        loggedFlowUnit = true
+        Log.i(TAG, "flow unit $which galHr=$galHrUnit galMin=$galMinUnit")
     }
 
     private fun maybeLearnUsable(id: Int) {
         val rt = tanks[id] ?: return
         val bins = rt.bins.bins.toList()
-        val span = FuelMath.coverageSpan(bins)
-        if (bins.size < 2 || span < 20.0) return
-        val nameplate = if (id == 1) cfg.tankGal else cfg.extra(id)?.tankGal
-        val usable = rt.math.remainingGal(100.0, bins, nameplate, rt.bins.reserveGal)
+        val current = if (id == 1) cfg.learnedUsable ?: cfg.tankGal else cfg.extra(id)?.learnedUsable ?: cfg.extra(id)?.tankGal
+        val usable = FuelMath.estimateUsable(bins, current) ?: return
         if (usable <= 0.0) return
+        val span = FuelMath.coverageSpan(bins)
+        val mapped = FuelMath.mappedGallons(bins, current)
         if (id == 1) {
             FixFuelPrefs.setLearnedUsable(this, usable)
             nameplateGal = usable
@@ -528,7 +556,7 @@ class PluginService : Service() {
             FixFuelPrefs.setLearnedUsableExtra(this, id, usable)
         }
         cfg = FixFuelPrefs.load(this)
-        Log.i(TAG, "learned usable tank=$id gal=$usable coverageSpan=$span")
+        Log.i(TAG, "learned usable tank=$id gal=$usable span=$span mappedGal=$mapped bins=${bins.size}")
     }
 
     private fun makeRuntime(id: Int): TankRt {

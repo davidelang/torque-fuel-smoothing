@@ -8,7 +8,7 @@ import org.prowl.torque.remote.ITorqueService
 import java.io.File
 
 internal class BinStore(
-    context: Context,
+    private val context: Context,
     fileName: String = "bins.json",
     private val profileKey: String = "${Pids.PREFIX}bins",
     clearLegacy: Boolean = true,
@@ -42,6 +42,36 @@ internal class BinStore(
         }
     }
 
+    fun rebuildFromJsonlOnce(): Boolean {
+        val p = FixFuelPrefs.prefs(context)
+        val key = if (file.name == "bins.json") KEY_V3 else "${KEY_V3}_${file.name}"
+        if (p.getBoolean(key, false)) return false
+        val sessionDir = sessionDirForBins()
+        bins.clear()
+        reserveGal = 0.0
+        val files = sessionDir.listFiles { _, name -> name.endsWith(".jsonl") }?.sortedBy { it.name } ?: emptyArray()
+        var n = 0
+        for (f in files) {
+            val samples = SessionStore.loadSmoothedSamples(f) ?: continue
+            add(FuelMath.observationsFrom(samples))
+            n++
+        }
+        saveFile()
+        p.edit().putBoolean(key, true).apply()
+        Log.i(TAG, "rebuilt ${file.name} from $n smoothed jsonl sessions bins=${bins.size} reserve=$reserveGal")
+        return true
+    }
+
+    private fun sessionDirForBins(): File {
+        val name = file.name
+        return if (name == "bins.json") {
+            File(context.filesDir, "sessions")
+        } else {
+            val id = name.removePrefix("bins-t").removeSuffix(".json")
+            File(context.filesDir, "sessions-t$id")
+        }
+    }
+
     private fun loadFile() {
         if (!file.isFile) return
         val parsed = parse(file.readText())
@@ -66,6 +96,7 @@ internal class BinStore(
     companion object {
         private const val TAG = "FordFuel"
         private const val KEY_V2 = "bins_v2"
+        private const val KEY_V3 = "bins_v3_chunk_units"
 
         fun clearLegacyOnce(ctx: Context) {
             val p = FixFuelPrefs.prefs(ctx)
