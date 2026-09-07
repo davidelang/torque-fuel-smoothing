@@ -125,3 +125,14 @@
 
 - No `gal/h` default; empty/unknown flow unit treated as SI liters. `gal` label with session mean > 8 gal/h still ×0.264172.
 - Remaining (and extra-tank remaining) published as `l` or `gal` from `getPreferredUnit`. Internal jsonl/bins stay gallons.
+
+## 2026-09-07 - Execute start: fix-fuel-register-extra-pids-20260907-1619-plan.md
+
+- Magic-approved plan: `sandbox/plans/fix-fuel-register-extra-pids-20260907-1619-plan.md`
+- Scope: once after bind, `sendPIDDataV2` for [FixFuel]/[OldFord] PIDs (and extras in list) so they appear in Manage extra PIDs. Keep setPIDInformation for values. No 1 Hz V2, no Ford/012F write.
+- No `./deploy` / `adb install` by coder; compile only via `./build_app`.
+
+## 2026-09-07 - Phase 1: sendPIDDataV2 once at bind
+
+- After bind, register [FixFuel] Smoothed/Corrected/Remaining/DTE and [OldFord] aliases (plus extras in list) with empty mode/header, equation 0, pluginName org.dlang.torque.fordfuel.
+- Values still via setPIDInformation each sample. No V2 on 1 Hz path. Remaining unit gal/l from preferred.

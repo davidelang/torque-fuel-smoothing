@@ -359,6 +359,8 @@ class PluginService : Service() {
     }
 
     private fun registerPluginPids(t: ITorqueService) {
+        runCatching { sendExtraPidRows(t) }
+            .onFailure { Log.w(TAG, "sendPIDDataV2: ${it.message}") }
         runCatching {
             publishFour(t, 0.0, 0.0, 0.0, 0.0)
             for (extra in cfg.extras) {
@@ -366,6 +368,57 @@ class PluginService : Service() {
             }
         }.onFailure { Log.w(TAG, "registerPluginPids: ${it.message}") }
         Log.i(TAG, "registered tank1 PIDs extras=${cfg.extras.map { it.id }}")
+    }
+
+    private fun sendExtraPidRows(t: ITorqueService) {
+        val remainUnit = remainingOut(0.0).second
+        val remainMax = remainingScale(nameplateGal)
+        val names = mutableListOf<String>()
+        val shorts = mutableListOf<String>()
+        val units = mutableListOf<String>()
+        val mins = mutableListOf<Float>()
+        val maxs = mutableListOf<Float>()
+        fun row(name: String, shortName: String, unit: String, max: Float) {
+            names.add(name)
+            shorts.add(shortName)
+            units.add(unit)
+            mins.add(0f)
+            maxs.add(max)
+        }
+        row(Pids.PLUGIN_SMOOTHED, "SmFuel", "%", 100f)
+        row(Pids.PLUGIN_CORRECTED, "CorrFuel", "%", 100f)
+        row(Pids.PLUGIN_REMAINING, "GalLeft", remainUnit, remainMax)
+        row(Pids.PLUGIN_DTE, "pDTE", "mi", 500f)
+        row(Pids.ALIAS_SMOOTHED, "SmFuel", "%", 100f)
+        row(Pids.ALIAS_FORD, "PFord", "%", 100f)
+        row(Pids.ALIAS_REMAINING, "GalLeft", remainUnit, remainMax)
+        row(Pids.ALIAS_DTE, "pDTE", "mi", 500f)
+        for (extra in cfg.extras) {
+            val n = Pids.extraPidNames(extra.id)
+            val tmax = remainingScale(extra.learnedUsable ?: extra.tankGal)
+            row(n.smoothed, n.shortSm, "%", 100f)
+            row(n.corrected, n.shortCorr, "%", 100f)
+            row(n.remaining, n.shortGal, remainUnit, tmax)
+            row(n.dte, n.shortDte, "mi", 500f)
+        }
+        val count = names.size
+        val blank = Array(count) { "" }
+        val eq = Array(count) { "0" }
+        val diag = arrayOfNulls<String>(count)
+        val ok = t.sendPIDDataV2(
+            "org.dlang.torque.fordfuel",
+            names.toTypedArray(),
+            shorts.toTypedArray(),
+            blank,
+            eq,
+            mins.toFloatArray(),
+            maxs.toFloatArray(),
+            units.toTypedArray(),
+            blank,
+            diag,
+            diag,
+        )
+        Log.i(TAG, "sendPIDDataV2 n=$count ok=$ok remainUnit=$remainUnit")
     }
 
     private fun publishExtra(
