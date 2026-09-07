@@ -375,31 +375,33 @@ class PluginService : Service() {
         val remainMax = remainingScale(nameplateGal)
         val names = mutableListOf<String>()
         val shorts = mutableListOf<String>()
+        val modes = mutableListOf<String>()
         val units = mutableListOf<String>()
         val mins = mutableListOf<Float>()
         val maxs = mutableListOf<Float>()
-        fun row(name: String, shortName: String, unit: String, max: Float) {
+        fun row(name: String, shortName: String, unit: String, max: Float, modePid: String) {
             names.add(name)
             shorts.add(shortName)
+            modes.add(modePid)
             units.add(unit)
             mins.add(0f)
             maxs.add(max)
         }
-        row(Pids.PLUGIN_SMOOTHED, "SmFuel", "%", 100f)
-        row(Pids.PLUGIN_CORRECTED, "CorrFuel", "%", 100f)
-        row(Pids.PLUGIN_REMAINING, "GalLeft", remainUnit, remainMax)
-        row(Pids.PLUGIN_DTE, "pDTE", "mi", 500f)
-        row(Pids.ALIAS_SMOOTHED, "SmFuel", "%", 100f)
-        row(Pids.ALIAS_FORD, "PFord", "%", 100f)
-        row(Pids.ALIAS_REMAINING, "GalLeft", remainUnit, remainMax)
-        row(Pids.ALIAS_DTE, "pDTE", "mi", 500f)
+        row(Pids.PLUGIN_SMOOTHED, "SmFuel", "%", 100f, Pids.MODE_SMOOTHED)
+        row(Pids.PLUGIN_CORRECTED, "CorrFuel", "%", 100f, Pids.MODE_CORRECTED)
+        row(Pids.PLUGIN_REMAINING, "GalLeft", remainUnit, remainMax, Pids.MODE_REMAINING)
+        row(Pids.PLUGIN_DTE, "pDTE", "mi", 500f, Pids.MODE_DTE)
+        row(Pids.ALIAS_SMOOTHED, "SmFuel", "%", 100f, Pids.MODE_ALIAS_SMOOTHED)
+        row(Pids.ALIAS_FORD, "PFord", "%", 100f, Pids.MODE_ALIAS_FORD)
+        row(Pids.ALIAS_REMAINING, "GalLeft", remainUnit, remainMax, Pids.MODE_ALIAS_REMAINING)
+        row(Pids.ALIAS_DTE, "pDTE", "mi", 500f, Pids.MODE_ALIAS_DTE)
         for (extra in cfg.extras) {
             val n = Pids.extraPidNames(extra.id)
             val tmax = remainingScale(extra.learnedUsable ?: extra.tankGal)
-            row(n.smoothed, n.shortSm, "%", 100f)
-            row(n.corrected, n.shortCorr, "%", 100f)
-            row(n.remaining, n.shortGal, remainUnit, tmax)
-            row(n.dte, n.shortDte, "mi", 500f)
+            row(n.smoothed, n.shortSm, "%", 100f, Pids.extraModePid(extra.id, 1))
+            row(n.corrected, n.shortCorr, "%", 100f, Pids.extraModePid(extra.id, 2))
+            row(n.remaining, n.shortGal, remainUnit, tmax, Pids.extraModePid(extra.id, 3))
+            row(n.dte, n.shortDte, "mi", 500f, Pids.extraModePid(extra.id, 4))
         }
         val count = names.size
         val blank = Array(count) { "" }
@@ -409,7 +411,7 @@ class PluginService : Service() {
             "org.dlang.torque.fordfuel",
             names.toTypedArray(),
             shorts.toTypedArray(),
-            blank,
+            modes.toTypedArray(),
             eq,
             mins.toFloatArray(),
             maxs.toFloatArray(),

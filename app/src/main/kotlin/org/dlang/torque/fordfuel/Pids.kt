@@ -26,6 +26,19 @@ internal object Pids {
     const val PLUGIN_T2_CORRECTED = "[FixFuel] Tank2 Corrected"
     const val PLUGIN_T2_REMAINING = "[FixFuel] Tank2 Remaining"
     const val PLUGIN_T2_DTE = "[FixFuel] Tank2 DTE"
+    const val MODE_SMOOTHED = "ffd001"
+    const val MODE_CORRECTED = "ffd002"
+    const val MODE_REMAINING = "ffd003"
+    const val MODE_DTE = "ffd004"
+    const val MODE_ALIAS_SMOOTHED = "ffd011"
+    const val MODE_ALIAS_FORD = "ffd012"
+    const val MODE_ALIAS_REMAINING = "ffd013"
+    const val MODE_ALIAS_DTE = "ffd014"
+
+    fun extraModePid(id: Int, which: Int): String {
+        check(id in 2..8 && which in 1..4)
+        return "ffd0$id$which"
+    }
 
     data class ExtraPidNames(
         val smoothed: String,

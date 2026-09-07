@@ -148,3 +148,14 @@
 - Drop bins at/near the 0.05 gal observation floor (gal ≤ 0.10) before the density median; drop <¼ and >3× that center. No currentUsable cap.
 - estimateUsable = 100 × mappedGallons / coverageSpan(kept). Rebuild flag bins_v4_slosh (ECU-down).
 - Local replay of sandbox/research/tank-8gal-20260907/bins.json → ~28 gal (not ~8).
+
+## 2026-09-07 - Execute start: fix-fuel-extrapid-modepid-20260907-1636-plan.md
+
+- Magic-approved plan: `sandbox/plans/fix-fuel-extrapid-modepid-20260907-1636-plan.md`
+- Scope: sendPIDDataV2 ModeAndPID unique plugin hex (ffd001…) so rows appear in Manage extra PIDs. Header empty, equation 0, no bus poll. Keep setPIDInformation. Help one line. No fuel-math/units/autostart changes.
+- No `./deploy` / `adb install` by coder; compile only via `./build_app`.
+
+## 2026-09-07 - Phase 1: ModeAndPID ffd001… on sendPIDDataV2
+
+- Unique plugin hex per row (ffd001–004 FixFuel, ffd011–014 OldFord, ffd0n1–4 extra tanks). Header empty, equation 0, no adapter poll.
+- Help: Manage extra PIDs lists Corrected after bind; Overrides PID → Fuel Level (From Engine ECU).
