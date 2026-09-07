@@ -44,7 +44,7 @@ internal class BinStore(
 
     fun rebuildFromJsonlOnce(): Boolean {
         val p = FixFuelPrefs.prefs(context)
-        val key = if (file.name == "bins.json") KEY_V3 else "${KEY_V3}_${file.name}"
+        val key = if (file.name == "bins.json") KEY_V4 else "${KEY_V4}_${file.name}"
         if (p.getBoolean(key, false)) return false
         val sessionDir = sessionDirForBins()
         bins.clear()
@@ -97,6 +97,7 @@ internal class BinStore(
         private const val TAG = "FordFuel"
         private const val KEY_V2 = "bins_v2"
         private const val KEY_V3 = "bins_v3_chunk_units"
+        private const val KEY_V4 = "bins_v4_slosh"
 
         fun clearLegacyOnce(ctx: Context) {
             val p = FixFuelPrefs.prefs(ctx)

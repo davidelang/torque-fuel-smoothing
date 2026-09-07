@@ -136,3 +136,15 @@
 
 - After bind, register [FixFuel] Smoothed/Corrected/Remaining/DTE and [OldFord] aliases (plus extras in list) with empty mode/header, equation 0, pluginName org.dlang.torque.fordfuel.
 - Values still via setPIDInformation each sample. No V2 on 1 Hz path. Remaining unit gal/l from preferred.
+
+## 2026-09-07 - Execute start: fix-fuel-usable-outlier-slosh-20260907-1638-plan.md
+
+- Magic-approved plan: `sandbox/plans/fix-fuel-usable-outlier-slosh-20260907-1638-plan.md`
+- Scope: drop 0.05 gal slosh crumbs before median; keep ~0.35 gal/%; no currentUsable death-spiral cap; bins_v4 rebuild on ECU-down. No sendPIDDataV2 / preferred-unit / autostart changes.
+- No `./deploy` / `adb install` by coder; compile only via `./build_app`.
+
+## 2026-09-07 - Phase 1: slosh crumbs out of usable median; bins_v4
+
+- Drop bins at/near the 0.05 gal observation floor (gal ≤ 0.10) before the density median; drop <¼ and >3× that center. No currentUsable cap.
+- estimateUsable = 100 × mappedGallons / coverageSpan(kept). Rebuild flag bins_v4_slosh (ECU-down).
+- Local replay of sandbox/research/tank-8gal-20260907/bins.json → ~28 gal (not ~8).

@@ -645,11 +645,11 @@ class PluginService : Service() {
     private fun maybeLearnUsable(id: Int) {
         val rt = tanks[id] ?: return
         val bins = rt.bins.bins.toList()
-        val current = if (id == 1) cfg.learnedUsable ?: cfg.tankGal else cfg.extra(id)?.learnedUsable ?: cfg.extra(id)?.tankGal
-        val usable = FuelMath.estimateUsable(bins, current) ?: return
+        val usable = FuelMath.estimateUsable(bins) ?: return
         if (usable <= 0.0) return
-        val span = FuelMath.coverageSpan(bins)
-        val mapped = FuelMath.mappedGallons(bins, current)
+        val kept = FuelMath.filterOutliers(bins)
+        val span = FuelMath.coverageSpan(kept)
+        val mapped = FuelMath.mappedGallons(bins)
         if (id == 1) {
             FixFuelPrefs.setLearnedUsable(this, usable)
             nameplateGal = usable

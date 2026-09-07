@@ -150,6 +150,8 @@ internal class FuelMath {
             return if (u.contains("km")) value * 0.621371 else value
         }
         private const val STEP = 1.0
+        const val OBS_MIN_GAL = 0.05
+        private const val SLOSH_GAL = OBS_MIN_GAL * 2.0
 
         fun covering(p: Double, bins: List<Bin>): List<Bin> {
             return bins.filter { b -> p >= b.lo && p < b.hi || (p == 100.0 && p == b.hi) }
@@ -164,50 +166,51 @@ internal class FuelMath {
             return if (n % 2 == 1) s[n / 2] else 0.5 * (s[n / 2 - 1] + s[n / 2])
         }
 
-        fun filterOutliers(bins: List<Bin>, currentUsable: Double?): List<Bin> {
+        fun filterOutliers(bins: List<Bin>): List<Bin> {
             if (bins.isEmpty()) return emptyList()
-            val dens = bins.map { density(it) }
-            val med = median(dens)
-            if (med <= 0.0) return bins.filter { density(it) > 0.0 }
-            var limit = med * 3.0
-            val usableCap = currentUsable?.takeIf { it > 0.0 }?.div(100.0)?.times(3.0)
-            if (usableCap != null) limit = minOf(limit, usableCap)
-            return bins.filter { b ->
+            val aboveGate = bins.filter { it.gal > SLOSH_GAL && density(it) > 0.0 }
+            if (aboveGate.isEmpty()) return emptyList()
+            val center = median(aboveGate.map { density(it) })
+            if (center <= 0.0) return aboveGate
+            val lo = center / 4.0
+            val hi = center * 3.0
+            return aboveGate.filter { b ->
                 val d = density(b)
-                d > 0.0 && d <= limit
+                d >= lo && d <= hi
             }
         }
 
         fun galPerPercent(p: Double, bins: List<Bin>, nameplateGal: Double?): Double {
             val hit = covering(p, bins)
             if (hit.isNotEmpty()) {
-                val kept = filterOutliers(hit, nameplateGal)
+                val kept = filterOutliers(hit)
                 if (kept.isNotEmpty()) return kept.map { density(it) }.average()
             }
             if (nameplateGal != null && nameplateGal > 0.0) return nameplateGal / 100.0
             return 0.0
         }
 
-        fun mappedGallons(bins: List<Bin>, currentUsable: Double?): Double {
+        fun mappedGallons(bins: List<Bin>): Double {
+            val kept = filterOutliers(bins)
             var gal = 0.0
             var cursor = 0.0
             while (cursor < 100.0) {
                 val next = minOf(100.0, cursor + STEP)
                 val mid = (cursor + next) / 2.0
-                val hit = covering(mid, bins)
+                val hit = covering(mid, kept)
                 if (hit.isNotEmpty()) {
-                    val kept = filterOutliers(hit, currentUsable)
-                    if (kept.isNotEmpty()) gal += kept.map { density(it) }.average() * (next - cursor)
+                    gal += hit.map { density(it) }.average() * (next - cursor)
                 }
                 cursor = next
             }
             return gal
         }
 
-        fun estimateUsable(bins: List<Bin>, currentUsable: Double?): Double? {
-            val span = coverageSpan(bins)
-            if (bins.size < 2 || span < 20.0) return null
-            val mapped = mappedGallons(bins, currentUsable)
+        fun estimateUsable(bins: List<Bin>): Double? {
+            val kept = filterOutliers(bins)
+            val span = coverageSpan(kept)
+            if (kept.size < 2 || span < 20.0) return null
+            val mapped = mappedGallons(bins)
             if (mapped <= 0.0) return null
             return 100.0 * mapped / span
         }
