@@ -156,15 +156,26 @@ internal class SessionStore(context: Context, private val tank: Int = 1) {
 }
 
 internal object Units {
+    const val GAL_PER_LITER = 0.264172052
+    const val LITERS_PER_GAL = 3.785411784
+    const val IMPLAUSIBLE_GPH = 8.0
+
     fun toGallons(value: Double, unit: String): Double {
         val u = unit.lowercase().replace(" ", "")
         return when {
             u.contains("gal") -> value
             u.contains("cc") || u.contains("ml") -> value * 0.000264172052
-            u.contains("l/h") || u.contains("lph") || u.contains("l/min") || u.contains("lpm") ||
-                u == "l" || u.contains("liter") || u.contains("litre") || u.contains("lit") ->
-                value * 0.264172052
-            else -> value
+            else -> value * GAL_PER_LITER
         }
+    }
+
+    fun looksLikeGallons(unit: String): Boolean {
+        return unit.lowercase().replace(" ", "").contains("gal")
+    }
+
+    fun prefersLiters(preferred: String): Boolean {
+        val u = preferred.lowercase().replace(" ", "")
+        if (u.contains("gal")) return false
+        return u == "l" || u.contains("liter") || u.contains("litre") || u.contains("lit")
     }
 }

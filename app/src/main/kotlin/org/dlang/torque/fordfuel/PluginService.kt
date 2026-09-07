@@ -25,6 +25,7 @@ class PluginService : Service() {
     ) {
         var usedGal: Double = 0.0
         var lastRateMs: Long? = null
+        var flowStartMs: Long? = null
     }
 
     private val handler = Handler(Looper.getMainLooper())
@@ -39,8 +40,9 @@ class PluginService : Service() {
     private var fuelUsedUnit: String = "gal"
     private var galHrPid: String? = null
     private var galMinPid: String? = null
-    private var galHrUnit: String = "gal/h"
-    private var galMinUnit: String = "gal/min"
+    private var galHrUnit: String = ""
+    private var galMinUnit: String = ""
+    private var preferredVolumeUnit: String = ""
     private var loggedFlowUnit: Boolean = false
     private var lastActive: String = FixFuelPrefs.ACTIVE_TANK1
     private var suppressFillUntilMs: Long = 0L
@@ -183,15 +185,20 @@ class PluginService : Service() {
         if (r.fuelUsedUnit.isNotEmpty()) fuelUsedUnit = r.fuelUsedUnit
         galHrPid = r.galHr ?: Pids.GAL_PER_HOUR
         galMinPid = r.galMin ?: Pids.GAL_PER_MIN
-        if (r.galHrUnit.isNotEmpty()) galHrUnit = r.galHrUnit
-        if (r.galMinUnit.isNotEmpty()) galMinUnit = r.galMinUnit
+        galHrUnit = r.galHrUnit
+        galMinUnit = r.galMinUnit
         mpgPid = r.mpg
         if (r.mpgUnit.isNotEmpty()) mpgUnit = r.mpgUnit
         pidNames = r.names
+        preferredVolumeUnit = runCatching { t.getPreferredUnit("l") }.getOrNull().orEmpty()
+        if (preferredVolumeUnit.isBlank()) {
+            preferredVolumeUnit = runCatching { t.getPreferredUnit("gal") }.getOrNull().orEmpty()
+        }
         Log.i(
             TAG,
             "pids ford=${fordPid ?: "UNRESOLVED"} speed=$speedPid fuelUsed=$fuelUsedPid unit=$fuelUsedUnit " +
-                "galHr=$galHrPid $galHrUnit galMin=$galMinPid $galMinUnit mpg=$mpgPid names=${pidNames.size}",
+                "galHr=$galHrPid raw=$galHrUnit galMin=$galMinPid raw=$galMinUnit " +
+                "preferredVol=$preferredVolumeUnit mpg=$mpgPid names=${pidNames.size}",
         )
     }
 
@@ -371,10 +378,11 @@ class PluginService : Service() {
         usable: Double?,
     ) {
         val names = Pids.extraPidNames(id)
-        val rmax = usable?.toFloat()?.takeIf { it > 0f } ?: 50f
+        val (vol, vu) = remainingOut(remain)
+        val rmax = remainingScale(usable)
         setPid(t, names.smoothed, names.shortSm, "%", rmax = 100f, value = smoothed.toFloat())
         setPid(t, names.corrected, names.shortCorr, "%", rmax = 100f, value = corrected.toFloat())
-        setPid(t, names.remaining, names.shortGal, "gal", rmax = rmax, value = remain.toFloat())
+        setPid(t, names.remaining, names.shortGal, vu, rmax = rmax, value = vol)
         setPid(t, names.dte, names.shortDte, "mi", rmax = 500f, value = dte.toFloat())
     }
 
@@ -396,14 +404,15 @@ class PluginService : Service() {
         remain: Double,
         dte: Double,
     ) {
-        val rmax = remainingMax()
+        val (vol, vu) = remainingOut(remain)
+        val rmax = remainingScale(nameplateGal)
         setPid(t, Pids.PLUGIN_SMOOTHED, "SmFuel", "%", rmax = 100f, value = smoothed.toFloat())
         setPid(t, Pids.PLUGIN_CORRECTED, "CorrFuel", "%", rmax = 100f, value = corrected.toFloat())
-        setPid(t, Pids.PLUGIN_REMAINING, "GalLeft", "gal", rmax = rmax, value = remain.toFloat())
+        setPid(t, Pids.PLUGIN_REMAINING, "GalLeft", vu, rmax = rmax, value = vol)
         setPid(t, Pids.PLUGIN_DTE, "pDTE", "mi", rmax = 500f, value = dte.toFloat())
         setPid(t, Pids.ALIAS_SMOOTHED, "SmFuel", "%", rmax = 100f, value = smoothed.toFloat())
         setPid(t, Pids.ALIAS_FORD, "PFord", "%", rmax = 100f, value = corrected.toFloat())
-        setPid(t, Pids.ALIAS_REMAINING, "GalLeft", "gal", rmax = rmax, value = remain.toFloat())
+        setPid(t, Pids.ALIAS_REMAINING, "GalLeft", vu, rmax = rmax, value = vol)
         setPid(t, Pids.ALIAS_DTE, "pDTE", "mi", rmax = 500f, value = dte.toFloat())
     }
 
@@ -491,6 +500,7 @@ class PluginService : Service() {
         if (id == 1) lastSliderPct = null
         rt.usedGal = 0.0
         rt.lastRateMs = null
+        rt.flowStartMs = null
         val sid = rt.sessions.open()
         Log.i(TAG, "session open tank=$id $sid files=${rt.sessions.sessionCount()}")
     }
@@ -522,12 +532,12 @@ class PluginService : Service() {
         val hr = readDouble(t, galHrPid ?: Pids.GAL_PER_HOUR)
         val gph = if (hr != null && hr.isFinite() && hr >= 0.0) {
             logFlowUnitOnce("galHr")
-            Units.toGallons(hr, galHrUnit)
+            flowToGallonsPerHour(hr, galHrUnit, perMinute = false, rt, now, last)
         } else {
             val gmin = readDouble(t, galMinPid ?: Pids.GAL_PER_MIN)
             if (gmin != null && gmin.isFinite() && gmin >= 0.0) {
                 logFlowUnitOnce("galMin")
-                Units.toGallons(gmin, galMinUnit) * 60.0
+                flowToGallonsPerHour(gmin, galMinUnit, perMinute = true, rt, now, last)
             } else {
                 return
             }
@@ -535,10 +545,48 @@ class PluginService : Service() {
         rt.usedGal += gph * (dtSec / 3600.0)
     }
 
+    private fun flowToGallonsPerHour(
+        raw: Double,
+        unit: String,
+        perMinute: Boolean,
+        rt: TankRt,
+        now: Long,
+        last: Long,
+    ): Double {
+        var gph = Units.toGallons(raw, unit)
+        if (perMinute) gph *= 60.0
+        if (Units.looksLikeGallons(unit)) {
+            val origin = rt.flowStartMs ?: last
+            rt.flowStartMs = origin
+            val dtSec = ((now - last).coerceAtLeast(0L) / 1000.0).coerceAtLeast(0.001)
+            val hours = ((now - origin) / 3_600_000.0).coerceAtLeast(dtSec / 3600.0)
+            val mean = (rt.usedGal + gph * (dtSec / 3600.0)) / hours
+            if (mean > Units.IMPLAUSIBLE_GPH) gph *= Units.GAL_PER_LITER
+        }
+        return gph
+    }
+
     private fun logFlowUnitOnce(which: String) {
         if (loggedFlowUnit) return
         loggedFlowUnit = true
-        Log.i(TAG, "flow unit $which galHr=$galHrUnit galMin=$galMinUnit")
+        val out = if (Units.prefersLiters(preferredVolumeUnit)) "l" else "gal"
+        Log.i(
+            TAG,
+            "flow unit $which raw galHr=$galHrUnit galMin=$galMinUnit preferred=$preferredVolumeUnit remaining=$out",
+        )
+    }
+
+    private fun remainingOut(gal: Double): Pair<Float, String> {
+        return if (Units.prefersLiters(preferredVolumeUnit)) {
+            (gal * Units.LITERS_PER_GAL).toFloat() to "l"
+        } else {
+            gal.toFloat() to "gal"
+        }
+    }
+
+    private fun remainingScale(gal: Double?): Float {
+        val g = gal?.takeIf { it > 0.0 } ?: 50.0
+        return if (Units.prefersLiters(preferredVolumeUnit)) (g * Units.LITERS_PER_GAL).toFloat() else g.toFloat()
     }
 
     private fun maybeLearnUsable(id: Int) {
@@ -594,10 +642,7 @@ class PluginService : Service() {
         }
     }
 
-    private fun remainingMax(): Float {
-        val n = nameplateGal
-        return if (n != null && n > 0.0) n.toFloat() else 50f
-    }
+    private fun remainingMax(): Float = remainingScale(nameplateGal)
 
     private fun readDouble(t: ITorqueService, pid: String): Double? {
         val asDouble = runCatching { t.getPIDValuesAsDouble(arrayOf(pid)) }

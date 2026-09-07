@@ -114,3 +114,14 @@
 - `integrateGalHr` uses `Units.toGallons` from PID unit (L/hr, cc/min, gal/hr, gal/min); log unit once.
 - Usable = 100×mappedGallons/span after 3× density outlier drop; holes identity usable/100.
 - Rebuild bins from smoothed jsonl only on ECU-down (`onEcuAway`), then `maybeLearnUsable` so existing >20pt sessions yield a first estimate without another drive.
+
+## 2026-09-07 - Execute start: fix-fuel-torque-volume-units-20260907-0742-plan.md
+
+- Magic-approved plan: `sandbox/plans/fix-fuel-torque-volume-units-20260907-0742-plan.md`
+- Scope: raw AIDL flow unit (never default gal/h; empty → liters); remaining PID gal vs l from getPreferredUnit. Internal math stays gallons. No chunk-formula/autostart/N-tanks changes.
+- No `./deploy` / `adb install` by coder; compile only via `./build_app`.
+
+## 2026-09-07 - Phase 1: raw flow unit in, preferred remaining unit out
+
+- No `gal/h` default; empty/unknown flow unit treated as SI liters. `gal` label with session mean > 8 gal/h still ×0.264172.
+- Remaining (and extra-tank remaining) published as `l` or `gal` from `getPreferredUnit`. Internal jsonl/bins stay gallons.
