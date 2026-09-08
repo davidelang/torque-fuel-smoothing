@@ -159,3 +159,14 @@
 
 - Unique plugin hex per row (ffd001–004 FixFuel, ffd011–014 OldFord, ffd0n1–4 extra tanks). Header empty, equation 0, no adapter poll.
 - Help: Manage extra PIDs lists Corrected after bind; Overrides PID → Fuel Level (From Engine ECU).
+
+## 2026-09-07 - Execute start: fix-fuel-hold-glitch-override-20260907-1746-plan.md
+
+- Magic-approved plan: `sandbox/plans/fix-fuel-hold-glitch-override-20260907-1746-plan.md`
+- Scope: hold raw <1% (and optional >15pt drop) when last good >5%; fill-snap vs held smoothed; sendPIDDataV2 equation not 0. Help: delete 0-equation extra PIDs. No chunk/L/hr/autostart changes.
+- No `./deploy` / `adb install` by coder; compile only via `./build_app`.
+
+## 2026-09-07 - Phase 1: hold 0.3% junk frames; extra-PID equation empty
+
+- isValidSample: last good >5% and raw <1% (or drop >15 pt) → hold, no ingest, no fill-snap. Fill compares raw to held smoothed.
+- sendPIDDataV2 equation empty (not 0) so Manage extra PIDs does not import a 0% duplicate. Help: delete old 0-equation rows; Overrides only on live Corrected.

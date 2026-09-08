@@ -254,7 +254,7 @@ class PluginService : Service() {
         }
         if (id == 1) Log.i(TAG, "source ${cfg.sourceId} ${src.how} active=$lastActive")
         val raw = src.pct
-        val valid = rt.math.isValidSample(raw, ecu) && !src.missing
+        val valid = rt.math.isValidSample(raw, ecu, rt.math.smoothed) && !src.missing
         if (!valid) {
             rt.math.hold()
             val held = rt.math.smoothed
@@ -405,7 +405,7 @@ class PluginService : Service() {
         }
         val count = names.size
         val blank = Array(count) { "" }
-        val eq = Array(count) { "0" }
+        val eq = Array(count) { "" }
         val diag = arrayOfNulls<String>(count)
         val ok = t.sendPIDDataV2(
             "org.dlang.torque.fordfuel",

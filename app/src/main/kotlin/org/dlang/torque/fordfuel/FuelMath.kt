@@ -25,14 +25,15 @@ internal class FuelMath {
     private var fillBandCenter: Double = 0.0
     private var fillBandStartMs: Long = 0L
 
-    fun isValidSample(raw: Double?, ecuConnected: Boolean?): Boolean {
+    fun isValidSample(raw: Double?, ecuConnected: Boolean?, lastGood: Double? = smoothed): Boolean {
         if (ecuConnected == false) return false
         if (raw == null || !raw.isFinite()) return false
         if (raw > 100.0 || raw < 0.0) return false
         if (raw == 0.0) {
-            val s = smoothed
-            return s != null && s <= NEAR_EMPTY_PCT
+            return lastGood != null && lastGood <= NEAR_EMPTY_PCT
         }
+        if (lastGood != null && lastGood > NEAR_EMPTY_PCT && raw < GLITCH_RAW_PCT) return false
+        if (lastGood != null && lastGood > NEAR_EMPTY_PCT && lastGood - raw > DROP_HOLD_PT) return false
         return raw > 0.0 && raw <= 100.0
     }
 
@@ -138,6 +139,8 @@ internal class FuelMath {
         const val SKEW_PCT_PER_SEC = 0.05
         const val PINNED_ZERO = 0.5
         const val NEAR_EMPTY_PCT = 5.0
+        const val GLITCH_RAW_PCT = 1.0
+        const val DROP_HOLD_PT = 15.0
         const val FILL_JUMP_PCT = 25.0
         const val FILL_ENTER_SPEED_MPH = 3.0
         const val FILL_EXIT_SPEED_MPH = 5.0
