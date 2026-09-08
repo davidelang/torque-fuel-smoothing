@@ -5,15 +5,23 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.ComponentName
+import android.content.ContentUris
+import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.ServiceInfo
+import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.provider.MediaStore
 import android.util.Log
 import org.prowl.torque.remote.ITorqueService
+import java.io.File
+import java.io.FileOutputStream
 import kotlin.math.roundToInt
 
 class PluginService : Service() {
@@ -169,6 +177,7 @@ class PluginService : Service() {
         runCatching { tanks[1]?.bins?.loadFromProfile(t) }
         nameplateGal = TankSeed.seed(t)
         registerPluginPids(t)
+        OverrideCsv.export(this)
         handler.removeCallbacks(poll)
         handler.post(poll)
     }
@@ -822,5 +831,103 @@ class PluginService : Service() {
 
         @Volatile
         var isRunning: Boolean = false
+    }
+}
+
+/** Writes the override extra-PID CSV to picker-visible Downloads. Not sendPIDDataV2. */
+internal object OverrideCsv {
+    const val FILE_NAME = "FixFuel-012F.csv"
+    private const val ASSET = "FixFuel-012F.csv"
+    private const val TAG = "FordFuel"
+
+    fun export(ctx: Context) {
+        val bytes = runCatching {
+            ctx.assets.open(ASSET).use { it.readBytes() }
+        }.getOrElse {
+            Log.w(TAG, "override csv asset missing: ${it.message}")
+            return
+        }
+        val dl = writeDownloads(ctx, bytes)
+        Log.i(TAG, "override csv Downloads=$dl")
+        val ext = copyTorqueExtended(ctx, bytes)
+        Log.i(TAG, "override csv extendedpids=$ext")
+    }
+
+    private fun writeDownloads(ctx: Context, bytes: ByteArray): String {
+        if (Build.VERSION.SDK_INT >= 29) {
+            return runCatching { writeMediaStore(ctx, bytes) }
+                .getOrElse { "mediastore-fail ${it.message}" }
+        }
+        @Suppress("DEPRECATION")
+        val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        if (!dir.exists() && !dir.mkdirs()) return "mkdir-fail ${dir.absolutePath}"
+        val f = File(dir, FILE_NAME)
+        return runCatching {
+            FileOutputStream(f).use { it.write(bytes) }
+            f.absolutePath
+        }.getOrElse { "write-fail ${it.message}" }
+    }
+
+    private fun writeMediaStore(ctx: Context, bytes: ByteArray): String {
+        val cr = ctx.contentResolver
+        val collection = MediaStore.Downloads.EXTERNAL_CONTENT_URI
+        var uri: Uri? = null
+        cr.query(
+            collection,
+            arrayOf(MediaStore.Downloads._ID),
+            "${MediaStore.MediaColumns.DISPLAY_NAME}=?",
+            arrayOf(FILE_NAME),
+            null,
+        )?.use { c ->
+            if (c.moveToFirst()) {
+                uri = ContentUris.withAppendedId(collection, c.getLong(0))
+            }
+        }
+        if (uri == null) {
+            uri = cr.insert(
+                collection,
+                ContentValues().apply {
+                    put(MediaStore.MediaColumns.DISPLAY_NAME, FILE_NAME)
+                    put(MediaStore.MediaColumns.MIME_TYPE, "text/csv")
+                    put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+                },
+            )
+        }
+        val dest = uri ?: return "insert-null"
+        val out = cr.openOutputStream(dest, "wt") ?: cr.openOutputStream(dest)
+        if (out == null) return "open-fail $dest"
+        out.use { it.write(bytes) }
+        return dest.toString()
+    }
+
+    private fun copyTorqueExtended(ctx: Context, bytes: ByteArray): String {
+        val candidates = mutableListOf<File>()
+        runCatching {
+            val other = ctx.createPackageContext("org.prowl.torque", 0)
+            other.getExternalFilesDir(null)?.let { candidates.add(File(it, "extendedpids")) }
+        }
+        @Suppress("DEPRECATION")
+        Environment.getExternalStorageDirectory()?.let { root ->
+            candidates.add(File(root, "Android/data/org.prowl.torque/files/extendedpids"))
+        }
+        val seen = mutableSetOf<String>()
+        for (dir in candidates) {
+            val path = dir.absolutePath
+            if (!seen.add(path)) continue
+            val parentOk = !dir.exists() && dir.parentFile?.canWrite() == true
+            if (!(dir.exists() && dir.canWrite()) && !parentOk) {
+                Log.i(TAG, "override csv skip extendedpids $path exists=${dir.exists()} writable=${dir.canWrite()}")
+                continue
+            }
+            if (!dir.exists() && !dir.mkdirs()) continue
+            val f = File(dir, FILE_NAME)
+            try {
+                FileOutputStream(f).use { it.write(bytes) }
+                return f.absolutePath
+            } catch (e: Exception) {
+                Log.i(TAG, "override csv extendedpids write-fail $path ${e.message}")
+            }
+        }
+        return "not-writable"
     }
 }

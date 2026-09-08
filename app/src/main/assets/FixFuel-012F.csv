@@ -1,0 +1,2 @@
+Name,ShortName,ModeAndPID,Equation,Min Value,Max Value,Units,Header
+"[FixFuel] 012F Override",F012F,,"[FixFuel] Corrected Fuel Level",0,100,%,

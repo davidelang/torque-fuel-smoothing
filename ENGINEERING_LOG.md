@@ -170,3 +170,16 @@
 
 - isValidSample: last good >5% and raw <1% (or drop >15 pt) → hold, no ingest, no fill-snap. Fill compares raw to held smoothed.
 - sendPIDDataV2 equation empty (not 0) so Manage extra PIDs does not import a 0% duplicate. Help: delete old 0-equation rows; Overrides only on live Corrected.
+
+## 2026-09-07 - Execute start: fix-fuel-override-csv-ref-20260907-1803-plan.md
+
+- Magic-approved plan: `sandbox/plans/fix-fuel-override-csv-ref-20260907-1803-plan.md`
+- Scope: asset CSV [FixFuel] 012F Override equation = plugin Corrected (different long name). Write Downloads/FixFuel-012F.csv; copy extendedpids if writable. Help: Import CSV. Do not sendPIDDataV2 for Overrides.
+- No `./deploy` / `adb install` by coder; compile only via `./build_app`.
+
+## 2026-09-07 - Phase 1: override CSV to Downloads (equation references Corrected)
+
+- Asset `FixFuel-012F.csv`: Name `[FixFuel] 012F Override`, Short `F012F`, empty ModeAndPID, equation `[FixFuel] Corrected Fuel Level`.
+- On activity start and Torque bind: write picker-visible Downloads/FixFuel-012F.csv (MediaStore Q+); copy Torque extendedpids/ only if writable. Log paths.
+- Help: ⋮ → Import CSV file; Overrides on 012F Override only; gauges stay plugin Corrected.
+- Did not sendPIDDataV2 as the Overrides path; no new storage permission.

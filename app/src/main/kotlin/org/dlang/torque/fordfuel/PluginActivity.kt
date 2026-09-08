@@ -160,6 +160,7 @@ class PluginActivity : Activity() {
 
     override fun onStart() {
         super.onStart()
+        OverrideCsv.export(this)
         requestGrants()
         loading = true
         loadIntoForm()
