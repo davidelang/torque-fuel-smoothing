@@ -37,6 +37,7 @@ class PluginActivity : Activity() {
     private lateinit var extrasCol: LinearLayout
     private lateinit var addBtn: Button
     private lateinit var showNotice: CheckBox
+    private lateinit var write012f: CheckBox
     private lateinit var activeSpinner: Spinner
     private lateinit var selectPid: EditText
     private val extraCards = mutableListOf<ExtraCard>()
@@ -76,6 +77,10 @@ class PluginActivity : Activity() {
         showNotice = CheckBox(this)
         showNotice.text = getString(R.string.show_fuel_notification)
         col.addView(showNotice)
+
+        write012f = CheckBox(this)
+        write012f.text = getString(R.string.write_012f)
+        col.addView(write012f)
 
         col.addView(label("Fuel source"))
         sourceSpinner = Spinner(this)
@@ -142,6 +147,7 @@ class PluginActivity : Activity() {
         sourceSpinner.onItemSelectedListener = spinListen
         activeSpinner.onItemSelectedListener = spinListen
         showNotice.setOnCheckedChangeListener { _, _ -> if (!loading) persist() }
+        write012f.setOnCheckedChangeListener { _, _ -> if (!loading) persist() }
 
         scroll.addView(col)
         scroll.setOnApplyWindowInsetsListener { v, insets ->
@@ -199,6 +205,7 @@ class PluginActivity : Activity() {
         refreshActiveSpinner(c.activeTank)
         if (selectPid.text.toString() != c.selectPidName) selectPid.setText(c.selectPidName)
         showNotice.isChecked = c.showFuelNotification
+        write012f.isChecked = c.write012f
         refreshAddBtn()
     }
 
@@ -361,6 +368,7 @@ class PluginActivity : Activity() {
             activeTank = activeTankFromSpinner(),
             selectPidName = selectPid.text.toString().trim(),
             showFuelNotification = showNotice.isChecked,
+            write012f = write012f.isChecked,
         )
     }
 

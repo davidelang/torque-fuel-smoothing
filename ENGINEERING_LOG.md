@@ -183,3 +183,15 @@
 - On activity start and Torque bind: write picker-visible Downloads/FixFuel-012F.csv (MediaStore Q+); copy Torque extendedpids/ only if writable. Log paths.
 - Help: ⋮ → Import CSV file; Overrides on 012F Override only; gauges stay plugin Corrected.
 - Did not sendPIDDataV2 as the Overrides path; no new storage permission.
+
+## 2026-09-07 - Execute start: fix-fuel-write-012f-20260907-1831-plan.md
+
+- Magic-approved plan: `sandbox/plans/fix-fuel-write-012f-20260907-1831-plan.md`
+- Scope: each sample, setPIDInformation on stock Fuel Level (From Engine ECU) / 012F with plugin Corrected; checkbox default on; never read 012F as Ford input; no extra-PID equations / sendPIDDataV2 as Overrides path.
+- No `./deploy` / `adb install` by coder; compile only via `./build_app`.
+
+## 2026-09-07 - Phase 1: write Corrected onto Torque stock 012F
+
+- After publish, setPIDInformation on Fuel Level (From Engine ECU) and listAllPIDs 012F id if present. Checkbox Write corrected % onto Torque Fuel Level (012F) default on; off skips the write.
+- Never getPIDValues 012F as Ford input; do not write [FORD]Fuel Level. Help: clear Ford extra-PID override; delete imported 012F Override extra PID; no Import CSV / Overrides PID.
+- FuelSources.kt unchanged: default remains ford_16c1; Ford path is [FORD]Fuel Level.

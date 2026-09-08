@@ -64,6 +64,10 @@ class PluginService : Service() {
     private var sliderWritable: Boolean? = null
     private var nameplateGal: Double? = null
     private var pidNames: Map<String, String> = emptyMap()
+    private var ecuLevelName: String = ECU_FUEL_NAME
+    private var ecuLevelPid: String? = null
+    private var ecuFuelResolved: Boolean = false
+    private var logged012fWrite: Boolean = false
     private var lastNoticeText: String? = null
     private var lastNoticeChannel: String? = null
     private var cfg: FixFuelConfig = FixFuelConfig(
@@ -209,6 +213,35 @@ class PluginService : Service() {
                 "galHr=$galHrPid raw=$galHrUnit galMin=$galMinPid raw=$galMinUnit " +
                 "preferredVol=$preferredVolumeUnit mpg=$mpgPid names=${pidNames.size}",
         )
+        resolveEcuFuel(t)
+    }
+
+    private fun resolveEcuFuel(t: ITorqueService) {
+        val all = runCatching { t.listAllPIDs() }.getOrNull() ?: emptyArray()
+        val infos = if (all.isEmpty()) {
+            emptyArray()
+        } else {
+            runCatching { t.getPIDInformation(all) }.getOrNull() ?: emptyArray()
+        }
+        val n = minOf(all.size, infos.size)
+        var pid: String? = null
+        var name = ECU_FUEL_NAME
+        for (i in 0 until n) {
+            val id = all[i]
+            val nm = Pids.csvName(infos[i])
+            if (nm.equals(ECU_FUEL_NAME, ignoreCase = true)) {
+                name = nm
+                if (pid == null) pid = id
+            }
+            if (isStock012F(id) && !nm.equals(Pids.FORD_FUEL_NAME, ignoreCase = true)) {
+                pid = id
+                if (nm.isNotEmpty()) name = nm
+            }
+        }
+        ecuLevelName = name
+        ecuLevelPid = pid
+        ecuFuelResolved = true
+        Log.i(TAG, "ecu 012F slot name=$ecuLevelName pid=${pid ?: "none"} write=${cfg.write012f}")
     }
 
     private fun sampleOnce() {
@@ -218,6 +251,7 @@ class PluginService : Service() {
         val t = torque ?: return
         val ecu = runCatching { t.isConnectedToECU }.getOrNull()
         if (pidNames.isEmpty()) resolvePids()
+        else if (cfg.write012f && !ecuFuelResolved) resolveEcuFuel(t)
         val now = System.currentTimeMillis()
         val speedRaw = speedPid?.let { readDouble(t, it) } ?: 0.0
         val speedMph = FuelMath.toMph(speedRaw, speedUnit)
@@ -255,7 +289,14 @@ class PluginService : Service() {
                 learnedUsable = extra.learnedUsable,
             )
         }
-        val src = FuelSources.read(t, srcCfg, pidNames) { pid -> readDouble(t, pid) }
+        val src = FuelSources.read(t, srcCfg, pidNames) { pid ->
+            if (isStock012F(pid)) {
+                Log.w(TAG, "refusing getPIDValues of 012F (not Ford input)")
+                null
+            } else {
+                readDouble(t, pid)
+            }
+        }
         if (id == 1) {
             if (src.how != cfg.sourceStatus) FixFuelPrefs.setSourceStatus(this, src.how)
         } else if (src.how != (cfg.extra(id)?.sourceStatus ?: "")) {
@@ -332,6 +373,7 @@ class PluginService : Service() {
         val mpg = mpgRaw?.let { FuelMath.mpgFrom(it, mpgUnit) } ?: 0.0
         val dte = rt.math.dteMiles(remain, mpg)
         publish(t, raw, smoothed, corrected, remain, dte)
+        writeStockFuelLevel(t, corrected)
         maybeSyncSlider(t, corrected)
         updatePresence(statusText())
     }
@@ -478,6 +520,31 @@ class PluginService : Service() {
         setPid(t, Pids.ALIAS_FORD, "PFord", "%", rmax = 100f, value = corrected.toFloat())
         setPid(t, Pids.ALIAS_REMAINING, "GalLeft", vu, rmax = rmax, value = vol)
         setPid(t, Pids.ALIAS_DTE, "pDTE", "mi", rmax = 500f, value = dte.toFloat())
+    }
+
+    private fun writeStockFuelLevel(t: ITorqueService, corrected: Double) {
+        if (!cfg.write012f) return
+        if (ecuLevelName.equals(Pids.FORD_FUEL_NAME, ignoreCase = true)) {
+            Log.w(TAG, "skip 012F write: resolved name is Ford extra PID")
+            return
+        }
+        val v = corrected.toFloat()
+        setPid(t, ecuLevelName, "Fuel", "%", rmax = 100f, value = v)
+        val pid = ecuLevelPid
+        if (pid != null && !pid.equals(ecuLevelName, ignoreCase = true) && !isFordName(pid)) {
+            setPid(t, pid, "Fuel", "%", rmax = 100f, value = v)
+        }
+        if (!logged012fWrite) {
+            logged012fWrite = true
+            Log.i(TAG, "write 012F name=$ecuLevelName pid=${pid ?: "none"} value=$corrected")
+        }
+    }
+
+    private fun isFordName(s: String): Boolean = s.equals(Pids.FORD_FUEL_NAME, ignoreCase = true)
+
+    private fun isStock012F(pid: String): Boolean {
+        val u = pid.replace(",", "").replace(" ", "").uppercase()
+        return u == "012F" || u.startsWith("012F")
     }
 
     private fun setPid(
@@ -828,6 +895,7 @@ class PluginService : Service() {
         const val ACTION_OBD_DISCONNECTED = "org.prowl.torque.OBD_DISCONNECTED"
         const val ACTION_PID_QUERY = "org.prowl.torque.PID_QUERY"
         const val ACTION_PID_PLUGIN = "org.prowl.torque.PID_PLUGIN"
+        private const val ECU_FUEL_NAME = "Fuel Level (From Engine ECU)"
 
         @Volatile
         var isRunning: Boolean = false
