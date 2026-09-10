@@ -466,9 +466,11 @@ fix_worktree() {
   find "$wt" -name .git -prune -o -type f -exec chmod u+rw,g+rw,o+r {} + 2>/dev/null || true
   find "$wt" -name .git -prune -o -type d -exec chmod u+rwx,g+rwxs,o+rx {} + 2>/dev/null || true
 
-  # 666 for TODO/facts (planner writable)
-  chmod 666 "$wt/TODO.md" 2>/dev/null || true
-  chmod 666 "$wt/project-facts.md" 2>/dev/null || true
+  # Planner writes via ai-shared group rw (664), not other-write. 666 is a bug.
+  chown :"$SHARED_GROUP" "$wt/TODO.md" 2>/dev/null || true
+  chmod 664 "$wt/TODO.md" 2>/dev/null || true
+  chown :"$SHARED_GROUP" "$wt/project-facts.md" 2>/dev/null || true
+  chmod 664 "$wt/project-facts.md" 2>/dev/null || true
 
   # .git handling (linked worktree file vs main common dir).
   # NEVER chmod 660 a .git *directory* (strips search bit → recursive heal cannot descend).

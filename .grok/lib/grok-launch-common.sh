@@ -52,8 +52,8 @@ if [[ -n "$GIT_HOME_CONFIG" && "$GIT_HOME_CONFIG" != @@* ]]; then
 fi
 
 # Prefer sandbox_dir / sandbox_path from project.config; stamped default:
-# sandbox_path=sandbox  (smudge from project.config; clean restores token)
-_sandbox_stamp="sandbox"
+# sandbox_path=@@SANDBOX_PATH@@  (smudge from project.config; clean restores token)
+_sandbox_stamp="@@SANDBOX_PATH@@"
 SANDBOX_REL="${sandbox_dir:-${sandbox_path:-}}"
 if [[ -z "$SANDBOX_REL" || "$SANDBOX_REL" == @@* ]]; then
   if [[ "$_sandbox_stamp" != @@* && -n "$_sandbox_stamp" ]]; then
@@ -87,7 +87,7 @@ if [[ ! -f "$COMPOSE" ]]; then
   echo "ERROR: missing $COMPOSE" >&2
   exit 1
 fi
-[[ -x "$COMPOSE" ]] || chmod +x "$COMPOSE" 2>/dev/null || true
+[[ -x "$COMPOSE" ]] || chmod a+x "$COMPOSE" 2>/dev/null || true
 
 ANDROID_SHARED=""
 if [[ ! -f "$SCRIPT_DIR/ve-resolve-orch" ]]; then
@@ -97,9 +97,9 @@ fi
 # shellcheck source=/dev/null
 . "$SCRIPT_DIR/ve-resolve-orch"
 ve_resolve_orch "$SCRIPT_DIR" || exit 1
-ANDROID_SHARED="$ORCH_ROOT/.android-shared"
+ve_setup_worktree_build_homes "$SCRIPT_DIR" || exit 1
+ANDROID_SHARED="$ANDROID_USER_HOME"
 export ORCH_ROOT
-export GRADLE_USER_HOME="$ORCH_ROOT/.gradle-shared"
 
 umask "${umask_launch:-002}"
 
@@ -300,6 +300,26 @@ launch_grok_with_prompt() {
     grok_role_env+=(GROK_WORKFLOWS="${GROK_WORKFLOWS}")
     echo "GROK_WORKFLOWS=${GROK_WORKFLOWS}"
   fi
+  # User-scope [ui] permission_mode (always-approve on this host) must not
+  # override VE-wins “launchers stay ask”. CLI wins. GROK_PERMISSION_MODE overrides.
+  local grok_permission_mode="${GROK_PERMISSION_MODE:-default}"
+  echo "GROK_PERMISSION_MODE=${grok_permission_mode}"
+
+  # User-scope [models] default_reasoning_effort (xhigh on this host) must not
+  # override VE-wins “coder/master --effort high”. CLI wins.
+  # GROK_REASONING_EFFORT overrides; empty/0/off skips the flag.
+  # Planner/orch/primary: do not pass --effort (planner may keep xhigh).
+  # Spawned execute children inherit this parent session (no spawn effort arg).
+  local grok_effort_args=()
+  case "${ROLE_KEY:-}" in
+    coder|master)
+      local grok_effort="${GROK_REASONING_EFFORT:-high}"
+      if [[ -n "$grok_effort" && "$grok_effort" != "0" && "$grok_effort" != "off" ]]; then
+        grok_effort_args+=(--effort "$grok_effort")
+        echo "GROK_REASONING_EFFORT=${grok_effort}"
+      fi
+      ;;
+  esac
 
   local freeform_args=()
   case "${ROLE_KEY:-}" in
@@ -323,11 +343,19 @@ launch_grok_with_prompt() {
   fi
 
   # Mutation-only Landlock (agent-landlock) as the role user, immediately before grok.
-  # AGENT_LANDLOCK_DISABLE=1 skips; missing ABI warns and continues (helper soft-fail).
+  # Missing helper warns and continues. Helper itself honors AGENT_LANDLOCK_DISABLE=1.
+  # Owner -x is not enough: ai-planner is not in ai-code; 774 → Permission denied.
   local landlock_helper="${SCRIPT_DIR}/agent-landlock"
   local landlock_args=()
-  if [[ -x "$landlock_helper" || -f "$landlock_helper" ]]; then
-    [[ -x "$landlock_helper" ]] || chmod +x "$landlock_helper" 2>/dev/null || true
+  if [[ -f "$landlock_helper" ]]; then
+    if ! sudo -u "$run_user" -- test -x "$landlock_helper"; then
+      echo "ERROR: $run_user cannot execute $landlock_helper" >&2
+      echo "  $(stat -c 'mode=%a owner=%U:%G' "$landlock_helper" 2>/dev/null || ls -la "$landlock_helper")" >&2
+      echo "  $run_user groups: $(id -nG "$run_user" 2>/dev/null || true)" >&2
+      echo "  Need other-execute (775) when helper is :ai-code and the role is not in ai-code." >&2
+      echo "  Fix: chmod a+x $landlock_helper  (or run fix-perms / update-rules on this worktree)" >&2
+      exit 1
+    fi
     landlock_args=(
       "$landlock_helper"
       --role "${ROLE_KEY:-primary}"
@@ -355,6 +383,8 @@ launch_grok_with_prompt() {
       ${TODO_GATE_FLAGS[@]+"${TODO_GATE_FLAGS[@]}"} \
       --no-alt-screen \
       --minimal \
+      --permission-mode "${grok_permission_mode}" \
+      ${grok_effort_args[@]+"${grok_effort_args[@]}"} \
       ${freeform_args[@]+"${freeform_args[@]}"} \
       ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"}
 }
