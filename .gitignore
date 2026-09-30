@@ -25,3 +25,4 @@ captures/
 *.keystore
 keystore.properties
 
+sandbox/
