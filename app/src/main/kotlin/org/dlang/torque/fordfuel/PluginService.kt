@@ -34,6 +34,9 @@ class PluginService : Service() {
         var usedGal: Double = 0.0
         var lastRateMs: Long? = null
         var flowStartMs: Long? = null
+        /** Tank 1 only. Null until a fill sets it. Not cleared on session open. */
+        var fillAnchorGal: Double? = null
+        var sinceFillUsedGal: Double = 0.0
     }
 
     private val handler = Handler(Looper.getMainLooper())
@@ -333,6 +336,7 @@ class PluginService : Service() {
         }
         if (prevMode == TrackMode.FILL && rt.math.mode != TrackMode.FILL) {
             Log.i(TAG, "tank$id fill end raw=$live smoothed=$smoothed")
+            if (id == 1) anchorTank1AfterFill(rt, smoothed)
         }
         if (rt.sessions.isOpen && lastActive == id.toString()) {
             integrateGalHr(t, now, rt)
@@ -366,8 +370,17 @@ class PluginService : Service() {
         val rt = tanks[1] ?: return
         val bins = rt.bins.bins.toList()
         val usable = cfg.learnedUsable ?: cfg.tankGal
-        val remain = rt.math.remainingGal(smoothed, bins, usable, rt.bins.reserveGal)
-        val corrected = rt.math.correctedPct(smoothed, remain, usable, bins.isEmpty())
+        val anchor = rt.fillAnchorGal
+        val remain = if (anchor != null) {
+            rt.math.remainSinceFill(anchor, rt.sinceFillUsedGal + rt.usedGal)
+        } else {
+            rt.math.remainingGal(smoothed, bins, usable, rt.bins.reserveGal)
+        }
+        val corrected = if (anchor != null) {
+            rt.math.correctedPct(smoothed, remain, cfg.learnedUsable, binsEmpty = false)
+        } else {
+            rt.math.correctedPct(smoothed, remain, usable, bins.isEmpty())
+        }
         lastAuthPct = corrected
         val mpgRaw = mpgPid?.let { readDouble(t, it) }
         val mpg = mpgRaw?.let { FuelMath.mpgFrom(it, mpgUnit) } ?: 0.0
@@ -639,6 +652,7 @@ class PluginService : Service() {
     private fun closeTankSession(id: Int) {
         val rt = tanks[id] ?: return
         if (!rt.sessions.isOpen) return
+        if (id == 1) commitTank1SinceFill(rt)
         val closed = rt.sessions.close()
         val obs = FuelMath.observationsFrom(closed)
         rt.bins.add(obs)
@@ -738,8 +752,45 @@ class PluginService : Service() {
         Log.i(TAG, "learned usable tank=$id gal=$usable span=$span mappedGal=$mapped bins=${bins.size}")
     }
 
+    private fun anchorTank1AfterFill(rt: TankRt, smoothed: Double) {
+        val learned = cfg.learnedUsable?.takeIf { it > 0.0 }
+        val anchor = if (smoothed >= FULL_FILL_PCT) {
+            learned
+        } else {
+            val bins = rt.bins.bins.toList()
+            val nameplate = learned ?: cfg.tankGal
+            rt.math.remainingGal(smoothed, bins, nameplate, rt.bins.reserveGal).takeIf { it > 0.0 }
+        }
+        if (anchor == null) {
+            Log.i(TAG, "tank1 fill end no anchor smoothed=$smoothed learned=$learned")
+            return
+        }
+        rt.fillAnchorGal = anchor
+        rt.sinceFillUsedGal = 0.0
+        rt.usedGal = 0.0
+        FixFuelPrefs.setFillLedger(this, anchor, 0.0)
+        Log.i(TAG, "tank1 fill anchor=$anchor sinceFill=0 smoothed=$smoothed")
+    }
+
+    /** Adds this session's flow integral. Does not run when no anchor exists yet. */
+    private fun commitTank1SinceFill(rt: TankRt) {
+        val anchor = rt.fillAnchorGal ?: return
+        val add = rt.usedGal
+        if (!add.isFinite() || add <= 0.0) return
+        val next = rt.sinceFillUsedGal + add
+        rt.sinceFillUsedGal = next
+        rt.usedGal = 0.0
+        FixFuelPrefs.setFillLedger(this, anchor, next)
+        Log.i(TAG, "tank1 since-fill used=$next anchor=$anchor added=$add")
+    }
+
+    private fun loadTank1Ledger(rt: TankRt) {
+        rt.fillAnchorGal = FixFuelPrefs.fillAnchorGal(this)
+        rt.sinceFillUsedGal = FixFuelPrefs.sinceFillUsedGal(this)
+    }
+
     private fun makeRuntime(id: Int): TankRt {
-        return if (id <= 1) {
+        val rt = if (id <= 1) {
             TankRt(
                 id = 1,
                 sessions = SessionStore(this, 1),
@@ -757,6 +808,8 @@ class PluginService : Service() {
                 ),
             )
         }
+        if (id <= 1) loadTank1Ledger(rt)
+        return rt
     }
 
     private fun ensureRuntimes() {
@@ -891,6 +944,7 @@ class PluginService : Service() {
         private const val NOTIF_ID = 350
         private const val POLL_MS = 1000L
         private const val FILL_SWITCH_DEBOUNCE_MS = 5000L
+        private const val FULL_FILL_PCT = 90.0
         const val ACTION_OBD_CONNECTED = "org.prowl.torque.OBD_CONNECTED"
         const val ACTION_OBD_DISCONNECTED = "org.prowl.torque.OBD_DISCONNECTED"
         const val ACTION_PID_QUERY = "org.prowl.torque.PID_QUERY"

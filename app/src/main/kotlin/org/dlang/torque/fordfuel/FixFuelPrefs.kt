@@ -68,6 +68,8 @@ internal object FixFuelPrefs {
     const val KEY_EXTRAS_MIGRATED = "extra_tanks_migrated"
     const val KEY_SHOW_NOTICE = "show_fuel_notification"
     const val KEY_WRITE_012F = "write_012f"
+    const val KEY_FILL_ANCHOR = "fill_anchor_gal"
+    const val KEY_SINCE_FILL = "since_fill_used_gal"
 
     const val DEFAULT_SOURCE = "ford_16c1"
     const val DEFAULT_SOURCE_T2 = "custom_name"
@@ -150,6 +152,25 @@ internal object FixFuelPrefs {
 
     fun setSourceStatus(ctx: Context, status: String) {
         prefs(ctx).edit().putString(KEY_STATUS, status).apply()
+    }
+
+    fun fillAnchorGal(ctx: Context): Double? {
+        val raw = prefs(ctx).getString(KEY_FILL_ANCHOR, "") ?: ""
+        return raw.toDoubleOrNull()?.takeIf { it.isFinite() && it > 0.0 }
+    }
+
+    fun sinceFillUsedGal(ctx: Context): Double {
+        val raw = prefs(ctx).getString(KEY_SINCE_FILL, "") ?: ""
+        return raw.toDoubleOrNull()?.takeIf { it.isFinite() && it >= 0.0 } ?: 0.0
+    }
+
+    /** Tank 1 only. Replaces the anchor and the burned-since-fill total together. */
+    fun setFillLedger(ctx: Context, anchorGal: Double, sinceUsedGal: Double) {
+        val used = if (sinceUsedGal.isFinite()) sinceUsedGal.coerceAtLeast(0.0) else 0.0
+        val e = prefs(ctx).edit()
+        if (anchorGal.isFinite() && anchorGal > 0.0) e.putString(KEY_FILL_ANCHOR, anchorGal.toString())
+        else e.putString(KEY_FILL_ANCHOR, "")
+        e.putString(KEY_SINCE_FILL, used.toString()).apply()
     }
 
     fun setLearnedUsable(ctx: Context, gal: Double) {

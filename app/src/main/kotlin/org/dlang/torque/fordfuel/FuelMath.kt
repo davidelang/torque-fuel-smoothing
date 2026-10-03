@@ -125,6 +125,11 @@ internal class FuelMath {
         return gal
     }
 
+    /** Gallons left after a fill: anchor minus fuel burned since that fill. */
+    fun remainSinceFill(anchorGal: Double, sinceFillUsedGal: Double): Double {
+        return (anchorGal - sinceFillUsedGal).coerceAtLeast(0.0)
+    }
+
     fun dteMiles(remainingGal: Double, mpg: Double): Double {
         if (mpg <= 0.0 || mpg.isNaN()) return 0.0
         return remainingGal * mpg

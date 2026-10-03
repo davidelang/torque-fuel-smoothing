@@ -195,3 +195,9 @@
 - After publish, setPIDInformation on Fuel Level (From Engine ECU) and listAllPIDs 012F id if present. Checkbox Write corrected % onto Torque Fuel Level (012F) default on; off skips the write.
 - Never getPIDValues 012F as Ford input; do not write [FORD]Fuel Level. Help: clear Ford extra-PID override; delete imported 012F Override extra PID; no Import CSV / Overrides PID.
 - FuelSources.kt unchanged: default remains ford_16c1; Ford path is [FORD]Fuel Level.
+
+## 2026-10-02 - Execute start: fix-fuel-since-fill-20261002-1759-plan.md
+
+- Magic-approved plan: `sandbox/plans/fix-fuel-since-fill-20261002-1759-plan.md`
+- Scope: tank-1 gallons left are the fill anchor minus fuel burned since that fill, including later sessions. Persist `fill_anchor_gal` and `since_fill_used_gal`. Extra tanks stay on the map integral.
+- No `./deploy` by coder. Compile only via `./build_app`.
