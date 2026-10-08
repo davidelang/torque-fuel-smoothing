@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # third_party/fetch-deps — consumer-side pin / rw / upgrade materialize
-# Design: dev-ai-interaction/research/third-party-fetch-deps-design-20260802.md
+# Design: @@SANDBOX_PATH@@/research/third-party-fetch-deps-design-20260802.md
 #
 # Defaults simple:
 #   fetch-deps [name…]           # ro pin @ libpin.toml git_sha (patches, then chmod a-w)
@@ -132,7 +132,7 @@ if [[ -z "${GIT_HOME}" || "$GIT_HOME" == @@* || "$GIT_HOME" == *"@@"* ]]; then
     echo "fetch-deps: note: git_home still has smudge token ($GIT_HOME) — host clone disabled; using network" >&2
   fi
   GIT_HOME=""
-  git_home=@@GIT_HOME@@
+  git_home=""
 fi
 
 if [[ "$NO_BWRAP" -eq 1 ]]; then
