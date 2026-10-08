@@ -71,7 +71,8 @@ if [[ -z "$SANDBOX_REL" || "$SANDBOX_REL" == @@* ]]; then
   elif [[ -d "$SCRIPT_DIR/../sandbox" || -L "$SCRIPT_DIR/../sandbox" ]]; then
     SANDBOX_REL="../sandbox"
   else
-    SANDBOX_REL="sandbox"
+    echo "ERROR: project.config sandbox_dir/sandbox_path is unset and no sandbox directory exists." >&2
+    exit 1
   fi
 fi
 if [[ "$SANDBOX_REL" = /* ]]; then
@@ -87,7 +88,7 @@ if [[ ! -f "$COMPOSE" ]]; then
   echo "ERROR: missing $COMPOSE" >&2
   exit 1
 fi
-[[ -x "$COMPOSE" ]] || chmod +x "$COMPOSE" 2>/dev/null || true
+[[ -x "$COMPOSE" ]] || chmod a+x "$COMPOSE" 2>/dev/null || true
 
 ANDROID_SHARED=""
 if [[ ! -f "$SCRIPT_DIR/ve-resolve-orch" ]]; then
@@ -97,9 +98,9 @@ fi
 # shellcheck source=/dev/null
 . "$SCRIPT_DIR/ve-resolve-orch"
 ve_resolve_orch "$SCRIPT_DIR" || exit 1
-ANDROID_SHARED="$ORCH_ROOT/.android-shared"
+ve_setup_worktree_build_homes "$SCRIPT_DIR" || exit 1
+ANDROID_SHARED="$ANDROID_USER_HOME"
 export ORCH_ROOT
-export GRADLE_USER_HOME="$ORCH_ROOT/.gradle-shared"
 
 umask "${umask_launch:-002}"
 
@@ -151,7 +152,7 @@ compose_prompt() {
 
 resolve_run_user() {
   case "${ROLE_KEY:-}" in
-    planner) echo "${planning_user:-ai-planner}" ;;
+    planner|imagine) echo "${planning_user:-ai-planner}" ;;
     coder) echo "${coder_user:-ai-coder}" ;;
     master) echo "${master_user:-${coder_user:-ai-coder}}" ;;
     orchestrator) echo "${orchestrator_user:-ai-orchestrator}" ;;
@@ -283,7 +284,7 @@ launch_grok_with_prompt() {
   # Orch / primary / master: leave unset.
   # sudo -u env does not inherit the parent — must pass these on the env line.
   case "${ROLE_KEY:-}" in
-    planner)
+    planner|imagine)
       : "${GROK_SUBAGENTS:=0}"
       : "${GROK_WORKFLOWS:=0}"
       ;;
@@ -300,6 +301,41 @@ launch_grok_with_prompt() {
     grok_role_env+=(GROK_WORKFLOWS="${GROK_WORKFLOWS}")
     echo "GROK_WORKFLOWS=${GROK_WORKFLOWS}"
   fi
+  # User-scope [ui] permission_mode (always-approve on this host) must not
+  # override VE-wins “launchers stay ask”. CLI wins. GROK_PERMISSION_MODE overrides.
+  # Exception: ROLE_KEY=imagine pins bypassPermissions + --always-approve
+  # (CLI rejects --permission-mode always-approve). Tight Landlock, Imagine batches.
+  local grok_permission_mode
+  local grok_always_approve_args=()
+  case "${ROLE_KEY:-}" in
+    imagine)
+      grok_permission_mode="bypassPermissions"
+      grok_always_approve_args+=(--always-approve)
+      ;;
+    *)
+      grok_permission_mode="${GROK_PERMISSION_MODE:-default}"
+      ;;
+  esac
+  echo "GROK_PERMISSION_MODE=${grok_permission_mode}"
+  if [[ ${#grok_always_approve_args[@]} -gt 0 ]]; then
+    echo "GROK_ALWAYS_APPROVE=1"
+  fi
+
+  # User-scope [models] default_reasoning_effort (xhigh on this host) must not
+  # override VE-wins “coder/master --effort high”. CLI wins.
+  # GROK_REASONING_EFFORT overrides; empty/0/off skips the flag.
+  # Planner/orch/primary: do not pass --effort (planner may keep xhigh).
+  # Spawned execute children inherit this parent session (no spawn effort arg).
+  local grok_effort_args=()
+  case "${ROLE_KEY:-}" in
+    coder|master)
+      local grok_effort="${GROK_REASONING_EFFORT:-high}"
+      if [[ -n "$grok_effort" && "$grok_effort" != "0" && "$grok_effort" != "off" ]]; then
+        grok_effort_args+=(--effort "$grok_effort")
+        echo "GROK_REASONING_EFFORT=${grok_effort}"
+      fi
+      ;;
+  esac
 
   local freeform_args=()
   case "${ROLE_KEY:-}" in
@@ -323,11 +359,19 @@ launch_grok_with_prompt() {
   fi
 
   # Mutation-only Landlock (agent-landlock) as the role user, immediately before grok.
-  # AGENT_LANDLOCK_DISABLE=1 skips; missing ABI warns and continues (helper soft-fail).
+  # Missing helper warns and continues. Helper itself honors AGENT_LANDLOCK_DISABLE=1.
+  # Owner -x is not enough: ai-planner is not in ai-code; 774 → Permission denied.
   local landlock_helper="${SCRIPT_DIR}/agent-landlock"
   local landlock_args=()
-  if [[ -x "$landlock_helper" || -f "$landlock_helper" ]]; then
-    [[ -x "$landlock_helper" ]] || chmod +x "$landlock_helper" 2>/dev/null || true
+  if [[ -f "$landlock_helper" ]]; then
+    if ! sudo -u "$run_user" -- test -x "$landlock_helper"; then
+      echo "ERROR: $run_user cannot execute $landlock_helper" >&2
+      echo "  $(stat -c 'mode=%a owner=%U:%G' "$landlock_helper" 2>/dev/null || ls -la "$landlock_helper")" >&2
+      echo "  $run_user groups: $(id -nG "$run_user" 2>/dev/null || true)" >&2
+      echo "  Need other-execute (775) when helper is :ai-code and the role is not in ai-code." >&2
+      echo "  Fix: chmod a+x $landlock_helper  (or run fix-perms / update-rules on this worktree)" >&2
+      exit 1
+    fi
     landlock_args=(
       "$landlock_helper"
       --role "${ROLE_KEY:-primary}"
@@ -355,6 +399,9 @@ launch_grok_with_prompt() {
       ${TODO_GATE_FLAGS[@]+"${TODO_GATE_FLAGS[@]}"} \
       --no-alt-screen \
       --minimal \
+      --permission-mode "${grok_permission_mode}" \
+      ${grok_always_approve_args[@]+"${grok_always_approve_args[@]}"} \
+      ${grok_effort_args[@]+"${grok_effort_args[@]}"} \
       ${freeform_args[@]+"${freeform_args[@]}"} \
       ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"}
 }

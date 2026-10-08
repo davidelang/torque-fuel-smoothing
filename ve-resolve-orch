@@ -135,9 +135,7 @@ ve_setup_worktree_build_homes() {
       chmod 660 "$dest" 2>/dev/null || true
     else
       echo "ERROR: no debug.keystore at $dest and none at $src" >&2
-      echo "  Copy VehicleExpenses' canonical debug.keystore to $src" >&2
-      echo "  (or run keytool once as the human — do not mint a new key silently;" >&2
-      echo "  a different cert breaks later adb install -r)." >&2
+      echo "  Copy a canonical debug.keystore to $src" >&2
       return 1
     fi
   fi
@@ -172,10 +170,10 @@ ve_reset_gradle_daemon_dir() {
   return 0
 }
 
-# AGP Maven aapt2 is stored unix 0644 in the jar. After extract, Gradle's
-# transform cache drops +x, so ProcessBuilder gets EACCES. Point AGP at
+# AGP Maven aapt2 (com.android.tools.build:aapt2 classifier linux) is stored
+# unix 0644 in the jar. After extract, Gradle's transform cache drops +x, so
+# ProcessBuilder gets EACCES ("AAPT2 Daemon startup failed"). Point AGP at
 # the SDK build-tools binary instead (android.aapt2FromMavenOverride = file).
-# Fail loud if local.properties sdk.dir or SDK aapt2 is missing — no machine-local default.
 ve_aapt2_from_sdk() {
   local wt props sdk ver aapt
   wt="$(ve_resolve_orch_worktree "${1:-}")" || return 1
@@ -208,7 +206,7 @@ ve_aapt2_from_sdk() {
   return 1
 }
 
-# Incremental app/build is same-uid only. If intermediates/generated
+# Incremental app/build is same-uid only. If intermediates/generated/kspCaches
 # are owned by someone else, Gradle chmod on leftover dest dirs fails.
 # Wipe those trees (group write, no sticky). Do not chmod/chown them.
 ve_wipe_foreign_app_build_outputs() {
@@ -239,6 +237,35 @@ ve_wipe_foreign_app_build_outputs() {
       return 1
     fi
   done
+  return 0
+}
+
+# Restore other-execute on tracked 100755 helpers.
+# umask 007 + git checkout writes 770; o+r-only passes leave 774.
+# ai-planner is not in ai-code, so 774 dlang:ai-code is Permission denied.
+# Always chmod a+x (umask-proof). Never chmod +x under umask 007.
+# Taken from orchestration:ve-resolve-orch (union with ve_aapt2_from_sdk).
+# Callers on orch: update-rules.sh / setup_agent.sh — not build_app/deploy.
+ve_ensure_tracked_exec_other_x() {
+  local wt="${1:-}"
+  local p mode _hash _stage
+  [ -n "$wt" ] && [ -d "$wt" ] || return 0
+  for p in agent-landlock todo-append todo-close ve-env \
+           landlock-smoke-matrix landlock-write-probe; do
+    if [ -f "$wt/$p" ]; then
+      chmod a+x "$wt/$p" 2>/dev/null || true
+    fi
+  done
+  if ! git -C "$wt" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    return 0
+  fi
+  while read -r mode _hash _stage p; do
+    [ "$mode" = "100755" ] || continue
+    [ -n "$p" ] || continue
+    if [ -f "$wt/$p" ]; then
+      chmod a+x "$wt/$p" 2>/dev/null || true
+    fi
+  done < <(git -C "$wt" ls-files -s)
   return 0
 }
 
