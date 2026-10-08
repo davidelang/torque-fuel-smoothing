@@ -62,12 +62,16 @@ rules = [
   # per-use permission prompts for this very common safe read-only operation.
   { action = "allow", tool = "bash", pattern = "./get-builds-tag.sh*" },
   { action = "allow", tool = "bash", pattern = "../get-builds-tag.sh*" },
+  { action = "allow", tool = "bash", pattern = "./reset-to-builds.sh*" },
+  { action = "allow", tool = "bash", pattern = "../reset-to-builds.sh*" },
   # append-to-engineering-log: trusted helper for append-only ENGINEERING_LOG.md updates.
   # Enforces the dated header format and protection (chattr +a). Explicitly listed as
   # approved helper script so it can be invoked directly (e.g. ./append-to-engineering-log)
   # without repeated permission prompts. See AGENT_MANDATES.md (mandatory use via wrapper).
   { action = "allow", tool = "bash", pattern = "./append-to-engineering-log*" },
   { action = "allow", tool = "bash", pattern = "../append-to-engineering-log*" },
+  { action = "allow", tool = "bash", pattern = "./exec-preflight*" },
+  { action = "allow", tool = "bash", pattern = "../exec-preflight*" },
   # cd && blessed-helper chains: allowed only via plan-mode-hard-stops.js with
   # in-project cd validation (no broad * && patterns — avoids system-wide backdoor).
   # Run launchers (invoked as ./run-* from root or ../run-* from worktrees)

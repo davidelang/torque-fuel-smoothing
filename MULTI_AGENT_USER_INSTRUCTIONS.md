@@ -1,6 +1,6 @@
 # MULTI_AGENT_USER_INSTRUCTIONS.md
 
-**This is the authoritative, tracked, user-facing (human) document for the exact rituals, magic words, and forbidden phrases when interacting with agents (Grok, and by extension the other runtimes) in the VehicleExpenses-automated multi-agent orchestration.**
+**Human catalog of phrases. Agents do not load this file. Law for agents is `AGENT_MANDATES.md`.**
 
 It lives at the orchestration root and is physically synced (via `update-rules.sh`) into `master/` and every `agent-N/` worktree so it is always present and versioned alongside AGENTS.md / AGENT_MANDATES.md.
 
@@ -73,7 +73,7 @@ When you are ready to let the agent proceed from planning to execution, your app
 
 After you send one of the above, the agent may exit plan mode (if still in it), update ENGINEERING_LOG.md via `./append-to-engineering-log` (first execution action; the master ensures wrappers are used for initial ENGINEERING_LOG entries), re-read the designated plan file, and begin the small decomposed steps.
 
-The approved plan **Phased Execution** section must use coherent, independently verifiable phases (~3–8 typical for modest features). Each phase states what changes, which files, and observable success — not a repeated gate checklist (the STANDARD BLOCK covers forensic verification + `git add` + successful `./build_app` before the next phase). On trouble, follow the **Baseball Rule** in AGENT_MANDATES.md (3 strikes = out; 3 outs = end of inning → End of Inning Report in `implementation-failure-logs/` before replan). On partial reset, only the tag of the most recent successful phase (after `./get-builds-tag.sh` preflight) may be used.
+Phases say what changes and what success looks like. `./build_app` commits. Agents do not `git add`. Retry limits and the reset that keeps the engineering log are `AGENT_MANDATES.md` “Retry”. The command is `./reset-to-builds.sh`.
 
 **Never rely on "looks good", "go ahead", "sounds right", "implement the changes", or similar vague language alone.** The path + "approved the plan at ..." is what the rules require for an unambiguous handoff from planning to execution.
 
