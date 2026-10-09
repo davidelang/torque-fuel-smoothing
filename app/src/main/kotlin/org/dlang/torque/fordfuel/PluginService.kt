@@ -74,6 +74,7 @@ class PluginService : Service() {
     private var lastEcuConnected: Boolean? = null
     private var sliderWritable: Boolean? = null
     private var nameplateGal: Double? = null
+    private var profileId: String = ProfileStore.DEFAULT_ID
     private var pidNames: Map<String, String> = emptyMap()
     private var ecuLevelName: String = ECU_FUEL_NAME
     private var ecuLevelPid: String? = null
@@ -125,6 +126,17 @@ class PluginService : Service() {
         super.onCreate()
         isRunning = true
         cfg = FixFuelPrefs.load(this)
+        ProfileStore.migrate(
+            filesDir,
+            null,
+            ProfileStore.LedgerSeed(
+                FixFuelPrefs.fillAnchorGal(this),
+                FixFuelPrefs.sinceFillUsedGal(this),
+                cfg.learnedUsable,
+                cfg.tankGal,
+            ),
+        )
+        profileId = ProfileStore.activeId(filesDir)
         tanks[1] = makeRuntime(1)
         ensureChannel()
         TapStartNotice.cancel(this)
@@ -257,7 +269,7 @@ class PluginService : Service() {
 
     private fun sampleOnce() {
         cfg = FixFuelPrefs.load(this)
-        nameplateGal = cfg.learnedUsable ?: cfg.tankGal
+        if (nameplateGal == null || nameplateGal!! <= 0.0) nameplateGal = cfg.tankGal
         ensureRuntimes()
         val t = torque ?: return
         val ecu = runCatching { t.isConnectedToECU }.getOrNull()
@@ -459,6 +471,7 @@ class PluginService : Service() {
         if (lastEcuConnected == connected) return
         lastEcuConnected = connected
         if (connected) {
+            selectProfile()
             ensureActiveSession()
         } else {
             onEcuAway()
@@ -468,11 +481,24 @@ class PluginService : Service() {
     private fun onEcuAway() {
         closeSession()
         if (tanks[1] == null) tanks[1] = makeRuntime(1)
-        for (id in tanks.keys.toList()) {
-            val rt = tanks[id] ?: continue
-            rt.bins.rebuildFromJsonlOnce()
-            maybeLearnUsable(id)
-        }
+    }
+
+    private fun selectProfile() {
+        if (tanks.values.any { it.sessions.isOpen }) return
+        val t = torque ?: return
+        val resp = runCatching { t.sendCommandGetResponse("", "0902") }.getOrNull()?.toList()
+        val vin = ProfileStore.parseVin(resp)
+        val torqueName = runCatching { t.getVehicleProfileInformation()?.firstOrNull() }.getOrNull()
+        if (!torqueName.isNullOrBlank()) ProfileStore.rememberTorqueName(filesDir, profileId, torqueName)
+        val next = ProfileStore.select(filesDir, vin, torqueName)
+        val note = ProfileStore.vinNote(ProfileStore.storedVin(filesDir, next), vin)
+        val gapFile = File(ProfileStore.profileDir(filesDir, next), "gap.txt")
+        val gap = if (gapFile.isFile) gapFile.readText() else ""
+        File(filesDir, "profile-notice.txt").writeText(if (note.isBlank()) gap else note)
+        if (next == profileId) return
+        profileId = next
+        File(filesDir, "active-profile.json").writeText("{\"profileId\":\"$next\"}")
+        for (id in tanks.keys.toList()) tanks[id] = makeRuntime(id)
     }
 
     private fun registerPluginPids(t: ITorqueService) {
@@ -700,7 +726,7 @@ class PluginService : Service() {
         rt.steppedChunks = 0
         rt.lastRateMs = null
         rt.flowStartMs = null
-        val sid = rt.sessions.open(app = BuildConfig.VERSION_NAME)
+        val sid = rt.sessions.open(profileId = profileId, app = BuildConfig.VERSION_NAME)
         Log.i(TAG, "session open tank=$id $sid files=${rt.sessions.sessionCount()}")
     }
 
@@ -709,14 +735,11 @@ class PluginService : Service() {
         if (!rt.sessions.isOpen) return
         if (id == 1) commitTank1SinceFill(rt)
         val closed = rt.sessions.close()
-        val obs = FuelMath.observationsFrom(closed)
-        rt.bins.add(obs)
-        rt.bins.persist(torque)
-        maybeLearnUsable(id)
+        val dir = ProfileStore.tankDir(filesDir, profileId, id)
+        val gap = ProfileStore.rollup(dir, nameplateFor(id))
         Log.i(
             TAG,
-            "session close tank=$id samples=${closed.size} obs=${obs.bins.size} reserve+=${obs.reserveGal} " +
-                "bins=${rt.bins.bins.size} reserve=${rt.bins.reserveGal} files=${rt.sessions.sessionCount()}",
+            "session close tank=$id samples=${closed.size} files=${rt.sessions.sessionCount()} gap=${gap.replace('\n', ' ')}",
         )
     }
 
@@ -840,21 +863,31 @@ class PluginService : Service() {
         val hEst: Double,
         val cap: Double,
         val reserve: Double,
+        val gpp: (Double) -> Double,
     )
 
     private fun nameplateFor(id: Int): Double? {
-        return if (id <= 1) cfg.tankGal else cfg.extra(id)?.tankGal
+        return if (id <= 1) nameplateGal?.takeIf { it > 0.0 } ?: cfg.tankGal else cfg.extra(id)?.tankGal
     }
 
     private fun priorFor(id: Int): Prior {
         val nameplate = nameplateFor(id)
         val t0 = if (nameplate != null && nameplate > 0.0) nameplate else 30.0
+        val stored = ProfileStore.storedMap(ProfileStore.tankDir(filesDir, profileId, id))
+        if (stored != null) {
+            val (edges, g, cap) = stored
+            val v = { level: Double -> FuelV2.vAt(level, edges, g) }
+            val v95 = v(FuelV2.L_HI)
+            val hEst = if (cap > v95) cap - v95 else 0.07 * v95
+            val reserve = FuelV2.reserveGal(nameplate, cap, 0.0)
+            return Prior(t0, v, v95, hEst, cap, reserve, { level -> FuelV2.gpp(level, edges, g) })
+        }
         val v = { level: Double -> (level / 100.0) * t0 }
         val v95 = v(FuelV2.L_HI)
         val hEst = 0.07 * v95
         val cap = v95 + hEst
         val reserve = FuelV2.reserveGal(nameplate, cap, 0.0)
-        return Prior(t0, v, v95, hEst, cap, reserve)
+        return Prior(t0, v, v95, hEst, cap, reserve) { t0 / 100.0 }
     }
 
     private fun stepLive(rt: TankRt, dF: Double) {
@@ -870,7 +903,7 @@ class PluginService : Service() {
         val spd = DoubleArray(n) { RawLog.gateSpeed(samples[it].speed, samples[it].spdUnit) }
         val fill = BooleanArray(n) { samples[it].fill }
         val session = FuelSession("live", tSec, raw, sm, used, spd, fill)
-        val chunks = FuelV2.chunksSf(session, { prior.t0 / 100.0 }, placeholderNMin(), 4.4)
+        val chunks = FuelV2.chunksSf(session, prior.gpp, placeholderNMin(), 4.4)
         val fuelNow = samples.last().fuelUsedGal
         while (rt.steppedChunks < chunks.size) {
             val c = chunks[rt.steppedChunks]
@@ -920,16 +953,17 @@ class PluginService : Service() {
     }
 
     private fun makeRuntime(id: Int): TankRt {
+        val raw = File(ProfileStore.tankDir(filesDir, profileId, id), "raw")
         val rt = if (id <= 1) {
             TankRt(
                 id = 1,
-                sessions = SessionStore(this, 1),
+                sessions = SessionStore(this, 1, raw),
                 bins = BinStore(this),
             )
         } else {
             TankRt(
                 id = id,
-                sessions = SessionStore(this, id),
+                sessions = SessionStore(this, id, raw),
                 bins = BinStore(
                     this,
                     fileName = "bins-t$id.json",

@@ -153,6 +153,23 @@ class FuelV2Test {
         }
         val usable = FuelMath.estimateUsable(bins)
         assertEquals(28.09, usable ?: Double.NaN, 0.05)
+        val src = serviceSource()
+        val close = src.substringAfter("private fun closeTankSession").substringBefore("private fun closeSession")
+        val away = src.substringAfter("private fun onEcuAway").substringBefore("private fun selectProfile")
+        val fill = src.substringAfter("private fun onFillEnd").substringBefore("private fun commitTank1SinceFill")
+        assertFalse(close.contains("estimateUsable"))
+        assertFalse(away.contains("estimateUsable"))
+        assertFalse(fill.contains("estimateUsable"))
+        assertFalse(src.contains("rebuildFromJsonlOnce"))
+        assertEquals(1, Regex("maybeLearnUsable\\(").findAll(src).count())
+    }
+
+    private fun serviceSource(): String {
+        val candidates = listOf(
+            File("src/main/kotlin/org/dlang/torque/fordfuel/PluginService.kt"),
+            File("app/src/main/kotlin/org/dlang/torque/fordfuel/PluginService.kt"),
+        )
+        return candidates.first { it.isFile }.readText()
     }
 
     private fun edgesNear(got: DoubleArray, expect: DoubleArray): Boolean {

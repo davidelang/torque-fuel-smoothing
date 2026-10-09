@@ -108,11 +108,14 @@ internal object FuelV2 {
                 if (s.isEmpty() || s.contains("\"event\"") || !s.contains("\"t\"")) return@forEachLine
                 val ms = num(s, "t") ?: return@forEachLine
                 t.add(ms / 1000.0)
-                raw.add(num(s, "rawPct") ?: Double.NaN)
-                sm.add(num(s, "smoothedPct") ?: Double.NaN)
-                used.add(num(s, "fuelUsedGal") ?: 0.0)
-                spd.add(num(s, "speed") ?: 0.0)
-                fill.add(s.contains("\"fill\":true") || s.contains("\"fill\": true"))
+                val rawPct = num(s, "rawPct") ?: num(s, "lvl") ?: Double.NaN
+                raw.add(rawPct)
+                sm.add(num(s, "smoothedPct") ?: num(s, "sm") ?: Double.NaN)
+                used.add(num(s, "fuelUsedGal") ?: num(s, "fuelGal") ?: 0.0)
+                spd.add(num(s, "speed") ?: num(s, "spd") ?: 0.0)
+                fill.add(
+                    s.contains("\"fill\":true") || s.contains("\"fill\": true") || s.contains("\"mode\":\"FILL\""),
+                )
             }
             if (t.size < 2) continue
             out.add(
@@ -217,6 +220,33 @@ internal object FuelV2 {
         nMin: Int,
         iqrMax: Double,
     ): List<FuelChunk> = chunksOf(s, gpp, nMin, iqrMax)
+
+    fun gpp(level: Double, edges: DoubleArray, g: DoubleArray): Double = densityAt(level, edges, g)
+
+    /** Nameplate, else 100× median ΔF/ΔL on the first drives spanning ≥ 5%, else 30. */
+    fun chooseT0(nameplate: Double?, sessions: List<FuelSession>): Double {
+        if (nameplate != null && nameplate > 0.0) return nameplate
+        val ratios = ArrayList<Double>()
+        for (s in sessions) {
+            if (s.sm.isEmpty() || s.used.isEmpty()) continue
+            var lo = s.sm[0]
+            var hi = s.sm[0]
+            for (v in s.sm) {
+                if (v < lo) lo = v
+                if (v > hi) hi = v
+            }
+            if (hi - lo < 5.0) continue
+            val dL = s.sm.first() - s.sm.last()
+            val dF = s.used.last() - s.used.first()
+            if (dL > 0.5 && dF > 0.0) ratios.add(dF / dL)
+        }
+        if (ratios.isEmpty()) return 30.0
+        return 100.0 * median(ratios.toDoubleArray())
+    }
+
+    fun fuelSuspect(session: FuelSession, peers: List<FuelSession>): Boolean {
+        return !flowOkRel(session, refGph(peers))
+    }
 
     fun vAt(level: Double, edges: DoubleArray, g: DoubleArray): Double {
         var sum = 0.0

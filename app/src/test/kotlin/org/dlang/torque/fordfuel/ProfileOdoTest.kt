@@ -1,0 +1,104 @@
+package org.dlang.torque.fordfuel
+
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
+import org.junit.Test
+import java.io.File
+
+class ProfileOdoTest {
+    @Test
+    fun test13MigrationIsIdempotentAndSelectsByVinThenName() {
+        val root = File("build/profile-odo-test13").apply {
+            deleteRecursively()
+            mkdirs()
+        }
+        val sessions = File(root, "sessions").apply { mkdirs() }
+        File(sessions, "1791007200000-abcd.jsonl").writeText(
+            """
+            {"event":"open","t0":1791007200000}
+            {"t":1791007200000,"rawPct":40,"smoothedPct":40,"fuelUsedGal":1,"speed":0,"fill":false}
+            {"t":1791007201000,"rawPct":39,"smoothedPct":39,"fuelUsedGal":2,"speed":0,"fill":false}
+            {"t":1791007202000,"rawPct":80,"smoothedPct":80,"fuelUsedGal":0.4,"speed":0,"fill":true}
+            """.trimIndent() + "\n",
+        )
+        File(root, "bins.json").writeText("{\"bins\":[],\"reserve\":0}")
+        File(root, "last-session-end.json").writeText("{}")
+        File(root, "sessions-t2").mkdirs()
+        File(root, "sessions-t2/1000-bbbb.jsonl").writeText(
+            """
+            {"event":"open","t0":1000}
+            {"t":1000,"rawPct":10,"smoothedPct":10,"fuelUsedGal":0.1,"speed":0,"fill":false}
+            {"t":2000,"rawPct":9,"smoothedPct":9,"fuelUsedGal":0.2,"speed":0,"fill":false}
+            """.trimIndent() + "\n",
+        )
+        File(root, "bins-t2.json").writeText("{}")
+        val now = ProfileStore.RESET_MS + 86_400_000L
+        val dir = ProfileStore.migrate(
+            root,
+            "E350",
+            ProfileStore.LedgerSeed(10.0, 1.5, null, 30.0),
+            now,
+        )
+        assertEquals("default", dir.name)
+        val profile = File(dir, "profile.json").readText()
+        assertTrue(profile.contains("\"schema\":2"))
+        assertTrue(profile.contains("Vehicle 1"))
+        assertTrue(profile.contains("E350"))
+        assertTrue(File(root, "profiles/default/legacy/sessions").isDirectory)
+        assertTrue(File(root, "profiles/default/legacy/bins.json").isFile)
+        assertTrue(File(root, "profiles/default/legacy/last-session-end.json").isFile)
+        assertTrue(File(root, "profiles/default/legacy/sessions-t2").isDirectory)
+        assertTrue(File(root, "profiles/default/legacy/bins-t2.json").isFile)
+        assertFalse(File(root, "sessions").exists())
+        assertFalse(File(root, "bins.json").exists())
+        assertTrue(File(root, "profiles/default/tanks/2/raw").isDirectory)
+        assertTrue(File(root, "active-profile.json").isFile)
+        assertTrue(File(dir, "ledger.json").readText().contains("10.0") || File(dir, "ledger.json").readText().contains("10"))
+        assertTrue(File(dir, "model.json").isFile)
+        assertTrue(File(dir, "chunks.jsonl").isFile)
+        assertTrue(File(dir, "drives.jsonl").isFile)
+        assertTrue(File(dir, "fills.jsonl").isFile)
+        val raw = File(dir, "raw/1791007200000-abcd.jsonl").readText()
+        val gals = raw.lines().filter { it.contains("\"lvl\"") }.map { line ->
+            line.substringAfter("\"fuelGal\":").substringBefore(",").toDouble()
+        }
+        assertEquals(listOf(1.0, 2.0, 2.4), gals)
+        val before = paths(root)
+        ProfileStore.migrate(root, "E350", null, now)
+        assertEquals(before, paths(root))
+        assertTrue(File(root, "profiles/default/legacy/sessions/1791007200000-abcd.jsonl").isFile)
+
+        File(root, "profiles/other").mkdirs()
+        File(root, "profiles/other/profile.json").writeText(
+            "{\"id\":\"other\",\"name\":\"Van\",\"vin\":\"1FTESTVIN00000001\",\"torqueProfileName\":\"Van\",\"schema\":2}",
+        )
+        assertEquals("other", ProfileStore.select(root, "1FTESTVIN00000001", "E350"))
+        assertEquals("default", ProfileStore.select(root, null, "E350"))
+        assertEquals("other", ProfileStore.select(root, null, "Van"))
+        assertEquals("default", ProfileStore.select(root, null, "missing"))
+
+        val rawDir = File(root, "retain/raw").apply { mkdirs() }
+        val old = File(rawDir, "old.jsonl")
+        ProfileStore.sparse(old, ProfileStore.RAW_CAP_BYTES + 1024)
+        old.setLastModified(now - ProfileStore.RAW_KEEP_MS - 86_400_000L)
+        val fresh = File(rawDir, "fresh.jsonl")
+        fresh.writeText("keep\n")
+        fresh.setLastModified(now)
+        val chunks = File(root, "retain/chunks.jsonl")
+        chunks.parentFile?.mkdirs()
+        chunks.writeText("keep\n")
+        val legacy = File(root, "retain/legacy/keep.txt")
+        legacy.parentFile?.mkdirs()
+        legacy.writeText("keep\n")
+        ProfileStore.retainRaw(rawDir, now)
+        assertFalse(old.exists())
+        assertTrue(fresh.exists())
+        assertTrue(chunks.isFile)
+        assertTrue(legacy.isFile)
+    }
+
+    private fun paths(root: File): List<String> {
+        return root.walkTopDown().filter { it.isFile }.map { it.relativeTo(root).path }.sorted().toList()
+    }
+}

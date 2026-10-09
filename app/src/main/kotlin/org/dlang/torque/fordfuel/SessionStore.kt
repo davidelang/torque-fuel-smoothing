@@ -23,13 +23,13 @@ internal data class Sample(
     val lvlSrc: String = "",
 )
 
-internal class SessionStore(context: Context, private val tank: Int = 1) {
-    private val dir = File(
+internal class SessionStore(context: Context, private val tank: Int = 1, rawDir: File? = null) {
+    private val dir = (rawDir ?: File(
         context.filesDir,
         if (tank <= 1) "sessions" else "sessions-t$tank",
-    ).apply { mkdirs() }
+    )).apply { mkdirs() }
     private val snapshotFile = File(
-        context.filesDir,
+        if (rawDir != null) rawDir.parentFile ?: context.filesDir else context.filesDir,
         if (tank <= 1) "last-session-end.json" else "last-session-end-t$tank.json",
     )
 

@@ -1,0 +1,470 @@
+package org.dlang.torque.fordfuel
+
+import java.io.File
+import java.io.RandomAccessFile
+
+/**
+ * Schema 2 profile tree. Migration moves legacy files under legacy/ and does not delete them.
+ * Raw retention drops only raw files older than 14 days, and only when raw/ exceeds 50 MB.
+ */
+internal object ProfileStore {
+    const val SCHEMA = 2
+    const val DEFAULT_ID = "default"
+    /** 2026-10-03T00:00:00-06:00. Reset repair applies only at or after this instant. */
+    const val RESET_MS = 1_791_007_200_000L
+    const val RAW_CAP_BYTES = 50L * 1024L * 1024L
+    const val RAW_KEEP_MS = 14L * 24L * 60L * 60L * 1000L
+
+    data class LedgerSeed(
+        val fillAnchorGal: Double?,
+        val burnSinceFillGal: Double,
+        val learnedUsable: Double?,
+        val tankGal: Double?,
+    )
+
+    data class ProfileHit(val id: String, val vin: String?, val torqueProfileName: String?)
+
+    fun migrate(
+        root: File,
+        torqueProfileName: String?,
+        ledger: LedgerSeed?,
+        nowMs: Long = System.currentTimeMillis(),
+    ): File {
+        val profile = File(root, "profiles/$DEFAULT_ID")
+        val marker = File(profile, "profile.json")
+        if (marker.isFile && fieldInt(marker.readText(), "schema") == SCHEMA) {
+            retainRaw(File(profile, "raw"), nowMs)
+            profile.listFiles()?.forEach { child ->
+                if (child.isDirectory && child.name == "tanks") {
+                    child.listFiles()?.forEach { tank -> retainRaw(File(tank, "raw"), nowMs) }
+                }
+            }
+            return profile
+        }
+        profile.mkdirs()
+        File(profile, "raw").mkdirs()
+        val legacy = File(profile, "legacy")
+        legacy.mkdirs()
+        moveInto(File(root, "sessions"), legacy)
+        moveInto(File(root, "bins.json"), legacy)
+        moveInto(File(root, "last-session-end.json"), legacy)
+        val tankIds = HashSet<Int>()
+        root.listFiles()?.forEach { f ->
+            val sessions = Regex("sessions-t(\\d+)").matchEntire(f.name)
+            val bins = Regex("bins-t(\\d+)\\.json").matchEntire(f.name)
+            val snap = Regex("last-session-end-t(\\d+)\\.json").matchEntire(f.name)
+            val id = sessions?.groupValues?.get(1) ?: bins?.groupValues?.get(1) ?: snap?.groupValues?.get(1)
+            if (id != null) {
+                tankIds.add(id.toInt())
+                moveInto(f, legacy)
+            }
+        }
+        val nameplate = ledger?.tankGal
+        marker.writeText(profileJson(DEFAULT_ID, "Vehicle 1", null, torqueProfileName, nowMs, nameplate))
+        val active = File(root, "active-profile.json")
+        if (!active.isFile) active.writeText("{\"profileId\":\"$DEFAULT_ID\"}")
+        File(profile, "ledger.json").writeText(ledgerJson(ledger))
+        convertTree(File(legacy, "sessions"), File(profile, "raw"), DEFAULT_ID, 1)
+        rollup(profile, nameplate)
+        for (id in tankIds.sorted()) {
+            val tank = File(profile, "tanks/$id")
+            tank.mkdirs()
+            File(tank, "raw").mkdirs()
+            File(tank, "profile.json").writeText(
+                profileJson("t$id", "Vehicle 1", null, torqueProfileName, nowMs, nameplate),
+            )
+            File(tank, "ledger.json").writeText(ledgerJson(null))
+            convertTree(File(legacy, "sessions-t$id"), File(tank, "raw"), DEFAULT_ID, id)
+            rollup(tank, nameplate)
+        }
+        return profile
+    }
+
+    fun select(root: File, vin: String?, torqueProfileName: String?): String {
+        val hits = profiles(root)
+        if (!vin.isNullOrBlank()) {
+            val hit = hits.firstOrNull { it.vin != null && it.vin.equals(vin, ignoreCase = true) }
+            if (hit != null) return hit.id
+        }
+        if (!torqueProfileName.isNullOrBlank()) {
+            val hit = hits.firstOrNull {
+                it.torqueProfileName != null && it.torqueProfileName.equals(torqueProfileName, ignoreCase = true)
+            }
+            if (hit != null) return hit.id
+        }
+        return activeId(root)
+    }
+
+    fun activeId(root: File): String {
+        val f = File(root, "active-profile.json")
+        if (!f.isFile) return DEFAULT_ID
+        return fieldString(f.readText(), "profileId") ?: DEFAULT_ID
+    }
+
+    fun profileDir(root: File, id: String = activeId(root)): File = File(root, "profiles/$id")
+
+    fun tankDir(root: File, profileId: String, tank: Int): File {
+        val base = profileDir(root, profileId)
+        return if (tank <= 1) base else File(base, "tanks/$tank")
+    }
+
+    fun rememberTorqueName(root: File, profileId: String, name: String) {
+        if (name.isBlank()) return
+        val f = File(profileDir(root, profileId), "profile.json")
+        if (!f.isFile) return
+        val text = f.readText()
+        if (fieldString(text, "torqueProfileName") != null) return
+        f.writeText(text.replace("\"torqueProfileName\":null", "\"torqueProfileName\":${jsonString(name)}"))
+    }
+
+    fun storedVin(root: File, profileId: String): String? {
+        val f = File(profileDir(root, profileId), "profile.json")
+        if (!f.isFile) return null
+        return fieldString(f.readText(), "vin")
+    }
+
+    /** Empty when the read VIN matches or either side is unknown. */
+    fun vinNote(stored: String?, read: String?): String {
+        if (stored.isNullOrBlank() || read.isNullOrBlank()) return ""
+        if (stored.equals(read, ignoreCase = true)) return ""
+        return "VIN mismatch $read"
+    }
+
+    fun parseVin(parts: List<String>?): String? {
+        if (parts.isNullOrEmpty()) return null
+        val joined = parts.joinToString(" ")
+        val hex = joined.uppercase().replace(Regex("[^0-9A-F]"), "")
+        val chars = StringBuilder()
+        var i = 0
+        while (i + 1 < hex.length) {
+            val b = hex.substring(i, i + 2).toIntOrNull(16) ?: break
+            val ch = b.toChar()
+            if (ch in 'A'..'Z' || ch in '0'..'9') chars.append(ch)
+            i += 2
+        }
+        val s = chars.toString()
+        for (start in 0..s.length - 17) {
+            val vin = s.substring(start, start + 17)
+            if (vin.none { it == 'I' || it == 'O' || it == 'Q' }) return vin
+        }
+        return null
+    }
+
+    fun retainRaw(rawDir: File, nowMs: Long) {
+        if (!rawDir.isDirectory) return
+        val files = rawDir.listFiles { f -> f.isFile }?.toMutableList() ?: return
+        var total = files.sumOf { it.length() }
+        if (total <= RAW_CAP_BYTES) return
+        val cutoff = nowMs - RAW_KEEP_MS
+        val old = files.filter { it.lastModified() < cutoff }.sortedBy { it.lastModified() }
+        for (f in old) {
+            if (total <= RAW_CAP_BYTES) break
+            val n = f.length()
+            if (f.delete()) total -= n
+        }
+    }
+
+    /**
+     * Rebuild chunks, drives, fills, and model.json from raw/.
+     * Does not call FuelMath.estimateUsable.
+     */
+    fun rollup(dir: File, nameplate: Double?): String {
+        val raw = File(dir, "raw")
+        val sessions = if (raw.isDirectory) FuelV2.loadSessions(raw) else emptyList()
+        val t0 = FuelV2.chooseT0(nameplate, sessions)
+        val model = if (sessions.isEmpty()) {
+            null
+        } else {
+            runCatching { FuelV2.replay(sessions, 1.0, t0) }.getOrNull()
+        }
+        if (model != null) {
+            File(dir, "model.json").writeText(model.json)
+            val chunksOut = File(dir, "chunks.jsonl")
+            chunksOut.writeText("")
+            val fillsOut = File(dir, "fills.jsonl")
+            fillsOut.writeText("")
+            for (s in sessions) {
+                val chunks = FuelV2.chunksSf(
+                    s,
+                    { level -> FuelV2.gpp(level, model.edges, model.g) },
+                    model.nMin,
+                    4.0 * model.sigmaQ,
+                )
+                for (c in chunks) {
+                    chunksOut.appendText(
+                        "{\"sessionId\":${jsonString(s.name)},\"group\":${c.g},\"t\":${c.t},\"F\":${c.f},\"L\":${c.l},\"n\":${c.n}}\n",
+                    )
+                }
+                if (model.fills.contains(s.name)) {
+                    fillsOut.appendText("{\"sessionId\":${jsonString(s.name)},\"t\":${s.t.first()}}\n")
+                }
+            }
+        } else {
+            val cap = (if (nameplate != null && nameplate > 0.0) nameplate else t0) * 0.95 * 1.07
+            File(dir, "model.json").writeText(
+                "{\"active\":[],\"capToZero\":$cap,\"chunks\":0,\"edges\":[0.0,95.0],\"g\":[${t0 / 100.0}],\"gUnc\":[${t0 / 100.0}],\"nMin\":28,\"se\":[0.0],\"sigmaQ\":1.1,\"tau\":3.5}",
+            )
+            if (!File(dir, "chunks.jsonl").isFile) File(dir, "chunks.jsonl").writeText("")
+            if (!File(dir, "fills.jsonl").isFile) File(dir, "fills.jsonl").writeText("")
+        }
+        val drives = File(dir, "drives.jsonl")
+        if (sessions.isNotEmpty()) {
+            drives.writeText("")
+            for (s in sessions) {
+                val suspect = FuelV2.fuelSuspect(s, sessions)
+                val fuel = if (s.used.isEmpty()) 0.0 else s.used.last() - s.used.first()
+                drives.appendText(
+                    "{\"sessionId\":${jsonString(s.name)},\"t0\":${s.t.first()},\"t1\":${s.t.last()},\"fuelGal\":$fuel," +
+                        "\"fuelSuspect\":$suspect,\"unlogged\":false}\n",
+                )
+            }
+        } else if (!drives.isFile) {
+            drives.writeText("")
+        }
+        val gap = gapText(sessions, model)
+        File(dir, "gap.txt").writeText(gap)
+        return gap
+    }
+
+    fun storedMap(dir: File): Triple<DoubleArray, DoubleArray, Double>? {
+        val f = File(dir, "model.json")
+        if (!f.isFile) return null
+        val text = f.readText()
+        val edges = arrayField(text, "edges") ?: return null
+        val g = arrayField(text, "g") ?: return null
+        if (edges.size < 2 || g.isEmpty()) return null
+        val cap = doubleField(text, "capToZero") ?: return null
+        return Triple(edges, g, cap)
+    }
+
+    fun gapText(sessions: List<FuelSession>, model: FuelModel?): String {
+        if (sessions.isEmpty()) return ""
+        val b = StringBuilder()
+        var prevEnd: Double? = null
+        for (s in sessions) {
+            val start = s.sm.firstOrNull() ?: continue
+            val end = s.sm.lastOrNull() ?: continue
+            val logged = start - end
+            val gap = if (prevEnd == null) 0.0 else prevEnd - start
+            val gapGal = if (model != null && prevEnd != null) model.v(prevEnd) - model.v(start) else 0.0
+            b.append("session ").append(s.name)
+            b.append(" loggedPct=").append(logged)
+            b.append(" gapPct=").append(gap)
+            b.append(" gapGal=").append(gapGal)
+            b.append('\n')
+            prevEnd = end
+        }
+        return b.toString()
+    }
+
+    private fun convertTree(legacySessions: File, rawDir: File, profileId: String, tank: Int) {
+        if (!legacySessions.isDirectory) return
+        rawDir.mkdirs()
+        val files = legacySessions.listFiles { f -> f.isFile && f.name.endsWith(".jsonl") }?.sortedBy { it.name } ?: return
+        for (file in files) convertOne(file, File(rawDir, file.name), profileId, tank)
+    }
+
+    private fun convertOne(src: File, dest: File, profileId: String, tank: Int) {
+        val original = src.readText()
+        val lines = original.lines()
+        val action = LiterFix.decide(lines)
+        val text = if (action == LiterFix.Action.CONVERT) LiterFix.convert(original) else original
+        val rows = ArrayList<Row>()
+        var t0 = 0L
+        for (line in text.lines()) {
+            if (line.isBlank()) continue
+            if (t0 == 0L) {
+                val openT = longField(line, "t0")
+                if (openT != null) t0 = openT
+            }
+            if (line.contains("\"event\"") || !line.contains("\"t\"")) continue
+            val t = longField(line, "t") ?: continue
+            val fuel = doubleField(line, "fuelUsedGal") ?: doubleField(line, "fuelGal") ?: continue
+            if (t0 == 0L) t0 = t
+            rows.add(
+                Row(
+                    t = t,
+                    fuel = fuel,
+                    raw = doubleField(line, "rawPct") ?: doubleField(line, "lvl") ?: Double.NaN,
+                    sm = doubleField(line, "smoothedPct") ?: doubleField(line, "sm") ?: Double.NaN,
+                    spd = doubleField(line, "speed") ?: doubleField(line, "spd") ?: 0.0,
+                    fill = line.contains("\"fill\":true") || line.contains("\"mode\":\"FILL\""),
+                ),
+            )
+        }
+        if (t0 >= RESET_MS && rows.size >= 2) repairReset(rows)
+        val log = RawLog()
+        val sessionId = src.name.removeSuffix(".jsonl")
+        log.openLine(sessionId, t0, profileId, tank, "", "{}")
+        var prev = 0.0
+        var have = false
+        for (row in rows) {
+            val d = if (!have) row.fuel.coerceAtLeast(0.0) else row.fuel - prev
+            if (d.isFinite() && d > 0.0) log.addDelta(d)
+            have = true
+            prev = row.fuel
+            log.sample(
+                t = row.t,
+                lvl = row.raw,
+                lvlSrc = "legacy",
+                fuelRaw = null,
+                fuelUnit = "gal",
+                spd = row.spd,
+                spdUnit = "",
+                ecu = true,
+                ok = true,
+                why = null,
+                mode = if (row.fill) "FILL" else "SKEW",
+                sm = if (row.sm.isFinite()) row.sm else row.raw,
+            )
+            if (row.fill) log.event("fillEnd", row.t)
+        }
+        log.closeLine(rows.lastOrNull()?.t ?: t0, rows.size)
+        dest.writeText(log.finish().joinToString("\n") + "\n")
+    }
+
+    /** If fuel drops, add the pre-drop value to that sample and every later sample. */
+    private fun repairReset(rows: MutableList<Row>) {
+        var i = 1
+        while (i < rows.size) {
+            val prev = rows[i - 1].fuel
+            if (rows[i].fuel < prev) {
+                for (j in i until rows.size) rows[j] = rows[j].copy(fuel = rows[j].fuel + prev)
+            }
+            i++
+        }
+    }
+
+    private fun profiles(root: File): List<ProfileHit> {
+        val dir = File(root, "profiles")
+        val files = dir.listFiles { f -> f.isDirectory }?.sortedBy { it.name } ?: return emptyList()
+        return files.map { f ->
+            val text = File(f, "profile.json").let { if (it.isFile) it.readText() else "" }
+            ProfileHit(f.name, fieldString(text, "vin"), fieldString(text, "torqueProfileName"))
+        }
+    }
+
+    private fun profileJson(
+        id: String,
+        name: String,
+        vin: String?,
+        torqueProfileName: String?,
+        createdMs: Long,
+        nameplateGal: Double?,
+    ): String {
+        return buildString {
+            append("{\"id\":").append(jsonString(id))
+            append(",\"name\":").append(jsonString(name))
+            append(",\"vin\":").append(if (vin == null) "null" else jsonString(vin))
+            append(",\"torqueProfileName\":").append(if (torqueProfileName == null) "null" else jsonString(torqueProfileName))
+            append(",\"createdMs\":").append(createdMs)
+            append(",\"nameplateGal\":").append(if (nameplateGal == null) "null" else nameplateGal.toString())
+            append(",\"sources\":{},\"odometerPins\":[],\"schema\":").append(SCHEMA).append("}")
+        }
+    }
+
+    private fun ledgerJson(seed: LedgerSeed?): String {
+        val anchor = seed?.fillAnchorGal
+        val burn = seed?.burnSinceFillGal ?: 0.0
+        val learned = seed?.learnedUsable
+        val tank = seed?.tankGal
+        return buildString {
+            append("{\"fillAnchorGal\":").append(if (anchor == null) "null" else anchor.toString())
+            append(",\"burnSinceFillGal\":").append(burn)
+            append(",\"learnedUsable\":").append(if (learned == null) "null" else learned.toString())
+            append(",\"tankGal\":").append(if (tank == null) "null" else tank.toString())
+            append("}")
+        }
+    }
+
+    private fun moveInto(src: File, destDir: File) {
+        if (!src.exists()) return
+        destDir.mkdirs()
+        val dest = File(destDir, src.name)
+        if (dest.exists()) return
+        if (!src.renameTo(dest)) {
+            src.copyRecursively(dest, overwrite = false)
+            src.deleteRecursively()
+        }
+    }
+
+    private data class Row(
+        val t: Long,
+        val fuel: Double,
+        val raw: Double,
+        val sm: Double,
+        val spd: Double,
+        val fill: Boolean,
+    )
+
+    private fun jsonString(s: String): String {
+        val b = StringBuilder(s.length + 2)
+        b.append('"')
+        for (ch in s) {
+            when (ch) {
+                '\\' -> b.append("\\\\")
+                '"' -> b.append("\\\"")
+                else -> b.append(ch)
+            }
+        }
+        b.append('"')
+        return b.toString()
+    }
+
+    private fun fieldString(text: String, key: String): String? {
+        val token = "\"$key\""
+        val i = text.indexOf(token)
+        if (i < 0) return null
+        val colon = text.indexOf(':', i + token.length)
+        if (colon < 0) return null
+        var p = colon + 1
+        while (p < text.length && text[p].isWhitespace()) p++
+        if (p >= text.length) return null
+        if (text.startsWith("null", p)) return null
+        if (text[p] != '"') return null
+        val start = p + 1
+        var q = start
+        while (q < text.length && text[q] != '"') q++
+        return text.substring(start, q)
+    }
+
+    private fun fieldInt(text: String, key: String): Int? {
+        val token = "\"$key\""
+        val i = text.indexOf(token)
+        if (i < 0) return null
+        val colon = text.indexOf(':', i + token.length)
+        if (colon < 0) return null
+        return text.substring(colon + 1).trimStart().takeWhile { it.isDigit() || it == '-' }.toIntOrNull()
+    }
+
+    private fun arrayField(text: String, key: String): DoubleArray? {
+        val token = "\"$key\""
+        val i = text.indexOf(token)
+        if (i < 0) return null
+        val lb = text.indexOf('[', i)
+        val rb = if (lb < 0) -1 else text.indexOf(']', lb)
+        if (lb < 0 || rb < 0) return null
+        val parts = text.substring(lb + 1, rb).split(',').mapNotNull { it.trim().toDoubleOrNull() }
+        if (parts.isEmpty()) return null
+        return parts.toDoubleArray()
+    }
+
+    private fun doubleField(line: String, key: String): Double? {
+        val token = "\"$key\""
+        val i = line.indexOf(token)
+        if (i < 0) return null
+        val colon = line.indexOf(':', i + token.length)
+        if (colon < 0) return null
+        val tail = line.substring(colon + 1).trimStart()
+        val num = tail.takeWhile { it.isDigit() || it == '-' || it == '.' || it == 'e' || it == 'E' || it == '+' }
+        return num.toDoubleOrNull()
+    }
+
+    private fun longField(line: String, key: String): Long? = doubleField(line, key)?.toLong()
+
+    /** Test helper: a sparse file whose length() exceeds the raw cap. */
+    fun sparse(file: File, bytes: Long) {
+        file.parentFile?.mkdirs()
+        RandomAccessFile(file, "rw").use { it.setLength(bytes) }
+    }
+}
