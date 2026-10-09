@@ -24,6 +24,7 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.Spinner
 import android.widget.TextView
+import java.io.File
 
 class PluginActivity : Activity() {
     private lateinit var sourceSpinner: Spinner
@@ -40,6 +41,12 @@ class PluginActivity : Activity() {
     private lateinit var write012f: CheckBox
     private lateinit var activeSpinner: Spinner
     private lateinit var selectPid: EditText
+    private lateinit var profileNameView: TextView
+    private lateinit var profileName: EditText
+    private lateinit var vehicleMake: EditText
+    private lateinit var detectBtn: Button
+    private lateinit var odoMiles: EditText
+    private lateinit var gapText: TextView
     private val extraCards = mutableListOf<ExtraCard>()
     private val watch = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -73,6 +80,41 @@ class PluginActivity : Activity() {
         help.text = getString(R.string.help_body)
         help.textSize = 14f
         col.addView(help)
+
+        profileNameView = TextView(this)
+        profileNameView.textSize = 16f
+        col.addView(profileNameView)
+        col.addView(label("Profile name"))
+        profileName = edit(InputType.TYPE_CLASS_TEXT)
+        col.addView(profileName)
+        col.addView(label("Make"))
+        vehicleMake = edit(InputType.TYPE_CLASS_TEXT)
+        col.addView(vehicleMake)
+        detectBtn = Button(this)
+        detectBtn.text = "Detect"
+        detectBtn.setOnClickListener {
+            val i = Intent(this, PluginService::class.java).setAction(PluginService.ACTION_DETECT)
+            try {
+                if (Build.VERSION.SDK_INT >= 26) startForegroundService(i) else startService(i)
+            } catch (t: Throwable) {
+                Log.w(TAG, "detect start ignored: ${t.javaClass.simpleName} ${t.message}")
+            }
+        }
+        col.addView(detectBtn)
+        col.addView(label("Odometer miles"))
+        odoMiles = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
+        col.addView(odoMiles)
+        val pinBtn = Button(this)
+        pinBtn.text = "Save pin"
+        pinBtn.setOnClickListener {
+            val miles = odoMiles.text.toString().toDoubleOrNull() ?: return@setOnClickListener
+            val id = ProfileStore.activeId(filesDir)
+            ProfileStore.addPin(filesDir, id, miles, System.currentTimeMillis())
+        }
+        col.addView(pinBtn)
+        gapText = TextView(this)
+        gapText.textSize = 14f
+        col.addView(gapText)
 
         showNotice = CheckBox(this)
         showNotice.text = getString(R.string.show_fuel_notification)
@@ -144,6 +186,8 @@ class PluginActivity : Activity() {
         jump.addTextChangedListener(watch)
         tank.addTextChangedListener(watch)
         selectPid.addTextChangedListener(watch)
+        profileName.addTextChangedListener(watch)
+        vehicleMake.addTextChangedListener(watch)
         sourceSpinner.onItemSelectedListener = spinListen
         activeSpinner.onItemSelectedListener = spinListen
         showNotice.setOnCheckedChangeListener { _, _ -> if (!loading) persist() }
@@ -162,6 +206,11 @@ class PluginActivity : Activity() {
         scroll.requestApplyInsets()
         loadIntoForm()
         loading = false
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (::detectBtn.isInitialized) refreshProfile()
     }
 
     override fun onStart() {
@@ -207,6 +256,24 @@ class PluginActivity : Activity() {
         showNotice.isChecked = c.showFuelNotification
         write012f.isChecked = c.write012f
         refreshAddBtn()
+        refreshProfile()
+    }
+
+    private fun refreshProfile() {
+        val id = ProfileStore.activeId(filesDir)
+        val name = ProfileStore.profileField(filesDir, id, "name") ?: "Vehicle 1"
+        profileNameView.text = name
+        if (!profileName.isFocused && profileName.text.toString() != name) profileName.setText(name)
+        val make = ProfileStore.profileField(filesDir, id, "make") ?: ""
+        if (!vehicleMake.isFocused && vehicleMake.text.toString() != make) vehicleMake.setText(make)
+        detectBtn.isEnabled = PluginService.ecuConnected
+        val notice = File(filesDir, "profile-notice.txt")
+        val gap = File(ProfileStore.profileDir(filesDir, id), "gap.txt")
+        gapText.text = when {
+            notice.isFile && notice.readText().isNotBlank() -> notice.readText()
+            gap.isFile -> gap.readText()
+            else -> ""
+        }
     }
 
     private fun syncExtraCards(extras: List<ExtraTank>) {
@@ -370,6 +437,11 @@ class PluginActivity : Activity() {
             showFuelNotification = showNotice.isChecked,
             write012f = write012f.isChecked,
         )
+        val id = ProfileStore.activeId(filesDir)
+        ProfileStore.setProfileField(filesDir, id, "name", profileName.text.toString().trim().ifBlank { "Vehicle 1" })
+        val make = vehicleMake.text.toString().trim()
+        ProfileStore.setProfileField(filesDir, id, "make", if (make.isEmpty()) null else make)
+        profileNameView.text = ProfileStore.profileField(filesDir, id, "name") ?: "Vehicle 1"
     }
 
     private fun label(s: String): TextView {

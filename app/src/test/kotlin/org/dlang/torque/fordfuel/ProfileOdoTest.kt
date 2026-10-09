@@ -98,6 +98,48 @@ class ProfileOdoTest {
         assertTrue(legacy.isFile)
     }
 
+    @Test
+    fun test14OdometerAndProbeCommands() {
+        val km = 1.0 / FuelV2.KM_PER_MILE
+        val drop = Odometer()
+        drop.pin(1000.0, 0.0)
+        drop.onCounter("0131", 100.0)
+        val beforeDrop = drop.miles
+        drop.onCounter("0131", 0.0)
+        assertEquals(beforeDrop, drop.miles, 1e-6)
+        assertTrue(drop.events.any { it.contains("counterReset") })
+
+        val wrap = Odometer()
+        wrap.pin(0.0, 0.0)
+        wrap.onCounter("0131", 65535.0)
+        val atEnd = wrap.miles
+        wrap.onCounter("0131", 1.0)
+        assertTrue(wrap.miles + 1e-6 >= atEnd)
+        assertEquals(0.0 + (1.0 + 65535.0) * km, wrap.miles, 1e-4)
+
+        val pin = Odometer()
+        pin.pin(5000.0, 10.0)
+        pin.onCounter("0131", 20.0)
+        assertEquals(5000.0 + 10.0 * km, pin.miles, 1e-6)
+
+        assertEquals(null, drop.unloggedLine(0.4, 15.0))
+        assertTrue(drop.unloggedLine(0.6, 15.0)!!.contains("\"unlogged\":true"))
+
+        val services = setOf("01", "09", "21", "22")
+        val fordCan = SourceProbe.commandsFor(null, "Ford", "ISO 15765-4", false)
+        assertTrue(fordCan.isNotEmpty())
+        assertTrue(fordCan.all { it.command.take(2) in services })
+        assertTrue(fordCan.none { it.row == 31 })
+        assertTrue(SourceProbe.rowIsListed(31))
+        assertEquals("18DA1AF1", SourceProbe.headerArg("DA1A"))
+        val honda = SourceProbe.commandsFor(null, "Honda", "ISO15765", false)
+        assertEquals("18DA10F1", honda.first { it.command == "222660" }.header)
+        val pwm = SourceProbe.commandsFor("1FTSW21P0XEA00001", "Ford", "SAE J1850 PWM", true)
+        assertTrue(pwm.none { it.canOnly })
+        assertTrue(pwm.all { it.command.take(2) in services })
+        assertTrue(pwm.none { it.row == 31 })
+    }
+
     private fun paths(root: File): List<String> {
         return root.walkTopDown().filter { it.isFile }.map { it.relativeTo(root).path }.sorted().toList()
     }

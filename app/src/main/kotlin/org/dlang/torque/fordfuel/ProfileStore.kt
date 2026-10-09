@@ -117,6 +117,43 @@ internal object ProfileStore {
         f.writeText(text.replace("\"torqueProfileName\":null", "\"torqueProfileName\":${jsonString(name)}"))
     }
 
+    fun profileField(root: File, profileId: String, key: String): String? {
+        val f = File(profileDir(root, profileId), "profile.json")
+        if (!f.isFile) return null
+        return fieldString(f.readText(), key)
+    }
+
+    fun setProfileField(root: File, profileId: String, key: String, value: String?) {
+        val f = File(profileDir(root, profileId), "profile.json")
+        if (!f.isFile) return
+        var text = f.readText()
+        val rendered = if (value == null) "null" else jsonString(value)
+        val token = "\"$key\":"
+        if (!text.contains(token)) {
+            text = text.replace("\"schema\":", "$token$rendered,\"schema\":")
+        } else {
+            text = Regex("\"$key\":(\"[^\"]*\"|null)").replace(text, "$token$rendered")
+        }
+        f.writeText(text)
+    }
+
+    fun addPin(root: File, profileId: String, miles: Double, tMs: Long) {
+        val f = File(profileDir(root, profileId), "profile.json")
+        if (!f.isFile) return
+        val text = f.readText()
+        val m = Regex("\"odometerPins\":\\[([^\\]]*)]").find(text) ?: return
+        val inner = m.groupValues[1].trim()
+        val item = "{\"tMs\":$tMs,\"miles\":$miles}"
+        val next = if (inner.isEmpty()) item else "$inner,$item"
+        f.writeText(text.replaceRange(m.range, "\"odometerPins\":[$next]"))
+    }
+
+    fun distanceManual(root: File, profileId: String): Boolean {
+        val f = File(profileDir(root, profileId), "profile.json")
+        if (!f.isFile) return false
+        return f.readText().contains("\"manual\":true")
+    }
+
     fun storedVin(root: File, profileId: String): String? {
         val f = File(profileDir(root, profileId), "profile.json")
         if (!f.isFile) return null

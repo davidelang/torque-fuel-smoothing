@@ -82,6 +82,9 @@ class PluginService : Service() {
     private var logged012fWrite: Boolean = false
     private var lastNoticeText: String? = null
     private var lastNoticeChannel: String? = null
+    private var detectQueue: ArrayDeque<SourceProbe.Planned>? = null
+    private var detectTimeouts = 0
+    private var lastDetectMs = 0L
     private var cfg: FixFuelConfig = FixFuelConfig(
         sourceId = FixFuelPrefs.DEFAULT_SOURCE,
         customName = "",
@@ -152,6 +155,10 @@ class PluginService : Service() {
             }
             ACTION_PID_QUERY, ACTION_PID_PLUGIN -> bindTorque()
             ACTION_OBD_DISCONNECTED -> onEcu(false)
+            ACTION_DETECT -> {
+                bindTorque()
+                queueDetect()
+            }
         }
         updatePresence(statusText())
         if (intent?.action.isNullOrEmpty()) {
@@ -170,6 +177,7 @@ class PluginService : Service() {
         bound = false
         torque = null
         isRunning = false
+        ecuConnected = false
         super.onDestroy()
     }
 
@@ -285,6 +293,7 @@ class PluginService : Service() {
         applyActiveTank(active, now)
         if (ecu == true) ensureActiveSession()
         val skipFill = now < suppressFillUntilMs
+        pumpDetect(t, speedRaw)
         sampleTank(1, t, ecu, speedMph, now, speedRaw, skipFill)
         for (extra in cfg.extras) {
             sampleTank(extra.id, t, ecu, speedMph, now, speedRaw, skipFill)
@@ -468,6 +477,7 @@ class PluginService : Service() {
     }
 
     private fun onEcu(connected: Boolean) {
+        ecuConnected = connected
         if (lastEcuConnected == connected) return
         lastEcuConnected = connected
         if (connected) {
@@ -1101,6 +1111,49 @@ class PluginService : Service() {
         }
     }
 
+    private fun queueDetect() {
+        if (!ecuConnected) return
+        if (ProfileStore.distanceManual(filesDir, profileId)) return
+        val t = torque ?: return
+        val protocol = runCatching { t.getProtocolName() }.getOrNull()
+        val make = ProfileStore.profileField(filesDir, profileId, "make")
+        val vin = ProfileStore.storedVin(filesDir, profileId)
+        val speed = speedPid?.let { readDouble(t, it) } ?: 0.0
+        val driving = RawLog.gateSpeed(speed, speedUnit) > 0.0
+        detectQueue = ArrayDeque(SourceProbe.commandsFor(vin, make, protocol, driving))
+        detectTimeouts = 0
+    }
+
+    /** One probe per poll. Three empty replies abort and send 0100. NO DATA is not a timeout. */
+    private fun pumpDetect(t: ITorqueService, speedRaw: Double) {
+        val q = detectQueue ?: return
+        if (q.isEmpty()) {
+            detectQueue = null
+            return
+        }
+        val now = System.currentTimeMillis()
+        val driving = RawLog.gateSpeed(speedRaw, speedUnit) > 0.0
+        val gap = if (driving) q.first().minGapMs else 0L
+        if (gap > 0L && now - lastDetectMs < gap) return
+        val cmd = q.removeFirst()
+        val resp = runCatching { t.sendCommandGetResponse(cmd.header, cmd.command) }.getOrNull()
+        lastDetectMs = now
+        val text = resp?.filterNotNull()?.joinToString(" ").orEmpty()
+        if (text.isBlank()) {
+            detectTimeouts++
+            if (detectTimeouts >= 3) {
+                runCatching { t.sendCommandGetResponse("", "0100") }
+                detectQueue = null
+            }
+            return
+        }
+        if (text.contains("NO DATA", ignoreCase = true)) return
+        detectTimeouts = 0
+        if (SourceProbe.positive(text, cmd.command)) {
+            Log.i(TAG, "probe row ${cmd.row} ${cmd.command} positive")
+        }
+    }
+
     companion object {
         private const val TAG = "FordFuel"
         private const val CHANNEL_ID = "fordfuel"
@@ -1113,6 +1166,10 @@ class PluginService : Service() {
         const val ACTION_OBD_DISCONNECTED = "org.prowl.torque.OBD_DISCONNECTED"
         const val ACTION_PID_QUERY = "org.prowl.torque.PID_QUERY"
         const val ACTION_PID_PLUGIN = "org.prowl.torque.PID_PLUGIN"
+        const val ACTION_DETECT = "org.dlang.torque.fordfuel.DETECT"
+
+        @Volatile
+        var ecuConnected: Boolean = false
         private const val ECU_FUEL_NAME = "Fuel Level (From Engine ECU)"
 
         @Volatile

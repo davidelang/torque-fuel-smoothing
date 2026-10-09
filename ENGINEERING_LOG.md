@@ -208,3 +208,7 @@
 - Scope: port Fix Fuel v2 into `app/` (math, raw log, profiles, probes, odometer, UI) per that plan. On-van Detect is not run.
 - `./exec-preflight` reported Host `/home/dlang/git/torque-ford-gas-tracking` against this checkout `/home/dlang/git/torque-ford-gas-tracking/master`. Worktree stamp is `master`. Implementing in this checkout.
 - No `./deploy` by coder. Compile via `./build_app`. Unit tests via `./gradlew :app:testDebugUnitTest`.
+
+## 2026-10-09 - Fuel v2 phase 4 probes
+
+- On-van Detect was not run.
