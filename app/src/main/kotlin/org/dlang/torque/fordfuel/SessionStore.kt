@@ -13,6 +13,14 @@ internal data class Sample(
     val fuelUsedGal: Double,
     val speed: Double,
     val fill: Boolean = false,
+    val ok: Boolean = true,
+    val why: String? = null,
+    val spdUnit: String = "",
+    val mode: String = "",
+    val ecu: Boolean = true,
+    val fuelRaw: Double? = null,
+    val fuelUnit: String = "",
+    val lvlSrc: String = "",
 )
 
 internal class SessionStore(context: Context, private val tank: Int = 1) {
@@ -31,25 +39,34 @@ internal class SessionStore(context: Context, private val tank: Int = 1) {
         }
     }
     private var file: File? = null
+    private var rawLog = RawLog()
     var sessionId: String? = null
         private set
     var fuelUsedOriginGal: Double? = null
+        private set
+    var profileId: String = "default"
         private set
     val samples = mutableListOf<Sample>()
 
     val isOpen: Boolean get() = file != null
 
-    fun open(t0: Long = System.currentTimeMillis()): String {
+    fun open(
+        t0: Long = System.currentTimeMillis(),
+        profileId: String = this.profileId,
+        app: String = "",
+        sources: String = "{}",
+    ): String {
         if (isOpen) close(t0)
         val id = "${t0}-${UUID.randomUUID().toString().take(8)}"
         sessionId = id
+        this.profileId = profileId
         fuelUsedOriginGal = null
         samples.clear()
+        rawLog = RawLog()
         val f = File(dir, "$id.jsonl")
         file = f
-        f.appendText(
-            JSONObject().put("sessionId", id).put("t0", t0).put("event", "open").put("tank", tank).toString() + "\n",
-        )
+        rawLog.openLine(id, t0, profileId, tank, app, sources)
+        rewrite()
         return id
     }
 
@@ -64,26 +81,51 @@ internal class SessionStore(context: Context, private val tank: Int = 1) {
     }
 
     fun append(sample: Sample) {
-        val f = file ?: return
+        if (file == null) return
+        val prev = samples.lastOrNull()?.fuelUsedGal
+        val dF = if (prev == null) {
+            if (sample.fuelUsedGal.isFinite() && sample.fuelUsedGal > 0.0) sample.fuelUsedGal else 0.0
+        } else {
+            val d = sample.fuelUsedGal - prev
+            if (d.isFinite() && d > 0.0) d else 0.0
+        }
+        rawLog.addDelta(dF)
+        rawLog.sample(
+            t = sample.t,
+            lvl = sample.rawPct,
+            lvlSrc = sample.lvlSrc,
+            fuelRaw = sample.fuelRaw,
+            fuelUnit = sample.fuelUnit,
+            spd = sample.speed,
+            spdUnit = sample.spdUnit,
+            ecu = sample.ecu,
+            ok = sample.ok,
+            why = sample.why,
+            mode = if (sample.fill && sample.mode.isEmpty()) "FILL" else sample.mode,
+            sm = sample.smoothedPct,
+        )
+        rewrite()
         samples.add(sample)
-        val o = JSONObject()
-            .put("t", sample.t)
-            .put("rawPct", sample.rawPct)
-            .put("smoothedPct", sample.smoothedPct)
-            .put("fuelUsedGal", sample.fuelUsedGal)
-            .put("speed", sample.speed)
-            .put("fill", sample.fill)
-            .put("tank", tank)
-        f.appendText(o.toString() + "\n")
+    }
+
+    /** Marker only. fuelGal stays where the last sample left it. */
+    fun mark(event: String, t: Long, extra: String = "") {
+        if (file == null) return
+        rawLog.event(event, t, extra)
+        rewrite()
+    }
+
+    private fun rewrite() {
+        val f = file ?: return
+        f.writeText(rawLog.rendered())
     }
 
     fun close(t: Long = System.currentTimeMillis()): List<Sample> {
-        val f = file ?: return emptyList()
+        if (file == null) return emptyList()
         val id = sessionId
         val copy = samples.toList()
-        f.appendText(
-            JSONObject().put("event", "close").put("t", t).put("n", copy.size).put("tank", tank).toString() + "\n",
-        )
+        rawLog.closeLine(t, copy.size)
+        rewrite()
         if (copy.isNotEmpty()) {
             val last = copy.last()
             snapshotFile.writeText(

@@ -22,6 +22,8 @@ import android.util.Log
 import org.prowl.torque.remote.ITorqueService
 import java.io.File
 import java.io.FileOutputStream
+import java.util.ArrayDeque
+import kotlin.math.ceil
 import kotlin.math.roundToInt
 
 class PluginService : Service() {
@@ -37,6 +39,12 @@ class PluginService : Service() {
         /** Tank 1 only. Null until a fill sets it. Not cleared on session open. */
         var fillAnchorGal: Double? = null
         var sinceFillUsedGal: Double = 0.0
+        /** Session fuelGal at the last fill end. Open resets this with usedGal. */
+        var fuelAtFillGal: Double = 0.0
+        val ledger = TankLedger()
+        var steppedChunks: Int = 0
+        var mpgRecent: Double = 0.0
+        val mpgWindow: ArrayDeque<Pair<Double, Double>> = ArrayDeque()
     }
 
     private val handler = Handler(Looper.getMainLooper())
@@ -308,13 +316,26 @@ class PluginService : Service() {
         if (id == 1) Log.i(TAG, "source ${cfg.sourceId} ${src.how} active=$lastActive")
         val raw = src.pct
         val valid = rt.math.isValidSample(raw, ecu, rt.math.smoothed) && !src.missing
+        val logging = rt.sessions.isOpen && lastActive == id.toString()
         if (!valid) {
             rt.math.hold()
             val held = rt.math.smoothed
-            if (held != null) {
-                if (id == 1) publishHeld(t, raw, held) else publishExtraFrom(t, id, rt, held)
+            val dF = if (logging) integrateGalHr(t, now, rt) else 0.0
+            if (logging) {
+                noteDistance(rt, speedMph, dF)
+                rt.sessions.append(
+                    sampleRow(
+                        id, now, raw ?: Double.NaN, held ?: raw ?: Double.NaN, speedRaw,
+                        fill = false, ok = false, why = holdWhy(raw, ecu, src.missing, rt.math.smoothed),
+                        mode = TrackMode.HOLD, ecu = ecu == true,
+                    ),
+                )
+                stepLive(rt, dF)
             }
-            Log.i(TAG, "tank$id hold raw=$raw src=${src.how}")
+            if (held != null) {
+                if (id == 1) publishFromSmoothed(t, raw ?: held, held) else publishExtraFrom(t, id, rt, held)
+            }
+            Log.i(TAG, "tank$id hold raw=$raw why=${holdWhy(raw, ecu, src.missing, rt.math.smoothed)} src=${src.how}")
             return
         }
         val live = raw!!
@@ -333,23 +354,27 @@ class PluginService : Service() {
         if (rt.math.mode == TrackMode.FILL && prevMode != TrackMode.FILL) {
             val delta = live - (before ?: live)
             Log.i(TAG, "tank$id fill start Δ=${"%.1f".format(delta)} raw=$live speedMph=${"%.1f".format(speedMph)}")
+            if (logging) rt.sessions.mark("fillStart", now)
         }
-        if (prevMode == TrackMode.FILL && rt.math.mode != TrackMode.FILL) {
+        val fillEnded = prevMode == TrackMode.FILL && rt.math.mode != TrackMode.FILL
+        if (fillEnded) {
             Log.i(TAG, "tank$id fill end raw=$live smoothed=$smoothed")
-            if (id == 1) anchorTank1AfterFill(rt, smoothed)
+            onFillEnd(rt, smoothed, now, logging)
         }
-        if (rt.sessions.isOpen && lastActive == id.toString()) {
-            integrateGalHr(t, now, rt)
+        val dF = if (logging) integrateGalHr(t, now, rt) else 0.0
+        if (logging) {
+            noteDistance(rt, speedMph, dF)
             rt.sessions.append(
-                Sample(
-                    t = now,
-                    rawPct = live,
-                    smoothedPct = smoothed,
-                    fuelUsedGal = rt.usedGal,
-                    speed = speedRaw,
+                sampleRow(
+                    id, now, live, smoothed, speedRaw,
                     fill = rt.math.mode == TrackMode.FILL,
+                    ok = true,
+                    why = null,
+                    mode = rt.math.mode,
+                    ecu = ecu == true,
                 ),
             )
+            stepLive(rt, dF)
         }
         if (id == 1) {
             publishFromSmoothed(t, live, smoothed)
@@ -362,44 +387,72 @@ class PluginService : Service() {
         }
     }
 
+    private fun sampleRow(
+        id: Int,
+        now: Long,
+        raw: Double,
+        smoothed: Double,
+        speedRaw: Double,
+        fill: Boolean,
+        ok: Boolean,
+        why: String?,
+        mode: TrackMode,
+        ecu: Boolean,
+    ): Sample {
+        val rt = tanks[id]
+        return Sample(
+            t = now,
+            rawPct = raw,
+            smoothedPct = smoothed,
+            fuelUsedGal = rt?.usedGal ?: 0.0,
+            speed = speedRaw,
+            fill = fill,
+            ok = ok,
+            why = why,
+            spdUnit = speedUnit,
+            mode = mode.name,
+            ecu = ecu,
+            fuelUnit = fuelUnitLabel(),
+            lvlSrc = if (id == 1) cfg.sourceId else cfg.extra(id)?.sourceId ?: "",
+        )
+    }
+
+    private fun fuelUnitLabel(): String {
+        return when {
+            galHrUnit.isNotBlank() -> galHrUnit
+            galMinUnit.isNotBlank() -> galMinUnit
+            else -> fuelUsedUnit
+        }
+    }
+
+    private fun holdWhy(raw: Double?, ecu: Boolean?, missing: Boolean, lastGood: Double?): String {
+        if (missing || raw == null || !raw.isFinite()) return "missing"
+        if (ecu == false) return "ecu"
+        if (lastGood != null && lastGood > FuelMath.NEAR_EMPTY_PCT && raw < FuelMath.GLITCH_RAW_PCT) return "glitch<1"
+        if (lastGood != null && lastGood > FuelMath.NEAR_EMPTY_PCT && lastGood - raw > FuelMath.DROP_HOLD_PT) {
+            return "held:drop>15"
+        }
+        return "missing"
+    }
+
     private fun publishHeld(t: ITorqueService, raw: Double?, held: Double) {
         publishFromSmoothed(t, raw ?: held, held)
     }
 
     private fun publishFromSmoothed(t: ITorqueService, raw: Double, smoothed: Double) {
         val rt = tanks[1] ?: return
-        val bins = rt.bins.bins.toList()
-        val usable = cfg.learnedUsable ?: cfg.tankGal
-        val anchor = rt.fillAnchorGal
-        val remain = if (anchor != null) {
-            rt.math.remainSinceFill(anchor, rt.sinceFillUsedGal + rt.usedGal)
-        } else {
-            rt.math.remainingGal(smoothed, bins, usable, rt.bins.reserveGal)
-        }
-        val corrected = if (anchor != null) {
-            rt.math.correctedPct(smoothed, remain, cfg.learnedUsable, binsEmpty = false)
-        } else {
-            rt.math.correctedPct(smoothed, remain, usable, bins.isEmpty())
-        }
-        lastAuthPct = corrected
-        val mpgRaw = mpgPid?.let { readDouble(t, it) }
-        val mpg = mpgRaw?.let { FuelMath.mpgFrom(it, mpgUnit) } ?: 0.0
-        val dte = rt.math.dteMiles(remain, mpg)
-        publish(t, raw, smoothed, corrected, remain, dte)
-        writeStockFuelLevel(t, corrected)
-        maybeSyncSlider(t, corrected)
+        val out = livePublish(rt)
+        lastAuthPct = out.correctedPct
+        publish(t, raw, smoothed, out.correctedPct, out.remaining, out.dte)
+        writeStockFuelLevel(t, out.correctedPct)
+        maybeSyncSlider(t, out.correctedPct)
         updatePresence(statusText())
     }
 
     private fun publishExtraFrom(t: ITorqueService, id: Int, rt: TankRt, smoothed: Double) {
         val extra = cfg.extra(id)
-        val bins = rt.bins.bins.toList()
-        val usable = extra?.learnedUsable ?: extra?.tankGal
-        val remain = rt.math.remainingGal(smoothed, bins, usable, rt.bins.reserveGal)
-        val corr = rt.math.correctedPct(smoothed, remain, usable, bins.isEmpty())
-        val mpgRaw = mpgPid?.let { readDouble(t, it) }
-        val mpg = mpgRaw?.let { FuelMath.mpgFrom(it, mpgUnit) } ?: 0.0
-        publishExtra(t, id, smoothed, corr, remain, rt.math.dteMiles(remain, mpg), usable)
+        val out = livePublish(rt)
+        publishExtra(t, id, smoothed, out.correctedPct, out.remaining, out.dte, extra?.tankGal)
     }
 
     private fun onEcu(connected: Boolean) {
@@ -643,9 +696,11 @@ class PluginService : Service() {
         if (rt.sessions.isOpen) return
         if (id == 1) lastSliderPct = null
         rt.usedGal = 0.0
+        rt.fuelAtFillGal = 0.0
+        rt.steppedChunks = 0
         rt.lastRateMs = null
         rt.flowStartMs = null
-        val sid = rt.sessions.open()
+        val sid = rt.sessions.open(app = BuildConfig.VERSION_NAME)
         Log.i(TAG, "session open tank=$id $sid files=${rt.sessions.sessionCount()}")
     }
 
@@ -669,10 +724,10 @@ class PluginService : Service() {
         for (id in tanks.keys.toList()) closeTankSession(id)
     }
 
-    private fun integrateGalHr(t: ITorqueService, now: Long, rt: TankRt) {
+    private fun integrateGalHr(t: ITorqueService, now: Long, rt: TankRt): Double {
         val last = rt.lastRateMs
         rt.lastRateMs = now
-        if (last == null) return
+        if (last == null) return 0.0
         val dtSec = ((now - last).coerceAtLeast(0L) / 1000.0).coerceAtLeast(0.001)
         val hr = readDouble(t, galHrPid ?: Pids.GAL_PER_HOUR)
         val gph = if (hr != null && hr.isFinite() && hr >= 0.0) {
@@ -684,10 +739,12 @@ class PluginService : Service() {
                 logFlowUnitOnce("galMin")
                 flowToGallonsPerHour(gmin, galMinUnit, perMinute = true, rt, now, last)
             } else {
-                return
+                return 0.0
             }
         }
-        rt.usedGal += gph * (dtSec / 3600.0)
+        val dF = gph * (dtSec / 3600.0)
+        if (dF.isFinite() && dF > 0.0) rt.usedGal += dF
+        return if (dF.isFinite() && dF > 0.0) dF else 0.0
     }
 
     private fun flowToGallonsPerHour(
@@ -752,36 +809,109 @@ class PluginService : Service() {
         Log.i(TAG, "learned usable tank=$id gal=$usable span=$span mappedGal=$mapped bins=${bins.size}")
     }
 
-    private fun anchorTank1AfterFill(rt: TankRt, smoothed: Double) {
-        val learned = cfg.learnedUsable?.takeIf { it > 0.0 }
-        val anchor = if (smoothed >= FULL_FILL_PCT) {
-            learned
-        } else {
-            val bins = rt.bins.bins.toList()
-            val nameplate = learned ?: cfg.tankGal
-            rt.math.remainingGal(smoothed, bins, nameplate, rt.bins.reserveGal).takeIf { it > 0.0 }
-        }
-        if (anchor == null) {
-            Log.i(TAG, "tank1 fill end no anchor smoothed=$smoothed learned=$learned")
-            return
-        }
-        rt.fillAnchorGal = anchor
+    private fun onFillEnd(rt: TankRt, smoothed: Double, now: Long, logging: Boolean) {
+        rt.fuelAtFillGal = rt.usedGal
         rt.sinceFillUsedGal = 0.0
-        rt.usedGal = 0.0
+        val prior = priorFor(rt.id)
+        FuelV2.stepFill(rt.ledger, smoothed, smoothed, prior.v, prior.v95, prior.hEst)
+        if (logging) rt.sessions.mark("fillEnd", now)
+        if (rt.id != 1) return
+        val anchor = rt.ledger.rHat.takeIf { rt.ledger.anchored && it.isFinite() && it > 0.0 } ?: return
+        rt.fillAnchorGal = anchor
         FixFuelPrefs.setFillLedger(this, anchor, 0.0)
-        Log.i(TAG, "tank1 fill anchor=$anchor sinceFill=0 smoothed=$smoothed")
+        Log.i(TAG, "tank1 fill anchor=$anchor sinceFill=0 smoothed=$smoothed fuelGal=${rt.usedGal}")
     }
 
-    /** Adds this session's flow integral. Does not run when no anchor exists yet. */
+    /** Adds burn since the last fill end. Does not zero the session fuel integral. */
     private fun commitTank1SinceFill(rt: TankRt) {
         val anchor = rt.fillAnchorGal ?: return
-        val add = rt.usedGal
+        val add = rt.usedGal - rt.fuelAtFillGal
         if (!add.isFinite() || add <= 0.0) return
         val next = rt.sinceFillUsedGal + add
         rt.sinceFillUsedGal = next
-        rt.usedGal = 0.0
         FixFuelPrefs.setFillLedger(this, anchor, next)
         Log.i(TAG, "tank1 since-fill used=$next anchor=$anchor added=$add")
+    }
+
+    private class Prior(
+        val t0: Double,
+        val v: (Double) -> Double,
+        val v95: Double,
+        val hEst: Double,
+        val cap: Double,
+        val reserve: Double,
+    )
+
+    private fun nameplateFor(id: Int): Double? {
+        return if (id <= 1) cfg.tankGal else cfg.extra(id)?.tankGal
+    }
+
+    private fun priorFor(id: Int): Prior {
+        val nameplate = nameplateFor(id)
+        val t0 = if (nameplate != null && nameplate > 0.0) nameplate else 30.0
+        val v = { level: Double -> (level / 100.0) * t0 }
+        val v95 = v(FuelV2.L_HI)
+        val hEst = 0.07 * v95
+        val cap = v95 + hEst
+        val reserve = FuelV2.reserveGal(nameplate, cap, 0.0)
+        return Prior(t0, v, v95, hEst, cap, reserve)
+    }
+
+    private fun stepLive(rt: TankRt, dF: Double) {
+        val prior = priorFor(rt.id)
+        FuelV2.stepSample(rt.ledger, dF)
+        val samples = rt.sessions.samples
+        if (samples.size < 2) return
+        val n = samples.size
+        val tSec = DoubleArray(n) { samples[it].t / 1000.0 }
+        val raw = DoubleArray(n) { samples[it].rawPct }
+        val sm = DoubleArray(n) { samples[it].smoothedPct }
+        val used = DoubleArray(n) { samples[it].fuelUsedGal }
+        val spd = DoubleArray(n) { RawLog.gateSpeed(samples[it].speed, samples[it].spdUnit) }
+        val fill = BooleanArray(n) { samples[it].fill }
+        val session = FuelSession("live", tSec, raw, sm, used, spd, fill)
+        val chunks = FuelV2.chunksSf(session, { prior.t0 / 100.0 }, placeholderNMin(), 4.4)
+        val fuelNow = samples.last().fuelUsedGal
+        while (rt.steppedChunks < chunks.size) {
+            val c = chunks[rt.steppedChunks]
+            FuelV2.stepChunk(rt.ledger, c.l, fuelNow - c.f, prior.v(c.l), prior.v95)
+            rt.steppedChunks++
+        }
+    }
+
+    private fun placeholderNMin(): Int {
+        val tau = 3.5
+        val sig = 1.1
+        val scaled = 1.25 * sig / FuelV2.SE_TARGET
+        return ceil(2.0 * tau * scaled * scaled).toInt().coerceAtLeast(10)
+    }
+
+    private fun noteDistance(rt: TankRt, speedMph: Double, dF: Double) {
+        val miles = if (speedMph.isFinite() && speedMph > 0.0) speedMph / 3600.0 else 0.0
+        val gal = if (dF.isFinite() && dF > 0.0) dF else 0.0
+        if (miles == 0.0 && gal == 0.0) return
+        rt.mpgWindow.addLast(miles to gal)
+        val cap = priorFor(rt.id).cap
+        val want = 0.15 * cap
+        var fuel = 0.0
+        var dist = 0.0
+        val it = rt.mpgWindow.descendingIterator()
+        var keep = 0
+        while (it.hasNext()) {
+            val p = it.next()
+            fuel += p.second
+            dist += p.first
+            keep++
+            if (want > 0.0 && fuel >= want) break
+        }
+        while (rt.mpgWindow.size > keep) rt.mpgWindow.removeFirst()
+        if (fuel > 1e-9) rt.mpgRecent = dist / fuel
+    }
+
+    private fun livePublish(rt: TankRt): TankPublish {
+        val prior = priorFor(rt.id)
+        val mpg = rt.mpgRecent
+        return FuelV2.publish(rt.ledger, prior.cap, prior.reserve, mpg)
     }
 
     private fun loadTank1Ledger(rt: TankRt) {
