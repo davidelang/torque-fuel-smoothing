@@ -201,3 +201,10 @@
 - Magic-approved plan: `sandbox/plans/fix-fuel-since-fill-20261002-1759-plan.md`
 - Scope: tank-1 gallons left are the fill anchor minus fuel burned since that fill, including later sessions. Persist `fill_anchor_gal` and `since_fill_used_gal`. Extra tanks stay on the map integral.
 - No `./deploy` by coder. Compile only via `./build_app`.
+
+## 2026-10-09 - Execute start: fix-fuel-v2-20261009-0249-plan.md
+
+- Magic-approved plan: `sandbox/plans/fix-fuel-v2-20261009-0249-plan.md`
+- Scope: port Fix Fuel v2 into `app/` (math, raw log, profiles, probes, odometer, UI) per that plan. On-van Detect is not run.
+- `./exec-preflight` reported Host `/home/dlang/git/torque-ford-gas-tracking` against this checkout `/home/dlang/git/torque-ford-gas-tracking/master`. Worktree stamp is `master`. Implementing in this checkout.
+- No `./deploy` by coder. Compile via `./build_app`. Unit tests via `./gradlew :app:testDebugUnitTest`.

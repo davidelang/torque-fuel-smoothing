@@ -1,0 +1,79 @@
+cutoff t0 < 1788822900000 (2026-09-07T16:15:00-07:00)
+convert  sessions/1787457049752-c771d474.jsonl (08-22 20:50 MST)  idle=3.86 moving=- n=671  total 0.739 -> 0.195 gal
+convert  sessions/1787457857756-5e7d6e30.jsonl (08-22 21:04 MST)  idle=3.73 moving=- n=1478  total 1.548 -> 0.409 gal
+skip     sessions/1787459363853-c005c28b.jsonl (08-22 21:29 MST)  before cutoff, cannot confirm units (flow dropout?) idle=- moving=- n=6
+convert  sessions/1787459381562-ee11f791.jsonl (08-22 21:29 MST)  idle=3.17 moving=- n=195  total 0.173 -> 0.046 gal
+convert  sessions/1787507887430-58af55c0.jsonl (08-23 10:58 MST)  idle=3.87 moving=15.38 n=635  total 1.737 -> 0.459 gal
+convert  sessions/1787511103632-1e6c0dde.jsonl (08-23 11:51 MST)  idle=3.96 moving=12.45 n=1104  total 2.892 -> 0.764 gal
+convert  sessions/1787519279321-d2aacbf8.jsonl (08-23 14:07 MST)  idle=3.81 moving=13.66 n=1652  total 4.138 -> 1.093 gal
+convert  sessions/1787663409712-d340aa30.jsonl (08-25 06:10 MST)  idle=3.89 moving=6.79 n=1443  total 2.318 -> 0.612 gal
+convert  sessions/1787680315214-1c92cc53.jsonl (08-25 10:51 MST)  idle=3.38 moving=9.27 n=704  total 1.553 -> 0.410 gal
+skip     sessions/1787682523978-f5ff80b2.jsonl (08-25 11:28 MST)  before cutoff, cannot confirm units (flow dropout?) idle=0.82 moving=0.33 n=1289
+skip     sessions/1787684207141-d3f3eb29.jsonl (08-25 11:56 MST)  before cutoff, cannot confirm units (flow dropout?) idle=0.21 moving=0.27 n=993
+keep     sessions/1787872198956-59a7a416.jsonl (08-27 16:09 MST)  before cutoff, no samples
+convert  sessions/1787872239890-8fd60533.jsonl (08-27 16:10 MST)  idle=3.86 moving=12.25 n=903  total 2.543 -> 0.672 gal
+convert  sessions/1787877428307-68982207.jsonl (08-27 17:37 MST)  idle=3.87 moving=9.28 n=382  total 0.876 -> 0.231 gal
+convert  sessions/1787879457840-5a3b8a3a.jsonl (08-27 18:10 MST)  idle=3.48 moving=10.89 n=3110  total 5.523 -> 1.459 gal
+convert  sessions/1787883047792-57d41ff3.jsonl (08-27 19:10 MST)  idle=3.00 moving=9.67 n=348  total 0.743 -> 0.196 gal
+convert  sessions/1787923542189-539ba773.jsonl (08-28 06:25 MST)  idle=3.33 moving=12.05 n=863  total 2.372 -> 0.627 gal
+convert  sessions/1787933920494-8f84e0ec.jsonl (08-28 09:18 MST)  idle=3.56 moving=13.31 n=1030  total 3.226 -> 0.852 gal
+convert  sessions/1787940404436-04d9ac94.jsonl (08-28 11:06 MST)  idle=3.81 moving=11.11 n=1558  total 2.468 -> 0.652 gal
+convert  sessions/1787942079303-9652cec5.jsonl (08-28 11:34 MST)  idle=4.08 moving=10.82 n=722  total 1.560 -> 0.412 gal
+convert  sessions/1787943778254-11820e3f.jsonl (08-28 12:02 MST)  idle=3.95 moving=12.79 n=807  total 2.373 -> 0.627 gal
+convert  sessions/1787952461833-7466d84c.jsonl (08-28 14:27 MST)  idle=4.04 moving=11.13 n=2456  total 5.309 -> 1.403 gal
+convert  sessions/1788043722773-9b86fc3c.jsonl (08-29 15:48 MST)  idle=3.61 moving=12.09 n=1741  total 4.440 -> 1.173 gal
+convert  sessions/1788134782534-30eaaf80.jsonl (08-30 17:06 MST)  idle=3.61 moving=10.95 n=1071  total 2.465 -> 0.651 gal
+convert  sessions/1788139896561-8a3adcaf.jsonl (08-30 18:31 MST)  idle=3.60 moving=10.71 n=793  total 2.052 -> 0.542 gal
+convert  sessions/1788197623048-8fb10e17.jsonl (08-31 10:33 MST)  idle=3.90 moving=12.36 n=1151  total 3.432 -> 0.907 gal
+convert  sessions/1788200331229-b98474c2.jsonl (08-31 11:18 MST)  idle=3.73 moving=11.33 n=1414  total 3.759 -> 0.993 gal
+convert  sessions/1788202177416-8a87e711.jsonl (08-31 11:49 MST)  idle=3.46 moving=8.44 n=991  total 1.962 -> 0.518 gal
+keep     sessions/1788462551905-a0295c45.jsonl (09-03 12:09 MST)  before cutoff, no samples
+convert  sessions/1788462583192-aaa97f65.jsonl (09-03 12:09 MST)  idle=3.44 moving=12.11 n=1631  total 4.035 -> 1.066 gal
+convert  sessions/1788469560338-e9f041d9.jsonl (09-03 14:06 MST)  idle=3.91 moving=13.73 n=3347  total 12.133 -> 3.205 gal
+convert  sessions/1788487147867-8940b9a6.jsonl (09-03 18:59 MST)  idle=4.15 moving=12.67 n=2707  total 9.133 -> 2.413 gal
+convert  sessions/1788644070621-79ed1308.jsonl (09-05 14:34 MST)  idle=3.92 moving=12.22 n=1471  total 4.229 -> 1.117 gal
+convert  sessions/1788650279872-48c3ba25.jsonl (09-05 16:17 MST)  idle=3.71 moving=12.80 n=1657  total 5.325 -> 1.407 gal
+convert  sessions/1788652522074-c0e8464d.jsonl (09-05 16:55 MST)  idle=4.17 moving=10.11 n=293  total 0.717 -> 0.189 gal
+convert  sessions/1788717769921-e2612a52.jsonl (09-06 11:02 MST)  idle=3.63 moving=12.50 n=472  total 1.364 -> 0.360 gal
+convert  sessions/1788721596375-0dc2eee3.jsonl (09-06 12:06 MST)  idle=3.94 moving=12.92 n=2588  total 8.754 -> 2.313 gal
+convert  sessions/1788733310727-0bf9ee18.jsonl (09-06 15:21 MST)  idle=3.51 moving=15.98 n=2041  total 7.820 -> 2.066 gal
+convert  sessions/1788821369433-33157f3f.jsonl (09-07 15:49 MST)  idle=3.70 moving=7.97 n=305  total 0.599 -> 0.158 gal
+convert  sessions/1788822002643-1fff2dfb.jsonl (09-07 16:00 MST)  idle=3.51 moving=11.04 n=1016  total 1.628 -> 0.430 gal
+keep     sessions/1788823045553-edd5fa4e.jsonl (09-07 16:17 MST)  after cutoff; idle=0.92 moving=- n=466
+keep     sessions/1788823524392-6dcfb084.jsonl (09-07 16:25 MST)  after cutoff; idle=- moving=- n=40
+keep     sessions/1788823593875-1c502c40.jsonl (09-07 16:26 MST)  after cutoff; idle=0.86 moving=- n=435
+keep     sessions/1788824044082-548c52d1.jsonl (09-07 16:34 MST)  after cutoff; idle=0.88 moving=- n=632
+keep     sessions/1788824689516-abd117f3.jsonl (09-07 16:44 MST)  after cutoff; idle=- moving=- n=36
+keep     sessions/1788824946743-2b00782a.jsonl (09-07 16:49 MST)  after cutoff; idle=0.86 moving=- n=441
+keep     sessions/1788825402721-54f63f84.jsonl (09-07 16:56 MST)  after cutoff; idle=0.87 moving=- n=219
+keep     sessions/1788825685693-f4fd6293.jsonl (09-07 17:01 MST)  after cutoff; idle=0.82 moving=- n=1248
+keep     sessions/1788827156834-d04957e7.jsonl (09-07 17:25 MST)  after cutoff; idle=0.63 moving=- n=2050
+keep     sessions/1788829235854-d893b884.jsonl (09-07 18:00 MST)  after cutoff; idle=0.27 moving=- n=1636
+keep     sessions/1788830888040-289979d5.jsonl (09-07 18:28 MST)  after cutoff; idle=0.27 moving=- n=903
+keep     sessions/1788831800961-8929195c.jsonl (09-07 18:43 MST)  after cutoff; idle=0.48 moving=2.61 n=708
+keep     sessions/1788904983594-8e23d4b1.jsonl (09-08 15:03 MST)  after cutoff; idle=- moving=3.62 n=289
+keep     sessions/1788905478772-4859a696.jsonl (09-08 15:11 MST)  after cutoff; idle=- moving=- n=0
+keep     sessions/1788905886019-d5bc09ce.jsonl (09-08 15:18 MST)  after cutoff; idle=- moving=- n=0
+keep     sessions/1788908861559-14860f0d.jsonl (09-08 16:07 MST)  after cutoff; idle=- moving=- n=0
+keep     sessions/1789153076236-e6df24c4.jsonl (09-11 11:57 MST)  after cutoff; idle=0.59 moving=3.16 n=1759
+keep     sessions/1789161729553-91401cb4.jsonl (09-11 14:22 MST)  after cutoff; idle=1.09 moving=2.85 n=2938
+keep     sessions/1789210201685-33824cea.jsonl (09-12 03:50 MST)  after cutoff; idle=0.99 moving=2.80 n=531
+keep     sessions/1789213905305-206f2ff5.jsonl (09-12 04:51 MST)  after cutoff; idle=0.98 moving=2.86 n=2746
+keep     sessions/1789418106199-32aac5a3.jsonl (09-14 13:35 MST)  after cutoff; idle=- moving=- n=0
+keep     sessions/1789418137862-6dd2e99c.jsonl (09-14 13:35 MST)  after cutoff; idle=0.93 moving=3.18 n=4136
+keep     sessions/1789496671430-98377344.jsonl (09-15 11:24 MST)  after cutoff; idle=1.00 moving=3.71 n=1131
+keep     sessions/1789499031010-3edcc8fa.jsonl (09-15 12:03 MST)  after cutoff; idle=0.99 moving=3.21 n=1480
+keep     sessions/1789521974786-6eb372fe.jsonl (09-15 18:26 MST)  after cutoff; idle=0.93 moving=3.67 n=2745
+keep     sessions/1789536103195-b89338f2.jsonl (09-15 22:21 MST)  after cutoff; idle=0.98 moving=3.73 n=3151
+keep     sessions/1789938576734-de65c0bf.jsonl (09-20 14:09 MST)  after cutoff; idle=0.97 moving=3.64 n=2509
+keep     sessions/1790457253485-a7044bbd.jsonl (09-26 14:14 MST)  after cutoff; idle=- moving=- n=0
+keep     sessions/1790457284676-82551ae8.jsonl (09-26 14:14 MST)  after cutoff; idle=1.07 moving=3.31 n=948
+keep     sessions/1790464603660-265242a9.jsonl (09-26 16:16 MST)  after cutoff; idle=0.98 moving=2.59 n=1637
+keep     sessions/1790468146583-1a6496b1.jsonl (09-26 17:15 MST)  after cutoff; idle=0.98 moving=2.37 n=1143
+keep     sessions/1790712921381-f641a89e.jsonl (09-29 13:15 MST)  after cutoff; idle=0.91 moving=3.65 n=1420
+keep     sessions/1790718217549-ccab3753.jsonl (09-29 14:43 MST)  after cutoff; idle=0.94 moving=2.88 n=8801
+keep     sessions/1790727880780-3e24c7c5.jsonl (09-29 17:24 MST)  after cutoff; idle=0.96 moving=2.64 n=598
+keep     sessions/1790809667586-a65b6279.jsonl (09-30 16:07 MST)  after cutoff; idle=1.03 moving=3.38 n=1053
+keep     sessions/1790811281196-bf28d1bc.jsonl (09-30 16:34 MST)  after cutoff; idle=1.01 moving=2.97 n=1176
+keep     sessions/1790812772823-36f07de5.jsonl (09-30 16:59 MST)  after cutoff; idle=0.91 moving=3.00 n=742
+summary: {'convert': 35, 'skip': 3, 'keep': 39}
