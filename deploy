@@ -10,7 +10,6 @@
 # Aliases: tablet / emulator → emulator-5554
 #          phone             → project.config deploy_serial= (gitignored; fail if unset)
 
-PACKAGE_NAME="org.dlang.torque.fordfuel"
 APK="app/build/outputs/apk/debug/app-debug.apk"
 
 deploy_usage() {
@@ -155,6 +154,28 @@ if [ ! -f "$APK" ]; then
   echo "  Run ./build_app first (or ./deploy --rebuild)." >&2
   exit 1
 fi
+
+read_apk_package() {
+  local sdk aapt line
+  sdk=$(sed -n 's/^sdk.dir=//p' local.properties 2>/dev/null | tr -d '\r' | head -1)
+  if [ -z "$sdk" ]; then
+    echo "ERROR: sdk.dir unset in local.properties" >&2
+    return 1
+  fi
+  aapt=$(find "$sdk/build-tools" -type f -name aapt -perm -111 2>/dev/null | sort -V | tail -1)
+  if [ -z "$aapt" ]; then
+    echo "ERROR: aapt not found under sdk.dir/build-tools" >&2
+    return 1
+  fi
+  line=$("$aapt" dump badging "$APK" | sed -n "s/^package: name='\([^']*\)'.*/\1/p" | head -1)
+  if [ -z "$line" ]; then
+    echo "ERROR: APK has no package: name= line" >&2
+    return 1
+  fi
+  printf '%s\n' "$line"
+}
+
+PACKAGE_NAME=$(read_apk_package) || exit 1
 
 FAIL=0
 for DEV in "${TARGETS[@]}"; do

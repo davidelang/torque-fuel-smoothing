@@ -18,5 +18,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "torque-ford-gas-tracking"
+rootProject.name = "torque-fuel-smoothing"
 include(":app")

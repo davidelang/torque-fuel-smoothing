@@ -1,4 +1,4 @@
-package org.dlang.torque.fordfuel
+package com.davidlang.torque.fuelsmoothing
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse

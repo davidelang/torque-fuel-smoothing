@@ -212,3 +212,10 @@
 ## 2026-10-09 - Fuel v2 phase 4 probes
 
 - On-van Detect was not run.
+
+## 2026-10-09 - Execute start: play-fuel-smoothing-20261009-1717-plan.md
+
+- Magic-approved plan: `sandbox/plans/play-fuel-smoothing-20261009-1717-plan.md`
+- Scope: first-time Fuel Smoothing identity, strip old-plugin leftovers, battery list, tip jar, launcher picture. No Play upload, no keystore, no GitHub push.
+- `./exec-preflight` reported Host `/home/dlang/git/torque-ford-gas-tracking` against this checkout `/home/dlang/git/torque-ford-gas-tracking/master`. Worktree stamp is `master`. Implementing in this checkout.
+- No `./deploy` by coder. Compile via `./build_app`. Unit tests via `./gradlew :app:testDebugUnitTest`.

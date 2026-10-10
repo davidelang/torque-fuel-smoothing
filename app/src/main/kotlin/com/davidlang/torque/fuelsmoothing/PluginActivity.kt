@@ -1,4 +1,4 @@
-package org.dlang.torque.fordfuel
+package com.davidlang.torque.fuelsmoothing
 
 import android.Manifest
 import android.app.Activity

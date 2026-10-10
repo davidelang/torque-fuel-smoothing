@@ -1,4 +1,4 @@
-package org.dlang.torque.fordfuel
+package com.davidlang.torque.fuelsmoothing
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -166,8 +166,8 @@ class FuelV2Test {
 
     private fun serviceSource(): String {
         val candidates = listOf(
-            File("src/main/kotlin/org/dlang/torque/fordfuel/PluginService.kt"),
-            File("app/src/main/kotlin/org/dlang/torque/fordfuel/PluginService.kt"),
+            File("src/main/kotlin/com/davidlang/torque/fuelsmoothing/PluginService.kt"),
+            File("app/src/main/kotlin/com/davidlang/torque/fuelsmoothing/PluginService.kt"),
         )
         return candidates.first { it.isFile }.readText()
     }

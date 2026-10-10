@@ -1,4 +1,4 @@
-package org.dlang.torque.fordfuel
+package com.davidlang.torque.fuelsmoothing
 
 /**
  * Spec §3a rows 1–34. commandsFor emits only services 01, 09, 21, and 22.

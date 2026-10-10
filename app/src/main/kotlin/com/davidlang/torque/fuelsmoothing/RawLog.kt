@@ -1,4 +1,4 @@
-package org.dlang.torque.fordfuel
+package com.davidlang.torque.fuelsmoothing
 
 /**
  * One JSON object per second. fuelGal only increases by a positive dF.

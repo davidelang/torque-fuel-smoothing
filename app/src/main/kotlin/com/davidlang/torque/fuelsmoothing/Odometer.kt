@@ -1,4 +1,4 @@
-package org.dlang.torque.fordfuel
+package com.davidlang.torque.fuelsmoothing
 
 /**
  * odo = pin.miles + (counter − counterAtPin + resetOffset) × kmToMi.

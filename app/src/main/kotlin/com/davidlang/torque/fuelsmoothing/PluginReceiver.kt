@@ -1,4 +1,4 @@
-package org.dlang.torque.fordfuel
+package com.davidlang.torque.fuelsmoothing
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -84,7 +84,7 @@ internal object TapStartNotice {
         }
         val n = b.setContentTitle(context.getString(R.string.tap_to_start))
             .setContentText(context.getString(R.string.tap_to_start_text))
-            .setSmallIcon(R.drawable.ic_launcher)
+            .setSmallIcon(R.drawable.ic_stat_notify)
             .setContentIntent(pi)
             .setAutoCancel(true)
             .build()

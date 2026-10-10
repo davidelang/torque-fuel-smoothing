@@ -1,4 +1,4 @@
-package org.dlang.torque.fordfuel
+package com.davidlang.torque.fuelsmoothing
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -1097,7 +1097,7 @@ class PluginService : Service() {
         }
         return b.setContentTitle(getString(R.string.app_name))
             .setContentText(text)
-            .setSmallIcon(R.drawable.ic_launcher)
+            .setSmallIcon(R.drawable.ic_stat_notify)
             .setOngoing(true)
             .build()
     }

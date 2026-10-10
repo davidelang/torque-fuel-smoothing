@@ -2,14 +2,36 @@ plugins {
     id("com.android.application")
 }
 
+val officialBuild = project.findProperty("fuelsmoothing.official")?.toString() == "true" ||
+    System.getenv("FUELSMOOTHING_OFFICIAL") == "1"
+val applicationUser = System.getProperty("user.name").orEmpty()
+    .lowercase()
+    .replace(Regex("[^a-z0-9]"), "_")
+    .trim('_')
+    .ifBlank { "local" }
+val fuelsmoothingApplicationId = if (officialBuild) {
+    "com.davidlang.torque.fuelsmoothing"
+} else {
+    "com.$applicationUser.torque.fuelsmoothing"
+}
+
+val releaseStoreFile = System.getenv("FUELSMOOTHING_STORE_FILE")
+val releaseStorePassword = System.getenv("FUELSMOOTHING_STORE_PASSWORD")
+val releaseKeyAlias = System.getenv("FUELSMOOTHING_KEY_ALIAS")
+val releaseKeyPassword = System.getenv("FUELSMOOTHING_KEY_PASSWORD")
+val releaseSigningReady = !releaseStoreFile.isNullOrBlank() &&
+    !releaseStorePassword.isNullOrBlank() &&
+    !releaseKeyAlias.isNullOrBlank() &&
+    !releaseKeyPassword.isNullOrBlank()
+
 android {
-    namespace = "org.dlang.torque.fordfuel"
+    namespace = "com.davidlang.torque.fuelsmoothing"
     compileSdk = 36
     defaultConfig {
-        applicationId = "org.dlang.torque.fordfuel"
+        applicationId = fuelsmoothingApplicationId
         minSdk = 21
         targetSdk = 36
-        versionCode = 1
+        versionCode = file("versionCode.txt").readText().trim().toInt()
         val rawVersion = providers.exec {
             workingDir = project.rootDir
             commandLine(
@@ -19,6 +41,9 @@ android {
             )
         }.standardOutput.asText.orNull?.trim() ?: "dev"
         versionName = rawVersion
+        if (!officialBuild) {
+            resValue("string", "app_name", "Fuel Smoothing for Torque (local)")
+        }
     }
     val androidUserHome = System.getenv("ANDROID_USER_HOME")
         ?: error("ANDROID_USER_HOME unset; run ./build_app (sets worktree .android-shared)")
@@ -29,6 +54,14 @@ android {
             keyAlias = "androiddebugkey"
             keyPassword = "android"
         }
+        if (releaseSigningReady) {
+            create("release") {
+                storeFile = file(releaseStoreFile!!)
+                storePassword = releaseStorePassword
+                keyAlias = releaseKeyAlias
+                keyPassword = releaseKeyPassword
+            }
+        }
     }
     buildTypes {
         getByName("debug") {
@@ -36,6 +69,9 @@ android {
         }
         release {
             isMinifyEnabled = false
+            if (releaseSigningReady) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
     }
     compileOptions {

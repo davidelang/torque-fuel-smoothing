@@ -5,9 +5,9 @@ policies, Landlock helper, group-refresh shell, setup/update/fix tooling.
 
 ## Layout
 
-- `/home/dlang/git/torque-ford-gas-tracking/` — branch `orchestration` (managing tree)
-- `/home/dlang/git/torque-ford-gas-tracking/master/` — worktree on branch `master`
-- `/home/dlang/git/torque-ford-gas-tracking/sandbox/` — plans, research, PRs, failure logs
+- `@@ORCH_ROOT@@/` — branch `orchestration` (managing tree)
+- `@@ORCH_ROOT@@/master/` — worktree on branch `master`
+- `@@SANDBOX_PATH@@/` — plans, research, PRs, failure logs
 
 ## Quick start
 
