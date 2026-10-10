@@ -57,6 +57,10 @@ internal class SessionStore(context: Context, private val tank: Int = 1, rawDir:
     var gapOpen: Boolean = false
         private set
 
+    /** Committed JSONL lines not yet appended to [file]; flushed every FLUSH_MS and on close. */
+    private val pending = StringBuilder()
+    private var lastFlushMs = 0L
+
     fun open(
         t0: Long = System.currentTimeMillis(),
         profileId: String = this.profileId,
@@ -73,8 +77,10 @@ internal class SessionStore(context: Context, private val tank: Int = 1, rawDir:
         val f = File(dir, "$id.jsonl")
         gapOpen = if (f.isFile) gapOpenFromLog(f.readLines()) else false
         file = f
+        pending.setLength(0)
+        lastFlushMs = 0L
         rawLog.openLine(id, t0, profileId, tank, app, sources)
-        rewrite()
+        drain(t0, force = true)
         return id
     }
 
@@ -113,7 +119,7 @@ internal class SessionStore(context: Context, private val tank: Int = 1, rawDir:
             mode = if (sample.fill && sample.mode.isEmpty()) "FILL" else sample.mode,
             sm = sample.smoothedPct,
         )
-        rewrite()
+        drain(sample.t, force = false)
         samples.add(sample)
     }
 
@@ -129,12 +135,25 @@ internal class SessionStore(context: Context, private val tank: Int = 1, rawDir:
     fun mark(event: String, t: Long, extra: String = "") {
         if (file == null) return
         rawLog.event(event, t, extra)
-        rewrite()
+        drain(t, force = false)
     }
 
-    private fun rewrite() {
+    /**
+     * Append-only writer. Only lines RawLog has committed are written (takeNew); the open
+     * identical-level run stays in RawLog's memory until it closes or latches as frozen, so
+     * no line on disk is ever rewritten. Appends at most every FLUSH_MS, and always when forced.
+     */
+    private fun drain(nowMs: Long, force: Boolean) {
         val f = file ?: return
-        f.writeText(rawLog.rendered())
+        for (line in rawLog.takeNew()) pending.append(line).append('\n')
+        if (pending.isEmpty()) return
+        if (!force && nowMs - lastFlushMs < FLUSH_MS) return
+        runCatching { f.appendText(pending.toString()) }
+            .onSuccess {
+                pending.setLength(0)
+                lastFlushMs = nowMs
+            }
+            .onFailure { Log.w(TAG, "append ${f.name}: ${it.message}") }
     }
 
     fun close(t: Long = System.currentTimeMillis()): List<Sample> {
@@ -142,7 +161,7 @@ internal class SessionStore(context: Context, private val tank: Int = 1, rawDir:
         val id = sessionId
         val copy = samples.toList()
         rawLog.closeLine(t, copy.size)
-        rewrite()
+        drain(t, force = true)
         if (copy.isNotEmpty()) {
             val last = copy.last()
             snapshotFile.writeText(
@@ -167,6 +186,7 @@ internal class SessionStore(context: Context, private val tank: Int = 1, rawDir:
 
     companion object {
         private const val TAG = "FuelSmooth"
+        private const val FLUSH_MS = 10_000L
         private val FUEL_GAL = Regex("\"fuelGal\":([-+0-9.eE]+)")
 
         /** Gap still open at the end of [lines]: a gap event with no fuelGal increase after it. */

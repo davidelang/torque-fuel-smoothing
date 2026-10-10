@@ -10,6 +10,13 @@ internal data class FuelSource(
 )
 
 internal object FuelSources {
+    /**
+     * Level scale for liter-reporting sources: 100 "%" = 150 L. Covers the largest Toyota/Lexus
+     * tanks (~144 L) while keeping the % thresholds (fill jump 25 → 37.5 L, drop hold 15 → 22.5 L,
+     * near-empty 5 → 7.5 L) physically sensible.
+     */
+    const val LITERS_FULL_SCALE = 150.0
+
     val catalog: List<FuelSource> = listOf(
         FuelSource("sae_012f", "SAE 012F Fuel Tank Level", modePid = "012F"),
         FuelSource("ford_16c1", "Mode 22 16C1", longName = "[FORD]Fuel Level"),
@@ -71,9 +78,12 @@ internal object FuelSources {
             if (a != null) {
                 var pct = a * 100.0 / 255.0
                 if (src.litersToPct) {
-                    val tank = cfg.tankGal ?: cfg.learnedUsable
-                    pct = if (tank != null && tank > 0.0) a / (tank * Units.LITERS_PER_GAL) * 100.0 else Double.NaN
-                    if (pct.isNaN()) return Read(null, "toyota liters need tank gal", true)
+                    // Cluster reports absolute liters. Map them onto a FIXED level scale that never
+                    // depends on the user's tank guess or on learned capacity (either would change the
+                    // level unit across history). FuelV2's map is scale-free, so it learns gallons per
+                    // level unit from fuel burned; corrected % and remaining come from that model.
+                    pct = (a * 100.0 / LITERS_FULL_SCALE).coerceAtMost(100.0)
+                    return Read(pct, "bus ${src.header ?: ""} $cmd liters=$a (level = L/${LITERS_FULL_SCALE.toInt()})", false)
                 }
                 return Read(pct, "bus ${src.header ?: ""} $cmd", false)
             }

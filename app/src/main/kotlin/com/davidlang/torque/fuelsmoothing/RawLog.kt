@@ -101,14 +101,6 @@ internal class RawLog {
         return out.toList()
     }
 
-    /** Committed lines plus the still-open run, so each second is already on disk. */
-    fun rendered(): String {
-        val pending = if (latched) emptyList() else buf.map { sampleLine(it, it.ok, it.why) }
-        val lines = if (pending.isEmpty()) out else out + pending
-        if (lines.isEmpty()) return ""
-        return lines.joinToString("\n") + "\n"
-    }
-
     private fun closeRun() {
         if (!latched) {
             for (row in buf) out.add(sampleLine(row, row.ok, row.why))
