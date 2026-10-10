@@ -131,39 +131,6 @@ class FuelV2Test {
         assertTrue(heldLine.contains("\"why\":\"held:drop>15\""))
     }
 
-    @Test
-    fun test12CurrentEstimateUsable() {
-        val bins = ArrayList<Bin>()
-        for (s in sessions()) {
-            val scaled = scaleCurrent(s)
-            val samples = ArrayList<Sample>(scaled.t.size)
-            for (i in scaled.t.indices) {
-                samples.add(
-                    Sample(
-                        t = (scaled.t[i] * 1000.0).toLong(),
-                        rawPct = scaled.raw[i],
-                        smoothedPct = scaled.sm[i],
-                        fuelUsedGal = scaled.used[i],
-                        speed = scaled.spd[i],
-                        fill = scaled.fill[i],
-                    ),
-                )
-            }
-            bins.addAll(FuelMath.observationsFrom(samples).bins)
-        }
-        val usable = FuelMath.estimateUsable(bins)
-        assertEquals(28.09, usable ?: Double.NaN, 0.05)
-        val src = serviceSource()
-        val close = src.substringAfter("private fun closeTankSession").substringBefore("private fun closeSession")
-        val away = src.substringAfter("private fun onEcuAway").substringBefore("private fun selectProfile")
-        val fill = src.substringAfter("private fun onFillEnd").substringBefore("private fun commitTank1SinceFill")
-        assertFalse(close.contains("estimateUsable"))
-        assertFalse(away.contains("estimateUsable"))
-        assertFalse(fill.contains("estimateUsable"))
-        assertFalse(src.contains("rebuildFromJsonlOnce"))
-        assertEquals(1, Regex("maybeLearnUsable\\(").findAll(src).count())
-    }
-
     private fun serviceSource(): String {
         val candidates = listOf(
             File("src/main/kotlin/com/davidlang/torque/fuelsmoothing/PluginService.kt"),

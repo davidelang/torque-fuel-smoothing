@@ -223,9 +223,12 @@ internal object FuelV2 {
 
     fun gpp(level: Double, edges: DoubleArray, g: DoubleArray): Double = densityAt(level, edges, g)
 
-    /** Nameplate, else 100× median ΔF/ΔL on the first drives spanning ≥ 5%, else 30. */
+    /**
+     * Prior scale only (the fit's low-weight LAM_PRIOR pulls toward t0/100 per %).
+     * Data first: 100× median ΔF/ΔL on drives spanning ≥ 5%; the user's tank guess
+     * is a seed used only when there is no such data yet; else 30.
+     */
     fun chooseT0(nameplate: Double?, sessions: List<FuelSession>): Double {
-        if (nameplate != null && nameplate > 0.0) return nameplate
         val ratios = ArrayList<Double>()
         for (s in sessions) {
             if (s.sm.isEmpty() || s.used.isEmpty()) continue
@@ -240,8 +243,9 @@ internal object FuelV2 {
             val dF = s.used.last() - s.used.first()
             if (dL > 0.5 && dF > 0.0) ratios.add(dF / dL)
         }
-        if (ratios.isEmpty()) return 30.0
-        return 100.0 * median(ratios.toDoubleArray())
+        if (ratios.isNotEmpty()) return 100.0 * median(ratios.toDoubleArray())
+        if (nameplate != null && nameplate > 0.0) return nameplate
+        return 30.0
     }
 
     fun fuelSuspect(session: FuelSession, peers: List<FuelSession>): Boolean {
@@ -282,9 +286,8 @@ internal object FuelV2 {
         return TankPublish(r, remaining, corrected, mpgRecent, remaining * mpgRecent, r * mpgRecent)
     }
 
-    fun reserveGal(nameplate: Double?, cap: Double, rObs: Double): Double {
-        return if (nameplate != null && nameplate > 0.0) max(rObs, nameplate - cap) else rObs
-    }
+    /** Observed reserve below gauge 0 only. The user's tank guess is never used as a floor. */
+    fun reserveGal(rObs: Double): Double = if (rObs.isFinite()) rObs.coerceAtLeast(0.0) else 0.0
 
     private class Fit(
         val edges: DoubleArray,
@@ -646,6 +649,16 @@ internal object FuelV2 {
             if (hi - lo < 1.0) continue
             grp.add(
                 DoubleArray(keep.size) { f[keep[it]] / s0 } to DoubleArray(keep.size) { l[keep[it]] },
+            )
+        }
+        if (grp.isEmpty()) {
+            // No usable groups yet: the prior (flat t0/100 per %) is the answer, stated explicitly.
+            return Fit(
+                edges = edges.copyOf(),
+                g = DoubleArray(k) { s0 },
+                gUnc = DoubleArray(k) { s0 },
+                se = DoubleArray(k),
+                active = IntArray(0),
             )
         }
         var mLast = ident(k)

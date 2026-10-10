@@ -8,18 +8,35 @@ internal object TankSeed {
     private const val TAG = "FuelSmooth"
     private val KEYS = arrayOf("tankCapacity", "profileTankCapacity")
 
+    private val WITH_UNIT = Regex("^([0-9]+(?:\\.[0-9]+)?)\\s*([A-Za-z]+)\\.?$")
+
+    /**
+     * Gallons from a capacity string. The unit must be explicit ("70 L", "18.5 gal").
+     * A bare number is unknown and returns null; no magnitude-based liters guess.
+     */
     fun parseLitersOrGal(raw: String?): Double? {
-        val v = raw?.trim()?.toDoubleOrNull() ?: return null
+        val m = WITH_UNIT.matchEntire(raw?.trim() ?: return null) ?: return null
+        val v = m.groupValues[1].toDoubleOrNull() ?: return null
         if (v <= 0.0 || v.isNaN() || v.isInfinite()) return null
-        return if (v > 80.0) v * 0.264172052 else v
+        return when (m.groupValues[2].lowercase()) {
+            "gal", "gals", "gallon", "gallons" -> v
+            "l", "lt", "ltr", "liter", "liters", "litre", "litres" -> v * Units.GAL_PER_LITER
+            else -> null
+        }
+    }
+
+    /** Our own key is always written by persist() in gallons. */
+    private fun parseOwnGallons(raw: String?): Double? {
+        val s = raw?.trim() ?: return null
+        parseLitersOrGal(s)?.let { return it }
+        val v = s.toDoubleOrNull() ?: return null
+        return if (v > 0.0 && v.isFinite()) v else null
     }
 
     fun probe(t: ITorqueService): Pair<String, Double>? {
         for (k in KEYS) {
             val s = runCatching { t.getSettingString(k, "") }.getOrNull()
             parseLitersOrGal(s)?.let { return "getSettingString:$k" to it }
-            val i = runCatching { t.getSettingInt(k, -1) }.getOrNull() ?: -1
-            if (i > 0) parseLitersOrGal(i.toString())?.let { return "getSettingInt:$k" to it }
             val p = runCatching { t.retrieveProfileData(k) }.getOrNull()
             parseLitersOrGal(p)?.let { return "retrieveProfileData:$k" to it }
         }
@@ -27,11 +44,11 @@ internal object TankSeed {
     }
 
     fun loadPersisted(t: ITorqueService): Double? {
-        return parseLitersOrGal(runCatching { t.retrieveProfileData(PROFILE_KEY) }.getOrNull())
+        return parseOwnGallons(runCatching { t.retrieveProfileData(PROFILE_KEY) }.getOrNull())
     }
 
     fun persist(t: ITorqueService, gal: Double) {
-        runCatching { t.storeInProfile(PROFILE_KEY, gal.toString(), true) }
+        runCatching { t.storeInProfile(PROFILE_KEY, "$gal gal", true) }
     }
 
     fun seed(t: ITorqueService): Double? {

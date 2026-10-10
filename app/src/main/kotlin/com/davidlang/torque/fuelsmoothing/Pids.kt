@@ -103,16 +103,21 @@ internal object Pids {
         var fordByName: String? = null
         for (i in 0 until n) {
             val nm = csvName(infos[i])
-            if (nm.isNotEmpty()) names[nm] = all[i]
-            if (nm == FORD_FUEL_NAME) fordByName = all[i]
+            if (nm.isNotEmpty() && nm !in names) names[nm] = all[i]
+            if (nm == FORD_FUEL_NAME && fordByName == null) fordByName = all[i]
         }
         val storedPrefix = FORD_FUEL_STORED.lowercase()
         val ford = fordByName
-            ?: all.firstOrNull { it.equals(FORD_FUEL_STORED, ignoreCase = true) || it.lowercase().startsWith(storedPrefix) }
+            ?: all.firstOrNull { it.equals(FORD_FUEL_STORED, ignoreCase = true) }
+            ?: all.firstOrNull { it.lowercase().startsWith(storedPrefix) }
         fun pick(vararg ids: String): String? {
             val lower = all.map { it.lowercase() }
             for (id in ids) {
-                val i = lower.indexOfFirst { it == id.lowercase() || it.startsWith(id.lowercase()) }
+                val i = lower.indexOf(id.lowercase())
+                if (i >= 0) return all[i]
+            }
+            for (id in ids) {
+                val i = lower.indexOfFirst { it.startsWith(id.lowercase()) }
                 if (i >= 0) return all[i]
             }
             return null

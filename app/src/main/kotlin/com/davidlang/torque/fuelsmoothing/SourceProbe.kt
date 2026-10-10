@@ -142,8 +142,7 @@ internal object SourceProbe {
         return hex
     }
 
-    fun positive(response: String, command: String): Boolean {
-        val hex = response.uppercase().replace(Regex("[^0-9A-F]"), "")
+    fun positive(lines: List<String>, command: String): Boolean {
         val echo = when (command.take(2)) {
             "01" -> "41" + command.drop(2).take(2)
             "09" -> "49" + command.drop(2).take(2)
@@ -151,7 +150,7 @@ internal object SourceProbe {
             "22" -> "62" + command.drop(2).take(4)
             else -> return false
         }
-        return hex.contains(echo)
+        return lines.any { ObdReply.payloadAfter(it, echo) != null }
     }
 
     fun plausibleKm(km: Double): Boolean = km in 100.0..2_000_000.0
@@ -166,5 +165,38 @@ internal object SourceProbe {
             if (prefixes.any { vinUp.startsWith(it) }) return true
         }
         return false
+    }
+}
+
+/**
+ * One OBD reply line: optional CAN header (11-bit "7E8", 29-bit "18DAF110"),
+ * optional single-frame PCI byte, then the positive-response marker.
+ * The marker must start the payload; matching anywhere in the line is not accepted.
+ */
+internal object ObdReply {
+    private val HEX_LINE = Regex("^[0-9A-Fa-f ]+$")
+    private val OFFSETS = intArrayOf(0, 2, 3, 5, 8, 10)
+
+    /** Hex after the marker, or null when this line is not a reply to it. */
+    fun payloadAfter(line: String?, marker: String): String? {
+        if (line == null) return null
+        val t = line.trim()
+        if (t.isEmpty() || !HEX_LINE.matches(t)) return null
+        val hex = t.replace(" ", "").uppercase()
+        val m = marker.replace(" ", "").uppercase()
+        for (off in OFFSETS) {
+            if (off == 2 && !pciAt(hex, 0)) continue
+            if (off == 5 && !pciAt(hex, 3)) continue
+            if (off == 10 && !pciAt(hex, 8)) continue
+            if (hex.startsWith(m, off)) return hex.substring(off + m.length)
+        }
+        return null
+    }
+
+    /** ISO-TP single frame: high nibble 0, length 1..7. */
+    private fun pciAt(hex: String, i: Int): Boolean {
+        if (i + 2 > hex.length) return false
+        val b = hex.substring(i, i + 2).toIntOrNull(16) ?: return false
+        return b in 1..7
     }
 }

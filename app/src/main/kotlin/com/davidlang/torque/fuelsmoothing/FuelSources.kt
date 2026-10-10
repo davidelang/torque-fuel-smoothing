@@ -72,7 +72,7 @@ internal object FuelSources {
                 var pct = a * 100.0 / 255.0
                 if (src.litersToPct) {
                     val tank = cfg.tankGal ?: cfg.learnedUsable
-                    pct = if (tank != null && tank > 0.0) a / tank * 100.0 else Double.NaN
+                    pct = if (tank != null && tank > 0.0) a / (tank * Units.LITERS_PER_GAL) * 100.0 else Double.NaN
                     if (pct.isNaN()) return Read(null, "toyota liters need tank gal", true)
                 }
                 return Read(pct, "bus ${src.header ?: ""} $cmd", false)
@@ -96,10 +96,11 @@ internal object FuelSources {
 
     private fun parseAAfter(resp: Array<String>?, marker: String): Int? {
         if (resp == null || resp.isEmpty()) return null
-        val joined = resp.joinToString("") { it.replace(" ", "").uppercase() }
-        val m = marker.replace(" ", "").uppercase()
-        val i = joined.indexOf(m)
-        if (i < 0 || i + m.length + 2 > joined.length) return null
-        return joined.substring(i + m.length, i + m.length + 2).toIntOrNull(16)
+        for (line in resp) {
+            val hex = ObdReply.payloadAfter(line, marker) ?: continue
+            if (hex.length < 2) continue
+            return hex.substring(0, 2).toIntOrNull(16)
+        }
+        return null
     }
 }

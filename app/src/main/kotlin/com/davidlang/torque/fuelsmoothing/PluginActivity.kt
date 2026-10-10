@@ -300,6 +300,7 @@ class PluginActivity : Activity() {
         setIfBlankOrInit(jump, c.jumpPct.toString())
         val tankStr = c.tankGal?.toString() ?: ""
         if (tank.text.toString() != tankStr && !tank.isFocused) tank.setText(tankStr)
+        showStoredInvalid(c)
         estimated.text = if (c.tankEstimated) "Tank shown is estimated usable from mapping." else ""
         val st = c.sourceStatus
         val lv = FixFuelPrefs.live(this)
@@ -475,16 +476,64 @@ class PluginActivity : Activity() {
         }
     }
 
+    private val normalColors = HashMap<EditText, android.content.res.ColorStateList>()
+
+    /** Red text + error hint when invalid; restores the original colour when valid. Returns ok. */
+    private fun markField(e: EditText, ok: Boolean, msg: String): Boolean {
+        val normal = normalColors.getOrPut(e) { e.textColors }
+        if (ok) {
+            if (e.error != null) e.error = null
+            e.setTextColor(normal)
+        } else {
+            e.setTextColor(android.graphics.Color.RED)
+            e.error = msg
+        }
+        return ok
+    }
+
+    /** Range-checks the numeric settings; invalid fields are shown in red and nothing is saved. */
+    private fun formValid(): Boolean {
+        var ok = true
+        ok = markField(tau, FixFuelPrefs.tauOk(tau.text.toString().trim().toDoubleOrNull()),
+            "0 to ${FixFuelPrefs.MAX_TAU} s") && ok
+        ok = markField(skew, FixFuelPrefs.skewOk(skew.text.toString().trim().toDoubleOrNull()),
+            "above 0, at most ${FixFuelPrefs.MAX_SKEW} %/s") && ok
+        ok = markField(jump, FixFuelPrefs.jumpOk(jump.text.toString().trim().toDoubleOrNull()),
+            "${FixFuelPrefs.MIN_JUMP} to ${FixFuelPrefs.MAX_JUMP} %") && ok
+        ok = markField(tank, FixFuelPrefs.tankOk(tank.text.toString()), "blank or a number above 0") && ok
+        for (card in extraCards) {
+            ok = markField(card.tank, FixFuelPrefs.tankOk(card.tank.text.toString()), "blank or a number above 0") && ok
+        }
+        return ok
+    }
+
+    /** Stored values that load() flagged: show the raw text in red so the user can fix it. */
+    private fun showStoredInvalid(c: FixFuelConfig) {
+        fun show(key: String, e: EditText) {
+            val raw = c.invalid[key] ?: return
+            if (!e.isFocused && e.text.toString() != raw) e.setText(raw)
+            markField(e, false, "stored value out of range")
+        }
+        show(FixFuelPrefs.KEY_TAU, tau)
+        show(FixFuelPrefs.KEY_SKEW, skew)
+        show(FixFuelPrefs.KEY_JUMP, jump)
+        show(FixFuelPrefs.KEY_TANK, tank)
+    }
+
     private fun persist() {
+        if (!formValid()) {
+            Log.i(TAG, "settings not saved: out-of-range field(s) shown in red")
+            return
+        }
         val src = FuelSources.catalog.getOrNull(sourceSpinner.selectedItemPosition)?.id ?: FixFuelPrefs.DEFAULT_SOURCE
         FixFuelPrefs.save(
             this,
             sourceId = src,
             customName = customName.text.toString().trim(),
-            tauSec = tau.text.toString().toDoubleOrNull() ?: FixFuelPrefs.DEFAULT_TAU,
-            skewPctPerSec = skew.text.toString().toDoubleOrNull() ?: FixFuelPrefs.DEFAULT_SKEW,
-            jumpPct = jump.text.toString().toDoubleOrNull() ?: FixFuelPrefs.DEFAULT_JUMP,
-            tankGal = tank.text.toString().toDoubleOrNull(),
+            tauSec = tau.text.toString().trim().toDouble(),
+            skewPctPerSec = skew.text.toString().trim().toDouble(),
+            jumpPct = jump.text.toString().trim().toDouble(),
+            tankGal = tank.text.toString().trim().toDoubleOrNull(),
             extras = extrasFromCards(),
             activeTank = activeTankFromSpinner(),
             selectPidName = selectPid.text.toString().trim(),

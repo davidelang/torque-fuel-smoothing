@@ -50,6 +50,13 @@ internal class SessionStore(context: Context, private val tank: Int = 1, rawDir:
 
     val isOpen: Boolean get() = file != null
 
+    /**
+     * True after a "gap" entry until a later sample shows fuel burned. Derived from the
+     * session file itself on open, so a restart that reuses a file cannot stack gap entries.
+     */
+    var gapOpen: Boolean = false
+        private set
+
     fun open(
         t0: Long = System.currentTimeMillis(),
         profileId: String = this.profileId,
@@ -64,6 +71,7 @@ internal class SessionStore(context: Context, private val tank: Int = 1, rawDir:
         samples.clear()
         rawLog = RawLog()
         val f = File(dir, "$id.jsonl")
+        gapOpen = if (f.isFile) gapOpenFromLog(f.readLines()) else false
         file = f
         rawLog.openLine(id, t0, profileId, tank, app, sources)
         rewrite()
@@ -90,6 +98,7 @@ internal class SessionStore(context: Context, private val tank: Int = 1, rawDir:
             if (d.isFinite() && d > 0.0) d else 0.0
         }
         rawLog.addDelta(dF)
+        if (dF > 0.0) gapOpen = false
         rawLog.sample(
             t = sample.t,
             lvl = sample.rawPct,
@@ -106,6 +115,14 @@ internal class SessionStore(context: Context, private val tank: Int = 1, rawDir:
         )
         rewrite()
         samples.add(sample)
+    }
+
+    /** Writes one gap entry unless one is already open (no burn since). Returns true if written. */
+    fun markGap(t: Long, dtSec: Double): Boolean {
+        if (file == null || gapOpen) return false
+        mark("gap", t, "\"dtSec\":${"%.1f".format(java.util.Locale.ROOT, dtSec)}")
+        gapOpen = true
+        return true
     }
 
     /** Marker only. fuelGal stays where the last sample left it. */
@@ -150,49 +167,22 @@ internal class SessionStore(context: Context, private val tank: Int = 1, rawDir:
 
     companion object {
         private const val TAG = "FuelSmooth"
-        private const val LITER_GPH = 0.264172052
-        private const val LITER_MEAN_GPH = 8.0
+        private val FUEL_GAL = Regex("\"fuelGal\":([-+0-9.eE]+)")
 
-        fun loadSmoothedSamples(file: File): List<Sample>? {
-            if (!file.isFile) return null
-            val samples = mutableListOf<Sample>()
-            var sawSmoothed = false
-            runCatching {
-                file.forEachLine { line ->
-                    if (line.isBlank()) return@forEachLine
-                    val o = JSONObject(line)
-                    if (o.has("event") || !o.has("t")) return@forEachLine
-                    if (o.has("smoothedPct")) sawSmoothed = true
-                    val raw = o.optDouble("rawPct", Double.NaN)
-                    val sm = o.optDouble("smoothedPct", raw)
-                    if (!sm.isFinite()) return@forEachLine
-                    samples.add(
-                        Sample(
-                            t = o.optLong("t"),
-                            rawPct = if (raw.isFinite()) raw else sm,
-                            smoothedPct = sm,
-                            fuelUsedGal = o.optDouble("fuelUsedGal", 0.0),
-                            speed = o.optDouble("speed", 0.0),
-                            fill = o.optBoolean("fill", false),
-                        ),
-                    )
+        /** Gap still open at the end of [lines]: a gap event with no fuelGal increase after it. */
+        fun gapOpenFromLog(lines: List<String>): Boolean {
+            var open = false
+            var prev: Double? = null
+            for (line in lines) {
+                if (line.contains("\"event\":\"gap\"")) {
+                    open = true
+                    continue
                 }
-            }.onFailure { Log.w(TAG, "jsonl ${file.name}: ${it.message}") }
-            if (!sawSmoothed || samples.size < 2) return null
-            return scaleIfLiterSession(samples)
-        }
-
-        private fun scaleIfLiterSession(samples: List<Sample>): List<Sample> {
-            val first = samples.first()
-            val last = samples.last()
-            val hours = (last.t - first.t) / 3_600_000.0
-            if (hours < 1.0 / 60.0) return samples
-            val used = last.fuelUsedGal - first.fuelUsedGal
-            if (used <= 0.0) return samples
-            val gph = used / hours
-            if (gph <= LITER_MEAN_GPH) return samples
-            Log.i(TAG, "jsonl liter-scale meanGph=${"%.2f".format(gph)} × $LITER_GPH")
-            return samples.map { it.copy(fuelUsedGal = it.fuelUsedGal * LITER_GPH) }
+                val fg = FUEL_GAL.find(line)?.groupValues?.get(1)?.toDoubleOrNull() ?: continue
+                if (prev != null && fg > prev) open = false
+                prev = fg
+            }
+            return open
         }
     }
 }
@@ -200,7 +190,6 @@ internal class SessionStore(context: Context, private val tank: Int = 1, rawDir:
 internal object Units {
     const val GAL_PER_LITER = 0.264172052
     const val LITERS_PER_GAL = 3.785411784
-    const val IMPLAUSIBLE_GPH = 8.0
 
     fun toGallons(value: Double, unit: String): Double {
         val u = unit.lowercase().replace(" ", "")
@@ -209,10 +198,6 @@ internal object Units {
             u.contains("cc") || u.contains("ml") -> value * 0.000264172052
             else -> value * GAL_PER_LITER
         }
-    }
-
-    fun looksLikeGallons(unit: String): Boolean {
-        return unit.lowercase().replace(" ", "").contains("gal")
     }
 
     fun prefersLiters(preferred: String): Boolean {

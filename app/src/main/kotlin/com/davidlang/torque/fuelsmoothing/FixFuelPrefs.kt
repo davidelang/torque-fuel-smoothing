@@ -30,6 +30,8 @@ internal data class FixFuelConfig(
     val selectPidName: String = "",
     val showFuelNotification: Boolean = true,
     val write012f: Boolean = true,
+    /** Stored values that failed validation: pref key -> raw stored text. Runtime uses defaults for these. */
+    val invalid: Map<String, String> = emptyMap(),
 ) {
     val tank2Enabled: Boolean get() = extras.any { it.id == 2 }
     private val extra2: ExtraTank? get() = extras.firstOrNull { it.id == 2 }
@@ -80,20 +82,63 @@ internal object FixFuelPrefs {
     const val DEFAULT_JUMP = 25.0
     const val MAX_TANKS = 8
 
+    const val MIN_JUMP = 10.0
+    const val MAX_JUMP = 100.0
+    const val MAX_TAU = 600.0
+    const val MAX_SKEW = 10.0
+
+    /** Smoothing time constant: finite, 0..MAX_TAU. */
+    fun tauOk(v: Double?): Boolean = v != null && v.isFinite() && v >= 0.0 && v <= MAX_TAU
+
+    /** Slew limit: finite and > 0 (0 would freeze the smoothed level). */
+    fun skewOk(v: Double?): Boolean = v != null && v.isFinite() && v > 0.0 && v <= MAX_SKEW
+
+    /** Fill jump: below MIN_JUMP any slosh while stopped would enter FILL. */
+    fun jumpOk(v: Double?): Boolean = v != null && v.isFinite() && v >= MIN_JUMP && v <= MAX_JUMP
+
+    /** Tank guess: blank (null) is allowed; otherwise finite and > 0. */
+    fun tankOk(raw: String): Boolean {
+        val t = raw.trim()
+        if (t.isEmpty()) return true
+        val v = t.toDoubleOrNull() ?: return false
+        return v.isFinite() && v > 0.0
+    }
+
+    /** Corrupt stored value: log, record it in [invalid], and fall back to [def] for runtime only. */
+    private fun checked(
+        p: SharedPreferences,
+        key: String,
+        def: Double,
+        ok: (Double?) -> Boolean,
+        invalid: MutableMap<String, String>,
+    ): Double {
+        val raw = p.getString(key, def.toString()) ?: def.toString()
+        val v = raw.trim().toDoubleOrNull()
+        if (ok(v)) return v!!
+        invalid[key] = raw
+        android.util.Log.w("FuelSmooth", "stored $key=\"$raw\" is out of range; using $def until corrected in settings")
+        return def
+    }
+
     fun prefs(ctx: Context): SharedPreferences = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
     fun load(ctx: Context): FixFuelConfig {
         val p = prefs(ctx)
+        val invalid = LinkedHashMap<String, String>()
         val tankRaw = p.getString(KEY_TANK, "") ?: ""
-        val tank = tankRaw.toDoubleOrNull()?.takeIf { it > 0.0 }
+        val tank = tankRaw.toDoubleOrNull()?.takeIf { it.isFinite() && it > 0.0 }
+        if (!tankOk(tankRaw)) {
+            invalid[KEY_TANK] = tankRaw
+            android.util.Log.w("FuelSmooth", "stored $KEY_TANK=\"$tankRaw\" is invalid; treated as no tank guess")
+        }
         val learnedRaw = p.getString(KEY_LEARNED, "") ?: ""
         val learned = learnedRaw.toDoubleOrNull()?.takeIf { it > 0.0 }
         return FixFuelConfig(
             sourceId = p.getString(KEY_SOURCE, DEFAULT_SOURCE) ?: DEFAULT_SOURCE,
             customName = p.getString(KEY_CUSTOM, "") ?: "",
-            tauSec = p.getString(KEY_TAU, DEFAULT_TAU.toString())?.toDoubleOrNull() ?: DEFAULT_TAU,
-            skewPctPerSec = p.getString(KEY_SKEW, DEFAULT_SKEW.toString())?.toDoubleOrNull() ?: DEFAULT_SKEW,
-            jumpPct = p.getString(KEY_JUMP, DEFAULT_JUMP.toString())?.toDoubleOrNull() ?: DEFAULT_JUMP,
+            tauSec = checked(p, KEY_TAU, DEFAULT_TAU, ::tauOk, invalid),
+            skewPctPerSec = checked(p, KEY_SKEW, DEFAULT_SKEW, ::skewOk, invalid),
+            jumpPct = checked(p, KEY_JUMP, DEFAULT_JUMP, ::jumpOk, invalid),
             tankGal = tank,
             learnedUsable = learned,
             tankEstimated = p.getBoolean(KEY_ESTIMATED, false),
@@ -103,6 +148,7 @@ internal object FixFuelPrefs {
             selectPidName = p.getString(KEY_SELECT_PID, "") ?: "",
             showFuelNotification = p.getBoolean(KEY_SHOW_NOTICE, true),
             write012f = p.getBoolean(KEY_WRITE_012F, true),
+            invalid = invalid,
         )
     }
 
@@ -126,7 +172,7 @@ internal object FixFuelPrefs {
             .putString(KEY_TAU, tauSec.toString())
             .putString(KEY_SKEW, skewPctPerSec.toString())
             .putString(KEY_JUMP, jumpPct.toString())
-        if (tankGal != null && tankGal > 0.0) e.putString(KEY_TANK, tankGal.toString())
+        if (tankGal != null && tankGal.isFinite() && tankGal > 0.0) e.putString(KEY_TANK, tankGal.toString())
         else e.putString(KEY_TANK, "")
         e.putString(KEY_EXTRAS, extrasToJson(extras))
             .putString(KEY_ACTIVE, normalizeActive(activeTank))
@@ -170,32 +216,8 @@ internal object FixFuelPrefs {
         e.putString(KEY_SINCE_FILL, used.toString()).apply()
     }
 
-    fun setLearnedUsable(ctx: Context, gal: Double) {
-        prefs(ctx).edit()
-            .putString(KEY_LEARNED, gal.toString())
-            .putString(KEY_TANK, gal.toString())
-            .putBoolean(KEY_ESTIMATED, true)
-            .apply()
-    }
-
-    fun setLearnedUsable2(ctx: Context, gal: Double) {
-        setLearnedUsableExtra(ctx, 2, gal)
-    }
-
     fun setSourceStatus2(ctx: Context, status: String) {
         setExtraSourceStatus(ctx, 2, status)
-    }
-
-    fun setLearnedUsableExtra(ctx: Context, id: Int, gal: Double) {
-        if (id <= 1) {
-            setLearnedUsable(ctx, gal)
-            return
-        }
-        val p = prefs(ctx)
-        val extras = parseExtras(p.getString(KEY_EXTRAS, "[]") ?: "[]").map { t ->
-            if (t.id == id) t.copy(learnedUsable = gal, tankGal = gal, tankEstimated = true) else t
-        }
-        p.edit().putString(KEY_EXTRAS, extrasToJson(extras)).apply()
     }
 
     fun setExtraSourceStatus(ctx: Context, id: Int, status: String) {

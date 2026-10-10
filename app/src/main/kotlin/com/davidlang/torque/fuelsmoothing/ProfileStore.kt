@@ -72,6 +72,10 @@ internal object ProfileStore {
         return fieldString(f.readText(), "profileId") ?: DEFAULT_ID
     }
 
+    fun setActiveId(root: File, id: String) {
+        File(root, "active-profile.json").writeText("{\"profileId\":${jsonString(id)}}")
+    }
+
     fun profileDir(root: File, id: String = activeId(root)): File = File(root, "profiles/$id")
 
     fun tankDir(root: File, profileId: String, tank: Int): File {
@@ -180,11 +184,15 @@ internal object ProfileStore {
         val raw = File(dir, "raw")
         val sessions = if (raw.isDirectory) FuelV2.loadSessions(raw) else emptyList()
         val t0 = FuelV2.chooseT0(nameplate, sessions)
-        val model = if (sessions.isEmpty()) {
+        val fitted = if (sessions.isEmpty()) {
             null
         } else {
-            runCatching { FuelV2.replay(sessions, 1.0, t0) }.getOrNull()
+            runCatching { FuelV2.replay(sessions, 1.0, t0) }
+                .onFailure { android.util.Log.w("FuelSmooth", "replay failed; keeping model.json: ${it.message}") }
+                .getOrNull()
         }
+        // A replay with zero chunks is just the prior; do not let it replace a learned model.
+        val model = fitted?.takeIf { it.chunks > 0 || !File(dir, "model.json").isFile }
         if (model != null) {
             File(dir, "model.json").writeText(model.json)
             val chunksOut = File(dir, "chunks.jsonl")
@@ -207,7 +215,8 @@ internal object ProfileStore {
                     fillsOut.appendText("{\"sessionId\":${jsonString(s.name)},\"t\":${s.t.first()}}\n")
                 }
             }
-        } else {
+        } else if (!File(dir, "model.json").isFile) {
+            // Seed only. A failed or empty replay must not overwrite a previously learned model.
             val cap = (if (nameplate != null && nameplate > 0.0) nameplate else t0) * 0.95 * 1.07
             File(dir, "model.json").writeText(
                 "{\"active\":[],\"capToZero\":$cap,\"chunks\":0,\"edges\":[0.0,95.0],\"g\":[${t0 / 100.0}],\"gUnc\":[${t0 / 100.0}],\"nMin\":28,\"se\":[0.0],\"sigmaQ\":1.1,\"tau\":3.5}",
