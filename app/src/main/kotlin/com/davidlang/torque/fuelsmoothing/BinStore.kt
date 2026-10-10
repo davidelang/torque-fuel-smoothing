@@ -11,7 +11,6 @@ internal class BinStore(
     private val context: Context,
     fileName: String = "bins.json",
     private val profileKey: String = "${Pids.PREFIX}bins",
-    clearLegacy: Boolean = true,
 ) {
     private val file = File(context.filesDir, fileName)
     val bins: MutableList<Bin> = mutableListOf()
@@ -19,7 +18,6 @@ internal class BinStore(
         private set
 
     init {
-        if (clearLegacy) clearLegacyOnce(context)
         loadFile()
     }
 
@@ -95,20 +93,8 @@ internal class BinStore(
 
     companion object {
         private const val TAG = "FordFuel"
-        private const val KEY_V2 = "bins_v2"
         private const val KEY_V3 = "bins_v3_chunk_units"
         private const val KEY_V4 = "bins_v4_slosh"
-
-        fun clearLegacyOnce(ctx: Context) {
-            val p = FixFuelPrefs.prefs(ctx)
-            if (p.getBoolean(KEY_V2, false)) return
-            val f = File(ctx.filesDir, "bins.json")
-            if (f.isFile) {
-                val ok = f.delete()
-                Log.i(TAG, "unlinked legacy bins.json ok=$ok")
-            }
-            p.edit().putBoolean(KEY_V2, true).apply()
-        }
 
         data class Parsed(val bins: List<Bin>, val reserveGal: Double)
 

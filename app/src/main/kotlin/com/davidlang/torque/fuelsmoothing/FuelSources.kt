@@ -12,7 +12,7 @@ internal data class FuelSource(
 internal object FuelSources {
     val catalog: List<FuelSource> = listOf(
         FuelSource("sae_012f", "SAE 012F Fuel Tank Level", modePid = "012F"),
-        FuelSource("ford_16c1", "Ford FLI 16C1 (default)", longName = "[FORD]Fuel Level"),
+        FuelSource("ford_16c1", "Mode 22 16C1", longName = "[FORD]Fuel Level"),
         FuelSource("ford_f42f", "Ford Mode 22 F42F", longName = null, modePid = "22F42F"),
         FuelSource("gm_12c5", "GM Mode 22 12C5 %", modePid = "2212C5"),
         FuelSource("chrysler_21a2", "Chrysler 21A2 %", modePid = "21A2"),

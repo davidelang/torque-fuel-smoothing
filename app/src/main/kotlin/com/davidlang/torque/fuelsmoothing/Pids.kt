@@ -3,7 +3,7 @@ package com.davidlang.torque.fuelsmoothing
 import org.prowl.torque.remote.ITorqueService
 
 internal object Pids {
-    const val PREFIX = "org.dlang.torque.fordfuel."
+    val PREFIX: String get() = BuildConfig.APPLICATION_ID + "."
     const val FORD_FUEL_NAME = "[FORD]Fuel Level"
     const val FORD_FUEL_STORED = "2234049"
     const val SPEED = "0d"
@@ -14,26 +14,18 @@ internal object Pids {
     const val LONG_TERM_MPG = "ff5201"
     const val DTE = "ff126a"
 
-    const val PLUGIN_SMOOTHED = "[FixFuel] Smoothed Fuel Level"
-    const val PLUGIN_CORRECTED = "[FixFuel] Corrected Fuel Level"
-    const val PLUGIN_REMAINING = "[FixFuel] Fuel Remaining"
-    const val PLUGIN_DTE = "[FixFuel] Plugin DTE"
-    const val ALIAS_FORD = "[OldFord] Ford Fuel"
-    const val ALIAS_SMOOTHED = "[OldFord] Smoothed Fuel Level"
-    const val ALIAS_REMAINING = "[OldFord] Fuel Remaining"
-    const val ALIAS_DTE = "[OldFord] Plugin DTE"
-    const val PLUGIN_T2_SMOOTHED = "[FixFuel] Tank2 Smoothed"
-    const val PLUGIN_T2_CORRECTED = "[FixFuel] Tank2 Corrected"
-    const val PLUGIN_T2_REMAINING = "[FixFuel] Tank2 Remaining"
-    const val PLUGIN_T2_DTE = "[FixFuel] Tank2 DTE"
+    const val PLUGIN_SMOOTHED = "[FuelSmooth] Smoothed Fuel Level"
+    const val PLUGIN_CORRECTED = "[FuelSmooth] Corrected Fuel Level"
+    const val PLUGIN_REMAINING = "[FuelSmooth] Fuel Remaining"
+    const val PLUGIN_DTE = "[FuelSmooth] Plugin DTE"
+    const val PLUGIN_T2_SMOOTHED = "[FuelSmooth] Tank2 Smoothed"
+    const val PLUGIN_T2_CORRECTED = "[FuelSmooth] Tank2 Corrected"
+    const val PLUGIN_T2_REMAINING = "[FuelSmooth] Tank2 Remaining"
+    const val PLUGIN_T2_DTE = "[FuelSmooth] Tank2 DTE"
     const val MODE_SMOOTHED = "ffd001"
     const val MODE_CORRECTED = "ffd002"
     const val MODE_REMAINING = "ffd003"
     const val MODE_DTE = "ffd004"
-    const val MODE_ALIAS_SMOOTHED = "ffd011"
-    const val MODE_ALIAS_FORD = "ffd012"
-    const val MODE_ALIAS_REMAINING = "ffd013"
-    const val MODE_ALIAS_DTE = "ffd014"
 
     fun extraModePid(id: Int, which: Int): String {
         check(id in 2..8 && which in 1..4)
@@ -66,10 +58,10 @@ internal object Pids {
             )
         }
         return ExtraPidNames(
-            "[FixFuel] Tank${id} Smoothed",
-            "[FixFuel] Tank${id} Corrected",
-            "[FixFuel] Tank${id} Remaining",
-            "[FixFuel] Tank${id} DTE",
+            "[FuelSmooth] Tank${id} Smoothed",
+            "[FuelSmooth] Tank${id} Corrected",
+            "[FuelSmooth] Tank${id} Remaining",
+            "[FuelSmooth] Tank${id} DTE",
             "T${id}Sm",
             "T${id}Corr",
             "T${id}Gal",

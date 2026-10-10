@@ -5,23 +5,17 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.ComponentName
-import android.content.ContentUris
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.ServiceInfo
-import android.net.Uri
 import android.os.Build
-import android.os.Environment
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import android.provider.MediaStore
 import android.util.Log
 import org.prowl.torque.remote.ITorqueService
 import java.io.File
-import java.io.FileOutputStream
 import java.util.ArrayDeque
 import kotlin.math.ceil
 import kotlin.math.roundToInt
@@ -212,7 +206,6 @@ class PluginService : Service() {
         runCatching { tanks[1]?.bins?.loadFromProfile(t) }
         nameplateGal = TankSeed.seed(t)
         registerPluginPids(t)
-        OverrideCsv.export(this)
         handler.removeCallbacks(poll)
         handler.post(poll)
     }
@@ -544,10 +537,6 @@ class PluginService : Service() {
         row(Pids.PLUGIN_CORRECTED, "CorrFuel", "%", 100f, Pids.MODE_CORRECTED)
         row(Pids.PLUGIN_REMAINING, "GalLeft", remainUnit, remainMax, Pids.MODE_REMAINING)
         row(Pids.PLUGIN_DTE, "pDTE", "mi", 500f, Pids.MODE_DTE)
-        row(Pids.ALIAS_SMOOTHED, "SmFuel", "%", 100f, Pids.MODE_ALIAS_SMOOTHED)
-        row(Pids.ALIAS_FORD, "PFord", "%", 100f, Pids.MODE_ALIAS_FORD)
-        row(Pids.ALIAS_REMAINING, "GalLeft", remainUnit, remainMax, Pids.MODE_ALIAS_REMAINING)
-        row(Pids.ALIAS_DTE, "pDTE", "mi", 500f, Pids.MODE_ALIAS_DTE)
         for (extra in cfg.extras) {
             val n = Pids.extraPidNames(extra.id)
             val tmax = remainingScale(extra.learnedUsable ?: extra.tankGal)
@@ -561,7 +550,7 @@ class PluginService : Service() {
         val eq = Array(count) { "" }
         val diag = arrayOfNulls<String>(count)
         val ok = t.sendPIDDataV2(
-            "org.dlang.torque.fordfuel",
+            BuildConfig.APPLICATION_ID,
             names.toTypedArray(),
             shorts.toTypedArray(),
             modes.toTypedArray(),
@@ -618,10 +607,6 @@ class PluginService : Service() {
         setPid(t, Pids.PLUGIN_CORRECTED, "CorrFuel", "%", rmax = 100f, value = corrected.toFloat())
         setPid(t, Pids.PLUGIN_REMAINING, "GalLeft", vu, rmax = rmax, value = vol)
         setPid(t, Pids.PLUGIN_DTE, "pDTE", "mi", rmax = 500f, value = dte.toFloat())
-        setPid(t, Pids.ALIAS_SMOOTHED, "SmFuel", "%", rmax = 100f, value = smoothed.toFloat())
-        setPid(t, Pids.ALIAS_FORD, "PFord", "%", rmax = 100f, value = corrected.toFloat())
-        setPid(t, Pids.ALIAS_REMAINING, "GalLeft", vu, rmax = rmax, value = vol)
-        setPid(t, Pids.ALIAS_DTE, "pDTE", "mi", rmax = 500f, value = dte.toFloat())
     }
 
     private fun writeStockFuelLevel(t: ITorqueService, corrected: Double) {
@@ -978,7 +963,6 @@ class PluginService : Service() {
                     this,
                     fileName = "bins-t$id.json",
                     profileKey = "${Pids.PREFIX}bins_t$id",
-                    clearLegacy = false,
                 ),
             )
         }
@@ -1166,7 +1150,7 @@ class PluginService : Service() {
         const val ACTION_OBD_DISCONNECTED = "org.prowl.torque.OBD_DISCONNECTED"
         const val ACTION_PID_QUERY = "org.prowl.torque.PID_QUERY"
         const val ACTION_PID_PLUGIN = "org.prowl.torque.PID_PLUGIN"
-        const val ACTION_DETECT = "org.dlang.torque.fordfuel.DETECT"
+        val ACTION_DETECT: String get() = BuildConfig.APPLICATION_ID + ".DETECT"
 
         @Volatile
         var ecuConnected: Boolean = false
@@ -1174,103 +1158,5 @@ class PluginService : Service() {
 
         @Volatile
         var isRunning: Boolean = false
-    }
-}
-
-/** Writes the override extra-PID CSV to picker-visible Downloads. Not sendPIDDataV2. */
-internal object OverrideCsv {
-    const val FILE_NAME = "FixFuel-012F.csv"
-    private const val ASSET = "FixFuel-012F.csv"
-    private const val TAG = "FordFuel"
-
-    fun export(ctx: Context) {
-        val bytes = runCatching {
-            ctx.assets.open(ASSET).use { it.readBytes() }
-        }.getOrElse {
-            Log.w(TAG, "override csv asset missing: ${it.message}")
-            return
-        }
-        val dl = writeDownloads(ctx, bytes)
-        Log.i(TAG, "override csv Downloads=$dl")
-        val ext = copyTorqueExtended(ctx, bytes)
-        Log.i(TAG, "override csv extendedpids=$ext")
-    }
-
-    private fun writeDownloads(ctx: Context, bytes: ByteArray): String {
-        if (Build.VERSION.SDK_INT >= 29) {
-            return runCatching { writeMediaStore(ctx, bytes) }
-                .getOrElse { "mediastore-fail ${it.message}" }
-        }
-        @Suppress("DEPRECATION")
-        val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-        if (!dir.exists() && !dir.mkdirs()) return "mkdir-fail ${dir.absolutePath}"
-        val f = File(dir, FILE_NAME)
-        return runCatching {
-            FileOutputStream(f).use { it.write(bytes) }
-            f.absolutePath
-        }.getOrElse { "write-fail ${it.message}" }
-    }
-
-    private fun writeMediaStore(ctx: Context, bytes: ByteArray): String {
-        val cr = ctx.contentResolver
-        val collection = MediaStore.Downloads.EXTERNAL_CONTENT_URI
-        var uri: Uri? = null
-        cr.query(
-            collection,
-            arrayOf(MediaStore.Downloads._ID),
-            "${MediaStore.MediaColumns.DISPLAY_NAME}=?",
-            arrayOf(FILE_NAME),
-            null,
-        )?.use { c ->
-            if (c.moveToFirst()) {
-                uri = ContentUris.withAppendedId(collection, c.getLong(0))
-            }
-        }
-        if (uri == null) {
-            uri = cr.insert(
-                collection,
-                ContentValues().apply {
-                    put(MediaStore.MediaColumns.DISPLAY_NAME, FILE_NAME)
-                    put(MediaStore.MediaColumns.MIME_TYPE, "text/csv")
-                    put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
-                },
-            )
-        }
-        val dest = uri ?: return "insert-null"
-        val out = cr.openOutputStream(dest, "wt") ?: cr.openOutputStream(dest)
-        if (out == null) return "open-fail $dest"
-        out.use { it.write(bytes) }
-        return dest.toString()
-    }
-
-    private fun copyTorqueExtended(ctx: Context, bytes: ByteArray): String {
-        val candidates = mutableListOf<File>()
-        runCatching {
-            val other = ctx.createPackageContext("org.prowl.torque", 0)
-            other.getExternalFilesDir(null)?.let { candidates.add(File(it, "extendedpids")) }
-        }
-        @Suppress("DEPRECATION")
-        Environment.getExternalStorageDirectory()?.let { root ->
-            candidates.add(File(root, "Android/data/org.prowl.torque/files/extendedpids"))
-        }
-        val seen = mutableSetOf<String>()
-        for (dir in candidates) {
-            val path = dir.absolutePath
-            if (!seen.add(path)) continue
-            val parentOk = !dir.exists() && dir.parentFile?.canWrite() == true
-            if (!(dir.exists() && dir.canWrite()) && !parentOk) {
-                Log.i(TAG, "override csv skip extendedpids $path exists=${dir.exists()} writable=${dir.canWrite()}")
-                continue
-            }
-            if (!dir.exists() && !dir.mkdirs()) continue
-            val f = File(dir, FILE_NAME)
-            try {
-                FileOutputStream(f).use { it.write(bytes) }
-                return f.absolutePath
-            } catch (e: Exception) {
-                Log.i(TAG, "override csv extendedpids write-fail $path ${e.message}")
-            }
-        }
-        return "not-writable"
     }
 }

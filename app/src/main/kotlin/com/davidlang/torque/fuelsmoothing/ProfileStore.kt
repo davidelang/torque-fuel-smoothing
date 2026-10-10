@@ -4,7 +4,7 @@ import java.io.File
 import java.io.RandomAccessFile
 
 /**
- * Schema 2 profile tree. Migration moves legacy files under legacy/ and does not delete them.
+ * Schema 2 profile tree. A missing default profile is created in place.
  * Raw retention drops only raw files older than 14 days, and only when raw/ exceeds 50 MB.
  */
 internal object ProfileStore {
@@ -43,40 +43,11 @@ internal object ProfileStore {
         }
         profile.mkdirs()
         File(profile, "raw").mkdirs()
-        val legacy = File(profile, "legacy")
-        legacy.mkdirs()
-        moveInto(File(root, "sessions"), legacy)
-        moveInto(File(root, "bins.json"), legacy)
-        moveInto(File(root, "last-session-end.json"), legacy)
-        val tankIds = HashSet<Int>()
-        root.listFiles()?.forEach { f ->
-            val sessions = Regex("sessions-t(\\d+)").matchEntire(f.name)
-            val bins = Regex("bins-t(\\d+)\\.json").matchEntire(f.name)
-            val snap = Regex("last-session-end-t(\\d+)\\.json").matchEntire(f.name)
-            val id = sessions?.groupValues?.get(1) ?: bins?.groupValues?.get(1) ?: snap?.groupValues?.get(1)
-            if (id != null) {
-                tankIds.add(id.toInt())
-                moveInto(f, legacy)
-            }
-        }
         val nameplate = ledger?.tankGal
         marker.writeText(profileJson(DEFAULT_ID, "Vehicle 1", null, torqueProfileName, nowMs, nameplate))
         val active = File(root, "active-profile.json")
         if (!active.isFile) active.writeText("{\"profileId\":\"$DEFAULT_ID\"}")
         File(profile, "ledger.json").writeText(ledgerJson(ledger))
-        convertTree(File(legacy, "sessions"), File(profile, "raw"), DEFAULT_ID, 1)
-        rollup(profile, nameplate)
-        for (id in tankIds.sorted()) {
-            val tank = File(profile, "tanks/$id")
-            tank.mkdirs()
-            File(tank, "raw").mkdirs()
-            File(tank, "profile.json").writeText(
-                profileJson("t$id", "Vehicle 1", null, torqueProfileName, nowMs, nameplate),
-            )
-            File(tank, "ledger.json").writeText(ledgerJson(null))
-            convertTree(File(legacy, "sessions-t$id"), File(tank, "raw"), DEFAULT_ID, id)
-            rollup(tank, nameplate)
-        }
         return profile
     }
 

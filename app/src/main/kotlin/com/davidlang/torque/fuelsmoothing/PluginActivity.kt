@@ -215,7 +215,6 @@ class PluginActivity : Activity() {
 
     override fun onStart() {
         super.onStart()
-        OverrideCsv.export(this)
         requestGrants()
         loading = true
         loadIntoForm()
@@ -307,7 +306,7 @@ class PluginActivity : Activity() {
         val source = Spinner(this)
         source.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, FuelSources.labels())
         root.addView(source)
-        root.addView(label("Tank ${t.id} custom long name (e.g. [FixFuel] Tank${t.id} Level)"))
+        root.addView(label("Tank ${t.id} custom long name (e.g. [FuelSmooth] Tank${t.id} Level)"))
         val name = edit(InputType.TYPE_CLASS_TEXT)
         root.addView(name)
         root.addView(label("Tank ${t.id} gallons"))

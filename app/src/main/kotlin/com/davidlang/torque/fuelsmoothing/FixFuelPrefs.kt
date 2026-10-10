@@ -65,7 +65,6 @@ internal object FixFuelPrefs {
     const val KEY_ACTIVE = "active_tank"
     const val KEY_SELECT_PID = "select_pid_name"
     const val KEY_EXTRAS = "extra_tanks"
-    const val KEY_EXTRAS_MIGRATED = "extra_tanks_migrated"
     const val KEY_SHOW_NOTICE = "show_fuel_notification"
     const val KEY_WRITE_012F = "write_012f"
     const val KEY_FILL_ANCHOR = "fill_anchor_gal"
@@ -85,7 +84,6 @@ internal object FixFuelPrefs {
 
     fun load(ctx: Context): FixFuelConfig {
         val p = prefs(ctx)
-        migrateOnce(p)
         val tankRaw = p.getString(KEY_TANK, "") ?: ""
         val tank = tankRaw.toDoubleOrNull()?.takeIf { it > 0.0 }
         val learnedRaw = p.getString(KEY_LEARNED, "") ?: ""
@@ -135,7 +133,6 @@ internal object FixFuelPrefs {
             .putString(KEY_SELECT_PID, selectPidName)
             .putBoolean(KEY_SHOW_NOTICE, showFuelNotification)
             .putBoolean(KEY_WRITE_012F, write012f)
-            .putBoolean(KEY_EXTRAS_MIGRATED, true)
         e.apply()
     }
 
@@ -260,28 +257,5 @@ internal object FixFuelPrefs {
             ACTIVE_FROM_PID -> ACTIVE_FROM_PID
             else -> raw.toIntOrNull()?.takeIf { it in 1..MAX_TANKS }?.toString() ?: ACTIVE_TANK1
         }
-    }
-
-    private fun migrateOnce(p: SharedPreferences) {
-        if (p.getBoolean(KEY_EXTRAS_MIGRATED, false)) return
-        val extras = mutableListOf<ExtraTank>()
-        if (p.getBoolean(KEY_T2_ON, false)) {
-            extras.add(
-                ExtraTank(
-                    id = 2,
-                    sourceId = p.getString(KEY_SOURCE2, DEFAULT_SOURCE_T2) ?: DEFAULT_SOURCE_T2,
-                    customName = p.getString(KEY_CUSTOM2, "") ?: "",
-                    tankGal = (p.getString(KEY_TANK2, "") ?: "").toDoubleOrNull()?.takeIf { it > 0.0 },
-                    learnedUsable = (p.getString(KEY_LEARNED2, "") ?: "").toDoubleOrNull()?.takeIf { it > 0.0 },
-                    tankEstimated = p.getBoolean(KEY_ESTIMATED2, false),
-                    sourceStatus = p.getString(KEY_STATUS2, "") ?: "",
-                ),
-            )
-        }
-        p.edit()
-            .putString(KEY_EXTRAS, extrasToJson(extras))
-            .putString(KEY_ACTIVE, normalizeActive(p.getString(KEY_ACTIVE, "tank1") ?: "tank1"))
-            .putBoolean(KEY_EXTRAS_MIGRATED, true)
-            .apply()
     }
 }
