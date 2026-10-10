@@ -81,6 +81,7 @@ android {
     buildFeatures {
         buildConfig = true
         aidl = true
+        resValues = true
     }
 }
 
