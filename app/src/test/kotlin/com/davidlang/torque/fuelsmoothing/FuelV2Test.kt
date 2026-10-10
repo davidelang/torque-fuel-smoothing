@@ -177,7 +177,7 @@ class FuelV2Test {
         return names
     }
 
-    private fun sessionFiles(): List<File> = resourceDir("fuel-sessions").listFiles { f ->
+    private fun sessionFiles(): List<File> = resourceDir("fuel-sessions-raw").listFiles { f ->
         f.isFile && f.name.endsWith(".jsonl")
     }!!.sortedBy { it.name }
 
