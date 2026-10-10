@@ -33,12 +33,25 @@ internal object TankSeed {
         return if (v > 0.0 && v.isFinite()) v else null
     }
 
+    /**
+     * Torque's own vehicle-profile capacity (tankCapacity in the .tdv). Torque stores it in liters
+     * regardless of display units (van: 132.4894123 = 35.0 gal; honda: 56.7811767 = 15.0 gal), so a
+     * bare number under Torque's key is liters. An explicit unit still wins. Used only as a seed.
+     */
+    fun parseTorqueCapacity(raw: String?): Double? {
+        parseLitersOrGal(raw)?.let { return it }
+        val v = raw?.trim()?.toDoubleOrNull() ?: return null
+        if (v <= 0.0 || !v.isFinite()) return null
+        return v * Units.GAL_PER_LITER
+    }
+
     fun probe(t: ITorqueService): Pair<String, Double>? {
         for (k in KEYS) {
             val s = runCatching { t.getSettingString(k, "") }.getOrNull()
-            parseLitersOrGal(s)?.let { return "getSettingString:$k" to it }
             val p = runCatching { t.retrieveProfileData(k) }.getOrNull()
-            parseLitersOrGal(p)?.let { return "retrieveProfileData:$k" to it }
+            Log.i(TAG, "tank seed probe $k setting='${s ?: "null"}' profile='${p ?: "null"}'")
+            parseTorqueCapacity(p)?.let { return "retrieveProfileData:$k" to it }
+            parseTorqueCapacity(s)?.let { return "getSettingString:$k" to it }
         }
         return null
     }

@@ -29,6 +29,11 @@ class PluginService : Service() {
     ) {
         var usedGal: Double = 0.0
         var lastRateMs: Long? = null
+        /** Last flow reading as Torque reported it (before unit conversion) and its unit label. */
+        var lastFlowRaw: Double? = null
+        var lastFlowUnit: String = ""
+        val burnGate = BurnGate()
+        var burnWhy: String? = null
         /** Tank 1 only. Null until a fill sets it. Not cleared on session open. */
         var fillAnchorGal: Double? = null
         var sinceFillUsedGal: Double = 0.0
@@ -471,7 +476,8 @@ class PluginService : Service() {
             spdUnit = speedUnit,
             mode = mode.name,
             ecu = ecu,
-            fuelUnit = fuelUnitLabel(),
+            fuelUnit = rt?.lastFlowUnit?.ifBlank { null } ?: fuelUnitLabel(),
+            fuelRaw = rt?.lastFlowRaw,
             lvlSrc = if (id == 1) cfg.sourceId else cfg.extra(id)?.sourceId ?: "",
         )
     }
@@ -773,6 +779,8 @@ class PluginService : Service() {
         rt.fuelAtFillGal = 0.0
         rt.steppedChunks = 0
         rt.lastRateMs = null
+        rt.burnGate.reset()
+        rt.burnWhy = null
         sessionFlowHrUnit = null
         sessionFlowMinUnit = null
         val sid = rt.sessions.open(profileId = profileId, app = BuildConfig.VERSION_NAME)
@@ -811,23 +819,63 @@ class PluginService : Service() {
             return 0.0
         }
         resolveSessionFlowUnits()
+        val pid: String
+        val raw: Double?
+        val perMinute: Boolean
         val hr = readDouble(t, galHrPid ?: Pids.GAL_PER_HOUR)
-        val gph = if (hr != null && hr.isFinite() && hr >= 0.0) {
+        if (hr != null && hr.isFinite() && hr >= 0.0) {
+            pid = galHrPid ?: Pids.GAL_PER_HOUR
+            raw = hr
+            perMinute = false
+            rt.lastFlowUnit = galHrUnit.ifBlank { sessionFlowHrUnit ?: "" }
             logFlowUnitOnce("galHr")
-            flowToGallonsPerHour(hr, sessionFlowHrUnit ?: "gal", perMinute = false)
         } else {
             val gmin = readDouble(t, galMinPid ?: Pids.GAL_PER_MIN)
-            if (gmin != null && gmin.isFinite() && gmin >= 0.0) {
-                logFlowUnitOnce("galMin")
-                flowToGallonsPerHour(gmin, sessionFlowMinUnit ?: "gal", perMinute = true)
-            } else {
+            if (gmin == null || !gmin.isFinite() || gmin < 0.0) {
+                rt.lastFlowRaw = null
+                noteBurn(rt, now, BurnGate.Verdict(false, "noFlow"))
                 return 0.0
             }
+            pid = galMinPid ?: Pids.GAL_PER_MIN
+            raw = gmin
+            perMinute = true
+            rt.lastFlowUnit = galMinUnit.ifBlank { sessionFlowMinUnit ?: "" }
+            logFlowUnitOnce("galMin")
         }
+        rt.lastFlowRaw = raw
+        val rpm = readDouble(t, Pids.RPM)
+        val maf = if (rpm == null) readDouble(t, Pids.MAF) else null
+        val verdict = rt.burnGate.check(
+            BurnGate.Input(
+                nowMs = now,
+                flow = raw,
+                flowUpdMs = updateTime(t, pid),
+                rpm = rpm,
+                rpmUpdMs = if (rpm != null) updateTime(t, Pids.RPM) else null,
+                maf = maf,
+                mafUpdMs = if (maf != null) updateTime(t, Pids.MAF) else null,
+            ),
+        )
+        noteBurn(rt, now, verdict)
+        if (!verdict.burn) return 0.0
+        val unit = if (perMinute) sessionFlowMinUnit ?: "gal" else sessionFlowHrUnit ?: "gal"
+        val gph = flowToGallonsPerHour(raw!!, unit, perMinute)
         val dF = gph * (dtSec / 3600.0)
         if (dF.isFinite() && dF > 0.0) rt.usedGal += dF
         return if (dF.isFinite() && dF > 0.0) dF else 0.0
     }
+
+    /** One event per burn on/off transition (not per sample). */
+    private fun noteBurn(rt: TankRt, now: Long, v: BurnGate.Verdict) {
+        val key = if (v.burn) "on" else v.why
+        if (rt.burnWhy == key) return
+        rt.burnWhy = key
+        rt.sessions.mark(if (v.burn) "burnOn" else "burnOff", now, "\"why\":\"${v.why}\"")
+        Log.i(TAG, "tank${rt.id} burn ${if (v.burn) "on" else "off"} why=${v.why} flowRaw=${rt.lastFlowRaw} ${rt.lastFlowUnit}")
+    }
+
+    private fun updateTime(t: ITorqueService, pid: String): Long? =
+        runCatching { t.getPIDUpdateTime(arrayOf(pid))?.firstOrNull() }.getOrNull()?.takeIf { it > 0L }
 
     /** Unit is fixed for the session by resolveSessionFlowUnits(); no per-sample unit guessing. */
     private fun flowToGallonsPerHour(raw: Double, unit: String, perMinute: Boolean): Double {

@@ -7,6 +7,8 @@ internal object Pids {
     const val FORD_FUEL_NAME = "[FORD]Fuel Level"
     const val FORD_FUEL_STORED = "2234049"
     const val SPEED = "0d"
+    const val RPM = "0c"
+    const val MAF = "10"
     const val FUEL_USED_TRIP = "ff125c"
     const val FUEL_USED_SESSION = "ff1271"
     const val GAL_PER_HOUR = "ff125d"
