@@ -51,19 +51,53 @@ internal object ProfileStore {
         return profile
     }
 
-    fun select(root: File, vin: String?, torqueProfileName: String?): String {
-        val hits = profiles(root)
-        if (!vin.isNullOrBlank()) {
-            val hit = hits.firstOrNull { it.vin != null && it.vin.equals(vin, ignoreCase = true) }
-            if (hit != null) return hit.id
-        }
-        if (!torqueProfileName.isNullOrBlank()) {
-            val hit = hits.firstOrNull {
-                it.torqueProfileName != null && it.torqueProfileName.equals(torqueProfileName, ignoreCase = true)
+    data class Selection(val id: String, val created: Boolean, val vinNote: String)
+
+    /**
+     * Binds the active profile to Torque's selected vehicle profile name.
+     * - Blank name: stay on the active profile.
+     * - One-time migration: while `default` is the only profile and has no Torque name, it takes
+     *   the current name (existing history stays with the vehicle it was recorded on).
+     * - Name match (case-insensitive) selects that profile; an unknown name creates a new profile.
+     * The VIN never drives selection: it is stored on first sight and only produces a mismatch note.
+     */
+    fun select(
+        root: File,
+        vin: String?,
+        torqueProfileName: String?,
+        nowMs: Long = System.currentTimeMillis(),
+    ): Selection {
+        val name = torqueProfileName?.trim().orEmpty()
+        val id = if (name.isEmpty()) {
+            Selection(activeId(root), false, "")
+        } else {
+            val hits = profiles(root)
+            val match = hits.firstOrNull { it.torqueProfileName?.equals(name, ignoreCase = true) == true }
+            val solo = hits.singleOrNull()
+            when {
+                match != null -> Selection(match.id, false, "")
+                solo != null && solo.id == DEFAULT_ID && solo.torqueProfileName == null -> {
+                    setProfileField(root, DEFAULT_ID, "torqueProfileName", name)
+                    Selection(DEFAULT_ID, false, "")
+                }
+                else -> Selection(create(root, name, hits.map { it.id }.toSet(), nowMs), true, "")
             }
-            if (hit != null) return hit.id
         }
-        return activeId(root)
+        val stored = storedVin(root, id.id)
+        if (stored.isNullOrBlank() && !vin.isNullOrBlank()) setProfileField(root, id.id, "vin", vin)
+        return id.copy(vinNote = vinNote(stored, vin))
+    }
+
+    private fun create(root: File, name: String, taken: Set<String>, nowMs: Long): String {
+        val base = name.lowercase().replace(Regex("[^a-z0-9]+"), "-").trim('-').take(32).ifEmpty { "vehicle" }
+        var id = base
+        var n = 2
+        while (id in taken || id == DEFAULT_ID || File(root, "profiles/$id").exists()) id = "$base-${n++}"
+        val dir = File(root, "profiles/$id")
+        File(dir, "raw").mkdirs()
+        File(dir, "profile.json").writeText(profileJson(id, name, null, name, nowMs, null))
+        File(dir, "ledger.json").writeText(ledgerJson(null))
+        return id
     }
 
     fun activeId(root: File): String {
@@ -81,15 +115,6 @@ internal object ProfileStore {
     fun tankDir(root: File, profileId: String, tank: Int): File {
         val base = profileDir(root, profileId)
         return if (tank <= 1) base else File(base, "tanks/$tank")
-    }
-
-    fun rememberTorqueName(root: File, profileId: String, name: String) {
-        if (name.isBlank()) return
-        val f = File(profileDir(root, profileId), "profile.json")
-        if (!f.isFile) return
-        val text = f.readText()
-        if (fieldString(text, "torqueProfileName") != null) return
-        f.writeText(text.replace("\"torqueProfileName\":null", "\"torqueProfileName\":${jsonString(name)}"))
     }
 
     fun profileField(root: File, profileId: String, key: String): String? {

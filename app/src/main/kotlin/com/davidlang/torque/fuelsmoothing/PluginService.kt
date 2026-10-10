@@ -537,9 +537,11 @@ class PluginService : Service() {
         val resp = runCatching { t.sendCommandGetResponse("", "0902") }.getOrNull()?.toList()
         val vin = ProfileStore.parseVin(resp)
         val torqueName = runCatching { t.getVehicleProfileInformation()?.firstOrNull() }.getOrNull()
-        if (!torqueName.isNullOrBlank()) ProfileStore.rememberTorqueName(filesDir, profileId, torqueName)
-        val next = ProfileStore.select(filesDir, vin, torqueName)
-        val note = ProfileStore.vinNote(ProfileStore.storedVin(filesDir, next), vin)
+        val sel = ProfileStore.select(filesDir, vin, torqueName)
+        val next = sel.id
+        val note = sel.vinNote
+        if (sel.created) Log.i(TAG, "profile created $next for Torque profile '$torqueName'")
+        if (note.isNotBlank()) Log.w(TAG, "profile $next: $note (stored ${ProfileStore.storedVin(filesDir, next)})")
         val gapFile = File(ProfileStore.profileDir(filesDir, next), "gap.txt")
         val gap = if (gapFile.isFile) gapFile.readText() else ""
         File(filesDir, "profile-notice.txt").writeText(if (note.isBlank()) gap else note)

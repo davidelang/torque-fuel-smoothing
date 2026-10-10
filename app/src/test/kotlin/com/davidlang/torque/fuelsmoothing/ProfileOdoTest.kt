@@ -8,7 +8,7 @@ import java.io.File
 
 class ProfileOdoTest {
     @Test
-    fun test13MigrationIsIdempotentAndSelectsByVinThenName() {
+    fun test13MigrationIsIdempotentAndSelectsByTorqueName() {
         val root = File("build/profile-odo-test13").apply {
             deleteRecursively()
             mkdirs()
@@ -60,14 +60,38 @@ class ProfileOdoTest {
         assertFalse(File(root, "profiles/default/legacy").exists())
         assertTrue(File(sessions, "1791007200000-abcd.jsonl").isFile)
 
+        // First connect: default (only profile, no Torque name yet) takes the current name once.
+        val first = ProfileStore.select(root, "1FTESTVIN00000009", "E350", now)
+        assertEquals("default", first.id)
+        assertFalse(first.created)
+        assertEquals("", first.vinNote)
+        assertEquals("1FTESTVIN00000009", ProfileStore.storedVin(root, "default"))
+        // Same name again: same profile, nothing created.
+        assertEquals("default", ProfileStore.select(root, null, "e350", now).id)
+
         File(root, "profiles/other").mkdirs()
         File(root, "profiles/other/profile.json").writeText(
             "{\"id\":\"other\",\"name\":\"Van\",\"vin\":\"1FTESTVIN00000001\",\"torqueProfileName\":\"Van\",\"schema\":2}",
         )
-        assertEquals("other", ProfileStore.select(root, "1FTESTVIN00000001", "E350"))
-        assertEquals("default", ProfileStore.select(root, null, "E350"))
-        assertEquals("other", ProfileStore.select(root, null, "Van"))
-        assertEquals("default", ProfileStore.select(root, null, "missing"))
+        // The Torque name decides; a different VIN only produces a mismatch note.
+        val cross = ProfileStore.select(root, "1FTESTVIN00000001", "E350", now)
+        assertEquals("default", cross.id)
+        assertEquals("VIN mismatch 1FTESTVIN00000001", cross.vinNote)
+        assertEquals("1FTESTVIN00000009", ProfileStore.storedVin(root, "default"))
+        assertEquals("other", ProfileStore.select(root, null, "Van", now).id)
+
+        // Unknown name: a new profile is created; default's name is not overwritten.
+        val made = ProfileStore.select(root, null, "Wife's Civic", now)
+        assertTrue(made.created)
+        assertEquals("wife-s-civic", made.id)
+        assertTrue(File(root, "profiles/wife-s-civic/raw").isDirectory)
+        assertEquals("Wife's Civic", ProfileStore.profileField(root, made.id, "torqueProfileName"))
+        assertEquals("E350", ProfileStore.profileField(root, "default", "torqueProfileName"))
+        val again = ProfileStore.select(root, null, "Wife's Civic", now)
+        assertEquals(made.id, again.id)
+        assertFalse(again.created)
+        // Blank name: stay on the active profile.
+        assertEquals(ProfileStore.activeId(root), ProfileStore.select(root, null, "  ", now).id)
 
         val rawDir = File(root, "retain/raw").apply { mkdirs() }
         val old = File(rawDir, "old.jsonl")
