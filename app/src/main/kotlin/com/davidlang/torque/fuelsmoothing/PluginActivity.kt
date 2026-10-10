@@ -605,7 +605,8 @@ class PluginActivity : Activity() {
                 .build()
         }
         val params = QueryProductDetailsParams.newBuilder().setProductList(products).build()
-        client.queryProductDetailsAsync(params) { result, details ->
+        client.queryProductDetailsAsync(params) { result, queryResult ->
+            val details = queryResult.productDetailsList
             runOnUiThread {
                 if (result.responseCode != BillingClient.BillingResponseCode.OK || details.isEmpty()) {
                     tipButton.text = getString(R.string.tips_play_only)
@@ -639,9 +640,12 @@ class PluginActivity : Activity() {
 
     private fun launchTip(details: ProductDetails) {
         val client = billing ?: return
-        val product = BillingFlowParams.ProductDetailsParams.newBuilder()
+        val offer = details.oneTimePurchaseOfferDetailsList?.firstOrNull()?.offerToken
+            ?: details.oneTimePurchaseOfferDetails?.offerToken
+        val productBuilder = BillingFlowParams.ProductDetailsParams.newBuilder()
             .setProductDetails(details)
-            .build()
+        if (!offer.isNullOrBlank()) productBuilder.setOfferToken(offer)
+        val product = productBuilder.build()
         val flow = BillingFlowParams.newBuilder()
             .setProductDetailsParamsList(listOf(product))
             .build()
