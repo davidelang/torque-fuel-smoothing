@@ -14,6 +14,12 @@ internal object ProfileStore {
     const val RESET_MS = 1_791_007_200_000L
     const val RAW_CAP_BYTES = 50L * 1024L * 1024L
     const val RAW_KEEP_MS = 14L * 24L * 60L * 60L * 1000L
+    /** Raw pruning is OFF: no raw or session file is ever deleted, at any size or age. */
+    const val RAW_PRUNE_ENABLED = false
+    /** Permanent, append-only learning record per tank dir: one line per session, deduped by id. */
+    const val LEARN_FILE = "learn-chunks.jsonl"
+    /** Extra drop-in dir (under filesDir) whose legacy *.jsonl sessions are imported like files/sessions. */
+    const val IMPORT_DIR = "import"
 
     data class LedgerSeed(
         val fillAnchorGal: Double?,
@@ -33,6 +39,7 @@ internal object ProfileStore {
         val profile = File(root, "profiles/$DEFAULT_ID")
         val marker = File(profile, "profile.json")
         if (marker.isFile && fieldInt(marker.readText(), "schema") == SCHEMA) {
+            importLegacy(root, activeId(root))
             retainRaw(File(profile, "raw"), nowMs)
             profile.listFiles()?.forEach { child ->
                 if (child.isDirectory && child.name == "tanks") {
@@ -48,7 +55,38 @@ internal object ProfileStore {
         val active = File(root, "active-profile.json")
         if (!active.isFile) active.writeText("{\"profileId\":\"$DEFAULT_ID\"}")
         File(profile, "ledger.json").writeText(ledgerJson(ledger))
+        importLegacy(root, activeId(root))
         return profile
+    }
+
+    /**
+     * Converts legacy sessions (files/sessions, files/import -> tank 1; files/sessions-tN -> tank N)
+     * into the profile's raw/ dirs. Idempotent: a session whose raw file exists is skipped.
+     * Sources are never deleted or modified. Returns the number of sessions imported.
+     */
+    fun importLegacy(root: File, profileId: String): Int {
+        val sources = ArrayList<Pair<File, Int>>()
+        sources.add(File(root, "sessions") to 1)
+        sources.add(File(root, IMPORT_DIR) to 1)
+        root.listFiles { f -> f.isDirectory && f.name.matches(Regex("sessions-t[0-9]+")) }
+            ?.sortedBy { it.name }
+            ?.forEach { sources.add(it to it.name.removePrefix("sessions-t").toInt()) }
+        var n = 0
+        for ((src, tank) in sources) {
+            if (!src.isDirectory) continue
+            val files = src.listFiles { f -> f.isFile && f.name.endsWith(".jsonl") }?.sortedBy { it.name } ?: continue
+            if (files.isEmpty()) continue
+            val raw = File(tankDir(root, profileId, tank), "raw").apply { mkdirs() }
+            for (f in files) {
+                val dest = File(raw, f.name)
+                if (dest.exists()) continue
+                val tmp = File(raw, f.name + ".part")
+                runCatching { convertOne(f, tmp, profileId, tank) }
+                    .onFailure { android.util.Log.w("FuelSmooth", "import ${f.name}: ${it.message}") }
+                if (tmp.isFile && tmp.renameTo(dest)) n++
+            }
+        }
+        return n
     }
 
     data class Selection(val id: String, val created: Boolean, val vinNote: String)
@@ -187,13 +225,16 @@ internal object ProfileStore {
         return null
     }
 
-    fun retainRaw(rawDir: File, nowMs: Long) {
+    fun retainRaw(rawDir: File, nowMs: Long, enabled: Boolean = RAW_PRUNE_ENABLED) {
+        if (!enabled) return
         if (!rawDir.isDirectory) return
+        val learned = learnedIds(File(rawDir.parentFile ?: rawDir, LEARN_FILE))
         val files = rawDir.listFiles { f -> f.isFile }?.toMutableList() ?: return
         var total = files.sumOf { it.length() }
         if (total <= RAW_CAP_BYTES) return
         val cutoff = nowMs - RAW_KEEP_MS
-        val old = files.filter { it.lastModified() < cutoff }.sortedBy { it.lastModified() }
+        // Only files whose chunk summary is already in the learning record may ever be pruned.
+        val old = files.filter { it.lastModified() < cutoff && it.name.removeSuffix(".jsonl") in learned }.sortedBy { it.lastModified() }
         for (f in old) {
             if (total <= RAW_CAP_BYTES) break
             val n = f.length()
@@ -249,6 +290,7 @@ internal object ProfileStore {
             if (!File(dir, "chunks.jsonl").isFile) File(dir, "chunks.jsonl").writeText("")
             if (!File(dir, "fills.jsonl").isFile) File(dir, "fills.jsonl").writeText("")
         }
+        appendLearned(dir, sessions, model)
         val drives = File(dir, "drives.jsonl")
         if (sessions.isNotEmpty()) {
             drives.writeText("")
@@ -299,11 +341,44 @@ internal object ProfileStore {
         return b.toString()
     }
 
-    private fun convertTree(legacySessions: File, rawDir: File, profileId: String, tank: Int) {
-        if (!legacySessions.isDirectory) return
-        rawDir.mkdirs()
-        val files = legacySessions.listFiles { f -> f.isFile && f.name.endsWith(".jsonl") }?.sortedBy { it.name } ?: return
-        for (file in files) convertOne(file, File(rawDir, file.name), profileId, tank)
+    /** Session ids already in the learning record. */
+    fun learnedIds(f: File): Set<String> {
+        if (!f.isFile) return emptySet()
+        val out = HashSet<String>()
+        f.forEachLine { line -> fieldString(line, "sessionId")?.let { out.add(it) } }
+        return out
+    }
+
+    /**
+     * Appends one compact line per not-yet-recorded session: its chunk summaries (group, t, F, L, n),
+     * chunked with the model current at that time, plus fill flag and fuel span. Never rewrites.
+     */
+    fun appendLearned(dir: File, sessions: List<FuelSession>, m: FuelModel?) {
+        // Without a fitted model there is nothing to chunk with; those sessions are recorded next time.
+        if (sessions.isEmpty() || m == null) return
+        val f = File(dir, LEARN_FILE)
+        val have = learnedIds(f)
+        val todo = sessions.filter { it.name !in have && it.t.size >= 2 }
+        if (todo.isEmpty()) return
+        val b = StringBuilder()
+        for (s in todo) {
+            val chunks = runCatching {
+                FuelV2.chunksSf(s, { level -> FuelV2.gpp(level, m.edges, m.g) }, m.nMin, 4.0 * m.sigmaQ)
+            }.getOrDefault(emptyList())
+            b.append("{\"sessionId\":").append(jsonString(s.name))
+            b.append(",\"t0\":").append(s.t.first()).append(",\"t1\":").append(s.t.last())
+            b.append(",\"fuelGal\":").append(s.used.last() - s.used.first())
+            b.append(",\"fill\":").append(s.fill.any { it })
+            b.append(",\"chunks\":[")
+            chunks.forEachIndexed { i, c ->
+                if (i > 0) b.append(',')
+                b.append("{\"group\":").append(c.g).append(",\"t\":").append(c.t)
+                    .append(",\"F\":").append(c.f).append(",\"L\":").append(c.l).append(",\"n\":").append(c.n).append('}')
+            }
+            b.append("]}\n")
+        }
+        runCatching { f.appendText(b.toString()) }
+            .onFailure { android.util.Log.w("FuelSmooth", "learn append: ${it.message}") }
     }
 
     private fun convertOne(src: File, dest: File, profileId: String, tank: Int) {

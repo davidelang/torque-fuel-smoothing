@@ -107,7 +107,9 @@ class ProfileOdoTest {
         legacy.parentFile?.mkdirs()
         legacy.writeText("keep\n")
         ProfileStore.retainRaw(rawDir, now)
-        assertFalse(old.exists())
+        // Pruning is disabled: nothing is deleted at any size or age.
+        assertFalse(ProfileStore.RAW_PRUNE_ENABLED)
+        assertTrue(old.exists())
         assertTrue(fresh.exists())
         assertTrue(chunks.isFile)
         assertTrue(legacy.isFile)
@@ -154,6 +156,75 @@ class ProfileOdoTest {
         assertTrue(pwm.all { it.command.take(2) in services })
         assertTrue(pwm.none { it.row == 31 })
     }
+
+    @Test
+    fun test15MigrationImportsLegacySessionsIdempotently() {
+        val root = File("build/profile-odo-test15").apply {
+            deleteRecursively()
+            mkdirs()
+        }
+        val names = fixtureNames().take(3)
+        File(root, "sessions").mkdirs()
+        File(root, ProfileStore.IMPORT_DIR).mkdirs()
+        fixture(names[0]).copyTo(File(root, "sessions/${names[0]}"))
+        fixture(names[1]).copyTo(File(root, "sessions/${names[1]}"))
+        fixture(names[2]).copyTo(File(root, "${ProfileStore.IMPORT_DIR}/${names[2]}"))
+        val now = ProfileStore.RESET_MS - 1L
+        ProfileStore.migrate(root, null, null, now)
+        val raw = File(root, "profiles/default/raw")
+        assertEquals(names.sorted(), raw.list()!!.sorted())
+        // Sources stay untouched.
+        assertTrue(File(root, "sessions/${names[0]}").readBytes().contentEquals(fixture(names[0]).readBytes()))
+        // Converted files carry the same samples.
+        val src = FuelV2.loadSessions(File(root, "sessions")).first { it.name == names[0].removeSuffix(".jsonl") }
+        val got = FuelV2.loadSessions(raw).first { it.name == src.name }
+        assertEquals(src.t.size, got.t.size)
+        assertEquals(src.used.last(), got.used.last(), 1e-9)
+        assertEquals(src.raw.last(), got.raw.last(), 1e-9)
+        val before = raw.listFiles()!!.associate { it.name to it.readText() }
+        assertEquals(0, ProfileStore.importLegacy(root, "default"))
+        ProfileStore.migrate(root, null, null, now)
+        assertEquals(before, raw.listFiles()!!.associate { it.name to it.readText() })
+    }
+
+    @Test
+    fun test16LearningRecordIsDedupedAndPruningCannotChangeTheFit() {
+        val dir = File("build/profile-odo-test16").apply {
+            deleteRecursively()
+            mkdirs()
+        }
+        val raw = File(dir, "raw").apply { mkdirs() }
+        for (n in fixtureNames()) fixture(n).copyTo(File(raw, n))
+        ProfileStore.rollup(dir, 35.0)
+        val model1 = File(dir, "model.json").readText()
+        val learn = File(dir, ProfileStore.LEARN_FILE)
+        val ids1 = learn.readLines().filter { it.isNotBlank() }
+        assertEquals(ids1.size, ProfileStore.learnedIds(learn).size)
+        assertTrue(ids1.any { it.contains("\"group\"") })
+        // Rollup again: no duplicate lines, same fit.
+        ProfileStore.rollup(dir, 35.0)
+        assertEquals(ids1, learn.readLines().filter { it.isNotBlank() })
+        assertEquals(model1, File(dir, "model.json").readText())
+        // Pruning with a huge old file present deletes nothing, so the fit is unchanged.
+        val big = File(raw, "0000000000000-old.bin")
+        ProfileStore.sparse(big, ProfileStore.RAW_CAP_BYTES + 1024)
+        for (f in raw.listFiles()!!) f.setLastModified(1_000L)
+        val count = raw.list()!!.size
+        ProfileStore.retainRaw(raw, ProfileStore.RESET_MS * 2)
+        assertEquals(count, raw.list()!!.size)
+        big.delete()
+        ProfileStore.rollup(dir, 35.0)
+        assertEquals(model1, File(dir, "model.json").readText())
+        assertEquals(ids1, learn.readLines().filter { it.isNotBlank() })
+    }
+
+    private fun fixtureDir(): File =
+        File(checkNotNull(javaClass.classLoader!!.getResource("fuel-sessions")).toURI())
+
+    private fun fixtureNames(): List<String> =
+        fixtureDir().list { _, n -> n.endsWith(".jsonl") }!!.sorted()
+
+    private fun fixture(name: String): File = File(fixtureDir(), name)
 
     private fun paths(root: File): List<String> {
         return root.walkTopDown().filter { it.isFile }.map { it.relativeTo(root).path }.sorted().toList()
