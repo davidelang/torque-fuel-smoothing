@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Fuel Smoothing for Torque</string>
-    <string name="privacy_policy_url">https://lang.hm/fuelsmoothing/privacy</string>
+    <string name="privacy_policy_url">https://play.landing.lang.hm/fuel-smoothing/privacy/</string>
     <string name="tips_play_only">Tips are on the Play Store version</string>
     <string name="help_body">Enable this plugin in Torque → Settings → Plugins.\n\nAllow notifications when asked. Set Unrestricted battery so Torque can start this plugin in the background.\n\nWith Write corrected % onto Torque Fuel Level (012F) enabled, the corrected percent is written onto Torque’s stock Fuel Level (012F).</string>
     <string name="show_fuel_notification">Show fuel level in notification</string>
