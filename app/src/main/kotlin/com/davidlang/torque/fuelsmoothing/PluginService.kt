@@ -1018,10 +1018,10 @@ class PluginService : Service() {
         if (Build.VERSION.SDK_INT < 26) return
         val nm = notificationManager() ?: return
         nm.createNotificationChannel(
-            NotificationChannel(CHANNEL_ID, "Fix Fuel", NotificationManager.IMPORTANCE_LOW),
+            NotificationChannel(CHANNEL_ID, "Fuel Smoothing", NotificationManager.IMPORTANCE_LOW),
         )
         nm.createNotificationChannel(
-            NotificationChannel(CHANNEL_QUIET, "Fix Fuel quiet", NotificationManager.IMPORTANCE_MIN),
+            NotificationChannel(CHANNEL_QUIET, "Fuel Smoothing quiet", NotificationManager.IMPORTANCE_MIN),
         )
     }
 
@@ -1139,9 +1139,9 @@ class PluginService : Service() {
     }
 
     companion object {
-        private const val TAG = "FordFuel"
-        private const val CHANNEL_ID = "fordfuel"
-        private const val CHANNEL_QUIET = "fordfuel_quiet"
+        private const val TAG = "FuelSmooth"
+        private const val CHANNEL_ID = "fuel_tap"
+        private const val CHANNEL_QUIET = "fuel_quiet"
         private const val NOTIF_ID = 350
         private const val POLL_MS = 1000L
         private const val FILL_SWITCH_DEBOUNCE_MS = 5000L

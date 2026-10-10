@@ -5,7 +5,7 @@ import org.prowl.torque.remote.ITorqueService
 
 internal object TankSeed {
     val PROFILE_KEY: String get() = Pids.PREFIX + "nameplateGal"
-    private const val TAG = "FordFuel"
+    private const val TAG = "FuelSmooth"
     private val KEYS = arrayOf("tankCapacity", "profileTankCapacity")
 
     fun parseLitersOrGal(raw: String?): Double? {

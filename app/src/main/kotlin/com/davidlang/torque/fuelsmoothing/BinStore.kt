@@ -92,7 +92,7 @@ internal class BinStore(
     }
 
     companion object {
-        private const val TAG = "FordFuel"
+        private const val TAG = "FuelSmooth"
         private const val KEY_V3 = "bins_v3_chunk_units"
         private const val KEY_V4 = "bins_v4_slosh"
 

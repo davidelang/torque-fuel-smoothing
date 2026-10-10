@@ -14,6 +14,7 @@ class PluginReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         try {
             val action = intent?.action ?: return
+            if (ignoreSender(action)) return
             Log.i(TAG, "onReceive $action")
             val start = Intent(context, PluginService::class.java).setAction(action)
             if (PluginService.isRunning) {
@@ -39,22 +40,38 @@ class PluginReceiver : BroadcastReceiver() {
         }
     }
 
+    private fun ignoreSender(action: String): Boolean {
+        if (Build.VERSION.SDK_INT < 34 || !torqueAction(action)) return false
+        val from = sentFromPackage
+        if (from != null && from != "org.prowl.torque") {
+            Log.i(TAG, "ignore $action from $from")
+            return true
+        }
+        return false
+    }
+
     companion object {
-        private const val TAG = "FordFuel"
+        private const val TAG = "FuelSmooth"
+
+        private fun torqueAction(action: String): Boolean {
+            return action == PluginService.ACTION_PID_QUERY ||
+                action == PluginService.ACTION_PID_PLUGIN ||
+                action == PluginService.ACTION_OBD_CONNECTED ||
+                action == PluginService.ACTION_OBD_DISCONNECTED
+        }
 
         private fun shouldStartFgs(action: String): Boolean {
             return action == PluginService.ACTION_PID_QUERY ||
                 action == PluginService.ACTION_PID_PLUGIN ||
                 action == PluginService.ACTION_OBD_CONNECTED ||
                 action == Intent.ACTION_BOOT_COMPLETED ||
-                action == Intent.ACTION_LOCKED_BOOT_COMPLETED ||
                 action == Intent.ACTION_MY_PACKAGE_REPLACED
         }
     }
 }
 
 internal object TapStartNotice {
-    const val CHANNEL_ID = "fordfuel_tap"
+    const val CHANNEL_ID = "fuel_tap"
     const val NOTIF_ID = 351
 
     fun post(context: Context) {
@@ -63,7 +80,7 @@ internal object TapStartNotice {
         nm.createNotificationChannel(
             NotificationChannel(
                 CHANNEL_ID,
-                "Fix Fuel start",
+                "Fuel Smoothing",
                 NotificationManager.IMPORTANCE_HIGH,
             ),
         )

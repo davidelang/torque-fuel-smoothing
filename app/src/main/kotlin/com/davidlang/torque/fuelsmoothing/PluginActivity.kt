@@ -24,6 +24,17 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.Spinner
 import android.widget.TextView
+import com.android.billingclient.api.AcknowledgePurchaseParams
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.BillingClientStateListener
+import com.android.billingclient.api.BillingFlowParams
+import com.android.billingclient.api.BillingResult
+import com.android.billingclient.api.ConsumeParams
+import com.android.billingclient.api.PendingPurchasesParams
+import com.android.billingclient.api.ProductDetails
+import com.android.billingclient.api.Purchase
+import com.android.billingclient.api.QueryProductDetailsParams
+import com.android.billingclient.api.QueryPurchasesParams
 import java.io.File
 
 class PluginActivity : Activity() {
@@ -47,6 +58,10 @@ class PluginActivity : Activity() {
     private lateinit var detectBtn: Button
     private lateinit var odoMiles: EditText
     private lateinit var gapText: TextView
+    private lateinit var tipButton: Button
+    private lateinit var tipChoices: LinearLayout
+    private lateinit var thanksView: TextView
+    private var billing: BillingClient? = null
     private val extraCards = mutableListOf<ExtraCard>()
     private val watch = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -80,6 +95,46 @@ class PluginActivity : Activity() {
         help.text = getString(R.string.help_body)
         help.textSize = 14f
         col.addView(help)
+
+        if (!torqueInstalled()) {
+            val need = TextView(this)
+            need.text = "Requires Torque Pro"
+            need.textSize = 16f
+            col.addView(need)
+            val play = Button(this)
+            play.text = "Torque Pro"
+            play.setOnClickListener {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=org.prowl.torque")))
+            }
+            col.addView(play)
+        }
+
+        val about = TextView(this)
+        about.text = versionName() + "\nNot affiliated with Torque or Ian Hawkins."
+        about.textSize = 14f
+        col.addView(about)
+        val privacy = Button(this)
+        privacy.text = "Privacy"
+        privacy.setOnClickListener {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.privacy_policy_url))))
+        }
+        col.addView(privacy)
+        val feedback = Button(this)
+        feedback.text = "Send feedback"
+        feedback.setOnClickListener { sendFeedback() }
+        col.addView(feedback)
+
+        tipButton = Button(this)
+        tipButton.text = "Tip"
+        tipButton.setOnClickListener { onTipClicked() }
+        col.addView(tipButton)
+        tipChoices = LinearLayout(this)
+        tipChoices.orientation = LinearLayout.VERTICAL
+        col.addView(tipChoices)
+        thanksView = TextView(this)
+        thanksView.textSize = 16f
+        col.addView(thanksView)
+        connectBilling()
 
         profileNameView = TextView(this)
         profileNameView.textSize = 16f
@@ -467,19 +522,156 @@ class PluginActivity : Activity() {
         if (Build.VERSION.SDK_INT < 31) return
         val pm = getSystemService(PowerManager::class.java)
         val ignoring = pm != null && pm.isIgnoringBatteryOptimizations(packageName)
-        if (!ignoring) {
-            val prefs = getSharedPreferences("fordfuel_grants", MODE_PRIVATE)
-            if (!prefs.getBoolean("battery_asked", false)) {
-                prefs.edit().putBoolean("battery_asked", true).apply()
-                try {
-                    val i = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
-                    i.data = Uri.parse("package:$packageName")
-                    startActivity(i)
-                } catch (t: Throwable) {
-                    Log.w(TAG, "battery exemption intent ignored: ${t.javaClass.simpleName} ${t.message}")
+        if (ignoring) return
+        val prefs = getSharedPreferences("fordfuel_grants", MODE_PRIVATE)
+        if (prefs.getBoolean("battery_asked", false)) return
+        prefs.edit().putBoolean("battery_asked", true).apply()
+        try {
+            startActivity(Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS))
+        } catch (t: Throwable) {
+            Log.w(TAG, "battery list intent ignored: ${t.javaClass.simpleName} ${t.message}")
+        }
+    }
+
+    private fun torqueInstalled(): Boolean {
+        return runCatching { packageManager.getPackageInfo("org.prowl.torque", 0) }.isSuccess
+    }
+
+    @Suppress("DEPRECATION")
+    private fun versionName(): String {
+        return packageManager.getPackageInfo(packageName, 0).versionName ?: ""
+    }
+
+    private fun sendFeedback() {
+        val body = "App version: ${versionName()}\nAndroid version: ${Build.VERSION.RELEASE}\nDevice model: ${Build.MANUFACTURER} ${Build.MODEL}\n"
+        val uri = Uri.parse(
+            "mailto:david+fuelsmoothing@lang.hm?subject=" +
+                Uri.encode("Fuel Smoothing") +
+                "&body=" +
+                Uri.encode(body),
+        )
+        try {
+            startActivity(Intent(Intent.ACTION_SENDTO, uri))
+        } catch (t: Throwable) {
+            Log.w(TAG, "feedback intent ignored: ${t.javaClass.simpleName} ${t.message}")
+        }
+    }
+
+    private fun connectBilling() {
+        val client = BillingClient.newBuilder(this)
+            .setListener { result, purchases ->
+                if (result.responseCode == BillingClient.BillingResponseCode.OK) {
+                    purchases?.forEach { finishTip(it) }
+                }
+            }
+            .enablePendingPurchases(
+                PendingPurchasesParams.newBuilder().enableOneTimeProducts().build(),
+            )
+            .build()
+        billing = client
+        try {
+            client.startConnection(object : BillingClientStateListener {
+                override fun onBillingSetupFinished(result: BillingResult) {
+                    if (result.responseCode == BillingClient.BillingResponseCode.OK) {
+                        queryTips(client)
+                        queryOwned(client)
+                    } else {
+                        runOnUiThread { tipButton.text = getString(R.string.tips_play_only) }
+                    }
+                }
+
+                override fun onBillingServiceDisconnected() {}
+            })
+        } catch (t: Throwable) {
+            Log.w(TAG, "billing start ignored: ${t.javaClass.simpleName} ${t.message}")
+            tipButton.text = getString(R.string.tips_play_only)
+        }
+    }
+
+    private fun onTipClicked() {
+        val client = billing
+        if (client == null || !client.isReady) {
+            tipButton.text = getString(R.string.tips_play_only)
+            return
+        }
+        queryTips(client)
+    }
+
+    private fun queryTips(client: BillingClient) {
+        val products = TIP_IDS.map { id ->
+            QueryProductDetailsParams.Product.newBuilder()
+                .setProductId(id)
+                .setProductType(BillingClient.ProductType.INAPP)
+                .build()
+        }
+        val params = QueryProductDetailsParams.newBuilder().setProductList(products).build()
+        client.queryProductDetailsAsync(params) { result, details ->
+            runOnUiThread {
+                if (result.responseCode != BillingClient.BillingResponseCode.OK || details.isEmpty()) {
+                    tipButton.text = getString(R.string.tips_play_only)
+                } else {
+                    showTipProducts(details)
                 }
             }
         }
+    }
+
+    private fun queryOwned(client: BillingClient) {
+        val params = QueryPurchasesParams.newBuilder()
+            .setProductType(BillingClient.ProductType.INAPP)
+            .build()
+        client.queryPurchasesAsync(params) { result, purchases ->
+            if (result.responseCode == BillingClient.BillingResponseCode.OK) {
+                purchases.forEach { finishTip(it) }
+            }
+        }
+    }
+
+    private fun showTipProducts(details: List<ProductDetails>) {
+        tipChoices.removeAllViews()
+        for (detailsItem in details) {
+            val b = Button(this)
+            b.text = detailsItem.name.ifBlank { detailsItem.productId }
+            b.setOnClickListener { launchTip(detailsItem) }
+            tipChoices.addView(b)
+        }
+    }
+
+    private fun launchTip(details: ProductDetails) {
+        val client = billing ?: return
+        val product = BillingFlowParams.ProductDetailsParams.newBuilder()
+            .setProductDetails(details)
+            .build()
+        val flow = BillingFlowParams.newBuilder()
+            .setProductDetailsParamsList(listOf(product))
+            .build()
+        client.launchBillingFlow(this, flow)
+    }
+
+    private fun finishTip(purchase: Purchase) {
+        if (purchase.purchaseState != Purchase.PurchaseState.PURCHASED) return
+        val client = billing ?: return
+        val token = purchase.purchaseToken
+        val consume = {
+            val params = ConsumeParams.newBuilder().setPurchaseToken(token).build()
+            client.consumeAsync(params) { result, _ ->
+                if (result.responseCode == BillingClient.BillingResponseCode.OK) {
+                    runOnUiThread { thanksView.text = "Thanks" }
+                }
+            }
+        }
+        if (purchase.isAcknowledged) {
+            consume()
+            return
+        }
+        val ack = AcknowledgePurchaseParams.newBuilder().setPurchaseToken(token).build()
+        client.acknowledgePurchase(ack) { consume() }
+    }
+
+    override fun onDestroy() {
+        billing?.endConnection()
+        billing = null
+        super.onDestroy()
     }
 
     private data class ExtraCard(
@@ -492,8 +684,9 @@ class PluginActivity : Activity() {
     )
 
     companion object {
-        private const val TAG = "FordFuel"
+        private const val TAG = "FuelSmooth"
         private const val PAD = 48
         private const val REQ_NOTIF = 3501
+        private val TIP_IDS = listOf("tip_small", "tip_medium", "tip_large")
     }
 }

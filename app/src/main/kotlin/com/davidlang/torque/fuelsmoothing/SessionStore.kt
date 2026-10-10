@@ -149,7 +149,7 @@ internal class SessionStore(context: Context, private val tank: Int = 1, rawDir:
     fun sessionCount(): Int = dir.listFiles { _, name -> name.endsWith(".jsonl") }?.size ?: 0
 
     companion object {
-        private const val TAG = "FordFuel"
+        private const val TAG = "FuelSmooth"
         private const val LITER_GPH = 0.264172052
         private const val LITER_MEAN_GPH = 8.0
 
