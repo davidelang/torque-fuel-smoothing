@@ -4,7 +4,7 @@ import android.util.Log
 import org.prowl.torque.remote.ITorqueService
 
 internal object TankSeed {
-    const val PROFILE_KEY = Pids.PREFIX + "nameplateGal"
+    val PROFILE_KEY: String get() = Pids.PREFIX + "nameplateGal"
     private const val TAG = "FordFuel"
     private val KEYS = arrayOf("tankCapacity", "profileTankCapacity")
 
