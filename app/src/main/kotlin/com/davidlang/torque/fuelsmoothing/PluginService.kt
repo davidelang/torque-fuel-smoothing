@@ -69,9 +69,7 @@ class PluginService : Service() {
     private var mpgUnit: String = "mpg"
     private var lastRawPct: Double? = null
     private var lastAuthPct: Double? = null
-    private var lastSliderPct: Double? = null
     private var lastEcuConnected: Boolean? = null
-    private var sliderWritable: Boolean? = null
     private var nameplateGal: Double? = null
     private var profileId: String = ProfileStore.DEFAULT_ID
     /** Wrong/unknown-vehicle hold: sessions go to files/quarantine/<stamp>/ and never touch a profile. */
@@ -102,6 +100,29 @@ class PluginService : Service() {
     }
     private var detectQueue: ArrayDeque<SourceProbe.Planned>? = null
     private var detectTimeouts = 0
+    private var fuelDetect: FuelDetect.Run? = null
+    /**
+     * Drive-end / disconnect / fill rollups run here, one at a time in submission order (never concurrently,
+     * never on the poll thread). Results are applied back on the main thread.
+     */
+    private val rollupExec = java.util.concurrent.Executors.newSingleThreadExecutor { r -> Thread(r, "FuelSmooth-rollup") }
+    /** Session ids currently being recorded; rollups never read these files. */
+    @Volatile private var openSessions: Set<String> = emptySet()
+
+    private fun refreshOpen() { openSessions = tanks.values.mapNotNull { it.sessions.sessionId }.toSet() }
+
+    private fun submitRollup(what: String, work: () -> Unit, done: () -> Unit) {
+        runCatching {
+            rollupExec.execute {
+                val t0 = System.currentTimeMillis()
+                runCatching(work).onFailure { Log.w(TAG, "$what failed: ${it.javaClass.simpleName} ${it.message}") }
+                Log.i(TAG, "$what done in ${System.currentTimeMillis() - t0} ms")
+                handler.post(done)
+            }
+        }.onFailure { Log.w(TAG, "$what not queued: ${it.message}") }
+    }
+    /** Auto-detection runs at most once per ECU connection. */
+    private var fuelDetectTried = false
     private var lastDetectMs = 0L
     private var cfg: FixFuelConfig = FixFuelConfig(
         sourceId = FixFuelPrefs.DEFAULT_SOURCE,
@@ -202,6 +223,7 @@ class PluginService : Service() {
             ACTION_Q_CONFIRM -> confirmQuarantine(intent.getStringExtra(EXTRA_TARGET))
             ACTION_DETECT -> {
                 bindTorque()
+                queueFuelDetect("manual")
                 queueDetect()
             }
         }
@@ -217,6 +239,8 @@ class PluginService : Service() {
         stopPolling()
         FixFuelPrefs.prefs(this).unregisterOnSharedPreferenceChangeListener(prefsListener)
         closeSession()
+        rollupExec.shutdown()
+        runCatching { rollupExec.awaitTermination(15, java.util.concurrent.TimeUnit.SECONDS) }
         if (bindRequested) {
             runCatching { unbindService(connection) }
         }
@@ -357,7 +381,15 @@ class PluginService : Service() {
         if (ecu == true) ensureActiveSession()
         val skipFill = now < suppressFillUntilMs
         // Never burst bus queries: at most one identity or one detect command per tick.
-        if (identity != null) pumpIdentity(t) else pumpDetect(t, speedRaw)
+        if (ecu == true && identity == null && !fuelDetectTried && fuelDetect == null && !cfg.sourceConfirmed) {
+            fuelDetectTried = true
+            queueFuelDetect("auto")
+        }
+        when {
+            identity != null -> pumpIdentity(t)
+            fuelDetect != null -> pumpFuelDetect(t)
+            else -> pumpDetect(t, speedRaw)
+        }
         sampleTank(1, t, ecu, speedMph, now, speedRaw, skipFill)
         for (extra in cfg.extras) {
             sampleTank(extra.id, t, ecu, speedMph, now, speedRaw, skipFill)
@@ -546,7 +578,6 @@ class PluginService : Service() {
         if (bandOut != null) runCatching { publishBand(t, bandOut) }
         if (kalOut != null) runCatching { publishKalman(t, kalOut) }
         writeStockFuelLevel(t, smoothed, out.correctedPct)
-        maybeSyncSlider(t, out.correctedPct)
         updatePresence(statusText())
     }
 
@@ -557,6 +588,7 @@ class PluginService : Service() {
 
     private fun onEcu(connected: Boolean) {
         ecuConnected = connected
+        if (connected != lastEcuConnected) { fuelDetectTried = false; fuelDetect = null }
         if (connected) startPolling() else stopPolling()
         if (lastEcuConnected == connected) return
         lastEcuConnected = connected
@@ -974,25 +1006,9 @@ class PluginService : Service() {
      * (the Pixel's .tdv holds both Torque's tankUsed=128.9 and our plugin_tankUsed=85.6, and tankCapacity
      * stayed 132.49), and ITorqueService has no setter for vehicle-profile fields, nor any call to create or
      * switch a vehicle profile. So the learned tank size cannot drive Torque's own remaining/DTE, and our
-     * Remaining/DTE PIDs stay required.
+     * Remaining/DTE PIDs stay required. The plugin therefore writes nothing into the Torque profile
+     * (the former plugin_tankUsed / plugin_authoritativePct storeInProfile writes were removed).
      */
-    private fun maybeSyncSlider(t: ITorqueService, auth: Double) {
-        if (!FuelMath.crossedOnePercent(lastSliderPct, auth)) return
-        lastSliderPct = auth
-        runCatching {
-            t.storeInProfile("${Pids.PREFIX}authoritativePct", auth.toString(), true)
-        }
-        val rc = runCatching { t.storeInProfile("tankUsed", auth.toString(), true) }.getOrNull()
-        if (sliderWritable == null) {
-            sliderWritable = rc == 0
-            Log.i(
-                TAG,
-                "tankUsed storeInProfile rc=$rc writable=$sliderWritable " +
-                    "(public API historically cannot write Torque's slider; Overrides PID + setPIDInformation is the DTE path)",
-            )
-        }
-    }
-
     private fun configuredIds(): Set<Int> = setOf(1) + cfg.extras.map { it.id }.toSet()
 
     private fun isConfigured(id: Int): Boolean = id == 1 || cfg.extras.any { it.id == id }
@@ -1043,7 +1059,6 @@ class PluginService : Service() {
     private fun openTankSession(id: Int) {
         val rt = tanks[id] ?: return
         if (rt.sessions.isOpen) return
-        if (id == 1) lastSliderPct = null
         rt.usedGal = 0.0
         rt.fuelAtFillGal = 0.0
         rt.lastRateMs = null
@@ -1053,6 +1068,7 @@ class PluginService : Service() {
         sessionFlowMinUnit = null
         val sid = rt.sessions.open(profileId = profileId, app = BuildConfig.VERSION_NAME)
         FsLog.reset()
+        refreshOpen()
         Log.i(TAG, "session open tank=$id $sid files=${rt.sessions.sessionCount()}")
     }
 
@@ -1071,8 +1087,8 @@ class PluginService : Service() {
                     val pd = ProfileStore.profileDir(filesDir, target)
                     Fingerprint.save(pd, Fingerprint.merge(Fingerprint.load(pd), o))
                 }
-                ProfileStore.rollup(ProfileStore.tankDir(filesDir, target, id), nameplateFor(id))
-                priorCache.clear()
+                val tdir = ProfileStore.tankDir(filesDir, target, id); val np = nameplateFor(id)
+                submitRollup("rollup $target tank$id", { ProfileStore.rollup(tdir, np, openSessions) }) { priorCache.clear() }
             }
             return
         }
@@ -1083,14 +1099,15 @@ class PluginService : Service() {
         if (id == 1) commitTank1SinceFill(rt)
         val closed = rt.sessions.close()
         closeLiveChunks(rt, closed)
-        val dir = ProfileStore.tankDir(filesDir, profileId, id)
-        val gap = ProfileStore.rollup(dir, nameplateFor(id))
-        priorCache.remove(id)
-        publishTankGuess(id)
-        Log.i(
-            TAG,
-            "session close tank=$id samples=${closed.size} files=${rt.sessions.sessionCount()} gap=${gap.replace('\n', ' ')}",
-        )
+        refreshOpen()
+        val dir = ProfileStore.tankDir(filesDir, profileId, id); val np = nameplateFor(id)
+        Log.i(TAG, "session close tank=$id samples=${closed.size} files=${rt.sessions.sessionCount()}; rollup queued")
+        var gap = ""
+        submitRollup("rollup tank$id", { gap = ProfileStore.rollup(dir, np, openSessions) }) {
+            priorCache.remove(id)
+            publishTankGuess(id)
+            Log.i(TAG, "tank$id gap=${gap.replace('\n', ' ')}")
+        }
     }
 
     private fun closeSession() {
@@ -1247,10 +1264,11 @@ class PluginService : Service() {
         if (logging && rt.sessions.isOpen && quarantineDir == null) {
             // Fill detection: the pre-fill part of this drive is complete; segment it, refit, reload the map.
             rt.sessions.flush()
-            val dir = ProfileStore.tankDir(filesDir, profileId, rt.id)
-            if (ProfileStore.fillUpdate(dir, nameplateFor(rt.id), rt.sessions.sessionId)) {
-                priorCache.remove(rt.id)
-                publishTankGuess(rt.id)
+            val dir = ProfileStore.tankDir(filesDir, profileId, rt.id); val np = nameplateFor(rt.id)
+            val open = rt.sessions.sessionId; val tid = rt.id
+            var ok = false
+            submitRollup("fill update tank$tid", { ok = ProfileStore.fillUpdate(dir, np, open) }) {
+                if (ok) { priorCache.remove(tid); publishTankGuess(tid) }
             }
         }
         if (rt.id != 1 || quarantineDir != null) return
@@ -1530,6 +1548,48 @@ class PluginService : Service() {
         }
     }
 
+    private fun queueFuelDetect(why: String) {
+        val t = torque ?: return
+        if (!ecuConnected) return
+        val make = ProfileStore.profileField(filesDir, profileId, "make")
+        val vin = ProfileStore.storedVin(filesDir, profileId)
+        val names = pidNames.keys.toSet()
+        val c = FuelDetect.candidates(vin, make, names)
+        fuelDetect = FuelDetect.Run(c)
+        Log.i(TAG, "fuel source detection ($why) for $profileId: candidates=$c current=${cfg.sourceId} confirmed=${cfg.sourceConfirmed}")
+    }
+
+    /** One candidate per poll tick (read-only). The first plausible level wins and is stored confirmed. */
+    private fun pumpFuelDetect(t: ITorqueService) {
+        val run = fuelDetect ?: return
+        val id = run.next()
+        if (id != null) {
+            val r = runCatching { FuelSources.read(t, cfg.copy(sourceId = id), pidNames) { pid -> if (isStock012F(pid)) null else readDouble(t, pid) } }.getOrNull()
+            run.report(id, r?.pct)
+            FsLog.v(TAG, "fuel detect $id -> ${r?.pct} ${r?.how}")
+        }
+        if (!run.done) return
+        fuelDetect = null
+        val found = run.found
+        if (found != null) {
+            FuelDetect.store(filesDir, profileId, found, true)
+            prefsDirty = true
+            Log.i(TAG, "fuel source detected for $profileId: $found (tried ${run.tried})")
+            notifySimple("Fuel level source found", "Using ${FuelSources.byId(found).label} for ${profileName(profileId)}. You can change it on the setup page.")
+        } else {
+            Log.w(TAG, "fuel source detection found nothing for $profileId (tried ${run.tried})")
+            notifySimple("No fuel level source found", "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.")
+        }
+    }
+
+    private fun notifySimple(title: String, text: String) {
+        val nm = notificationManager() ?: return
+        val b = if (Build.VERSION.SDK_INT >= 26) Notification.Builder(this, CHANNEL_ID) else @Suppress("DEPRECATION") Notification.Builder(this)
+        b.setSmallIcon(R.drawable.ic_stat_notify).setContentTitle(title).setContentText(text)
+            .setStyle(Notification.BigTextStyle().bigText(text)).setAutoCancel(true)
+        runCatching { nm.notify(DETECT_NOTIF_ID, b.build()) }.onFailure { FsLog.warn(TAG, "notify", "notify ignored: ${it.message}") }
+    }
+
     private fun queueDetect() {
         if (!ecuConnected) return
         if (ProfileStore.distanceManual(filesDir, profileId)) return
@@ -1588,6 +1648,7 @@ class PluginService : Service() {
         const val EXTRA_TARGET = "target"
         const val NEW_PROFILE = Fingerprint.NEW_PROFILE
         const val IDENTITY_NOTIF_ID = 4242
+        const val DETECT_NOTIF_ID = 4243
         const val ACTION_OBD_CONNECTED = "org.prowl.torque.OBD_CONNECTED"
         const val ACTION_OBD_DISCONNECTED = "org.prowl.torque.OBD_DISCONNECTED"
         const val ACTION_PID_QUERY = "org.prowl.torque.PID_QUERY"

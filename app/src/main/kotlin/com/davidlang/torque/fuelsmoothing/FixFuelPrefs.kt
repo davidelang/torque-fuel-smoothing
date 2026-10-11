@@ -17,6 +17,7 @@ internal data class ExtraTank(
 
 internal data class FixFuelConfig(
     val sourceId: String,
+    val sourceConfirmed: Boolean = false,
     val customName: String,
     val tauSec: Double,
     val skewPctPerSec: Double,
@@ -99,7 +100,7 @@ internal object FixFuelPrefs {
     const val KEY_FILL_ANCHOR = "fill_anchor_gal"
     const val KEY_SINCE_FILL = "since_fill_used_gal"
 
-    const val DEFAULT_SOURCE = "ford_16c1"
+    const val DEFAULT_SOURCE = FuelDetect.NONE
     const val DEFAULT_SOURCE_T2 = "custom_name"
     const val ACTIVE_TANK1 = "1"
     const val ACTIVE_TANK2 = "2"
@@ -169,10 +170,12 @@ internal object FixFuelPrefs {
             invalid[KEY_TANK] = tankRaw
             android.util.Log.w("FuelSmooth", "stored $KEY_TANK=\"$tankRaw\" is invalid; treated as no tank guess")
         }
+        val src = FuelDetect.load(root, pid, if (p.contains(KEY_SOURCE)) p.getString(KEY_SOURCE, null) else null)
         val learnedRaw = p.getString(KEY_LEARNED, "") ?: ""
         val learned = learnedRaw.toDoubleOrNull()?.takeIf { it > 0.0 }
         return FixFuelConfig(
-            sourceId = p.getString(KEY_SOURCE, DEFAULT_SOURCE) ?: DEFAULT_SOURCE,
+            sourceId = src.first,
+            sourceConfirmed = src.second,
             customName = p.getString(KEY_CUSTOM, "") ?: "",
             tauSec = checked(p, KEY_TAU, DEFAULT_TAU, ::tauOk, invalid),
             skewPctPerSec = checked(p, KEY_SKEW, DEFAULT_SKEW, ::skewOk, invalid),
@@ -206,6 +209,11 @@ internal object FixFuelPrefs {
         feed012f: FeedMode = FeedMode.CORRECTED,
         primaryAlgo: MapAlgo = MapAlgo.CHUNK,
     ) {
+        // Per profile: a source the user picks (different from the stored one) is confirmed.
+        run {
+            val r = ctx.filesDir; val id = ProfileStore.activeId(r)
+            if (ProfileStore.profileField(r, id, "fuelSource") != sourceId) FuelDetect.store(r, id, sourceId, sourceId != FuelDetect.NONE)
+        }
         val e = prefs(ctx).edit()
             .putString(KEY_SOURCE, sourceId)
             .putString(KEY_CUSTOM, customName)
@@ -340,4 +348,21 @@ enum class MapAlgo(val label: String) {
     CHUNK("Chunk fit (default)"),
     BAND("Band fit (smooth curve)"),
     KALMAN("Kalman fit"),
+}
+
+/** Tank size entry/display unit (per profile, profile.json "tankUnit"). Stored values are always gallons. */
+enum class VolUnit(val label: String, val litersPer: Double) {
+    GAL("gal", 3.785411784),
+    L("L", 1.0);
+
+    fun toGal(v: Double): Double = v * litersPer / GAL.litersPer
+    fun fromGal(g: Double): Double = g * GAL.litersPer / litersPer
+
+    companion object {
+        fun of(s: String?): VolUnit = entries.firstOrNull { it.name == s } ?: GAL
+        /** Text for the entry field: one decimal, blank when unknown. */
+        fun show(gal: Double?, u: VolUnit): String = gal?.takeIf { it.isFinite() && it > 0 }?.let { String.format(java.util.Locale.ROOT, "%.1f", u.fromGal(it)) } ?: ""
+        /** Shown when the tank size is blank: the neutral fallbacks used until drives take over. */
+        const val FALLBACK_HINT = "blank = unknown; fits start from neutral fallbacks (30 gal chunk/raw prior, 25 gal Kalman) until your drives take over"
+    }
 }

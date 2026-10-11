@@ -44,6 +44,8 @@ class PluginActivity : Activity() {
     private lateinit var skew: EditText
     private lateinit var jump: EditText
     private lateinit var tank: EditText
+    private lateinit var tankUnit: Spinner
+    private var shownUnit = VolUnit.GAL
     private lateinit var live: TextView
     private lateinit var estimated: TextView
     private lateinit var extrasCol: LinearLayout
@@ -221,9 +223,26 @@ class PluginActivity : Activity() {
         jump = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
         col.addView(jump)
 
-        col.addView(label("Tank size, current guess (gallons) — updated at fills and when Torque disconnects"))
+        col.addView(label("Tank size, current guess — updated at fills and when Torque disconnects"))
         tank = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
+        tank.hint = VolUnit.FALLBACK_HINT
         col.addView(tank)
+        tankUnit = Spinner(this)
+        tankUnit.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, VolUnit.entries.map { it.label })
+        col.addView(tankUnit)
+        tankUnit.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val u = VolUnit.entries[position.coerceIn(0, VolUnit.entries.size - 1)]
+                if (loading || u == shownUnit) return
+                // Re-express the typed value in the new unit; the stored value stays in gallons.
+                val gal = tank.text.toString().trim().toDoubleOrNull()?.let { shownUnit.toGal(it) }
+                shownUnit = u
+                ProfileStore.setProfileField(filesDir, ProfileStore.activeId(filesDir), "tankUnit", u.name)
+                tank.setText(VolUnit.show(gal, u))
+                persist()
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
 
         estimated = TextView(this)
         estimated.textSize = 14f
@@ -320,7 +339,10 @@ class PluginActivity : Activity() {
         setIfBlankOrInit(tau, c.tauSec.toString())
         setIfBlankOrInit(skew, c.skewPctPerSec.toString())
         setIfBlankOrInit(jump, c.jumpPct.toString())
-        val tankStr = c.tankGal?.toString() ?: ""
+        shownUnit = VolUnit.of(ProfileStore.profileField(filesDir, ProfileStore.activeId(filesDir), "tankUnit"))
+        tankUnit.setSelection(shownUnit.ordinal)
+        val shownGal = tank.text.toString().trim().toDoubleOrNull()?.let { shownUnit.toGal(it) }
+        val tankStr = if (shownGal != null && c.tankGal != null && kotlin.math.abs(shownGal - c.tankGal) < 0.05) tank.text.toString() else VolUnit.show(c.tankGal, shownUnit)
         if (tank.text.toString() != tankStr && !tank.isFocused) tank.setText(tankStr)
         showStoredInvalid(c)
         val km = Kalman.loadModel(ProfileStore.tankDir(filesDir, ProfileStore.activeId(filesDir), 1))
@@ -563,7 +585,7 @@ class PluginActivity : Activity() {
             tauSec = tau.text.toString().trim().toDouble(),
             skewPctPerSec = skew.text.toString().trim().toDouble(),
             jumpPct = jump.text.toString().trim().toDouble(),
-            tankGal = tank.text.toString().trim().toDoubleOrNull(),
+            tankGal = tank.text.toString().trim().toDoubleOrNull()?.let { shownUnit.toGal(it) },
             extras = extrasFromCards(),
             activeTank = activeTankFromSpinner(),
             selectPidName = selectPid.text.toString().trim(),

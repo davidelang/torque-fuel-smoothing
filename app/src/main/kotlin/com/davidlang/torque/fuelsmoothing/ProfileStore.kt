@@ -335,9 +335,29 @@ internal object ProfileStore {
      * Rebuild chunks, drives, fills, and model.json from raw/.
      * Does not call FuelMath.estimateUsable.
      */
-    fun rollup(dir: File, nameplate: Double?): String {
+    const val ROLLUP_SIG = "rollup.sig"
+
+    /**
+     * [exclude]: session ids still being recorded (never read mid-drive). Skipped entirely, outputs untouched,
+     * when the included raw files and settings are unchanged since the last rollup (RollupCache.enabled).
+     */
+    fun rollup(dir: File, nameplate: Double?, exclude: Set<String> = emptySet()): String {
         val raw = File(dir, "raw")
-        val sessions = if (raw.isDirectory) FuelV2.loadSessions(raw) else emptyList()
+        val files = if (raw.isDirectory) FuelV2.sessionFiles(raw, exclude) else emptyList()
+        val sig = RollupCache.signature(files, "nameplate=$nameplate v=${ChunkFit.VERSION}/${BandFit.VERSION}/${Kalman.VERSION}")
+        val sigFile = File(dir, ROLLUP_SIG)
+        if (RollupCache.enabled && files.isNotEmpty() && sigFile.isFile && File(dir, "model.json").isFile && sigFile.readText() == sig) {
+            runCatching { android.util.Log.i("FuelSmooth", "rollup skipped: no new or changed raw sessions (${files.size})") }
+            return File(dir, "gap.txt").takeIf { it.isFile }?.readText() ?: ""
+        }
+        val r = rollupFull(dir, nameplate, exclude)
+        if (files.isNotEmpty()) sigFile.writeText(sig)
+        return r
+    }
+
+    private fun rollupFull(dir: File, nameplate: Double?, exclude: Set<String>): String {
+        val raw = File(dir, "raw")
+        val sessions = if (raw.isDirectory) FuelV2.loadSessions(raw, exclude) else emptyList()
         val t0 = FuelV2.chooseT0(nameplate, sessions)
         val fitted = if (sessions.isEmpty()) {
             null
@@ -444,7 +464,7 @@ internal object ProfileStore {
     private fun writeModelIfChanged(f: File, json: String) {
         val strip = { x: String -> x.replace(Regex("\"timestamp\":[0-9]+"), "") }
         if (f.isFile && strip(f.readText()) == strip(json)) return
-        f.writeText(json)
+        AtomicFile.write(f, json)
     }
 
     fun storedMap(dir: File): Triple<DoubleArray, DoubleArray, Double>? {

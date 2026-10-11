@@ -24,7 +24,14 @@ internal object BandFit {
     const val ITERS = 10
     const val QUAD = 41
 
-    class Result(val g: DoubleArray, val lambda: Double, val lodoRms: Double, val v95: Double, val capToZero: Double, val chunks: Int, val activeCons: Int) {
+    /** λ is re-chosen by LODO only every [LAMBDA_EVERY] new drives or when the chunk count moves by >= [LAMBDA_CHUNK_REL]. */
+    const val LAMBDA_EVERY = 5
+    const val LAMBDA_CHUNK_REL = 0.2
+
+    class Result(
+        val g: DoubleArray, val lambda: Double, val lodoRms: Double, val v95: Double, val capToZero: Double, val chunks: Int, val activeCons: Int,
+        val lambdaDrives: Int = 0, val lambdaChunks: Int = 0,
+    ) {
         fun v(level: Double) = vAt(level, g)
     }
 
@@ -125,16 +132,27 @@ internal object BandFit {
         return if (n == 0) Double.POSITIVE_INFINITY else sqrt(se / n)
     }
 
-    fun run(ps: List<ChunkFit.Part>, ch: List<ChunkFit.Chunk>): Result? {
+    fun drives(ch: List<ChunkFit.Chunk>) = ch.map { drive(it.key) }.toSet().size
+
+    /** Cached choice (λ, LODO RMS, drives, chunks) is reused when the data grew less than the policy allows. */
+    fun reuse(cached: DoubleArray?, ch: List<ChunkFit.Chunk>): Boolean {
+        if (cached == null || cached.size < 4) return false
+        val d = drives(ch); val n = ch.size
+        return d < cached[2] + LAMBDA_EVERY && abs(n - cached[3]) < LAMBDA_CHUNK_REL * cached[3]
+    }
+
+    fun run(ps: List<ChunkFit.Part>, ch: List<ChunkFit.Chunk>, cached: DoubleArray? = null): Result? {
         if (ch.size < 2) return null
         var best = LAMBDAS[0]; var bestR = Double.POSITIVE_INFINITY
-        for (l in LAMBDAS) { val r = lodo(ch, ps, l); if (r < bestR) { bestR = r; best = l } }
+        var lamD = drives(ch); var lamN = ch.size
+        if (reuse(cached, ch)) { best = cached!![0]; bestR = cached[1]; lamD = cached[2].toInt(); lamN = cached[3].toInt() }
+        else for (l in LAMBDAS) { val r = lodo(ch, ps, l); if (r < bestR) { bestR = r; best = l } }
         val (g, act) = fit(ch, ps, best)
         val v95 = vAt(95.0, g)
         val (_, plats) = ChunkFit.epochs(ps, ch)
         val pl = plats.map { max(it[1] - (v95 - vAt(it[0], g)), 0.0) }
         val cap = v95 + if (pl.isNotEmpty()) ChunkFit.med(pl.toDoubleArray()) else 0.07 * v95
-        return Result(g, best, bestR, v95, cap, ch.size, act)
+        return Result(g, best, bestR, v95, cap, ch.size, act, lamD, lamN)
     }
 
     private fun d(x: Double) = if (x.isFinite()) x.toString() else "null"
@@ -142,7 +160,15 @@ internal object BandFit {
     fun json(r: Result, nowMs: Long): String =
         "{\"version\":$VERSION,\"source\":\"band\",\"timestamp\":$nowMs,\"knots\":${KNOTS.joinToString(",", "[", "]") { d(it) }}," +
             "\"g\":${r.g.joinToString(",", "[", "]") { d(it) }},\"lambda\":${d(r.lambda)},\"lodoRms\":${d(r.lodoRms)},\"v95\":${d(r.v95)}," +
-            "\"capToZero\":${d(r.capToZero)},\"chunks\":${r.chunks},\"activeConstraints\":${r.activeCons}}"
+            "\"capToZero\":${d(r.capToZero)},\"chunks\":${r.chunks},\"activeConstraints\":${r.activeCons}," +
+            "\"lambdaDrives\":${r.lambdaDrives},\"lambdaChunks\":${r.lambdaChunks}}"
+
+    /** (λ, LODO RMS, drives, chunks) recorded at the last λ choice, or null. */
+    fun cachedLambda(dir: File): DoubleArray? = runCatching {
+        val t = File(dir, FILE).takeIf { it.isFile }?.readText() ?: return null
+        fun n(k: String) = Regex("\"$k\":(-?[0-9.eE+-]+)").find(t)?.groupValues?.get(1)?.toDouble()
+        doubleArrayOf(n("lambda")!!, n("lodoRms")!!, n("lambdaDrives")!!, n("lambdaChunks")!!).takeIf { it[2] > 0 && it[3] > 0 }
+    }.getOrNull()
 
     /** (g at knots, capToZero) from model-band.json, or null. */
     fun load(dir: File): Pair<DoubleArray, Double>? {
@@ -158,10 +184,10 @@ internal object BandFit {
     /** Refit from all stored chunks and write model-band.json when the result changed. */
     fun update(dir: File): Result? = runCatching {
         val (ps, ch) = ChunkFit.load(dir)
-        val r = run(ps, ch) ?: return@runCatching null
+        val r = run(ps, ch, cachedLambda(dir)) ?: return@runCatching null
         val f = File(dir, FILE); val js = json(r, System.currentTimeMillis())
         val strip = { x: String -> x.replace(Regex("\"timestamp\":[0-9]+"), "") }
-        if (!f.isFile || strip(f.readText()) != strip(js)) f.writeText(js)
+        if (!f.isFile || strip(f.readText()) != strip(js)) AtomicFile.write(f, js)
         runCatching {
             android.util.Log.i("FuelSmooth", "fit band v95=${"%.2f".format(r.v95)} cap=${"%.2f".format(r.capToZero)} lambda=${r.lambda} lodoRms=${"%.3f".format(r.lodoRms)} chunks=${r.chunks} active=${r.activeCons}")
         }

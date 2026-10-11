@@ -18,6 +18,7 @@ internal object FuelSources {
     const val LITERS_FULL_SCALE = 150.0
 
     val catalog: List<FuelSource> = listOf(
+        FuelSource("none", "None yet (Detect runs on connect)"),
         FuelSource("sae_012f", "SAE 012F Fuel Tank Level", modePid = "012F"),
         FuelSource("ford_16c1", "Mode 22 16C1", longName = "[FORD]Fuel Level"),
         FuelSource("ford_f42f", "Ford Mode 22 F42F", longName = null, modePid = "22F42F"),
@@ -28,13 +29,13 @@ internal object FuelSources {
         FuelSource("custom_name", "Torque extra PID by long name"),
     )
 
-    fun byId(id: String): FuelSource = catalog.firstOrNull { it.id == id } ?: catalog.first { it.id == "ford_16c1" }
+    fun byId(id: String): FuelSource = catalog.firstOrNull { it.id == id } ?: catalog.first { it.id == "none" }
 
     fun labels(): Array<String> = catalog.map { it.label }.toTypedArray()
 
     fun indexOf(id: String): Int {
         val i = catalog.indexOfFirst { it.id == id }
-        return if (i >= 0) i else catalog.indexOfFirst { it.id == "ford_16c1" }
+        return if (i >= 0) i else catalog.indexOfFirst { it.id == "none" }
     }
 
     data class Read(
@@ -50,6 +51,7 @@ internal object FuelSources {
         getValue: (String) -> Double?,
     ): Read {
         val src = byId(cfg.sourceId)
+        if (src.id == "none") return Read(null, "no fuel source yet (Detect)", true)
         if (src.id == "sae_012f") {
             val resp = bus(torque, "", "012F") ?: bus(torque, "", "01 2F")
             val a = parseAAfter(resp, "412F")

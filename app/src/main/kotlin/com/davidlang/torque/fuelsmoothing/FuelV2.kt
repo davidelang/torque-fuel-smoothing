@@ -93,47 +93,50 @@ internal object FuelV2 {
     private const val LITER_FACTOR = 0.264172052
     const val KM_PER_MILE = 1.609344
 
-    fun loadSessions(dir: File): List<FuelSession> {
-        val files = dir.listFiles { f -> f.isFile && f.name.endsWith(".jsonl") } ?: return emptyList()
-        val out = ArrayList<FuelSession>()
-        for (file in files.sortedBy { it.name }) {
-            val t = ArrayList<Double>()
-            val raw = ArrayList<Double>()
-            val sm = ArrayList<Double>()
-            val used = ArrayList<Double>()
-            val spd = ArrayList<Double>()
-            val fill = ArrayList<Boolean>()
-            file.forEachLine { line ->
-                val s = line.trim()
-                if (s.isEmpty() || s.contains("\"event\"") || !s.contains("\"t\"")) return@forEachLine
-                val ms = num(s, "t") ?: return@forEachLine
-                t.add(ms / 1000.0)
-                val rawPct = num(s, "rawPct") ?: num(s, "lvl") ?: Double.NaN
-                // lvl < 0 is the explicit missing flag; older new-format rows marked ok:false carried a
-                // glitch/held value (often 0). Both are missing levels; fuel stays cumulative and counted.
-                val missing = !rawPct.isFinite() || rawPct < 0.0 || s.contains("\"ok\":false")
-                raw.add(if (missing) Double.NaN else rawPct)
-                sm.add(if (missing) Double.NaN else num(s, "smoothedPct") ?: num(s, "sm") ?: Double.NaN)
-                used.add(num(s, "fuelUsedGal") ?: num(s, "fuelGal") ?: 0.0)
-                spd.add(num(s, "speed") ?: num(s, "spd") ?: 0.0)
-                fill.add(
-                    s.contains("\"fill\":true") || s.contains("\"fill\": true") || s.contains("\"mode\":\"FILL\""),
-                )
-            }
-            if (t.size < 2) continue
-            out.add(
-                FuelSession(
-                    name = file.name.removeSuffix(".jsonl"),
-                    t = t.toDoubleArray(),
-                    raw = raw.toDoubleArray(),
-                    sm = sm.toDoubleArray(),
-                    used = used.toDoubleArray(),
-                    spd = spd.toDoubleArray(),
-                    fill = fill.toBooleanArray(),
-                ),
+    fun loadSessions(dir: File, exclude: Set<String> = emptySet()): List<FuelSession> =
+        sessionFiles(dir, exclude).mapNotNull { f -> RollupCache.session(f) { parseSession(it) } }
+
+    /** Raw session files in name (time) order, without [exclude] (open sessions, by session id). */
+    fun sessionFiles(dir: File, exclude: Set<String> = emptySet()): List<File> =
+        (dir.listFiles { f -> f.isFile && f.name.endsWith(".jsonl") } ?: emptyArray())
+            .filter { it.name.removeSuffix(".jsonl") !in exclude }.sortedBy { it.name }
+
+    fun parseSession(file: File): FuelSession? {
+        val t = ArrayList<Double>()
+        val raw = ArrayList<Double>()
+        val sm = ArrayList<Double>()
+        val used = ArrayList<Double>()
+        val spd = ArrayList<Double>()
+        val fill = ArrayList<Boolean>()
+        file.forEachLine { line ->
+            val s = line.trim()
+            if (s.isEmpty() || s.contains("\"event\"") || !s.contains("\"t\"")) return@forEachLine
+            val ms = num(s, "t") ?: return@forEachLine
+            t.add(ms / 1000.0)
+            val rawPct = num(s, "rawPct") ?: num(s, "lvl") ?: Double.NaN
+            // lvl < 0 is the explicit missing flag; older new-format rows marked ok:false carried a
+            // glitch/held value (often 0). Both are missing levels; fuel stays cumulative and counted.
+            val missing = !rawPct.isFinite() || rawPct < 0.0 || s.contains("\"ok\":false")
+            raw.add(if (missing) Double.NaN else rawPct)
+            sm.add(if (missing) Double.NaN else num(s, "smoothedPct") ?: num(s, "sm") ?: Double.NaN)
+            used.add(num(s, "fuelUsedGal") ?: num(s, "fuelGal") ?: 0.0)
+            spd.add(num(s, "speed") ?: num(s, "spd") ?: 0.0)
+            fill.add(
+                s.contains("\"fill\":true") || s.contains("\"fill\": true") || s.contains("\"mode\":\"FILL\""),
             )
         }
-        return out
+        if (t.size < 2) return null
+        return (
+            FuelSession(
+                name = file.name.removeSuffix(".jsonl"),
+                t = t.toDoubleArray(),
+                raw = raw.toDoubleArray(),
+                sm = sm.toDoubleArray(),
+                used = used.toDoubleArray(),
+                spd = spd.toDoubleArray(),
+                fill = fill.toBooleanArray(),
+            )
+        )
     }
 
     fun replay(sessions: List<FuelSession>, scale: Double, t0: Double): FuelModel {

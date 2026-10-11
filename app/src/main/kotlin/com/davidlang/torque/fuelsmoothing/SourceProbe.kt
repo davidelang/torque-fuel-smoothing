@@ -155,7 +155,7 @@ internal object SourceProbe {
 
     fun plausibleKm(km: Double): Boolean = km in 100.0..2_000_000.0
 
-    private fun gateOpen(gates: Set<String>, vin: String?, make: String?): Boolean {
+    internal fun gateOpen(gates: Set<String>, vin: String?, make: String?): Boolean {
         if (gates.isEmpty()) return true
         val m = make?.lowercase().orEmpty()
         val vinUp = vin?.uppercase().orEmpty()

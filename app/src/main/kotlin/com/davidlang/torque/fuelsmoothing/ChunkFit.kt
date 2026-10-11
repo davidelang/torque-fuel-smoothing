@@ -145,30 +145,45 @@ internal object ChunkFit {
     }
 
     // ---------------- segmentation ----------------
+    /** Per-session work that does not depend on other sessions; memoized per session object (rollup cache). */
+    private class Prep(val first: Double, val lastMed: Double, val gph: Double?, val cuts: List<Int>, val q: BooleanArray)
+    private val prepMemo = java.util.Collections.synchronizedMap(java.util.WeakHashMap<FuelSession, Prep>())
+
+    private fun prep(s: FuelSession): Prep {
+        if (RollupCache.enabled) prepMemo[s]?.let { return it }
+        val n = s.t.size; val l = s.raw
+        val fin = (0 until n).filter { l[it].isFinite() }
+        val first = if (fin.isEmpty()) Double.NaN else finiteMed(fin.take(60).map { l[it] })
+        val last = if (fin.isEmpty()) Double.NaN else finiteMed(fin.takeLast(60).map { l[it] })
+        val cut = TreeSet<Int>(); cut.add(0)
+        val fi = (0 until n).filter { s.fill[it] }
+        if (fi.isNotEmpty()) { cut.add(fi.first()); cut.add(fi.last() + 1) }
+        for (i in 60 until n - 60) {
+            var mx = Double.NEGATIVE_INFINITY
+            for (k in i - 60 until i + 60) mx = max(mx, s.spd[k])
+            if (mx < 1.0) {
+                val a = finiteMed((i - 60 until i).map { l[it] }); val b = finiteMed((i until i + 60).map { l[it] })
+                if (a.isFinite() && b.isFinite() && b - a >= FILL_JUMP) { cut.add(i); break }
+            }
+        }
+        val p = Prep(first, last, movingGph(s), cut.filter { it in 0 until n } + n, steady(s))
+        if (RollupCache.enabled) prepMemo[s] = p
+        return p
+    }
+
     private fun parts(sessions: List<FuelSession>): List<Work> {
-        val gs = sessions.mapNotNull { movingGph(it) }.toDoubleArray()
+        val preps = sessions.map { prep(it) }
+        val gs = preps.mapNotNull { it.gph }.toDoubleArray()
         val ref = if (gs.isEmpty()) 0.0 else med(gs)
         val out = ArrayList<Work>()
         var prevEnd = Double.NaN
-        for (s in sessions) {
-            val n = s.t.size; val l = s.raw
-            val fin = (0 until n).filter { l[it].isFinite() }
-            val first = if (fin.isEmpty()) Double.NaN else finiteMed(fin.take(60).map { l[it] })
+        for ((si, s) in sessions.withIndex()) {
+            val pr = preps[si]
+            val first = pr.first
             val between = prevEnd.isFinite() && first.isFinite() && first - prevEnd >= FILL_JUMP
-            val g = movingGph(s); val dropout = g != null && g < FLOW_REL * ref
-            val cut = TreeSet<Int>(); cut.add(0)
-            val fi = (0 until n).filter { s.fill[it] }
-            if (fi.isNotEmpty()) { cut.add(fi.first()); cut.add(fi.last() + 1) }
-            for (i in 60 until n - 60) {
-                var mx = Double.NEGATIVE_INFINITY
-                for (k in i - 60 until i + 60) mx = max(mx, s.spd[k])
-                if (mx < 1.0) {
-                    val a = finiteMed((i - 60 until i).map { l[it] }); val b = finiteMed((i until i + 60).map { l[it] })
-                    if (a.isFinite() && b.isFinite() && b - a >= FILL_JUMP) { cut.add(i); break }
-                }
-            }
-            val cuts = cut.filter { it in 0 until n } + n
-            val q = steady(s)
+            val g = pr.gph; val dropout = g != null && g < FLOW_REL * ref
+            val cuts = pr.cuts
+            val q = pr.q
             for (p in 0 until cuts.size - 1) {
                 val a = cuts[p]; val b = cuts[p + 1]
                 val mv = (a until b).filter { s.spd[it] >= 5.0 }
@@ -180,7 +195,7 @@ internal object ChunkFit {
                     ),
                 )
             }
-            if (fin.isNotEmpty()) prevEnd = finiteMed(fin.takeLast(60).map { l[it] })
+            if (pr.lastMed.isFinite()) prevEnd = pr.lastMed
         }
         return out
     }

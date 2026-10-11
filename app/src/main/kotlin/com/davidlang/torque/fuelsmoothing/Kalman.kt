@@ -227,14 +227,29 @@ internal object Kalman {
         sb.append("last ").append(s.cellLast.joinToString(" ") { it.ifEmpty { "-" } }).append('\n')
         sb.append("bad ").append(s.bad.joinToString(" ") { ds(it) }).append('\n')
         for (k in s.done) sb.append("done $k\n")
+        sb.append("end ${s.done.size}\n")
         val tmp = File(dir, "$STATE.tmp"); tmp.writeText(sb.toString())
         if (!tmp.renameTo(File(dir, STATE))) { File(dir, STATE).writeText(sb.toString()); tmp.delete() }
     }
 
-    fun load(dir: File): State? = runCatching {
+    /** Why the last [load] returned null for an existing file (null when it loaded or no file existed). */
+    @Volatile var lastLoadError: String? = null
+
+    private fun warn(msg: String) { runCatching { android.util.Log.w("FuelSmooth", msg) } }
+
+    fun load(dir: File): State? {
+        lastLoadError = null
         val f = File(dir, STATE); if (!f.isFile) return null
+        return try { parse(f) } catch (e: Exception) {
+            lastLoadError = "${e.javaClass.simpleName}: ${e.message}"
+            warn("kalman state unreadable (${f.name}, ${f.length()} bytes): $lastLoadError")
+            null
+        }
+    }
+
+    private fun parse(f: File): State = run {
         val lines = f.readLines(); val kv = { k: String -> lines.first { it.startsWith("$k ") }.substring(k.length + 1) }
-        if (kv("version").trim().toInt() != VERSION) return null
+        kv("version").trim().toInt().let { v -> check(v == VERSION) { "state version $v, expected $VERSION" } }
         val s = State(kv("c0").toDouble())
         s.ns2 = kv("ns2").toDouble(); s.sig = kv("sig").toDouble()
         s.b = kv("b").split(' ').map { it.toDouble() }.toDoubleArray()
@@ -247,9 +262,28 @@ internal object Kalman {
         kv("last").split(' ').forEachIndexed { i, c -> s.cellLast[i] = if (c == "-") "" else c }
         kv("bad").trim().takeIf { it.isNotEmpty() }?.split(' ')?.forEach { s.bad.add(it.toDouble()) }
         for (l in lines.filter { it.startsWith("done ") }) s.done.add(l.substring(5))
+        check(s.b.size == N) { "b has ${s.b.size} values" }
+        // A complete file ends with "end <done count>"; anything else is truncated (would re-apply drives).
+        val end = lines.lastOrNull { it.isNotBlank() }
+        check(end == "end ${s.done.size}") { "truncated (last line '${end?.take(40)}')" }
         s.solve(); s.lastTank = s.tank
+        check(s.mu.all { it.isFinite() }) { "non-finite mean" }
         s
-    }.getOrNull()
+    }
+
+    /** Keeps an unreadable file as STATE.corrupt (never deleted; numbered if one already exists). */
+    fun quarantineCorrupt(dir: File): File? {
+        val f = File(dir, STATE); if (!f.isFile) return null
+        var dst = File(dir, "$STATE.corrupt"); var k = 1
+        while (dst.exists()) dst = File(dir, "$STATE.corrupt.${k++}")
+        return if (f.renameTo(dst)) dst else { f.copyTo(dst); dst }
+    }
+
+    /** C0 recorded in model-kalman.json (so a rebuild after a lost state keeps the original prior scale). */
+    fun storedC0(dir: File): Double? {
+        val f = File(dir, MODEL); if (!f.isFile) return null
+        return Regex("\"c0\":(-?[0-9.eE+-]+)").find(f.readText())?.groupValues?.get(1)?.toDoubleOrNull()?.takeIf { it > 0 }
+    }
 
     fun modelJson(s: State, nowMs: Long): String =
         "{\"version\":$VERSION,\"source\":\"kalman\",\"timestamp\":$nowMs,\"c0\":${ds(s.c0)},\"ns2\":${ds(s.ns2)},\"sigmaGauge\":${ds(s.sig)}," +
@@ -260,13 +294,19 @@ internal object Kalman {
         fun v(level: Double): Double { val r = row(level); var s = 0.0; for (k in 0 until N) s += r[k] * g[k]; return s }
     }
 
-    fun loadModel(dir: File): Model? = runCatching {
-        val t = File(dir, MODEL).takeIf { it.isFile }?.readText() ?: return null
+    fun loadModel(dir: File): Model? {
+        val f = File(dir, MODEL); if (!f.isFile) return null
+        return try { parseModel(f.readText()) } catch (e: Exception) {
+            warn("kalman model unreadable (${f.name}): ${e.javaClass.simpleName}: ${e.message}"); null
+        }
+    }
+
+    private fun parseModel(t: String): Model = run {
         fun num(k: String) = Regex("\"$k\":(-?[0-9.eE+-]+)").find(t)!!.groupValues[1].toDouble()
         val g = Regex("\"g\":\\[([^\\]]*)\\]").find(t)!!.groupValues[1].split(',').map { it.trim().toDouble() }.toDoubleArray()
         check(g.size == N)
         Model(g, num("tank"), num("coverage1").toInt(), num("coverage2").toInt(), num("coverage3").toInt(), t.contains("\"trusted\":true"))
-    }.getOrNull()
+    }
 
     /** The learned tank size to store in the profile, or null while the trust trigger has not fired. */
     fun trustedTank(m: Model?): Double? = m?.takeIf { it.trusted && it.tank.isFinite() && it.tank > 0 }?.tank
@@ -278,13 +318,22 @@ internal object Kalman {
     fun update(dir: File, sessions: List<FuelSession>, c0: Double?, openName: String? = null): State? = runCatching {
         if (sessions.isEmpty()) return@runCatching load(dir)
         val (drives, sig) = ChunkFit.kalmanDrives(sessions, THIN_S, openName)
-        val s = load(dir) ?: State(c0?.takeIf { it.isFinite() && it > 0 } ?: DEFAULT_C0)
+        var s = load(dir)
+        if (s == null && File(dir, STATE).isFile) {
+            val kept = quarantineCorrupt(dir)
+            warn("kalman state kept as ${kept?.name} and rebuilt from the stored drives (${lastLoadError})")
+        }
+        if (s == null) {
+            val prior = storedC0(dir)
+            s = State(prior ?: c0?.takeIf { it.isFinite() && it > 0 } ?: DEFAULT_C0)
+            if (prior != null) runCatching { android.util.Log.i("FuelSmooth", "kalman rebuild uses the original C0=$prior") }
+        }
         s.sig = sig
         var n = 0
         for (d in drives) if (s.apply(d)) n++
         if (n > 0 || !File(dir, STATE).isFile) {
             save(dir, s)
-            File(dir, MODEL).writeText(modelJson(s, System.currentTimeMillis()))
+            AtomicFile.write(File(dir, MODEL), modelJson(s, System.currentTimeMillis()))
         }
         runCatching {
             android.util.Log.i("FuelSmooth", "fit kalman tank=${"%.2f".format(s.tank)} sd=${"%.2f".format(s.sdG(100.0))} v95=${"%.2f".format(s.g(95.0))} " +
