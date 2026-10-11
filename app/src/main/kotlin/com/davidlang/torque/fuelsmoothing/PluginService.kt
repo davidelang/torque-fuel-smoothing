@@ -932,6 +932,12 @@ class PluginService : Service() {
         val prior = priorFor(rt.id)
         FuelV2.stepFill(rt.ledger, smoothed, smoothed, prior.v, prior.v95, prior.hEst)
         if (logging) rt.sessions.mark("fillEnd", now)
+        if (logging && rt.sessions.isOpen) {
+            // Fill detection: the pre-fill part of this drive is complete; segment it, refit, reload the map.
+            rt.sessions.flush()
+            val dir = ProfileStore.tankDir(filesDir, profileId, rt.id)
+            if (ProfileStore.fillUpdate(dir, nameplateFor(rt.id), rt.sessions.sessionId)) priorCache.remove(rt.id)
+        }
         if (rt.id != 1) return
         val anchor = rt.ledger.rHat.takeIf { rt.ledger.anchored && it.isFinite() && it > 0.0 } ?: return
         rt.fillAnchorGal = anchor

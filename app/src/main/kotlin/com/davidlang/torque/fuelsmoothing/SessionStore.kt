@@ -143,6 +143,9 @@ internal class SessionStore(context: Context, private val tank: Int = 1, rawDir:
      * identical-level run stays in RawLog's memory until it closes or latches as frozen, so
      * no line on disk is ever rewritten. Appends at most every FLUSH_MS, and always when forced.
      */
+    /** Writes buffered samples now (fill-time chunk update reads the file). */
+    fun flush() = drain(System.currentTimeMillis(), true)
+
     private fun drain(nowMs: Long, force: Boolean) {
         val f = file ?: return
         for (line in rawLog.takeNew()) pending.append(line).append('\n')

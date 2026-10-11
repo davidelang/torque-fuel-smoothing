@@ -259,8 +259,16 @@ internal object ProfileStore {
         }
         // A replay with zero chunks is just the prior; do not let it replace a learned model.
         val model = fitted?.takeIf { it.chunks > 0 || !File(dir, "model.json").isFile }
-        if (model != null) {
+        // The chunk fit (ChunkFit, all stored chunks) is the authority for model.json; the raw replay is
+        // kept in model-raw.json for comparison. Falls back to the raw fit until a chunk group exists.
+        val chunkFit = chunkUpdate(dir, sessions, nameplate, fitted, null)
+        if (model != null) File(dir, "model-raw.json").writeText(model.json)
+        if (chunkFit != null) {
+            writeModelIfChanged(File(dir, "model.json"), chunkFit)
+        } else if (model != null) {
             File(dir, "model.json").writeText(model.json)
+        }
+        if (model != null) {
             val chunksOut = File(dir, "chunks.jsonl")
             chunksOut.writeText("")
             val fillsOut = File(dir, "fills.jsonl")
@@ -308,6 +316,42 @@ internal object ProfileStore {
         val gap = gapText(sessions, model)
         File(dir, "gap.txt").writeText(gap)
         return gap
+    }
+
+    /**
+     * Appends this profile's new drive parts to segments.jsonl and refits from all stored chunks.
+     * Returns model.json text, or null when no chunk group exists yet. [openName] is a session still being
+     * recorded (fill detection): only its parts completed by a fill are stored.
+     */
+    fun chunkUpdate(dir: File, sessions: List<FuelSession>, nameplate: Double?, raw: FuelModel?, openName: String?): String? {
+        return runCatching {
+            dir.mkdirs()
+            val added = ChunkFit.append(dir, sessions, openName)
+            val (ps, ch) = ChunkFit.load(dir)
+            val r = ChunkFit.fit(ps, ch, nameplate)
+            val msg = "fit chunk v95=${"%.2f".format(r.v95)} cap=${"%.2f".format(r.capToZero)} chunks=${r.chunks} groups=${r.groups} " +
+                "newParts=$added active=${r.active}/${r.cons.size} | raw v95=${raw?.let { "%.2f".format(it.v95()) }} " +
+                "cap=${raw?.let { "%.2f".format(it.capToZero) }} authority=${if (r.groups > 0) "chunk" else "raw"}"
+            runCatching { android.util.Log.i("FuelSmooth", msg) }
+            if (r.groups > 0) ChunkFit.modelJson(r, raw, System.currentTimeMillis()) else null
+        }.onFailure { e -> runCatching { android.util.Log.w("FuelSmooth", "chunk fit failed; keeping model.json: ${e.message}") } }
+            .getOrNull()
+    }
+
+    /** At fill detection: store the drive parts completed by the fill and refit. Raw replay untouched. */
+    fun fillUpdate(dir: File, nameplate: Double?, openName: String?): Boolean {
+        val raw = File(dir, "raw")
+        val sessions = if (raw.isDirectory) FuelV2.loadSessions(raw) else return false
+        val json = chunkUpdate(dir, sessions, nameplate, null, openName) ?: return false
+        writeModelIfChanged(File(dir, "model.json"), json)
+        return true
+    }
+
+    /** Keeps model.json (and its timestamp) unchanged when the refit gives the same result. */
+    private fun writeModelIfChanged(f: File, json: String) {
+        val strip = { x: String -> x.replace(Regex("\"timestamp\":[0-9]+"), "") }
+        if (f.isFile && strip(f.readText()) == strip(json)) return
+        f.writeText(json)
     }
 
     fun storedMap(dir: File): Triple<DoubleArray, DoubleArray, Double>? {
