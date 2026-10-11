@@ -29,9 +29,9 @@ class FixesTest {
         assertEquals(text.length / 2, File(dir, "${Kalman.STATE}.corrupt").readText().length)
         assertEquals(35.0, b.c0, 1e-12)
         assertEquals(a.tank, b.tank, 1e-9)
-        // Truncation that keeps whole lines (lost "done"/"end" lines) is detected too.
+        // New-format file that lost "done" lines but kept its end line: count mismatch is detected.
         val lines = File(dir, Kalman.STATE).readLines()
-        File(dir, Kalman.STATE).writeText(lines.dropLast(3).joinToString("\n") + "\n")
+        File(dir, Kalman.STATE).writeText((lines.filterNot { it.startsWith("end ") }.dropLast(2) + lines.last { it.startsWith("end ") }).joinToString("\n") + "\n")
         assertNull(Kalman.load(dir))
         File(dir, Kalman.MODEL).writeText("{\"version\":")
         assertNull(Kalman.loadModel(dir)) // logged, not thrown
@@ -138,5 +138,40 @@ class FixesTest {
         assertEquals(12.3, VolUnit.L.toGal(VolUnit.L.fromGal(12.3)), 1e-12)
         assertEquals(VolUnit.GAL, VolUnit.of(null)); assertEquals(VolUnit.L, VolUnit.of("L"))
         assertTrue(VolUnit.FALLBACK_HINT.contains("30 gal") && VolUnit.FALLBACK_HINT.contains("25 gal"))
+    }
+
+    private fun stateDump(s: Kalman.State) = listOf(s.c0, s.ns2, s.sig, s.tank).toString() + s.mu.toList() + s.done.toList() + s.cons.keys.toList() + (0..3).map { s.coverage(it) }
+
+    @Test
+    fun test63LegacyStateWithoutEndLineLoads() {
+        val dir = tmp("kl")
+        checkNotNull(Kalman.update(dir, fixtures(), 35.0))
+        val ref = checkNotNull(Kalman.load(dir))
+        val f = File(dir, Kalman.STATE)
+        val legacy = f.readLines().filterNot { it.startsWith("end ") }
+        f.writeText(legacy.joinToString("\n") + "\n")
+        val got = checkNotNull(Kalman.load(dir))
+        assertNull(Kalman.lastLoadError)
+        assertEquals(stateDump(ref), stateDump(got))
+        // An update on top of a legacy file keeps it (no .corrupt, same state); new writes add the end line.
+        assertEquals(stateDump(ref), stateDump(checkNotNull(Kalman.update(dir, fixtures(), 99.0))))
+        assertFalse(File(dir, "${Kalman.STATE}.corrupt").exists())
+        Kalman.save(dir, got)
+        assertEquals("end ${got.done.size}", f.readLines().last())
+    }
+
+    @Test
+    fun test64TruncatedLegacyStateSetAside() {
+        val dir = tmp("kt")
+        val a = checkNotNull(Kalman.update(dir, fixtures(), 35.0))
+        val f = File(dir, Kalman.STATE)
+        val legacy = f.readLines().filterNot { it.startsWith("end ") }.joinToString("\n")
+        val cut = legacy.substring(0, legacy.length / 3)
+        f.writeText(cut)
+        assertNull(Kalman.load(dir)); assertNotNull(Kalman.lastLoadError)
+        val b = checkNotNull(Kalman.update(dir, fixtures(), 99.0))
+        assertEquals(cut, File(dir, "${Kalman.STATE}.corrupt").readText())
+        assertEquals(35.0, b.c0, 1e-12)
+        assertEquals(a.tank, b.tank, 1e-9)
     }
 }

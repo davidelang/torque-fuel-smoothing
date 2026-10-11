@@ -263,9 +263,10 @@ internal object Kalman {
         kv("bad").trim().takeIf { it.isNotEmpty() }?.split(' ')?.forEach { s.bad.add(it.toDouble()) }
         for (l in lines.filter { it.startsWith("done ") }) s.done.add(l.substring(5))
         check(s.b.size == N) { "b has ${s.b.size} values" }
-        // A complete file ends with "end <done count>"; anything else is truncated (would re-apply drives).
-        val end = lines.lastOrNull { it.isNotBlank() }
-        check(end == "end ${s.done.size}") { "truncated (last line '${end?.take(40)}')" }
+        // New files end with "end <done count>"; a mismatch means lost lines (would re-apply drives).
+        // Legacy files (no end line) load as-is when they parse cleanly.
+        val end = lines.lastOrNull { it.startsWith("end ") }
+        if (end != null) check(end == "end ${s.done.size}") { "end count mismatch ('$end', ${s.done.size} done)" }
         s.solve(); s.lastTank = s.tank
         check(s.mu.all { it.isFinite() }) { "non-finite mean" }
         s
