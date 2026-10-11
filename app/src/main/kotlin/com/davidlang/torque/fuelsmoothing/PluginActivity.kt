@@ -89,75 +89,96 @@ class PluginActivity : Activity() {
         col.orientation = LinearLayout.VERTICAL
         col.setPadding(pad, pad, pad, pad)
 
+        // Top: title + Help/About, then a compact status; settings follow immediately (explanations behind (i)).
+        val head = LinearLayout(this)
+        head.orientation = LinearLayout.HORIZONTAL
+        head.gravity = android.view.Gravity.CENTER_VERTICAL
         val title = TextView(this)
         title.text = getString(R.string.app_name)
-        title.textSize = 22f
-        col.addView(title)
+        title.textSize = 20f
+        title.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        head.addView(title)
+        head.addView(smallButton("Help") { showPage("Help", helpPage) })
+        head.addView(smallButton("About") { showPage("About", aboutPage) })
+        col.addView(head)
 
+        statusLine = TextView(this)
+        statusLine.textSize = 13f
+        statusLine.maxLines = 2
+        statusLine.ellipsize = android.text.TextUtils.TruncateAt.END
+        col.addView(statusLine)
+
+        if (!torqueInstalled()) {
+            val need = TextView(this)
+            need.text = "Requires Torque Pro (paid). Torque Lite does not support plugins."
+            need.textSize = 14f
+            col.addView(need)
+            col.addView(smallButton("Get Torque Pro") {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=org.prowl.torque")))
+            })
+        }
+
+        // Help page (shown in a dialog).
+        helpPage = LinearLayout(this)
+        helpPage.orientation = LinearLayout.VERTICAL
         val help = TextView(this)
         help.text = getString(R.string.help_body)
         help.textSize = 14f
-        col.addView(help)
+        helpPage.addView(help)
         val manual = Button(this)
         manual.text = getString(R.string.manual_button)
         manual.setOnClickListener {
             runCatching { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.manual_url)))) }
         }
-        col.addView(manual)
+        helpPage.addView(manual)
 
-        if (!torqueInstalled()) {
-            val need = TextView(this)
-            need.text = "Requires Torque Pro (paid). Torque Lite does not support plugins."
-            need.textSize = 16f
-            col.addView(need)
-            val play = Button(this)
-            play.text = "Torque Pro"
-            play.setOnClickListener {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=org.prowl.torque")))
-            }
-            col.addView(play)
-        }
-
+        // About page (shown in a dialog): version, privacy, feedback, tip.
+        aboutPage = LinearLayout(this)
+        aboutPage.orientation = LinearLayout.VERTICAL
         val about = TextView(this)
         about.text = versionName() + "\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded."
         about.textSize = 14f
-        col.addView(about)
+        aboutPage.addView(about)
         val privacy = Button(this)
         privacy.text = "Privacy"
         privacy.setOnClickListener {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.privacy_policy_url))))
         }
-        col.addView(privacy)
+        aboutPage.addView(privacy)
         val feedback = Button(this)
         feedback.text = "Send feedback"
         feedback.setOnClickListener { sendFeedback() }
-        col.addView(feedback)
-
+        aboutPage.addView(feedback)
         tipButton = Button(this)
         tipButton.text = "Tip"
         tipButton.setOnClickListener { onTipClicked() }
-        col.addView(tipButton)
+        aboutPage.addView(tipButton)
         tipChoices = LinearLayout(this)
         tipChoices.orientation = LinearLayout.VERTICAL
-        col.addView(tipChoices)
+        aboutPage.addView(tipChoices)
         thanksView = TextView(this)
-        thanksView.textSize = 16f
-        col.addView(thanksView)
+        thanksView.textSize = 14f
+        aboutPage.addView(thanksView)
         // Google Play Billing connects only when the user taps Tip, or to finish a recorded tip (no network use otherwise).
         TipReconciler.run(this, "app start")
 
-        profileNameView = TextView(this)
-        profileNameView.textSize = 16f
-        col.addView(profileNameView)
-        col.addView(label("Profile name"))
+        // ---- Settings ----
+        profileNameView = TextView(this)   // kept for refreshProfile; the name is in the status line
+        col.addView(info("Profile name", "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps."))
         profileName = edit(InputType.TYPE_CLASS_TEXT)
         col.addView(profileName)
-        col.addView(label("Make"))
+        col.addView(info("Make", "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try."))
         vehicleMake = edit(InputType.TYPE_CLASS_TEXT)
         col.addView(vehicleMake)
-        detectBtn = Button(this)
-        detectBtn.text = "Detect"
-        detectBtn.setOnClickListener {
+
+        col.addView(info("Fuel source", "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. None = detect on the next connect."))
+        val srcRow = LinearLayout(this)
+        srcRow.orientation = LinearLayout.HORIZONTAL
+        sourceSpinner = Spinner(this)
+        sourceSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, FuelSources.labels())
+        sourceSpinner.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        srcRow.addView(sourceSpinner)
+        detectBtn = smallButton("Detect") {
             val i = Intent(this, PluginService::class.java).setAction(PluginService.ACTION_DETECT)
             try {
                 if (Build.VERSION.SDK_INT >= 26) startForegroundService(i) else startService(i)
@@ -165,71 +186,24 @@ class PluginActivity : Activity() {
                 FsLog.w(TAG, "detect start ignored: ${t.javaClass.simpleName} ${t.message}")
             }
         }
-        col.addView(detectBtn)
-        col.addView(label("Odometer miles"))
-        odoMiles = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
-        col.addView(odoMiles)
-        val pinBtn = Button(this)
-        pinBtn.text = "Save pin"
-        pinBtn.setOnClickListener {
-            val miles = odoMiles.text.toString().toDoubleOrNull() ?: return@setOnClickListener
-            val id = ProfileStore.activeId(filesDir)
-            ProfileStore.addPin(filesDir, id, miles, System.currentTimeMillis())
-        }
-        col.addView(pinBtn)
-        gapText = TextView(this)
-        gapText.textSize = 14f
-        col.addView(gapText)
+        srcRow.addView(detectBtn)
+        col.addView(srcRow)
 
-        showNotice = CheckBox(this)
-        showNotice.text = getString(R.string.show_fuel_notification)
-        col.addView(showNotice)
-
-        col.addView(label(getString(R.string.write_012f)))
-        feed012f = Spinner(this)
-        feed012f.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, FeedMode.entries.map { it.label })
-        col.addView(feed012f)
-        col.addView(label("Gauge map for Corrected / Remaining / DTE and the 012F feed"))
-        primaryAlgo = Spinner(this)
-        primaryAlgo.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, MapAlgo.entries.map { it.label })
-        col.addView(primaryAlgo)
-        val verbose = android.widget.CheckBox(this)
-        verbose.text = "Verbose logging (debug; per-second log lines)"
-        verbose.isChecked = FixFuelPrefs.prefs(this).getBoolean(FsLog.KEY_VERBOSE, false)
-        verbose.setOnCheckedChangeListener { _, on ->
-            FixFuelPrefs.prefs(this).edit().putBoolean(FsLog.KEY_VERBOSE, on).apply()
-            FsLog.verbose = on
-        }
-        col.addView(verbose)
-
-        col.addView(label("Fuel source"))
-        sourceSpinner = Spinner(this)
-        sourceSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, FuelSources.labels())
-        col.addView(sourceSpinner)
-
-        col.addView(label("Custom long name (if extra PID by name)"))
+        col.addView(info("Custom long name", "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level."))
         customName = edit(InputType.TYPE_CLASS_TEXT)
         col.addView(customName)
 
-        col.addView(label("Smoothing time τ seconds (0 = no EMA)"))
-        tau = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
-        col.addView(tau)
-
-        col.addView(label("Max skew %/s"))
-        skew = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
-        col.addView(skew)
-
-        col.addView(label("Fill jump % (speed ≈ 0)"))
-        jump = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
-        col.addView(jump)
-
-        col.addView(label("Tank size, current guess — updated at fills and when Torque disconnects"))
+        col.addView(info("Tank size", "Current guess. Seeded from Torque's vehicle profile or your entry, then learned from your drives (Kalman, once enough of the gauge is covered) and updated at fills and when Torque disconnects."))
+        val tankRow = LinearLayout(this)
+        tankRow.orientation = LinearLayout.HORIZONTAL
         tank = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
         tank.hint = VolUnit.FALLBACK_HINT
-        col.addView(tank)
+        tank.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        tankRow.addView(tank)
         tankUnit = Spinner(this)
         tankUnit.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, VolUnit.entries.map { it.label })
-        col.addView(tankUnit)
+        tankRow.addView(tankUnit)
+        col.addView(tankRow)
         tankUnit.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val u = VolUnit.entries[position.coerceIn(0, VolUnit.entries.size - 1)]
@@ -244,36 +218,77 @@ class PluginActivity : Activity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        estimated = TextView(this)
-        estimated.textSize = 14f
-        col.addView(estimated)
+        col.addView(info(getString(R.string.write_012f), "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman map. Independent of the Gauge map; Band/Kalman use Chunk until built."))
+        feed012f = Spinner(this)
+        feed012f.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, FeedMode.entries.map { it.label })
+        col.addView(feed012f)
+        col.addView(info("Gauge map", "Which learned map drives the main Corrected %, Fuel Remaining and DTE PIDs. Each map also has its own PIDs (corrected, remaining, DTE, tank size)."))
+        primaryAlgo = Spinner(this)
+        primaryAlgo.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, MapAlgo.entries.map { it.label })
+        col.addView(primaryAlgo)
 
-        live = TextView(this)
-        live.textSize = 14f
-        col.addView(live)
+        showNotice = CheckBox(this)
+        showNotice.text = getString(R.string.show_fuel_notification)
+        col.addView(showNotice)
 
-        val extraHelp = TextView(this)
-        extraHelp.text = getString(R.string.tank2_help)
-        extraHelp.textSize = 14f
-        extraHelp.setPadding(0, 32, 0, 8)
-        col.addView(extraHelp)
+        col.addView(info("Smoothing τ seconds", "Time constant of the smoothing filter (0 = no smoothing)."))
+        tau = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
+        col.addView(tau)
+        col.addView(info("Max skew %/s", "Largest change per second the smoothed level may follow; slosh beyond this is ignored."))
+        skew = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
+        col.addView(skew)
+        col.addView(info("Fill jump %", "Rise in level while stopped that counts as a fill."))
+        jump = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
+        col.addView(jump)
 
+        col.addView(info("Odometer miles", "Optional: enter the odometer reading and Save pin to anchor distance for this profile."))
+        val odoRow = LinearLayout(this)
+        odoRow.orientation = LinearLayout.HORIZONTAL
+        odoMiles = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
+        odoMiles.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        odoRow.addView(odoMiles)
+        odoRow.addView(smallButton("Save pin") {
+            val miles = odoMiles.text.toString().toDoubleOrNull() ?: return@smallButton
+            val id = ProfileStore.activeId(filesDir)
+            ProfileStore.addPin(filesDir, id, miles, System.currentTimeMillis())
+        })
+        col.addView(odoRow)
+
+        col.addView(info("Additional tanks", getString(R.string.tank2_help)))
         extrasCol = LinearLayout(this)
         extrasCol.orientation = LinearLayout.VERTICAL
         col.addView(extrasCol)
-
         addBtn = Button(this)
         addBtn.text = "Add additional tank"
         addBtn.setOnClickListener { addExtra() }
         col.addView(addBtn)
-
-        col.addView(label("Active tank (gal/hr charged here)"))
+        col.addView(info("Active tank", "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id)."))
         activeSpinner = Spinner(this)
         col.addView(activeSpinner)
-
-        col.addView(label("Select-PID long name (1-based tank id) if active = From PID"))
+        col.addView(info("Select-PID long name", "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id."))
         selectPid = edit(InputType.TYPE_CLASS_TEXT)
         col.addView(selectPid)
+
+        val verbose = android.widget.CheckBox(this)
+        verbose.text = "Verbose logging (debug; per-second log lines)"
+        verbose.isChecked = FixFuelPrefs.prefs(this).getBoolean(FsLog.KEY_VERBOSE, false)
+        verbose.setOnCheckedChangeListener { _, on ->
+            FixFuelPrefs.prefs(this).edit().putBoolean(FsLog.KEY_VERBOSE, on).apply()
+            FsLog.verbose = on
+        }
+        col.addView(verbose)
+
+        // Details (below the settings).
+        col.addView(label("Details"))
+        estimated = TextView(this)
+        estimated.textSize = 13f
+        col.addView(estimated)
+        live = TextView(this)
+        live.textSize = 13f
+        col.addView(live)
+        gapText = TextView(this)
+        gapText.textSize = 12f
+        col.addView(gapText)
 
         customName.addTextChangedListener(watch)
         tau.addTextChangedListener(watch)
@@ -364,6 +379,7 @@ class PluginActivity : Activity() {
         primaryAlgo.setSelection(c.primaryAlgo.ordinal)
         refreshAddBtn()
         refreshProfile()
+        refreshStatus(c)
     }
 
     private fun refreshProfile() {
@@ -600,11 +616,65 @@ class PluginActivity : Activity() {
         profileNameView.text = ProfileStore.profileField(filesDir, id, "name") ?: "Vehicle 1"
     }
 
+    private lateinit var statusLine: TextView
+    private lateinit var helpPage: LinearLayout
+    private lateinit var aboutPage: LinearLayout
+
+    private fun smallButton(text: String, onClick: () -> Unit): Button {
+        val b = Button(this)
+        b.text = text
+        b.isAllCaps = false
+        b.minWidth = 0; b.minimumWidth = 0
+        b.setPadding(24, 0, 24, 0)
+        b.setOnClickListener { onClick() }
+        return b
+    }
+
+    /** Label with a small (i) button that explains the option in a dialog. */
+    private fun info(text: String, explanation: String): LinearLayout {
+        val row = LinearLayout(this)
+        row.orientation = LinearLayout.HORIZONTAL
+        row.gravity = android.view.Gravity.CENTER_VERTICAL
+        val l = label(text)
+        l.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        row.addView(l)
+        val i = TextView(this)
+        i.text = "ⓘ"
+        i.textSize = 18f
+        i.setPadding(24, 16, 8, 0)
+        i.contentDescription = "About $text"
+        i.setOnClickListener {
+            android.app.AlertDialog.Builder(this).setTitle(text).setMessage(explanation).setPositiveButton("OK", null).show()
+        }
+        row.addView(i)
+        return row
+    }
+
+    /** Help/About sub-page in a scrolling dialog (the page view is reused). */
+    private fun showPage(title: String, page: LinearLayout) {
+        (page.parent as? android.view.ViewGroup)?.removeView(page)
+        val sv = ScrollView(this)
+        page.setPadding(PAD, PAD / 2, PAD, 0)
+        sv.addView(page)
+        android.app.AlertDialog.Builder(this).setTitle(title).setView(sv).setPositiveButton("Close", null)
+            .setOnDismissListener { sv.removeView(page) }.show()
+    }
+
+    /** One or two lines: profile, source, tank estimate. */
+    private fun refreshStatus(c: FixFuelConfig) {
+        if (!::statusLine.isInitialized) return
+        val id = ProfileStore.activeId(filesDir)
+        val name = ProfileStore.profileField(filesDir, id, "name") ?: "Vehicle 1"
+        val src = FuelSources.byId(c.sourceId).label + if (c.sourceConfirmed) "" else " (unconfirmed)"
+        val tankTxt = c.tankGal?.let { "${VolUnit.show(it, shownUnit)} ${shownUnit.label}" + if (c.tankEstimated) " learned" else "" } ?: "tank ?"
+        statusLine.text = "$name · $src · $tankTxt" + if (PluginService.ecuConnected) " · ECU connected" else ""
+    }
+
     private fun label(s: String): TextView {
         val t = TextView(this)
         t.text = s
         t.textSize = 13f
-        t.setPadding(0, 24, 0, 4)
+        t.setPadding(0, 12, 0, 0)
         return t
     }
 

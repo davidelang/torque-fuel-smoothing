@@ -76,6 +76,8 @@ internal object FixFuelPrefs {
     const val KEY_SHOW_NOTICE = "show_fuel_notification"
     const val KEY_WRITE_012F = "write_012f"
     const val KEY_FEED_012F = "feed_012f"
+    /** Set once the old single "Corrected" feed has been mapped to the then-selected Gauge map. */
+    const val KEY_FEED_V2 = "feed_012f_v2"
     const val KEY_PRIMARY_ALGO = "primary_algo"
 
     fun mapAlgo(stored: String?): MapAlgo = MapAlgo.entries.firstOrNull { it.name == stored } ?: MapAlgo.CHUNK
@@ -91,11 +93,30 @@ internal object FixFuelPrefs {
     fun feedMode(stored: String?, legacyChecked: Boolean?): FeedMode =
         FeedMode.entries.firstOrNull { it.name == stored } ?: if (legacyChecked == false) FeedMode.OFF else FeedMode.CORRECTED
 
+    /** One-time migration: the old "Corrected" followed the Gauge map, so it becomes that map's own feed. */
+    fun migrateFeed(mode: FeedMode, algo: MapAlgo): FeedMode = if (mode != FeedMode.CORRECTED) mode else when (algo) {
+        MapAlgo.CHUNK -> FeedMode.CORRECTED
+        MapAlgo.BAND -> FeedMode.CORRECTED_BAND
+        MapAlgo.KALMAN -> FeedMode.CORRECTED_KALMAN
+    }
+
+    /**
+     * Value written to 012F, or null for no write. Each Corrected feed uses its own map, independent of the
+     * Gauge map; a Band/Kalman feed falls back to Chunk until that model exists (as the Gauge map does).
+     */
+    fun feedValue(mode: FeedMode, smoothedPct: Double?, chunkPct: Double?, bandPct: Double?, kalmanPct: Double?): Double? = when (mode) {
+        FeedMode.OFF -> null
+        FeedMode.SMOOTHED -> smoothedPct?.takeIf { it.isFinite() }
+        FeedMode.CORRECTED -> chunkPct?.takeIf { it.isFinite() }
+        FeedMode.CORRECTED_BAND -> (bandPct ?: chunkPct)?.takeIf { it.isFinite() }
+        FeedMode.CORRECTED_KALMAN -> (kalmanPct ?: chunkPct)?.takeIf { it.isFinite() }
+    }
+
     /** Value written to 012F, or null for no write. */
     fun feedValue(mode: FeedMode, smoothedPct: Double?, correctedPct: Double?): Double? = when (mode) {
         FeedMode.OFF -> null
         FeedMode.SMOOTHED -> smoothedPct?.takeIf { it.isFinite() }
-        FeedMode.CORRECTED -> correctedPct?.takeIf { it.isFinite() }
+        else -> correctedPct?.takeIf { it.isFinite() }
     }
     const val KEY_FILL_ANCHOR = "fill_anchor_gal"
     const val KEY_SINCE_FILL = "since_fill_used_gal"
@@ -189,7 +210,14 @@ internal object FixFuelPrefs {
             selectPidName = p.getString(KEY_SELECT_PID, "") ?: "",
             showFuelNotification = p.getBoolean(KEY_SHOW_NOTICE, true),
             primaryAlgo = mapAlgo(p.getString(KEY_PRIMARY_ALGO, null)),
-            feed012f = feedMode(p.getString(KEY_FEED_012F, null), if (p.contains(KEY_WRITE_012F)) p.getBoolean(KEY_WRITE_012F, true) else null),
+            feed012f = run {
+                val m = feedMode(p.getString(KEY_FEED_012F, null), if (p.contains(KEY_WRITE_012F)) p.getBoolean(KEY_WRITE_012F, true) else null)
+                if (p.getBoolean(KEY_FEED_V2, false)) m else {
+                    val n = migrateFeed(m, mapAlgo(p.getString(KEY_PRIMARY_ALGO, null)))
+                    p.edit().putString(KEY_FEED_012F, n.name).putBoolean(KEY_FEED_V2, true).apply()
+                    n
+                }
+            },
             invalid = invalid,
         )
     }
@@ -231,6 +259,7 @@ internal object FixFuelPrefs {
             .putString(KEY_SELECT_PID, selectPidName)
             .putBoolean(KEY_SHOW_NOTICE, showFuelNotification)
             .putString(KEY_FEED_012F, feed012f.name)
+            .putBoolean(KEY_FEED_V2, true)
             .putString(KEY_PRIMARY_ALGO, primaryAlgo.name)
             .putBoolean(KEY_WRITE_012F, feed012f != FeedMode.OFF)
         e.apply()
@@ -337,10 +366,13 @@ internal object FixFuelPrefs {
 }
 
 /** Feed-back of fuel level into Torque's 012F slot. */
+/** Names are persisted (R8 keeps them): CORRECTED stays the Chunk feed; Band/Kalman added. */
 enum class FeedMode(val label: String) {
     OFF("Off"),
     SMOOTHED("Smoothed %"),
-    CORRECTED("Corrected % (linearized)"),
+    CORRECTED("Corrected % (Chunk)"),
+    CORRECTED_BAND("Corrected % (Band)"),
+    CORRECTED_KALMAN("Corrected % (Kalman)"),
 }
 
 /** Gauge-map algorithm for the primary outputs. */

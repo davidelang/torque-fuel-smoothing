@@ -642,7 +642,9 @@ class PluginService : Service() {
         publish(t, raw, smoothed, out.correctedPct, out.remaining, out.dte)
         if (bandOut != null) runCatching { publishBand(t, bandOut) }
         if (kalOut != null) runCatching { publishKalman(t, kalOut) }
-        writeStockFuelLevel(t, smoothed, out.correctedPct)
+        runCatching { publishChunk(t, chunkOut) }
+        runCatching { publishTankSizes(t) }
+        writeStockFuelLevel(t, smoothed, chunkOut.correctedPct, bandOut?.correctedPct, kalOut?.correctedPct)
         updatePresence(statusText())
     }
 
@@ -923,6 +925,12 @@ class PluginService : Service() {
         row(Pids.PLUGIN_KALMAN_CORRECTED, "CorrKal", "%", 100f, Pids.MODE_KALMAN_CORRECTED)
         row(Pids.PLUGIN_KALMAN_REMAINING, "GalKal", remainUnit, remainMax, Pids.MODE_KALMAN_REMAINING)
         row(Pids.PLUGIN_KALMAN_DTE, "DTEKal", dteUnit(), dteMax(), Pids.MODE_KALMAN_DTE)
+        row(Pids.PLUGIN_CHUNK_CORRECTED, "CorrChk", "%", 100f, Pids.MODE_CHUNK_CORRECTED)
+        row(Pids.PLUGIN_CHUNK_REMAINING, "GalChk", remainUnit, remainMax, Pids.MODE_CHUNK_REMAINING)
+        row(Pids.PLUGIN_CHUNK_DTE, "DTEChk", dteUnit(), dteMax(), Pids.MODE_CHUNK_DTE)
+        row(Pids.PLUGIN_TANK_CHUNK, "TankChk", remainUnit, remainMax, Pids.MODE_TANK_CHUNK)
+        row(Pids.PLUGIN_TANK_BAND, "TankBand", remainUnit, remainMax, Pids.MODE_TANK_BAND)
+        row(Pids.PLUGIN_TANK_KALMAN, "TankKal", remainUnit, remainMax, Pids.MODE_TANK_KALMAN)
         for (extra in cfg.extras) {
             val n = Pids.extraPidNames(extra.id)
             val tmax = remainingScale(priorFor(extra.id).cap)
@@ -1036,6 +1044,27 @@ class PluginService : Service() {
         setPid(t, Pids.PLUGIN_KALMAN_DTE, "DTEKal", dteUnit(), rmax = dteMax(), value = dteOut(b.dte))
     }
 
+    private fun publishChunk(t: ITorqueService, b: TankPublish) {
+        val (vol, vu) = remainingOut(b.remaining)
+        val rmax = remainingScale(priorFor(1).cap)
+        setPid(t, Pids.PLUGIN_CHUNK_CORRECTED, "CorrChk", "%", rmax = 100f, value = b.correctedPct.toFloat())
+        setPid(t, Pids.PLUGIN_CHUNK_REMAINING, "GalChk", vu, rmax = rmax, value = vol)
+        setPid(t, Pids.PLUGIN_CHUNK_DTE, "DTEChk", dteUnit(), rmax = dteMax(), value = dteOut(b.dte))
+    }
+
+    /** Tank size per map (full -> 0 capacity, in the remaining-volume unit); a map not yet built is not published. */
+    private fun publishTankSizes(t: ITorqueService) {
+        val rmax = remainingScale(priorFor(1).cap)
+        fun pub(name: String, short: String, gal: Double?) {
+            if (gal == null || !gal.isFinite() || gal <= 0.0) return
+            val (vol, vu) = remainingOut(gal)
+            setPid(t, name, short, vu, rmax = rmax, value = vol)
+        }
+        pub(Pids.PLUGIN_TANK_CHUNK, "TankChk", priorFor(1).cap)
+        pub(Pids.PLUGIN_TANK_BAND, "TankBand", bandModel()?.second)
+        pub(Pids.PLUGIN_TANK_KALMAN, "TankKal", kalmanModel()?.tank)
+    }
+
     private fun publishBand(t: ITorqueService, b: TankPublish) {
         val (vol, vu) = remainingOut(b.remaining)
         val rmax = remainingScale(priorFor(1).cap)
@@ -1059,8 +1088,9 @@ class PluginService : Service() {
         setPid(t, Pids.PLUGIN_DTE, "pDTE", dteUnit(), rmax = dteMax(), value = dteOut(dte))
     }
 
-    private fun writeStockFuelLevel(t: ITorqueService, smoothedPct: Double, correctedPct: Double) {
-        val corrected = FixFuelPrefs.feedValue(cfg.feed012f, LevelScale.display(smoothedPct, levelUnit(1)), correctedPct) ?: return
+    private fun writeStockFuelLevel(t: ITorqueService, smoothedPct: Double, chunkPct: Double, bandPct: Double?, kalmanPct: Double?) {
+        // The feed picks its own map (independent of the Gauge map).
+        val corrected = FixFuelPrefs.feedValue(cfg.feed012f, LevelScale.display(smoothedPct, levelUnit(1)), chunkPct, bandPct, kalmanPct) ?: return
         val rt1 = tanks[1]
         if (rt1 != null && !rt1.ledger.anchored && (rt1.math.smoothed == null || !corrected.isFinite() || corrected <= 0.0)) {
             // Unanchored with no usable reading: never push a placeholder 0% into Torque's stock slot.

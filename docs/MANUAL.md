@@ -62,7 +62,7 @@ Until the plugin has learned enough, the Corrected and Remaining values are roug
 | Setting | Valid values | Default | Meaning |
 |---|---|---|---|
 | Show fuel level in notification | on/off | on | Shows the level in the plugin's notification |
-| Feed fuel level back to Torque (overrides 012F) | Off / Smoothed % / Corrected % (linearized) | Corrected | Writes that value onto Torque's stock Fuel Level (012F), so existing gauges show it. Nothing is written until the plugin has a valid value |
+| Feed fuel level back to Torque (overrides 012F) | Off / Smoothed % / Corrected % (Chunk) / Corrected % (Band) / Corrected % (Kalman) | Corrected (Chunk) | Writes that value onto Torque's stock Fuel Level (012F), so existing gauges show it. Nothing is written until the plugin has a valid value |
 | Fuel source | see list | None (detected on first connect) | Where the raw level comes from. Stored per vehicle profile |
 | Custom long name | text | — | For "Torque extra PID by long name": the exact long name of an extra PID you created in Torque |
 | Smoothing time τ seconds | 0 – 600 (0 = no extra averaging) | 0 | Extra exponential averaging on top of slosh rejection |
@@ -130,3 +130,27 @@ Invalid entries are shown in red and are not saved.
 - **Data went to the wrong vehicle:** select the right profile in Torque before the drive. Use the notification actions if you get "Wrong vehicle profile?".
 - **Corrected/Remaining look off:** they improve as more partial tanks are logged. Early estimates can be off by several gallons.
 - **Smoothed level reacts slowly after a real change:** this is the Max skew limit. Raise it a little (e.g. 0.1).
+
+## Torque PIDs published
+
+The main four follow the Gauge map; the per-map PIDs never do. A map not built yet is not published (tank size) or falls back to Chunk.
+
+| Name | Short | ID |
+|---|---|---|
+| [FuelSmooth] Smoothed Fuel Level | SmFuel | ffd001 |
+| [FuelSmooth] Corrected Fuel Level (Gauge map) | CorrFuel | ffd002 |
+| [FuelSmooth] Fuel Remaining (Gauge map) | GalLeft | ffd003 |
+| [FuelSmooth] Plugin DTE (Gauge map) | pDTE | ffd004 |
+| [FuelSmooth] Corrected % (chunk) | CorrChk | ffd018 |
+| [FuelSmooth] Remaining (chunk) | GalChk | ffd019 |
+| [FuelSmooth] DTE (chunk) | DTEChk | ffd01a |
+| [FuelSmooth] Corrected % (band) | CorrBand | ffd012 |
+| [FuelSmooth] Remaining (band) | GalBand | ffd013 |
+| [FuelSmooth] DTE (band) | DTEBand | ffd014 |
+| [FuelSmooth] Corrected % (kalman) | CorrKal | ffd015 |
+| [FuelSmooth] Remaining (kalman) | GalKal | ffd016 |
+| [FuelSmooth] DTE (kalman) | DTEKal | ffd017 |
+| [FuelSmooth] Tank size (chunk) | TankChk | ffd01b |
+| [FuelSmooth] Tank size (band) | TankBand | ffd01c |
+| [FuelSmooth] Tank size (kalman) | TankKal | ffd01d |
+

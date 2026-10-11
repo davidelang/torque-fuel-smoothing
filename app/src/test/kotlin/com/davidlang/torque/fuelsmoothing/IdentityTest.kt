@@ -176,4 +176,56 @@ class IdentityTest {
         assertEquals(35.0, FixFuelPrefs.feedValue(FeedMode.CORRECTED, 40.0, 35.0)!!, 0.0)
         assertNull(FixFuelPrefs.feedValue(FeedMode.CORRECTED, 40.0, Double.NaN))
     }
+
+    @Test
+    fun test39FeedPicksItsOwnMapAndMigratesFromGaugeMap() {
+        assertEquals(listOf("OFF", "SMOOTHED", "CORRECTED", "CORRECTED_BAND", "CORRECTED_KALMAN"), FeedMode.entries.map { it.name })
+        assertEquals(FeedMode.CORRECTED, FixFuelPrefs.migrateFeed(FeedMode.CORRECTED, MapAlgo.CHUNK))
+        assertEquals(FeedMode.CORRECTED_BAND, FixFuelPrefs.migrateFeed(FeedMode.CORRECTED, MapAlgo.BAND))
+        assertEquals(FeedMode.CORRECTED_KALMAN, FixFuelPrefs.migrateFeed(FeedMode.CORRECTED, MapAlgo.KALMAN))
+        assertEquals(FeedMode.SMOOTHED, FixFuelPrefs.migrateFeed(FeedMode.SMOOTHED, MapAlgo.KALMAN))
+        assertEquals(FeedMode.OFF, FixFuelPrefs.migrateFeed(FeedMode.OFF, MapAlgo.BAND))
+        assertEquals(FeedMode.CORRECTED_KALMAN, FixFuelPrefs.feedMode("CORRECTED_KALMAN", null))
+        // Independent of the Gauge map: each feed uses its own value.
+        assertEquals(71.1, FixFuelPrefs.feedValue(FeedMode.CORRECTED, 82.7, 71.1, 73.4, 75.3)!!, 0.0)
+        assertEquals(73.4, FixFuelPrefs.feedValue(FeedMode.CORRECTED_BAND, 82.7, 71.1, 73.4, 75.3)!!, 0.0)
+        assertEquals(75.3, FixFuelPrefs.feedValue(FeedMode.CORRECTED_KALMAN, 82.7, 71.1, 73.4, 75.3)!!, 0.0)
+        assertEquals(82.7, FixFuelPrefs.feedValue(FeedMode.SMOOTHED, 82.7, 71.1, 73.4, 75.3)!!, 0.0)
+        assertNull(FixFuelPrefs.feedValue(FeedMode.OFF, 82.7, 71.1, 73.4, 75.3))
+        // Model not built yet: falls back to Chunk.
+        assertEquals(71.1, FixFuelPrefs.feedValue(FeedMode.CORRECTED_KALMAN, 82.7, 71.1, null, null)!!, 0.0)
+        val ps = File("src/main/kotlin/com/davidlang/torque/fuelsmoothing/PluginService.kt").readText()
+        assertTrue(ps.contains("writeStockFuelLevel(t, smoothed, chunkOut.correctedPct, bandOut?.correctedPct, kalOut?.correctedPct)"))
+    }
+
+    @Test
+    fun test40EveryMapPublishedAsItsOwnPids() {
+        val ps = File("src/main/kotlin/com/davidlang/torque/fuelsmoothing/PluginService.kt").readText()
+        val reg = ps.substringAfter("private fun sendExtraPidRows").substringBefore("for (extra in cfg.extras)")
+        val modes = listOf(Pids.MODE_SMOOTHED, Pids.MODE_CORRECTED, Pids.MODE_REMAINING, Pids.MODE_DTE,
+            Pids.MODE_CHUNK_CORRECTED, Pids.MODE_CHUNK_REMAINING, Pids.MODE_CHUNK_DTE,
+            Pids.MODE_BAND_CORRECTED, Pids.MODE_BAND_REMAINING, Pids.MODE_BAND_DTE,
+            Pids.MODE_KALMAN_CORRECTED, Pids.MODE_KALMAN_REMAINING, Pids.MODE_KALMAN_DTE,
+            Pids.MODE_TANK_CHUNK, Pids.MODE_TANK_BAND, Pids.MODE_TANK_KALMAN)
+        assertEquals(modes.size, modes.toSet().size)
+        for (n in 2..8) for (w in 1..4) assertFalse(Pids.extraModePid(n, w) in modes)
+        for (k in listOf("CHUNK_CORRECTED", "CHUNK_REMAINING", "CHUNK_DTE", "BAND_CORRECTED", "BAND_REMAINING", "BAND_DTE",
+                "KALMAN_CORRECTED", "KALMAN_REMAINING", "KALMAN_DTE", "TANK_CHUNK", "TANK_BAND", "TANK_KALMAN"))
+            assertTrue(k, reg.contains("Pids.MODE_$k") && ps.contains("Pids.PLUGIN_$k, \""))
+        val live = ps.substringAfter("private fun publishFromSmoothed").substringBefore("private fun publishExtraFrom")
+        for (c in listOf("publishChunk(t, chunkOut)", "publishBand(t, bandOut)", "publishKalman(t, kalOut)", "publishTankSizes(t)")) assertTrue(c, live.contains(c))
+    }
+
+    @Test
+    fun test41SettingsFirstHelpAboutOnSubPages() {
+        val a = File("src/main/kotlin/com/davidlang/torque/fuelsmoothing/PluginActivity.kt").readText()
+        val top = a.substringAfter("override fun onCreate").substringBefore("// ---- Settings ----")
+        // Above the settings only the title row, the compact status and (if missing) the Torque Pro notice reach the page.
+        assertFalse(Regex("""col\.addView\((help|about|privacy|feedback|tipButton|tipChoices|thanksView|manual)\)""").containsMatchIn(top))
+        assertTrue(top.contains("helpPage.addView(help)") && top.contains("aboutPage.addView(about)") && top.contains("aboutPage.addView(tipButton)"))
+        assertTrue(top.contains("statusLine.maxLines = 2"))
+        val settings = a.substringAfter("// ---- Settings ----").substringBefore("// Details (below the settings).")
+        assertTrue(Regex("""col\.addView\(info\(""").findAll(settings).count() >= 12)
+        assertFalse(settings.contains("col.addView(label("))
+    }
 }

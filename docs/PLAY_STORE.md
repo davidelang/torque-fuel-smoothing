@@ -14,7 +14,7 @@ Features:
 • Learns your tank from fuel burned vs. gauge movement over several partial tanks. Three gauge maps (Chunk, Band and Kalman) are refit after each drive and fill; you choose which one drives the main gauges, and each also publishes its own PIDs for comparison.
 • Learned tank size: replaces your initial guess once 10% of the gauge has been covered by at least two different drives.
 • Published Torque PIDs: Smoothed Fuel Level, Corrected Fuel Level (linearized %), Fuel Remaining and distance to empty, plus Corrected/Remaining/DTE for the Band and Kalman maps.
-• Feed back to Torque's stock Fuel Level (012F): Off, Smoothed or Corrected, so existing gauges show it.
+• Feed back to Torque's stock Fuel Level (012F): Off, Smoothed or Corrected (Chunk, Band or Kalman), so existing gauges show it.
 • Automatic fill detection, including pump pauses.
 • Vehicle profiles tied to the Torque profile, with VIN/ECU fingerprinting: if the connected vehicle doesn't match, the drive is held aside and never learned into the wrong profile until you choose.
 • Fuel-level source detection on first connect, with a Confirm step. Sources: SAE 012F, Ford 16C1 and F42F, GM 12C5, Chrysler 21A2 and fuel level average, Toyota cluster 2129, or any Torque extra PID by name. Brand PIDs are used only when the make or VIN matches.
