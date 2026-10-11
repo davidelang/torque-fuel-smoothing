@@ -50,6 +50,7 @@ class PluginActivity : Activity() {
     private lateinit var addBtn: Button
     private lateinit var showNotice: CheckBox
     private lateinit var feed012f: Spinner
+    private lateinit var primaryAlgo: Spinner
     private lateinit var activeSpinner: Spinner
     private lateinit var selectPid: EditText
     private lateinit var profileNameView: TextView
@@ -186,6 +187,10 @@ class PluginActivity : Activity() {
         feed012f = Spinner(this)
         feed012f.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, FeedMode.entries.map { it.label })
         col.addView(feed012f)
+        col.addView(label("Gauge map for Corrected / Remaining / DTE and the 012F feed"))
+        primaryAlgo = Spinner(this)
+        primaryAlgo.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, MapAlgo.entries.map { it.label })
+        col.addView(primaryAlgo)
 
         col.addView(label("Fuel source"))
         sourceSpinner = Spinner(this)
@@ -255,6 +260,7 @@ class PluginActivity : Activity() {
         activeSpinner.onItemSelectedListener = spinListen
         showNotice.setOnCheckedChangeListener { _, _ -> if (!loading) persist() }
         feed012f.onItemSelectedListener = spinListen
+        primaryAlgo.onItemSelectedListener = spinListen
 
         scroll.addView(col)
         scroll.setOnApplyWindowInsetsListener { v, insets ->
@@ -318,6 +324,7 @@ class PluginActivity : Activity() {
         if (selectPid.text.toString() != c.selectPidName) selectPid.setText(c.selectPidName)
         showNotice.isChecked = c.showFuelNotification
         feed012f.setSelection(c.feed012f.ordinal)
+        primaryAlgo.setSelection(c.primaryAlgo.ordinal)
         refreshAddBtn()
         refreshProfile()
     }
@@ -547,6 +554,7 @@ class PluginActivity : Activity() {
             selectPidName = selectPid.text.toString().trim(),
             showFuelNotification = showNotice.isChecked,
             feed012f = FeedMode.entries[feed012f.selectedItemPosition.coerceIn(0, FeedMode.entries.size - 1)],
+            primaryAlgo = MapAlgo.entries[primaryAlgo.selectedItemPosition.coerceIn(0, MapAlgo.entries.size - 1)],
         )
         val id = ProfileStore.activeId(filesDir)
         ProfileStore.setProfileField(filesDir, id, "name", profileName.text.toString().trim().ifBlank { "Vehicle 1" })

@@ -354,6 +354,7 @@ internal object ProfileStore {
         if (model != null) File(dir, "model-raw.json").writeText(model.json)
         if (chunkFit != null) {
             writeModelIfChanged(File(dir, "model.json"), chunkFit)
+            BandFit.update(dir)
         } else if (model != null) {
             File(dir, "model.json").writeText(model.json)
         }
@@ -433,6 +434,7 @@ internal object ProfileStore {
         val sessions = if (raw.isDirectory) FuelV2.loadSessions(raw) else return false
         val json = chunkUpdate(dir, sessions, nameplate, null, openName) ?: return false
         writeModelIfChanged(File(dir, "model.json"), json)
+        BandFit.update(dir)
         return true
     }
 

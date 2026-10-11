@@ -491,7 +491,7 @@ internal object ChunkFit {
     }
 
     /** Hard constraints (La, Lb, burn) and plateau points (La, Fa) from tank epochs. */
-    private fun epochs(ps: List<Part>, ch: List<Chunk>): Pair<List<DoubleArray>, List<DoubleArray>> {
+    internal fun epochs(ps: List<Part>, ch: List<Chunk>): Pair<List<DoubleArray>, List<DoubleArray>> {
         val by = ch.groupBy { it.key }
         class Ep(val fill: Boolean, val pts: MutableList<DoubleArray> = ArrayList())
         val eps = ArrayList<Ep>(); var cur: Ep? = null; var off = 0.0

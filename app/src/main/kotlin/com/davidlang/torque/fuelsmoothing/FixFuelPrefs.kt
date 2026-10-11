@@ -31,6 +31,8 @@ internal data class FixFuelConfig(
     val showFuelNotification: Boolean = true,
     /** What the plugin feeds back into Torque's Fuel Level (012F). Default = previous behavior (corrected). */
     val feed012f: FeedMode = FeedMode.CORRECTED,
+    /** Which map drives the primary Corrected/Remaining/DTE and the Corrected 012F feed. */
+    val primaryAlgo: MapAlgo = MapAlgo.CHUNK,
     /** Stored values that failed validation: pref key -> raw stored text. Runtime uses defaults for these. */
     val invalid: Map<String, String> = emptyMap(),
 ) {
@@ -73,6 +75,12 @@ internal object FixFuelPrefs {
     const val KEY_SHOW_NOTICE = "show_fuel_notification"
     const val KEY_WRITE_012F = "write_012f"
     const val KEY_FEED_012F = "feed_012f"
+    const val KEY_PRIMARY_ALGO = "primary_algo"
+
+    fun mapAlgo(stored: String?): MapAlgo = MapAlgo.entries.firstOrNull { it.name == stored } ?: MapAlgo.CHUNK
+
+    /** Primary output: the band result only when Band is chosen and a band model exists; otherwise chunk. */
+    fun <T> primary(algo: MapAlgo, chunk: T, band: T?): T = if (algo == MapAlgo.BAND && band != null) band else chunk
 
     /** Stored mode, else the legacy checkbox (unchecked = OFF, checked/absent = CORRECTED). */
     fun feedMode(stored: String?, legacyChecked: Boolean?): FeedMode =
@@ -173,6 +181,7 @@ internal object FixFuelPrefs {
             activeTank = normalizeActive(p.getString(KEY_ACTIVE, ACTIVE_TANK1) ?: ACTIVE_TANK1),
             selectPidName = p.getString(KEY_SELECT_PID, "") ?: "",
             showFuelNotification = p.getBoolean(KEY_SHOW_NOTICE, true),
+            primaryAlgo = mapAlgo(p.getString(KEY_PRIMARY_ALGO, null)),
             feed012f = feedMode(p.getString(KEY_FEED_012F, null), if (p.contains(KEY_WRITE_012F)) p.getBoolean(KEY_WRITE_012F, true) else null),
             invalid = invalid,
         )
@@ -191,6 +200,7 @@ internal object FixFuelPrefs {
         selectPidName: String = "",
         showFuelNotification: Boolean = true,
         feed012f: FeedMode = FeedMode.CORRECTED,
+        primaryAlgo: MapAlgo = MapAlgo.CHUNK,
     ) {
         val e = prefs(ctx).edit()
             .putString(KEY_SOURCE, sourceId)
@@ -209,6 +219,7 @@ internal object FixFuelPrefs {
             .putString(KEY_SELECT_PID, selectPidName)
             .putBoolean(KEY_SHOW_NOTICE, showFuelNotification)
             .putString(KEY_FEED_012F, feed012f.name)
+            .putString(KEY_PRIMARY_ALGO, primaryAlgo.name)
             .putBoolean(KEY_WRITE_012F, feed012f != FeedMode.OFF)
         e.apply()
     }
@@ -318,4 +329,10 @@ enum class FeedMode(val label: String) {
     OFF("Off"),
     SMOOTHED("Smoothed %"),
     CORRECTED("Corrected % (linearized)"),
+}
+
+/** Gauge-map algorithm for the primary outputs. */
+enum class MapAlgo(val label: String) {
+    CHUNK("Chunk fit (default)"),
+    BAND("Band fit (smooth curve)"),
 }

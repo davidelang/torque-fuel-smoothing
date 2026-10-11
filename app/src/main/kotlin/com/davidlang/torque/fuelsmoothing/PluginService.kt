@@ -533,9 +533,12 @@ class PluginService : Service() {
 
     private fun publishFromSmoothed(t: ITorqueService, raw: Double, smoothed: Double) {
         val rt = tanks[1] ?: return
-        val out = livePublish(rt)
+        val chunkOut = livePublish(rt)
+        val bandOut = bandPublish(rt)
+        val out = FixFuelPrefs.primary(cfg.primaryAlgo, chunkOut, bandOut)
         lastAuthPct = out.correctedPct
         publish(t, raw, smoothed, out.correctedPct, out.remaining, out.dte)
+        if (bandOut != null) runCatching { publishBand(t, bandOut) }
         writeStockFuelLevel(t, smoothed, out.correctedPct)
         maybeSyncSlider(t, out.correctedPct)
         updatePresence(statusText())
@@ -773,6 +776,9 @@ class PluginService : Service() {
         row(Pids.PLUGIN_CORRECTED, "CorrFuel", "%", 100f, Pids.MODE_CORRECTED)
         row(Pids.PLUGIN_REMAINING, "GalLeft", remainUnit, remainMax, Pids.MODE_REMAINING)
         row(Pids.PLUGIN_DTE, "pDTE", dteUnit(), dteMax(), Pids.MODE_DTE)
+        row(Pids.PLUGIN_BAND_CORRECTED, "CorrBand", "%", 100f, Pids.MODE_BAND_CORRECTED)
+        row(Pids.PLUGIN_BAND_REMAINING, "GalBand", remainUnit, remainMax, Pids.MODE_BAND_REMAINING)
+        row(Pids.PLUGIN_BAND_DTE, "DTEBand", dteUnit(), dteMax(), Pids.MODE_BAND_DTE)
         for (extra in cfg.extras) {
             val n = Pids.extraPidNames(extra.id)
             val tmax = remainingScale(priorFor(extra.id).cap)
@@ -828,6 +834,39 @@ class PluginService : Service() {
         dte: Double,
     ) {
         runCatching { publishFour(t, smoothed, corrected, remain, dte) }
+    }
+
+    private var bandCache: Triple<Long, DoubleArray, Double>? = null
+
+    /** Band map (model-band.json) for tank 1, reloaded only when the file changes (drive end / fill). */
+    private fun bandModel(): Pair<DoubleArray, Double>? {
+        val f = File(ProfileStore.tankDir(filesDir, profileId, 1), BandFit.FILE)
+        val m = if (f.isFile) f.lastModified() else -1L
+        bandCache?.let { if (it.first == m) return it.second to it.third }
+        val loaded = BandFit.load(f.parentFile!!)
+        bandCache = loaded?.let { Triple(m, it.first, it.second) }
+        return loaded
+    }
+
+    /** Band outputs: corrected = band mapGal(gauge) / band capToZero x 100; remaining = band map gal + reserve. */
+    private fun bandPublish(rt: TankRt): TankPublish? {
+        val (g, cap) = bandModel() ?: return null
+        val sm = rt.math.smoothed?.takeIf { it.isFinite() } ?: return null
+        val v = { l: Double -> BandFit.vAt(l.coerceIn(0.0, 100.0), g) }
+        val corr = FuelV2.correctedPct(sm, v, cap)
+        if (!corr.isFinite()) return null
+        val r = v(sm).coerceAtLeast(0.0)
+        val reserve = priorFor(1).reserve
+        val mpg = rt.mpgRecent
+        return TankPublish(r, r + reserve, corr, mpg, (r + reserve) * mpg, r * mpg)
+    }
+
+    private fun publishBand(t: ITorqueService, b: TankPublish) {
+        val (vol, vu) = remainingOut(b.remaining)
+        val rmax = remainingScale(priorFor(1).cap)
+        setPid(t, Pids.PLUGIN_BAND_CORRECTED, "CorrBand", "%", rmax = 100f, value = b.correctedPct.toFloat())
+        setPid(t, Pids.PLUGIN_BAND_REMAINING, "GalBand", vu, rmax = rmax, value = vol)
+        setPid(t, Pids.PLUGIN_BAND_DTE, "DTEBand", dteUnit(), rmax = dteMax(), value = dteOut(b.dte))
     }
 
     private fun publishFour(
