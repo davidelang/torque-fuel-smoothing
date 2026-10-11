@@ -61,6 +61,7 @@ class PluginService : Service() {
     private var galHrUnit: String = ""
     private var galMinUnit: String = ""
     private var preferredVolumeUnit: String = ""
+    private var preferredDistanceUnit: String = ""
     private var loggedFlowUnit: Boolean = false
     private var lastActive: String = FixFuelPrefs.ACTIVE_TANK1
     private var suppressFillUntilMs: Long = 0L
@@ -184,6 +185,7 @@ class PluginService : Service() {
         tanks[1] = makeRuntime(1)
         ensureChannel()
         TapStartNotice.cancel(this)
+        TipReconciler.run(this, "service start")
         updatePresence("Binding to Torque…")
         bindTorque()
     }
@@ -210,6 +212,7 @@ class PluginService : Service() {
     }
 
     override fun onDestroy() {
+        TipReconciler.run(this, "service stop")
         stopPolling()
         FixFuelPrefs.prefs(this).unregisterOnSharedPreferenceChangeListener(prefsListener)
         closeSession()
@@ -255,6 +258,15 @@ class PluginService : Service() {
         lastActive = resolveStoredActive()
         resolvePids()
         nameplateGal = TankSeed.seed(t)
+        // Torque's profile capacity is the initial guess shown in settings, until a learned model exists.
+        val seeded = nameplateGal
+        // Seed the per-profile tank size from Torque's capacity only while it is blank; afterwards the plugin maintains it.
+        if (seeded != null && seeded > 0.0 && cfg.tankGal == null && quarantineDir == null &&
+            ProfileStore.setTankGuess(filesDir, profileId, seeded, false)
+        ) {
+            prefsDirty = true
+            Log.i(TAG, "tank size for $profileId seeded from Torque capacity ${"%.1f".format(seeded)} gal")
+        }
         registerPluginPids(t)
         val connected = ecuConnected || runCatching { t.isConnectedToECU }.getOrNull() == true
         if (connected) {
@@ -282,6 +294,7 @@ class PluginService : Service() {
         mpgPid = r.mpg
         if (r.mpgUnit.isNotEmpty()) mpgUnit = r.mpgUnit
         pidNames = r.names
+        preferredDistanceUnit = runCatching { t.getPreferredUnit("km") }.getOrNull().orEmpty()
         preferredVolumeUnit = runCatching { t.getPreferredUnit("l") }.getOrNull().orEmpty()
         if (preferredVolumeUnit.isBlank()) {
             preferredVolumeUnit = runCatching { t.getPreferredUnit("gal") }.getOrNull().orEmpty()
@@ -341,7 +354,8 @@ class PluginService : Service() {
         applyActiveTank(active, now)
         if (ecu == true) ensureActiveSession()
         val skipFill = now < suppressFillUntilMs
-        pumpDetect(t, speedRaw)
+        // Never burst bus queries: at most one identity or one detect command per tick.
+        if (identity != null) pumpIdentity(t) else pumpDetect(t, speedRaw)
         sampleTank(1, t, ecu, speedMph, now, speedRaw, skipFill)
         for (extra in cfg.extras) {
             sampleTank(extra.id, t, ecu, speedMph, now, speedRaw, skipFill)
@@ -384,6 +398,11 @@ class PluginService : Service() {
         }
         if (id == 1) Log.i(TAG, "source ${cfg.sourceId} ${src.how} active=$lastActive")
         val raw = src.pct
+        val logging0 = rt.sessions.isOpen && lastActive == id.toString()
+        if (!src.missing && ecu != false && rt.math.checkReanchor(raw, speedMph, now)) {
+            Log.i(TAG, "tank$id level re-anchored to ${rt.math.smoothed} after sustained low readings (raw=$raw)")
+            if (logging0) rt.sessions.mark("reanchor", now, "\"sm\":${rt.math.smoothed}")
+        }
         val valid = rt.math.isValidSample(raw, ecu, rt.math.smoothed) && !src.missing
         val logging = rt.sessions.isOpen && lastActive == id.toString()
         if (!valid) {
@@ -541,11 +560,13 @@ class PluginService : Service() {
     }
 
     private fun onEcuAway() {
+        identity = null
         closeSession()
         if (tanks[1] == null) tanks[1] = makeRuntime(1)
     }
 
     private fun selectProfile() {
+        if (identity != null) return
         if (tanks.values.any { it.sessions.isOpen }) return
         val t = torque ?: return
         val torqueName = runCatching { t.getVehicleProfileInformation()?.firstOrNull() }.getOrNull()
@@ -559,7 +580,82 @@ class PluginService : Service() {
         val gapFile = File(ProfileStore.profileDir(filesDir, next), "gap.txt")
         val gap = if (gapFile.isFile) gapFile.readText() else ""
         File(filesDir, "profile-notice.txt").writeText(if (note.isBlank()) gap else note)
-        val obs = readIdentity(t)
+        // ECU identity is read one bus command per poll tick (never a burst), then decided in finishIdentity().
+        // Sessions wait for the decision (ensureActiveSession), so data never lands in the wrong profile.
+        val stored = Fingerprint.loadAll(filesDir)[next]
+        identity = IdentityRead(next, torqueName, stored)
+        Log.i(TAG, "identity read queued for $next (firm=${stored?.firm == true}, steps=${identity!!.queue.size})")
+    }
+
+    /**
+     * Paced ECU identity read: at most one sendCommandGetResponse per poll tick, total capped at
+     * IDENTITY_MAX_MS. A firm profile only re-checks its strongest key (VIN if stored, else 0100).
+     */
+    private inner class IdentityRead(val next: String, val torqueName: String?, stored: Fingerprint.Fp?) {
+        val startMs = System.currentTimeMillis()
+        val queue = ArrayDeque<String>()
+        val bitmaps = LinkedHashMap<String, String>()
+        var vin: String? = null; var calId: String? = null; var cvn: String? = null; var ecuName: String? = null
+        var probe: String? = null
+        var bitmapsDone = false
+
+        init {
+            when {
+                stored?.firm == true && stored.vin != null -> queue.add("0902")
+                stored?.firm == true -> queue.add("0100")
+                else -> queue.addAll(listOf("0100", "0902", "0904", "0906", "090A", "2216C1"))
+            }
+        }
+
+        fun step(t: ITorqueService): Boolean {
+            if (System.currentTimeMillis() - startMs > IDENTITY_MAX_MS) {
+                Log.w(TAG, "identity read capped after ${IDENTITY_MAX_MS}ms; ${queue.size} steps skipped")
+                queue.clear()
+            }
+            val c = queue.pollFirst() ?: return true
+            if (runCatching { t.isConnectedToECU }.getOrNull() != true) {
+                queue.clear()
+                return true
+            }
+            val r = runCatching { t.sendCommandGetResponse("", c) }.getOrNull()?.toList()
+            when (c) {
+                "0902" -> vin = ProfileStore.parseVin(r)
+                "0904" -> calId = Fingerprint.parseAscii(r, "04")
+                "0906" -> cvn = Fingerprint.parseCvn(r)
+                "090A" -> ecuName = Fingerprint.parseAscii(r, "0A")
+                "2216C1" -> probe = r?.joinToString(" ")?.uppercase()?.replace(" ", "")
+                else -> if (c in Fingerprint.BITMAP_PIDS) {
+                    val bm = Fingerprint.parseBitmap(r, c)
+                    if (bm != null) {
+                        bitmaps[c] = bm
+                        // Next bitmap PID only if this one says it is supported; queued right behind.
+                        val nextPid = Fingerprint.BITMAP_PIDS.getOrNull(Fingerprint.BITMAP_PIDS.indexOf(c) + 1)
+                        if ((bm.toLong(16) and 1L) != 0L && nextPid != null && queue.size < 12) queue.addFirst(nextPid)
+                    }
+                }
+            }
+            return queue.isEmpty()
+        }
+
+        fun obs(t: ITorqueService): Fingerprint.Fp = Fingerprint.Fp(
+            vin = vin, calId = calId, cvn = cvn, ecuName = ecuName,
+            protocol = runCatching { t.protocolName }.getOrNull()?.takeIf { it.isNotBlank() },
+            bitmaps = bitmaps,
+            probes = probe?.let { mapOf("ford2216C1" to if (it.contains("6216C1")) "ok" else "no") } ?: emptyMap(),
+        )
+    }
+
+    private var identity: IdentityRead? = null
+
+    /** Called once per poll tick while connected; finishes the identity decision when the paced read is done. */
+    private fun pumpIdentity(t: ITorqueService) {
+        val r = identity ?: return
+        if (!r.step(t)) return
+        identity = null
+        finishIdentity(t, r.next, r.torqueName, r.obs(t))
+    }
+
+    private fun finishIdentity(t: ITorqueService, next: String, torqueName: String?, obs: Fingerprint.Fp) {
         val fps = Fingerprint.loadAll(filesDir)
         val d = Fingerprint.decide(next, obs, fps)
         Log.i(TAG, "identity decision ${d::class.simpleName} torque='$torqueName' profile=$next: ${d.why} obs=${Fingerprint.toJson(obs)}")
@@ -596,32 +692,11 @@ class PluginService : Service() {
         }
         Log.i(TAG, "identity route: write=${quarantineDir?.path ?: target} suggest=${quarantineSuggest}")
         ProfileStore.setActiveId(filesDir, next)
+        prefsDirty = true // tank size etc. are per profile
         if (target == profileId && wasQ == quarantineDir) return
         profileId = target
         priorCache.clear()
         for (id in tanks.keys.toList()) tanks[id] = makeRuntime(id)
-    }
-
-    /** ECU identity for the vehicle fingerprint: 0902/0904/0906/090A, protocol, PID bitmaps, Ford probe. */
-    private fun readIdentity(t: ITorqueService): Fingerprint.Fp {
-        fun cmd(c: String): List<String>? = runCatching { t.sendCommandGetResponse("", c) }.getOrNull()?.toList()
-        if (runCatching { t.isConnectedToECU }.getOrNull() != true) return Fingerprint.Fp()
-        val bitmaps = LinkedHashMap<String, String>()
-        for (pid in Fingerprint.BITMAP_PIDS) {
-            val bm = Fingerprint.parseBitmap(cmd(pid), pid) ?: break
-            bitmaps[pid] = bm
-            if ((bm.toLong(16) and 1L) == 0L) break
-        }
-        val probe = cmd("2216C1")?.joinToString(" ")?.uppercase()?.replace(" ", "")
-        return Fingerprint.Fp(
-            vin = ProfileStore.parseVin(cmd("0902")),
-            calId = Fingerprint.parseAscii(cmd("0904"), "04"),
-            cvn = Fingerprint.parseCvn(cmd("0906")),
-            ecuName = Fingerprint.parseAscii(cmd("090A"), "0A"),
-            protocol = runCatching { t.protocolName }.getOrNull()?.takeIf { it.isNotBlank() },
-            bitmaps = bitmaps,
-            probes = mapOf("ford2216C1" to if (probe?.contains("6216C1") == true) "ok" else "no"),
-        )
     }
 
     private fun profileName(id: String): String = ProfileStore.profileField(filesDir, id, "torqueProfileName")
@@ -697,14 +772,14 @@ class PluginService : Service() {
         row(Pids.PLUGIN_SMOOTHED, "SmFuel", "%", 100f, Pids.MODE_SMOOTHED)
         row(Pids.PLUGIN_CORRECTED, "CorrFuel", "%", 100f, Pids.MODE_CORRECTED)
         row(Pids.PLUGIN_REMAINING, "GalLeft", remainUnit, remainMax, Pids.MODE_REMAINING)
-        row(Pids.PLUGIN_DTE, "pDTE", "mi", 500f, Pids.MODE_DTE)
+        row(Pids.PLUGIN_DTE, "pDTE", dteUnit(), dteMax(), Pids.MODE_DTE)
         for (extra in cfg.extras) {
             val n = Pids.extraPidNames(extra.id)
             val tmax = remainingScale(priorFor(extra.id).cap)
             row(n.smoothed, n.shortSm, "%", 100f, Pids.extraModePid(extra.id, 1))
             row(n.corrected, n.shortCorr, "%", 100f, Pids.extraModePid(extra.id, 2))
             row(n.remaining, n.shortGal, remainUnit, tmax, Pids.extraModePid(extra.id, 3))
-            row(n.dte, n.shortDte, "mi", 500f, Pids.extraModePid(extra.id, 4))
+            row(n.dte, n.shortDte, dteUnit(), dteMax(), Pids.extraModePid(extra.id, 4))
         }
         val count = names.size
         val blank = Array(count) { "" }
@@ -741,7 +816,7 @@ class PluginService : Service() {
         setPid(t, names.smoothed, names.shortSm, "%", rmax = 100f, value = smoothed.toFloat())
         setPid(t, names.corrected, names.shortCorr, "%", rmax = 100f, value = corrected.toFloat())
         setPid(t, names.remaining, names.shortGal, vu, rmax = rmax, value = vol)
-        setPid(t, names.dte, names.shortDte, "mi", rmax = 500f, value = dte.toFloat())
+        setPid(t, names.dte, names.shortDte, dteUnit(), rmax = dteMax(), value = dteOut(dte))
     }
 
     private fun publish(
@@ -767,7 +842,7 @@ class PluginService : Service() {
         setPid(t, Pids.PLUGIN_SMOOTHED, "SmFuel", "%", rmax = 100f, value = smoothed.toFloat())
         setPid(t, Pids.PLUGIN_CORRECTED, "CorrFuel", "%", rmax = 100f, value = corrected.toFloat())
         setPid(t, Pids.PLUGIN_REMAINING, "GalLeft", vu, rmax = rmax, value = vol)
-        setPid(t, Pids.PLUGIN_DTE, "pDTE", "mi", rmax = 500f, value = dte.toFloat())
+        setPid(t, Pids.PLUGIN_DTE, "pDTE", dteUnit(), rmax = dteMax(), value = dteOut(dte))
     }
 
     private fun writeStockFuelLevel(t: ITorqueService, smoothedPct: Double, correctedPct: Double) {
@@ -878,6 +953,7 @@ class PluginService : Service() {
     }
 
     private fun ensureActiveSession() {
+        if (identity != null) return
         val id = lastActive.toIntOrNull() ?: 1
         for (tid in tanks.keys.toList()) {
             if (tid != id) closeTankSession(tid)
@@ -921,11 +997,16 @@ class PluginService : Service() {
             }
             return
         }
+        rt.math.finishFill()?.let { anchor ->
+            Log.i(TAG, "tank$id fill still open at session close; ending at plateau $anchor")
+            onFillEnd(rt, anchor, System.currentTimeMillis(), true)
+        }
         if (id == 1) commitTank1SinceFill(rt)
         val closed = rt.sessions.close()
         val dir = ProfileStore.tankDir(filesDir, profileId, id)
         val gap = ProfileStore.rollup(dir, nameplateFor(id))
         priorCache.remove(id)
+        publishTankGuess(id)
         Log.i(
             TAG,
             "session close tank=$id samples=${closed.size} files=${rt.sessions.sessionCount()} gap=${gap.replace('\n', ' ')}",
@@ -934,6 +1015,7 @@ class PluginService : Service() {
 
     private fun closeSession() {
         for (id in tanks.keys.toList()) closeTankSession(id)
+        TipReconciler.run(this, "session close")
     }
 
     private fun integrateGalHr(t: ITorqueService, now: Long, rt: TankRt): Double {
@@ -1023,14 +1105,22 @@ class PluginService : Service() {
         if (sessionFlowHrUnit != null && sessionFlowMinUnit != null) return
         val override = ProfileStore.profileField(filesDir, profileId, "flowUnit")
             ?.trim()?.lowercase()?.takeIf { it == "gal" || it == "l" }
-        fun pick(label: String, which: String): String {
+        // Standard OBD (SAE J1979 015E is L/h) and Torque's own calculated flow PIDs (ff125d/ff125a) report
+        // liters internally whatever Torque displays, so they are always taken as liters. Only a
+        // manufacturer-specific flow PID uses the profile "flowUnit" override, then its label, then gal (warned).
+        fun pick(pid: String?, label: String, which: String): String {
+            // Standard/Torque-calculated flow is metric: L (per h) or, for per-minute PIDs, possibly cc/ml.
+            if (pid == null || Pids.isStandardFlowPid(pid)) {
+                val l = label.lowercase()
+                return if (l.contains("cc") || l.contains("ml")) label else "l"
+            }
             if (override != null) return override
             if (label.isNotBlank()) return label
-            Log.w(TAG, "flow unit blank for $which; assuming gal (set profile flowUnit to \"l\" to override)")
+            Log.w(TAG, "flow unit blank for proprietary $which pid=$pid; assuming gal (set profile flowUnit to override)")
             return "gal"
         }
-        sessionFlowHrUnit = pick(galHrUnit, "galHr")
-        sessionFlowMinUnit = pick(galMinUnit, "galMin")
+        sessionFlowHrUnit = pick(galHrPid ?: Pids.GAL_PER_HOUR, galHrUnit, "galHr")
+        sessionFlowMinUnit = pick(galMinPid ?: Pids.GAL_PER_MIN, galMinUnit, "galMin")
         Log.i(TAG, "session flow units galHr=$sessionFlowHrUnit galMin=$sessionFlowMinUnit override=${override ?: "none"}")
     }
 
@@ -1043,6 +1133,17 @@ class PluginService : Service() {
             "flow unit $which raw galHr=$galHrUnit galMin=$galMinUnit preferred=$preferredVolumeUnit remaining=$out",
         )
     }
+
+    /** Display only: DTE is computed in miles internally and shown in Torque's preferred distance unit. */
+    private fun dteKm(): Boolean {
+        if (preferredDistanceUnit.isBlank()) {
+            preferredDistanceUnit = torque?.let { t -> runCatching { t.getPreferredUnit("km") }.getOrNull() }.orEmpty()
+        }
+        return preferredDistanceUnit.trim().lowercase().let { it == "km" || it.startsWith("kilomet") }
+    }
+    private fun dteUnit(): String = if (dteKm()) "km" else "mi"
+    private fun dteOut(miles: Double): Float = (if (dteKm()) miles * 1.609344 else miles).toFloat()
+    private fun dteMax(): Float = if (dteKm()) 800f else 500f
 
     private fun remainingOut(gal: Double): Pair<Float, String> {
         return if (Units.prefersLiters(preferredVolumeUnit)) {
@@ -1067,7 +1168,10 @@ class PluginService : Service() {
             // Fill detection: the pre-fill part of this drive is complete; segment it, refit, reload the map.
             rt.sessions.flush()
             val dir = ProfileStore.tankDir(filesDir, profileId, rt.id)
-            if (ProfileStore.fillUpdate(dir, nameplateFor(rt.id), rt.sessions.sessionId)) priorCache.remove(rt.id)
+            if (ProfileStore.fillUpdate(dir, nameplateFor(rt.id), rt.sessions.sessionId)) {
+                priorCache.remove(rt.id)
+                publishTankGuess(rt.id)
+            }
         }
         if (rt.id != 1 || quarantineDir != null) return
         val anchor = rt.ledger.rHat.takeIf { rt.ledger.anchored && it.isFinite() && it > 0.0 } ?: return
@@ -1097,8 +1201,23 @@ class PluginService : Service() {
         val gpp: (Double) -> Double,
     )
 
+    private fun hasModel(id: Int): Boolean = ProfileStore.storedMap(ProfileStore.tankDir(filesDir, profileId, id)) != null
+
+    /** After an analysis cycle (drive end or fill): publish the learned capacity as the current tank guess. */
+    private fun publishTankGuess(id: Int) {
+        if (id != 1 || quarantineDir != null || !hasModel(id)) return
+        val cap = priorFor(id).cap
+        if (ProfileStore.setTankGuess(filesDir, profileId, cap, true)) {
+            prefsDirty = true
+            // Only the plugin's per-profile setting changes: Torque's tankCapacity is not writable from the
+            // plugin API (storeInProfile keys land under "plugin_"), so Torque's own figure stays as entered.
+            Log.i(TAG, "tank guess for $profileId updated to learned capacity ${"%.1f".format(cap)} gal (Torque tankCapacity not writable; unchanged)")
+        }
+    }
+
     private fun nameplateFor(id: Int): Double? {
-        return if (id <= 1) nameplateGal?.takeIf { it > 0.0 } ?: cfg.tankGal else cfg.extra(id)?.tankGal
+        // The profile's tank size (seeded, learned or user-edited) is the starting guess; Torque's value only if blank.
+        return if (id <= 1) cfg.tankGal?.takeIf { it > 0.0 } ?: nameplateGal?.takeIf { it > 0.0 } else cfg.extra(id)?.tankGal
     }
 
     /** Cached; invalidated at bind, profile switch, session-close rollup and pref changes. */
@@ -1396,6 +1515,7 @@ class PluginService : Service() {
         private const val NOTIF_ID = 350
         private const val POLL_MS = 1000L
         private const val MAX_FLOW_GAP_SEC = 5.0
+        private const val IDENTITY_MAX_MS = 20_000L
         private const val FILL_SWITCH_DEBOUNCE_MS = 5000L
         private const val FULL_FILL_PCT = 90.0
         const val ACTION_Q_CONFIRM = "com.davidlang.torque.fuelsmoothing.QUARANTINE_CONFIRM"

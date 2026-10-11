@@ -9,11 +9,16 @@ internal object Pids {
     const val SPEED = "0d"
     const val RPM = "0c"
     const val MAF = "10"
-    const val FUEL_USED_TRIP = "ff125c"
-    const val FUEL_USED_SESSION = "ff1271"
+    const val FUEL_USED_TRIP = "ff1271" // Torque "Fuel used (trip)"; ff125c is "Fuel cost (trip)"
+    const val FUEL_COST_TRIP = "ff125c"
     const val GAL_PER_HOUR = "ff125d"
     const val GAL_PER_MIN = "ff125a"
     const val LONG_TERM_MPG = "ff5201"
+    const val ECU_FUEL_RATE = "015e"
+
+    /** SAE J1979 015E (L/h) and Torque's calculated flow PIDs: liters internally, regardless of display. */
+    fun isStandardFlowPid(pid: String): Boolean =
+        pid.lowercase().removePrefix("0x").let { it == GAL_PER_HOUR || it == GAL_PER_MIN || it == ECU_FUEL_RATE || it == "5e" }
     const val DTE = "ff126a"
 
     const val PLUGIN_SMOOTHED = "[FuelSmooth] Smoothed Fuel Level"
@@ -130,7 +135,7 @@ internal object Pids {
             return if (i >= 0 && i < infos.size) csvUnit(infos[i]) else ""
         }
         val speed = pick(SPEED) ?: SPEED
-        val fuelUsed = pick(FUEL_USED_TRIP, FUEL_USED_SESSION)
+        val fuelUsed = pick(FUEL_USED_TRIP)
         val galHr = pick(GAL_PER_HOUR)
         val galMin = pick(GAL_PER_MIN)
         val mpg = pick(LONG_TERM_MPG) ?: LONG_TERM_MPG

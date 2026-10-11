@@ -140,7 +140,18 @@ internal object FixFuelPrefs {
     fun load(ctx: Context): FixFuelConfig {
         val p = prefs(ctx)
         val invalid = LinkedHashMap<String, String>()
-        val tankRaw = p.getString(KEY_TANK, "") ?: ""
+        // Tank size is per profile (profile.json tankGal). The old shared setting seeds the active profile once.
+        val root = ctx.filesDir
+        val pid = ProfileStore.activeId(root)
+        if (ProfileStore.profileField(root, pid, "tankGal") == null) {
+            val legacy = p.getString(KEY_TANK, "")?.trim().orEmpty()
+            if (legacy.isNotEmpty() && tankOk(legacy)) {
+                ProfileStore.setTankEntered(root, pid, legacy)
+                if (p.getBoolean(KEY_ESTIMATED, false)) ProfileStore.setProfileField(root, pid, "tankEstimated", "true")
+            }
+        }
+        val (profTank, profEst) = ProfileStore.tankGuess(root, pid)
+        val tankRaw = profTank ?: ""
         val tank = tankRaw.toDoubleOrNull()?.takeIf { it.isFinite() && it > 0.0 }
         if (!tankOk(tankRaw)) {
             invalid[KEY_TANK] = tankRaw
@@ -156,7 +167,7 @@ internal object FixFuelPrefs {
             jumpPct = checked(p, KEY_JUMP, DEFAULT_JUMP, ::jumpOk, invalid),
             tankGal = tank,
             learnedUsable = learned,
-            tankEstimated = p.getBoolean(KEY_ESTIMATED, false),
+            tankEstimated = profEst,
             sourceStatus = p.getString(KEY_STATUS, "") ?: "",
             extras = parseExtras(p.getString(KEY_EXTRAS, "[]") ?: "[]"),
             activeTank = normalizeActive(p.getString(KEY_ACTIVE, ACTIVE_TANK1) ?: ACTIVE_TANK1),
@@ -187,8 +198,12 @@ internal object FixFuelPrefs {
             .putString(KEY_TAU, tauSec.toString())
             .putString(KEY_SKEW, skewPctPerSec.toString())
             .putString(KEY_JUMP, jumpPct.toString())
-        if (tankGal != null && tankGal.isFinite() && tankGal > 0.0) e.putString(KEY_TANK, tankGal.toString())
-        else e.putString(KEY_TANK, "")
+        // Per profile. A value typed by the user is a guess, not a learned estimate (unchanged value keeps the flag).
+        val root = ctx.filesDir
+        val pid = ProfileStore.activeId(root)
+        val oldTank = ProfileStore.tankGuess(root, pid).first?.toDoubleOrNull()
+        val newRaw = if (tankGal != null && tankGal.isFinite() && tankGal > 0.0) tankGal.toString() else ""
+        if (oldTank == null || tankGal == null || kotlin.math.abs(oldTank - tankGal) >= 0.05) ProfileStore.setTankEntered(root, pid, newRaw)
         e.putString(KEY_EXTRAS, extrasToJson(extras))
             .putString(KEY_ACTIVE, normalizeActive(activeTank))
             .putString(KEY_SELECT_PID, selectPidName)

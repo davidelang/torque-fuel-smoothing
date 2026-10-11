@@ -3,7 +3,19 @@
     <string name="app_name">Fuel Smoothing for Torque</string>
     <string name="privacy_policy_url">https://play.landing.lang.hm/fuel-smoothing/privacy/</string>
     <string name="tips_play_only">Tips are on the Play Store version</string>
-    <string name="help_body">Enable this plugin in Torque → Settings → Plugins.\n\nAllow notifications when asked. Set Unrestricted battery so Torque can start this plugin in the background.\n\nWith Feed fuel level back to Torque (overrides 012F) enabled, the corrected percent is written onto Torque’s stock Fuel Level (012F).</string>
+    <string name="help_body">Quick start\n
+1. Install Torque Pro and pair your OBD-II adapter.\n
+2. Enable this plugin in Torque → Settings → Plugins.\n
+3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n
+4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile.\n
+5. Choose the Fuel source below. Tank size is only the current guess; it is updated at fills and when Torque disconnects.\n
+6. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level, Corrected Fuel Level and Fuel Remaining.\n
+7. With Feed fuel level back to Torque (overrides 012F) on, your existing 012F fuel gauge shows the chosen value.\n
+8. Drive normally. The plugin runs only while Torque is connected to the ECU.\n
+9. Keep driving and filling up. Corrected % and fuel remaining get accurate over several partial tanks.\n
+10. If a Wrong vehicle profile? notification appears, choose what to do with that drive.</string>
+    <string name="manual_url">https://play.landing.lang.hm/fuel-smoothing/manual/</string>
+    <string name="manual_button">Full manual (online)</string>
     <string name="show_fuel_notification">Show fuel level in notification</string>
     <string name="write_012f">Feed fuel level back to Torque (overrides 012F)</string>
     <string name="running_quiet">Fuel Smoothing is running</string>

@@ -95,6 +95,12 @@ class PluginActivity : Activity() {
         help.text = getString(R.string.help_body)
         help.textSize = 14f
         col.addView(help)
+        val manual = Button(this)
+        manual.text = getString(R.string.manual_button)
+        manual.setOnClickListener {
+            runCatching { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.manual_url)))) }
+        }
+        col.addView(manual)
 
         if (!torqueInstalled()) {
             val need = TextView(this)
@@ -134,7 +140,8 @@ class PluginActivity : Activity() {
         thanksView = TextView(this)
         thanksView.textSize = 16f
         col.addView(thanksView)
-        connectBilling()
+        // Google Play Billing connects only when the user taps Tip, or to finish a recorded tip (no network use otherwise).
+        TipReconciler.run(this, "app start")
 
         profileNameView = TextView(this)
         profileNameView.textSize = 16f
@@ -201,7 +208,7 @@ class PluginActivity : Activity() {
         jump = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
         col.addView(jump)
 
-        col.addView(label("Tank gallons (typed until estimated)"))
+        col.addView(label("Tank size, current guess (gallons) — updated at fills and when Torque disconnects"))
         tank = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
         col.addView(tank)
 
@@ -302,7 +309,7 @@ class PluginActivity : Activity() {
         val tankStr = c.tankGal?.toString() ?: ""
         if (tank.text.toString() != tankStr && !tank.isFocused) tank.setText(tankStr)
         showStoredInvalid(c)
-        estimated.text = if (c.tankEstimated) "Tank shown is estimated usable from mapping." else ""
+        estimated.text = if (c.tankEstimated) "Learned from your drives (updated at each fill and disconnect)." else ""
         val st = c.sourceStatus
         val lv = FixFuelPrefs.live(this)
         live.text = listOf(st, lv).filter { it.isNotBlank() }.joinToString("\n")
@@ -610,8 +617,14 @@ class PluginActivity : Activity() {
     private fun connectBilling() {
         val client = BillingClient.newBuilder(this)
             .setListener { result, purchases ->
-                if (result.responseCode == BillingClient.BillingResponseCode.OK) {
-                    purchases?.forEach { finishTip(it) }
+                when (result.responseCode) {
+                    BillingClient.BillingResponseCode.OK -> purchases?.forEach {
+                        // Persist first, then acknowledge/consume while still connected.
+                        TipStore.note(this, it)
+                        finishTip(it)
+                    }
+                    BillingClient.BillingResponseCode.USER_CANCELED -> TipStore.clear(this)
+                    else -> Unit
                 }
             }
             .enablePendingPurchases(
@@ -640,7 +653,11 @@ class PluginActivity : Activity() {
 
     private fun onTipClicked() {
         val client = billing
-        if (client == null || !client.isReady) {
+        if (client == null) {
+            connectBilling() // queries tips and owned purchases once connected
+            return
+        }
+        if (!client.isReady) {
             tipButton.text = getString(R.string.tips_play_only)
             return
         }
@@ -699,6 +716,7 @@ class PluginActivity : Activity() {
         val flow = BillingFlowParams.newBuilder()
             .setProductDetailsParamsList(listOf(product))
             .build()
+        TipStore.put(this, TipRules.Record(TipRules.State.STARTED, System.currentTimeMillis()))
         client.launchBillingFlow(this, flow)
     }
 
@@ -710,6 +728,7 @@ class PluginActivity : Activity() {
             val params = ConsumeParams.newBuilder().setPurchaseToken(token).build()
             client.consumeAsync(params) { result, _ ->
                 if (result.responseCode == BillingClient.BillingResponseCode.OK) {
+                    TipStore.clear(this)
                     runOnUiThread { thanksView.text = "Thanks" }
                 }
             }

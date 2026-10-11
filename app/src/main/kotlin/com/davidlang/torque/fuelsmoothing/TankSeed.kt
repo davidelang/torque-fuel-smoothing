@@ -25,7 +25,7 @@ internal object TankSeed {
         }
     }
 
-    /** Our own key is always written by persist() in gallons. */
+    /** Our own key (written by older builds, read only now) holds gallons. */
     private fun parseOwnGallons(raw: String?): Double? {
         val s = raw?.trim() ?: return null
         parseLitersOrGal(s)?.let { return it }
@@ -60,14 +60,11 @@ internal object TankSeed {
         return parseOwnGallons(runCatching { t.retrieveProfileData(PROFILE_KEY) }.getOrNull())
     }
 
-    fun persist(t: ITorqueService, gal: Double) {
-        runCatching { t.storeInProfile(PROFILE_KEY, "$gal gal", true) }
-    }
+    // Nothing is ever written back to Torque (David): the tank size lives in the plugin's profile only.
 
     fun seed(t: ITorqueService): Double? {
         val probed = probe(t)
         if (probed != null) {
-            persist(t, probed.second)
             Log.i(TAG, "tank seed gal=${probed.second} from ${probed.first}")
             return probed.second
         }

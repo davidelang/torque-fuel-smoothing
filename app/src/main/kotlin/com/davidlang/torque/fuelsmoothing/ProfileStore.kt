@@ -186,6 +186,32 @@ internal object ProfileStore {
         if (!tmp.renameTo(f)) { f.writeText(text); tmp.delete() }
     }
 
+    /** Per-profile tank-size guess (gal) and whether it was learned (true) or entered/seeded (false). */
+    fun tankGuess(root: File, id: String): Pair<String?, Boolean> =
+        profileField(root, id, "tankGal") to (profileField(root, id, "tankEstimated") == "true")
+
+    /** Stores the profile's tank guess rounded to 0.1 gal; returns false when unchanged (< 0.1 gal, same flag). */
+    fun setTankGuess(root: File, id: String, gal: Double, estimated: Boolean): Boolean {
+        if (!gal.isFinite() || gal <= 0.0) return false
+        if (!File(profileDir(root, id), "profile.json").isFile) return false
+        val (oldRaw, oldEst) = tankGuess(root, id)
+        val rounded = Math.round(gal * 10.0) / 10.0
+        val old = oldRaw?.toDoubleOrNull()
+        if (old != null && kotlin.math.abs(old - rounded) < 0.1 && oldEst == estimated) return false
+        setProfileField(root, id, "tankGal", rounded.toString())
+        setProfileField(root, id, "tankEstimated", estimated.toString())
+        return true
+    }
+
+    /** Entered by the user: stored as typed (validated by the caller), never "estimated". Blank clears it. */
+    fun setTankEntered(root: File, id: String, raw: String) {
+        if (!File(profileDir(root, id), "profile.json").isFile) return
+        val old = profileField(root, id, "tankGal")
+        if (old == raw.ifBlank { null }) return
+        setProfileField(root, id, "tankGal", raw.ifBlank { null })
+        setProfileField(root, id, "tankEstimated", "false")
+    }
+
     fun createProfile(root: File, name: String, nowMs: Long = System.currentTimeMillis()): String =
         create(root, name, profiles(root).map { it.id }.toSet(), nowMs)
 
