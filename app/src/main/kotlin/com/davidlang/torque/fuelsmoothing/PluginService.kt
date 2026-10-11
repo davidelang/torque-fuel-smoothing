@@ -41,9 +41,8 @@ class PluginService : Service() {
         /** Session fuelGal at the last fill end. Open resets this with usedGal. */
         var fuelAtFillGal: Double = 0.0
         val ledger = TankLedger()
-        var steppedChunks: Int = 0
         var mpgRecent: Double = 0.0
-        val mpgWindow: ArrayDeque<Pair<Double, Double>> = ArrayDeque()
+        val mpgWindow = Live.MpgWindow()
     }
 
     private val handler = Handler(Looper.getMainLooper())
@@ -1042,7 +1041,6 @@ class PluginService : Service() {
         if (id == 1) lastSliderPct = null
         rt.usedGal = 0.0
         rt.fuelAtFillGal = 0.0
-        rt.steppedChunks = 0
         rt.lastRateMs = null
         rt.burnGate.reset()
         rt.burnWhy = null
@@ -1078,6 +1076,7 @@ class PluginService : Service() {
         }
         if (id == 1) commitTank1SinceFill(rt)
         val closed = rt.sessions.close()
+        closeLiveChunks(rt, closed)
         val dir = ProfileStore.tankDir(filesDir, profileId, id)
         val gap = ProfileStore.rollup(dir, nameplateFor(id))
         priorCache.remove(id)
@@ -1327,26 +1326,23 @@ class PluginService : Service() {
         return Prior(t0, v, v95, hEst, cap, reserve) { t0 / 100.0 }
     }
 
+    /** Per tick: O(1). Only this tick's burn moves the ledger; chunk corrections wait for session close. */
     private fun stepLive(rt: TankRt, dF: Double) {
+        Live.tick(rt.ledger, dF)
+    }
+
+    /** Session close: build the closed session once and apply its chunk corrections to the ledger. */
+    private fun closeLiveChunks(rt: TankRt, samples: List<Sample>) {
+        if (samples.size < 2 || !rt.ledger.anchored) return
         val prior = priorFor(rt.id)
-        FuelV2.stepSample(rt.ledger, dF)
-        val samples = rt.sessions.samples
-        if (samples.size < 2) return
         val n = samples.size
-        val tSec = DoubleArray(n) { samples[it].t / 1000.0 }
-        val raw = DoubleArray(n) { samples[it].rawPct }
-        val sm = DoubleArray(n) { samples[it].smoothedPct }
-        val used = DoubleArray(n) { samples[it].fuelUsedGal }
-        val spd = DoubleArray(n) { RawLog.gateSpeed(samples[it].speed, samples[it].spdUnit) }
-        val fill = BooleanArray(n) { samples[it].fill }
-        val session = FuelSession("live", tSec, raw, sm, used, spd, fill)
-        val chunks = FuelV2.chunksSf(session, prior.gpp, placeholderNMin(), 4.4)
-        val fuelNow = samples.last().fuelUsedGal
-        while (rt.steppedChunks < chunks.size) {
-            val c = chunks[rt.steppedChunks]
-            FuelV2.stepChunk(rt.ledger, c.l, fuelNow - c.f, prior.v(c.l), prior.v95)
-            rt.steppedChunks++
-        }
+        val session = FuelSession(
+            "closed", DoubleArray(n) { samples[it].t / 1000.0 }, DoubleArray(n) { samples[it].rawPct },
+            DoubleArray(n) { samples[it].smoothedPct }, DoubleArray(n) { samples[it].fuelUsedGal },
+            DoubleArray(n) { RawLog.gateSpeed(samples[it].speed, samples[it].spdUnit) }, BooleanArray(n) { samples[it].fill },
+        )
+        val k = Live.closeChunks(rt.ledger, session, prior.gpp, placeholderNMin(), prior.v, prior.v95)
+        Log.i(TAG, "tank${rt.id} close: applied $k drive chunks to the ledger (rHat=${"%.2f".format(rt.ledger.rHat)})")
     }
 
     private fun placeholderNMin(): Int {
@@ -1360,22 +1356,8 @@ class PluginService : Service() {
         val miles = if (speedMph.isFinite() && speedMph > 0.0) speedMph / 3600.0 else 0.0
         val gal = if (dF.isFinite() && dF > 0.0) dF else 0.0
         if (miles == 0.0 && gal == 0.0) return
-        rt.mpgWindow.addLast(miles to gal)
-        val cap = priorFor(rt.id).cap
-        val want = 0.15 * cap
-        var fuel = 0.0
-        var dist = 0.0
-        val it = rt.mpgWindow.descendingIterator()
-        var keep = 0
-        while (it.hasNext()) {
-            val p = it.next()
-            fuel += p.second
-            dist += p.first
-            keep++
-            if (want > 0.0 && fuel >= want) break
-        }
-        while (rt.mpgWindow.size > keep) rt.mpgWindow.removeFirst()
-        if (fuel > 1e-9) rt.mpgRecent = dist / fuel
+        rt.mpgWindow.add(miles, gal, 0.15 * priorFor(rt.id).cap)
+        rt.mpgRecent = rt.mpgWindow.mpg
     }
 
     private fun livePublish(rt: TankRt): TankPublish {
