@@ -139,6 +139,7 @@ class PluginService : Service() {
         if (!prefsDirty) return
         prefsDirty = false
         cfg = FixFuelPrefs.load(this)
+        FsLog.verbose = getSharedPreferences(FixFuelPrefs.PREFS, MODE_PRIVATE).getBoolean(FsLog.KEY_VERBOSE, false)
     }
 
     private val connection = object : ServiceConnection {
@@ -168,6 +169,7 @@ class PluginService : Service() {
         super.onCreate()
         isRunning = true
         cfg = FixFuelPrefs.load(this)
+        FsLog.verbose = getSharedPreferences(FixFuelPrefs.PREFS, MODE_PRIVATE).getBoolean(FsLog.KEY_VERBOSE, false)
         prefsDirty = false
         FixFuelPrefs.prefs(this).registerOnSharedPreferenceChangeListener(prefsListener)
         ProfileStore.migrate(
@@ -251,6 +253,7 @@ class PluginService : Service() {
     private fun afterBindWork() {
         val t = torque ?: return
         cfg = FixFuelPrefs.load(this)
+        FsLog.verbose = getSharedPreferences(FixFuelPrefs.PREFS, MODE_PRIVATE).getBoolean(FsLog.KEY_VERBOSE, false)
         prefsDirty = false
         priorCache.clear()
         ensureRuntimes()
@@ -384,7 +387,7 @@ class PluginService : Service() {
         }
         val src = FuelSources.read(t, srcCfg, pidNames) { pid ->
             if (isStock012F(pid)) {
-                Log.w(TAG, "refusing getPIDValues of 012F (not Ford input)")
+                FsLog.warn(TAG, "refuse012f", "refusing getPIDValues of 012F (not Ford input)")
                 null
             } else {
                 readDouble(t, pid)
@@ -395,7 +398,7 @@ class PluginService : Service() {
         } else if (src.how != (cfg.extra(id)?.sourceStatus ?: "")) {
             FixFuelPrefs.setExtraSourceStatus(this, id, src.how)
         }
-        if (id == 1) Log.i(TAG, "source ${cfg.sourceId} ${src.how} active=$lastActive")
+        if (id == 1) FsLog.change(TAG, "source", "${cfg.sourceId} ${src.how} $lastActive", "source ${cfg.sourceId} ${src.how} active=$lastActive")
         val raw = src.pct
         val logging0 = rt.sessions.isOpen && lastActive == id.toString()
         if (!src.missing && ecu != false && rt.math.checkReanchor(raw, speedMph, now)) {
@@ -422,7 +425,9 @@ class PluginService : Service() {
             if (held != null) {
                 if (id == 1) publishFromSmoothed(t, raw ?: held, held) else publishExtraFrom(t, id, rt, held)
             }
-            Log.i(TAG, "tank$id hold raw=$raw why=${holdWhy(raw, ecu, src.missing, rt.math.smoothed)} src=${src.how}")
+            holdWhy(raw, ecu, src.missing, rt.math.smoothed).let { why ->
+                FsLog.change(TAG, "state$id", "hold $why", "tank$id hold raw=$raw why=$why src=${src.how}")
+            }
             return
         }
         val live = raw!!
@@ -466,14 +471,14 @@ class PluginService : Service() {
         if (id == 1) {
             publishFromSmoothed(t, live, smoothed)
             val line = "track mode=${rt.math.mode} raw=$live smoothed=$smoothed speedMph=${"%.1f".format(speedMph)}"
-            Log.i(TAG, line)
+            FsLog.change(TAG, "state1", "mode ${rt.math.mode}", line)
             if (line != lastLiveLine) {
                 lastLiveLine = line
                 FixFuelPrefs.setLive(this, line)
             }
         } else {
             publishExtraFrom(t, id, rt, smoothed)
-            Log.i(TAG, "tank$id mode=${rt.math.mode} raw=$live smoothed=$smoothed src=${src.how}")
+            FsLog.change(TAG, "state$id", "mode ${rt.math.mode}", "tank$id mode=${rt.math.mode} raw=$live smoothed=$smoothed src=${src.how}")
         }
     }
 
@@ -959,9 +964,9 @@ class PluginService : Service() {
     ) {
         val info = runCatching { t.setPIDInformation(name, shortName, unit, rmax, 0f, value, null) }
         if (info.isSuccess) return
-        Log.w(TAG, "setPIDInformation $name: ${info.exceptionOrNull()?.message}")
+        FsLog.warn(TAG, "setPIDInformation $name", "setPIDInformation $name: ${info.exceptionOrNull()?.message}")
         runCatching { t.setPIDData(name, shortName, unit, rmax, 0f, value) }
-            .onFailure { Log.w(TAG, "setPIDData $name: ${it.message}") }
+            .onFailure { FsLog.warn(TAG, "setPIDData $name", "setPIDData $name: ${it.message}") }
     }
 
     /*
@@ -1047,6 +1052,7 @@ class PluginService : Service() {
         sessionFlowHrUnit = null
         sessionFlowMinUnit = null
         val sid = rt.sessions.open(profileId = profileId, app = BuildConfig.VERSION_NAME)
+        FsLog.reset()
         Log.i(TAG, "session open tank=$id $sid files=${rt.sessions.sessionCount()}")
     }
 
@@ -1101,7 +1107,7 @@ class PluginService : Service() {
             // Unknown flow during the gap; adding rate*dt would invent fuel. Burn for the gap is skipped.
             // One gap entry per gap: none again until a sample records burned fuel.
             if (rt.sessions.markGap(now, dtSec)) {
-                Log.i(TAG, "tank${rt.id} flow gap ${"%.1f".format(dtSec)}s > ${MAX_FLOW_GAP_SEC}s; no burn added")
+                FsLog.warn(TAG, "flowGap${rt.id}", "tank${rt.id} flow gap ${"%.1f".format(dtSec)}s > ${MAX_FLOW_GAP_SEC}s; no burn added")
             }
             return 0.0
         }
@@ -1190,7 +1196,7 @@ class PluginService : Service() {
             }
             if (override != null) return override
             if (label.isNotBlank()) return label
-            Log.w(TAG, "flow unit blank for proprietary $which pid=$pid; assuming gal (set profile flowUnit to override)")
+            FsLog.warn(TAG, "flowUnitBlank$which", "flow unit blank for proprietary $which pid=$pid; assuming gal (set profile flowUnit to override)")
             return "gal"
         }
         sessionFlowHrUnit = pick(galHrPid ?: Pids.GAL_PER_HOUR, galHrUnit, "galHr")
@@ -1422,10 +1428,10 @@ class PluginService : Service() {
             if (d.isNaN() || d.isInfinite()) return null
             return d
         }
-        Log.w(TAG, "getPIDValuesAsDouble: ${asDouble.exceptionOrNull()?.message}")
+        FsLog.warn(TAG, "getPIDValuesAsDouble", "getPIDValuesAsDouble: ${asDouble.exceptionOrNull()?.message}")
         val asFloat = runCatching { t.getPIDValues(arrayOf(pid)) }
         if (asFloat.isFailure) {
-            Log.w(TAG, "getPIDValues: ${asFloat.exceptionOrNull()?.message}")
+            FsLog.warn(TAG, "getPIDValues", "getPIDValues: ${asFloat.exceptionOrNull()?.message}")
             return null
         }
         val f = asFloat.getOrNull()?.firstOrNull() ?: return null
@@ -1480,7 +1486,7 @@ class PluginService : Service() {
         try {
             notificationManager()?.notify(NOTIF_ID, notification(liveText, CHANNEL_ID))
         } catch (t: Throwable) {
-            Log.w(TAG, "notify ignored: ${t.javaClass.simpleName} ${t.message}")
+            FsLog.warn(TAG, "notify", "notify ignored: ${t.javaClass.simpleName} ${t.message}")
         }
     }
 

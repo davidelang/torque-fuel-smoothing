@@ -191,6 +191,14 @@ class PluginActivity : Activity() {
         primaryAlgo = Spinner(this)
         primaryAlgo.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, MapAlgo.entries.map { it.label })
         col.addView(primaryAlgo)
+        val verbose = android.widget.CheckBox(this)
+        verbose.text = "Verbose logging (debug; per-second log lines)"
+        verbose.isChecked = FixFuelPrefs.prefs(this).getBoolean(FsLog.KEY_VERBOSE, false)
+        verbose.setOnCheckedChangeListener { _, on ->
+            FixFuelPrefs.prefs(this).edit().putBoolean(FsLog.KEY_VERBOSE, on).apply()
+            FsLog.verbose = on
+        }
+        col.addView(verbose)
 
         col.addView(label("Fuel source"))
         sourceSpinner = Spinner(this)

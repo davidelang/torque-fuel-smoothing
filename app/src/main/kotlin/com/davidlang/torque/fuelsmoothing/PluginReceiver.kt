@@ -15,7 +15,7 @@ class PluginReceiver : BroadcastReceiver() {
         try {
             val action = intent?.action ?: return
             if (ignoreSender(action)) return
-            Log.i(TAG, "onReceive $action")
+            if (action.endsWith("PID_QUERY") || action.endsWith("PID_PLUGIN")) FsLog.v(TAG, "onReceive $action") else Log.i(TAG, "onReceive $action")
             val start = Intent(context, PluginService::class.java).setAction(action)
             if (PluginService.isRunning) {
                 context.startService(start)
