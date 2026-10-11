@@ -309,6 +309,27 @@ internal object ChunkFit {
      * Segments every part of [sessions] whose key is not in [skip]. Parts of [openName] (a session still
      * being recorded) are only returned when complete, i.e. ended by a fill cut.
      */
+    /** One drive part for the Kalman estimator: trusted samples (steady mask) thinned to one per [thinS] s. */
+    class KDrive(val key: String, val session: String, val t0: Double, val fuel: Double, val fillAtStart: Boolean, val l: DoubleArray, val f: DoubleArray)
+
+    /** Drive parts in time order (same parts and mask as segmentAll) plus the gauge sigma; the last part of [openName] is left out. */
+    fun kalmanDrives(sessions: List<FuelSession>, thinS: Double, openName: String? = null): Pair<List<KDrive>, Double> {
+        val ps = parts(sessions)
+        val sig = noise(ps)[0]
+        val lastOpen = ps.lastOrNull { it.s.name == openName }?.key
+        val out = ArrayList<KDrive>()
+        for (w in ps) {
+            if (w.key == lastOpen) continue
+            val s = w.s; val ls = ArrayList<Double>(); val fs = ArrayList<Double>()
+            if (w.moving) {
+                var last = -1e9
+                for (i in w.i0 until w.i1) if (w.q!![i] && s.t[i] - last >= thinS) { ls.add(s.raw[i]); fs.add(s.used[i] - s.used[w.a]); last = s.t[i] }
+            }
+            out.add(KDrive(w.key, s.name, s.t[w.a], s.used[w.b - 1] - s.used[w.a], w.fillAtStart, ls.toDoubleArray(), fs.toDoubleArray()))
+        }
+        return out to sig
+    }
+
     fun segmentAll(sessions: List<FuelSession>, skip: Set<String> = emptySet(), openName: String? = null): Pair<List<Part>, List<Chunk>> {
         val ps = parts(sessions)
         val nz = noise(ps); val nb = nz[2].toInt(); val sb2 = nz[3]

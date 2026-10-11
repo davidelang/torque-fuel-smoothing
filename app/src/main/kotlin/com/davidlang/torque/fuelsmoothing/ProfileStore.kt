@@ -358,6 +358,7 @@ internal object ProfileStore {
         } else if (model != null) {
             File(dir, "model.json").writeText(model.json)
         }
+        Kalman.update(dir, sessions, nameplate)
         if (model != null) {
             val chunksOut = File(dir, "chunks.jsonl")
             chunksOut.writeText("")
@@ -435,6 +436,7 @@ internal object ProfileStore {
         val json = chunkUpdate(dir, sessions, nameplate, null, openName) ?: return false
         writeModelIfChanged(File(dir, "model.json"), json)
         BandFit.update(dir)
+        Kalman.update(dir, sessions, nameplate, openName)
         return true
     }
 

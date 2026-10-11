@@ -79,8 +79,12 @@ internal object FixFuelPrefs {
 
     fun mapAlgo(stored: String?): MapAlgo = MapAlgo.entries.firstOrNull { it.name == stored } ?: MapAlgo.CHUNK
 
-    /** Primary output: the band result only when Band is chosen and a band model exists; otherwise chunk. */
-    fun <T> primary(algo: MapAlgo, chunk: T, band: T?): T = if (algo == MapAlgo.BAND && band != null) band else chunk
+    /** Primary output: Band or Kalman only when chosen and that model exists; otherwise chunk. */
+    fun <T> primary(algo: MapAlgo, chunk: T, band: T?, kalman: T? = null): T = when {
+        algo == MapAlgo.BAND && band != null -> band
+        algo == MapAlgo.KALMAN && kalman != null -> kalman
+        else -> chunk
+    }
 
     /** Stored mode, else the legacy checkbox (unchecked = OFF, checked/absent = CORRECTED). */
     fun feedMode(stored: String?, legacyChecked: Boolean?): FeedMode =
@@ -335,4 +339,5 @@ enum class FeedMode(val label: String) {
 enum class MapAlgo(val label: String) {
     CHUNK("Chunk fit (default)"),
     BAND("Band fit (smooth curve)"),
+    KALMAN("Kalman fit"),
 }

@@ -315,7 +315,14 @@ class PluginActivity : Activity() {
         val tankStr = c.tankGal?.toString() ?: ""
         if (tank.text.toString() != tankStr && !tank.isFocused) tank.setText(tankStr)
         showStoredInvalid(c)
-        estimated.text = if (c.tankEstimated) "Learned from your drives (updated at each fill and disconnect)." else ""
+        val km = Kalman.loadModel(ProfileStore.tankDir(filesDir, ProfileStore.activeId(filesDir), 1))
+        val kmText = km?.let {
+            "Kalman tank ${"%.1f".format(it.tank)} gal (${if (it.trusted) "learned" else "provisional"}); gauge covered by >=1/2/3 drives: ${it.cov1}/${it.cov2}/${it.cov3} %"
+        }
+        estimated.text = listOfNotNull(
+            if (c.tankEstimated) "Learned from your drives (Kalman fit, once >= ${Kalman.TRUST_COV2} % of the gauge is covered by 2+ drives)." else null,
+            kmText,
+        ).joinToString("\n")
         val st = c.sourceStatus
         val lv = FixFuelPrefs.live(this)
         live.text = listOf(st, lv).filter { it.isNotBlank() }.joinToString("\n")

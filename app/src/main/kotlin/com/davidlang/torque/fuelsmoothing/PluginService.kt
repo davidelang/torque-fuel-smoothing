@@ -535,10 +535,12 @@ class PluginService : Service() {
         val rt = tanks[1] ?: return
         val chunkOut = livePublish(rt)
         val bandOut = bandPublish(rt)
-        val out = FixFuelPrefs.primary(cfg.primaryAlgo, chunkOut, bandOut)
+        val kalOut = kalmanPublish(rt)
+        val out = FixFuelPrefs.primary(cfg.primaryAlgo, chunkOut, bandOut, kalOut)
         lastAuthPct = out.correctedPct
         publish(t, raw, smoothed, out.correctedPct, out.remaining, out.dte)
         if (bandOut != null) runCatching { publishBand(t, bandOut) }
+        if (kalOut != null) runCatching { publishKalman(t, kalOut) }
         writeStockFuelLevel(t, smoothed, out.correctedPct)
         maybeSyncSlider(t, out.correctedPct)
         updatePresence(statusText())
@@ -779,6 +781,9 @@ class PluginService : Service() {
         row(Pids.PLUGIN_BAND_CORRECTED, "CorrBand", "%", 100f, Pids.MODE_BAND_CORRECTED)
         row(Pids.PLUGIN_BAND_REMAINING, "GalBand", remainUnit, remainMax, Pids.MODE_BAND_REMAINING)
         row(Pids.PLUGIN_BAND_DTE, "DTEBand", dteUnit(), dteMax(), Pids.MODE_BAND_DTE)
+        row(Pids.PLUGIN_KALMAN_CORRECTED, "CorrKal", "%", 100f, Pids.MODE_KALMAN_CORRECTED)
+        row(Pids.PLUGIN_KALMAN_REMAINING, "GalKal", remainUnit, remainMax, Pids.MODE_KALMAN_REMAINING)
+        row(Pids.PLUGIN_KALMAN_DTE, "DTEKal", dteUnit(), dteMax(), Pids.MODE_KALMAN_DTE)
         for (extra in cfg.extras) {
             val n = Pids.extraPidNames(extra.id)
             val tmax = remainingScale(priorFor(extra.id).cap)
@@ -859,6 +864,37 @@ class PluginService : Service() {
         val reserve = priorFor(1).reserve
         val mpg = rt.mpgRecent
         return TankPublish(r, r + reserve, corr, mpg, (r + reserve) * mpg, r * mpg)
+    }
+
+    private var kalCache: Pair<Long, Kalman.Model?>? = null
+
+    private fun kalmanModel(): Kalman.Model? {
+        val f = File(ProfileStore.tankDir(filesDir, profileId, 1), Kalman.MODEL)
+        val m = if (f.isFile) f.lastModified() else -1L
+        kalCache?.let { if (it.first == m) return it.second }
+        val loaded = Kalman.loadModel(f.parentFile!!)
+        kalCache = m to loaded
+        return loaded
+    }
+
+    /** Kalman outputs: corrected = G(gauge) / G(100) x 100; remaining = G(gauge) + reserve. */
+    private fun kalmanPublish(rt: TankRt): TankPublish? {
+        val km = kalmanModel() ?: return null
+        val sm = rt.math.smoothed?.takeIf { it.isFinite() } ?: return null
+        val corr = FuelV2.correctedPct(sm, { km.v(it) }, km.tank)
+        if (!corr.isFinite()) return null
+        val r = km.v(sm).coerceAtLeast(0.0)
+        val reserve = priorFor(1).reserve
+        val mpg = rt.mpgRecent
+        return TankPublish(r, r + reserve, corr, mpg, (r + reserve) * mpg, r * mpg)
+    }
+
+    private fun publishKalman(t: ITorqueService, b: TankPublish) {
+        val (vol, vu) = remainingOut(b.remaining)
+        val rmax = remainingScale(priorFor(1).cap)
+        setPid(t, Pids.PLUGIN_KALMAN_CORRECTED, "CorrKal", "%", rmax = 100f, value = b.correctedPct.toFloat())
+        setPid(t, Pids.PLUGIN_KALMAN_REMAINING, "GalKal", vu, rmax = rmax, value = vol)
+        setPid(t, Pids.PLUGIN_KALMAN_DTE, "DTEKal", dteUnit(), rmax = dteMax(), value = dteOut(b.dte))
     }
 
     private fun publishBand(t: ITorqueService, b: TankPublish) {
@@ -1244,8 +1280,11 @@ class PluginService : Service() {
 
     /** After an analysis cycle (drive end or fill): publish the learned capacity as the current tank guess. */
     private fun publishTankGuess(id: Int) {
-        if (id != 1 || quarantineDir != null || !hasModel(id)) return
-        val cap = priorFor(id).cap
+        if (id != 1 || quarantineDir != null) return
+        // Trust trigger: the Kalman G(100) replaces the entered/seeded tank size only once >= TRUST_COV2 % of the
+        // gauge is covered by 2+ distinct drives; before that the initial estimate stays (Kalman shown as provisional).
+        val km = Kalman.loadModel(ProfileStore.tankDir(filesDir, profileId, id))
+        val cap = Kalman.trustedTank(km) ?: return
         if (ProfileStore.setTankGuess(filesDir, profileId, cap, true)) {
             prefsDirty = true
             // Only the plugin's per-profile setting changes: Torque's tankCapacity is not writable from the
