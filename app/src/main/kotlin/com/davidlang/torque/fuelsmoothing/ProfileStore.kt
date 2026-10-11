@@ -36,7 +36,9 @@ internal object ProfileStore {
         ledger: LedgerSeed?,
         nowMs: Long = System.currentTimeMillis(),
     ): File {
-        val profile = File(root, "profiles/$DEFAULT_ID")
+        renameDefaultToSlug(root)
+        val existing = profileDir(root, activeId(root))
+        val profile = if (File(existing, "profile.json").isFile) existing else File(root, "profiles/$DEFAULT_ID")
         val marker = File(profile, "profile.json")
         if (marker.isFile && fieldInt(marker.readText(), "schema") == SCHEMA) {
             importLegacy(root, activeId(root))
@@ -116,7 +118,8 @@ internal object ProfileStore {
                 match != null -> Selection(match.id, false, "")
                 solo != null && solo.id == DEFAULT_ID && solo.torqueProfileName == null -> {
                     setProfileField(root, DEFAULT_ID, "torqueProfileName", name)
-                    Selection(DEFAULT_ID, false, "")
+                    setProfileField(root, DEFAULT_ID, "name", name)
+                    Selection(renameDefaultToSlug(root) ?: DEFAULT_ID, false, "")
                 }
                 else -> Selection(create(root, name, hits.map { it.id }.toSet(), nowMs), true, "")
             }
@@ -126,8 +129,68 @@ internal object ProfileStore {
         return id.copy(vinNote = vinNote(stored, vin))
     }
 
+    fun slug(name: String): String = name.lowercase().replace(Regex("[^a-z0-9]+"), "-").trim('-').take(32).ifEmpty { "vehicle" }
+
+    private const val RENAME_JOURNAL = "profiles/rename-journal.json"
+
+    /**
+     * Renames the legacy `default` profile folder to the slug of its Torque profile name (e.g. "Van" -> van),
+     * then updates profile.json id/name and active-profile.json. Copies and deletes no data. Idempotent and
+     * crash-safe: a journal is written first and replayed on the next call. Returns the new id or null.
+     */
+    fun renameDefaultToSlug(root: File): String? {
+        val journal = File(root, RENAME_JOURNAL)
+        var from = DEFAULT_ID
+        var to: String? = null
+        if (journal.isFile) {
+            val t = journal.readText()
+            from = fieldString(t, "from") ?: DEFAULT_ID
+            to = fieldString(t, "to")
+        }
+        if (to == null) {
+            val dir = File(root, "profiles/$DEFAULT_ID")
+            val pj = File(dir, "profile.json")
+            if (!pj.isFile) return null
+            val name = fieldString(pj.readText(), "torqueProfileName")?.trim().orEmpty()
+            if (name.isEmpty()) return null
+            val want = slug(name)
+            if (want == DEFAULT_ID || File(root, "profiles/$want").exists()) return null
+            to = want
+            writeAtomic(journal, "{\"from\":${jsonString(from)},\"to\":${jsonString(want)}}")
+        }
+        val src = File(root, "profiles/$from")
+        val dest = File(root, "profiles/$to")
+        if (src.isDirectory && !dest.exists() && !src.renameTo(dest)) {
+            android.util.Log.w("FuelSmooth", "rename profile $from -> $to failed; will retry")
+            return null
+        }
+        if (!dest.isDirectory) return null
+        val pj = File(dest, "profile.json")
+        if (pj.isFile) {
+            var text = pj.readText()
+            val name = fieldString(text, "torqueProfileName") ?: to
+            text = Regex("\"id\":(\"[^\"]*\"|null)").replaceFirst(text, "\"id\":${jsonString(to)}".replace("$", "\\$"))
+            text = Regex("\"name\":(\"[^\"]*\"|null)").replaceFirst(text, "\"name\":${jsonString(name)}".replace("$", "\\$"))
+            writeAtomic(pj, text)
+        }
+        if (activeId(root) == from) writeAtomic(File(root, "active-profile.json"), "{\"profileId\":${jsonString(to)}}")
+        journal.delete()
+        runCatching { android.util.Log.i("FuelSmooth", "profile renamed $from -> $to") }
+        return to
+    }
+
+    private fun writeAtomic(f: File, text: String) {
+        f.parentFile?.mkdirs()
+        val tmp = File(f.path + ".tmp")
+        tmp.writeText(text)
+        if (!tmp.renameTo(f)) { f.writeText(text); tmp.delete() }
+    }
+
+    fun createProfile(root: File, name: String, nowMs: Long = System.currentTimeMillis()): String =
+        create(root, name, profiles(root).map { it.id }.toSet(), nowMs)
+
     private fun create(root: File, name: String, taken: Set<String>, nowMs: Long): String {
-        val base = name.lowercase().replace(Regex("[^a-z0-9]+"), "-").trim('-').take(32).ifEmpty { "vehicle" }
+        val base = slug(name)
         var id = base
         var n = 2
         while (id in taken || id == DEFAULT_ID || File(root, "profiles/$id").exists()) id = "$base-${n++}"
@@ -208,7 +271,7 @@ internal object ProfileStore {
     fun parseVin(parts: List<String>?): String? {
         if (parts.isNullOrEmpty()) return null
         val joined = parts.joinToString(" ")
-        val hex = joined.uppercase().replace(Regex("[^0-9A-F]"), "")
+        val hex = Fingerprint.payload09(parts, "02") ?: joined.uppercase().replace(Regex("[^0-9A-F]"), "")
         val chars = StringBuilder()
         var i = 0
         while (i + 1 < hex.length) {

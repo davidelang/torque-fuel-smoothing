@@ -49,7 +49,7 @@ class PluginActivity : Activity() {
     private lateinit var extrasCol: LinearLayout
     private lateinit var addBtn: Button
     private lateinit var showNotice: CheckBox
-    private lateinit var write012f: CheckBox
+    private lateinit var feed012f: Spinner
     private lateinit var activeSpinner: Spinner
     private lateinit var selectPid: EditText
     private lateinit var profileNameView: TextView
@@ -175,9 +175,10 @@ class PluginActivity : Activity() {
         showNotice.text = getString(R.string.show_fuel_notification)
         col.addView(showNotice)
 
-        write012f = CheckBox(this)
-        write012f.text = getString(R.string.write_012f)
-        col.addView(write012f)
+        col.addView(label(getString(R.string.write_012f)))
+        feed012f = Spinner(this)
+        feed012f.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, FeedMode.entries.map { it.label })
+        col.addView(feed012f)
 
         col.addView(label("Fuel source"))
         sourceSpinner = Spinner(this)
@@ -246,7 +247,7 @@ class PluginActivity : Activity() {
         sourceSpinner.onItemSelectedListener = spinListen
         activeSpinner.onItemSelectedListener = spinListen
         showNotice.setOnCheckedChangeListener { _, _ -> if (!loading) persist() }
-        write012f.setOnCheckedChangeListener { _, _ -> if (!loading) persist() }
+        feed012f.onItemSelectedListener = spinListen
 
         scroll.addView(col)
         scroll.setOnApplyWindowInsetsListener { v, insets ->
@@ -309,7 +310,7 @@ class PluginActivity : Activity() {
         refreshActiveSpinner(c.activeTank)
         if (selectPid.text.toString() != c.selectPidName) selectPid.setText(c.selectPidName)
         showNotice.isChecked = c.showFuelNotification
-        write012f.isChecked = c.write012f
+        feed012f.setSelection(c.feed012f.ordinal)
         refreshAddBtn()
         refreshProfile()
     }
@@ -538,7 +539,7 @@ class PluginActivity : Activity() {
             activeTank = activeTankFromSpinner(),
             selectPidName = selectPid.text.toString().trim(),
             showFuelNotification = showNotice.isChecked,
-            write012f = write012f.isChecked,
+            feed012f = FeedMode.entries[feed012f.selectedItemPosition.coerceIn(0, FeedMode.entries.size - 1)],
         )
         val id = ProfileStore.activeId(filesDir)
         ProfileStore.setProfileField(filesDir, id, "name", profileName.text.toString().trim().ifBlank { "Vehicle 1" })

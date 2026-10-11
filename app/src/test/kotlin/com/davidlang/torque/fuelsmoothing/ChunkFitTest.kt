@@ -190,4 +190,29 @@ class ChunkFitTest {
         // Pieces tile the drive in order.
         for (k in 1 until ch.size) assertTrue(ch[k].t0 > ch[k - 1].t1 - 1e-9 || ch[k].f0 >= ch[k - 1].f1 - 1e-9)
     }
+
+    @Test
+    fun test39CorrectedPercentIsInvariantToFuelScale() {
+        val base = fixtures()
+        fun fitScaled(k: Double): ChunkFit.Result {
+            val s = base.map { FuelSession(it.name, it.t, it.raw, it.sm, DoubleArray(it.used.size) { i -> it.used[i] * k }, it.spd, it.fill) }
+            val (ps, ch) = ChunkFit.segmentAll(s)
+            return ChunkFit.fit(ps, ch, 35.0)
+        }
+        val a = fitScaled(1.0)
+        for (k in doubleArrayOf(0.5, 2.0)) {
+            val b = fitScaled(k)
+            // Gallons scale with k ...
+            assertEquals(k * a.v95, b.v95, 0.02 * k * a.v95)
+            // ... but corrected % (map gal / map capToZero) does not.
+            for (lvl in doubleArrayOf(5.0, 20.0, 40.0, 60.0, 80.0, 95.0)) {
+                val ca = FuelV2.correctedPct(lvl, { a.v(it) }, a.capToZero)
+                val cb = FuelV2.correctedPct(lvl, { b.v(it) }, b.capToZero)
+                assertEquals("k=$k lvl=$lvl", ca, cb, 0.5)
+            }
+        }
+        // Exact for a pure global scale of the map itself.
+        val v = { l: Double -> a.v(l) }
+        assertEquals(FuelV2.correctedPct(50.0, v, a.capToZero), FuelV2.correctedPct(50.0, { 3.0 * v(it) }, 3.0 * a.capToZero), 1e-9)
+    }
 }

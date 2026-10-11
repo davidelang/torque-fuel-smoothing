@@ -291,6 +291,15 @@ internal object FuelV2 {
         return TankPublish(r, remaining, corrected, mpgRecent, remaining * mpgRecent, r * mpgRecent)
     }
 
+    /**
+     * Corrected % as displayed and fed to 012F: mapGal(gauge) / mapGal(full -> gauge 0) x 100, using the map's
+     * own capacity (capToZero), never the user's or Torque's tank size, so a global fuel-scale error cancels.
+     */
+    fun correctedPct(gaugePct: Double, mapGal: (Double) -> Double, capToZero: Double): Double {
+        if (!gaugePct.isFinite() || !(capToZero > 0.0)) return Double.NaN
+        return (100.0 * mapGal(gaugePct.coerceIn(0.0, 100.0)) / capToZero).coerceIn(0.0, 100.0)
+    }
+
     /** Observed reserve below gauge 0 only. The user's tank guess is never used as a floor. */
     fun reserveGal(rObs: Double): Double = if (rObs.isFinite()) rObs.coerceAtLeast(0.0) else 0.0
 

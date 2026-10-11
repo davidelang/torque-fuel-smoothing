@@ -29,10 +29,13 @@ internal data class FixFuelConfig(
     val activeTank: String = FixFuelPrefs.ACTIVE_TANK1,
     val selectPidName: String = "",
     val showFuelNotification: Boolean = true,
-    val write012f: Boolean = true,
+    /** What the plugin feeds back into Torque's Fuel Level (012F). Default = previous behavior (corrected). */
+    val feed012f: FeedMode = FeedMode.CORRECTED,
     /** Stored values that failed validation: pref key -> raw stored text. Runtime uses defaults for these. */
     val invalid: Map<String, String> = emptyMap(),
 ) {
+    val write012f: Boolean get() = feed012f != FeedMode.OFF
+
     val tank2Enabled: Boolean get() = extras.any { it.id == 2 }
     private val extra2: ExtraTank? get() = extras.firstOrNull { it.id == 2 }
     val sourceId2: String get() = extra2?.sourceId ?: FixFuelPrefs.DEFAULT_SOURCE_T2
@@ -69,6 +72,18 @@ internal object FixFuelPrefs {
     const val KEY_EXTRAS = "extra_tanks"
     const val KEY_SHOW_NOTICE = "show_fuel_notification"
     const val KEY_WRITE_012F = "write_012f"
+    const val KEY_FEED_012F = "feed_012f"
+
+    /** Stored mode, else the legacy checkbox (unchecked = OFF, checked/absent = CORRECTED). */
+    fun feedMode(stored: String?, legacyChecked: Boolean?): FeedMode =
+        FeedMode.entries.firstOrNull { it.name == stored } ?: if (legacyChecked == false) FeedMode.OFF else FeedMode.CORRECTED
+
+    /** Value written to 012F, or null for no write. */
+    fun feedValue(mode: FeedMode, smoothedPct: Double?, correctedPct: Double?): Double? = when (mode) {
+        FeedMode.OFF -> null
+        FeedMode.SMOOTHED -> smoothedPct?.takeIf { it.isFinite() }
+        FeedMode.CORRECTED -> correctedPct?.takeIf { it.isFinite() }
+    }
     const val KEY_FILL_ANCHOR = "fill_anchor_gal"
     const val KEY_SINCE_FILL = "since_fill_used_gal"
 
@@ -147,7 +162,7 @@ internal object FixFuelPrefs {
             activeTank = normalizeActive(p.getString(KEY_ACTIVE, ACTIVE_TANK1) ?: ACTIVE_TANK1),
             selectPidName = p.getString(KEY_SELECT_PID, "") ?: "",
             showFuelNotification = p.getBoolean(KEY_SHOW_NOTICE, true),
-            write012f = p.getBoolean(KEY_WRITE_012F, true),
+            feed012f = feedMode(p.getString(KEY_FEED_012F, null), if (p.contains(KEY_WRITE_012F)) p.getBoolean(KEY_WRITE_012F, true) else null),
             invalid = invalid,
         )
     }
@@ -164,7 +179,7 @@ internal object FixFuelPrefs {
         activeTank: String = ACTIVE_TANK1,
         selectPidName: String = "",
         showFuelNotification: Boolean = true,
-        write012f: Boolean = true,
+        feed012f: FeedMode = FeedMode.CORRECTED,
     ) {
         val e = prefs(ctx).edit()
             .putString(KEY_SOURCE, sourceId)
@@ -178,7 +193,8 @@ internal object FixFuelPrefs {
             .putString(KEY_ACTIVE, normalizeActive(activeTank))
             .putString(KEY_SELECT_PID, selectPidName)
             .putBoolean(KEY_SHOW_NOTICE, showFuelNotification)
-            .putBoolean(KEY_WRITE_012F, write012f)
+            .putString(KEY_FEED_012F, feed012f.name)
+            .putBoolean(KEY_WRITE_012F, feed012f != FeedMode.OFF)
         e.apply()
     }
 
@@ -280,4 +296,11 @@ internal object FixFuelPrefs {
             else -> raw.toIntOrNull()?.takeIf { it in 1..MAX_TANKS }?.toString() ?: ACTIVE_TANK1
         }
     }
+}
+
+/** Feed-back of fuel level into Torque's 012F slot. */
+enum class FeedMode(val label: String) {
+    OFF("Off"),
+    SMOOTHED("Smoothed %"),
+    CORRECTED("Corrected % (linearized)"),
 }
