@@ -30,6 +30,13 @@ internal object Fingerprint {
         val firm: Boolean get() = vin != null || calId != null || (sessions >= FIRM_BITMAP_SESSIONS && bitmaps.isNotEmpty())
     }
 
+    /** Log-safe summary: no VIN, calibration ID or CVN values (last 4 VIN chars, short hash of the cal ID). */
+    fun redacted(f: Fp): String {
+        fun h(x: String) = "%08x".format(x.hashCode())
+        return "{vin=${f.vin?.let { "…" + it.takeLast(4) } ?: "-"},calId=${f.calId?.let { "#" + h(it) } ?: "-"},cvn=${if (f.cvn != null) "present" else "-"}," +
+            "ecu=${f.ecuName ?: "-"},protocol=${f.protocol ?: "-"},bitmaps=${f.bitmaps.size},probes=${f.probes.size}}"
+    }
+
     sealed class Decision(val why: String) {
         class Normal(why: String) : Decision(why)
 

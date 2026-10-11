@@ -93,25 +93,40 @@ internal object FuelV2 {
     private const val LITER_FACTOR = 0.264172052
     const val KM_PER_MILE = 1.609344
 
-    fun loadSessions(dir: File, exclude: Set<String> = emptySet()): List<FuelSession> =
-        sessionFiles(dir, exclude).mapNotNull { f -> RollupCache.session(f) { parseSession(it) } }
+    /** [caps]: session id -> byte length; that file is read only up to its last complete line before it (uncached). */
+    fun loadSessions(dir: File, exclude: Set<String> = emptySet(), caps: Map<String, Long> = emptyMap()): List<FuelSession> =
+        sessionFiles(dir, exclude).mapNotNull { f ->
+            val cap = caps[f.name.removeSuffix(".jsonl")]
+            if (cap != null) parseSession(f, cap) else RollupCache.session(f) { parseSession(it) }
+        }
 
     /** Raw session files in name (time) order, without [exclude] (open sessions, by session id). */
     fun sessionFiles(dir: File, exclude: Set<String> = emptySet()): List<File> =
         (dir.listFiles { f -> f.isFile && f.name.endsWith(".jsonl") } ?: emptyArray())
             .filter { it.name.removeSuffix(".jsonl") !in exclude }.sortedBy { it.name }
 
-    fun parseSession(file: File): FuelSession? {
+    /** Complete lines among the first [maxBytes] bytes (a partially appended last line is dropped). */
+    fun linesUpTo(file: File, maxBytes: Long): List<String> {
+        val n = minOf(maxBytes, file.length()).toInt().coerceAtLeast(0)
+        val buf = ByteArray(n)
+        java.io.RandomAccessFile(file, "r").use { it.readFully(buf) }
+        val end = buf.lastIndexOf('\n'.code.toByte())
+        if (end < 0) return emptyList()
+        return String(buf, 0, end, Charsets.UTF_8).split('\n')
+    }
+
+    fun parseSession(file: File, maxBytes: Long? = null): FuelSession? {
         val t = ArrayList<Double>()
         val raw = ArrayList<Double>()
         val sm = ArrayList<Double>()
         val used = ArrayList<Double>()
         val spd = ArrayList<Double>()
         val fill = ArrayList<Boolean>()
-        file.forEachLine { line ->
+        val lines: Sequence<String> = if (maxBytes != null) linesUpTo(file, maxBytes).asSequence() else file.readLines().asSequence()
+        for (line in lines) {
             val s = line.trim()
-            if (s.isEmpty() || s.contains("\"event\"") || !s.contains("\"t\"")) return@forEachLine
-            val ms = num(s, "t") ?: return@forEachLine
+            if (s.isEmpty() || s.contains("\"event\"") || !s.contains("\"t\"")) continue
+            val ms = num(s, "t") ?: continue
             t.add(ms / 1000.0)
             val rawPct = num(s, "rawPct") ?: num(s, "lvl") ?: Double.NaN
             // lvl < 0 is the explicit missing flag; older new-format rows marked ok:false carried a

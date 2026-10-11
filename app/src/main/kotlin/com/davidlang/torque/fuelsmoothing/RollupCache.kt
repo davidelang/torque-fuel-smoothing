@@ -24,6 +24,8 @@ internal object RollupCache {
 
     @Synchronized fun clear() = parsed.clear()
 
+    @Synchronized fun size(): Int = parsed.size
+
     /** Input signature of a rollup: the raw files (name, size, mtime) plus the settings that change outputs. */
     fun signature(files: List<File>, extra: String): String =
         files.sortedBy { it.name }.joinToString("\n", postfix = "\n$extra") { "${it.name} ${key(it)}" }

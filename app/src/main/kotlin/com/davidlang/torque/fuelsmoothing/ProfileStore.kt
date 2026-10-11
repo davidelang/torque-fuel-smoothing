@@ -250,21 +250,26 @@ internal object ProfileStore {
         return fieldString(f.readText(), key)
     }
 
+    /** Serializes every profile.json read-modify-write (activity and service threads). */
+    val PROFILE_LOCK = Any()
+
+    /** Parsed with JSONObject (escapes handled), changed, written atomically under [PROFILE_LOCK]. */
     fun setProfileField(root: File, profileId: String, key: String, value: String?) {
         val f = File(profileDir(root, profileId), "profile.json")
-        if (!f.isFile) return
-        var text = f.readText()
-        val rendered = if (value == null) "null" else jsonString(value)
-        val token = "\"$key\":"
-        if (!text.contains(token)) {
-            text = text.replace("\"schema\":", "$token$rendered,\"schema\":")
-        } else {
-            text = Regex("\"$key\":(\"[^\"]*\"|null)").replace(text, "$token$rendered")
+        synchronized(PROFILE_LOCK) {
+            if (!f.isFile) return
+            val o = try { org.json.JSONObject(f.readText()) } catch (e: Exception) {
+                runCatching { android.util.Log.w("FuelSmooth", "profile.json unreadable, $key not saved: ${e.message}") }
+                return
+            }
+            o.put(key, value ?: org.json.JSONObject.NULL)
+            AtomicFile.write(f, o.toString())
         }
-        f.writeText(text)
     }
 
-    fun addPin(root: File, profileId: String, miles: Double, tMs: Long) {
+    fun addPin(root: File, profileId: String, miles: Double, tMs: Long) = synchronized(PROFILE_LOCK) { addPin0(root, profileId, miles, tMs) }
+
+    private fun addPin0(root: File, profileId: String, miles: Double, tMs: Long) {
         val f = File(profileDir(root, profileId), "profile.json")
         if (!f.isFile) return
         val text = f.readText()
@@ -272,7 +277,7 @@ internal object ProfileStore {
         val inner = m.groupValues[1].trim()
         val item = "{\"tMs\":$tMs,\"miles\":$miles}"
         val next = if (inner.isEmpty()) item else "$inner,$item"
-        f.writeText(text.replaceRange(m.range, "\"odometerPins\":[$next]"))
+        AtomicFile.write(f, text.replaceRange(m.range, "\"odometerPins\":[$next]"))
     }
 
     fun distanceManual(root: File, profileId: String): Boolean {
@@ -350,9 +355,13 @@ internal object ProfileStore {
             runCatching { android.util.Log.i("FuelSmooth", "rollup skipped: no new or changed raw sessions (${files.size})") }
             return File(dir, "gap.txt").takeIf { it.isFile }?.readText() ?: ""
         }
-        val r = rollupFull(dir, nameplate, exclude)
-        if (files.isNotEmpty()) sigFile.writeText(sig)
-        return r
+        try {
+            val r = rollupFull(dir, nameplate, exclude)
+            if (files.isNotEmpty()) AtomicFile.write(sigFile, sig)
+            return r
+        } finally {
+            RollupCache.clear() // parsed history is not kept between rollups
+        }
     }
 
     private fun rollupFull(dir: File, nameplate: Double?, exclude: Set<String>): String {
@@ -371,12 +380,12 @@ internal object ProfileStore {
         // The chunk fit (ChunkFit, all stored chunks) is the authority for model.json; the raw replay is
         // kept in model-raw.json for comparison. Falls back to the raw fit until a chunk group exists.
         val chunkFit = chunkUpdate(dir, sessions, nameplate, fitted, null)
-        if (model != null) File(dir, "model-raw.json").writeText(model.json)
+        if (model != null) AtomicFile.write(File(dir, "model-raw.json"), model.json)
         if (chunkFit != null) {
             writeModelIfChanged(File(dir, "model.json"), chunkFit)
             BandFit.update(dir)
         } else if (model != null) {
-            File(dir, "model.json").writeText(model.json)
+            AtomicFile.write(File(dir, "model.json"), model.json)
         }
         Kalman.update(dir, sessions, nameplate)
         if (model != null) {
@@ -403,7 +412,8 @@ internal object ProfileStore {
         } else if (!File(dir, "model.json").isFile) {
             // Seed only. A failed or empty replay must not overwrite a previously learned model.
             val cap = (if (nameplate != null && nameplate > 0.0) nameplate else t0) * 0.95 * 1.07
-            File(dir, "model.json").writeText(
+            AtomicFile.write(
+                File(dir, "model.json"),
                 "{\"active\":[],\"capToZero\":$cap,\"chunks\":0,\"edges\":[0.0,95.0],\"g\":[${t0 / 100.0}],\"gUnc\":[${t0 / 100.0}],\"nMin\":28,\"se\":[0.0],\"sigmaQ\":1.1,\"tau\":3.5}",
             )
             if (!File(dir, "chunks.jsonl").isFile) File(dir, "chunks.jsonl").writeText("")
@@ -425,7 +435,7 @@ internal object ProfileStore {
             drives.writeText("")
         }
         val gap = gapText(sessions, model)
-        File(dir, "gap.txt").writeText(gap)
+        AtomicFile.write(File(dir, "gap.txt"), gap)
         return gap
     }
 
@@ -450,9 +460,20 @@ internal object ProfileStore {
     }
 
     /** At fill detection: store the drive parts completed by the fill and refit. Raw replay untouched. */
-    fun fillUpdate(dir: File, nameplate: Double?, openName: String?): Boolean {
+    /**
+     * [openBytes]: length of the open session's file when the update was queued; only complete lines up to it
+     * are read (the recorder keeps appending meanwhile).
+     */
+    fun fillUpdate(dir: File, nameplate: Double?, openName: String?, openBytes: Long? = null): Boolean = try {
+        fillUpdate0(dir, nameplate, openName, openBytes)
+    } finally {
+        RollupCache.clear()
+    }
+
+    private fun fillUpdate0(dir: File, nameplate: Double?, openName: String?, openBytes: Long?): Boolean {
         val raw = File(dir, "raw")
-        val sessions = if (raw.isDirectory) FuelV2.loadSessions(raw) else return false
+        val caps = if (openName != null && openBytes != null) mapOf(openName to openBytes) else emptyMap()
+        val sessions = if (raw.isDirectory) FuelV2.loadSessions(raw, caps = caps) else return false
         val json = chunkUpdate(dir, sessions, nameplate, null, openName) ?: return false
         writeModelIfChanged(File(dir, "model.json"), json)
         BandFit.update(dir)
@@ -697,9 +718,21 @@ internal object ProfileStore {
         if (text.startsWith("null", p)) return null
         if (text[p] != '"') return null
         val start = p + 1
+        val sb = StringBuilder()
         var q = start
-        while (q < text.length && text[q] != '"') q++
-        return text.substring(start, q)
+        while (q < text.length && text[q] != '"') {
+            val c = text[q]
+            if (c == '\\' && q + 1 < text.length) {
+                val e = text[q + 1]
+                when (e) {
+                    'n' -> sb.append('\n'); 't' -> sb.append('\t'); 'r' -> sb.append('\r'); 'b' -> sb.append('\b'); 'f' -> sb.append('\u000C')
+                    'u' -> if (q + 5 < text.length) { sb.append(text.substring(q + 2, q + 6).toInt(16).toChar()); q += 4 }
+                    else -> sb.append(e)
+                }
+                q += 2
+            } else { sb.append(c); q++ }
+        }
+        return sb.toString()
     }
 
     private fun fieldInt(text: String, key: String): Int? {

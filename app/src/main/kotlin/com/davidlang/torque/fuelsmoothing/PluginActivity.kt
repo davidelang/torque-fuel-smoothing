@@ -107,7 +107,7 @@ class PluginActivity : Activity() {
 
         if (!torqueInstalled()) {
             val need = TextView(this)
-            need.text = "Requires Torque Pro"
+            need.text = "Requires Torque Pro (paid). Torque Lite does not support plugins."
             need.textSize = 16f
             col.addView(need)
             val play = Button(this)

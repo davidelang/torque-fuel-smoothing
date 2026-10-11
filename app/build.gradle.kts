@@ -93,4 +93,6 @@ kotlin {
 dependencies {
     implementation("com.android.billingclient:billing-ktx:8.0.0")
     testImplementation("junit:junit:4.13.2")
+    // Real org.json for unit tests (android.jar ships stubs only); profile.json is edited with JSONObject.
+    testImplementation("org.json:json:20240303")
 }

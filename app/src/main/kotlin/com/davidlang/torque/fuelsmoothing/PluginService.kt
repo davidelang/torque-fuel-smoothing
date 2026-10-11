@@ -108,6 +108,7 @@ class PluginService : Service() {
     private val rollupExec = java.util.concurrent.Executors.newSingleThreadExecutor { r -> Thread(r, "FuelSmooth-rollup") }
     /** Session ids currently being recorded; rollups never read these files. */
     @Volatile private var openSessions: Set<String> = emptySet()
+    @Volatile private var destroyed = false
 
     private fun refreshOpen() { openSessions = tanks.values.mapNotNull { it.sessions.sessionId }.toSet() }
 
@@ -117,7 +118,7 @@ class PluginService : Service() {
                 val t0 = System.currentTimeMillis()
                 runCatching(work).onFailure { Log.w(TAG, "$what failed: ${it.javaClass.simpleName} ${it.message}") }
                 Log.i(TAG, "$what done in ${System.currentTimeMillis() - t0} ms")
-                handler.post(done)
+                if (!destroyed) handler.post { if (!destroyed) done() }
             }
         }.onFailure { Log.w(TAG, "$what not queued: ${it.message}") }
     }
@@ -221,6 +222,15 @@ class PluginService : Service() {
             ACTION_PID_QUERY, ACTION_PID_PLUGIN -> bindTorque()
             ACTION_OBD_DISCONNECTED -> onEcu(false)
             ACTION_Q_CONFIRM -> confirmQuarantine(intent.getStringExtra(EXTRA_TARGET))
+            ACTION_CONFIRM_SOURCE -> {
+                val pid = intent.getStringExtra(EXTRA_TARGET); val src = intent.getStringExtra(EXTRA_SOURCE)
+                if (pid != null && src != null && ProfileStore.profileField(filesDir, pid, "fuelSource") == src) {
+                    FuelDetect.store(filesDir, pid, src, true)
+                    prefsDirty = true
+                    Log.i(TAG, "fuel source $src confirmed by user for $pid")
+                }
+                notificationManager()?.cancel(DETECT_NOTIF_ID)
+            }
             ACTION_DETECT -> {
                 bindTorque()
                 queueFuelDetect("manual")
@@ -239,8 +249,10 @@ class PluginService : Service() {
         stopPolling()
         FixFuelPrefs.prefs(this).unregisterOnSharedPreferenceChangeListener(prefsListener)
         closeSession()
+        destroyed = true
         rollupExec.shutdown()
-        runCatching { rollupExec.awaitTermination(15, java.util.concurrent.TimeUnit.SECONDS) }
+        // Short wait only; an unfinished rollup is redone at the next close (input signature unchanged).
+        runCatching { rollupExec.awaitTermination(2, java.util.concurrent.TimeUnit.SECONDS) }
         if (bindRequested) {
             runCatching { unbindService(connection) }
         }
@@ -383,7 +395,8 @@ class PluginService : Service() {
         // Never burst bus queries: at most one identity or one detect command per tick.
         if (ecu == true && identity == null && !fuelDetectTried && fuelDetect == null && !cfg.sourceConfirmed) {
             fuelDetectTried = true
-            queueFuelDetect("auto")
+            // Auto-run only when there is no source yet; a detected but unconfirmed source is shown for confirmation.
+            if (cfg.sourceId == FuelDetect.NONE) queueFuelDetect("auto") else notifyConfirmSource(cfg.sourceId, null, "detected earlier")
         }
         when {
             identity != null -> pumpIdentity(t)
@@ -699,7 +712,8 @@ class PluginService : Service() {
     private fun finishIdentity(t: ITorqueService, next: String, torqueName: String?, obs: Fingerprint.Fp) {
         val fps = Fingerprint.loadAll(filesDir)
         val d = Fingerprint.decide(next, obs, fps)
-        Log.i(TAG, "identity decision ${d::class.simpleName} torque='$torqueName' profile=$next: ${d.why} obs=${Fingerprint.toJson(obs)}")
+        Log.i(TAG, "identity decision ${d::class.simpleName} torque='$torqueName' profile=$next: ${d.why} obs=${Fingerprint.redacted(obs)}")
+        FsLog.v(TAG, "identity obs full=${Fingerprint.toJson(obs)}")
         val wasQ = quarantineDir
         quarantineDir = null
         quarantineSuggest = null
@@ -1267,7 +1281,8 @@ class PluginService : Service() {
             val dir = ProfileStore.tankDir(filesDir, profileId, rt.id); val np = nameplateFor(rt.id)
             val open = rt.sessions.sessionId; val tid = rt.id
             var ok = false
-            submitRollup("fill update tank$tid", { ok = ProfileStore.fillUpdate(dir, np, open) }) {
+            val bytes = open?.let { File(File(dir, "raw"), "$it.jsonl").length() }
+            submitRollup("fill update tank$tid", { ok = ProfileStore.fillUpdate(dir, np, open, bytes) }) {
                 if (ok) { priorCache.remove(tid); publishTankGuess(tid) }
             }
         }
@@ -1559,27 +1574,49 @@ class PluginService : Service() {
         Log.i(TAG, "fuel source detection ($why) for $profileId: candidates=$c current=${cfg.sourceId} confirmed=${cfg.sourceConfirmed}")
     }
 
-    /** One candidate per poll tick (read-only). The first plausible level wins and is stored confirmed. */
+    /** One poll per tick (read-only). See FuelDetect.Run for what counts as an answer. */
     private fun pumpFuelDetect(t: ITorqueService) {
         val run = fuelDetect ?: return
         val id = run.next()
         if (id != null) {
-            val r = runCatching { FuelSources.read(t, cfg.copy(sourceId = id), pidNames) { pid -> if (isStock012F(pid)) null else readDouble(t, pid) } }.getOrNull()
-            run.report(id, r?.pct)
-            FsLog.v(TAG, "fuel detect $id -> ${r?.pct} ${r?.how}")
+            var upd: Long? = null // set only when the source is read by Torque PID name
+            val r = runCatching {
+                FuelSources.read(t, cfg.copy(sourceId = id), pidNames) { pid ->
+                    if (isStock012F(pid)) null else { upd = updateTime(t, pid) ?: 0L; readDouble(t, pid) }
+                }
+            }.getOrNull()
+            run.report(id, r?.pct, upd)
+            FsLog.v(TAG, "fuel detect $id -> ${r?.pct} upd=$upd ${r?.how}")
         }
         if (!run.done) return
         fuelDetect = null
-        val found = run.found
-        if (found != null) {
-            FuelDetect.store(filesDir, profileId, found, true)
+        val res = run.result()
+        Log.i(TAG, "fuel source detection for $profileId: ${res.id} confirmed=${res.confirmed} level=${res.level} (${res.why}; tried ${run.tried})")
+        if (res.id != null) {
+            FuelDetect.store(filesDir, profileId, res.id, res.confirmed)
             prefsDirty = true
-            Log.i(TAG, "fuel source detected for $profileId: $found (tried ${run.tried})")
-            notifySimple("Fuel level source found", "Using ${FuelSources.byId(found).label} for ${profileName(profileId)}. You can change it on the setup page.")
+            if (res.confirmed) notifySimple("Fuel level source found", "Using ${FuelSources.byId(res.id).label} for ${profileName(profileId)} (${res.why}).")
+            else notifyConfirmSource(res.id, res.level, res.why)
         } else {
-            Log.w(TAG, "fuel source detection found nothing for $profileId (tried ${run.tried})")
             notifySimple("No fuel level source found", "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.")
         }
+    }
+
+    /** Asks the user to check the detected source against the dash gauge; Confirm stores it confirmed. */
+    private fun notifyConfirmSource(id: String, level: Double?, why: String) {
+        val nm = notificationManager() ?: return
+        val flags = PendingIntent.FLAG_UPDATE_CURRENT or (if (Build.VERSION.SDK_INT >= 23) PendingIntent.FLAG_IMMUTABLE else 0)
+        val text = "Detected ${FuelSources.byId(id).label}" + (level?.let { " reading ${"%.0f".format(it)} %" } ?: "") +
+            " for ${profileName(profileId)}. Check it matches the dash fuel gauge, then tap Confirm ($why)."
+        val b = if (Build.VERSION.SDK_INT >= 26) Notification.Builder(this, CHANNEL_ID) else @Suppress("DEPRECATION") Notification.Builder(this)
+        b.setSmallIcon(R.drawable.ic_stat_notify).setContentTitle("Confirm fuel level source").setContentText(text)
+            .setStyle(Notification.BigTextStyle().bigText(text)).setAutoCancel(true)
+        val i = Intent(this, PluginService::class.java).setAction(ACTION_CONFIRM_SOURCE).putExtra(EXTRA_TARGET, profileId).putExtra(EXTRA_SOURCE, id)
+        @Suppress("DEPRECATION")
+        b.addAction(android.R.drawable.ic_menu_save, "Confirm", PendingIntent.getService(this, 61, i, flags))
+        val setup = Intent(this, PluginActivity::class.java)
+        b.setContentIntent(PendingIntent.getActivity(this, 62, setup, flags))
+        runCatching { nm.notify(DETECT_NOTIF_ID, b.build()) }.onFailure { FsLog.warn(TAG, "notify", "notify ignored: ${it.message}") }
     }
 
     private fun notifySimple(title: String, text: String) {
@@ -1649,6 +1686,8 @@ class PluginService : Service() {
         const val NEW_PROFILE = Fingerprint.NEW_PROFILE
         const val IDENTITY_NOTIF_ID = 4242
         const val DETECT_NOTIF_ID = 4243
+        const val EXTRA_SOURCE = "source"
+        val ACTION_CONFIRM_SOURCE: String get() = BuildConfig.APPLICATION_ID + ".CONFIRM_SOURCE"
         const val ACTION_OBD_CONNECTED = "org.prowl.torque.OBD_CONNECTED"
         const val ACTION_OBD_DISCONNECTED = "org.prowl.torque.OBD_DISCONNECTED"
         const val ACTION_PID_QUERY = "org.prowl.torque.PID_QUERY"

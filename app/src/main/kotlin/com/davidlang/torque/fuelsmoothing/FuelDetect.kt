@@ -7,8 +7,8 @@ import java.io.File
  * "fuelSource", "fuelSourceConfirmed"); a new profile starts at "none". On connect, an unconfirmed profile
  * queues detection: one candidate per poll tick (one read-only request: a Torque PID read by name, or a
  * service 01/21/22 query), brand candidates only when the make or VIN WMI matches (spec §3a gating), the
- * generic SAE 012F last. The first candidate with a plausible level (0..100 %) wins and is stored confirmed.
- * The manual Detect button runs the same detection.
+ * generic SAE 012F last. A candidate needs fresh, non-zero, stable reads (see [Run]); it is confirmed only when a
+ * second source agrees, otherwise stored unconfirmed and the user is asked to confirm. Detect runs it on demand.
  */
 internal object FuelDetect {
     const val NONE = "none"
@@ -22,12 +22,16 @@ internal object FuelDetect {
     )
 
     /**
-     * Ordered candidates. A source Torque already exposes by long name (no bus traffic) is tried first whatever
-     * the make; then brand sources whose gate matches; then SAE 012F.
+     * Ordered candidates. Brand sources (mode 21/22 identifiers are manufacturer-defined and reused with other
+     * meanings by other makes) are tried only when the make or VIN WMI matches their gate; a Torque PID read by
+     * long name (no bus traffic) is also allowed when neither make nor VIN is known, but then it can only be
+     * confirmed by agreement with another source or by the user. SAE 012F (same meaning on every make) last.
      */
     fun candidates(vin: String?, make: String?, torqueNames: Set<String>): List<String> {
         val out = ArrayList<String>()
-        for (s in FuelSources.catalog) if (s.longName != null && s.longName in torqueNames) out.add(s.id)
+        val unknown = vin.isNullOrBlank() && make.isNullOrBlank()
+        fun gateOk(id: String) = GATES[id]?.let { SourceProbe.gateOpen(it, vin, make) } ?: true
+        for (s in FuelSources.catalog) if (s.longName != null && s.longName in torqueNames && (gateOk(s.id) || unknown)) out.add(s.id)
         for (s in FuelSources.catalog) {
             val g = GATES[s.id] ?: continue
             if (s.id !in out && s.modePid != null && SourceProbe.gateOpen(g, vin, make)) out.add(s.id)
@@ -36,20 +40,58 @@ internal object FuelDetect {
         return out
     }
 
-    fun plausible(pct: Double?): Boolean = pct != null && pct.isFinite() && pct in 0.0..100.0
+    const val NEED = 3            // valid reads needed per candidate
+    const val MAX_POLLS = 8       // polls per candidate before moving on
+    const val NO_REPLY_POLLS = 3  // give up early when nothing valid came back in this many polls
+    const val STABLE_PCT = 3.0    // max spread of the valid reads
+    const val AGREE_PCT = 5.0     // two different sources within this many % points confirm each other
 
-    /** One detection pass: [next] gives the candidate to try this tick; [report] its read. */
+    /**
+     * A read counts only if it is a real, fresh answer: finite, > 0 and <= 100 (exact 0.0 is what Torque returns
+     * for a PID it has not polled yet), and for a Torque PID read by name the update time must be set and must
+     * have advanced since the previous read. [updateMs] null = a bus reply (fresh by construction).
+     */
+    fun valid(pct: Double?, updateMs: Long?, prevUpdateMs: Long?): Boolean {
+        if (pct == null || !pct.isFinite() || pct <= 0.0 || pct > 100.0) return false
+        if (updateMs == null) return true
+        return updateMs > 0L && updateMs != prevUpdateMs
+    }
+
+    data class Result(val id: String?, val confirmed: Boolean, val level: Double?, val why: String)
+
+    /**
+     * One detection pass, one poll per tick. Every candidate is polled until it gives [NEED] valid, stable reads
+     * (accepted) or runs out of polls. Result: the first accepted candidate in priority order; confirmed only
+     * when a second, different accepted source agrees within [AGREE_PCT]. A single source is never
+     * auto-confirmed: the user is asked to confirm it.
+     */
     class Run(private val queue: List<String>) {
         private var i = 0
-        var found: String? = null
-            private set
+        private var polls = 0
+        private var prevUpd: Long? = null
+        private val reads = ArrayList<Double>()
+        private val accepted = LinkedHashMap<String, Double>()
         val tried = ArrayList<String>()
-        val done get() = found != null || i >= queue.size
+        val done get() = i >= queue.size
         fun next(): String? = if (done) null else queue[i]
-        fun report(id: String, pct: Double?) {
+
+        fun report(id: String, pct: Double?, updateMs: Long?) {
             if (done || queue[i] != id) return
-            tried.add(id)
-            if (plausible(pct)) found = id else i++
+            polls++
+            if (valid(pct, updateMs, prevUpd)) reads.add(pct!!)
+            if (updateMs != null) prevUpd = updateMs
+            val stable = reads.size >= NEED && reads.takeLast(NEED).let { it.max() - it.min() <= STABLE_PCT }
+            if (stable) accepted[id] = reads.takeLast(NEED).sorted()[NEED / 2]
+            if (stable || polls >= MAX_POLLS || (polls >= NO_REPLY_POLLS && reads.isEmpty())) {
+                tried.add(id); i++; polls = 0; prevUpd = null; reads.clear()
+            }
+        }
+
+        fun result(): Result {
+            val first = accepted.entries.firstOrNull() ?: return Result(null, false, null, "no source gave $NEED fresh, stable, non-zero reads")
+            val other = accepted.entries.drop(1).firstOrNull { kotlin.math.abs(it.value - first.value) <= AGREE_PCT }
+            return if (other != null) Result(first.key, true, first.value, "agrees with ${other.key} (${"%.1f".format(other.value)} %)")
+            else Result(first.key, false, first.value, "single source; needs your confirmation")
         }
     }
 

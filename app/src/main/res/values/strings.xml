@@ -4,7 +4,7 @@
     <string name="privacy_policy_url">https://play.landing.lang.hm/fuel-smoothing/privacy/</string>
     <string name="tips_play_only">Tips are on the Play Store version</string>
     <string name="help_body">Quick start\n
-1. Install Torque Pro and pair your OBD-II adapter.\n
+1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n
 2. Enable this plugin in Torque → Settings → Plugins.\n
 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n
 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile.\n
