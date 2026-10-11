@@ -208,11 +208,28 @@ internal object ObdReply {
             if (pciPos >= 0 && !pciAt(hex, pciPos)) continue
             if (!hex.startsWith(m, off)) continue
             val rest = hex.substring(off + m.length)
-            if (pciPos < 0) return rest
+            if (pciPos < 0) return stripPadding(rest)
             val n = hex.substring(pciPos, pciPos + 2).toInt(16) - m.length / 2
             return rest.take((n * 2).coerceAtLeast(0))
         }
         return null
+    }
+
+    /**
+     * No length byte (headers off): drop a trailing run of 2+ identical padding bytes (55, AA, 00, CC) so padding is
+     * not read as data. A lone trailing byte is kept (it may be data); GM's 2-byte form is additionally gated by
+     * agreement with 012F at detection.
+     */
+    fun stripPadding(hex: String): String {
+        val b = hex.chunked(2)
+        var n = b.size
+        val pad = setOf("55", "AA", "00", "CC")
+        if (n >= 3 && b[n - 1] in pad) {
+            var k = n - 1
+            while (k > 0 && b[k - 1] == b[n - 1]) k--
+            if (n - k >= 2 && k >= 1) n = k
+        }
+        return b.take(n).joinToString("")
     }
 
     /** ISO-TP single frame: high nibble 0, length 1..7. */

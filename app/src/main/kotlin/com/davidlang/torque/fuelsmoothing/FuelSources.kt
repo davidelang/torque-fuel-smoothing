@@ -19,7 +19,7 @@ internal object FuelSources {
         FuelSource("gm_12c5", "GM Mode 22 12C5 %", modePid = "2212C5", twoByteOk = true),
         FuelSource("chrysler_21a2", "Chrysler 21A2 %", modePid = "21A2"),
         FuelSource("chrysler_avg", "Chrysler Fuel Level Average", modePid = "228126"),
-        FuelSource("toyota_7c0_2129", "Toyota cluster 2129 (litres → % of tank size)", modePid = "2129", header = "7C0", litersToPct = true),
+        FuelSource("toyota_7c0_2129", "Toyota cluster 2129 (half-litre counts)", modePid = "2129", header = "7C0", litersToPct = true),
         FuelSource("custom_name", "Torque extra PID by long name"),
     )
 
@@ -36,6 +36,10 @@ internal object FuelSources {
         val pct: Double?,
         val how: String,
         val missing: Boolean,
+        /** Raw litres for litre-reporting sources (logged as lvlL). */
+        val liters: Double? = null,
+        /** GM 12C5 two-byte form (needs agreement with 012F before detection trusts it). */
+        val twoByte: Boolean = false,
     )
 
     fun read(
@@ -74,12 +78,12 @@ internal object FuelSources {
             if (data != null && data.length >= 2) {
                 if (src.litersToPct) {
                     // Toyota cluster: A counts half litres. Level = litres as % of the profile's tank size.
-                    val liters = data.substring(0, 2).toInt(16) / 2.0
-                    return toyotaLevel(liters, cfg.tankGal, "bus ${src.header ?: ""} $cmd")
+                    return toyotaLevel(data.substring(0, 2).toInt(16), "bus ${src.header ?: ""} $cmd")
                 }
                 if (src.twoByteOk) {
                     val pct = gmLevel(data) ?: return Read(null, "bad reply ${src.label}", true)
-                    return Read(pct, "bus ${src.header ?: ""} $cmd ${data.length / 2}B", false)
+                    // A 2-byte form is trusted at detection only after it agrees with 012F (FuelDetect).
+                    return Read(pct, "bus ${src.header ?: ""} $cmd ${minOf(data.length / 2, 2)}B", false, twoByte = data.length >= 4)
                 }
                 return Read(data.substring(0, 2).toInt(16) * 100.0 / 255.0, "bus ${src.header ?: ""} $cmd", false)
             }
@@ -103,17 +107,17 @@ internal object FuelSources {
     private fun dataAfter(resp: Array<String>?, marker: String): String? =
         resp?.firstNotNullOfOrNull { ObdReply.dataAfter(it, marker)?.takeIf { d -> d.length >= 2 } }
 
-    /** Above this the tank size is clearly wrong (level held as missing instead of clamped). */
-    const val TOYOTA_OVER_PCT = 110.0
-    const val L_PER_GAL = 3.785411784
+    /**
+     * Toyota/Lexus cluster 7C0 2129 counts half litres (A/2 L; Prado and Prius C threads, see FuelSources docs).
+     * The level is the count on a FIXED scale (255 counts = 127.5 L = 100 %), independent of any tank size,
+     * so the model learns gallons per level unit exactly as for % sources; the litres are logged per sample.
+     */
+    const val TOYOTA_L_PER_COUNT = 0.5
+    const val TOYOTA_FULL_COUNTS = 255.0
 
-    /** Toyota 2129 litres -> % of the profile's tank size; clamped to 0..100 up to [TOYOTA_OVER_PCT]. */
-    fun toyotaLevel(liters: Double, tankGal: Double?, how: String): Read {
-        val tankL = tankGal?.takeIf { it.isFinite() && it > 0 }?.let { it * L_PER_GAL }
-            ?: return Read(null, "$how liters=$liters: enter the tank size to turn litres into %", true)
-        val pct = liters * 100.0 / tankL
-        if (pct > TOYOTA_OVER_PCT) return Read(null, "$how liters=$liters > ${TOYOTA_OVER_PCT.toInt()} % of ${"%.0f".format(tankL)} L tank: check tank size", true)
-        return Read(pct.coerceIn(0.0, 100.0), "$how liters=$liters of ${"%.0f".format(tankL)} L", false)
+    fun toyotaLevel(count: Int, how: String): Read {
+        val liters = count * TOYOTA_L_PER_COUNT
+        return Read(count * 100.0 / TOYOTA_FULL_COUNTS, "$how count=$count liters=$liters", false, liters = liters)
     }
 
     /** GM 12C5: 1 byte = A*100/255; 2 bytes = (A*256+B)*100/65535. Longer replies use the first 2 bytes. */

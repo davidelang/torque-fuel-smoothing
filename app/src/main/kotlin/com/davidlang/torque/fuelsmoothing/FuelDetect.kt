@@ -12,6 +12,16 @@ import java.io.File
  */
 internal object FuelDetect {
     const val NONE = "none"
+    const val KEY_TRIED = "fuelDetectTried"
+    const val KEY_NOTIFIED = "fuelDetectNotified"
+    const val REDETECT_MIN_SAMPLES = 300
+
+    /** Auto-detect only for a profile with no source that has not been auto-detected before. */
+    fun shouldAutoDetect(sourceId: String, triedBefore: Boolean): Boolean = sourceId == NONE && !triedBefore
+
+    /** Optional re-detect: an unconfirmed source that produced no usable level over a whole session (>= 5 min). */
+    fun redetectAfter(sourceId: String, confirmed: Boolean, samples: Int, valid: Int): Boolean =
+        sourceId != NONE && !confirmed && samples >= REDETECT_MIN_SAMPLES && valid == 0
     private val GATES = mapOf(
         "ford_16c1" to setOf("ford", "lincoln"),
         "ford_f42f" to setOf("ford", "lincoln"),
@@ -75,8 +85,12 @@ internal object FuelDetect {
         val done get() = i >= queue.size
         fun next(): String? = if (done) null else queue[i]
 
-        fun report(id: String, pct: Double?, updateMs: Long?) {
+        /** Candidates whose reading is trusted only if 012F agrees (GM 12C5 two-byte form). */
+        private val needs012f = HashSet<String>()
+
+        fun report(id: String, pct: Double?, updateMs: Long?, needsAgreement: Boolean = false) {
             if (done || queue[i] != id) return
+            if (needsAgreement) needs012f.add(id)
             polls++
             if (valid(pct, updateMs, prevUpd)) reads.add(pct!!)
             if (updateMs != null) prevUpd = updateMs
@@ -88,8 +102,12 @@ internal object FuelDetect {
         }
 
         fun result(): Result {
-            val first = accepted.entries.firstOrNull() ?: return Result(null, false, null, "no source gave $NEED fresh, stable, non-zero reads")
-            val other = accepted.entries.drop(1).firstOrNull { kotlin.math.abs(it.value - first.value) <= AGREE_PCT }
+            val sae = accepted["sae_012f"]
+            val usable = accepted.entries.filter { e ->
+                e.key !in needs012f || (sae != null && kotlin.math.abs(e.value - sae) <= AGREE_PCT)
+            }
+            val first = usable.firstOrNull() ?: return Result(null, false, null, "no source gave $NEED fresh, stable, non-zero reads")
+            val other = usable.drop(1).firstOrNull { kotlin.math.abs(it.value - first.value) <= AGREE_PCT }
             return if (other != null) Result(first.key, true, first.value, "agrees with ${other.key} (${"%.1f".format(other.value)} %)")
             else Result(first.key, false, first.value, "single source; needs your confirmation")
         }

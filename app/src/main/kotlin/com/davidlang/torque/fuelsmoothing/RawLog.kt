@@ -55,8 +55,9 @@ internal class RawLog {
         why: String?,
         mode: String,
         sm: Double,
+        lvlL: Double? = null,
     ) {
-        val pend = Pend(t, lvl, lvlSrc, fuelRaw, fuelUnit, spd, spdUnit, ecu, ok, why, mode, sm, fuelGal)
+        val pend = Pend(t, lvl, lvlSrc, fuelRaw, fuelUnit, spd, spdUnit, ecu, ok, why, mode, sm, fuelGal, lvlL)
         if (runLvl != null && pend.lvl != runLvl) closeRun()
         if (runLvl == null) runLvl = pend.lvl
         if (latched) {
@@ -124,6 +125,11 @@ internal class RawLog {
             append(",\"lvl\":")
             // -1 is the explicit missing-level flag (never 0): not ok, or no finite reading.
             append(if (!ok || !row.lvl.isFinite() || row.lvl < 0.0) "-1" else LiterFix.javaDouble(row.lvl))
+            if (row.lvlL != null && row.lvlL.isFinite()) {
+                // Raw litres from a litre-reporting source (Toyota 2129), kept so history can be rescaled.
+                append(",\"lvlL\":")
+                append(LiterFix.javaDouble(row.lvlL))
+            }
             append(",\"lvlSrc\":")
             append(jsonString(row.lvlSrc))
             append(",\"fuelRaw\":")
@@ -164,6 +170,7 @@ internal class RawLog {
         val mode: String,
         val sm: Double,
         val fuelGal: Double,
+        val lvlL: Double? = null,
     )
 
     companion object {

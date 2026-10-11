@@ -21,6 +21,7 @@ internal data class Sample(
     val fuelRaw: Double? = null,
     val fuelUnit: String = "",
     val lvlSrc: String = "",
+    val lvlL: Double? = null,
 )
 
 internal class SessionStore(context: Context, private val tank: Int = 1, rawDir: File? = null) {
@@ -110,6 +111,7 @@ internal class SessionStore(context: Context, private val tank: Int = 1, rawDir:
             lvl = sample.rawPct,
             lvlSrc = sample.lvlSrc,
             fuelRaw = sample.fuelRaw,
+            lvlL = sample.lvlL,
             fuelUnit = sample.fuelUnit,
             spd = sample.speed,
             spdUnit = sample.spdUnit,

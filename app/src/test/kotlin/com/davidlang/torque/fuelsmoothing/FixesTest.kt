@@ -286,17 +286,21 @@ class FixesTest {
     }
 
     @Test
-    fun test72ToyotaHalfLitresAsPercentOfProfileTank() {
-        // A = 0x7E = 126 half-litres = 63 L; 87 L tank = 23.0 gal -> 72.4 %.
-        val line = "7C8 03 61 29 7E 00 00 00 00"
-        val d = checkNotNull(ObdReply.dataAfter(line, "6129")); assertEquals("7E", d)
-        val tank = 87.0 / FuelSources.L_PER_GAL
-        val r = FuelSources.toyotaLevel(d.toInt(16) / 2.0, tank, "t")
-        assertEquals(72.41, checkNotNull(r.pct), 0.01); assertFalse(r.missing)
-        assertEquals(100.0, checkNotNull(FuelSources.toyotaLevel(90.0, tank, "t").pct), 0.0) // 103 %: clamped
-        assertNull(FuelSources.toyotaLevel(120.0, tank, "t").pct)                        // 138 %: tank size wrong
-        assertNull(FuelSources.toyotaLevel(40.0, null, "t").pct)                         // no tank size yet
-        assertEquals(0.0, checkNotNull(FuelSources.toyotaLevel(0.0, tank, "t").pct), 0.0)
+    fun test72ToyotaFixedScaleIndependentOfTankAndLitresLogged() {
+        // A = 0x7E = 126 counts = 63 L (0.5 L/count); level on the fixed 255-count scale, never the tank size.
+        val d = checkNotNull(ObdReply.dataAfter("7C8 03 61 29 7E 00 00 00 00", "6129")); assertEquals("7E", d)
+        val r = FuelSources.toyotaLevel(d.toInt(16), "t")
+        assertEquals(126 * 100.0 / 255.0, checkNotNull(r.pct), 1e-12)
+        assertEquals(63.0, checkNotNull(r.liters), 0.0)
+        assertEquals(100.0, checkNotNull(FuelSources.toyotaLevel(255, "t").pct), 0.0)
+        assertEquals(0.0, checkNotNull(FuelSources.toyotaLevel(0, "t").pct), 0.0)
+        // The decode has no tank-size input at all (signature), and the litres reach the raw log row.
+        val log = RawLog()
+        log.sample(1000L, 49.4, "toyota_7c0_2129", null, "", 30.0, "km/h", true, true, null, "TRACK", 49.4, lvlL = 63.0)
+        log.sample(2000L, 49.0, "toyota_7c0_2129", null, "", 30.0, "km/h", true, true, null, "TRACK", 49.0, lvlL = 62.5)
+        log.sample(3000L, 48.6, "toyota_7c0_2129", null, "", 30.0, "km/h", true, true, null, "TRACK", 48.6, lvlL = 62.0)
+        val lines = log.finish()
+        assertTrue(lines.joinToString("\n"), lines.any { it.contains("\"lvlL\":63,") && it.contains("\"lvl\":49.4") })
     }
 
     @Test
@@ -311,5 +315,57 @@ class FixesTest {
         // No PCI (J1850 VPW style line): the whole remainder is data.
         assertEquals("64", ObdReply.dataAfter("62 12 C5 64", "6212C5"))
         assertNull(FuelSources.gmLevel(""))
+    }
+
+    @Test
+    fun test74DetectionNeverAutoRunsWhenProfileHasASource() {
+        assertTrue(FuelDetect.shouldAutoDetect(FuelDetect.NONE, false))
+        assertFalse(FuelDetect.shouldAutoDetect(FuelDetect.NONE, true))      // already tried once for this profile
+        assertFalse(FuelDetect.shouldAutoDetect("sae_012f", false))        // unconfirmed source: in use, no re-detect
+        assertFalse(FuelDetect.shouldAutoDetect("ford_16c1", false))
+        // Optional re-detect only after a whole session of nothing usable from an unconfirmed source.
+        assertTrue(FuelDetect.redetectAfter("sae_012f", false, 600, 0))
+        assertFalse(FuelDetect.redetectAfter("sae_012f", true, 600, 0))
+        assertFalse(FuelDetect.redetectAfter("sae_012f", false, 600, 3))
+        assertFalse(FuelDetect.redetectAfter("sae_012f", false, 120, 0))
+        val svc = File("src/main/kotlin/com/davidlang/torque/fuelsmoothing/PluginService.kt").readText()
+        assertFalse(svc.contains("\"detected earlier\"")) // no confirm nag on every connect
+        assertTrue(svc.contains("FuelDetect.KEY_NOTIFIED"))
+    }
+
+    @Test
+    fun test75Gm2ByteTrustedOnlyWhenItAgreesWith012F() {
+        val ids = listOf("gm_12c5", "sae_012f")
+        val agree = FuelDetect.Run(ids)
+        repeat(3) { agree.report("gm_12c5", 40.0, null, needsAgreement = true) }
+        repeat(3) { agree.report("sae_012f", 41.5, null) }
+        assertEquals("gm_12c5", agree.result().id); assertTrue(agree.result().confirmed)
+        val bad = FuelDetect.Run(ids)
+        repeat(3) { bad.report("gm_12c5", 25.1, null, needsAgreement = true) } // 1 byte + status misread as 2 bytes
+        repeat(3) { bad.report("sae_012f", 62.0, null) }
+        assertEquals("sae_012f", bad.result().id); assertFalse(bad.result().confirmed)
+        val alone = FuelDetect.Run(ids)
+        repeat(3) { alone.report("gm_12c5", 40.0, null, needsAgreement = true) }
+        repeat(3) { alone.report("sae_012f", null, null) }
+        assertNull(alone.result().id)
+    }
+
+    @Test
+    fun test76NoLengthByteNeverReturnsPadding() {
+        assertEquals("64", ObdReply.dataAfter("62 12 C5 64 55 55 55", "6212C5"))
+        assertEquals("8000", ObdReply.dataAfter("62 12 C5 80 00 AA AA", "6212C5"))
+        assertEquals("64", ObdReply.dataAfter("62 12 C5 64 00 00", "6212C5"))
+        assertEquals("6455", ObdReply.dataAfter("62 12 C5 64 55", "6212C5")) // single trailing byte may be data
+        assertEquals("7E", ObdReply.dataAfter("61 29 7E", "6129"))
+    }
+
+    @Test
+    fun test77VerboseIdentityLogHasNoVinCalIdCvn() {
+        val svc = File("src/main/kotlin/com/davidlang/torque/fuelsmoothing/PluginService.kt").readText()
+        assertFalse(svc.contains("Fingerprint.toJson(obs)}"))
+        assertTrue(svc.contains("obs.copy(vin = null, calId = null, cvn = null)"))
+        val fp = Fingerprint.Fp(vin = "1FDSS34L05HA12345", calId = "RZAA0F1", cvn = "AB12CD34", protocol = "ISO 15765-4", bitmaps = mapOf("0100" to "BE3EB813"))
+        val detail = Fingerprint.toJson(fp.copy(vin = null, calId = null, cvn = null))
+        assertFalse(detail.contains("1FDSS34L") || detail.contains("RZAA0F1") || detail.contains("AB12CD34"))
     }
 }

@@ -32,6 +32,9 @@ class PluginService : Service() {
         var lastRateMs: Long? = null
         /** Last flow reading as Torque reported it (before unit conversion) and its unit label. */
         var lastFlowRaw: Double? = null
+        var lastLvlL: Double? = null
+        /** Usable level reads this session (re-detect when an unconfirmed source gave none all session). */
+        var validLevels = 0
         var lastFlowUnit: String = ""
         val burnGate = BurnGate()
         var burnWhy: String? = null
@@ -393,10 +396,12 @@ class PluginService : Service() {
         if (ecu == true) ensureActiveSession()
         val skipFill = now < suppressFillUntilMs
         // Never burst bus queries: at most one identity or one detect command per tick.
-        if (ecu == true && identity == null && !fuelDetectTried && fuelDetect == null && !cfg.sourceConfirmed) {
+        if (ecu == true && identity == null && !fuelDetectTried && fuelDetect == null &&
+            FuelDetect.shouldAutoDetect(cfg.sourceId, ProfileStore.profileField(filesDir, profileId, FuelDetect.KEY_TRIED) == "true")
+        ) {
             fuelDetectTried = true
-            // Auto-run only when there is no source yet; a detected but unconfirmed source is shown for confirmation.
-            if (cfg.sourceId == FuelDetect.NONE) queueFuelDetect("auto") else notifyConfirmSource(cfg.sourceId, null, "detected earlier")
+            ProfileStore.setProfileField(filesDir, profileId, FuelDetect.KEY_TRIED, "true")
+            queueFuelDetect("auto")
         }
         when {
             identity != null -> pumpIdentity(t)
@@ -438,6 +443,7 @@ class PluginService : Service() {
                 readDouble(t, pid)
             }
         }
+        tanks[id]?.let { rt -> rt.lastLvlL = src.liters; if (src.pct != null && !src.missing) rt.validLevels++ }
         if (id == 1) {
             if (src.how != cfg.sourceStatus) FixFuelPrefs.setSourceStatus(this, src.how)
         } else if (src.how != (cfg.extra(id)?.sourceStatus ?: "")) {
@@ -554,6 +560,7 @@ class PluginService : Service() {
             ecu = ecu,
             fuelUnit = rt?.lastFlowUnit?.ifBlank { null } ?: fuelUnitLabel(),
             fuelRaw = rt?.lastFlowRaw,
+            lvlL = rt?.lastLvlL,
             lvlSrc = if (id == 1) cfg.sourceId else cfg.extra(id)?.sourceId ?: "",
         )
     }
@@ -713,7 +720,8 @@ class PluginService : Service() {
         val fps = Fingerprint.loadAll(filesDir)
         val d = Fingerprint.decide(next, obs, fps)
         Log.i(TAG, "identity decision ${d::class.simpleName} torque='$torqueName' profile=$next: ${d.why} obs=${Fingerprint.redacted(obs)}")
-        FsLog.v(TAG, "identity obs full=${Fingerprint.toJson(obs)}")
+        // Verbose adds the non-identifying parts only (bitmaps, probes, protocol); VIN/calId/CVN never reach logcat.
+        FsLog.v(TAG, "identity obs detail=${Fingerprint.toJson(obs.copy(vin = null, calId = null, cvn = null))}")
         val wasQ = quarantineDir
         quarantineDir = null
         quarantineSuggest = null
@@ -1080,6 +1088,7 @@ class PluginService : Service() {
         rt.burnWhy = null
         sessionFlowHrUnit = null
         sessionFlowMinUnit = null
+        rt.validLevels = 0
         val sid = rt.sessions.open(profileId = profileId, app = BuildConfig.VERSION_NAME)
         FsLog.reset()
         refreshOpen()
@@ -1112,6 +1121,13 @@ class PluginService : Service() {
         }
         if (id == 1) commitTank1SinceFill(rt)
         val closed = rt.sessions.close()
+        if (id == 1 && quarantineDir == null && FuelDetect.redetectAfter(cfg.sourceId, cfg.sourceConfirmed, closed.size, rt.validLevels)) {
+            // An unconfirmed source gave nothing usable for a whole session: clear it so the next connect detects again.
+            FuelDetect.store(filesDir, profileId, FuelDetect.NONE, false)
+            ProfileStore.setProfileField(filesDir, profileId, FuelDetect.KEY_TRIED, null)
+            prefsDirty = true
+            Log.w(TAG, "fuel source ${cfg.sourceId} gave no usable level in ${closed.size} samples; detection will run at next connect")
+        }
         closeLiveChunks(rt, closed)
         refreshOpen()
         val dir = ProfileStore.tankDir(filesDir, profileId, id); val np = nameplateFor(id)
@@ -1563,7 +1579,18 @@ class PluginService : Service() {
         }
     }
 
+    private var fuelDetectManual = false
+
+    /** Notifications from automatic detection are shown once per profile; a manual Detect always reports. */
+    private fun detectNotifyAllowed(): Boolean {
+        if (fuelDetectManual) return true
+        if (ProfileStore.profileField(filesDir, profileId, FuelDetect.KEY_NOTIFIED) == "true") return false
+        ProfileStore.setProfileField(filesDir, profileId, FuelDetect.KEY_NOTIFIED, "true")
+        return true
+    }
+
     private fun queueFuelDetect(why: String) {
+        fuelDetectManual = why == "manual"
         val t = torque ?: return
         if (!ecuConnected) return
         val make = ProfileStore.profileField(filesDir, profileId, "make")
@@ -1585,7 +1612,7 @@ class PluginService : Service() {
                     if (isStock012F(pid)) null else { upd = updateTime(t, pid) ?: 0L; readDouble(t, pid) }
                 }
             }.getOrNull()
-            run.report(id, r?.pct, upd)
+            run.report(id, r?.pct, upd, needsAgreement = r?.twoByte == true)
             FsLog.v(TAG, "fuel detect $id -> ${r?.pct} upd=$upd ${r?.how}")
         }
         if (!run.done) return
@@ -1595,9 +1622,10 @@ class PluginService : Service() {
         if (res.id != null) {
             FuelDetect.store(filesDir, profileId, res.id, res.confirmed)
             prefsDirty = true
-            if (res.confirmed) notifySimple("Fuel level source found", "Using ${FuelSources.byId(res.id).label} for ${profileName(profileId)} (${res.why}).")
+            if (!detectNotifyAllowed()) Unit
+            else if (res.confirmed) notifySimple("Fuel level source found", "Using ${FuelSources.byId(res.id).label} for ${profileName(profileId)} (${res.why}).")
             else notifyConfirmSource(res.id, res.level, res.why)
-        } else {
+        } else if (detectNotifyAllowed()) {
             notifySimple("No fuel level source found", "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.")
         }
     }
