@@ -441,6 +441,7 @@ class PluginService : Service() {
         when {
             identity != null -> pumpIdentity(t)
             fuelDetect != null -> pumpFuelDetect(t)
+            diag != null -> pumpDiag()
             else -> pumpDetect(t, speedRaw)
         }
         sampleTank(1, t, ecu, speedMph, now, speedRaw, skipFill)
@@ -659,13 +660,45 @@ class PluginService : Service() {
         if (connected) {
             selectProfile()
             ensureActiveSession()
+            startDiag()
         } else {
             onEcuAway()
         }
     }
 
+    // ---- TEMP diagnostic: probe every connect (DiagProbe; results logged only, nothing stored) ----
+    private var diag: DiagProbe? = null
+
+    private fun startDiag() {
+        val t = torque ?: return
+        val now = System.currentTimeMillis()
+        DiagProbe.prune(filesDir)
+        val f = DiagProbe.fileFor(filesDir, now)
+        diag = DiagProbe(f, object : DiagProbe.Io {
+            override fun send(header: String, command: String) =
+                runCatching { t.sendCommandGetResponse(SourceProbe.headerArg(header), command) }.getOrNull()
+            override fun protocol() = runCatching { t.protocolName }.getOrNull()
+            override fun profileInfo() = runCatching { t.getVehicleProfileInformation() }.getOrNull()
+            override fun profileData(key: String) = runCatching { t.retrieveProfileData(key) }.getOrNull()
+            override fun setting(key: String) = runCatching { t.getSettingString(key, "") }.getOrNull()
+            override fun ecuSupported() = runCatching { t.listECUSupportedPIDs() }.getOrNull()
+            override fun valueByName(longName: String): Pair<String, Double?>? {
+                val id = pidNames[longName] ?: return null
+                return id to readDouble(t, id)
+            }
+        })
+        // File name only: the file holds unredacted identity and never goes to logcat.
+        FsLog.i(TAG, "TEMP diag probe started: ${f.name} steps=${diag?.total}")
+    }
+
+    private fun pumpDiag() {
+        val d = diag ?: return
+        if (d.step()) { diag = null; FsLog.i(TAG, "TEMP diag probe finished") }
+    }
+
     private fun onEcuAway() {
         identity = null
+        diag = null
         closeSession()
         if (tanks[1] == null) tanks[1] = makeRuntime(1)
     }

@@ -501,4 +501,41 @@ class FixesTest {
         assertTrue(seed.contains("torqueCapGal") && seed.contains("!cfg.tankEstimated"))
         for (bad in listOf("Chunk", "Band", "model", "nameplateFor", "nameplateGal")) assertFalse(bad, seed.contains(bad))
     }
+
+    @Test
+    fun test86TempDiagProbeLogsEverythingToFileOnly() {
+        val d = Files.createTempDirectory("diag").toFile(); val f = File(d, "logs/probe-x.log")
+        val sent = ArrayList<String>()
+        val io = object : DiagProbe.Io {
+            override fun send(header: String, command: String): Array<String>? { sent += "$header|$command"; return when (command) {
+                "0902" -> arrayOf("014", "0: 49 02 01 31 46 54", "1: 4E 57 32 31 50 33 34 45", "2: 41 31 32 33 34 35 36")
+                "012F" -> arrayOf("41 2F 80")
+                "2216C1" -> if (header == "C410F1") arrayOf("62 16 C1 B4") else arrayOf("NO DATA")
+                "22F42F" -> arrayOf("7F 22 31")
+                else -> null } }
+            override fun protocol() = "J1850 PWM(41.6K)"
+            override fun profileInfo() = arrayOf("van", "x")
+            override fun profileData(key: String) = "140"
+            override fun setting(key: String) = ""
+            override fun ecuSupported() = arrayOf("0D")
+            override fun valueByName(longName: String) = "ff1234" to 70.6
+        }
+        val p = DiagProbe(f, io)
+        var n = 0
+        while (!p.step()) { n++; assertTrue(n < 200) }
+        assertEquals(p.total, sent.size + DiagProbe.plan().count { it is DiagProbe.Step.Info })   // one request per step
+        val log = f.readText()
+        assertTrue(log, log.contains("[VIN 0902] PASS VIN=") || log.contains("[VIN 0902] FAIL undecodable"))
+        assertTrue(log.contains("[sae_012f 012F] PASS level=50.20%"))
+        assertTrue(log.contains("hdr C410F1 (J1850 PCM)] PASS level=70.59%"))
+        assertTrue(log.contains("2216C1 (no header)] FAIL reply 'NO DATA'"))
+        assertTrue(log.contains("FAIL negative response 7F2231"))
+        assertTrue(log.contains("name:[FORD]Fuel Level] PASS") && log.contains("=== done"))
+        // Logged only: the diag path never stores sources, flags, profiles or fingerprints, never logs identity to logcat.
+        val src = File("src/main/kotlin/com/davidlang/torque/fuelsmoothing/DiagProbe.kt").readText()
+        for (bad in listOf("FsLog", "Log.", "setProfileField", "FuelDetect.store", "Fingerprint.save")) assertFalse(bad, src.contains(bad))
+        val ps = File("src/main/kotlin/com/davidlang/torque/fuelsmoothing/PluginService.kt").readText()
+        val glue = ps.substringAfter("TEMP diagnostic: probe every connect").substringBefore("private fun onEcuAway")
+        for (bad in listOf("setProfileField", "FuelDetect.store", "Fingerprint.save", "obs", "vin")) assertFalse(bad, glue.contains(bad))
+    }
 }
