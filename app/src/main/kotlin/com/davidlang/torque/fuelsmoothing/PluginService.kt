@@ -171,11 +171,11 @@ class PluginService : Service() {
 
     private fun levelUnit(id: Int): Double = if (id == 1 && LevelScale.applies(cfg.sourceId)) LevelScale.unit(lvlFull, lvlMax) else 1.0
 
-    private fun freezeLevelScale(counts: Double, why: String) {
+    private fun seedLevelScale(counts: Double, why: String) {
         if (lvlFull != null || !LevelScale.applies(cfg.sourceId)) return
         lvlFull = counts
         ProfileStore.setProfileField(filesDir, profileId, LevelScale.KEY_FULL, counts.toString())
-        Log.i(TAG, "level full scale frozen for $profileId: ${"%.0f".format(counts)} counts ($why); units only, tank size still learned")
+        Log.i(TAG, "level full scale seeded for $profileId: ${"%.0f".format(counts)} counts ($why); units only, tank size still learned")
     }
 
     private fun reloadCfgIfDirty() {
@@ -320,7 +320,7 @@ class PluginService : Service() {
         nameplateGal = TankSeed.seed(t)
         loadLevelScale()
         if (lvlFull == null && LevelScale.applies(cfg.sourceId)) {
-            runCatching { TankSeed.probe(t) }.getOrNull()?.second?.let { freezeLevelScale(LevelScale.fromCapacity(it), "Torque profile capacity") }
+            runCatching { TankSeed.probe(t) }.getOrNull()?.second?.let { seedLevelScale(LevelScale.fromCapacity(it), "Torque profile capacity") }
         }
         // Torque's profile capacity is the initial guess shown in settings, until a learned model exists.
         val seeded = nameplateGal
@@ -466,13 +466,6 @@ class PluginService : Service() {
             }
         }
         tanks[id]?.let { rt -> rt.lastLvlL = src.liters; if (src.pct != null && !src.missing) rt.validLevels++ }
-        if (id == 1 && LevelScale.applies(cfg.sourceId) && src.pct != null && !src.missing) {
-            val c = LevelScale.counts(src.pct)
-            if (c >= (lvlMax ?: 0.0) + 1.0) {
-                lvlMax = c
-                ProfileStore.setProfileField(filesDir, profileId, LevelScale.KEY_MAX, c.toString())
-            }
-        }
         tanks[id]?.math?.unit = levelUnit(id)
         if (id == 1) {
             if (src.how != cfg.sourceStatus) FixFuelPrefs.setSourceStatus(this, src.how)
@@ -524,6 +517,13 @@ class PluginService : Service() {
             jumpPct = cfg.jumpPct,
             ignoreFill = skipFill,
         )
+        if (id == 1 && LevelScale.applies(cfg.sourceId)) {
+            // Highest settled (smoothed, tracking, not filling/holding) count only rises; raw slosh never counts.
+            LevelScale.raise(lvlMax, smoothed, rt.math.mode == TrackMode.SKEW)?.let { c ->
+                lvlMax = c
+                ProfileStore.setProfileField(filesDir, profileId, LevelScale.KEY_MAX, c.toString())
+            }
+        }
         if (rt.math.mode == TrackMode.FILL && prevMode != TrackMode.FILL) {
             val delta = live - (before ?: live)
             Log.i(TAG, "tank$id fill start Δ=${"%.1f".format(delta)} raw=$live speedMph=${"%.1f".format(speedMph)}")
@@ -1328,7 +1328,6 @@ class PluginService : Service() {
     }
 
     private fun onFillEnd(rt: TankRt, smoothed: Double, now: Long, logging: Boolean) {
-        if (rt.id == 1 && quarantineDir == null) freezeLevelScale(LevelScale.fromFill(smoothed, lvlMax), "first fill plateau")
         rt.fuelAtFillGal = rt.usedGal
         rt.sinceFillUsedGal = 0.0
         val prior = priorFor(rt.id)

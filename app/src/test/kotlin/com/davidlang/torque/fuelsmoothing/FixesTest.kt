@@ -381,23 +381,32 @@ class FixesTest {
     }
 
     @Test
-    fun test78ToyotaFullScaleFrozenForThresholdsAndDisplayOnly() {
+    fun test78ToyotaFullScaleIsHighestSettledCountOnlyRising() {
         // Prius C 36 L = 72 counts: full reads 28.2 % on the fixed 255 scale.
-        val full = LevelScale.fromCapacity(36.0 / 3.785411784)
-        assertEquals(72.0, full, 1e-9)
-        val u = LevelScale.unit(full, null)
-        assertEquals(72.0 / 255.0, u, 1e-12)
+        val seed = LevelScale.fromCapacity(36.0 / 3.785411784)
+        assertEquals(72.0, seed, 1e-9)
         assertEquals(1.0, LevelScale.unit(null, null), 0.0)               // unknown: fixed scale
-        assertEquals(60.0 / 255.0, LevelScale.unit(null, 60.0), 1e-12)   // provisional: largest count seen
-        assertEquals(u, LevelScale.unit(full, 200.0), 0.0)               // frozen wins; learning never moves it
-        assertEquals(100.0, LevelScale.display(LevelScale.counts(0.0) + 72.0 * 100 / 255, u), 1e-9)
-        assertEquals(72.0, LevelScale.fromFill(72 * 100.0 / 255.0, 10.0), 1e-9)
-        assertEquals(80.0, LevelScale.fromFill(20.0, 80.0), 1e-9)        // never below the largest count seen
-        // 1/4 -> full on that tank: 7 % -> 28 % on the fixed scale; missed with % thresholds, caught when scaled.
+        assertEquals(72.0 / 255.0, LevelScale.unit(seed, null), 1e-12)    // capacity seed
+        assertEquals(72.0 / 255.0, LevelScale.unit(seed, 50.0), 1e-12)    // seed stays while settled max is lower
+        assertEquals(80.0 / 255.0, LevelScale.unit(seed, 80.0), 1e-12)    // a higher settled count raises it
+        assertEquals(60.0 / 255.0, LevelScale.unit(null, 60.0), 1e-12)
+        // Only settled readings raise it, and it never falls.
+        var max: Double? = null
+        for ((pct, settled) in listOf(20.0 to true, 30.0 to false /* slosh/fill */, 25.0 to true, 22.0 to true, 26.0 to true)) {
+            LevelScale.raise(max, pct, settled)?.let { max = it }
+        }
+        assertEquals(LevelScale.counts(26.0), checkNotNull(max), 1e-9)
+        assertNull(LevelScale.raise(max, 10.0, true))
+        // No freeze from a fill: the service never sets the scale at fill end.
+        val svc = File("src/main/kotlin/com/davidlang/torque/fuelsmoothing/PluginService.kt").readText()
+        val fillEnd = svc.substring(svc.indexOf("private fun onFillEnd"), svc.indexOf("private fun onFillEnd") + 400)
+        assertFalse(fillEnd.contains("LevelScale"))
+        // Thresholds: 1/4 -> full on that tank (7 % -> 28 %) missed on the fixed scale, caught when scaled.
+        val u = LevelScale.unit(seed, null)
+        assertEquals(100.0, LevelScale.display(72 * 100.0 / 255.0, u), 1e-9)
         assertFalse(fillDetected(1.0, 7.0, 28.0))
         assertTrue(fillDetected(u, 7.0, 28.0))
-        assertTrue(fillDetected(1.0, 20.0, 80.0)) // % sources unchanged
-        // Logged level stays on the fixed scale (decode has no scale input).
+        assertTrue(fillDetected(1.0, 20.0, 80.0))
         assertEquals(72 * 100.0 / 255.0, checkNotNull(FuelSources.toyotaLevel(72, "t").pct), 1e-12)
     }
 
