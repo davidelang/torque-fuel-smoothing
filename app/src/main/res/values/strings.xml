@@ -7,13 +7,14 @@
 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n
 2. Enable this plugin in Torque → Settings → Plugins.\n
 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n
-4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile.\n
-5. Choose the Fuel source below. Tank size is only the current guess; it is updated at fills and when Torque disconnects.\n
-6. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level, Corrected Fuel Level and Fuel Remaining.\n
-7. With Feed fuel level back to Torque (overrides 012F) on, your existing 012F fuel gauge shows the chosen value.\n
-8. Drive normally. The plugin runs only while Torque is connected to the ECU.\n
-9. Keep driving and filling up. Corrected % and fuel remaining get accurate over several partial tanks.\n
-10. If a Wrong vehicle profile? notification appears, choose what to do with that drive.</string>
+4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle\'s VIN/ECU identity.\n
+5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. You can also pick it below.\n
+6. Tank size (gal or L) is only a starting guess. The learned size replaces it once 10% of the gauge is covered by 2+ drives.\n
+7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level, Corrected Fuel Level, Fuel Remaining and Plugin DTE. Band and Kalman maps have their own (band)/(kalman) PIDs.\n
+8. Feed fuel level back to Torque: Off, Smoothed or Corrected (from the Gauge map you choose) onto your 012F gauge.\n
+9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n
+10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n
+11. All data stays on this phone. No GPS or location is recorded.</string>
     <string name="manual_url">https://play.landing.lang.hm/fuel-smoothing/manual/</string>
     <string name="manual_button">Full manual (online)</string>
     <string name="show_fuel_notification">Show fuel level in notification</string>

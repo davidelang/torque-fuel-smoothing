@@ -119,7 +119,7 @@ class PluginActivity : Activity() {
         }
 
         val about = TextView(this)
-        about.text = versionName() + "\nNot affiliated with Torque or Ian Hawkins."
+        about.text = versionName() + "\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded."
         about.textSize = 14f
         col.addView(about)
         val privacy = Button(this)

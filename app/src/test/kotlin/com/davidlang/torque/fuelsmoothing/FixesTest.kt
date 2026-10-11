@@ -323,14 +323,17 @@ class FixesTest {
         assertFalse(FuelDetect.shouldAutoDetect(FuelDetect.NONE, true))      // already tried once for this profile
         assertFalse(FuelDetect.shouldAutoDetect("sae_012f", false))        // unconfirmed source: in use, no re-detect
         assertFalse(FuelDetect.shouldAutoDetect("ford_16c1", false))
-        // Optional re-detect only after a whole session of nothing usable from an unconfirmed source.
-        assertTrue(FuelDetect.redetectAfter("sae_012f", false, 600, 0))
-        assertFalse(FuelDetect.redetectAfter("sae_012f", true, 600, 0))
-        assertFalse(FuelDetect.redetectAfter("sae_012f", false, 600, 3))
-        assertFalse(FuelDetect.redetectAfter("sae_012f", false, 120, 0))
+        // A session with no usable level only alerts; it never clears the source or triggers detection.
+        assertTrue(FuelDetect.noLevelAlert("sae_012f", 600, 0))
+        assertTrue(FuelDetect.noLevelAlert("ford_16c1", 600, 0))
+        assertFalse(FuelDetect.noLevelAlert("sae_012f", 600, 3))
+        assertFalse(FuelDetect.noLevelAlert("sae_012f", 120, 0))
+        assertFalse(FuelDetect.noLevelAlert(FuelDetect.NONE, 600, 0))
         val svc = File("src/main/kotlin/com/davidlang/torque/fuelsmoothing/PluginService.kt").readText()
         assertFalse(svc.contains("\"detected earlier\"")) // no confirm nag on every connect
         assertTrue(svc.contains("FuelDetect.KEY_NOTIFIED"))
+        val close = svc.substring(svc.indexOf("FuelDetect.noLevelAlert("), svc.indexOf("FuelDetect.noLevelAlert(") + 600)
+        assertFalse(close.contains("FuelDetect.store(")); assertFalse(close.contains("KEY_TRIED"))
     }
 
     @Test

@@ -1121,12 +1121,13 @@ class PluginService : Service() {
         }
         if (id == 1) commitTank1SinceFill(rt)
         val closed = rt.sessions.close()
-        if (id == 1 && quarantineDir == null && FuelDetect.redetectAfter(cfg.sourceId, cfg.sourceConfirmed, closed.size, rt.validLevels)) {
-            // An unconfirmed source gave nothing usable for a whole session: clear it so the next connect detects again.
-            FuelDetect.store(filesDir, profileId, FuelDetect.NONE, false)
-            ProfileStore.setProfileField(filesDir, profileId, FuelDetect.KEY_TRIED, null)
-            prefsDirty = true
-            Log.w(TAG, "fuel source ${cfg.sourceId} gave no usable level in ${closed.size} samples; detection will run at next connect")
+        if (id == 1 && quarantineDir == null && FuelDetect.noLevelAlert(cfg.sourceId, closed.size, rt.validLevels)) {
+            // Once per session; the source definition is never changed and detection is not triggered.
+            Log.w(TAG, "fuel source ${cfg.sourceId} gave no usable level in ${closed.size} samples")
+            notifySimple(
+                "No fuel level this drive",
+                "${FuelSources.byId(cfg.sourceId).label} gave no usable level for ${profileName(profileId)}. Check the adapter connection, or run Detect on the setup page.",
+            )
         }
         closeLiveChunks(rt, closed)
         refreshOpen()

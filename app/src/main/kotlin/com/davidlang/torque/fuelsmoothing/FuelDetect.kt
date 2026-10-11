@@ -19,9 +19,12 @@ internal object FuelDetect {
     /** Auto-detect only for a profile with no source that has not been auto-detected before. */
     fun shouldAutoDetect(sourceId: String, triedBefore: Boolean): Boolean = sourceId == NONE && !triedBefore
 
-    /** Optional re-detect: an unconfirmed source that produced no usable level over a whole session (>= 5 min). */
-    fun redetectAfter(sourceId: String, confirmed: Boolean, samples: Int, valid: Int): Boolean =
-        sourceId != NONE && !confirmed && samples >= REDETECT_MIN_SAMPLES && valid == 0
+    /**
+     * A session (>= 5 min) in which the configured source gave no usable level: alert the user once for that session.
+     * Communication failures never trigger detection and never change the stored source.
+     */
+    fun noLevelAlert(sourceId: String, samples: Int, valid: Int): Boolean =
+        sourceId != NONE && samples >= REDETECT_MIN_SAMPLES && valid == 0
     private val GATES = mapOf(
         "ford_16c1" to setOf("ford", "lincoln"),
         "ford_f42f" to setOf("ford", "lincoln"),
