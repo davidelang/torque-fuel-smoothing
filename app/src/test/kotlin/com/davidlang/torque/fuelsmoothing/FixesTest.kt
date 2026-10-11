@@ -438,4 +438,67 @@ class FixesTest {
         assertFalse(drive(50))          // a good drive re-arms
         assertTrue(drive(0)); assertFalse(drive(0))
     }
+
+    @Test
+    fun test82RoutineQueryDoesNotStartTheRunningService() {
+        assertTrue(PluginReceiver.routine(PluginService.ACTION_PID_QUERY))
+        assertTrue(PluginReceiver.routine(PluginService.ACTION_PID_PLUGIN))
+        assertFalse(PluginReceiver.routine(PluginService.ACTION_OBD_CONNECTED))
+        val r = File("src/main/kotlin/com/davidlang/torque/fuelsmoothing/PluginReceiver.kt").readText()
+        val fast = r.substringAfter("val live = PluginService.instance").substringBefore("if (PluginService.isRunning && live != null)")
+        assertTrue(fast.contains("live.onRoutineQuery()") && fast.contains("return") && !fast.contains("startService"))
+        // Killed service (instance null) still falls through to a (foreground) start.
+        assertTrue(r.contains("live != null && PluginService.isRunning && routine(action)"))
+        val ps = File("src/main/kotlin/com/davidlang/torque/fuelsmoothing/PluginService.kt").readText()
+        assertTrue(ps.contains("instance = this") && ps.contains("if (instance === this) instance = null"))
+    }
+
+    @Test
+    fun test83LifecycleLinesMirroredToFileAndRotated() {
+        val d = Files.createTempDirectory("fslog").toFile()
+        FsLog.init(d)
+        FsLog.i("FuelSmooth", "session open tank=1 x")
+        FsLog.v("FuelSmooth", "per tick")          // verbose off: not in the file
+        val f = File(d, "logs/events.log")
+        val t = f.readText()
+        assertTrue(t.contains(" I FuelSmooth: session open tank=1 x")); assertFalse(t.contains("per tick"))
+        val big = "x".repeat(1000)
+        repeat(300) { FsLog.i("FuelSmooth", big) }
+        assertTrue(File(d, "logs/events.1.log").isFile)
+        assertTrue(f.length() <= FsLog.LOG_MAX_BYTES + 2000)
+        val ps = File("src/main/kotlin/com/davidlang/torque/fuelsmoothing/PluginService.kt").readText()
+        assertTrue(ps.contains("FsLog.init(filesDir)") && ps.contains("FsLog.i(TAG, \"\$what start\")"))
+        assertFalse(Regex("""\bLog\.i\(TAG,""").containsMatchIn(ps))
+    }
+
+    @Test
+    fun test84ProbeOkNeverDowngradedAndLiveSuccessRecorded() {
+        assertEquals("ok", Fingerprint.mergeProbes(mapOf("ford2216C1" to "ok"), mapOf("ford2216C1" to "no"), true)["ford2216C1"])
+        assertEquals("ok", Fingerprint.mergeProbes(mapOf("ford2216C1" to "no"), mapOf("ford2216C1" to "ok"), false)["ford2216C1"])
+        assertEquals("NODATA".filter { it in "0123456789ABCDEF" }, Fingerprint.replyHex(listOf("NO DATA")))
+        assertEquals("7F2231", Fingerprint.replyHex(listOf("7F 22 31")))
+        val pd = Files.createTempDirectory("fp").toFile()
+        Fingerprint.save(pd, Fingerprint.Fp(protocol = "J1850 PWM(41.6K)", probes = mapOf("ford2216C1" to "no"), sessions = 2))
+        assertTrue(Fingerprint.markLive(pd, "ford_16c1")); assertFalse(Fingerprint.markLive(pd, "ford_16c1"))
+        val f = Fingerprint.load(pd)
+        assertEquals("ok", f.probes["live:ford_16c1"]); assertEquals("no", f.probes["ford2216C1"]); assertEquals(2, f.sessions)
+    }
+
+    @Test
+    fun test85KalmanSeedSelfContainedAndNeverReseeded() {
+        val pd = Files.createTempDirectory("kseed").toFile(); val raw = File(pd, "raw"); raw.mkdirs()
+        File(checkNotNull(javaClass.classLoader!!.getResource("fuel-sessions")).toURI()).listFiles()!!.filter { it.name.endsWith(".jsonl") }.forEach { it.copyTo(File(raw, it.name)) }
+        ProfileStore.rollup(pd, 35.0, emptySet(), null)      // no Torque capacity, no user size -> default
+        assertEquals(Kalman.DEFAULT_C0, checkNotNull(Kalman.load(pd)).c0, 0.0)
+        File(pd, ProfileStore.ROLLUP_SIG).delete()
+        ProfileStore.rollup(pd, 35.0, emptySet(), 40.0)      // existing state: C0 stays
+        assertEquals(Kalman.DEFAULT_C0, checkNotNull(Kalman.load(pd)).c0, 0.0)
+        val pd2 = Files.createTempDirectory("kseed2").toFile(); raw.copyRecursively(File(pd2, "raw"))
+        ProfileStore.rollup(pd2, 33.0, emptySet(), 36.0)     // seed independent of the chunk/raw nameplate
+        assertEquals(36.0, checkNotNull(Kalman.load(pd2)).c0, 0.0)
+        val ps = File("src/main/kotlin/com/davidlang/torque/fuelsmoothing/PluginService.kt").readText()
+        val seed = ps.substringAfter("private fun kalmanSeedFor(id: Int): Double? {").substringBefore("private fun nameplateFor")
+        assertTrue(seed.contains("torqueCapGal") && seed.contains("!cfg.tankEstimated"))
+        for (bad in listOf("Chunk", "Band", "model", "nameplateFor", "nameplateGal")) assertFalse(bad, seed.contains(bad))
+    }
 }

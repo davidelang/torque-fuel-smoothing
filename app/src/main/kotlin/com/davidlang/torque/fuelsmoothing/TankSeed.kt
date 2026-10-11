@@ -49,7 +49,7 @@ internal object TankSeed {
         for (k in KEYS) {
             val s = runCatching { t.getSettingString(k, "") }.getOrNull()
             val p = runCatching { t.retrieveProfileData(k) }.getOrNull()
-            Log.i(TAG, "tank seed probe $k setting='${s ?: "null"}' profile='${p ?: "null"}'")
+            FsLog.i(TAG, "tank seed probe $k setting='${s ?: "null"}' profile='${p ?: "null"}'")
             parseTorqueCapacity(p)?.let { return "retrieveProfileData:$k" to it }
             parseTorqueCapacity(s)?.let { return "getSettingString:$k" to it }
         }
@@ -65,15 +65,15 @@ internal object TankSeed {
     fun seed(t: ITorqueService): Double? {
         val probed = probe(t)
         if (probed != null) {
-            Log.i(TAG, "tank seed gal=${probed.second} from ${probed.first}")
+            FsLog.i(TAG, "tank seed gal=${probed.second} from ${probed.first}")
             return probed.second
         }
         val stored = loadPersisted(t)
         if (stored != null) {
-            Log.i(TAG, "tank seed gal=$stored from persisted plugin profile")
+            FsLog.i(TAG, "tank seed gal=$stored from persisted plugin profile")
             return stored
         }
-        Log.i(TAG, "tank seed none")
+        FsLog.i(TAG, "tank seed none")
         return null
     }
 }

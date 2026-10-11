@@ -74,6 +74,8 @@ class PluginService : Service() {
     private var lastAuthPct: Double? = null
     private var lastEcuConnected: Boolean? = null
     private var nameplateGal: Double? = null
+    /** Torque's own profile capacity only (never the plugin's learned size); Kalman seed source. */
+    private var torqueCapGal: Double? = null
     private var profileId: String = ProfileStore.DEFAULT_ID
     /** Wrong/unknown-vehicle hold: sessions go to files/quarantine/<stamp>/ and never touch a profile. */
     private var quarantineDir: File? = null
@@ -119,11 +121,12 @@ class PluginService : Service() {
         runCatching {
             rollupExec.execute {
                 val t0 = System.currentTimeMillis()
-                runCatching(work).onFailure { Log.w(TAG, "$what failed: ${it.javaClass.simpleName} ${it.message}") }
-                Log.i(TAG, "$what done in ${System.currentTimeMillis() - t0} ms")
+                FsLog.i(TAG, "$what start")
+                runCatching(work).onFailure { FsLog.w(TAG, "$what failed: ${it.javaClass.simpleName} ${it.message}") }
+                FsLog.i(TAG, "$what done in ${System.currentTimeMillis() - t0} ms")
                 if (!destroyed) handler.post { if (!destroyed) done() }
             }
-        }.onFailure { Log.w(TAG, "$what not queued: ${it.message}") }
+        }.onFailure { FsLog.w(TAG, "$what not queued: ${it.message}") }
     }
     /** Auto-detection runs at most once per ECU connection. */
     private var fuelDetectTried = false
@@ -175,7 +178,7 @@ class PluginService : Service() {
         if (lvlFull != null || !LevelScale.applies(cfg.sourceId)) return
         lvlFull = counts
         ProfileStore.setProfileField(filesDir, profileId, LevelScale.KEY_FULL, counts.toString())
-        Log.i(TAG, "level full scale seeded for $profileId: ${"%.0f".format(counts)} counts ($why); units only, tank size still learned")
+        FsLog.i(TAG, "level full scale seeded for $profileId: ${"%.0f".format(counts)} counts ($why); units only, tank size still learned")
     }
 
     private fun reloadCfgIfDirty() {
@@ -191,13 +194,13 @@ class PluginService : Service() {
             torque = ITorqueService.Stub.asInterface(service)
             bound = true
             bindRequested = true
-            Log.i(TAG, "bound Torque API ${runCatching { torque?.version }.getOrNull()}")
+            FsLog.i(TAG, "bound Torque API ${runCatching { torque?.version }.getOrNull()}")
             stopPolling()
             handler.post { afterBindWork() }
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
-            Log.w(TAG, "Torque disconnected; not auto-creating")
+            FsLog.w(TAG, "Torque disconnected; not auto-creating")
             stopPolling()
             onEcuAway()
             // Drop the stale binding so the next bindTorque() does not stack a second connection.
@@ -212,6 +215,8 @@ class PluginService : Service() {
     override fun onCreate() {
         super.onCreate()
         isRunning = true
+        instance = this
+        FsLog.init(filesDir)
         cfg = FixFuelPrefs.load(this)
         FsLog.verbose = getSharedPreferences(FixFuelPrefs.PREFS, MODE_PRIVATE).getBoolean(FsLog.KEY_VERBOSE, false)
         prefsDirty = false
@@ -249,7 +254,7 @@ class PluginService : Service() {
                 if (pid != null && src != null && ProfileStore.profileField(filesDir, pid, "fuelSource") == src) {
                     FuelDetect.store(filesDir, pid, src, true)
                     prefsDirty = true
-                    Log.i(TAG, "fuel source $src confirmed by user for $pid")
+                    FsLog.i(TAG, "fuel source $src confirmed by user for $pid")
                 }
                 notificationManager()?.cancel(DETECT_NOTIF_ID)
             }
@@ -282,8 +287,15 @@ class PluginService : Service() {
         bound = false
         torque = null
         isRunning = false
+        if (instance === this) instance = null
         ecuConnected = false
         super.onDestroy()
+    }
+
+    /** Routine PID_QUERY/PID_PLUGIN from the receiver while running: what onStartCommand did, minus the start. */
+    fun onRoutineQuery() {
+        if (destroyed) return
+        bindTorque()
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
@@ -291,16 +303,16 @@ class PluginService : Service() {
     private fun bindTorque() {
         if (bound || bindRequested) return
         val flags = 0
-        Log.i(TAG, "bindTorque flags=$flags (no BIND_AUTO_CREATE)")
+        FsLog.i(TAG, "bindTorque flags=$flags (no BIND_AUTO_CREATE)")
         val ok = runCatching {
             bindService(intentForTorque(), connection, flags)
         }.getOrDefault(false)
         if (ok) {
             bindRequested = true
-            Log.i(TAG, "bindService ok (waiting onServiceConnected; flags=$flags)")
+            FsLog.i(TAG, "bindService ok (waiting onServiceConnected; flags=$flags)")
         } else {
             bindRequested = false
-            Log.i(TAG, "bindService fail flags=$flags (Torque not running; will not create)")
+            FsLog.i(TAG, "bindService fail flags=$flags (Torque not running; will not create)")
         }
     }
 
@@ -318,6 +330,7 @@ class PluginService : Service() {
         lastActive = resolveStoredActive()
         resolvePids()
         nameplateGal = TankSeed.seed(t)
+        torqueCapGal = nameplateGal?.takeIf { it > 0.0 }
         loadLevelScale()
         if (lvlFull == null && LevelScale.applies(cfg.sourceId)) {
             runCatching { TankSeed.probe(t) }.getOrNull()?.second?.let { seedLevelScale(LevelScale.fromCapacity(it), "Torque profile capacity") }
@@ -329,7 +342,7 @@ class PluginService : Service() {
             ProfileStore.setTankGuess(filesDir, profileId, seeded, false)
         ) {
             prefsDirty = true
-            Log.i(TAG, "tank size for $profileId seeded from Torque capacity ${"%.1f".format(seeded)} gal")
+            FsLog.i(TAG, "tank size for $profileId seeded from Torque capacity ${"%.1f".format(seeded)} gal")
         }
         registerPluginPids(t)
         val connected = ecuConnected || runCatching { t.isConnectedToECU }.getOrNull() == true
@@ -337,14 +350,14 @@ class PluginService : Service() {
             startPolling()
         } else {
             stopPolling()
-            Log.i(TAG, "bound; ECU not connected, waiting for OBD_CONNECTED")
+            FsLog.i(TAG, "bound; ECU not connected, waiting for OBD_CONNECTED")
         }
     }
 
     private fun resolvePids() {
         val t = torque ?: return
         val r = runCatching { Pids.resolve(t) }
-            .onFailure { Log.w(TAG, "listAllPIDs/getPIDInformation: ${it.message}") }
+            .onFailure { FsLog.w(TAG, "listAllPIDs/getPIDInformation: ${it.message}") }
             .getOrNull() ?: return
         fordPid = r.ford
         speedPid = r.speed
@@ -363,7 +376,7 @@ class PluginService : Service() {
         if (preferredVolumeUnit.isBlank()) {
             preferredVolumeUnit = runCatching { t.getPreferredUnit("gal") }.getOrNull().orEmpty()
         }
-        Log.i(
+        FsLog.i(
             TAG,
             "pids ford=${fordPid ?: "UNRESOLVED"} speed=$speedPid fuelUsed=$fuelUsedPid unit=$fuelUsedUnit " +
                 "galHr=$galHrPid raw=$galHrUnit galMin=$galMinPid raw=$galMinUnit " +
@@ -397,7 +410,7 @@ class PluginService : Service() {
         ecuLevelName = name
         ecuLevelPid = pid
         ecuFuelResolved = true
-        Log.i(TAG, "ecu 012F slot name=$ecuLevelName pid=${pid ?: "none"} write=${cfg.feed012f}")
+        FsLog.i(TAG, "ecu 012F slot name=$ecuLevelName pid=${pid ?: "none"} write=${cfg.feed012f}")
     }
 
     private fun sampleOnce() {
@@ -476,7 +489,7 @@ class PluginService : Service() {
         val raw = src.pct
         val logging0 = rt.sessions.isOpen && lastActive == id.toString()
         if (!src.missing && ecu != false && rt.math.checkReanchor(raw, speedMph, now)) {
-            Log.i(TAG, "tank$id level re-anchored to ${rt.math.smoothed} after sustained low readings (raw=$raw)")
+            FsLog.i(TAG, "tank$id level re-anchored to ${rt.math.smoothed} after sustained low readings (raw=$raw)")
             if (logging0) rt.sessions.mark("reanchor", now, "\"sm\":${rt.math.smoothed}")
         }
         val valid = rt.math.isValidSample(raw, ecu, rt.math.smoothed) && !src.missing
@@ -526,12 +539,12 @@ class PluginService : Service() {
         }
         if (rt.math.mode == TrackMode.FILL && prevMode != TrackMode.FILL) {
             val delta = live - (before ?: live)
-            Log.i(TAG, "tank$id fill start Δ=${"%.1f".format(delta)} raw=$live speedMph=${"%.1f".format(speedMph)}")
+            FsLog.i(TAG, "tank$id fill start Δ=${"%.1f".format(delta)} raw=$live speedMph=${"%.1f".format(speedMph)}")
             if (logging) rt.sessions.mark("fillStart", now)
         }
         val fillEnded = prevMode == TrackMode.FILL && rt.math.mode != TrackMode.FILL
         if (fillEnded) {
-            Log.i(TAG, "tank$id fill end raw=$live smoothed=$smoothed")
+            FsLog.i(TAG, "tank$id fill end raw=$live smoothed=$smoothed")
             onFillEnd(rt, smoothed, now, logging)
         }
         val dF = if (logging) integrateGalHr(t, now, rt) else 0.0
@@ -667,8 +680,8 @@ class PluginService : Service() {
         val sel = ProfileStore.select(filesDir, null, torqueName)
         val next = sel.id
         val note = sel.vinNote
-        if (sel.created) Log.i(TAG, "profile created $next for Torque profile '$torqueName'")
-        if (note.isNotBlank()) Log.w(TAG, "profile $next: $note (stored ${ProfileStore.storedVin(filesDir, next)})")
+        if (sel.created) FsLog.i(TAG, "profile created $next for Torque profile '$torqueName'")
+        if (note.isNotBlank()) FsLog.w(TAG, "profile $next: $note (stored ${ProfileStore.storedVin(filesDir, next)})")
         val gapFile = File(ProfileStore.profileDir(filesDir, next), "gap.txt")
         val gap = if (gapFile.isFile) gapFile.readText() else ""
         File(filesDir, "profile-notice.txt").writeText(if (note.isBlank()) gap else note)
@@ -676,7 +689,7 @@ class PluginService : Service() {
         // Sessions wait for the decision (ensureActiveSession), so data never lands in the wrong profile.
         val stored = Fingerprint.loadAll(filesDir)[next]
         identity = IdentityRead(next, torqueName, stored)
-        Log.i(TAG, "identity read queued for $next (firm=${stored?.firm == true}, steps=${identity!!.queue.size})")
+        FsLog.i(TAG, "identity read queued for $next (firm=${stored?.firm == true}, steps=${identity!!.queue.size})")
     }
 
     /**
@@ -689,6 +702,7 @@ class PluginService : Service() {
         val bitmaps = LinkedHashMap<String, String>()
         var vin: String? = null; var calId: String? = null; var cvn: String? = null; var ecuName: String? = null
         var probe: String? = null
+        var probeRaw: List<String>? = null
         var bitmapsDone = false
 
         init {
@@ -701,7 +715,7 @@ class PluginService : Service() {
 
         fun step(t: ITorqueService): Boolean {
             if (System.currentTimeMillis() - startMs > IDENTITY_MAX_MS) {
-                Log.w(TAG, "identity read capped after ${IDENTITY_MAX_MS}ms; ${queue.size} steps skipped")
+                FsLog.w(TAG, "identity read capped after ${IDENTITY_MAX_MS}ms; ${queue.size} steps skipped")
                 queue.clear()
             }
             val c = queue.pollFirst() ?: return true
@@ -715,7 +729,7 @@ class PluginService : Service() {
                 "0904" -> calId = Fingerprint.parseAscii(r, "04")
                 "0906" -> cvn = Fingerprint.parseCvn(r)
                 "090A" -> ecuName = Fingerprint.parseAscii(r, "0A")
-                "2216C1" -> probe = r?.joinToString(" ")?.uppercase()?.replace(" ", "")
+                "2216C1" -> { probe = r?.joinToString(" ")?.uppercase()?.replace(" ", ""); probeRaw = r }
                 else -> if (c in Fingerprint.BITMAP_PIDS) {
                     val bm = Fingerprint.parseBitmap(r, c)
                     if (bm != null) {
@@ -733,7 +747,10 @@ class PluginService : Service() {
             vin = vin, calId = calId, cvn = cvn, ecuName = ecuName,
             protocol = runCatching { t.protocolName }.getOrNull()?.takeIf { it.isNotBlank() },
             bitmaps = bitmaps,
-            probes = probe?.let { mapOf("ford2216C1" to if (it.contains("6216C1")) "ok" else "no") } ?: emptyMap(),
+            probes = probe?.let {
+                val ok = it.contains("6216C1")
+                if (ok) mapOf("ford2216C1" to "ok") else mapOf("ford2216C1" to "no", "ford2216C1Reply" to Fingerprint.replyHex(probeRaw))
+            } ?: emptyMap(),
         )
     }
 
@@ -750,7 +767,7 @@ class PluginService : Service() {
     private fun finishIdentity(t: ITorqueService, next: String, torqueName: String?, obs: Fingerprint.Fp) {
         val fps = Fingerprint.loadAll(filesDir)
         val d = Fingerprint.decide(next, obs, fps)
-        Log.i(TAG, "identity decision ${d::class.simpleName} torque='$torqueName' profile=$next: ${d.why} obs=${Fingerprint.redacted(obs)}")
+        FsLog.i(TAG, "identity decision ${d::class.simpleName} torque='$torqueName' profile=$next: ${d.why} obs=${Fingerprint.redacted(obs)}")
         // Verbose adds the non-identifying parts only (bitmaps, probes, protocol); VIN/calId/CVN never reach logcat.
         FsLog.v(TAG, "identity obs detail=${Fingerprint.toJson(obs.copy(vin = null, calId = null, cvn = null))}")
         val wasQ = quarantineDir
@@ -784,7 +801,7 @@ class PluginService : Service() {
                 )
             }
         }
-        Log.i(TAG, "identity route: write=${quarantineDir?.path ?: target} suggest=${quarantineSuggest}")
+        FsLog.i(TAG, "identity route: write=${quarantineDir?.path ?: target} suggest=${quarantineSuggest}")
         ProfileStore.setActiveId(filesDir, next)
         prefsDirty = true // tank size etc. are per profile
         if (target == profileId && wasQ == quarantineDir) return
@@ -798,12 +815,12 @@ class PluginService : Service() {
 
     private fun confirmQuarantine(target: String?) {
         if (quarantineDir == null || target == null) {
-            Log.i(TAG, "quarantine confirm ignored (no quarantine)")
+            FsLog.i(TAG, "quarantine confirm ignored (no quarantine)")
             return
         }
         val id = Quarantine.confirmTarget(filesDir, target, System.currentTimeMillis())
         quarantineConfirm = id
-        Log.i(TAG, "quarantine confirmed by user -> $id")
+        FsLog.i(TAG, "quarantine confirmed by user -> $id")
         notifyIdentity(
             "Keeping drive data",
             "This drive will be saved to ${profileName(id)}. Torque's plugin API can't create or switch Torque profiles: " +
@@ -831,19 +848,19 @@ class PluginService : Service() {
             b.addAction(android.R.drawable.ic_menu_save, label, PendingIntent.getService(this, 42 + k, i, flags))
         }
         nm.notify(IDENTITY_NOTIF_ID, b.build())
-        Log.i(TAG, "identity notice: $title | $text | choices=$choices")
+        FsLog.i(TAG, "identity notice: $title | $text | choices=$choices")
     }
 
     private fun registerPluginPids(t: ITorqueService) {
         runCatching { sendExtraPidRows(t) }
-            .onFailure { Log.w(TAG, "sendPIDDataV2: ${it.message}") }
+            .onFailure { FsLog.w(TAG, "sendPIDDataV2: ${it.message}") }
         runCatching {
             publishFour(t, 0.0, 0.0, 0.0, 0.0)
             for (extra in cfg.extras) {
                 publishExtra(t, extra.id, 0.0, 0.0, 0.0, 0.0, priorFor(extra.id).cap)
             }
-        }.onFailure { Log.w(TAG, "registerPluginPids: ${it.message}") }
-        Log.i(TAG, "registered tank1 PIDs extras=${cfg.extras.map { it.id }}")
+        }.onFailure { FsLog.w(TAG, "registerPluginPids: ${it.message}") }
+        FsLog.i(TAG, "registered tank1 PIDs extras=${cfg.extras.map { it.id }}")
     }
 
     private fun sendExtraPidRows(t: ITorqueService) {
@@ -898,7 +915,7 @@ class PluginService : Service() {
             diag,
             diag,
         )
-        Log.i(TAG, "sendPIDDataV2 n=$count ok=$ok remainUnit=$remainUnit")
+        FsLog.i(TAG, "sendPIDDataV2 n=$count ok=$ok remainUnit=$remainUnit")
     }
 
     private fun publishExtra(
@@ -1017,7 +1034,7 @@ class PluginService : Service() {
             return
         }
         if (ecuLevelName.equals(Pids.FORD_FUEL_NAME, ignoreCase = true)) {
-            Log.w(TAG, "skip 012F write: resolved name is Ford extra PID")
+            FsLog.w(TAG, "skip 012F write: resolved name is Ford extra PID")
             return
         }
         val v = corrected.toFloat()
@@ -1028,7 +1045,7 @@ class PluginService : Service() {
         }
         if (!logged012fWrite) {
             logged012fWrite = true
-            Log.i(TAG, "write 012F mode=${cfg.feed012f} name=$ecuLevelName pid=${pid ?: "none"} value=$corrected")
+            FsLog.i(TAG, "write 012F mode=${cfg.feed012f} name=$ecuLevelName pid=${pid ?: "none"} value=$corrected")
         }
     }
 
@@ -1094,7 +1111,7 @@ class PluginService : Service() {
     private fun applyActiveTank(active: String, now: Long) {
         val want = if (isConfigured(active.toIntOrNull() ?: -1)) active else FixFuelPrefs.ACTIVE_TANK1
         if (want == lastActive) return
-        Log.i(TAG, "active tank $lastActive -> $want (fill-snap ignored ${FILL_SWITCH_DEBOUNCE_MS}ms)")
+        FsLog.i(TAG, "active tank $lastActive -> $want (fill-snap ignored ${FILL_SWITCH_DEBOUNCE_MS}ms)")
         closeTankSession(lastActive.toIntOrNull() ?: 1)
         lastActive = want
         suppressFillUntilMs = now + FILL_SWITCH_DEBOUNCE_MS
@@ -1123,7 +1140,7 @@ class PluginService : Service() {
         val sid = rt.sessions.open(profileId = profileId, app = BuildConfig.VERSION_NAME)
         FsLog.reset()
         refreshOpen()
-        Log.i(TAG, "session open tank=$id $sid files=${rt.sessions.sessionCount()}")
+        FsLog.i(TAG, "session open tank=$id $sid files=${rt.sessions.sessionCount()}")
     }
 
     private fun closeTankSession(id: Int) {
@@ -1135,19 +1152,19 @@ class PluginService : Service() {
             val closedQ = rt.sessions.close()
             val target = quarantineConfirm
             val moved = Quarantine.resolve(filesDir, q, id, target)
-            Log.i(TAG, "quarantine close tank=$id samples=${closedQ.size} -> ${target ?: "discarded (not learned)"} files=${moved.map { it.name }}")
+            FsLog.i(TAG, "quarantine close tank=$id samples=${closedQ.size} -> ${target ?: "discarded (not learned)"} files=${moved.map { it.name }}")
             if (target != null) {
                 quarantineObs?.let { o ->
                     val pd = ProfileStore.profileDir(filesDir, target)
                     Fingerprint.save(pd, Fingerprint.merge(Fingerprint.load(pd), o))
                 }
                 val tdir = ProfileStore.tankDir(filesDir, target, id); val np = nameplateFor(id)
-                submitRollup("rollup $target tank$id", { ProfileStore.rollup(tdir, np, openSessions) }) { priorCache.clear() }
+                submitRollup("rollup $target tank$id", { ProfileStore.rollup(tdir, np, openSessions, kalmanSeedFor(id)) }) { priorCache.clear() }
             }
             return
         }
         rt.math.finishFill()?.let { anchor ->
-            Log.i(TAG, "tank$id fill still open at session close; ending at plateau $anchor")
+            FsLog.i(TAG, "tank$id fill still open at session close; ending at plateau $anchor")
             onFillEnd(rt, anchor, System.currentTimeMillis(), true)
         }
         if (id == 1) commitTank1SinceFill(rt)
@@ -1160,11 +1177,14 @@ class PluginService : Service() {
             val was = ProfileStore.profileField(filesDir, profileId, FuelDetect.KEY_NO_LEVEL_ALERTED) == "true"
             val (alert, now) = FuelDetect.noLevelStep(cfg.sourceId, closed.size, rt.validLevels, was)
             if (now != was) ProfileStore.setProfileField(filesDir, profileId, FuelDetect.KEY_NO_LEVEL_ALERTED, now.toString())
+            if (rt.validLevels > 0 && cfg.sourceId != FuelDetect.NONE) runCatching {
+                if (Fingerprint.markLive(ProfileStore.profileDir(filesDir, profileId), cfg.sourceId)) FsLog.i(TAG, "fingerprint: ${cfg.sourceId} works live for $profileId")
+            }
             alert
         } else false
         if (noLevel) {
             // Once, re-armed only after a drive with valid levels; the source is never changed, detection not triggered.
-            Log.w(TAG, "fuel source ${cfg.sourceId} gave no usable level in ${closed.size} samples")
+            FsLog.w(TAG, "fuel source ${cfg.sourceId} gave no usable level in ${closed.size} samples")
             notifySimple(
                 "No fuel level this drive",
                 "${FuelSources.byId(cfg.sourceId).label} gave no usable level for ${profileName(profileId)}. Check the adapter connection, or run Detect on the setup page.",
@@ -1173,12 +1193,12 @@ class PluginService : Service() {
         closeLiveChunks(rt, closed)
         refreshOpen()
         val dir = ProfileStore.tankDir(filesDir, profileId, id); val np = nameplateFor(id)
-        Log.i(TAG, "session close tank=$id samples=${closed.size} files=${rt.sessions.sessionCount()}; rollup queued")
+        FsLog.i(TAG, "session close tank=$id samples=${closed.size} files=${rt.sessions.sessionCount()}; rollup queued")
         var gap = ""
-        submitRollup("rollup tank$id", { gap = ProfileStore.rollup(dir, np, openSessions) }) {
+        submitRollup("rollup tank$id", { gap = ProfileStore.rollup(dir, np, openSessions, kalmanSeedFor(id)) }) {
             priorCache.remove(id)
             publishTankGuess(id)
-            Log.i(TAG, "tank$id gap=${gap.replace('\n', ' ')}")
+            FsLog.i(TAG, "tank$id gap=${gap.replace('\n', ' ')}")
         }
     }
 
@@ -1253,7 +1273,7 @@ class PluginService : Service() {
         if (rt.burnWhy == key) return
         rt.burnWhy = key
         rt.sessions.mark(if (v.burn) "burnOn" else "burnOff", now, "\"why\":\"${v.why}\"")
-        Log.i(TAG, "tank${rt.id} burn ${if (v.burn) "on" else "off"} why=${v.why} flowRaw=${rt.lastFlowRaw} ${rt.lastFlowUnit}")
+        FsLog.i(TAG, "tank${rt.id} burn ${if (v.burn) "on" else "off"} why=${v.why} flowRaw=${rt.lastFlowRaw} ${rt.lastFlowUnit}")
     }
 
     private fun updateTime(t: ITorqueService, pid: String): Long? =
@@ -1290,14 +1310,14 @@ class PluginService : Service() {
         }
         sessionFlowHrUnit = pick(galHrPid ?: Pids.GAL_PER_HOUR, galHrUnit, "galHr")
         sessionFlowMinUnit = pick(galMinPid ?: Pids.GAL_PER_MIN, galMinUnit, "galMin")
-        Log.i(TAG, "session flow units galHr=$sessionFlowHrUnit galMin=$sessionFlowMinUnit override=${override ?: "none"}")
+        FsLog.i(TAG, "session flow units galHr=$sessionFlowHrUnit galMin=$sessionFlowMinUnit override=${override ?: "none"}")
     }
 
     private fun logFlowUnitOnce(which: String) {
         if (loggedFlowUnit) return
         loggedFlowUnit = true
         val out = if (Units.prefersLiters(preferredVolumeUnit)) "l" else "gal"
-        Log.i(
+        FsLog.i(
             TAG,
             "flow unit $which raw galHr=$galHrUnit galMin=$galMinUnit preferred=$preferredVolumeUnit remaining=$out",
         )
@@ -1340,7 +1360,7 @@ class PluginService : Service() {
             val open = rt.sessions.sessionId; val tid = rt.id
             var ok = false
             val bytes = open?.let { File(File(dir, "raw"), "$it.jsonl").length() }
-            submitRollup("fill update tank$tid", { ok = ProfileStore.fillUpdate(dir, np, open, bytes) }) {
+            submitRollup("fill update tank$tid", { ok = ProfileStore.fillUpdate(dir, np, open, bytes, kalmanSeedFor(tid)) }) {
                 if (ok) { priorCache.remove(tid); publishTankGuess(tid) }
             }
         }
@@ -1348,7 +1368,7 @@ class PluginService : Service() {
         val anchor = rt.ledger.rHat.takeIf { rt.ledger.anchored && it.isFinite() && it > 0.0 } ?: return
         rt.fillAnchorGal = anchor
         FixFuelPrefs.setFillLedger(this, anchor, 0.0)
-        Log.i(TAG, "tank1 fill anchor=$anchor sinceFill=0 smoothed=$smoothed fuelGal=${rt.usedGal}")
+        FsLog.i(TAG, "tank1 fill anchor=$anchor sinceFill=0 smoothed=$smoothed fuelGal=${rt.usedGal}")
     }
 
     /** Adds burn since the last fill end. Does not zero the session fuel integral. */
@@ -1359,7 +1379,7 @@ class PluginService : Service() {
         val next = rt.sinceFillUsedGal + add
         rt.sinceFillUsedGal = next
         FixFuelPrefs.setFillLedger(this, anchor, next)
-        Log.i(TAG, "tank1 since-fill used=$next anchor=$anchor added=$add")
+        FsLog.i(TAG, "tank1 since-fill used=$next anchor=$anchor added=$add")
     }
 
     private class Prior(
@@ -1385,8 +1405,19 @@ class PluginService : Service() {
             prefsDirty = true
             // Only the plugin's per-profile setting changes: Torque's tankCapacity is not writable from the
             // plugin API (storeInProfile keys land under "plugin_"), so Torque's own figure stays as entered.
-            Log.i(TAG, "tank guess for $profileId updated to learned capacity ${"%.1f".format(cap)} gal (Torque tankCapacity not writable; unchanged)")
+            FsLog.i(TAG, "tank guess for $profileId updated to learned capacity ${"%.1f".format(cap)} gal (Torque tankCapacity not writable; unchanged)")
         }
+    }
+
+    /**
+     * Kalman C0, self-contained (no Chunk/Band/raw-fit input): Torque's capacity, else a user-entered tank size
+     * (not one the plugin learned), else null -> Kalman.DEFAULT_C0. Used only when a Kalman state is created;
+     * an existing state (or the C0 stored in model-kalman.json) is never re-seeded.
+     */
+    private fun kalmanSeedFor(id: Int): Double? {
+        if (id <= 1) return torqueCapGal ?: cfg.tankGal?.takeIf { it > 0.0 && !cfg.tankEstimated }
+        val x = cfg.extra(id) ?: return null
+        return x.tankGal?.takeIf { it > 0.0 && !x.tankEstimated }
     }
 
     private fun nameplateFor(id: Int): Double? {
@@ -1439,7 +1470,7 @@ class PluginService : Service() {
             DoubleArray(n) { RawLog.gateSpeed(samples[it].speed, samples[it].spdUnit) }, BooleanArray(n) { samples[it].fill },
         )
         val k = Live.closeChunks(rt.ledger, session, prior.gpp, placeholderNMin(), prior.v, prior.v95)
-        Log.i(TAG, "tank${rt.id} close: applied $k drive chunks to the ledger (rHat=${"%.2f".format(rt.ledger.rHat)})")
+        FsLog.i(TAG, "tank${rt.id} close: applied $k drive chunks to the ledger (rHat=${"%.2f".format(rt.ledger.rHat)})")
     }
 
     private fun placeholderNMin(): Int {
@@ -1594,7 +1625,7 @@ class PluginService : Service() {
             }
             TapStartNotice.cancel(this)
         } catch (t: Throwable) {
-            Log.w(TAG, "startForeground ignored: ${t.javaClass.simpleName} ${t.message}")
+            FsLog.w(TAG, "startForeground ignored: ${t.javaClass.simpleName} ${t.message}")
         }
     }
 
@@ -1640,7 +1671,7 @@ class PluginService : Service() {
         val names = pidNames.keys.toSet()
         val c = FuelDetect.candidates(vin, make, names)
         fuelDetect = FuelDetect.Run(c)
-        Log.i(TAG, "fuel source detection ($why) for $profileId: candidates=$c current=${cfg.sourceId} confirmed=${cfg.sourceConfirmed}")
+        FsLog.i(TAG, "fuel source detection ($why) for $profileId: candidates=$c current=${cfg.sourceId} confirmed=${cfg.sourceConfirmed}")
     }
 
     /** One poll per tick (read-only). See FuelDetect.Run for what counts as an answer. */
@@ -1661,7 +1692,7 @@ class PluginService : Service() {
         fuelDetect = null
         if (!fuelDetectManual) ProfileStore.setProfileField(filesDir, profileId, FuelDetect.KEY_TRIED, "true")
         val res = run.result()
-        Log.i(TAG, "fuel source detection for $profileId: ${res.id} confirmed=${res.confirmed} level=${res.level} (${res.why}; tried ${run.tried})")
+        FsLog.i(TAG, "fuel source detection for $profileId: ${res.id} confirmed=${res.confirmed} level=${res.level} (${res.why}; tried ${run.tried})")
         if (res.id != null) {
             FuelDetect.store(filesDir, profileId, res.id, res.confirmed)
             prefsDirty = true
@@ -1738,7 +1769,7 @@ class PluginService : Service() {
         if (text.contains("NO DATA", ignoreCase = true)) return
         detectTimeouts = 0
         if (SourceProbe.positive(lines, cmd.command)) {
-            Log.i(TAG, "probe row ${cmd.row} ${cmd.command} positive")
+            FsLog.i(TAG, "probe row ${cmd.row} ${cmd.command} positive")
         }
     }
 
@@ -1771,5 +1802,9 @@ class PluginService : Service() {
 
         @Volatile
         var isRunning: Boolean = false
+
+        /** The live service (main thread); null when not created or destroyed, so the receiver falls back to a start. */
+        @Volatile
+        var instance: PluginService? = null
     }
 }

@@ -36,7 +36,7 @@ internal class SessionStore(context: Context, private val tank: Int = 1, rawDir:
 
     init {
         if (snapshotFile.isFile) {
-            Log.i(TAG, "last session-end snapshot (debug only): ${snapshotFile.readText()}")
+            FsLog.i(TAG, "last session-end snapshot (debug only): ${snapshotFile.readText()}")
         }
     }
     private var file: File? = null
@@ -158,7 +158,7 @@ internal class SessionStore(context: Context, private val tank: Int = 1, rawDir:
                 pending.setLength(0)
                 lastFlushMs = nowMs
             }
-            .onFailure { Log.w(TAG, "append ${f.name}: ${it.message}") }
+            .onFailure { FsLog.w(TAG, "append ${f.name}: ${it.message}") }
     }
 
     fun close(t: Long = System.currentTimeMillis()): List<Sample> {

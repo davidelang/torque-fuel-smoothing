@@ -109,10 +109,36 @@ internal object Fingerprint {
         }
         return Fp(
             stored.vin ?: obs.vin, stored.calId ?: obs.calId, stored.cvn ?: obs.cvn, stored.ecuName ?: obs.ecuName,
-            stored.protocol ?: obs.protocol, bm, if (learning) stored.probes + obs.probes else stored.probes,
+            stored.protocol ?: obs.protocol, bm, mergeProbes(stored.probes, obs.probes, learning),
             stored.sessions + if (obs.empty) 0 else 1,
         )
     }
+
+    /** An "ok" probe (or live success) is never downgraded by a later "no"; new keys are added while learning. */
+    fun mergeProbes(stored: Map<String, String>, obs: Map<String, String>, learning: Boolean): Map<String, String> {
+        val out = LinkedHashMap(stored)
+        for ((k, v) in obs) {
+            val old = out[k]
+            if (old == null) { if (learning) out[k] = v }
+            else if (old != "ok") out[k] = v
+        }
+        return out
+    }
+
+    /** Key recording that [sourceId] returned usable levels in a real session (live evidence beats the probe). */
+    fun liveKey(sourceId: String) = "live:$sourceId"
+
+    /** Record live success for [sourceId]; true when the fingerprint changed. Informational (not used for matching). */
+    fun markLive(profileDir: File, sourceId: String): Boolean {
+        val f = load(profileDir)
+        if (f.probes[liveKey(sourceId)] == "ok") return false
+        save(profileDir, f.copy(probes = f.probes + (liveKey(sourceId) to "ok")))
+        return true
+    }
+
+    /** Probe reply, hex only, truncated: kept so a "no" can be diagnosed (NO DATA, 7F 22 negative reply, header). */
+    fun replyHex(parts: List<String>?): String =
+        (parts?.joinToString("") ?: "").uppercase().filter { it in "0123456789ABCDEF" }.take(32).ifEmpty { "none" }
 
     private fun orHex(a: String, b: String): String =
         if (a.length != b.length) a else (a.toLong(16) or b.toLong(16)).toString(16).uppercase().padStart(a.length, '0')

@@ -162,7 +162,7 @@ class PluginActivity : Activity() {
             try {
                 if (Build.VERSION.SDK_INT >= 26) startForegroundService(i) else startService(i)
             } catch (t: Throwable) {
-                Log.w(TAG, "detect start ignored: ${t.javaClass.simpleName} ${t.message}")
+                FsLog.w(TAG, "detect start ignored: ${t.javaClass.simpleName} ${t.message}")
             }
         }
         col.addView(detectBtn)
@@ -323,7 +323,7 @@ class PluginActivity : Activity() {
                 startService(start)
             }
         } catch (t: Throwable) {
-            Log.w(TAG, "start FGS ignored: ${t.javaClass.simpleName} ${t.message}")
+            FsLog.w(TAG, "start FGS ignored: ${t.javaClass.simpleName} ${t.message}")
         }
     }
 
@@ -574,7 +574,7 @@ class PluginActivity : Activity() {
 
     private fun persist() {
         if (!formValid()) {
-            Log.i(TAG, "settings not saved: out-of-range field(s) shown in red")
+            FsLog.i(TAG, "settings not saved: out-of-range field(s) shown in red")
             return
         }
         val src = FuelSources.catalog.getOrNull(sourceSpinner.selectedItemPosition)?.id ?: FixFuelPrefs.DEFAULT_SOURCE
@@ -631,7 +631,7 @@ class PluginActivity : Activity() {
         try {
             startActivity(Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS))
         } catch (t: Throwable) {
-            Log.w(TAG, "battery list intent ignored: ${t.javaClass.simpleName} ${t.message}")
+            FsLog.w(TAG, "battery list intent ignored: ${t.javaClass.simpleName} ${t.message}")
         }
     }
 
@@ -655,7 +655,7 @@ class PluginActivity : Activity() {
         try {
             startActivity(Intent(Intent.ACTION_SENDTO, uri))
         } catch (t: Throwable) {
-            Log.w(TAG, "feedback intent ignored: ${t.javaClass.simpleName} ${t.message}")
+            FsLog.w(TAG, "feedback intent ignored: ${t.javaClass.simpleName} ${t.message}")
         }
     }
 
@@ -691,7 +691,7 @@ class PluginActivity : Activity() {
                 override fun onBillingServiceDisconnected() {}
             })
         } catch (t: Throwable) {
-            Log.w(TAG, "billing start ignored: ${t.javaClass.simpleName} ${t.message}")
+            FsLog.w(TAG, "billing start ignored: ${t.javaClass.simpleName} ${t.message}")
             tipButton.text = getString(R.string.tips_play_only)
         }
     }

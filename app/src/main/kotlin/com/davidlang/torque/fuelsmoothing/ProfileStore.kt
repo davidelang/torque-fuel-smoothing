@@ -84,7 +84,7 @@ internal object ProfileStore {
                 if (dest.exists()) continue
                 val tmp = File(raw, f.name + ".part")
                 runCatching { convertOne(f, tmp, profileId, tank) }
-                    .onFailure { android.util.Log.w("FuelSmooth", "import ${f.name}: ${it.message}") }
+                    .onFailure { FsLog.w("FuelSmooth", "import ${f.name}: ${it.message}") }
                 if (tmp.isFile && tmp.renameTo(dest)) n++
             }
         }
@@ -161,7 +161,7 @@ internal object ProfileStore {
         val src = File(root, "profiles/$from")
         val dest = File(root, "profiles/$to")
         if (src.isDirectory && !dest.exists() && !src.renameTo(dest)) {
-            android.util.Log.w("FuelSmooth", "rename profile $from -> $to failed; will retry")
+            FsLog.w("FuelSmooth", "rename profile $from -> $to failed; will retry")
             return null
         }
         if (!dest.isDirectory) return null
@@ -175,7 +175,7 @@ internal object ProfileStore {
         }
         if (activeId(root) == from) writeAtomic(File(root, "active-profile.json"), "{\"profileId\":${jsonString(to)}}")
         journal.delete()
-        runCatching { android.util.Log.i("FuelSmooth", "profile renamed $from -> $to") }
+        runCatching { FsLog.i("FuelSmooth", "profile renamed $from -> $to") }
         return to
     }
 
@@ -259,7 +259,7 @@ internal object ProfileStore {
         synchronized(PROFILE_LOCK) {
             if (!f.isFile) return
             val o = try { org.json.JSONObject(f.readText()) } catch (e: Exception) {
-                runCatching { android.util.Log.w("FuelSmooth", "profile.json unreadable, $key not saved: ${e.message}") }
+                runCatching { FsLog.w("FuelSmooth", "profile.json unreadable, $key not saved: ${e.message}") }
                 return
             }
             o.put(key, value ?: org.json.JSONObject.NULL)
@@ -346,17 +346,18 @@ internal object ProfileStore {
      * [exclude]: session ids still being recorded (never read mid-drive). Skipped entirely, outputs untouched,
      * when the included raw files and settings are unchanged since the last rollup (RollupCache.enabled).
      */
-    fun rollup(dir: File, nameplate: Double?, exclude: Set<String> = emptySet()): String {
+    /** [kalmanC0]: Kalman prior scale used only when its state is created (self-contained seed; see PluginService.kalmanSeedFor). */
+    fun rollup(dir: File, nameplate: Double?, exclude: Set<String> = emptySet(), kalmanC0: Double? = nameplate): String {
         val raw = File(dir, "raw")
         val files = if (raw.isDirectory) FuelV2.sessionFiles(raw, exclude) else emptyList()
         val sig = RollupCache.signature(files, "nameplate=$nameplate v=${ChunkFit.VERSION}/${BandFit.VERSION}/${Kalman.VERSION}")
         val sigFile = File(dir, ROLLUP_SIG)
         if (RollupCache.enabled && files.isNotEmpty() && sigFile.isFile && File(dir, "model.json").isFile && sigFile.readText() == sig) {
-            runCatching { android.util.Log.i("FuelSmooth", "rollup skipped: no new or changed raw sessions (${files.size})") }
+            runCatching { FsLog.i("FuelSmooth", "rollup skipped: no new or changed raw sessions (${files.size})") }
             return File(dir, "gap.txt").takeIf { it.isFile }?.readText() ?: ""
         }
         try {
-            val r = rollupFull(dir, nameplate, exclude)
+            val r = rollupFull(dir, nameplate, exclude, kalmanC0)
             if (files.isNotEmpty()) AtomicFile.write(sigFile, sig)
             return r
         } finally {
@@ -364,7 +365,7 @@ internal object ProfileStore {
         }
     }
 
-    private fun rollupFull(dir: File, nameplate: Double?, exclude: Set<String>): String {
+    private fun rollupFull(dir: File, nameplate: Double?, exclude: Set<String>, kalmanC0: Double?): String {
         val raw = File(dir, "raw")
         val sessions = if (raw.isDirectory) FuelV2.loadSessions(raw, exclude) else emptyList()
         val t0 = FuelV2.chooseT0(nameplate, sessions)
@@ -372,7 +373,7 @@ internal object ProfileStore {
             null
         } else {
             runCatching { FuelV2.replay(sessions, 1.0, t0) }
-                .onFailure { android.util.Log.w("FuelSmooth", "replay failed; keeping model.json: ${it.message}") }
+                .onFailure { FsLog.w("FuelSmooth", "replay failed; keeping model.json: ${it.message}") }
                 .getOrNull()
         }
         // A replay with zero chunks is just the prior; do not let it replace a learned model.
@@ -387,7 +388,7 @@ internal object ProfileStore {
         } else if (model != null) {
             AtomicFile.write(File(dir, "model.json"), model.json)
         }
-        Kalman.update(dir, sessions, nameplate)
+        Kalman.update(dir, sessions, kalmanC0)
         if (model != null) {
             val chunksOut = File(dir, "chunks.jsonl")
             chunksOut.writeText("")
@@ -453,9 +454,9 @@ internal object ProfileStore {
             val msg = "fit chunk v95=${"%.2f".format(r.v95)} cap=${"%.2f".format(r.capToZero)} chunks=${r.chunks} groups=${r.groups} " +
                 "newParts=$added active=${r.active}/${r.cons.size} | raw v95=${raw?.let { "%.2f".format(it.v95()) }} " +
                 "cap=${raw?.let { "%.2f".format(it.capToZero) }} authority=${if (r.groups > 0) "chunk" else "raw"}"
-            runCatching { android.util.Log.i("FuelSmooth", msg) }
+            runCatching { FsLog.i("FuelSmooth", msg) }
             if (r.groups > 0) ChunkFit.modelJson(r, raw, System.currentTimeMillis()) else null
-        }.onFailure { e -> runCatching { android.util.Log.w("FuelSmooth", "chunk fit failed; keeping model.json: ${e.message}") } }
+        }.onFailure { e -> runCatching { FsLog.w("FuelSmooth", "chunk fit failed; keeping model.json: ${e.message}") } }
             .getOrNull()
     }
 
@@ -464,20 +465,20 @@ internal object ProfileStore {
      * [openBytes]: length of the open session's file when the update was queued; only complete lines up to it
      * are read (the recorder keeps appending meanwhile).
      */
-    fun fillUpdate(dir: File, nameplate: Double?, openName: String?, openBytes: Long? = null): Boolean = try {
-        fillUpdate0(dir, nameplate, openName, openBytes)
+    fun fillUpdate(dir: File, nameplate: Double?, openName: String?, openBytes: Long? = null, kalmanC0: Double? = nameplate): Boolean = try {
+        fillUpdate0(dir, nameplate, openName, openBytes, kalmanC0)
     } finally {
         RollupCache.clear()
     }
 
-    private fun fillUpdate0(dir: File, nameplate: Double?, openName: String?, openBytes: Long?): Boolean {
+    private fun fillUpdate0(dir: File, nameplate: Double?, openName: String?, openBytes: Long?, kalmanC0: Double?): Boolean {
         val raw = File(dir, "raw")
         val caps = if (openName != null && openBytes != null) mapOf(openName to openBytes) else emptyMap()
         val sessions = if (raw.isDirectory) FuelV2.loadSessions(raw, caps = caps) else return false
         val json = chunkUpdate(dir, sessions, nameplate, null, openName) ?: return false
         writeModelIfChanged(File(dir, "model.json"), json)
         BandFit.update(dir)
-        Kalman.update(dir, sessions, nameplate, openName)
+        Kalman.update(dir, sessions, kalmanC0, openName)
         return true
     }
 
@@ -556,7 +557,7 @@ internal object ProfileStore {
             b.append("]}\n")
         }
         runCatching { f.appendText(b.toString()) }
-            .onFailure { android.util.Log.w("FuelSmooth", "learn append: ${it.message}") }
+            .onFailure { FsLog.w("FuelSmooth", "learn append: ${it.message}") }
     }
 
     private fun convertOne(src: File, dest: File, profileId: String, tank: Int) {

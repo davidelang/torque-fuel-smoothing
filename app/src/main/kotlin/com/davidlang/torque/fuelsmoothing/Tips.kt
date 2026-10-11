@@ -70,12 +70,12 @@ internal object TipStore {
 
     fun put(ctx: Context, r: TipRules.Record) {
         FixFuelPrefs.prefs(ctx).edit().putString(KEY, TipRules.encode(r)).apply()
-        Log.i("FuelSmooth", "tip record ${r.state}")
+        FsLog.i("FuelSmooth", "tip record ${r.state}")
     }
 
     fun clear(ctx: Context) {
         FixFuelPrefs.prefs(ctx).edit().remove(KEY).apply()
-        Log.i("FuelSmooth", "tip record cleared")
+        FsLog.i("FuelSmooth", "tip record cleared")
     }
 
     /** Persist the record from a purchase update (listener). */
@@ -98,13 +98,13 @@ internal object TipReconciler {
         val rec = TipStore.get(ctx)
         if (!TipRules.needsCheck(rec) || running) return
         running = true
-        Log.i("FuelSmooth", "tip check ($why): record=${rec?.state}")
+        FsLog.i("FuelSmooth", "tip check ($why): record=${rec?.state}")
         val client = BillingClient.newBuilder(ctx)
             .setListener { _, _ -> }
             .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
             .build()
         fun done(msg: String) {
-            Log.i("FuelSmooth", "tip check ($why): $msg")
+            FsLog.i("FuelSmooth", "tip check ($why): $msg")
             runCatching { client.endConnection() }
             running = false
         }

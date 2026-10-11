@@ -15,14 +15,21 @@ class PluginReceiver : BroadcastReceiver() {
         try {
             val action = intent?.action ?: return
             if (ignoreSender(action)) return
-            if (action.endsWith("PID_QUERY") || action.endsWith("PID_PLUGIN")) FsLog.v(TAG, "onReceive $action") else Log.i(TAG, "onReceive $action")
+            if (action.endsWith("PID_QUERY") || action.endsWith("PID_PLUGIN")) FsLog.v(TAG, "onReceive $action") else FsLog.i(TAG, "onReceive $action")
             val start = Intent(context, PluginService::class.java).setAction(action)
-            if (PluginService.isRunning) {
+            val live = PluginService.instance
+            if (live != null && PluginService.isRunning && routine(action)) {
+                // Routine Torque query while the service is up: no service start call (each one made the system log a
+                // "Foreground service started from background" warning, ~1/s). Just make sure it is bound.
+                live.onRoutineQuery()
+                return
+            }
+            if (PluginService.isRunning && live != null) {
                 context.startService(start)
                 return
             }
             if (!shouldStartFgs(action)) {
-                Log.i(TAG, "service not running; skip $action")
+                FsLog.i(TAG, "service not running; skip $action")
                 return
             }
             try {
@@ -32,11 +39,11 @@ class PluginReceiver : BroadcastReceiver() {
                     context.startService(start)
                 }
             } catch (t: IllegalStateException) {
-                Log.w(TAG, "FGS start denied: ${t.javaClass.simpleName} ${t.message}")
+                FsLog.w(TAG, "FGS start denied: ${t.javaClass.simpleName} ${t.message}")
                 if (Build.VERSION.SDK_INT >= 26) TapStartNotice.post(context)
             }
         } catch (t: Throwable) {
-            Log.w(TAG, "onReceive ignored: ${t.javaClass.simpleName} ${t.message}")
+            FsLog.w(TAG, "onReceive ignored: ${t.javaClass.simpleName} ${t.message}")
         }
     }
 
@@ -44,7 +51,7 @@ class PluginReceiver : BroadcastReceiver() {
         if (Build.VERSION.SDK_INT < 34 || !torqueAction(action)) return false
         val from = sentFromPackage
         if (from != null && from != "org.prowl.torque") {
-            Log.i(TAG, "ignore $action from $from")
+            FsLog.i(TAG, "ignore $action from $from")
             return true
         }
         return false
@@ -59,6 +66,10 @@ class PluginReceiver : BroadcastReceiver() {
                 action == PluginService.ACTION_OBD_CONNECTED ||
                 action == PluginService.ACTION_OBD_DISCONNECTED
         }
+
+        /** Per-second Torque broadcasts. */
+        internal fun routine(action: String): Boolean =
+            action == PluginService.ACTION_PID_QUERY || action == PluginService.ACTION_PID_PLUGIN
 
         private fun shouldStartFgs(action: String): Boolean {
             return action == PluginService.ACTION_PID_QUERY ||

@@ -189,8 +189,8 @@ internal object BandFit {
         val strip = { x: String -> x.replace(Regex("\"timestamp\":[0-9]+"), "") }
         if (!f.isFile || strip(f.readText()) != strip(js)) AtomicFile.write(f, js)
         runCatching {
-            android.util.Log.i("FuelSmooth", "fit band v95=${"%.2f".format(r.v95)} cap=${"%.2f".format(r.capToZero)} lambda=${r.lambda} lodoRms=${"%.3f".format(r.lodoRms)} chunks=${r.chunks} active=${r.activeCons}")
+            FsLog.i("FuelSmooth", "fit band v95=${"%.2f".format(r.v95)} cap=${"%.2f".format(r.capToZero)} lambda=${r.lambda} lodoRms=${"%.3f".format(r.lodoRms)} chunks=${r.chunks} active=${r.activeCons}")
         }
         r
-    }.onFailure { e -> runCatching { android.util.Log.w("FuelSmooth", "band fit failed; keeping $FILE: ${e.message}") } }.getOrNull()
+    }.onFailure { e -> runCatching { FsLog.w("FuelSmooth", "band fit failed; keeping $FILE: ${e.message}") } }.getOrNull()
 }

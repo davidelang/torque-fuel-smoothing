@@ -235,7 +235,7 @@ internal object Kalman {
     /** Why the last [load] returned null for an existing file (null when it loaded or no file existed). */
     @Volatile var lastLoadError: String? = null
 
-    private fun warn(msg: String) { runCatching { android.util.Log.w("FuelSmooth", msg) } }
+    private fun warn(msg: String) { runCatching { FsLog.w("FuelSmooth", msg) } }
 
     fun load(dir: File): State? {
         lastLoadError = null
@@ -327,7 +327,7 @@ internal object Kalman {
         if (s == null) {
             val prior = storedC0(dir)
             s = State(prior ?: c0?.takeIf { it.isFinite() && it > 0 } ?: DEFAULT_C0)
-            if (prior != null) runCatching { android.util.Log.i("FuelSmooth", "kalman rebuild uses the original C0=$prior") }
+            if (prior != null) runCatching { FsLog.i("FuelSmooth", "kalman rebuild uses the original C0=$prior") }
         }
         s.sig = sig
         var n = 0
@@ -337,9 +337,9 @@ internal object Kalman {
             AtomicFile.write(File(dir, MODEL), modelJson(s, System.currentTimeMillis()))
         }
         runCatching {
-            android.util.Log.i("FuelSmooth", "fit kalman tank=${"%.2f".format(s.tank)} sd=${"%.2f".format(s.sdG(100.0))} v95=${"%.2f".format(s.g(95.0))} " +
+            FsLog.i("FuelSmooth", "fit kalman tank=${"%.2f".format(s.tank)} sd=${"%.2f".format(s.sdG(100.0))} v95=${"%.2f".format(s.g(95.0))} " +
                 "cov1/2/3=${s.coverage(1)}/${s.coverage(2)}/${s.coverage(3)} trusted=${s.trusted} newParts=$n c0=${s.c0}")
         }
         s
-    }.onFailure { e -> runCatching { android.util.Log.w("FuelSmooth", "kalman update failed; keeping $STATE: ${e.message}") } }.getOrNull()
+    }.onFailure { e -> runCatching { FsLog.w("FuelSmooth", "kalman update failed; keeping $STATE: ${e.message}") } }.getOrNull()
 }
