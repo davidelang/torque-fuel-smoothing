@@ -193,6 +193,28 @@ internal object ObdReply {
         return null
     }
 
+    /**
+     * Data bytes after the marker, cut to the length the ISO-TP single-frame PCI declares (so CAN padding such
+     * as 55/AA/00 is not mistaken for data). Without a PCI the whole remainder is returned.
+     */
+    fun dataAfter(line: String?, marker: String): String? {
+        if (line == null) return null
+        val t = line.trim()
+        if (t.isEmpty() || !HEX_LINE.matches(t)) return null
+        val hex = t.replace(" ", "").uppercase()
+        val m = marker.replace(" ", "").uppercase()
+        for (off in OFFSETS) {
+            val pciPos = when (off) { 2 -> 0; 5 -> 3; 10 -> 8; else -> -1 }
+            if (pciPos >= 0 && !pciAt(hex, pciPos)) continue
+            if (!hex.startsWith(m, off)) continue
+            val rest = hex.substring(off + m.length)
+            if (pciPos < 0) return rest
+            val n = hex.substring(pciPos, pciPos + 2).toInt(16) - m.length / 2
+            return rest.take((n * 2).coerceAtLeast(0))
+        }
+        return null
+    }
+
     /** ISO-TP single frame: high nibble 0, length 1..7. */
     private fun pciAt(hex: String, i: Int): Boolean {
         if (i + 2 > hex.length) return false

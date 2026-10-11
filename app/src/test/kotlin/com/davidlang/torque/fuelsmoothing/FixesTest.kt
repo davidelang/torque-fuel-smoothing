@@ -284,4 +284,32 @@ class FixesTest {
         val strings = File("src/main/res/values/strings.xml").readText()
         assertTrue(strings.contains("Torque Lite does not support plugins"))
     }
+
+    @Test
+    fun test72ToyotaHalfLitresAsPercentOfProfileTank() {
+        // A = 0x7E = 126 half-litres = 63 L; 87 L tank = 23.0 gal -> 72.4 %.
+        val line = "7C8 03 61 29 7E 00 00 00 00"
+        val d = checkNotNull(ObdReply.dataAfter(line, "6129")); assertEquals("7E", d)
+        val tank = 87.0 / FuelSources.L_PER_GAL
+        val r = FuelSources.toyotaLevel(d.toInt(16) / 2.0, tank, "t")
+        assertEquals(72.41, checkNotNull(r.pct), 0.01); assertFalse(r.missing)
+        assertEquals(100.0, checkNotNull(FuelSources.toyotaLevel(90.0, tank, "t").pct), 0.0) // 103 %: clamped
+        assertNull(FuelSources.toyotaLevel(120.0, tank, "t").pct)                        // 138 %: tank size wrong
+        assertNull(FuelSources.toyotaLevel(40.0, null, "t").pct)                         // no tank size yet
+        assertEquals(0.0, checkNotNull(FuelSources.toyotaLevel(0.0, tank, "t").pct), 0.0)
+    }
+
+    @Test
+    fun test73Gm12C5OneAndTwoByteReplies() {
+        // 1 byte (PCI 04 = 62 12 C5 + 1), padding ignored.
+        val one = checkNotNull(ObdReply.dataAfter("7E8 04 62 12 C5 80 55 55 55", "6212C5")); assertEquals("80", one)
+        assertEquals(128 * 100.0 / 255.0, checkNotNull(FuelSources.gmLevel(one)), 1e-9)
+        // 2 bytes (PCI 05).
+        val two = checkNotNull(ObdReply.dataAfter("7E8 05 62 12 C5 80 00 AA AA", "6212C5")); assertEquals("8000", two)
+        assertEquals(0x8000 * 100.0 / 65535.0, checkNotNull(FuelSources.gmLevel(two)), 1e-9)
+        assertEquals(100.0, checkNotNull(FuelSources.gmLevel("FFFF")), 1e-9)
+        // No PCI (J1850 VPW style line): the whole remainder is data.
+        assertEquals("64", ObdReply.dataAfter("62 12 C5 64", "6212C5"))
+        assertNull(FuelSources.gmLevel(""))
+    }
 }
