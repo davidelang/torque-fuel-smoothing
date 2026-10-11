@@ -197,7 +197,7 @@ internal object ObdReply {
      * Data bytes after the marker, cut to the length the ISO-TP single-frame PCI declares (so CAN padding such
      * as 55/AA/00 is not mistaken for data). Without a PCI the whole remainder is returned.
      */
-    fun dataAfter(line: String?, marker: String): String? {
+    fun dataAfter(line: String?, marker: String, minBytes: Int = 1): String? {
         if (line == null) return null
         val t = line.trim()
         if (t.isEmpty() || !HEX_LINE.matches(t)) return null
@@ -208,7 +208,7 @@ internal object ObdReply {
             if (pciPos >= 0 && !pciAt(hex, pciPos)) continue
             if (!hex.startsWith(m, off)) continue
             val rest = hex.substring(off + m.length)
-            if (pciPos < 0) return stripPadding(rest)
+            if (pciPos < 0) return stripPadding(rest, minBytes)
             val n = hex.substring(pciPos, pciPos + 2).toInt(16) - m.length / 2
             return rest.take((n * 2).coerceAtLeast(0))
         }
@@ -220,14 +220,14 @@ internal object ObdReply {
      * not read as data. A lone trailing byte is kept (it may be data); GM's 2-byte form is additionally gated by
      * agreement with 012F at detection.
      */
-    fun stripPadding(hex: String): String {
+    fun stripPadding(hex: String, minBytes: Int = 1): String {
         val b = hex.chunked(2)
         var n = b.size
         val pad = setOf("55", "AA", "00", "CC")
         if (n >= 3 && b[n - 1] in pad) {
             var k = n - 1
             while (k > 0 && b[k - 1] == b[n - 1]) k--
-            if (n - k >= 2 && k >= 1) n = k
+            if (n - k >= 2 && k >= 1) n = maxOf(k, minOf(minBytes, n))
         }
         return b.take(n).joinToString("")
     }

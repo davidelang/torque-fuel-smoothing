@@ -5,6 +5,9 @@ import kotlin.math.abs
 internal enum class TrackMode { HOLD, SKEW, FILL }
 
 internal class FuelMath {
+    /** Units scale for the %-based thresholds (LevelScale.unit; 1.0 for % sources). */
+    var unit: Double = 1.0
+
     var smoothed: Double? = null
         private set
     var mode: TrackMode = TrackMode.HOLD
@@ -23,10 +26,10 @@ internal class FuelMath {
         if (raw == null || !raw.isFinite()) return false
         if (raw > 100.0 || raw < 0.0) return false
         if (raw == 0.0) {
-            return lastGood != null && lastGood <= NEAR_EMPTY_PCT
+            return lastGood != null && lastGood <= NEAR_EMPTY_PCT * unit
         }
-        if (lastGood != null && lastGood > NEAR_EMPTY_PCT && raw < GLITCH_RAW_PCT) return false
-        if (lastGood != null && lastGood > NEAR_EMPTY_PCT && lastGood - raw > DROP_HOLD_PT) return false
+        if (lastGood != null && lastGood > NEAR_EMPTY_PCT * unit && raw < GLITCH_RAW_PCT * unit) return false
+        if (lastGood != null && lastGood > NEAR_EMPTY_PCT * unit && lastGood - raw > DROP_HOLD_PT * unit) return false
         return raw > 0.0 && raw <= 100.0
     }
 
@@ -61,9 +64,9 @@ internal class FuelMath {
         // Fill candidate: stopped and well above the smoothed level. Confirmed only if it is sustained for
         // FILL_CONFIRM_SEC (a single glitch reading or a short spike never becomes a fill). While pending the
         // smoothed level is frozen rather than slewed toward the candidate.
-        if (!ignoreFill && speedMph <= FILL_ENTER_SPEED_MPH && raw - prev >= jumpPct) {
+        if (!ignoreFill && speedMph <= FILL_ENTER_SPEED_MPH && raw - prev >= jumpPct * unit) {
             val since = fillCandMs ?: nowMs.also { fillCandMs = it }
-            if (nowMs - since >= FILL_CONFIRM_MS && medianSince(since) - prev >= jumpPct) {
+            if (nowMs - since >= FILL_CONFIRM_MS && medianSince(since) - prev >= jumpPct * unit) {
                 fillCandMs = null
                 mode = TrackMode.FILL
                 val m = median(nowMs - MEDIAN_MS)
@@ -83,7 +86,7 @@ internal class FuelMath {
             val a = dtSec / (tauSec + dtSec)
             a * raw + (1.0 - a) * prev
         }
-        val maxStep = skewPctPerSec.coerceAtLeast(0.0) * dtSec
+        val maxStep = skewPctPerSec.coerceAtLeast(0.0) * unit * dtSec
         val y = prev + (ema - prev).coerceIn(-maxStep, maxStep)
         smoothed = y
         mode = TrackMode.SKEW
@@ -106,7 +109,7 @@ internal class FuelMath {
         movingSinceMs = null
         if (med > fillPeak) fillPeak = med
         fillStillMed = med
-        val drop = maxOf(FILL_DROP_MIN_PCT, 3.0 * sigmaPct)
+        val drop = maxOf(FILL_DROP_MIN_PCT * unit, 3.0 * sigmaPct)
         if (med < fillPeak - drop) return endFill(med)
         smoothed = med
         return med
@@ -130,7 +133,7 @@ internal class FuelMath {
      */
     fun checkReanchor(raw: Double?, speedMph: Double, nowMs: Long): Boolean {
         val s = smoothed
-        if (raw == null || !raw.isFinite() || raw < GLITCH_RAW_PCT || raw > 100.0 || s == null || s - raw <= DROP_HOLD_PT || mode == TrackMode.FILL) {
+        if (raw == null || !raw.isFinite() || raw < GLITCH_RAW_PCT * unit || raw > 100.0 || s == null || s - raw <= DROP_HOLD_PT * unit || mode == TrackMode.FILL) {
             low.clear()
             lowMoving = false
             return false
@@ -140,7 +143,7 @@ internal class FuelMath {
         val need = if (lowMoving) REANCHOR_MOVE_MS else REANCHOR_STOP_MS
         if (nowMs - low.first().first < need) return false
         val v = low.map { it.second }.sorted()
-        if (v.last() - v.first() > REANCHOR_SPREAD_PCT) {
+        if (v.last() - v.first() > REANCHOR_SPREAD_PCT * unit) {
             low.removeFirst()
             return false
         }

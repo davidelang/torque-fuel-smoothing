@@ -332,7 +332,7 @@ class FixesTest {
         val svc = File("src/main/kotlin/com/davidlang/torque/fuelsmoothing/PluginService.kt").readText()
         assertFalse(svc.contains("\"detected earlier\"")) // no confirm nag on every connect
         assertTrue(svc.contains("FuelDetect.KEY_NOTIFIED"))
-        val close = svc.substring(svc.indexOf("FuelDetect.noLevelAlert("), svc.indexOf("FuelDetect.noLevelAlert(") + 600)
+        val close = svc.substring(svc.indexOf("FuelDetect.noLevelStep("), svc.indexOf("FuelDetect.noLevelStep(") + 600)
         assertFalse(close.contains("FuelDetect.store(")); assertFalse(close.contains("KEY_TRIED"))
     }
 
@@ -370,5 +370,63 @@ class FixesTest {
         val fp = Fingerprint.Fp(vin = "1FDSS34L05HA12345", calId = "RZAA0F1", cvn = "AB12CD34", protocol = "ISO 15765-4", bitmaps = mapOf("0100" to "BE3EB813"))
         val detail = Fingerprint.toJson(fp.copy(vin = null, calId = null, cvn = null))
         assertFalse(detail.contains("1FDSS34L") || detail.contains("RZAA0F1") || detail.contains("AB12CD34"))
+    }
+
+    private fun fillDetected(unit: Double, from: Double, to: Double): Boolean {
+        val m = FuelMath(); m.unit = unit
+        var t = 0L
+        repeat(60) { m.ingest(from, 0.0, nowMs = t); t += 1000 }
+        repeat(40) { m.ingest(to, 0.0, nowMs = t); t += 1000 }
+        return m.mode == TrackMode.FILL || (m.smoothed ?: 0.0) > (from + to) / 2
+    }
+
+    @Test
+    fun test78ToyotaFullScaleFrozenForThresholdsAndDisplayOnly() {
+        // Prius C 36 L = 72 counts: full reads 28.2 % on the fixed 255 scale.
+        val full = LevelScale.fromCapacity(36.0 / 3.785411784)
+        assertEquals(72.0, full, 1e-9)
+        val u = LevelScale.unit(full, null)
+        assertEquals(72.0 / 255.0, u, 1e-12)
+        assertEquals(1.0, LevelScale.unit(null, null), 0.0)               // unknown: fixed scale
+        assertEquals(60.0 / 255.0, LevelScale.unit(null, 60.0), 1e-12)   // provisional: largest count seen
+        assertEquals(u, LevelScale.unit(full, 200.0), 0.0)               // frozen wins; learning never moves it
+        assertEquals(100.0, LevelScale.display(LevelScale.counts(0.0) + 72.0 * 100 / 255, u), 1e-9)
+        assertEquals(72.0, LevelScale.fromFill(72 * 100.0 / 255.0, 10.0), 1e-9)
+        assertEquals(80.0, LevelScale.fromFill(20.0, 80.0), 1e-9)        // never below the largest count seen
+        // 1/4 -> full on that tank: 7 % -> 28 % on the fixed scale; missed with % thresholds, caught when scaled.
+        assertFalse(fillDetected(1.0, 7.0, 28.0))
+        assertTrue(fillDetected(u, 7.0, 28.0))
+        assertTrue(fillDetected(1.0, 20.0, 80.0)) // % sources unchanged
+        // Logged level stays on the fixed scale (decode has no scale input).
+        assertEquals(72 * 100.0 / 255.0, checkNotNull(FuelSources.toyotaLevel(72, "t").pct), 1e-12)
+    }
+
+    @Test
+    fun test79DetectTriedOnlyOnCompletionAndNoSourceAlert() {
+        val svc = File("src/main/kotlin/com/davidlang/torque/fuelsmoothing/PluginService.kt").readText()
+        val queued = svc.substring(svc.indexOf("queueFuelDetect(\"auto\")") - 300, svc.indexOf("queueFuelDetect(\"auto\")"))
+        assertFalse(queued.contains("FuelDetect.KEY_TRIED, \"true\""))
+        val done = svc.substring(svc.indexOf("if (!run.done) return"), svc.indexOf("if (!run.done) return") + 250)
+        assertTrue(done.contains("FuelDetect.KEY_TRIED, \"true\""))
+        assertTrue(FuelDetect.noSourceAlert(FuelDetect.NONE, 600, false))
+        assertFalse(FuelDetect.noSourceAlert(FuelDetect.NONE, 600, true))
+        assertFalse(FuelDetect.noSourceAlert(FuelDetect.NONE, 100, false))
+        assertFalse(FuelDetect.noSourceAlert("sae_012f", 600, false))
+    }
+
+    @Test
+    fun test80TwoByteFormNeverStrippedBelowTwoBytes() {
+        assertEquals("1200", ObdReply.dataAfter("62 12 C5 12 00 00 00 00", "6212C5", 2))
+        assertEquals("12", ObdReply.dataAfter("62 12 C5 12 00 00 00 00", "6212C5", 1))
+        assertEquals("8000", ObdReply.dataAfter("62 12 C5 80 00 AA AA", "6212C5", 2))
+    }
+
+    @Test
+    fun test81NoLevelAlertOnceUntilAValidDrive() {
+        var alerted = false
+        fun drive(valid: Int): Boolean { val (a, n) = FuelDetect.noLevelStep("sae_012f", 600, valid, alerted); alerted = n; return a }
+        assertTrue(drive(0)); assertFalse(drive(0)); assertFalse(drive(0))
+        assertFalse(drive(50))          // a good drive re-arms
+        assertTrue(drive(0)); assertFalse(drive(0))
     }
 }

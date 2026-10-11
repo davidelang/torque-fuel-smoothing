@@ -160,10 +160,29 @@ class PluginService : Service() {
         handler.removeCallbacks(poll)
     }
 
+    /** Toyota-type full-scale counts for the active profile (frozen) and the largest count seen. */
+    private var lvlFull: Double? = null
+    private var lvlMax: Double? = null
+
+    private fun loadLevelScale() {
+        lvlFull = ProfileStore.profileField(filesDir, profileId, LevelScale.KEY_FULL)?.toDoubleOrNull()
+        lvlMax = ProfileStore.profileField(filesDir, profileId, LevelScale.KEY_MAX)?.toDoubleOrNull()
+    }
+
+    private fun levelUnit(id: Int): Double = if (id == 1 && LevelScale.applies(cfg.sourceId)) LevelScale.unit(lvlFull, lvlMax) else 1.0
+
+    private fun freezeLevelScale(counts: Double, why: String) {
+        if (lvlFull != null || !LevelScale.applies(cfg.sourceId)) return
+        lvlFull = counts
+        ProfileStore.setProfileField(filesDir, profileId, LevelScale.KEY_FULL, counts.toString())
+        Log.i(TAG, "level full scale frozen for $profileId: ${"%.0f".format(counts)} counts ($why); units only, tank size still learned")
+    }
+
     private fun reloadCfgIfDirty() {
         if (!prefsDirty) return
         prefsDirty = false
         cfg = FixFuelPrefs.load(this)
+        loadLevelScale()
         FsLog.verbose = getSharedPreferences(FixFuelPrefs.PREFS, MODE_PRIVATE).getBoolean(FsLog.KEY_VERBOSE, false)
     }
 
@@ -299,6 +318,10 @@ class PluginService : Service() {
         lastActive = resolveStoredActive()
         resolvePids()
         nameplateGal = TankSeed.seed(t)
+        loadLevelScale()
+        if (lvlFull == null && LevelScale.applies(cfg.sourceId)) {
+            runCatching { TankSeed.probe(t) }.getOrNull()?.second?.let { freezeLevelScale(LevelScale.fromCapacity(it), "Torque profile capacity") }
+        }
         // Torque's profile capacity is the initial guess shown in settings, until a learned model exists.
         val seeded = nameplateGal
         // Seed the per-profile tank size from Torque's capacity only while it is blank; afterwards the plugin maintains it.
@@ -399,8 +422,7 @@ class PluginService : Service() {
         if (ecu == true && identity == null && !fuelDetectTried && fuelDetect == null &&
             FuelDetect.shouldAutoDetect(cfg.sourceId, ProfileStore.profileField(filesDir, profileId, FuelDetect.KEY_TRIED) == "true")
         ) {
-            fuelDetectTried = true
-            ProfileStore.setProfileField(filesDir, profileId, FuelDetect.KEY_TRIED, "true")
+            fuelDetectTried = true // once per connection; the profile flag is set only when the run completes
             queueFuelDetect("auto")
         }
         when {
@@ -444,6 +466,14 @@ class PluginService : Service() {
             }
         }
         tanks[id]?.let { rt -> rt.lastLvlL = src.liters; if (src.pct != null && !src.missing) rt.validLevels++ }
+        if (id == 1 && LevelScale.applies(cfg.sourceId) && src.pct != null && !src.missing) {
+            val c = LevelScale.counts(src.pct)
+            if (c >= (lvlMax ?: 0.0) + 1.0) {
+                lvlMax = c
+                ProfileStore.setProfileField(filesDir, profileId, LevelScale.KEY_MAX, c.toString())
+            }
+        }
+        tanks[id]?.math?.unit = levelUnit(id)
         if (id == 1) {
             if (src.how != cfg.sourceStatus) FixFuelPrefs.setSourceStatus(this, src.how)
         } else if (src.how != (cfg.extra(id)?.sourceStatus ?: "")) {
@@ -576,8 +606,9 @@ class PluginService : Service() {
     private fun holdWhy(raw: Double?, ecu: Boolean?, missing: Boolean, lastGood: Double?): String {
         if (missing || raw == null || !raw.isFinite()) return "missing"
         if (ecu == false) return "ecu"
-        if (lastGood != null && lastGood > FuelMath.NEAR_EMPTY_PCT && raw < FuelMath.GLITCH_RAW_PCT) return "glitch<1"
-        if (lastGood != null && lastGood > FuelMath.NEAR_EMPTY_PCT && lastGood - raw > FuelMath.DROP_HOLD_PT) {
+        val u = levelUnit(1)
+        if (lastGood != null && lastGood > FuelMath.NEAR_EMPTY_PCT * u && raw < FuelMath.GLITCH_RAW_PCT * u) return "glitch<1"
+        if (lastGood != null && lastGood > FuelMath.NEAR_EMPTY_PCT * u && lastGood - raw > FuelMath.DROP_HOLD_PT * u) {
             return "held:drop>15"
         }
         return "missing"
@@ -972,14 +1003,14 @@ class PluginService : Service() {
     ) {
         val (vol, vu) = remainingOut(remain)
         val rmax = remainingScale(priorFor(1).cap)
-        setPid(t, Pids.PLUGIN_SMOOTHED, "SmFuel", "%", rmax = 100f, value = smoothed.toFloat())
+        setPid(t, Pids.PLUGIN_SMOOTHED, "SmFuel", "%", rmax = 100f, value = LevelScale.display(smoothed, levelUnit(1)).toFloat())
         setPid(t, Pids.PLUGIN_CORRECTED, "CorrFuel", "%", rmax = 100f, value = corrected.toFloat())
         setPid(t, Pids.PLUGIN_REMAINING, "GalLeft", vu, rmax = rmax, value = vol)
         setPid(t, Pids.PLUGIN_DTE, "pDTE", dteUnit(), rmax = dteMax(), value = dteOut(dte))
     }
 
     private fun writeStockFuelLevel(t: ITorqueService, smoothedPct: Double, correctedPct: Double) {
-        val corrected = FixFuelPrefs.feedValue(cfg.feed012f, smoothedPct, correctedPct) ?: return
+        val corrected = FixFuelPrefs.feedValue(cfg.feed012f, LevelScale.display(smoothedPct, levelUnit(1)), correctedPct) ?: return
         val rt1 = tanks[1]
         if (rt1 != null && !rt1.ledger.anchored && (rt1.math.smoothed == null || !corrected.isFinite() || corrected <= 0.0)) {
             // Unanchored with no usable reading: never push a placeholder 0% into Torque's stock slot.
@@ -1121,8 +1152,18 @@ class PluginService : Service() {
         }
         if (id == 1) commitTank1SinceFill(rt)
         val closed = rt.sessions.close()
-        if (id == 1 && quarantineDir == null && FuelDetect.noLevelAlert(cfg.sourceId, closed.size, rt.validLevels)) {
-            // Once per session; the source definition is never changed and detection is not triggered.
+        if (id == 1 && quarantineDir == null && FuelDetect.noSourceAlert(cfg.sourceId, closed.size, ProfileStore.profileField(filesDir, profileId, FuelDetect.KEY_NONE_ALERTED) == "true")) {
+            ProfileStore.setProfileField(filesDir, profileId, FuelDetect.KEY_NONE_ALERTED, "true")
+            notifySimple("No fuel level source set", "Fuel Smoothing has no fuel level source for ${profileName(profileId)}. Open the setup page and tap Detect, or pick a source.")
+        }
+        val noLevel = if (id == 1 && quarantineDir == null) {
+            val was = ProfileStore.profileField(filesDir, profileId, FuelDetect.KEY_NO_LEVEL_ALERTED) == "true"
+            val (alert, now) = FuelDetect.noLevelStep(cfg.sourceId, closed.size, rt.validLevels, was)
+            if (now != was) ProfileStore.setProfileField(filesDir, profileId, FuelDetect.KEY_NO_LEVEL_ALERTED, now.toString())
+            alert
+        } else false
+        if (noLevel) {
+            // Once, re-armed only after a drive with valid levels; the source is never changed, detection not triggered.
             Log.w(TAG, "fuel source ${cfg.sourceId} gave no usable level in ${closed.size} samples")
             notifySimple(
                 "No fuel level this drive",
@@ -1287,6 +1328,7 @@ class PluginService : Service() {
     }
 
     private fun onFillEnd(rt: TankRt, smoothed: Double, now: Long, logging: Boolean) {
+        if (rt.id == 1 && quarantineDir == null) freezeLevelScale(LevelScale.fromFill(smoothed, lvlMax), "first fill plateau")
         rt.fuelAtFillGal = rt.usedGal
         rt.sinceFillUsedGal = 0.0
         val prior = priorFor(rt.id)
@@ -1618,6 +1660,7 @@ class PluginService : Service() {
         }
         if (!run.done) return
         fuelDetect = null
+        if (!fuelDetectManual) ProfileStore.setProfileField(filesDir, profileId, FuelDetect.KEY_TRIED, "true")
         val res = run.result()
         Log.i(TAG, "fuel source detection for $profileId: ${res.id} confirmed=${res.confirmed} level=${res.level} (${res.why}; tried ${run.tried})")
         if (res.id != null) {

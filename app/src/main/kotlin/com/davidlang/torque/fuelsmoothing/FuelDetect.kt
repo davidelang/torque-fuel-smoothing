@@ -25,6 +25,23 @@ internal object FuelDetect {
      */
     fun noLevelAlert(sourceId: String, samples: Int, valid: Int): Boolean =
         sourceId != NONE && samples >= REDETECT_MIN_SAMPLES && valid == 0
+
+    const val KEY_NO_LEVEL_ALERTED = "noLevelAlerted"
+    const val KEY_NONE_ALERTED = "noSourceAlerted"
+
+    /**
+     * No-level alert state: alert once; re-armed only by a drive that had valid levels.
+     * Returns (alert now, new alerted flag).
+     */
+    fun noLevelStep(sourceId: String, samples: Int, valid: Int, alerted: Boolean): Pair<Boolean, Boolean> = when {
+        valid > 0 -> false to false
+        noLevelAlert(sourceId, samples, valid) && !alerted -> true to true
+        else -> false to alerted
+    }
+
+    /** Still no source after a >= 5 min session: alert once per profile. */
+    fun noSourceAlert(sourceId: String, samples: Int, alerted: Boolean): Boolean =
+        sourceId == NONE && samples >= REDETECT_MIN_SAMPLES && !alerted
     private val GATES = mapOf(
         "ford_16c1" to setOf("ford", "lincoln"),
         "ford_f42f" to setOf("ford", "lincoln"),

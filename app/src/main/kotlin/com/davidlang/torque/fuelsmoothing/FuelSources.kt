@@ -74,7 +74,7 @@ internal object FuelSources {
         if (cmd != null) {
             val resp = bus(torque, src.header ?: "", cmd)
             val marker = positiveMarker(cmd)
-            val data = dataAfter(resp, marker)
+            val data = dataAfter(resp, marker, if (src.twoByteOk) 2 else 1)
             if (data != null && data.length >= 2) {
                 if (src.litersToPct) {
                     // Toyota cluster: A counts half litres. Level = litres as % of the profile's tank size.
@@ -104,8 +104,8 @@ internal object FuelSources {
         return hex
     }
 
-    private fun dataAfter(resp: Array<String>?, marker: String): String? =
-        resp?.firstNotNullOfOrNull { ObdReply.dataAfter(it, marker)?.takeIf { d -> d.length >= 2 } }
+    private fun dataAfter(resp: Array<String>?, marker: String, minBytes: Int = 1): String? =
+        resp?.firstNotNullOfOrNull { ObdReply.dataAfter(it, marker, minBytes)?.takeIf { d -> d.length >= 2 } }
 
     /**
      * Toyota/Lexus cluster 7C0 2129 counts half litres (A/2 L; Prado and Prius C threads, see FuelSources docs).
