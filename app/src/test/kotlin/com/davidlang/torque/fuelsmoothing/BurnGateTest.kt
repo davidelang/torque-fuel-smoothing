@@ -37,9 +37,11 @@ class BurnGateTest {
             if (gate.check(BurnGate.Input(now, 4.2, rpm = 730.0 + (k % 4))).burn) on++
         }
         assertTrue("on=$on", on <= (BurnGate.HELD_MS / 1000L).toInt() + 1)
+        // After the startup window: an update time that stops advancing goes stale after STALE_MS.
         val stale = BurnGate()
+        stale.check(BurnGate.Input(0L, 4.0, rpm = 700.0, rpmUpdMs = 1L))
         var n = 0
-        for (k in 0 until 20) {
+        for (k in 61 until 81) {
             if (stale.check(BurnGate.Input(1_000L * k, 4.0 + k * 0.01, rpm = 700.0 + k, rpmUpdMs = 5L)).burn) n++
         }
         assertTrue("n=$n", n <= 6)
@@ -53,9 +55,56 @@ class BurnGateTest {
         assertTrue(gate.check(BurnGate.Input(2_000L, 1.2, maf = 3.1)).burn)
         assertTrue(gate.check(BurnGate.Input(3_000L, 1.3, maf = 3.2)).burn)
         var last = true
-        for (k in 4 until 20) last = gate.check(BurnGate.Input(1_000L * k, 1.0 + k * 0.01, maf = 3.2)).burn
+        for (k in 4 until 80) last = gate.check(BurnGate.Input(1_000L * k, 1.0 + k * 0.01, maf = 3.2)).burn
         assertFalse(last)
-        assertEquals("noFlow", gate.check(BurnGate.Input(21_000L, null, rpm = 700.0)).why)
+        assertEquals("noFlow", gate.check(BurnGate.Input(81_000L, null, rpm = 700.0)).why)
+    }
+
+    @Test
+    fun test21StartupIsLenientThenStrict() {
+        // 10-10 stages 2/3: update times lag for the first ~30 s after connect. A 9 s stale update
+        // time must not flap the burn off during the first minute, but must after it.
+        val gate = BurnGate()
+        var offEarly = 0
+        for (k in 0 until 40) {
+            val upd = 1L + k / 9 // advances every 9 s (> STALE_MS, < 3x STALE_MS)
+            if (!gate.check(BurnGate.Input(1_000L * k, 3.3 + 0.01 * (k % 3), rpm = 720.0 + (k % 4), rpmUpdMs = upd)).burn) offEarly++
+        }
+        assertEquals(0, offEarly)
+        var offLate = 0
+        for (k in 100 until 115) {
+            if (!gate.check(BurnGate.Input(1_000L * k, 3.3 + 0.01 * (k % 3), rpm = 720.0 + (k % 4), rpmUpdMs = 3L)).burn) offLate++
+        }
+        assertTrue("offLate=$offLate", offLate >= 8)
+    }
+
+    @Test
+    fun test22MissingLevelIsMinusOneAndIgnoredButFuelCounts() {
+        val log = RawLog()
+        log.addDelta(0.5)
+        log.sample(1_000L, 0.0, "ford_16c1", 3.3, "l/hr", 0.0, "km/h", true, false, "glitch<1", "HOLD", Double.NaN)
+        log.addDelta(0.5)
+        log.sample(2_000L, 55.0, "ford_16c1", 3.3, "l/hr", 0.0, "km/h", true, true, null, "SKEW", 55.0)
+        val lines = log.finish()
+        val rows = lines.filter { it.contains("\"lvl\"") }
+        assertTrue(rows[0], rows[0].contains("\"lvl\":-1,"))
+        assertTrue(rows[1].contains("\"lvl\":55"))
+        val dir = java.io.File("build/burn-test22").apply { deleteRecursively(); mkdirs() }
+        // Plus an old-format-on-phone row: lvl 0 with ok:false.
+        java.io.File(dir, "s.jsonl").writeText(
+            (lines + "{\"t\":3000,\"lvl\":0,\"fuelGal\":1.5,\"spd\":0,\"ok\":false,\"why\":\"missing\",\"mode\":\"HOLD\",\"sm\":0}")
+                .joinToString("\n") + "\n",
+        )
+        val s = FuelV2.loadSessions(dir).single()
+        assertEquals(3, s.t.size)
+        assertTrue(s.raw[0].isNaN())
+        assertEquals(55.0, s.raw[1], 0.0)
+        assertTrue(s.raw[2].isNaN())
+        assertTrue(s.sm[2].isNaN())
+        assertEquals(1.5, s.used.last() - 0.0, 1e-9)
+        // Gap text uses only finite levels: start = end = 55, no bogus 55% (or 97%) gap.
+        val gap = ProfileStore.gapText(listOf(s), null)
+        assertTrue(gap, gap.contains("loggedPct=0.0"))
     }
 
     @Test

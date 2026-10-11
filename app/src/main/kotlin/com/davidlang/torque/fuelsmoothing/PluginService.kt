@@ -386,7 +386,7 @@ class PluginService : Service() {
                 noteDistance(rt, speedMph, dF)
                 rt.sessions.append(
                     sampleRow(
-                        id, now, raw ?: Double.NaN, held ?: raw ?: Double.NaN, speedRaw,
+                        id, now, raw ?: Double.NaN, held ?: Double.NaN, speedRaw,
                         fill = false, ok = false, why = holdWhy(raw, ecu, src.missing, rt.math.smoothed),
                         mode = TrackMode.HOLD, ecu = ecu == true,
                     ),

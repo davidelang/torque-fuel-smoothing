@@ -326,8 +326,8 @@ internal object ProfileStore {
         val b = StringBuilder()
         var prevEnd: Double? = null
         for (s in sessions) {
-            val start = s.sm.firstOrNull() ?: continue
-            val end = s.sm.lastOrNull() ?: continue
+            val start = s.sm.firstOrNull { it.isFinite() } ?: continue
+            val end = s.sm.lastOrNull { it.isFinite() } ?: continue
             val logged = start - end
             val gap = if (prevEnd == null) 0.0 else prevEnd - start
             val gapGal = if (model != null && prevEnd != null) model.v(prevEnd) - model.v(start) else 0.0
@@ -429,8 +429,8 @@ internal object ProfileStore {
                 spd = row.spd,
                 spdUnit = "",
                 ecu = true,
-                ok = true,
-                why = null,
+                ok = row.raw.isFinite() && row.raw >= 0.0,
+                why = if (row.raw.isFinite() && row.raw >= 0.0) null else "missing",
                 mode = if (row.fill) "FILL" else "SKEW",
                 sm = if (row.sm.isFinite()) row.sm else row.raw,
             )

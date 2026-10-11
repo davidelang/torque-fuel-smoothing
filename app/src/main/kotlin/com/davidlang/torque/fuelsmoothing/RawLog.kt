@@ -122,7 +122,8 @@ internal class RawLog {
             append("{\"t\":")
             append(row.t)
             append(",\"lvl\":")
-            append(numOrNull(row.lvl))
+            // -1 is the explicit missing-level flag (never 0): not ok, or no finite reading.
+            append(if (!ok || !row.lvl.isFinite() || row.lvl < 0.0) "-1" else LiterFix.javaDouble(row.lvl))
             append(",\"lvlSrc\":")
             append(jsonString(row.lvlSrc))
             append(",\"fuelRaw\":")

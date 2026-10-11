@@ -109,8 +109,11 @@ internal object FuelV2 {
                 val ms = num(s, "t") ?: return@forEachLine
                 t.add(ms / 1000.0)
                 val rawPct = num(s, "rawPct") ?: num(s, "lvl") ?: Double.NaN
-                raw.add(rawPct)
-                sm.add(num(s, "smoothedPct") ?: num(s, "sm") ?: Double.NaN)
+                // lvl < 0 is the explicit missing flag; older new-format rows marked ok:false carried a
+                // glitch/held value (often 0). Both are missing levels; fuel stays cumulative and counted.
+                val missing = !rawPct.isFinite() || rawPct < 0.0 || s.contains("\"ok\":false")
+                raw.add(if (missing) Double.NaN else rawPct)
+                sm.add(if (missing) Double.NaN else num(s, "smoothedPct") ?: num(s, "sm") ?: Double.NaN)
                 used.add(num(s, "fuelUsedGal") ?: num(s, "fuelGal") ?: 0.0)
                 spd.add(num(s, "speed") ?: num(s, "spd") ?: 0.0)
                 fill.add(
@@ -231,16 +234,18 @@ internal object FuelV2 {
     fun chooseT0(nameplate: Double?, sessions: List<FuelSession>): Double {
         val ratios = ArrayList<Double>()
         for (s in sessions) {
-            if (s.sm.isEmpty() || s.used.isEmpty()) continue
-            var lo = s.sm[0]
-            var hi = s.sm[0]
+            val fin = s.sm.indices.filter { s.sm[it].isFinite() }
+            if (fin.size < 2 || s.used.isEmpty()) continue
+            var lo = s.sm[fin.first()]
+            var hi = lo
             for (v in s.sm) {
+                if (!v.isFinite()) continue
                 if (v < lo) lo = v
                 if (v > hi) hi = v
             }
             if (hi - lo < 5.0) continue
-            val dL = s.sm.first() - s.sm.last()
-            val dF = s.used.last() - s.used.first()
+            val dL = s.sm[fin.first()] - s.sm[fin.last()]
+            val dF = s.used[fin.last()] - s.used[fin.first()]
             if (dL > 0.5 && dF > 0.0) ratios.add(dF / dL)
         }
         if (ratios.isNotEmpty()) return 100.0 * median(ratios.toDoubleArray())
@@ -332,7 +337,7 @@ internal object FuelV2 {
         for (s in list) {
             val q = quietMask(s.spd, s.t, s.fill)
             val idx = ArrayList<Int>()
-            for (i in q.indices) if (q[i]) idx.add(i)
+            for (i in q.indices) if (q[i] && s.raw[i].isFinite()) idx.add(i)
             var start = 0
             for (p in 0..idx.size) {
                 val split = p == idx.size || (p > 0 && idx[p] - idx[p - 1] > 1)
@@ -422,7 +427,7 @@ internal object FuelV2 {
     ): List<FuelChunk> {
         val q0 = quietMask(s.spd, s.t, s.fill)
         val frozen = frozenMask(s.raw, s.spd)
-        val q = BooleanArray(s.t.size) { q0[it] && !frozen[it] }
+        val q = BooleanArray(s.t.size) { q0[it] && !frozen[it] && s.raw[it].isFinite() }
         val out = ArrayList<FuelChunk>()
         val cur = ArrayList<Int>()
         var grp = 0
@@ -458,7 +463,7 @@ internal object FuelV2 {
                 else -> s.raw[i]
             }
             val burn = s.used[i] - (f0 ?: s.used[i])
-            val unit = gpp(ref)
+            val unit = if (ref.isFinite()) gpp(ref) else gpp(50.0)
             if ((burn >= C_PCT * unit && cur.size >= nMin) || burn >= C_MAX_PCT * unit) {
                 emit()
                 cur.clear()
@@ -486,14 +491,16 @@ internal object FuelV2 {
         if (flags.isNotEmpty()) {
             val i0 = flags.first()
             val i1 = flags.last()
-            val pre = if (i0 > 0) median(r.copyOfRange(max(0, i0 - 30), i0)) else Double.NaN
-            val post = if (i1 + 1 < n) median(r.copyOfRange(i1 + 1, min(n, i1 + 31))) else Double.NaN
+            val preW = r.copyOfRange(max(0, i0 - 30), i0).filter { it.isFinite() }
+            val postW = if (i1 + 1 < n) r.copyOfRange(i1 + 1, min(n, i1 + 31)).filter { it.isFinite() } else emptyList()
+            val pre = if (preW.isNotEmpty()) median(preW.toDoubleArray()) else Double.NaN
+            val post = if (postW.isNotEmpty()) median(postW.toDoubleArray()) else Double.NaN
             if (pre.isNaN() || post - pre >= 10.0) return i1
             return null
         }
         if (n < 120) return null
         for (i in 60 until n - 60) {
-            if (r[i] - r[i - 1] < 5.0) continue
+            if (!r[i].isFinite() || !r[i - 1].isFinite() || r[i] - r[i - 1] < 5.0) continue
             var parked = true
             for (j in i - 60 until i + 60) {
                 if (s.spd[j] >= 1.0) {
