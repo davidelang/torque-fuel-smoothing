@@ -1,4 +1,4 @@
-# rules.manifest.local: host-specific infra, synced only root -> this host's worktrees.
+# rules.manifest.local: files local to this project (not to one worktree).
 # Files local to this PROJECT: the root's version is published into every worktree;
 # a worktree's own modification of a file skips just that file. Seeded from the legacy
 # update-rules.sh FILES lists. Format: local <path>
