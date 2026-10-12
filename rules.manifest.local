@@ -15,8 +15,6 @@ local refresh-shell.c
 local install-refresh-shell.sh
 local generate_pr.sh
 local setup-project
-local fix-android-sdk-perms
-local sync-debug-keystores
 local project.config.example
 local .gitattributes
 local enable-full-orchestration.sh
