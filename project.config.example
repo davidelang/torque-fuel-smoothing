@@ -1,6 +1,7 @@
 # project.config.example
-# Committed template. Copy to project.config (gitignored) and fill real values.
-# Used by clean/smudge filters (manage-configs) and setup-project.
+# Committed template with the same keys as project.config (gitignored).
+# Copy to project.config and fill real values. @@TOKEN@@ values are what the
+# manage-configs clean filter writes; smudge replaces them from project.config.
 
 sandbox_path=@@SANDBOX_PATH@@
 planning_user=@@PLANNING_USER@@
@@ -9,50 +10,16 @@ orchestrator_user=@@ORCHESTRATOR_USER@@
 code_group=@@CODE_GROUP@@
 sandbox_group=@@SANDBOX_GROUP@@
 shared_group=@@SHARED_GROUP@@
-
-# Example paths (will be @@ substituted in scripts via manage-configs filter)
-# Bin paths may use $HOME/… (expanded at runtime by launchers).
+# Binaries may use $HOME/... (expanded by launchers).
 grok_bin_default=@@GROK_BIN_DEFAULT@@
 antigravity_bin=@@ANTIGRAVITY_BIN@@
 gemini_bin_default=@@GEMINI_BIN_DEFAULT@@
 primary_user=@@PRIMARY_USER@@
-
-# Absolute directory holding first-party / pin host clones (remotetable, extractmail, …).
-# MUST be absolute on this machine (e.g. /home/you/git), NOT ~/git:
-#   - @@CODER_USER@@ / @@PLANNING_USER@@ have different $HOME; ~/git is not shared.
-#   - Landlock and open() need a concrete path.
-# Checked-in templates use @@GIT_HOME@@; local project.config has the real path.
-# landlock.config (tracked) is smudged from the same git_home= / sandbox_path=.
+# Absolute dir holding host clones (not ~/git: agent users have other $HOME).
 git_home=@@GIT_HOME@@
-
-# Absolute orchestration root (managing tree). Worktrees do not guess via
-# ../.gradle-shared. update-rules.sh / setup_agent.sh write the real path into
-# gitignored project.config. Runtime: ./ve-resolve-orch or source it.
-orch_root=@@ORCH_ROOT@@
-
-# Special sandbox paths (for setup-project to create)
+# Sandbox subdirs setup-project creates.
 sandbox_special_paths=plans,historical-plans,implementation-failure-logs,PRs,research
-
-# Prefer sandbox_dir for launchers/generate_pr (generic hosts).
-# VehicleExpenses default: dev-ai-interaction
-# Library hosts default: sandbox
-# Legacy alias still accepted: sandbox_path
-# sandbox_dir=dev-ai-interaction
-# sandbox_dir=sandbox
-
-# Optional build gate for master-merge on non-Android hosts:
-# build_command=./build
-
-# landlock.config is smudged separately (landlock.config.example); it may
-# reference @@GIT_HOME@@ for host .git allow paths.
-
-# Users/groups creation (for reference in setup-project, emitted only)
-# groupadd @@CODE_GROUP@@
-# groupadd @@SANDBOX_GROUP@@
-# groupadd @@SHARED_GROUP@@
-# useradd -g @@SANDBOX_GROUP@@ @@PLANNING_USER@@
-# useradd -g @@CODE_GROUP@@ @@CODER_USER@@
-# useradd -g @@CODE_GROUP@@ -G @@SHARED_GROUP@@ @@ORCHESTRATOR_USER@@
-# usermod -aG @@CODE_GROUP@@ @@ORCHESTRATOR_USER@@
-
-# Notes for filters: use @@VAR@@ in source scripts for substitution.
+# Sandbox dir (sandbox_dir wins; sandbox_path is the legacy alias).
+sandbox_dir=@@SANDBOX_PATH@@
+# Absolute orchestration root of this project; written by setup_agent.sh / update-rules.sh.
+orch_root=@@ORCH_ROOT@@
