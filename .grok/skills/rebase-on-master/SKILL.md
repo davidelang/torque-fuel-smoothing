@@ -11,6 +11,8 @@ when-to-use: "rebase, rebase on master, catch up master, replay commits, /rebase
 
 # rebase-on-master
 
+**Human-run.** These are `git rebase`, `git checkout -- …` and `git add` commands, which agents may not run (`AGENTS.md`; grok permissions deny them). An agent prints the commands for David and stops.
+
 Keep **this branch's** copies of **only** these three files:
 
 - `ENGINEERING_LOG.md`
@@ -91,7 +93,7 @@ files. Restore only the three paths from `$FEAT` (below).
 7. Do not commit specials "to match master". A commit is needed only if
    step 5 dirtied the tree; message: keep branch specials after rebase.
 
-8. `./build_app` if this is an app worktree and the rebase changed product
+8. Build with the project-facts.md Build path if the rebase changed product
    files.
 
 ## Forbidden
