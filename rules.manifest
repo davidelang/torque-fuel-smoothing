@@ -53,6 +53,7 @@ shared todo-close
 shared get-builds-tag.sh
 shared reset-to-builds.sh
 shared prepare-pr-rewrite
+shared plans-scope
 shared install-merge-drivers.sh
 shared merge-branch-into-master.sh
 shared git-merge-drivers/*
@@ -61,6 +62,7 @@ shared remove_worktree.sh
 shared fix-perms
 shared filter-apply-config
 shared filter-clean-config
+shared verify-smudge
 shared hooks/post-checkout
 shared MULTI_AGENT_USER_INSTRUCTIONS.md
 shared README-multi-agent.md
