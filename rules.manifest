@@ -30,6 +30,7 @@ shared roles.config
 shared .grok/config.toml
 shared .grok/hooks/rules-hooks.json
 shared .grok/hooks/rules-hooks.sh
+shared .grok/hooks/cmd-words.py
 shared .grok/roles/*.toml
 shared .grok/agents/*.md
 shared .grok/lib/grok-launch-common.sh
@@ -73,6 +74,15 @@ shared probes/README.md
 shared probes/general/*.md
 shared probes/protected/*.md
 shared probes/protected/COUNT
+
+# Connector pin: docs/rules/channel.md and the /channel skills run artifact/channel-*, so the pin
+# travels with them in the same per-tree commit (the library checkout is never needed).
+# fetch-deps travels with the pins it reads. get-artifacts and libpin-* are not shared: some trees
+# carry their own older get-artifacts history (it would make deploy skip the whole tree).
+shared third_party/fetch-deps
+shared third_party/agent-coordination-tickets/libpin.toml
+shared third_party/agent-coordination-tickets/SOURCE.md
+shared third_party/agent-coordination-tickets/artifact/*
 
 opt run-antigravity
 opt run-antigravity-master
