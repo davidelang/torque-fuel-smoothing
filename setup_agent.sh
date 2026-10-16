@@ -432,12 +432,17 @@ elif [ -f "../local.properties" ]; then
     cp ../local.properties local.properties
 fi
 
-# 7. Fork anchor for git describe. Not a role and not the checked-out branch.
-# Start-branch owns the -start tag. Forked-from is the parent branch name.
+# 7. Identity and fork anchor. exec-preflight reads "- **Agent ID:** " (plans' Worktree:);
+# Start-branch owns the -start tag (git describe); Forked-from is the parent branch name.
+[[ -n "${AGENT_ID:-}" ]] || _setup_die "AGENT_ID is empty; cannot write AGENT_CONTEXT.md"
 cat > AGENT_CONTEXT.md <<EOF
+- **Agent ID:** $AGENT_ID
+- **Current Branch:** $BRANCH_NAME
 Forked-from: master
 Start-branch: $BRANCH_NAME
 EOF
+_ctx_id="$(sed -n 's/^- \*\*Agent ID:\*\* //p' AGENT_CONTEXT.md | head -1 | tr -d '\r')"
+[[ "$_ctx_id" == "$AGENT_ID" ]] || _setup_die "AGENT_CONTEXT.md Agent ID is '$_ctx_id', expected '$AGENT_ID'"
 
 # 8. Make this a *fully working* tree with all correct permissions.
 #    Since we are always run from the orchestration root (which has the
@@ -541,6 +546,38 @@ fi
 if type ve_ensure_tracked_exec_other_x >/dev/null 2>&1; then
   ve_ensure_tracked_exec_other_x "$AGENT_ABS"
 fi
+
+# 9. third_party comes from the pinned, committed artifacts in the checkout; setup never checks out
+#    or builds a library (that is fetch-deps rw/upgrade/build, by hand). Every [[artifact]] path a
+#    libpin.toml declares must exist (pin-local, app/..., or absolute), else stop.
+python3 - "$AGENT_ABS" <<'PYEND_ARTIFACTS' || _setup_die "pinned third_party artifacts missing (list above); commit them on the branch (fetch-deps build NAME in a tree that has the library)"
+import glob, os, re, sys
+root = sys.argv[1]
+missing, n = [], 0
+for pin in sorted(glob.glob(os.path.join(root, "third_party/*/libpin.toml"))):
+    lib = os.path.dirname(pin)
+    for blk in re.split(r"(?m)^\[\[artifact\]\]\s*$", open(pin).read())[1:]:
+        m = re.search(r'(?m)^path\s*=\s*"([^"]+)"', blk)
+        if not m:
+            missing.append("%s: [[artifact]] without path" % os.path.relpath(pin, root))
+            continue
+        p = m.group(1)
+        n += 1
+        full = p if os.path.isabs(p) else os.path.join(root, p) if p.startswith("app/") else os.path.join(lib, p)
+        if not os.path.exists(full):
+            missing.append(os.path.relpath(full, root))
+            continue
+        h = re.search(r'(?m)^sha256\s*=\s*"([0-9a-f]{64})"', blk)
+        if h:
+            import hashlib
+            got = hashlib.sha256(open(full, "rb").read()).hexdigest()
+            if got != h.group(1):
+                missing.append("%s (sha256 %s, pinned %s)" % (os.path.relpath(full, root), got, h.group(1)))
+print("third_party: %d pinned artifact(s) present" % (n - len(missing)))
+for x in missing:
+    print("ERROR: missing pinned artifact " + x, file=sys.stderr)
+sys.exit(1 if missing else 0)
+PYEND_ARTIFACTS
 
 # CRITICAL: seed/smudge/copy of tracked files must not leave the agent worktree dirty,
 # or ./build_app will refuse (uncommitted tracked files gate). Commit if needed.
