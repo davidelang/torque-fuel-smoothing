@@ -117,6 +117,8 @@ class PluginService : Service() {
 
     private fun refreshOpen() { openSessions = tanks.values.mapNotNull { it.sessions.sessionId }.toSet() }
 
+    private fun refreshRecording() { recording = tanks.values.any { it.sessions.isOpen } }
+
     private fun submitRollup(what: String, work: () -> Unit, done: () -> Unit) {
         runCatching {
             rollupExec.execute {
@@ -1204,6 +1206,7 @@ class PluginService : Service() {
         FsLog.reset()
         refreshOpen()
         FsLog.i(TAG, "session open tank=$id $sid files=${rt.sessions.sessionCount()}")
+        refreshRecording()
     }
 
     private fun closeTankSession(id: Int) {
@@ -1213,6 +1216,7 @@ class PluginService : Service() {
         if (q != null) {
             // Never write the wrong profile: no ledger, rollup, chunks, model or fills here.
             val closedQ = rt.sessions.close()
+            refreshRecording()
             val target = quarantineConfirm
             val moved = Quarantine.resolve(filesDir, q, id, target)
             FsLog.i(TAG, "quarantine close tank=$id samples=${closedQ.size} -> ${target ?: "discarded (not learned)"} files=${moved.map { it.name }}")
@@ -1255,6 +1259,7 @@ class PluginService : Service() {
         }
         closeLiveChunks(rt, closed)
         refreshOpen()
+        refreshRecording()
         val dir = ProfileStore.tankDir(filesDir, profileId, id); val np = nameplateFor(id)
         FsLog.i(TAG, "session close tank=$id samples=${closed.size} files=${rt.sessions.sessionCount()}; rollup queued")
         var gap = ""
@@ -1865,6 +1870,10 @@ class PluginService : Service() {
 
         @Volatile
         var isRunning: Boolean = false
+
+        /** True while any tank session is open. Export and import refuse when this is set. */
+        @Volatile
+        var recording: Boolean = false
 
         /** The live service (main thread); null when not created or destroyed, so the receiver falls back to a start. */
         @Volatile

@@ -229,3 +229,9 @@
 
 - Approved plan: `sandbox/plans/chunkfit-on-pieces-20261016-2305-plan.md`
 - Scope: each stored piece is one ChunkFit chunk; refit model.json from pieces.jsonl. Kalman still reads kalmanDrives. No phone install. Do not edit Kalman.kt. Plan 1 already committed at 5c336199.
+
+## 2026-10-17 - Execute start: adb-data-transfer-20261016-2310-plan.md
+
+- Approved plan: `sandbox/plans/adb-data-transfer-20261016-2310-plan.md`
+- Scope: adb-only export and exact restore (provider, ustar, manifest field codec, importReplace). No content checks. No phone install. No adb content command.
+- David directed this plan before identity-c410f1. That plan is not implemented in this commit.

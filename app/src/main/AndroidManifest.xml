@@ -70,5 +70,11 @@
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="Reads the Torque fuel level and fuel rate while the adapter is connected and publishes a smoothed level." />
         </service>
+
+        <provider
+            android:name=".DataTransferProvider"
+            android:authorities="${applicationId}.datatransfer"
+            android:exported="true"
+            android:grantUriPermissions="false" />
     </application>
 </manifest>
