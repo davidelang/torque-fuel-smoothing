@@ -6,3 +6,7 @@
 - git_home: @@GIT_HOME@@
 - Launch: `./run-grok-*` via `.grok/lib/grok-launch-common.sh` + `agent-landlock`
 - Groups: source `./env` (refresh-shell setuid)
+
+## Build and commit
+- Build: `./build_app --standard --test` (never `--play`: it needs David at a terminal)
+- Commit: `./build_app --standard --test "<message>"|@<msg_file> <paths...>` (builds, then commits exactly the named paths and tags builds)
