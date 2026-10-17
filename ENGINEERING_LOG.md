@@ -235,3 +235,8 @@
 - Approved plan: `sandbox/plans/adb-data-transfer-20261016-2310-plan.md`
 - Scope: adb-only export and exact restore (provider, ustar, manifest field codec, importReplace). No content checks. No phone install. No adb content command.
 - David directed this plan before identity-c410f1. That plan is not implemented in this commit.
+
+## 2026-10-17 - Execute start: datatransfer-developer-doc-20261016-2311-plan.md
+
+- Approved plan: `sandbox/plans/datatransfer-developer-doc-20261016-2311-plan.md`
+- Scope: one developer page (`docs/DEVELOPER.md`) for adb export/restore, the eval harness, and piece constants. User-facing docs stay silent. No phone install. Adb data-transfer plan already committed.
