@@ -240,3 +240,8 @@
 
 - Approved plan: `sandbox/plans/datatransfer-developer-doc-20261016-2311-plan.md`
 - Scope: one developer page (`docs/DEVELOPER.md`) for adb export/restore, the eval harness, and piece constants. User-facing docs stay silent. No phone install. Adb data-transfer plan already committed.
+
+## 2026-10-17 - Execute start: revert-temp-diag-20261016-2312-plan.md
+
+- Approved plan: `sandbox/plans/revert-temp-diag-20261016-2312-plan.md`
+- Scope: `git revert` of TEMP diagnostic `076f4b13`. Keep the summary log, identity header, and `recording`. Fingerprint gate waived in chat 2026-10-17. No phone install. No `--play`. No adb.
