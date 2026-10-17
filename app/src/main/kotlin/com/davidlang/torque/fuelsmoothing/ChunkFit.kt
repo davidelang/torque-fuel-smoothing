@@ -1,23 +1,18 @@
 package com.davidlang.torque.fuelsmoothing
 
-import java.io.File
 import java.util.TreeSet
 import kotlin.math.abs
 import kotlin.math.ceil
-import kotlin.math.hypot
 import kotlin.math.ln
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sqrt
 
 /**
- * Chunk-based gauge map and tank size (CHUNK_STUDY.md). Mirrors
- * sandbox/research/chunk-study/ref_chunkfit.py line by line; ChunkFitTest checks parity.
+ * Gauge map and tank size fit from stored pieces: one chunk per piece. Kalman still reads [kalmanDrives].
  *
- * Per drive part (never across sessions or fills; lvl<0 skipped): steady samples -> nb-sample median
- * blocks -> top-down piecewise-linear level-on-fuel segmentation -> chunks. Parts and chunks are appended
- * to segments.jsonl (append-only, deduplicated by "<session>#<part>"). The map is refit from ALL stored
- * chunks: inverse overlap fit with weights fuel x 1/noise^2 and Huber (k=2) bounded influence, h >= H_MIN,
+ * [fromPieces] maps pieces.jsonl onto parts and chunks. The map is refit from all of those chunks:
+ * inverse overlap fit with weights fuel x 1/noise^2 and Huber (k=2) bounded influence, h >= H_MIN,
  * then lifted to satisfy hard constraints (logged burn within a tank epoch).
  */
 internal object ChunkFit {
@@ -90,12 +85,6 @@ internal object ChunkFit {
         for (i in a until b) { sxx += (f[i] - mf) * (f[i] - mf); sxy += (f[i] - mf) * (l[i] - ml) }
         val c1 = if (sxx > 0) sxy / sxx else 0.0
         return doubleArrayOf(ml - c1 * mf, c1, sxx)
-    }
-
-    private fun sse(f: DoubleArray, l: DoubleArray, a: Int, b: Int): Double {
-        val c = ols(f, l, a, b); var s = 0.0
-        for (i in a until b) { val r = l[i] - (c[0] + c[1] * f[i]); s += r * r }
-        return s
     }
 
     fun steady(s: FuelSession): BooleanArray = Pieces.trusted(s)
@@ -211,93 +200,10 @@ internal object ChunkFit {
         return doubleArrayOf(sig, tau, nb.toDouble(), sb2)
     }
 
-    /** Blocks as columns F, L, n, t, joined (1.0 when no untrusted/unsteady sample lies between it and the previous block). */
-    private fun blocks(w: Work, nb: Int): Array<DoubleArray> {
-        val idx = steadyIdx(w)
-        val cnt = if (idx.size >= nb) (idx.size - nb) / nb + 1 else 0
-        val f = DoubleArray(cnt); val l = DoubleArray(cnt); val c = DoubleArray(cnt); val t = DoubleArray(cnt); val j = DoubleArray(cnt)
-        for (b in 0 until cnt) {
-            val ii = idx.copyOfRange(b * nb, b * nb + nb)
-            f[b] = med(DoubleArray(nb) { w.s.used[ii[it]] }); l[b] = med(DoubleArray(nb) { w.s.raw[ii[it]] })
-            c[b] = nb.toDouble(); t[b] = med(DoubleArray(nb) { w.s.t[ii[it]] })
-            // Breakable before block b only if blocks b-1 and b are one contiguous run of trusted samples.
-            j[b] = if (b > 0 && idx[b * nb + nb - 1] - idx[(b - 1) * nb] == 2 * nb - 1) 1.0 else 0.0
-        }
-        return arrayOf(f, l, c, t, j)
-    }
-
-    private class Seg(val a: Int, val b: Int, val c0: Double, val c1: Double, val sse: Double, val dens: Double, val seD: Double)
-
-    private fun segment(bl: Array<DoubleArray>, sb2: Double, fmin: Double): List<Seg> {
-        val f = bl[0]; val l = bl[1]; val n = f.size; val joined = bl[4]
-        val pen = PEN_K * ln(max(n, 2).toDouble()) * sb2
-        var segs = listOf(0 to n); var changed = true
-        while (changed) {
-            changed = false
-            val nw = ArrayList<Pair<Int, Int>>()
-            for ((a, b) in segs) {
-                val tot = sse(f, l, a, b); var bestG = 0.0; var bestK = -1
-                for (k in a + MIN_BLOCKS..b - MIN_BLOCKS) {
-                    // Never break inside a questionable (masked) period: only between contiguous trusted blocks.
-                    if (joined[k] < 0.5) continue
-                    if (abs(l[a] - l[k - 1]) < MIN_SPAN || abs(l[k] - l[b - 1]) < MIN_SPAN) continue
-                    if (f[k - 1] - f[a] < fmin || f[b - 1] - f[k] < fmin) continue
-                    val gain = tot - sse(f, l, a, k) - sse(f, l, k, b)
-                    if (bestK < 0 || gain > bestG) { bestG = gain; bestK = k }
-                }
-                if (bestK >= 0 && bestG > pen) { nw.add(a to bestK); nw.add(bestK to b); changed = true } else nw.add(a to b)
-            }
-            segs = nw
-        }
-        fun st(a: Int, b: Int): Seg {
-            val c = ols(f, l, a, b)
-            val seB = if (c[2] > 0) sqrt(sb2 / c[2]) else Double.POSITIVE_INFINITY
-            val dens = if (c[1] < 0) -1.0 / c[1] else Double.NaN
-            val seD = if (c[1] != 0.0) seB / (c[1] * c[1]) else Double.POSITIVE_INFINITY
-            return Seg(a, b, c[0], c[1], sse(f, l, a, b), dens, seD)
-        }
-        val s = segs.map { st(it.first, it.second) }.toMutableList()
-        var merged = true
-        while (merged && s.size > 1) {
-            merged = false
-            for (k in 0 until s.size - 1) {
-                val x = s[k]; val y = s[k + 1]
-                if (x.dens.isFinite() && y.dens.isFinite() && abs(x.dens - y.dens) < Z_MERGE * hypot(x.seD, y.seD)) {
-                    s[k] = st(x.a, y.b); s.removeAt(k + 1); merged = true; break
-                }
-            }
-        }
-        // Span cap: split long segments into ceil(span/MAX_SPAN) near-equal pieces, breaking only between
-        // contiguous trusted blocks with >= MIN_BLOCKS on each side.
-        val out = ArrayList<Seg>()
-        for (x in s) {
-            val m = ceil(abs(x.c1 * (f[x.b - 1] - f[x.a])) / MAX_SPAN - 1e-9).toInt()
-            var prev = x.a
-            for (j in 1 until max(m, 1)) {
-                val target = x.a + Math.round(j.toDouble() * (x.b - x.a) / m).toInt()
-                var pick = -1
-                for (dk in 0..(x.b - x.a)) {
-                    for (k in intArrayOf(target + dk, target - dk)) {
-                        if (pick < 0 && k >= prev + MIN_BLOCKS && k <= x.b - MIN_BLOCKS && joined[k] >= 0.5) pick = k
-                    }
-                    if (pick >= 0) break
-                }
-                if (pick < 0) continue
-                out.add(st(prev, pick)); prev = pick
-            }
-            out.add(if (prev == x.a) x else st(prev, x.b))
-        }
-        return out
-    }
-
-    /**
-     * Segments every part of [sessions] whose key is not in [skip]. Parts of [openName] (a session still
-     * being recorded) are only returned when complete, i.e. ended by a fill cut.
-     */
     /** One drive part for the Kalman estimator: trusted samples (steady mask) thinned to one per [thinS] s. */
     class KDrive(val key: String, val session: String, val t0: Double, val fuel: Double, val fillAtStart: Boolean, val l: DoubleArray, val f: DoubleArray)
 
-    /** Drive parts in time order (same parts and mask as segmentAll) plus the gauge sigma; the last part of [openName] is left out. */
+    /** Drive parts in time order plus the gauge sigma; the last part of [openName] is left out. */
     fun kalmanDrives(sessions: List<FuelSession>, thinS: Double, openName: String? = null): Pair<List<KDrive>, Double> {
         val ps = parts(sessions)
         val sig = noise(ps)[0]
@@ -315,39 +221,26 @@ internal object ChunkFit {
         return out to sig
     }
 
-    fun segmentAll(sessions: List<FuelSession>, skip: Set<String> = emptySet(), openName: String? = null): Pair<List<Part>, List<Chunk>> {
-        val ps = parts(sessions)
-        val nz = noise(ps); val nb = nz[2].toInt(); val sb2 = nz[3]
-        val dd = ArrayList<Double>()
-        for (w in ps) {
-            if (!w.moving) continue
-            val b = blocks(w, nb)
-            if (b[0].size >= 2 * MIN_BLOCKS && b[1][0] - b[1][b[1].size - 1] >= 5.0) {
-                val c = ols(b[0], b[1]); if (c[1] < 0) dd.add(-1.0 / c[1])
-            }
+    /**
+     * One [Part] per piece-part and one [Chunk] per included piece, in time order.
+     * [Part.dens0] is the median finite rho of moving parts (NaN rho is non-moving), stamped on every part.
+     * A piece is included when it is overSpan, [Pieces.FIT_WEAK] is set, or it is not weak.
+     */
+    fun fromPieces(parts: List<Pieces.Part>, pieces: List<Pieces.Piece>): Pair<List<Part>, List<Chunk>> {
+        val rhos = parts.map { it.rho }.filter { it.isFinite() }
+        val dens0 = if (rhos.isEmpty()) Double.NaN else med(rhos.toDoubleArray())
+        val partsOut = parts.map { p ->
+            Part(p.key, p.t0, p.t1, p.fStart, p.fuel, p.fillAtStart, p.nb, p.sigma, p.tau, dens0)
         }
-        val dens0 = if (dd.isEmpty()) Double.NaN else med(dd.toDoubleArray())
-        val fmin = MIN_SPAN * (if (dens0.isFinite()) dens0 else 0.3)
-        val lastOpen = ps.lastOrNull { it.s.name == openName }?.key
-        val partsOut = ArrayList<Part>(); val chunksOut = ArrayList<Chunk>()
-        for (w in ps) {
-            if (w.key in skip || w.key == lastOpen) continue
-            val s = w.s
-            partsOut.add(Part(w.key, s.t[w.a], s.t[w.b - 1], s.used[w.a], s.used[w.b - 1] - s.used[w.a], w.fillAtStart, nb, nz[0], nz[1], dens0))
-            if (!w.moving) continue
-            val b = blocks(w, nb)
-            if (b[0].size < MIN_BLOCKS) continue
-            for (sg in segment(b, sb2, fmin)) {
-                val f0 = b[0][sg.a]; val f1 = b[0][sg.b - 1]
-                var n = 0.0; for (k in sg.a until sg.b) n += b[2][k]
-                val nbk = sg.b - sg.a
-                chunksOut.add(
-                    Chunk(
-                        w.key, b[3][sg.a], b[3][sg.b - 1], f0, f1, sg.c0 + sg.c1 * f0, sg.c0 + sg.c1 * f1, f1 - f0, n.toInt(), nbk,
-                        sqrt(sg.sse / max(nbk - 2, 1)), sqrt(4 * sb2 / nbk),
-                    ),
-                )
-            }
+        val chunksOut = ArrayList<Chunk>()
+        for (pc in pieces.sortedWith(compareBy({ it.t0 }, { it.t1 }, { it.key }))) {
+            if (!(pc.overSpan || Pieces.FIT_WEAK || !pc.weak)) continue
+            chunksOut.add(
+                Chunk(
+                    pc.part, pc.t0, pc.t1, pc.f0, pc.f1, pc.ls, pc.le, pc.dF, pc.nS + pc.nE, 0, 0.0,
+                    max(pc.seS, pc.seE),
+                ),
+            )
         }
         return partsOut to chunksOut
     }
@@ -374,7 +267,7 @@ internal object ChunkFit {
         for (k in m.keys.sorted()) {
             val p = m[k]!!
             val ls = p.map { it[1] }
-            if (p.size >= 2 && ls.max() - ls.min() >= 1.0) {
+            if (p.size >= 2) {
                 out.add(Grp(p.map { it[0] }.toDoubleArray(), ls.toDoubleArray(), p.map { it[2] }.toDoubleArray()))
             }
         }
@@ -552,58 +445,7 @@ internal object ChunkFit {
     }
 
     // ---------------- store ----------------
-    private fun num(s: String, k: String): Double? {
-        val m = Regex("\"$k\":(-?[0-9.eE+-]+|NaN|-?Infinity)").find(s) ?: return null
-        return m.groupValues[1].toDoubleOrNull()
-    }
-
-    private fun str(s: String, k: String): String? = Regex("\"$k\":\"((?:[^\"\\\\]|\\\\.)*)\"").find(s)?.groupValues?.get(1)
-
     private fun d(x: Double) = if (x.isFinite()) x.toString() else "null"
-
-    fun load(dir: File): Pair<List<Part>, List<Chunk>> {
-        val f = File(dir, FILE)
-        val ps = ArrayList<Part>(); val ch = ArrayList<Chunk>(); val seen = HashSet<String>()
-        if (!f.isFile) return ps to ch
-        f.forEachLine { line ->
-            val key = str(line, "key") ?: return@forEachLine
-            when (str(line, "type")) {
-                "part" -> if (seen.add(key)) ps.add(
-                    Part(
-                        key, num(line, "t0")!!, num(line, "t1")!!, num(line, "Fstart")!!, num(line, "fuel")!!,
-                        line.contains("\"fillAtStart\":true"), num(line, "nb")!!.toInt(), num(line, "sigmaQ")!!,
-                        num(line, "tau")!!, num(line, "dens0") ?: Double.NaN,
-                    ),
-                )
-                "chunk" -> ch.add(
-                    Chunk(
-                        key, num(line, "t0")!!, num(line, "t1")!!, num(line, "F0")!!, num(line, "F1")!!, num(line, "Ls")!!,
-                        num(line, "Le")!!, num(line, "dF")!!, num(line, "n")!!.toInt(), num(line, "blocks")!!.toInt(),
-                        num(line, "resid")!!, num(line, "seEnd")!!,
-                    ),
-                )
-            }
-        }
-        return ps to ch
-    }
-
-    /** Appends parts/chunks not yet stored. Returns the number of new parts. Append-only; never rewrites. */
-    fun append(dir: File, sessions: List<FuelSession>, openName: String? = null): Int {
-        val have = load(dir).first.map { it.key }.toSet()
-        val (ps, ch) = segmentAll(sessions, have, openName)
-        if (ps.isEmpty()) return 0
-        val sb = StringBuilder()
-        for (p in ps) {
-            sb.append("{\"type\":\"part\",\"v\":$VERSION,\"key\":\"${p.key}\",\"t0\":${d(p.t0)},\"t1\":${d(p.t1)},\"Fstart\":${d(p.fStart)},")
-            sb.append("\"fuel\":${d(p.fuel)},\"fillAtStart\":${p.fillAtStart},\"nb\":${p.nb},\"sigmaQ\":${d(p.sigmaQ)},\"tau\":${d(p.tau)},\"dens0\":${d(p.dens0)}}\n")
-            for (c in ch.filter { it.key == p.key }) {
-                sb.append("{\"type\":\"chunk\",\"key\":\"${c.key}\",\"t0\":${d(c.t0)},\"t1\":${d(c.t1)},\"F0\":${d(c.f0)},\"F1\":${d(c.f1)},")
-                sb.append("\"Ls\":${d(c.ls)},\"Le\":${d(c.le)},\"dF\":${d(c.dF)},\"n\":${c.n},\"blocks\":${c.blocks},\"resid\":${d(c.resid)},\"seEnd\":${d(c.seEnd)}}\n")
-            }
-        }
-        File(dir, FILE).appendText(sb.toString())
-        return ps.size
-    }
 
     fun modelJson(r: Result, raw: FuelModel?, nowMs: Long): String {
         val arr = { a: DoubleArray -> a.joinToString(",", "[", "]") { d(it) } }

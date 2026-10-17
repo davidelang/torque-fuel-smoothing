@@ -55,8 +55,10 @@ class LiveTest {
         val old = OldMpg(); val mw = Live.MpgWindow()
         val ledger = TankLedger(); ledger.rHat = 30.0; ledger.anchored = true; var burned = 0.0
         val dir = java.nio.file.Files.createTempDirectory("live").toFile()
-        ChunkFit.append(dir, FuelV2.loadSessions(File(url.toURI())))
-        val (ps, ch) = ChunkFit.load(dir); val cf = ChunkFit.fit(ps, ch, 35.0)
+        Pieces.store(dir, FuelV2.loadSessions(File(url.toURI())))
+        val (pp, pcs) = Pieces.load(dir)
+        val (ps, ch) = ChunkFit.fromPieces(pp, pcs)
+        val cf = ChunkFit.fit(ps, ch, 35.0)
         for (i in 1 until s.t.size) {
             val dF = (s.used[i] - s.used[i - 1]).coerceAtLeast(0.0); val miles = s.spd[i] / 3600.0
             old.add(miles, dF, want); mw.add(miles, dF, want)

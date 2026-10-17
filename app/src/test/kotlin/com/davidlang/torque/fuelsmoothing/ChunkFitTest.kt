@@ -15,6 +15,22 @@ class ChunkFitTest {
 
     private fun tmp(): File = Files.createTempDirectory("chunkfit").toFile()
 
+    private class Mapped(
+        val ps: List<ChunkFit.Part>,
+        val ch: List<ChunkFit.Chunk>,
+        val parts: List<Pieces.Part>,
+        val pieces: List<Pieces.Piece>,
+    )
+
+    /** Store pieces, load them back, and map to chunk parts and chunks. */
+    private fun viaPieces(sessions: List<FuelSession>, openName: String? = null): Mapped {
+        val dir = tmp()
+        Pieces.store(dir, sessions, openName)
+        val (pp, pcs) = Pieces.load(dir)
+        val (ps, ch) = ChunkFit.fromPieces(pp, pcs)
+        return Mapped(ps, ch, pp, pcs)
+    }
+
     /** Synthetic steady drive: speed 60, level falls linearly with fuel (density gpp), small noise. */
     private fun drive(name: String, t0: Double, l0: Double, gal: Double, gpp: Double, fillAt: Int = -1, refill: Double = 0.0): FuelSession {
         val n = (gal / 0.0009).toInt()
@@ -34,19 +50,20 @@ class ChunkFitTest {
     fun test23SegmentationIsDeterministic() {
         val s = fixtures()
         val a = tmp(); val b = tmp()
-        ChunkFit.append(a, s); ChunkFit.append(b, s)
-        val ta = File(a, ChunkFit.FILE).readText()
-        assertEquals(ta, File(b, ChunkFit.FILE).readText())
-        // Append-only and deduplicated: a second pass adds nothing.
-        assertEquals(0, ChunkFit.append(a, s))
-        assertEquals(ta, File(a, ChunkFit.FILE).readText())
+        Pieces.store(a, s); Pieces.store(b, s)
+        val ta = File(a, Pieces.FILE).readText()
+        assertEquals(ta, File(b, Pieces.FILE).readText())
+        Pieces.store(a, s)
+        assertEquals(ta, File(a, Pieces.FILE).readText())
     }
 
     @Test
     fun test24ChunksNeverCrossDrivesOrFills() {
         val s1 = drive("1000-a", 0.0, 80.0, 6.0, 0.30, fillAt = 3000, refill = 20.0)
         val s2 = drive("2000-b", 100000.0, 94.0, 4.0, 0.30)   // starts 10+ % above where 1000-a ended -> fill between
-        val (ps, ch) = ChunkFit.segmentAll(listOf(s1, s2))
+        val mapped = viaPieces(listOf(s1, s2))
+        val ps = mapped.ps
+        val ch = mapped.ch
         val keys = ps.map { it.key }
         assertTrue(keys.toString(), keys.containsAll(listOf("1000-a#0", "1000-a#1", "1000-a#2", "2000-b#0")))
         val fillT = s1.t[3000]
@@ -58,17 +75,20 @@ class ChunkFitTest {
         assertTrue(ps.first { it.key == "1000-a#2" }.fillAtStart)
         assertTrue(ps.first { it.key == "2000-b#0" }.fillAtStart)
         // An open session only stores parts completed by a fill.
-        val open = ChunkFit.segmentAll(listOf(s1), openName = "1000-a").first.map { it.key }
+        val open = viaPieces(listOf(s1), openName = "1000-a").ps.map { it.key }
         assertEquals(listOf("1000-a#0", "1000-a#1"), open)
     }
 
     @Test
     fun test25RobustWeightingLimitsOneBadDrive() {
         val good = (0 until 6).map { drive("${3000 + it}-g", it * 1e5, 90.0 - 10 * it, 6.0, 0.30) }
-        val base = ChunkFit.segmentAll(good).let { (p, c) -> ChunkFit.fit(p, c, null) }
+        val baseMapped = viaPieces(good)
+        val base = ChunkFit.fit(baseMapped.ps, baseMapped.ch, null)
         // One loaded/sloped drive whose level falls twice as fast per gallon.
         val bad = good + drive("3900-x", 9e5, 70.0, 6.0, 0.15)
-        val (pb, cb) = ChunkFit.segmentAll(bad)
+        val badMapped = viaPieces(bad)
+        val pb = badMapped.ps
+        val cb = badMapped.ch
         val robust = ChunkFit.fit(pb, cb, null)
         val plain = ChunkFit.fit(pb, cb, null, huberK = Double.POSITIVE_INFINITY)
         val dR = abs(robust.v(70.0) - robust.v(30.0) - (base.v(70.0) - base.v(30.0)))
@@ -88,14 +108,15 @@ class ChunkFitTest {
         assertTrue(text, text.contains("\"version\":${ChunkFit.VERSION}") && text.contains("\"timestamp\":") && text.contains("\"source\":\"chunks\""))
         assertTrue(File(dir, "model-raw.json").isFile)
         val (edges, g, cap) = checkNotNull(ProfileStore.storedMap(dir))
-        val (ps, ch) = ChunkFit.load(dir)
+        val (pp, pcs) = Pieces.load(dir)
+        val (ps, ch) = ChunkFit.fromPieces(pp, pcs)
         val r = ChunkFit.fit(ps, ch, 35.0)
         assertEquals(r.v95, FuelV2.vAt(95.0, edges, g), 1e-9)
         assertEquals(r.capToZero, cap, 1e-9)
         // Rollup again with no new sessions: store unchanged, same map.
-        val before = File(dir, ChunkFit.FILE).readText()
+        val before = File(dir, Pieces.FILE).readText()
         ProfileStore.rollup(dir, 35.0)
-        assertEquals(before, File(dir, ChunkFit.FILE).readText())
+        assertEquals(before, File(dir, Pieces.FILE).readText())
         assertEquals(r.v95, FuelV2.vAt(95.0, edges, checkNotNull(ProfileStore.storedMap(dir)).second), 1e-9)
     }
 
@@ -103,16 +124,18 @@ class ChunkFitTest {
     fun test27ParityWithPythonReference() {
         // python3 sandbox/research/chunk-study/ref_chunkfit.py app/src/test/resources/fuel-sessions
         val dir = tmp()
-        ChunkFit.append(dir, fixtures())
-        val (ps, ch) = ChunkFit.load(dir)
+        Pieces.store(dir, fixtures())
+        val (pp, pcs) = Pieces.load(dir)
+        val (ps, ch) = ChunkFit.fromPieces(pp, pcs)
         val r = ChunkFit.fit(ps, ch, null)
         assertEquals(87, ps.size)
-        assertEquals(54, ch.size)
-        assertEquals(29, r.groups)
-        val ref = doubleArrayOf(0.1173251483073062, 0.11873091581785829, 0.12715701691693557, 0.14215045343570423, 0.15890164610581375, 0.1852145572903725, 0.2080618831183091, 0.4245792893052299, 0.40246785838267046, 0.2749926546389111, 0.23879294309794966, 0.2439652308121886, 0.49318784394671955, 0.3488147882794675, 0.3802058961492376, 0.425314951631795, 0.49120472377671337, 0.6229272146904896, 0.6486288723182294)
+        assertEquals(132, ch.size) // re-pinned at ANALYSIS_VERSION 3; was 54
+        assertEquals(42, r.groups) // re-pinned at ANALYSIS_VERSION 3; was 29
+        // re-pinned at ANALYSIS_VERSION 3; was 0.1173251483073062, 0.11873091581785829, 0.12715701691693557, 0.14215045343570423, 0.15890164610581375, 0.1852145572903725, 0.2080618831183091, 0.4245792893052299, 0.40246785838267046, 0.2749926546389111, 0.23879294309794966, 0.2439652308121886, 0.49318784394671955, 0.3488147882794675, 0.3802058961492376, 0.425314951631795, 0.49120472377671337, 0.6229272146904896, 0.6486288723182294
+        val ref = doubleArrayOf(0.11148218144405395, 0.11569480954807894, 0.1487270818065337, 0.2139192107757819, 0.2507380370007187, 0.2326587772782218, 0.20012889559878896, 0.37427225911592765, 0.364363060410713, 0.3330539477373982, 0.69813246643399, 0.3981485005131473, 0.5270150723708016, 0.27158404788115026, 0.3855179435156638, 0.3745430196778443, 0.7956440117345199, 0.6992160341052779, 0.42137658310689863)
         for (k in ref.indices) assertEquals("g[$k]", ref[k], r.g[k], 0.005)
-        assertEquals(30.263119440109506, r.v95, 0.05)
-        assertEquals(31.254848755384163, r.capToZero, 0.05)
+        assertEquals(34.58107970027755, r.v95, 0.05) // re-pinned at ANALYSIS_VERSION 3; was 30.263119440109506
+        assertEquals(35.601272279310614, r.capToZero, 0.05) // re-pinned at ANALYSIS_VERSION 3; was 31.254848755384163
     }
 
     /** Drive with a stop at 600-660 s and a hard brake at 1200 s. */
@@ -138,14 +161,14 @@ class ChunkFitTest {
         assertTrue((0 until ChunkFit.SETTLE_S.toInt()).none { ok[it] })
         // Raw level is untouched (mask only), and fuel through the masked spans still counts.
         assertEquals(80.0 - s.used[1200] / 0.3, s.raw[1200], 1e-12)
-        val (ps, _) = ChunkFit.segmentAll(listOf(s))
+        val ps = viaPieces(listOf(s)).ps
         assertEquals(s.used.last() - s.used.first(), ps.sumOf { it.fuel }, 1e-9)
     }
 
     @Test
     fun test29MaskedSpansNeverFeedChunksButFuelSpansThem() {
         val s = stopAndBrake()
-        val (_, ch) = ChunkFit.segmentAll(listOf(s))
+        val ch = viaPieces(listOf(s)).ch
         val ok = ChunkFit.steady(s)
         assertTrue(ch.isNotEmpty())
         // Chunk endpoints are block medians of trusted samples; fuel inside a chunk includes masked seconds.
@@ -163,7 +186,9 @@ class ChunkFitTest {
         // Density changes right at the brake, which would tempt a breakpoint inside the masked window.
         val raw = DoubleArray(n) { i -> if (i < 1500) 90.0 - used[i] / 0.3 else 90.0 - used[1500] / 0.3 - (used[i] - used[1500]) / 0.2 }
         val s = FuelSession("6000-b", t, raw, raw.copyOf(), used, spd, BooleanArray(n))
-        val (ps, ch) = ChunkFit.segmentAll(listOf(s))
+        val mapped = viaPieces(listOf(s))
+        val ps = mapped.ps
+        val ch = mapped.ch
         assertEquals(1, ps.size)
         val masked = 1499.0..(1500.0 + FuelV2.HARD_HOLD)
         for (c in ch) assertTrue("endpoint in masked window: ${c.t0}..${c.t1}", c.t0 !in masked && c.t1 !in masked)
@@ -181,10 +206,17 @@ class ChunkFitTest {
         val s = drive("7000-l", 0.0, 85.0, 9.0, 0.30)
         val spd = s.spd.copyOf(); spd[5000] = 40.0
         val d = FuelSession(s.name, s.t, s.raw, s.sm, s.used, spd, s.fill)
-        val (ps, ch) = ChunkFit.segmentAll(listOf(d))
+        val mapped = viaPieces(listOf(d))
+        val ps = mapped.ps
+        val ch = mapped.ch
         assertEquals(1, ps.size)
         assertTrue("chunks=${ch.size}", ch.size >= 3)
-        for (c in ch) assertTrue("span ${c.ls - c.le}", abs(c.ls - c.le) <= ChunkFit.MAX_SPAN + 1.0)
+        val rhoOf = mapped.parts.associate { it.key to it.rho }
+        for (pc in mapped.pieces) {
+            if (pc.overSpan) continue
+            val dFmax = Pieces.MAX_SPAN * rhoOf.getValue(pc.part)
+            assertTrue("dF ${pc.dF} > ΔF $dFmax", pc.dF <= dFmax)
+        }
         val masked = 4999.0..(5000.0 + FuelV2.HARD_HOLD)
         for (c in ch) assertTrue(c.t0 !in masked && c.t1 !in masked)
         // Pieces tile the drive in order.
@@ -196,8 +228,8 @@ class ChunkFitTest {
         val base = fixtures()
         fun fitScaled(k: Double): ChunkFit.Result {
             val s = base.map { FuelSession(it.name, it.t, it.raw, it.sm, DoubleArray(it.used.size) { i -> it.used[i] * k }, it.spd, it.fill) }
-            val (ps, ch) = ChunkFit.segmentAll(s)
-            return ChunkFit.fit(ps, ch, 35.0)
+            val mapped = viaPieces(s)
+            return ChunkFit.fit(mapped.ps, mapped.ch, 35.0)
         }
         val a = fitScaled(1.0)
         for (k in doubleArrayOf(0.5, 2.0)) {

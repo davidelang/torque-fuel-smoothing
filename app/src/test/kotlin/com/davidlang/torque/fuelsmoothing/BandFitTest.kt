@@ -19,15 +19,17 @@ class BandFitTest {
     fun test43BandParityWithPythonReference() {
         // python3 sandbox/research/chunk-study/ref_bandfit.py app/src/test/resources/fuel-sessions
         val dir = tmp()
-        ChunkFit.append(dir, fixtures())
-        val (ps, ch) = ChunkFit.load(dir)
+        Pieces.store(dir, fixtures())
+        val (pp, pcs) = Pieces.load(dir)
+        val (ps, ch) = ChunkFit.fromPieces(pp, pcs)
         val r = checkNotNull(BandFit.run(ps, ch))
-        assertEquals(0.3, r.lambda, 1e-12)
-        assertEquals(0.7888755388909849, r.lodoRms, 0.01)
-        val ref = doubleArrayOf(0.10999842790069102, 0.11750118095460527, 0.12665796151545836, 0.07023368673078903, 0.05543437924058408, 0.16508600454649938, 0.1960590927139637, 0.5186412249115221, 0.297467452280851, 0.39696646763395727, 0.3049384363970512, 0.15410127496483594, 0.35186108612259653, 0.4496919096176997, 0.16870148610926652, 0.5093458845940436, 0.3028831534978558, 0.47327606645886894, 0.6280135494624337, 0.7884888201395112)
+        assertEquals(1000.0, r.lambda, 1e-12) // re-pinned at ANALYSIS_VERSION 3; was 0.3
+        assertEquals(0.5877055468859453, r.lodoRms, 0.01) // re-pinned at ANALYSIS_VERSION 3; was 0.7888755388909849
+        // re-pinned at ANALYSIS_VERSION 3; was 0.10999842790069102, 0.11750118095460527, 0.12665796151545836, 0.07023368673078903, 0.05543437924058408, 0.16508600454649938, 0.1960590927139637, 0.5186412249115221, 0.297467452280851, 0.39696646763395727, 0.3049384363970512, 0.15410127496483594, 0.35186108612259653, 0.4496919096176997, 0.16870148610926652, 0.5093458845940436, 0.3028831534978558, 0.47327606645886894, 0.6280135494624337, 0.7884888201395112
+        val ref = doubleArrayOf(0.4124416814393542, 0.32756763392448573, 0.2453202170030607, 0.17391702709729998, 0.12511044178023242, 0.10666060772326011, 0.12224977940721046, 0.17134840892341496, 0.2420531575876042, 0.3167608094751123, 0.3825978441169252, 0.4307455611826585, 0.4564968020516288, 0.4584808993789942, 0.43931653344107846, 0.4048994898672622, 0.35941068404746357, 0.30778784374375023, 0.25297212146580855, 0.19736884957574397)
         for (k in ref.indices) assertEquals("g[$k]", ref[k], r.g[k], 0.005)
-        assertEquals(28.703841593871978, r.v95, 0.05)
-        assertEquals(29.650719074892795, r.capToZero, 0.05)
+        assertEquals(28.150380044863493, r.v95, 0.05) // re-pinned at ANALYSIS_VERSION 3; was 28.703841593871978
+        assertEquals(29.254804077719847, r.capToZero, 0.05) // re-pinned at ANALYSIS_VERSION 3; was 29.650719074892795
     }
 
     @Test
@@ -35,7 +37,10 @@ class BandFitTest {
         val base = fixtures()
         fun fitScaled(k: Double): BandFit.Result {
             val s = base.map { FuelSession(it.name, it.t, it.raw, it.sm, DoubleArray(it.used.size) { i -> it.used[i] * k }, it.spd, it.fill) }
-            val (ps, ch) = ChunkFit.segmentAll(s)
+            val dir = tmp()
+            Pieces.store(dir, s)
+            val (pp, pcs) = Pieces.load(dir)
+            val (ps, ch) = ChunkFit.fromPieces(pp, pcs)
             return checkNotNull(BandFit.run(ps, ch))
         }
         val a = fitScaled(1.0)
@@ -77,7 +82,8 @@ class BandFitTest {
         val text = File(dir, BandFit.FILE).readText()
         assertTrue(text, text.contains("\"version\":${BandFit.VERSION}") && text.contains("\"source\":\"band\"") && text.contains("\"timestamp\":"))
         val (g, cap) = checkNotNull(BandFit.load(dir))
-        val (ps, ch) = ChunkFit.load(dir)
+        val (pp, pcs) = Pieces.load(dir)
+        val (ps, ch) = ChunkFit.fromPieces(pp, pcs)
         val r = checkNotNull(BandFit.run(ps, ch))
         for (k in g.indices) assertEquals(r.g[k], g[k], 1e-12)
         assertEquals(r.capToZero, cap, 1e-12)

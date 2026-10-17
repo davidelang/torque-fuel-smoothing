@@ -511,15 +511,16 @@ internal object ProfileStore {
     }
 
     /**
-     * Appends this profile's new drive parts to segments.jsonl and refits from all stored chunks.
+     * Stores pieces.jsonl and refits model.json from those pieces. Does not write segments.jsonl.
      * Returns model.json text, or null when no chunk group exists yet. [openName] is a session still being
      * recorded (fill detection): only its parts completed by a fill are stored.
      */
     fun chunkUpdate(dir: File, sessions: List<FuelSession>, nameplate: Double?, raw: FuelModel?, openName: String?): String? {
         return runCatching {
             dir.mkdirs()
-            val added = ChunkFit.append(dir, sessions, openName)
-            val (ps, ch) = ChunkFit.load(dir)
+            val added = Pieces.store(dir, sessions, openName)
+            val (pp, pcs) = Pieces.load(dir)
+            val (ps, ch) = ChunkFit.fromPieces(pp, pcs)
             val r = ChunkFit.fit(ps, ch, nameplate)
             val msg = "fit chunk v95=${"%.2f".format(r.v95)} cap=${"%.2f".format(r.capToZero)} chunks=${r.chunks} groups=${r.groups} " +
                 "newParts=$added active=${r.active}/${r.cons.size} | raw v95=${raw?.let { "%.2f".format(it.v95()) }} " +

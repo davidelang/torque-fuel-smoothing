@@ -131,7 +131,7 @@ class PiecesTest {
 
     @Test
     fun test92VersionBumpArchivesAndReprocessesKeepsC0() {
-        assertEquals(2, Pieces.ANALYSIS_VERSION)
+        assertEquals(3, Pieces.ANALYSIS_VERSION)
         assertEquals(EndpointMethod.PIECE_FIT, Pieces.ENDPOINT)
         assertTrue(Pieces.FIT_WEAK)
         val dir = tmp()
@@ -153,7 +153,7 @@ class PiecesTest {
             assertTrue(name, File(dir, "$name.v1").isFile)
         }
         assertTrue(File(dir, "model-kalman.json.v1").readText().contains("41.5"))
-        assertEquals("2", File(dir, "analysis.version").readText().trim())
+        assertEquals("3", File(dir, "analysis.version").readText().trim())
         val c0 = Regex("\"c0\":(-?[0-9.eE+-]+)").find(File(dir, "model-kalman.json").readText())!!.groupValues[1].toDouble()
         assertEquals(41.5, c0, 1e-9)
         assertTrue(File(dir, "rollup.sig").isFile)
@@ -168,7 +168,7 @@ class PiecesTest {
         val dirEq = tmp()
         File(dirEq, "raw").mkdirs()
         fixtures.take(1).forEach { it.copyTo(File(dirEq, "raw/${it.name}")) }
-        File(dirEq, "analysis.version").writeText("2")
+        File(dirEq, "analysis.version").writeText("3")
         File(dirEq, "segments.jsonl").writeText("MARKER\n")
         ProfileStore.rollup(dirEq, 35.0)
         assertTrue(File(dirEq, "segments.jsonl").readText().contains("MARKER"))
@@ -191,11 +191,12 @@ class PiecesTest {
         f.writeText(sb.toString())
         val bytes = f.length()
         val loaded = FuelV2.loadSessions(File(dirOpen, "raw"), caps = mapOf(openName to bytes))
-        assertEquals(listOf("$openName#0", "$openName#1"), ChunkFit.segmentAll(loaded).first.map { it.key })
+        assertEquals(listOf("$openName#0", "$openName#1"), Pieces.cut(loaded).first.map { it.key })
         ProfileStore.fillUpdate(dirOpen, 35.0, openName, bytes)
-        val seg = File(dirOpen, "segments.jsonl").readText()
-        assertTrue(seg, seg.contains("\"$openName#0\""))
-        assertFalse(seg, seg.contains("\"$openName#1\""))
+        val pcs = File(dirOpen, "pieces.jsonl").readText()
+        assertTrue(pcs, pcs.contains("\"$openName#0\""))
+        assertFalse(pcs, pcs.contains("\"$openName#1\""))
+        assertFalse(File(dirOpen, "segments.jsonl").exists())
     }
 
     @Test

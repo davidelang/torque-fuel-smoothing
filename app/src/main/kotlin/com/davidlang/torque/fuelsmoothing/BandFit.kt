@@ -181,9 +181,10 @@ internal object BandFit {
         return g.toDoubleArray() to cap
     }
 
-    /** Refit from all stored chunks and write model-band.json when the result changed. */
+    /** Refit from pieces.jsonl and write model-band.json when the result changed. */
     fun update(dir: File): Result? = runCatching {
-        val (ps, ch) = ChunkFit.load(dir)
+        val (pp, pcs) = Pieces.load(dir)
+        val (ps, ch) = ChunkFit.fromPieces(pp, pcs)
         val r = run(ps, ch, cachedLambda(dir)) ?: return@runCatching null
         val f = File(dir, FILE); val js = json(r, System.currentTimeMillis())
         val strip = { x: String -> x.replace(Regex("\"timestamp\":[0-9]+"), "") }
