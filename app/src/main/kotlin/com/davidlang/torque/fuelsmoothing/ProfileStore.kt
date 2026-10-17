@@ -2,6 +2,7 @@ package com.davidlang.torque.fuelsmoothing
 
 import java.io.File
 import java.io.RandomAccessFile
+import java.util.concurrent.locks.ReentrantLock
 
 /**
  * Schema 2 profile tree. A missing default profile is created in place.
@@ -342,26 +343,95 @@ internal object ProfileStore {
      */
     const val ROLLUP_SIG = "rollup.sig"
 
+    /** Held for the whole rollup and fillUpdate. rollupFull and reprocessAll do not lock. */
+    val DataLock = ReentrantLock()
+
+    private val ARCHIVE_PRODUCTS = arrayOf(
+        "segments.jsonl", "pieces.jsonl", "kalman-state.txt", "model.json",
+        "model-band.json", "model-kalman.json", "rollup.sig",
+    )
+
     /**
      * [exclude]: session ids still being recorded (never read mid-drive). Skipped entirely, outputs untouched,
      * when the included raw files and settings are unchanged since the last rollup (RollupCache.enabled).
      */
     /** [kalmanC0]: Kalman prior scale used only when its state is created (self-contained seed; see PluginService.kalmanSeedFor). */
     fun rollup(dir: File, nameplate: Double?, exclude: Set<String> = emptySet(), kalmanC0: Double? = nameplate): String {
-        val raw = File(dir, "raw")
-        val files = if (raw.isDirectory) FuelV2.sessionFiles(raw, exclude) else emptyList()
-        val sig = RollupCache.signature(files, "nameplate=$nameplate v=${ChunkFit.VERSION}/${BandFit.VERSION}/${Kalman.VERSION}")
-        val sigFile = File(dir, ROLLUP_SIG)
-        if (RollupCache.enabled && files.isNotEmpty() && sigFile.isFile && File(dir, "model.json").isFile && sigFile.readText() == sig) {
-            runCatching { FsLog.i("FuelSmooth", "rollup skipped: no new or changed raw sessions (${files.size})") }
-            return File(dir, "gap.txt").takeIf { it.isFile }?.readText() ?: ""
-        }
+        DataLock.lock()
         try {
-            val r = rollupFull(dir, nameplate, exclude, kalmanC0)
-            if (files.isNotEmpty()) AtomicFile.write(sigFile, sig)
-            return r
+            val raw = File(dir, "raw")
+            val files = if (raw.isDirectory) FuelV2.sessionFiles(raw, exclude) else emptyList()
+            val sig = RollupCache.signature(
+                files,
+                "nameplate=$nameplate v=${ChunkFit.VERSION}/${BandFit.VERSION}/${Kalman.VERSION} a=${Pieces.ANALYSIS_VERSION}",
+            )
+            val sigFile = File(dir, ROLLUP_SIG)
+            if (versionChanged(dir)) {
+                try {
+                    val r = reprocessAll(dir, nameplate, kalmanC0, exclude)
+                    if (files.isNotEmpty()) AtomicFile.write(sigFile, sig)
+                    return r
+                } finally {
+                    RollupCache.clear()
+                }
+            }
+            if (RollupCache.enabled && files.isNotEmpty() && sigFile.isFile && File(dir, "model.json").isFile && sigFile.readText() == sig) {
+                runCatching { FsLog.i("FuelSmooth", "rollup skipped: no new or changed raw sessions (${files.size})") }
+                return File(dir, "gap.txt").takeIf { it.isFile }?.readText() ?: ""
+            }
+            try {
+                val r = rollupFull(dir, nameplate, exclude, kalmanC0)
+                if (files.isNotEmpty()) AtomicFile.write(sigFile, sig)
+                return r
+            } finally {
+                RollupCache.clear() // parsed history is not kept between rollups
+            }
         } finally {
-            RollupCache.clear() // parsed history is not kept between rollups
+            DataLock.unlock()
+        }
+    }
+
+    /** True when analysis.version is missing (counted as version 1) or is not [Pieces.ANALYSIS_VERSION]. */
+    fun versionChanged(dir: File): Boolean {
+        val v = analysisVersion(dir)
+        return v == null || v != Pieces.ANALYSIS_VERSION
+    }
+
+    /**
+     * Archives the v1 products, then one rollupFull. Does not lock and does not call rollup.
+     * The Kalman C0 is the value stored before the rename, else [kalmanC0].
+     */
+    fun reprocessAll(dir: File, nameplate: Double?, kalmanC0: Double?, exclude: Set<String>): String {
+        val c0 = Kalman.storedC0(dir) ?: kalmanC0
+        val old = analysisVersion(dir) ?: 1
+        FsLog.i("FuelSmooth", "reprocess analysis v$old -> ${Pieces.ANALYSIS_VERSION}")
+        for (name in ARCHIVE_PRODUCTS) archiveProduct(dir, name, old)
+        val text = rollupFull(dir, nameplate, exclude, c0)
+        AtomicFile.write(File(dir, "analysis.version"), Pieces.ANALYSIS_VERSION.toString())
+        return text
+    }
+
+    private fun analysisVersion(dir: File): Int? {
+        val f = File(dir, "analysis.version")
+        if (!f.isFile) return null
+        val t = f.readText().trim()
+        val n = t.toIntOrNull()
+        if (n == null) {
+            FsLog.w("FuelSmooth", "analysis.version is not an integer ('$t') in ${f.path}")
+            throw IllegalStateException("analysis.version is not an integer ('$t') in ${f.path}")
+        }
+        return n
+    }
+
+    private fun archiveProduct(dir: File, name: String, old: Int) {
+        val f = File(dir, name)
+        if (!f.isFile) return
+        var dst = File(dir, "$name.v$old")
+        var k = 2
+        while (dst.exists()) dst = File(dir, "$name.v$old.${k++}")
+        if (!f.renameTo(dst)) {
+            FsLog.w("FuelSmooth", "reprocess could not archive ${f.name} to ${dst.name}")
+            throw IllegalStateException("reprocess could not archive ${f.path} to ${dst.path}")
         }
     }
 
@@ -465,13 +535,21 @@ internal object ProfileStore {
      * [openBytes]: length of the open session's file when the update was queued; only complete lines up to it
      * are read (the recorder keeps appending meanwhile).
      */
-    fun fillUpdate(dir: File, nameplate: Double?, openName: String?, openBytes: Long? = null, kalmanC0: Double? = nameplate): Boolean = try {
-        fillUpdate0(dir, nameplate, openName, openBytes, kalmanC0)
-    } finally {
-        RollupCache.clear()
+    fun fillUpdate(dir: File, nameplate: Double?, openName: String?, openBytes: Long? = null, kalmanC0: Double? = nameplate): Boolean {
+        DataLock.lock()
+        try {
+            return fillUpdate0(dir, nameplate, openName, openBytes, kalmanC0)
+        } finally {
+            RollupCache.clear()
+            DataLock.unlock()
+        }
     }
 
     private fun fillUpdate0(dir: File, nameplate: Double?, openName: String?, openBytes: Long?, kalmanC0: Double?): Boolean {
+        if (versionChanged(dir)) {
+            val ex = if (openName != null) setOf(openName) else emptySet()
+            reprocessAll(dir, nameplate, kalmanC0, ex)
+        }
         val raw = File(dir, "raw")
         val caps = if (openName != null && openBytes != null) mapOf(openName to openBytes) else emptyMap()
         val sessions = if (raw.isDirectory) FuelV2.loadSessions(raw, caps = caps) else return false

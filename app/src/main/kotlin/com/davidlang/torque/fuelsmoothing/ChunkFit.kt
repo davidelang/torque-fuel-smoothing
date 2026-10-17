@@ -41,10 +41,10 @@ internal object ChunkFit {
     const val IRLS_ITERS = 6
     const val CONS_MIN_SPAN = 10.0
     /** Seconds of steady driving after any stop (or hard accel/brake) before the level is trusted (slope skew from parking). */
-    const val SETTLE_S = 25.0
+    const val SETTLE_S = Pieces.SETTLE_S
     /** Max gauge span of one chunk (2 bins), so long drives yield several chunks across the map. */
     const val MAX_SPAN = 2 * 5.0
-    const val STOP_KMH = 5.0
+    const val STOP_KMH = Pieces.STOP_KMH
 
     /** Future anomaly exclusion hook (|robust z| above this drops a chunk). Off: data too sparse. */
     val EXCLUDE_Z: Double? = null
@@ -74,11 +74,7 @@ internal object ChunkFit {
     )
 
     // ---------------- helpers (match numpy) ----------------
-    fun med(x: DoubleArray): Double {
-        if (x.isEmpty()) return 0.0
-        val s = x.sorted(); val n = s.size
-        return if (n % 2 == 1) s[n / 2] else 0.5 * (s[n / 2 - 1] + s[n / 2])
-    }
+    fun med(x: DoubleArray): Double = Stats.med(x)
 
     private fun finiteMed(x: List<Double>): Double {
         val f = x.filter { it.isFinite() }.toDoubleArray()
@@ -102,40 +98,14 @@ internal object ChunkFit {
         return s
     }
 
-    fun steady(s: FuelSession): BooleanArray {
-        val q = FuelV2.quietMask(s.spd, s.t, s.fill)
-        val n = s.t.size
-        val frozen = BooleanArray(n)
-        var i = 0
-        while (i < n) {
-            var j = i
-            while (j + 1 < n && s.raw[j + 1] == s.raw[i]) j++
-            if (j - i + 1 >= FuelV2.FROZEN_S) {
-                var mv = 0
-                for (k in i..j) if (s.spd[k] > 5.0) mv++
-                if (mv >= FuelV2.FROZEN_S / 2) for (k in i..j) frozen[k] = true
-            }
-            i = j + 1
-        }
-        val ok = levelTrusted(s, q)
-        return BooleanArray(n) { q[it] && ok[it] && s.raw[it].isFinite() && !frozen[it] }
-    }
+    fun steady(s: FuelSession): BooleanArray = Pieces.trusted(s)
 
     /**
      * Analysis-only level mask (equivalent to lvl=-1; raw data is untouched and fuel always counts): false during
      * the hard accel/brake blanking (HARD_HOLD, applied in [q]) and for the first SETTLE_S seconds of driving after any stop.
      */
-    fun levelTrusted(s: FuelSession, q: BooleanArray = FuelV2.quietMask(s.spd, s.t, s.fill)): BooleanArray {
-        val n = s.t.size
-        val out = BooleanArray(n)
-        var start = Double.NaN
-        for (i in 0 until n) {
-            if (s.spd[i] < STOP_KMH) { start = Double.NaN; continue }
-            if (start.isNaN()) start = s.t[i]
-            out[i] = s.t[i] - start >= SETTLE_S
-        }
-        return out
-    }
+    fun levelTrusted(s: FuelSession, q: BooleanArray = FuelV2.quietMask(s.spd, s.t, s.fill)): BooleanArray =
+        Pieces.levelTrusted(s)
 
     private fun movingGph(s: FuelSession): Double? {
         var cnt = 0; var fu = 0.0; var dt = 0.0

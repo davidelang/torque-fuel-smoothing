@@ -67,12 +67,12 @@ internal data class TankPublish(
  * Logged speed is compared as stored. Live callers convert to km/h before the gates.
  */
 internal object FuelV2 {
-    const val V_MIN = 30.0
-    const val A_WIN = 5
-    const val A_MAX = 0.5
-    const val A_HARD = 1.5
-    const val HARD_HOLD = 10
-    const val FROZEN_S = 60
+    const val V_MIN = Pieces.V_MIN_KMH
+    const val A_WIN = Pieces.A_WIN
+    const val A_MAX = Pieces.A_MAX
+    const val A_HARD = Pieces.A_HARD
+    const val HARD_HOLD = Pieces.HARD_HOLD
+    const val FROZEN_S = Pieces.FROZEN_S
     const val C_PCT = 1.0
     const val C_MAX_PCT = 5.0
     const val SE_TARGET = 0.7
@@ -200,40 +200,9 @@ internal object FuelV2 {
         )
     }
 
-    fun quietMask(spd: DoubleArray, t: DoubleArray, fill: BooleanArray): BooleanArray {
-        val n = spd.size
-        val a = if (n > 2) gradient(spd, t) else DoubleArray(n)
-        val a5 = convolveSame(a, A_WIN)
-        val block = BooleanArray(n)
-        for (i in 0 until n) {
-            if (abs(a[i]) > A_HARD) {
-                val end = min(n, i + HARD_HOLD + 1)
-                for (j in i until end) block[j] = true
-            }
-        }
-        return BooleanArray(n) { i ->
-            spd[i] >= V_MIN && abs(a5[i]) <= A_MAX && !block[i] && !fill[i]
-        }
-    }
+    fun quietMask(spd: DoubleArray, t: DoubleArray, fill: BooleanArray): BooleanArray = Pieces.quietMask(spd, t, fill)
 
-    fun frozenMask(raw: DoubleArray, spd: DoubleArray): BooleanArray {
-        val n = raw.size
-        val m = BooleanArray(n)
-        var i = 0
-        while (i < n) {
-            var j = i
-            while (j + 1 < n && raw[j + 1] == raw[i]) j++
-            if (j - i + 1 >= FROZEN_S) {
-                var fast = 0
-                for (k in i..j) if (spd[k] > 5.0) fast++
-                if (fast >= FROZEN_S / 2) {
-                    for (k in i..j) m[k] = true
-                }
-            }
-            i = j + 1
-        }
-        return m
-    }
+    fun frozenMask(raw: DoubleArray, spd: DoubleArray): BooleanArray = Pieces.frozenMask(raw, spd)
 
     fun chunksSf(
         s: FuelSession,
@@ -1032,40 +1001,6 @@ internal object FuelV2 {
             append(",\"tau\":").append(tau.toString())
             append('}')
         }
-    }
-
-    private fun gradient(v: DoubleArray, t: DoubleArray): DoubleArray {
-        val n = v.size
-        val g = DoubleArray(n)
-        if (n == 0) return g
-        if (n == 1) return g
-        val d0 = t[1] - t[0]
-        g[0] = if (d0 != 0.0) (v[1] - v[0]) / d0 else 0.0
-        val dN = t[n - 1] - t[n - 2]
-        g[n - 1] = if (dN != 0.0) (v[n - 1] - v[n - 2]) / dN else 0.0
-        for (i in 1 until n - 1) {
-            val h0 = t[i] - t[i - 1]
-            val h1 = t[i + 1] - t[i]
-            val den = h0 * h1 * (h0 + h1)
-            g[i] = if (den == 0.0) 0.0 else (h0 * h0 * v[i + 1] + (h1 * h1 - h0 * h0) * v[i] - h1 * h1 * v[i - 1]) / den
-        }
-        return g
-    }
-
-    private fun convolveSame(a: DoubleArray, win: Int): DoubleArray {
-        val n = a.size
-        val out = DoubleArray(n)
-        val half = win / 2
-        val scale = 1.0 / win
-        for (i in 0 until n) {
-            var s = 0.0
-            for (k in 0 until win) {
-                val j = i + k - half
-                if (j in 0 until n) s += a[j]
-            }
-            out[i] = s * scale
-        }
-        return out
     }
 
     private fun detrend(t: DoubleArray, x: DoubleArray) {

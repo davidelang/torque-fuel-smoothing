@@ -219,3 +219,8 @@
 - Scope: first-time Fuel Smoothing identity, strip old-plugin leftovers, battery list, tip jar, launcher picture. No Play upload, no keystore, no GitHub push.
 - `./exec-preflight` reported Host `/home/dlang/git/torque-ford-gas-tracking` against this checkout `/home/dlang/git/torque-ford-gas-tracking/master`. Worktree stamp is `master`. Implementing in this checkout.
 - No `./deploy` by coder. Compile via `./build_app`. Unit tests via `./gradlew :app:testDebugUnitTest`.
+
+## 2026-10-16 - Execute start: pieces-reprocess-20261016-2304-plan.md
+
+- Approved plan: `sandbox/plans/pieces-reprocess-20261016-2304-plan.md`
+- Scope: neutral piece cutter (`Pieces`) and analysis-version reprocess (`ProfileStore.reprocessAll`). Chunk, band, and Kalman fits stay. No phone install.
