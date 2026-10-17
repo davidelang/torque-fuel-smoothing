@@ -224,3 +224,8 @@
 
 - Approved plan: `sandbox/plans/pieces-reprocess-20261016-2304-plan.md`
 - Scope: neutral piece cutter (`Pieces`) and analysis-version reprocess (`ProfileStore.reprocessAll`). Chunk, band, and Kalman fits stay. No phone install.
+
+## 2026-10-17 - Execute start: chunkfit-on-pieces-20261016-2305-plan.md
+
+- Approved plan: `sandbox/plans/chunkfit-on-pieces-20261016-2305-plan.md`
+- Scope: each stored piece is one ChunkFit chunk; refit model.json from pieces.jsonl. Kalman still reads kalmanDrives. No phone install. Do not edit Kalman.kt. Plan 1 already committed at 5c336199.
