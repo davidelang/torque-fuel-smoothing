@@ -22,3 +22,4 @@ local deploy
 local build_app
 local run-as-primary.c
 local ve-resolve-orch
+local android-build-info
