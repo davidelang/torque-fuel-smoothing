@@ -228,4 +228,24 @@ class IdentityTest {
         assertTrue(Regex("""col\.addView\(info\(""").findAll(settings).count() >= 12)
         assertFalse(settings.contains("col.addView(label("))
     }
+
+    @Test
+    fun test100IdentityHeader() {
+        assertEquals("C410F1", identityHeader("2216C1", "SAE J1850 PWM"))
+        assertEquals("", identityHeader("2216C1", null))
+        assertEquals("", identityHeader("2216C1", ""))
+        assertEquals("", identityHeader("2216C1", "CAN"))
+        assertEquals("", identityHeader("0902", "J1850 PWM"))
+    }
+
+    @Test
+    fun test101FirmProfileProbesUntilOkNoDoubleQueue() {
+        assertEquals(listOf("0902", "2216C1"), identityQueue(true, "1FTBW3XM5HKA12345", "no"))
+        assertEquals(listOf("0902"), identityQueue(true, "1FTBW3XM5HKA12345", "ok"))
+        assertEquals(listOf("0100"), identityQueue(true, null, "ok"))
+        assertEquals(listOf("0902", "2216C1"), identityQueue(true, "1FTBW3XM5HKA12345", null))
+        assertEquals(listOf("0100", "2216C1"), identityQueue(true, null, null))
+        assertEquals(listOf("0100", "0902", "0904", "0906", "090A", "2216C1"), identityQueue(false, "1FTBW3XM5HKA12345", "no"))
+        assertEquals(listOf("0100", "0902", "0904", "0906", "090A", "2216C1"), identityQueue(false, null, null))
+    }
 }

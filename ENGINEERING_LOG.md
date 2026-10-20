@@ -262,3 +262,8 @@
 - Approved plan: `sandbox/plans/rollup-summary-line-20261016-2308-plan.md`
 - Scope: rollup writes rollup-summary.txt and returns that one line. Session close logs tank id plus the summary. gap.txt is still written. ANALYSIS_VERSION stays 4. No phone install.
 - test59 tank dirs are both named tank so the summary profile id matches across the cached and uncached trees.
+
+## 2026-10-19 - Execute start: identity-c410f1-20261016-2309-plan.md
+
+- Approved plan: `sandbox/plans/identity-c410f1-20261016-2309-plan.md`
+- Scope: firm profiles send 2216C1 once per connect until the stored probe is ok, using header C410F1 on J1850 PWM. ANALYSIS_VERSION stays. No phone install. No adb.

@@ -22,6 +22,19 @@ import java.util.ArrayDeque
 import kotlin.math.ceil
 import kotlin.math.roundToInt
 
+internal fun identityHeader(cmd: String, protocol: String?): String =
+    if (cmd == "2216C1" && protocol?.contains("J1850 PWM") == true) "C410F1" else ""
+
+internal fun identityQueue(firm: Boolean, vin: String?, probe: String?): List<String> {
+    val queue = when {
+        firm && vin != null -> mutableListOf("0902")
+        firm -> mutableListOf("0100")
+        else -> mutableListOf("0100", "0902", "0904", "0906", "090A", "2216C1")
+    }
+    if (firm && probe != "ok" && "2216C1" !in queue) queue.add("2216C1")
+    return queue
+}
+
 class PluginService : Service() {
     private class TankRt(
         val id: Int,
@@ -698,7 +711,8 @@ class PluginService : Service() {
 
     /**
      * Paced ECU identity read: at most one sendCommandGetResponse per poll tick, total capped at
-     * IDENTITY_MAX_MS. A firm profile only re-checks its strongest key (VIN if stored, else 0100).
+     * IDENTITY_MAX_MS. A firm profile re-checks its strongest key (VIN if stored, else 0100)
+     * and sends 2216C1 until the stored ford2216C1 probe is ok.
      */
     private inner class IdentityRead(val next: String, val torqueName: String?, stored: Fingerprint.Fp?) {
         val startMs = System.currentTimeMillis()
@@ -710,11 +724,7 @@ class PluginService : Service() {
         var bitmapsDone = false
 
         init {
-            when {
-                stored?.firm == true && stored.vin != null -> queue.add("0902")
-                stored?.firm == true -> queue.add("0100")
-                else -> queue.addAll(listOf("0100", "0902", "0904", "0906", "090A", "2216C1"))
-            }
+            queue.addAll(identityQueue(stored?.firm == true, stored?.vin, stored?.probes["ford2216C1"]))
         }
 
         fun step(t: ITorqueService): Boolean {
@@ -727,7 +737,9 @@ class PluginService : Service() {
                 queue.clear()
                 return true
             }
-            val r = runCatching { t.sendCommandGetResponse("", c) }.getOrNull()?.toList()
+            val r = runCatching {
+                t.sendCommandGetResponse(identityHeader(c, runCatching { t.protocolName }.getOrNull()), c)
+            }.getOrNull()?.toList()
             when (c) {
                 "0902" -> vin = ProfileStore.parseVin(r)
                 "0904" -> calId = Fingerprint.parseAscii(r, "04")
