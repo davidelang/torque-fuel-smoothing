@@ -16,36 +16,46 @@
 #        default) and stdin is not a terminal, stop: pass --standard/--test explicitly.
 #     2. Commit phase: commit the named files (or nothing when no message is given).
 #     3. Integrity check: the tree must be clean; every build comes from that one commit.
-#     4. Play only: testing-version y/N check and password prompts, before any gradle work,
-#        so an unattended build never stalls part-way.
-#     5. Builds in sequence: standard, test, play. The first failure stops everything.
-#     6. The builds tag moves only after every selected build succeeded.
-#   A commit creates an untagged HEAD, so committing and building Play in one run always
-#   triggers the testing-version question. For a release: commit, tag, then ./build_app --play.
+#     4. Play only: testing-version y/N check (only on a branch with a BRANCH-start tag) and
+#        password prompts, before any gradle work, so an unattended build never stalls part-way.
+#     5. Play only: versionCode bump. app/versionCode.txt N -> N+1 is committed alone
+#        ("versionCode N+1 (play build, tag T)") and that commit gets the annotated tag
+#        T = <base>+<N+1>, where <base> is the nearest tag named v<digit>... or <digit>...
+#        (tags containing '+' excluded; none reachable: base v0). versionName is then T.
+#        If any later step fails the tag is deleted again (said so on screen); the commit
+#        stays, so the next --play uses N+2 (Play only needs increasing codes).
+#     6. Builds in sequence: standard, test, play. The first failure stops everything.
+#     7. The builds tag moves only after every selected build succeeded.
 #
 # Every build runs as coder_user (project.config), so all builds share one owner and one
 # environment. Anyone else (root, primary_user, ...) is re-executed as coder_user through
 # 'sudo -n -u <coder_user> /usr/bin/env ...', carrying the invoker's git identity for commits.
 #
 # NEVER run gradlew, gradlew.bat, or direct gradle commands (forbidden; this is the enforced gateway).
-# It handles: git commit, tag update, forensic checks, local .gradle repair, umask/sg enforcement.
+# It handles: git commit, tag update, forensic checks, local .gradle repair, umask (perm-model.tsv),
+# and makes the APKs/AAB readable by primary_user even without group membership (644).
 # Pass gradle options after -- (e.g. build_app "msg" file.kt -- --info --stacktrace).
 #
 # project.config keys (see project.config.example):
 #   coder_user          user every build runs as (required)
 #   java_home           JDK home for Gradle and keytool: absolute, with release file and bin/java, javac, keytool (required)
-#   apk_tasks           standard build: space-separated gradle tasks (unset: assembleDebug)
-#   apk_outputs         standard build: space-separated APKs that must exist afterwards
-#                       (unset: app/build/outputs/apk/debug/app-debug.apk)
+#   planning_user       planning agent user, which must never build (required)
+#   apk_tasks           standard build: space-separated gradle tasks (required when the standard build is selected)
+#   apk_outputs         standard build: space-separated APKs that must exist afterwards (required likewise)
 #   apk_test_tasks      test build: gradle tasks (required when the test build is selected)
 #   apk_test_outputs    test build: APKs that must exist afterwards (required likewise)
 #   release_keystore    Play build: absolute path of the app's upload keystore (required)
 #   release_key_alias   Play build: key alias in that keystore (required)
-#   release_bundle_task Play build: gradle task (unset: bundleRelease)
-#   release_bundle_path Play build: AAB it produces (unset: app/build/outputs/bundle/release/app-release.aab)
+#   release_bundle_task Play build: gradle task, e.g. bundlePlayRelease (required)
+#   release_bundle_path Play build: AAB that task produces, relative to the worktree (required)
+#   No key has a default: a selected build whose keys are unset stops before the commit phase.
 #   release_gradle_args Play build: extra space-separated gradle args (e.g. -Pfuelsmoothing.official=true)
 
-PRIMARY_USER=$(sed -n 's/^primary_user=//p' project.config 2>/dev/null | tr -d '\r' | head -1)
+if [ ! -f project.config ]; then
+  echo "ERROR: no project.config in $(pwd) (run build_app from the worktree root)." >&2
+  exit 1
+fi
+PRIMARY_USER=$(sed -n 's/^primary_user=//p' project.config | tr -d '\r' | head -1)
 if [ -z "$PRIMARY_USER" ]; then
   echo "ERROR: primary_user unset in project.config" >&2
   echo "  Stamp project.config from project.config.example (or source ./env after setup)." >&2
@@ -81,8 +91,20 @@ if [ "$(id -un)" != "$CODER_USER" ]; then
     "$0" "$@"
 fi
 
-# Source/docs: prefer 664/2775 → umask 002. Build outputs tightened after gradle.
-umask 002
+# Owners, groups, modes and umasks come from perm-model.tsv through perm-lib.sh (next to this
+# script). Gradle runs with --no-daemon, so the JVM that writes the outputs is a child of this
+# shell and inherits its umask (a long-lived daemon would keep the umask it was started with).
+_BA_DIR="$(cd "$(dirname "$0")" && pwd)"
+if [ ! -f "$_BA_DIR/perm-lib.sh" ]; then
+  echo "ERROR: missing $_BA_DIR/perm-lib.sh (ships with the orchestration rules)." >&2
+  exit 1
+fi
+# shellcheck source=/dev/null
+. "$_BA_DIR/perm-lib.sh"
+perm_init "$_BA_DIR/project.config" || exit 1
+WORKTREE_UMASK=$(perm_umask worktree) || exit 1
+BUILD_UMASK=$(perm_umask build-intermediates) || exit 1
+umask "$WORKTREE_UMASK"
 
 # sudo resets the environment, so the JDK running Gradle and keytool comes from project.config
 # (java_home=, required), never from the invoker's shell or coder_user's default java.
@@ -150,10 +172,16 @@ if [ "$BUILD_STANDARD" = true ]; then
   read -r -a STD_TASKS <<< "$(cfg apk_tasks)"
   read -r -a STD_OUTPUTS <<< "$(cfg apk_outputs)"
   if [ ${#STD_TASKS[@]} -eq 0 ]; then
-    STD_TASKS=( assembleDebug )
+    echo "ERROR: the standard build is selected but apk_tasks is unset in project.config." >&2
+    echo "  Example: apk_tasks=assembleDebug" >&2
+    echo "  Set it, or select builds explicitly (e.g. --test)." >&2
+    exit 1
   fi
   if [ ${#STD_OUTPUTS[@]} -eq 0 ]; then
-    STD_OUTPUTS=( app/build/outputs/apk/debug/app-debug.apk )
+    echo "ERROR: the standard build is selected but apk_outputs is unset in project.config." >&2
+    echo "  Example: apk_outputs=app/build/outputs/apk/debug/app-debug.apk" >&2
+    echo "  Set it, or select builds explicitly (e.g. --test)." >&2
+    exit 1
   fi
 fi
 if [ "$BUILD_TEST" = true ]; then
@@ -205,9 +233,19 @@ if [ "$BUILD_PLAY" = true ]; then
     echo "WARNING: $RELEASE_KEYSTORE is mode $KS_MODE (world-accessible). Fix: chmod 640 '$RELEASE_KEYSTORE'" >&2
   fi
   RELEASE_BUNDLE_TASK=$(cfg release_bundle_task)
-  RELEASE_BUNDLE_TASK=${RELEASE_BUNDLE_TASK:-bundleRelease}
+  if [ -z "$RELEASE_BUNDLE_TASK" ]; then
+    echo "ERROR: the Play build is selected but release_bundle_task is unset in project.config." >&2
+    echo "  Example: release_bundle_task=bundlePlayRelease" >&2
+    echo "  Or select builds explicitly (e.g. --standard --test)." >&2
+    exit 1
+  fi
   AAB=$(cfg release_bundle_path)
-  AAB=${AAB:-app/build/outputs/bundle/release/app-release.aab}
+  if [ -z "$AAB" ]; then
+    echo "ERROR: the Play build is selected but release_bundle_path is unset in project.config." >&2
+    echo "  Example: release_bundle_path=app/build/outputs/bundle/playRelease/app-play-release.aab" >&2
+    echo "  Or select builds explicitly (e.g. --standard --test)." >&2
+    exit 1
+  fi
   read -r -a RELEASE_GRADLE_ARGS <<< "$(cfg release_gradle_args)"
 fi
 
@@ -322,29 +360,34 @@ fi
 if [ "$BUILD_PLAY" = true ]; then
   # Runs as coder_user like every build. The upload keystore is group-readable by coder_user;
   # what protects it is the password, which only the person at this terminal types.
-  # Same version string the gradle files compute for versionName:
-  # BRANCH-start tag when it exists, else 'git describe --always'.
+  # Same version string the gradle files compute for versionName: BRANCH-start tag when it
+  # exists, else 'git describe --always'. Without a BRANCH-start tag the versionCode commit's
+  # own release tag (step 5) is what describe prints, so only the BRANCH-start case is a
+  # testing version.
   BRANCH=$(git rev-parse --abbrev-ref HEAD) || exit 1
-  if git rev-parse -q --verify "refs/tags/${BRANCH}-start" >/dev/null; then
-    VERSION_DESC=$(git describe --tags --match "${BRANCH}-start") || exit 1
-  else
-    VERSION_DESC=$(git describe --always) || exit 1
+  if [ ! -f app/versionCode.txt ]; then
+    echo "ERROR: --play needs app/versionCode.txt (one integer; gradle reads versionCode from it)." >&2
+    exit 1
   fi
-  HEAD_SHORT=$(git rev-parse --short HEAD) || exit 1
-  if [[ "$VERSION_DESC" == *-* ]] || [ "$VERSION_DESC" = "$HEAD_SHORT" ]; then
+  OLD_VERSION_CODE=$(tr -d '[:space:]' < app/versionCode.txt)
+  if ! [[ "$OLD_VERSION_CODE" =~ ^[0-9]+$ ]]; then
+    echo "ERROR: app/versionCode.txt is '$OLD_VERSION_CODE', not an integer." >&2
+    exit 1
+  fi
+  if ! git ls-files --error-unmatch app/versionCode.txt >/dev/null; then
+    echo "ERROR: app/versionCode.txt is not tracked; --play commits each bump." >&2
+    exit 1
+  fi
+  if git rev-parse -q --verify "refs/tags/${BRANCH}-start" >/dev/null; then
     echo "==================================================================" >&2
-    echo "WARNING: '$VERSION_DESC' is a TESTING version, not a release tag." >&2
-    if [ "$VERSION_DESC" = "$HEAD_SHORT" ]; then
-      echo "  No annotated tag is reachable from HEAD." >&2
-    else
-      echo "  It contains '-' (commits after the tag, or a branch -start tag)." >&2
-    fi
-    echo "  Tag HEAD (git tag -a vX.Y.Z) for a release build." >&2
+    echo "WARNING: branch '$BRANCH' has tag ${BRANCH}-start, so its versionName is" >&2
+    echo "  '${BRANCH}-start-<n>-g<hash>': a TESTING version, not a release." >&2
+    echo "  Release builds come from a branch without a -start tag (e.g. master)." >&2
     echo "==================================================================" >&2
     read -r -p "Build a release bundle from this testing version anyway? [y/N] " ANSWER
     case "$ANSWER" in
       y|Y|yes|YES) ;;
-      *) echo "Aborted: testing version." >&2; exit 1 ;;
+      *) echo "Aborted: testing version (nothing committed or tagged)." >&2; exit 1 ;;
     esac
   fi
 
@@ -373,6 +416,56 @@ if [ "$BUILD_PLAY" = true ]; then
     exit 1
   fi
   echo "Upload key: $RELEASE_KEYSTORE alias $RELEASE_KEY_ALIAS (SHA256 $UPLOAD_SHA256)"
+
+  # versionCode bump + release tag (see the header, step 5).
+  NEW_VERSION_CODE=$((OLD_VERSION_CODE + 1))
+  _rel_tags=$(git tag --merged HEAD --list 'v[0-9]*' '[0-9]*') || exit 1
+  if [ -z "$(printf '%s\n' "$_rel_tags" | grep -v -F '+')" ]; then
+    TAG_BASE=v0
+    echo "No v<digit>/<digit> tag reachable from HEAD: release tag base is v0."
+  else
+    TAG_BASE=$(git describe --tags --abbrev=0 --match 'v[0-9]*' --match '[0-9]*' --exclude '*+*' HEAD) || exit 1
+  fi
+  PLAY_TAG="${TAG_BASE}+${NEW_VERSION_CODE}"
+  if ! git check-ref-format "refs/tags/$PLAY_TAG"; then
+    echo "ERROR: '$PLAY_TAG' is not a valid tag name (base tag '$TAG_BASE')." >&2
+    exit 1
+  fi
+  if git rev-parse -q --verify "refs/tags/$PLAY_TAG" >/dev/null; then
+    echo "ERROR: tag $PLAY_TAG already exists ($(git rev-parse --short "refs/tags/$PLAY_TAG^{commit}")); app/versionCode.txt ($OLD_VERSION_CODE) is behind it." >&2
+    exit 1
+  fi
+  printf '%s\n' "$NEW_VERSION_CODE" > app/versionCode.txt
+  git commit -q --only -m "versionCode $NEW_VERSION_CODE (play build, tag $PLAY_TAG)" -- app/versionCode.txt || {
+    echo "ERROR: could not commit app/versionCode.txt ($NEW_VERSION_CODE)." >&2
+    exit 1
+  }
+  git tag -a "$PLAY_TAG" -m "Play build: versionCode $NEW_VERSION_CODE" || {
+    echo "ERROR: could not create tag $PLAY_TAG on the versionCode commit." >&2
+    exit 1
+  }
+  PLAY_TAG_PENDING=true
+  # Any exit before build_play finishes removes the tag again (the commit stays).
+  drop_unbuilt_play_tag() {
+    if [ "${PLAY_TAG_PENDING:-false}" = true ]; then
+      if git tag -d "$PLAY_TAG" >/dev/null; then
+        echo "Play build did not finish: deleted tag $PLAY_TAG. The versionCode $NEW_VERSION_CODE commit stays; the next --play uses $((NEW_VERSION_CODE + 1))." >&2
+      else
+        echo "ERROR: could not delete tag $PLAY_TAG (it names a versionCode that was never built): git tag -d $PLAY_TAG" >&2
+      fi
+    fi
+  }
+  trap drop_unbuilt_play_tag EXIT
+  if git rev-parse -q --verify "refs/tags/${BRANCH}-start" >/dev/null; then
+    VERSION_DESC=$(git describe --tags --match "${BRANCH}-start") || exit 1
+  else
+    VERSION_DESC=$(git describe --always) || exit 1
+    if [ "$VERSION_DESC" != "$PLAY_TAG" ]; then
+      echo "ERROR: git describe gives '$VERSION_DESC', not the new tag $PLAY_TAG." >&2
+      exit 1
+    fi
+  fi
+  echo "versionCode $OLD_VERSION_CODE -> $NEW_VERSION_CODE, committed and tagged $PLAY_TAG (versionName $VERSION_DESC)"
 fi
 
 # Homes under this worktree. orch_root is read/seed only (keystore copy).
@@ -386,14 +479,20 @@ fi
 ve_resolve_orch "$_BA_HERE" || exit 1
 ve_setup_worktree_build_homes "$_BA_HERE" || exit 1
 _AAPT2=$(ve_aapt2_from_sdk "$_BA_HERE") || exit 1
+# Extracted Maven aapt2 copies lose +x (see ve_aapt2_from_sdk); restore it where missing.
+# A copy this user cannot chmod stops the build with chmod's own error.
 if [ -n "${GRADLE_USER_HOME:-}" ] && [ -d "$GRADLE_USER_HOME" ]; then
-  find "$GRADLE_USER_HOME" -type f -name aapt2 -exec chmod u+rx,g+rx {} + 2>/dev/null || true
+  find "$GRADLE_USER_HOME" -type f -name aapt2 ! -perm -u+rx,g+rx -exec chmod u+rx,g+rx {} + || exit 1
 fi
 ve_reset_gradle_daemon_dir || exit 1
 ve_wipe_foreign_app_build_outputs || exit 1
 unset GRADLE_OPTS
-PLANNING_USER=$(sed -n 's/^planning_user=//p' project.config 2>/dev/null | tr -d '\r' | head -1)
-PLANNING_USER=${PLANNING_USER:-ai-planner}
+PLANNING_USER=$(cfg planning_user)
+if [ -z "$PLANNING_USER" ]; then
+  echo "ERROR: planning_user unset in project.config (the user that must never build)." >&2
+  echo "  Example: planning_user=ai-planner" >&2
+  exit 1
+fi
 if [ "$(id -un)" = "$PLANNING_USER" ]; then
   echo "ERROR: Planning agents must not run Gradle builds. Policy violation."
   exit 1
@@ -405,40 +504,57 @@ GRADLE_BASE=( ./gradlew --no-daemon --no-configuration-cache
   -Dkotlin.compiler.execution.strategy=in-process )
 
 # Post-build permission repair for this worktree only (not orch caches). Runs after every
-# gradle invocation, successful or not. (Legacy lines, kept verbatim.)
+# gradle invocation, successful or not: app/build and .gradle get the build-intermediates
+# area (group ai-code, group rw, setgid dirs; 'other' bits are left as the umask made them),
+# app/src the worktree area. Paths whose owner is someone else and whose modes differ make
+# chmod fail, and the build stops with that error.
 repair_build_perms() {
-for gdir in .gradle app/build; do
-  if [ -d "$gdir" ]; then
-    echo "Quick $gdir permission repair (group sync + setgid + ug+rwX)..."
-    chgrp -R ai-code "$gdir" 2>/dev/null || true
-    find "$gdir" -type d -exec chmod 2770 {} + 2>/dev/null || true
-    chmod -R ug+rwX,o-rwx "$gdir" 2>/dev/null || true
-  fi
-done
-
-# Assert group-writable dirs under app/build (2755 blocks other users' deploy wipe).
-if [ -d app/build ]; then
-  BAD_DIRS=$(find app/build -type d ! -perm -g+w 2>/dev/null | head -20)
-  if [ -n "$BAD_DIRS" ]; then
-    echo "Re-applying group-write on non-group-writable app/build dirs..."
-    echo "$BAD_DIRS" | while read -r d; do chmod g+rwX "$d" 2>/dev/null || true; done
-    find app/build -type d -exec chmod 2770 {} + 2>/dev/null || true
-    BAD_DIRS=$(find app/build -type d ! -perm -g+w | head -10)
-    if [ -n "$BAD_DIRS" ]; then
-      echo "WARN: app/build dir(s) still lack group write (other users cannot wipe/deploy). Sample:"
-      echo "$BAD_DIRS"
-      echo "  Fix as owner: find app/build -type d -exec chmod 2770 {} +"
-    else
-      echo "Build tree group-writable: OK (after re-chmod)"
+  local d
+  for d in .gradle app/build; do
+    if [ -d "$d" ]; then
+      perm_apply build-intermediates "$d" || exit 1
     fi
+  done
+  if [ -d app/src ]; then
+    perm_apply worktree app/src || exit 1
   fi
-fi
+}
 
-# Source tree target modes: dirs 2775, files 664 (planner other-read + group write)
-if [ -d app/src ]; then
-  find app/src -type d -exec chmod 2775 {} + 2>/dev/null || true
-  find app/src -type f -exec chmod 664 {} + 2>/dev/null || true
-fi
+# Deliverables (the files someone uploads or sideloads, possibly from a desktop session that
+# predates a group change): each named file gets the deliverables area (644), every directory
+# from the worktree down to it the deliverable-dirs area (o+rx), and then the result is checked
+# from the primary user's point of view with no supplementary groups. Not readable = exit 1.
+publish_deliverables() {
+  local f d files=()
+  for f in "$@"; do
+    case "$f" in
+      /*) echo "ERROR: deliverable path must be relative to the worktree: $f" >&2; exit 1 ;;
+    esac
+    if [ ! -f "$f" ]; then
+      echo "ERROR: deliverable missing: $f" >&2
+      exit 1
+    fi
+    files+=("$f")
+    if [ -f "$(dirname "$f")/output-metadata.json" ]; then
+      files+=("$(dirname "$f")/output-metadata.json")
+    fi
+  done
+  for f in "${files[@]}"; do
+    perm_apply deliverables "$f" --top-only || exit 1
+    d=$(dirname "$f")
+    while [ "$d" != "." ]; do
+      perm_apply deliverable-dirs "$d" --top-only || exit 1
+      d=$(dirname "$d")
+    done
+  done
+  for f in "${files[@]}"; do
+    perm_verify deliverables "$f" --top-only || exit 1
+  done
+  perm_readable_nogroups "$PRIMARY_USER" "${files[@]/#/$(pwd)/}" || {
+    echo "ERROR: deliverables are not readable by $PRIMARY_USER without group membership (see NOT-READABLE above)." >&2
+    exit 1
+  }
+  echo "Deliverables readable by $PRIMARY_USER without group membership: ${files[*]}"
 }
 
 # APK build: $1 = label; remaining args = tasks, then '::', then expected outputs.
@@ -451,7 +567,7 @@ build_apks() {
   outputs=( "$@" )
   echo "=== $label build: ${tasks[*]} ==="
   # No daemon: multi-worktree RAM; agent path does not keep Gradle daemons warm.
-  (umask 007; "${GRADLE_BASE[@]}" "${GRADLE_ARGS[@]}" "${tasks[@]}")
+  (umask "$BUILD_UMASK"; "${GRADLE_BASE[@]}" "${GRADLE_ARGS[@]}" "${tasks[@]}")
   ret=$?
   ve_reset_gradle_daemon_dir || exit 1
   repair_build_perms
@@ -465,6 +581,7 @@ build_apks() {
       exit 1
     fi
   done
+  publish_deliverables "${outputs[@]}"
   echo "=== $label build OK ==="
 }
 
@@ -476,7 +593,7 @@ build_play() {
   # ORG_GRADLE_PROJECT_* environment variables rather than -P so the passwords never appear in
   # ps. Bash cannot export names containing '.', so python3 renames them and execs gradlew.
   # gradlew is '#!/usr/bin/env sh' and dash silently drops such variables, so it runs under bash.
-  (umask 007
+  (umask "$BUILD_UMASK"
    export BA_STORE_FILE="$RELEASE_KEYSTORE" BA_KEY_ALIAS="$RELEASE_KEY_ALIAS" BA_STORE_PASSWORD BA_KEY_PASSWORD
    exec python3 -c '
 import os, sys
@@ -508,17 +625,16 @@ os.execvp(sys.argv[1], sys.argv[1:])
     echo "ERROR: $AAB is signed with SHA256 '$aab_sha256', not the upload key ($UPLOAD_SHA256)." >&2
     exit 1
   fi
-  if [ -f app/versionCode.txt ]; then
-    version_code=$(tr -d '[:space:]' < app/versionCode.txt)
-  else
-    version_code="(no app/versionCode.txt; see versionCode in app/build.gradle*)"
-  fi
+  publish_deliverables "$AAB"
+  version_code=$(tr -d '[:space:]' < app/versionCode.txt)
   PLAY_SUMMARY="Play bundle ready for upload:
   Path:        $(pwd)/$AAB
   File SHA256: $(sha256sum "$AAB" | cut -d' ' -f1)
   Signed by:   SHA256 $aab_sha256 (upload key)
   versionName: $VERSION_DESC
-  versionCode: $version_code"
+  versionCode: $version_code
+  Tag:         $PLAY_TAG"
+  PLAY_TAG_PENDING=false
   echo "=== play build OK ==="
 }
 
@@ -542,7 +658,12 @@ else
 fi
 echo "All selected builds succeeded:$SELECTED. Updating '$TAG_NAME' tag."
 git tag -f "$TAG_NAME"
-git describe --tags --match "${CURRENT_BRANCH}-start" 2>/dev/null || git describe
+# Same version string as the gradle versionName: BRANCH-start tag when it exists, else 'git describe --always'.
+if git rev-parse -q --verify "refs/tags/${CURRENT_BRANCH}-start" >/dev/null; then
+  git describe --tags --match "${CURRENT_BRANCH}-start"
+else
+  git describe --always
+fi
 if [ -n "$PLAY_SUMMARY" ]; then
   echo "=================================================================="
   echo "$PLAY_SUMMARY"
