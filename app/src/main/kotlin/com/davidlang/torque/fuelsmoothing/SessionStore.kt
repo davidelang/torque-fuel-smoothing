@@ -36,7 +36,9 @@ internal class SessionStore(context: Context, private val tank: Int = 1, rawDir:
 
     init {
         if (snapshotFile.isFile) {
-            FsLog.i(TAG, "last session-end snapshot (debug only): ${snapshotFile.readText()}")
+            if (BuildConfig.DEBUG) {
+                FsLog.i(TAG, "last session-end snapshot (debug only): ${snapshotFile.readText()}")
+            }
         }
     }
     private var file: File? = null

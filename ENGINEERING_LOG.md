@@ -267,3 +267,8 @@
 
 - Approved plan: `sandbox/plans/identity-c410f1-20261016-2309-plan.md`
 - Scope: firm profiles send 2216C1 once per connect until the stored probe is ok, using header C410F1 on J1850 PWM. ANALYSIS_VERSION stays. No phone install. No adb.
+
+## 2026-10-20 - Execute start: release-shrink-icon-20261020-0005-plan.md
+
+- Approved plan: `sandbox/plans/release-shrink-icon-20261020-0005-plan.md`
+- Scope: release shrinks resources and is not debuggable; debug stays unminified, unshrunk, and debuggable. Session-end snapshot is logged only when BuildConfig.DEBUG. Launcher becomes lossless WebP, same pixels. No phone install. No --play.
