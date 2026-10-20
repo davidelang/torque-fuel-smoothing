@@ -277,3 +277,8 @@
 
 - Approved plan: `sandbox/plans/no-play-version-tags-20261020-0333-plan.md`
 - Scope: a Play build commits app/versionCode.txt only and creates no git tag. versionName stays git describe on the real version tag, excluding *+* tags. Delete local tags v0.9.1+3, v0.9.2+4, and v0.9.2+5 after each subject is Play build: versionCode N. No phone install. No --play. No push.
+
+## 2026-10-20 - Execute start: about-license-libraries-20261020-1506-plan.md
+
+- Approved plan: `sandbox/plans/about-license-libraries-20261020-1506-plan.md`
+- Scope: About dialog lists the installed version, this app's copyright, and the open source libraries shipped in the release bundle. No phone install. No --play. No adb. No new Activity.

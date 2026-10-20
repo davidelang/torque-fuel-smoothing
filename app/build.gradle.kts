@@ -98,6 +98,7 @@ kotlin {
 }
 
 dependencies {
+    // Changing billing-ktx requires the same version in R.string.open_source_notices.
     implementation("com.android.billingclient:billing-ktx:8.0.0")
     testImplementation("junit:junit:4.13.2")
     // Real org.json for unit tests (android.jar ships stubs only); profile.json is edited with JSONObject.

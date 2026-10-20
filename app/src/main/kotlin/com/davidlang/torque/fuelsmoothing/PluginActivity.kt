@@ -136,7 +136,7 @@ class PluginActivity : Activity() {
         aboutPage = LinearLayout(this)
         aboutPage.orientation = LinearLayout.VERTICAL
         val about = TextView(this)
-        about.text = versionName() + "\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded."
+        about.text = getString(R.string.about_body, versionName(), versionCode()) + "\n\n" + getString(R.string.open_source_notices)
         about.textSize = 14f
         aboutPage.addView(about)
         val privacy = Button(this)
@@ -712,6 +712,12 @@ class PluginActivity : Activity() {
     @Suppress("DEPRECATION")
     private fun versionName(): String {
         return packageManager.getPackageInfo(packageName, 0).versionName ?: ""
+    }
+
+    @Suppress("DEPRECATION")
+    private fun versionCode(): String {
+        val info = packageManager.getPackageInfo(packageName, 0)
+        return if (Build.VERSION.SDK_INT >= 28) info.longVersionCode.toString() else info.versionCode.toString()
     }
 
     private fun sendFeedback() {

@@ -248,4 +248,23 @@ class IdentityTest {
         assertEquals(listOf("0100", "0902", "0904", "0906", "090A", "2216C1"), identityQueue(false, "1FTBW3XM5HKA12345", "no"))
         assertEquals(listOf("0100", "0902", "0904", "0906", "090A", "2216C1"), identityQueue(false, null, null))
     }
+
+    @Test
+    fun test102AboutListsLicenseAndLibraries() {
+        val strings = File("src/main/res/values/strings.xml").readText()
+        val aboutBody = strings.substringAfter("<string name=\"about_body\">").substringBefore("</string>")
+        val notices = strings.substringAfter("<string name=\"open_source_notices\">").substringBefore("</string>")
+        assertTrue(aboutBody.contains("Copyright David Lang. All rights reserved."))
+        val gradle = File("build.gradle.kts").readText()
+        val billing = Regex("""billing-ktx:([0-9][^"')]*)""").find(gradle)
+        assertTrue(billing != null)
+        assertTrue(notices.contains(billing!!.groupValues[1]))
+        assertTrue(notices.contains("kotlinx-coroutines-core 1.6.0"))
+        assertTrue(notices.contains("Apache License 2.0"))
+        assertTrue(notices.contains("Android Software Development Kit License"))
+        assertFalse(notices.contains("play-services-location"))
+        val activity = File("src/main/kotlin/com/davidlang/torque/fuelsmoothing/PluginActivity.kt").readText()
+        val assign = activity.substringAfter("about.text =").substringBefore("about.textSize")
+        assertTrue(assign.contains("R.string.about_body") && assign.contains("R.string.open_source_notices"))
+    }
 }
