@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.testing.Test
+
 plugins {
     id("com.android.application")
 }
@@ -95,4 +97,9 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     // Real org.json for unit tests (android.jar ships stubs only); profile.json is edited with JSONObject.
     testImplementation("org.json:json:20240303")
+}
+
+tasks.withType<Test>().configureEach {
+    val evalDir = System.getProperty("fuelsmoothing.evalDir")
+    if (evalDir != null) systemProperty("fuelsmoothing.evalDir", evalDir)
 }
