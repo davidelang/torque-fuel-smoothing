@@ -1229,11 +1229,11 @@ class PluginService : Service() {
         refreshRecording()
         val dir = ProfileStore.tankDir(filesDir, profileId, id); val np = nameplateFor(id)
         FsLog.i(TAG, "session close tank=$id samples=${closed.size} files=${rt.sessions.sessionCount()}; rollup queued")
-        var gap = ""
-        submitRollup("rollup tank$id", { gap = ProfileStore.rollup(dir, np, openSessions, kalmanSeedFor(id)) }) {
+        var summary = ""
+        submitRollup("rollup tank$id", { summary = ProfileStore.rollup(dir, np, openSessions, kalmanSeedFor(id)) }) {
             priorCache.remove(id)
             publishTankGuess(id)
-            FsLog.i(TAG, "tank$id gap=${gap.replace('\n', ' ')}")
+            FsLog.i(TAG, "tank$id $summary")
         }
     }
 

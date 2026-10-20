@@ -250,3 +250,15 @@
 
 - Approved plan: `sandbox/plans/kalman-band-independent-20261016-2306-plan.md`
 - Scope: one Kalman apply packet per part from Pieces (block medians, per-row level error); BandFit reads Pieces directly. Neither names ChunkFit. No phone install.
+
+## 2026-10-19 - Endpoint eval harness
+
+- Added EndpointEvalTest and forwarded fuelsmoothing.evalDir into the unit-test JVM.
+- Replay passed: 1 test, 0 failures, 58.405s. Report sandbox/research/endpoint-eval-20261019-2332.md.
+- ENDPOINT, Kalman.INPUT, FIT_WEAK, and ANALYSIS_VERSION were not changed.
+
+## 2026-10-19 - Execute start: rollup-summary-line-20261016-2308-plan.md
+
+- Approved plan: `sandbox/plans/rollup-summary-line-20261016-2308-plan.md`
+- Scope: rollup writes rollup-summary.txt and returns that one line. Session close logs tank id plus the summary. gap.txt is still written. ANALYSIS_VERSION stays 4. No phone install.
+- test59 tank dirs are both named tank so the summary profile id matches across the cached and uncached trees.

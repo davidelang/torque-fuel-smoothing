@@ -342,6 +342,8 @@ internal object ProfileStore {
      * Does not call FuelMath.estimateUsable.
      */
     const val ROLLUP_SIG = "rollup.sig"
+    private const val ROLLUP_SUMMARY = "rollup-summary.txt"
+    private const val SUMMARY_MAX = 300
 
     /** Held for the whole rollup and fillUpdate. rollupFull and reprocessAll do not lock. */
     val DataLock = ReentrantLock()
@@ -354,6 +356,7 @@ internal object ProfileStore {
     /**
      * [exclude]: session ids still being recorded (never read mid-drive). Skipped entirely, outputs untouched,
      * when the included raw files and settings are unchanged since the last rollup (RollupCache.enabled).
+     * A matching signature with a missing or empty rollup-summary.txt is rebuilt, not returned empty.
      */
     /** [kalmanC0]: Kalman prior scale used only when its state is created (self-contained seed; see PluginService.kalmanSeedFor). */
     fun rollup(dir: File, nameplate: Double?, exclude: Set<String> = emptySet(), kalmanC0: Double? = nameplate): String {
@@ -376,8 +379,13 @@ internal object ProfileStore {
                 }
             }
             if (RollupCache.enabled && files.isNotEmpty() && sigFile.isFile && File(dir, "model.json").isFile && sigFile.readText() == sig) {
-                runCatching { FsLog.i("FuelSmooth", "rollup skipped: no new or changed raw sessions (${files.size})") }
-                return File(dir, "gap.txt").takeIf { it.isFile }?.readText() ?: ""
+                val stored = storedSummary(File(dir, ROLLUP_SUMMARY))
+                if (stored != null) {
+                    runCatching { FsLog.i("FuelSmooth", "rollup skipped: no new or changed raw sessions (${files.size})") }
+                    return stored
+                }
+                val summaryFile = File(dir, ROLLUP_SUMMARY)
+                FsLog.w("FuelSmooth", "rollup summary missing or empty: ${summaryFile.path}")
             }
             try {
                 val r = rollupFull(dir, nameplate, exclude, kalmanC0)
@@ -437,6 +445,8 @@ internal object ProfileStore {
 
     private fun rollupFull(dir: File, nameplate: Double?, exclude: Set<String>, kalmanC0: Double?): String {
         val raw = File(dir, "raw")
+        val rawFiles = if (raw.isDirectory) FuelV2.sessionFiles(raw, exclude) else emptyList()
+        val prevSig = File(dir, ROLLUP_SIG).takeIf { it.isFile }?.readText()
         val sessions = if (raw.isDirectory) FuelV2.loadSessions(raw, exclude) else emptyList()
         val t0 = FuelV2.chooseT0(nameplate, sessions)
         val fitted = if (sessions.isEmpty()) {
@@ -507,7 +517,60 @@ internal object ProfileStore {
         }
         val gap = gapText(sessions, model)
         AtomicFile.write(File(dir, "gap.txt"), gap)
-        return gap
+        val line = summaryLine(dir, rawFiles, prevSig, gap)
+        AtomicFile.write(File(dir, ROLLUP_SUMMARY), line)
+        return line
+    }
+
+    /** One line, no newline, at most [SUMMARY_MAX] characters. A missing model field is the token na. */
+    private fun summaryLine(dir: File, rawFiles: List<File>, prevSig: String?, gap: String): String {
+        val (parts, pieces) = Pieces.load(dir)
+        val newN = if (prevSig == null) 0 else rawFiles.count { it.name.removeSuffix(".jsonl") !in prevSig }
+        val weak = pieces.count { it.weak }
+        val overSpan = pieces.count { it.overSpan }
+        val line = "rollup profile=${profileIdOf(dir)} tank=${tankNumberOf(dir)} sessions=${rawFiles.size} new=$newN " +
+            "parts=${parts.size} pieces=${pieces.size} weak=$weak overSpan=$overSpan " +
+            "chunkCap=${modelNum(File(dir, "model.json"), "capToZero")} " +
+            "bandCap=${modelNum(File(dir, BandFit.FILE), "capToZero")} " +
+            "kalmanTank=${modelNum(File(dir, Kalman.MODEL), "tank")} lastGapPct=${lastGapPct(gap)}"
+        if (line.length <= SUMMARY_MAX) return line
+        FsLog.w("FuelSmooth", "rollup summary truncated from ${line.length} to $SUMMARY_MAX (${File(dir, ROLLUP_SUMMARY).path})")
+        return line.take(SUMMARY_MAX)
+    }
+
+    /** Non-empty single line with no newline, or null when the file is missing, empty, or not one line. */
+    private fun storedSummary(f: File): String? {
+        if (!f.isFile) return null
+        val text = f.readText()
+        if (text.isBlank() || text.contains('\n') || text.contains('\r')) return null
+        return text
+    }
+
+    private fun profileIdOf(dir: File): String {
+        val parts = dir.absoluteFile.invariantSeparatorsPath.split('/').filter { it.isNotEmpty() }
+        val i = parts.indexOf("profiles")
+        return if (i >= 0 && i + 1 < parts.size) parts[i + 1] else dir.name
+    }
+
+    private fun tankNumberOf(dir: File): Int {
+        val parts = dir.absoluteFile.invariantSeparatorsPath.split('/').filter { it.isNotEmpty() }
+        val i = parts.indexOf("tanks")
+        if (i < 0 || i + 1 >= parts.size) return 1
+        return parts[i + 1].toIntOrNull() ?: 1
+    }
+
+    private fun modelNum(f: File, key: String): String {
+        if (!f.isFile) return "na"
+        return Regex("\"$key\":(-?[0-9.eE+-]+)").find(f.readText())?.groupValues?.get(1) ?: "na"
+    }
+
+    private fun lastGapPct(gap: String): String {
+        var last: String? = null
+        for (line in gap.lineSequence()) {
+            val m = Regex("gapPct=(\\S+)").find(line) ?: continue
+            last = m.groupValues[1]
+        }
+        return last ?: "na"
     }
 
     /**

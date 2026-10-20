@@ -63,7 +63,7 @@ class FixesTest {
     @Test
     fun test59CachedIncrementalRollupIdenticalToUncached() {
         val files = fixtureDir().listFiles()!!.filter { it.name.endsWith(".jsonl") }.sortedBy { it.name }
-        val a = tmp("ra"); val b = tmp("rb")
+        val a = File(tmp("ra"), "tank"); val b = File(tmp("rb"), "tank")
         File(a, "raw").mkdirs(); File(b, "raw").mkdirs()
         val batches = listOf(files.take(30), files.drop(30).take(30), files.drop(60))
         try {
@@ -501,5 +501,37 @@ class FixesTest {
         val seed = ps.substringAfter("private fun kalmanSeedFor(id: Int): Double? {").substringBefore("private fun nameplateFor")
         assertTrue(seed.contains("torqueCapGal") && seed.contains("!cfg.tankEstimated"))
         for (bad in listOf("Chunk", "Band", "model", "nameplateFor", "nameplateGal")) assertFalse(bad, seed.contains(bad))
+    }
+
+    @Test
+    fun test99RollupSummaryOneLine() {
+        RollupCache.enabled = true
+        val dir = File(tmp("rsum"), "profiles/van")
+        val raw = File(dir, "raw")
+        raw.mkdirs()
+        File(raw, "1000-tiny.jsonl").writeText(
+            "{\"t\":1700000000000,\"lvl\":80.0,\"sm\":80.0,\"fuelGal\":0.0,\"spd\":0.0}\n" +
+                "{\"t\":1700000005000,\"lvl\":79.0,\"sm\":79.0,\"fuelGal\":0.02,\"spd\":40.0}\n",
+        )
+        val logDir = tmp("rsumlog")
+        FsLog.init(logDir)
+        val line = ProfileStore.rollup(dir, 35.0)
+        assertFalse(line.contains('\n'))
+        assertTrue(line.length <= 300)
+        assertEquals(line, File(dir, "rollup-summary.txt").readText())
+        assertTrue(File(dir, "gap.txt").isFile)
+        assertEquals(line, ProfileStore.rollup(dir, 35.0))
+        val stored = "stored-summary-line"
+        File(dir, "rollup-summary.txt").writeText(stored)
+        assertEquals(stored, ProfileStore.rollup(dir, 35.0))
+        assertTrue(File(dir, "rollup-summary.txt").delete())
+        val rebuilt = ProfileStore.rollup(dir, 35.0)
+        assertTrue(rebuilt.isNotEmpty())
+        assertFalse(rebuilt.contains('\n'))
+        assertTrue(rebuilt.length <= 300)
+        assertEquals(rebuilt, File(dir, "rollup-summary.txt").readText())
+        val log = File(logDir, "logs/events.log").readText()
+        assertTrue(log.contains("rollup summary missing or empty"))
+        assertTrue(log.contains(File(dir, "rollup-summary.txt").path))
     }
 }
