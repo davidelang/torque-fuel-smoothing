@@ -12,5 +12,7 @@
 - SDK: gitignored `local.properties` `sdk.dir=` (no machine-path default in scripts)
 
 ## Build and commit
+- **Standard build:** debug
+- **Test build:** none
 - Build: `./build_app --standard --test` (never `--play`: it needs David at a terminal)
 - Commit: `./build_app --standard --test "<message>"|@<msg_file> <paths...>` (builds, then commits exactly the named paths and tags builds)
