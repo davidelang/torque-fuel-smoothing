@@ -7,15 +7,15 @@ import kotlin.math.min
 import kotlin.math.sqrt
 
 /**
- * Band algorithm (kept alongside ChunkFit): continuous piecewise-linear g (gal per %) on knots every 5 %
- * from 0 to 95 %, fitted to the stored chunks (integral of g over [Le, Ls] = chunk fuel) with
+ * Band algorithm: continuous piecewise-linear g (gal per %) on knots every 5 %
+ * from 0 to 95 %, fitted to the stored pieces (integral of g over [Le, Ls] = piece fuel) with
  * inverse-noise + Huber weights, a second-difference roughness penalty whose strength is chosen by
  * leave-one-drive-out, burn constraints (logged fuel within a tank) as soft one-sided rows, and a positive
  * floor relative to the data scale. No monotonic assumption. Mirrors sandbox/code-review/band_review.py
  * fit_prop/lodo (reference: sandbox/research/chunk-study/ref_bandfit.py).
  */
 internal object BandFit {
-    const val VERSION = 1
+    const val VERSION = 2
     const val FILE = "model-band.json"
     val KNOTS: DoubleArray = DoubleArray(20) { it * 5.0 }
     val LAMBDAS = doubleArrayOf(0.01, 0.03, 0.1, 0.3, 1.0, 3.0, 10.0, 30.0, 100.0, 300.0, 1000.0)
@@ -72,7 +72,7 @@ internal object BandFit {
         return x
     }
 
-    fun fit(ch: List<ChunkFit.Chunk>, ps: List<ChunkFit.Part>, lam: Double): Pair<DoubleArray, Int> {
+    fun fit(ch: List<Pieces.Piece>, ps: List<Pieces.Part>, lam: Double): Pair<DoubleArray, Int> {
         val nk = KNOTS.size
         if (ch.isEmpty()) return DoubleArray(nk) to 0
         val a = ch.map { basis(it.le, it.ls) }
@@ -80,9 +80,9 @@ internal object BandFit {
         var sy = 0.0; var sa = 0.0
         for (i in y.indices) { sy += abs(y[i]); sa += abs(a[i].sum()) }
         val g0 = max(sy / max(sa, 1e-9), 1e-6)
-        val w = DoubleArray(y.size) { val se = max(ch[it].seEnd, 0.2); 1.0 / (2 * (0.33 * se * g0) * (0.33 * se * g0) + (0.03 * abs(y[it])) * (0.03 * abs(y[it]))) }
-        val medW = ChunkFit.med(w)
-        val (cons, _) = ChunkFit.epochs(ps, ch)
+        val w = DoubleArray(y.size) { val se = max(max(ch[it].seS, ch[it].seE), 0.2); 1.0 / (2 * (0.33 * se * g0) * (0.33 * se * g0) + (0.03 * abs(y[it])) * (0.03 * abs(y[it]))) }
+        val medW = Stats.med(w)
+        val (cons, _) = Pieces.epochs(ps, ch)
         val cr = cons.map { basis(it[1], it[0]) }; val cb = cons.map { it[2] }
         // P = lam * median(w) * D2'D2
         val p = Array(nk) { DoubleArray(nk) }
@@ -108,21 +108,21 @@ internal object BandFit {
             g = solve(m, v).let { s -> DoubleArray(nk) { max(s[it], FLOOR_REL * g0) } }
             for (c in cons.indices) if (dot(cr[c], g) < cb[c] - 1e-9) act[c] = true
             val rs = DoubleArray(y.size) { abs(y[it] - dot(a[it], g)) * sqrt(w[it]) }
-            val s = 1.4826 * ChunkFit.med(rs) + 1e-12
+            val s = 1.4826 * Stats.med(rs) + 1e-12
             for (i in y.indices) hub[i] = min(1.0, HUBER_K * s / max(rs[i], 1e-12))
         }
         return g to act.count { it }
     }
 
-    private fun drive(key: String) = key.substringBefore('#')
+    private fun drive(partKey: String) = partKey.substringBefore('#')
 
-    /** Leave-one-drive-out RMS of chunk fuel for a given lambda. */
-    fun lodo(ch: List<ChunkFit.Chunk>, ps: List<ChunkFit.Part>, lam: Double): Double {
+    /** Leave-one-drive-out RMS of chunk fuel for a given lambda. A drive is one connect-to-disconnect capture. */
+    fun lodo(ch: List<Pieces.Piece>, ps: List<Pieces.Part>, lam: Double): Double {
         var se = 0.0; var n = 0
-        for (d in ch.map { drive(it.key) }.toSortedSet()) {
-            val test = ch.filter { it.key.startsWith(d) && abs(it.ls - it.le) >= 0.5 }
+        for (d in ch.map { drive(it.part) }.toSortedSet()) {
+            val test = ch.filter { it.part.startsWith(d) && abs(it.ls - it.le) >= 0.5 }
             if (test.isEmpty()) continue
-            val (g, _) = fit(ch.filter { !it.key.startsWith(d) }, ps.filter { !it.key.startsWith(d) }, lam)
+            val (g, _) = fit(ch.filter { !it.part.startsWith(d) }, ps.filter { !it.key.startsWith(d) }, lam)
             for (c in test) {
                 val s = if (c.ls >= c.le) 1.0 else -1.0
                 val e = s * dot(basis(c.le, c.ls), g) - c.dF
@@ -132,16 +132,16 @@ internal object BandFit {
         return if (n == 0) Double.POSITIVE_INFINITY else sqrt(se / n)
     }
 
-    fun drives(ch: List<ChunkFit.Chunk>) = ch.map { drive(it.key) }.toSet().size
+    fun drives(ch: List<Pieces.Piece>) = ch.map { drive(it.part) }.toSet().size
 
     /** Cached choice (λ, LODO RMS, drives, chunks) is reused when the data grew less than the policy allows. */
-    fun reuse(cached: DoubleArray?, ch: List<ChunkFit.Chunk>): Boolean {
+    fun reuse(cached: DoubleArray?, ch: List<Pieces.Piece>): Boolean {
         if (cached == null || cached.size < 4) return false
         val d = drives(ch); val n = ch.size
         return d < cached[2] + LAMBDA_EVERY && abs(n - cached[3]) < LAMBDA_CHUNK_REL * cached[3]
     }
 
-    fun run(ps: List<ChunkFit.Part>, ch: List<ChunkFit.Chunk>, cached: DoubleArray? = null): Result? {
+    fun run(ps: List<Pieces.Part>, ch: List<Pieces.Piece>, cached: DoubleArray? = null): Result? {
         if (ch.size < 2) return null
         var best = LAMBDAS[0]; var bestR = Double.POSITIVE_INFINITY
         var lamD = drives(ch); var lamN = ch.size
@@ -149,9 +149,9 @@ internal object BandFit {
         else for (l in LAMBDAS) { val r = lodo(ch, ps, l); if (r < bestR) { bestR = r; best = l } }
         val (g, act) = fit(ch, ps, best)
         val v95 = vAt(95.0, g)
-        val (_, plats) = ChunkFit.epochs(ps, ch)
+        val (_, plats) = Pieces.epochs(ps, ch)
         val pl = plats.map { max(it[1] - (v95 - vAt(it[0], g)), 0.0) }
-        val cap = v95 + if (pl.isNotEmpty()) ChunkFit.med(pl.toDoubleArray()) else 0.07 * v95
+        val cap = v95 + if (pl.isNotEmpty()) Stats.med(pl.toDoubleArray()) else 0.07 * v95
         return Result(g, best, bestR, v95, cap, ch.size, act, lamD, lamN)
     }
 
@@ -183,8 +183,8 @@ internal object BandFit {
 
     /** Refit from pieces.jsonl and write model-band.json when the result changed. */
     fun update(dir: File): Result? = runCatching {
-        val (pp, pcs) = Pieces.load(dir)
-        val (ps, ch) = ChunkFit.fromPieces(pp, pcs)
+        val (ps, pcs) = Pieces.load(dir)
+        val ch = pcs.filter { it.overSpan || Pieces.FIT_WEAK || !it.weak }
         val r = run(ps, ch, cachedLambda(dir)) ?: return@runCatching null
         val f = File(dir, FILE); val js = json(r, System.currentTimeMillis())
         val strip = { x: String -> x.replace(Regex("\"timestamp\":[0-9]+"), "") }

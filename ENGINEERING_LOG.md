@@ -245,3 +245,8 @@
 
 - Approved plan: `sandbox/plans/revert-temp-diag-20261016-2312-plan.md`
 - Scope: `git revert` of TEMP diagnostic `076f4b13`. Keep the summary log, identity header, and `recording`. Fingerprint gate waived in chat 2026-10-17. No phone install. No `--play`. No adb.
+
+## 2026-10-19 - Execute start: kalman-band-independent-20261016-2306-plan.md
+
+- Approved plan: `sandbox/plans/kalman-band-independent-20261016-2306-plan.md`
+- Scope: one Kalman apply packet per part from Pieces (block medians, per-row level error); BandFit reads Pieces directly. Neither names ChunkFit. No phone install.

@@ -93,8 +93,8 @@ class FixesTest {
         val dir = tmp("bl"); File(dir, "raw").mkdirs()
         for (f in fixtureDir().listFiles()!!.filter { it.name.endsWith(".jsonl") }) f.copyTo(File(dir, "raw/${f.name}"))
         ProfileStore.rollup(dir, 35.0)
-        val (pp, pcs) = Pieces.load(dir)
-        val (ps, ch) = ChunkFit.fromPieces(pp, pcs)
+        val (ps, loaded) = Pieces.load(dir)
+        val ch = loaded.filter { it.overSpan || Pieces.FIT_WEAK || !it.weak }
         val fresh = checkNotNull(BandFit.run(ps, ch))
         val cached = checkNotNull(BandFit.cachedLambda(dir))
         assertEquals(fresh.lambda, cached[0], 0.0)

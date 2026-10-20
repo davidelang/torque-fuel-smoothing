@@ -1,15 +1,12 @@
 package com.davidlang.torque.fuelsmoothing
 
-import java.util.TreeSet
 import kotlin.math.abs
-import kotlin.math.ceil
-import kotlin.math.ln
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sqrt
 
 /**
- * Gauge map and tank size fit from stored pieces: one chunk per piece. Kalman still reads [kalmanDrives].
+ * Gauge map and tank size fit from stored pieces: one chunk per piece.
  *
  * [fromPieces] maps pieces.jsonl onto parts and chunks. The map is refit from all of those chunks:
  * inverse overlap fit with weights fuel x 1/noise^2 and Huber (k=2) bounded influence, h >= H_MIN,
@@ -63,30 +60,7 @@ internal object ChunkFit {
         fun v(level: Double) = vAt(level, g)
     }
 
-    private class Work(
-        val key: String, val s: FuelSession, val a: Int, val b: Int, val moving: Boolean,
-        val i0: Int, val i1: Int, val q: BooleanArray?, val fillAtStart: Boolean,
-    )
-
     // ---------------- helpers (match numpy) ----------------
-    fun med(x: DoubleArray): Double = Stats.med(x)
-
-    private fun finiteMed(x: List<Double>): Double {
-        val f = x.filter { it.isFinite() }.toDoubleArray()
-        return if (f.isEmpty()) Double.NaN else med(f)
-    }
-
-    private fun ols(f: DoubleArray, l: DoubleArray, a: Int = 0, b: Int = f.size): DoubleArray {
-        val n = b - a
-        var mf = 0.0; var ml = 0.0
-        for (i in a until b) { mf += f[i]; ml += l[i] }
-        mf /= n; ml /= n
-        var sxx = 0.0; var sxy = 0.0
-        for (i in a until b) { sxx += (f[i] - mf) * (f[i] - mf); sxy += (f[i] - mf) * (l[i] - ml) }
-        val c1 = if (sxx > 0) sxy / sxx else 0.0
-        return doubleArrayOf(ml - c1 * mf, c1, sxx)
-    }
-
     fun steady(s: FuelSession): BooleanArray = Pieces.trusted(s)
 
     /**
@@ -96,131 +70,6 @@ internal object ChunkFit {
     fun levelTrusted(s: FuelSession, q: BooleanArray = FuelV2.quietMask(s.spd, s.t, s.fill)): BooleanArray =
         Pieces.levelTrusted(s)
 
-    private fun movingGph(s: FuelSession): Double? {
-        var cnt = 0; var fu = 0.0; var dt = 0.0
-        for (i in 1 until s.t.size) if (s.spd[i] > 5) { cnt++; fu += s.used[i] - s.used[i - 1]; dt += s.t[i] - s.t[i - 1] }
-        if (cnt < 120) return null
-        return fu / max(dt, 1.0) * 3600
-    }
-
-    // ---------------- segmentation ----------------
-    /** Per-session work that does not depend on other sessions; memoized per session object (rollup cache). */
-    private class Prep(val first: Double, val lastMed: Double, val gph: Double?, val cuts: List<Int>, val q: BooleanArray)
-    private val prepMemo = java.util.Collections.synchronizedMap(java.util.WeakHashMap<FuelSession, Prep>())
-
-    private fun prep(s: FuelSession): Prep {
-        if (RollupCache.enabled) prepMemo[s]?.let { return it }
-        val n = s.t.size; val l = s.raw
-        val fin = (0 until n).filter { l[it].isFinite() }
-        val first = if (fin.isEmpty()) Double.NaN else finiteMed(fin.take(60).map { l[it] })
-        val last = if (fin.isEmpty()) Double.NaN else finiteMed(fin.takeLast(60).map { l[it] })
-        val cut = TreeSet<Int>(); cut.add(0)
-        val fi = (0 until n).filter { s.fill[it] }
-        if (fi.isNotEmpty()) { cut.add(fi.first()); cut.add(fi.last() + 1) }
-        for (i in 60 until n - 60) {
-            var mx = Double.NEGATIVE_INFINITY
-            for (k in i - 60 until i + 60) mx = max(mx, s.spd[k])
-            if (mx < 1.0) {
-                val a = finiteMed((i - 60 until i).map { l[it] }); val b = finiteMed((i until i + 60).map { l[it] })
-                if (a.isFinite() && b.isFinite() && b - a >= FILL_JUMP) { cut.add(i); break }
-            }
-        }
-        val p = Prep(first, last, movingGph(s), cut.filter { it in 0 until n } + n, steady(s))
-        if (RollupCache.enabled) prepMemo[s] = p
-        return p
-    }
-
-    private fun parts(sessions: List<FuelSession>): List<Work> {
-        val preps = sessions.map { prep(it) }
-        val gs = preps.mapNotNull { it.gph }.toDoubleArray()
-        val ref = if (gs.isEmpty()) 0.0 else med(gs)
-        val out = ArrayList<Work>()
-        var prevEnd = Double.NaN
-        for ((si, s) in sessions.withIndex()) {
-            val pr = preps[si]
-            val first = pr.first
-            val between = prevEnd.isFinite() && first.isFinite() && first - prevEnd >= FILL_JUMP
-            val g = pr.gph; val dropout = g != null && g < FLOW_REL * ref
-            val cuts = pr.cuts
-            val q = pr.q
-            for (p in 0 until cuts.size - 1) {
-                val a = cuts[p]; val b = cuts[p + 1]
-                val mv = (a until b).filter { s.spd[it] >= 5.0 }
-                val moving = mv.isNotEmpty() && !dropout
-                out.add(
-                    Work(
-                        "${s.name}#$p", s, a, b, moving, if (moving) mv.first() else 0, if (moving) mv.last() + 1 else 0,
-                        if (moving) q else null, p > 0 || between,
-                    ),
-                )
-            }
-            if (pr.lastMed.isFinite()) prevEnd = pr.lastMed
-        }
-        return out
-    }
-
-    private fun steadyIdx(w: Work): IntArray = (w.i0 until w.i1).filter { w.q!![it] }.toIntArray()
-
-    /** (sigmaQ, tau, nb, sb2) */
-    private fun noise(ps: List<Work>): DoubleArray {
-        val sds = ArrayList<Double>(); val taus = ArrayList<Double>()
-        for (w in ps) {
-            if (!w.moving) continue
-            val idx = steadyIdx(w); if (idx.isEmpty()) continue
-            var st = 0
-            for (k in 1..idx.size) {
-                if (k == idx.size || idx[k] - idx[k - 1] > 1) {
-                    val len = k - st
-                    if (len >= 120) {
-                        val x = DoubleArray(len) { w.s.raw[idx[st + it]] }
-                        val tt = DoubleArray(len) { it.toDouble() }
-                        val c = ols(tt, x)
-                        for (i in 0 until len) x[i] -= c[0] + c[1] * tt[i]
-                        val m = x.average()
-                        sds.add(sqrt(x.sumOf { (it - m) * (it - m) } / len))
-                        val ma = (0 until len - 1).sumOf { x[it] } / (len - 1)
-                        val mb = (1 until len).sumOf { x[it] } / (len - 1)
-                        var sab = 0.0; var saa = 0.0; var sbb = 0.0
-                        for (i in 0 until len - 1) {
-                            val a = x[i] - ma; val b = x[i + 1] - mb
-                            sab += a * b; saa += a * a; sbb += b * b
-                        }
-                        val den = sqrt(saa * sbb)
-                        val r1 = if (den > 0) sab / den else 0.0
-                        taus.add(-1.0 / ln(min(max(r1, 0.05), 0.99)))
-                    }
-                    st = k
-                }
-            }
-        }
-        val sig = if (sds.isEmpty()) 1.0 else med(sds.toDoubleArray())
-        val tau = if (taus.isEmpty()) 3.0 else med(taus.toDoubleArray())
-        val nb = max(ceil(2 * tau * (sig / SE_TARGET) * (sig / SE_TARGET)).toInt(), NB_MIN)
-        val sb2 = (1.25 * sig) * (1.25 * sig) * 2 * tau / nb
-        return doubleArrayOf(sig, tau, nb.toDouble(), sb2)
-    }
-
-    /** One drive part for the Kalman estimator: trusted samples (steady mask) thinned to one per [thinS] s. */
-    class KDrive(val key: String, val session: String, val t0: Double, val fuel: Double, val fillAtStart: Boolean, val l: DoubleArray, val f: DoubleArray)
-
-    /** Drive parts in time order plus the gauge sigma; the last part of [openName] is left out. */
-    fun kalmanDrives(sessions: List<FuelSession>, thinS: Double, openName: String? = null): Pair<List<KDrive>, Double> {
-        val ps = parts(sessions)
-        val sig = noise(ps)[0]
-        val lastOpen = ps.lastOrNull { it.s.name == openName }?.key
-        val out = ArrayList<KDrive>()
-        for (w in ps) {
-            if (w.key == lastOpen) continue
-            val s = w.s; val ls = ArrayList<Double>(); val fs = ArrayList<Double>()
-            if (w.moving) {
-                var last = -1e9
-                for (i in w.i0 until w.i1) if (w.q!![i] && s.t[i] - last >= thinS) { ls.add(s.raw[i]); fs.add(s.used[i] - s.used[w.a]); last = s.t[i] }
-            }
-            out.add(KDrive(w.key, s.name, s.t[w.a], s.used[w.b - 1] - s.used[w.a], w.fillAtStart, ls.toDoubleArray(), fs.toDoubleArray()))
-        }
-        return out to sig
-    }
-
     /**
      * One [Part] per piece-part and one [Chunk] per included piece, in time order.
      * [Part.dens0] is the median finite rho of moving parts (NaN rho is non-moving), stamped on every part.
@@ -228,7 +77,7 @@ internal object ChunkFit {
      */
     fun fromPieces(parts: List<Pieces.Part>, pieces: List<Pieces.Piece>): Pair<List<Part>, List<Chunk>> {
         val rhos = parts.map { it.rho }.filter { it.isFinite() }
-        val dens0 = if (rhos.isEmpty()) Double.NaN else med(rhos.toDoubleArray())
+        val dens0 = if (rhos.isEmpty()) Double.NaN else Stats.med(rhos.toDoubleArray())
         val partsOut = parts.map { p ->
             Part(p.key, p.t0, p.t1, p.fStart, p.fuel, p.fillAtStart, p.nb, p.sigma, p.tau, dens0)
         }
@@ -378,7 +227,7 @@ internal object ChunkFit {
                     var s = b[r]; for (i in 0 until k) s -= rows[r][i] * h[i]
                     abs(s) * sqrt(w[r])
                 }
-                val sc = 1.4826 * med(rs) + 1e-9
+                val sc = 1.4826 * Stats.med(rs) + 1e-9
                 for (r in 0 until nr) hub[r] = min(1.0, huberK * sc / max(rs[r], 1e-12))
             }
             val un = DoubleArray(k) { max(1.0 / h[it], U_MIN) }
@@ -389,30 +238,18 @@ internal object ChunkFit {
         return DoubleArray(k) { u[it] * s0 }
     }
 
-    /** Hard constraints (La, Lb, burn) and plateau points (La, Fa) from tank epochs. */
-    internal fun epochs(ps: List<Part>, ch: List<Chunk>): Pair<List<DoubleArray>, List<DoubleArray>> {
-        val by = ch.groupBy { it.key }
-        class Ep(val fill: Boolean, val pts: MutableList<DoubleArray> = ArrayList())
-        val eps = ArrayList<Ep>(); var cur: Ep? = null; var off = 0.0
-        for (d in ps.sortedBy { it.t0 }) {
-            if (cur == null || d.fillAtStart) { cur = Ep(d.fillAtStart); eps.add(cur); off = 0.0 }
-            for (c in by[d.key].orEmpty()) {
-                cur.pts.add(doubleArrayOf(c.t0, c.ls, off + c.f0 - d.fStart))
-                cur.pts.add(doubleArrayOf(c.t1, c.le, off + c.f1 - d.fStart))
-            }
-            off += d.fuel
+    /** Part key, times, Ls/Le, F0/F1, part fuel, and fillAtStart for [Pieces.epochs]. */
+    private fun epochsOf(ps: List<Part>, ch: List<Chunk>): Pair<List<DoubleArray>, List<DoubleArray>> {
+        val parts = ps.map { p ->
+            Pieces.Part(p.key, p.t0, p.t1, p.fStart, p.fuel, p.fillAtStart, 0, Double.NaN, Double.NaN, Double.NaN, null, 0, 0)
         }
-        val cons = ArrayList<DoubleArray>(); val plats = ArrayList<DoubleArray>()
-        for (e in eps) {
-            val pts = e.pts.filter { it[1] > FuelV2.L_LO && it[1] < FuelV2.L_HI }
-                .sortedWith(compareBy<DoubleArray>({ it[0] }, { it[1] }, { it[2] }))
-            if (pts.isEmpty()) continue
-            val a = pts[0]
-            val b = pts.minWith(compareBy<DoubleArray>({ it[1] }, { it[0] }))
-            if (a[1] - b[1] >= CONS_MIN_SPAN && b[2] > a[2]) cons.add(doubleArrayOf(a[1], b[1], b[2] - a[2]))
-            if (e.fill) plats.add(doubleArrayOf(a[1], a[2]))
+        val pieces = ch.map { c ->
+            Pieces.Piece(
+                c.key, c.key, c.t0, c.t1, c.f0, c.f1, c.ls, c.le, Double.NaN, Double.NaN, 0, 0, c.dF, Double.NaN,
+                false, false, Pieces.ENDPOINT, null, -1, -1, Double.NaN, Double.NaN,
+            )
         }
-        return cons to plats
+        return Pieces.epochs(parts, pieces)
     }
 
     private fun project(g0: DoubleArray, cons: List<DoubleArray>): Pair<DoubleArray, Int> {
@@ -436,11 +273,11 @@ internal object ChunkFit {
         val t0 = if (dens0.isFinite()) 100 * dens0 else (nameplate?.takeIf { it > 0 } ?: 30.0)
         val grp = groups(ch)
         val gUnc = fitInv(grp, t0 / 100.0, huberK)
-        val (cons, plats) = epochs(ps, ch)
+        val (cons, plats) = epochsOf(ps, ch)
         val (g, active) = project(gUnc, cons)
         val v95 = vAt(FuelV2.L_HI, g)
         val pl = plats.map { max(it[1] - (v95 - vAt(it[0], g)), 0.0) }
-        val cap = v95 + if (pl.isNotEmpty()) med(pl.toDoubleArray()) else 0.07 * v95
+        val cap = v95 + if (pl.isNotEmpty()) Stats.med(pl.toDoubleArray()) else 0.07 * v95
         return Result(g, gUnc, v95, cap, t0, ch.size, grp.size, cons, active, pl)
     }
 

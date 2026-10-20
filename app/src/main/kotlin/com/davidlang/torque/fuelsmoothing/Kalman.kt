@@ -7,26 +7,28 @@ import kotlin.math.min
 import kotlin.math.sqrt
 
 /**
- * Third gauge-map method (next to ChunkFit and BandFit): sequential information filter on the fuel density
+ * Third gauge-map method (next to the chunk map and the band map): sequential information filter on the fuel density
  * g_k (gal per 1 % of gauge, k = 0..99); G(L) = gallons above gauge 0 = sum of g over [0, L]; tank = G(100).
  * Port of sandbox/research/chunk-study/kalman_replay_v2.py (reference: ref_kalman.py, fixed noise factor).
  *
  * Prior: g_k ~ N(C0/100, s_g^2), s_g = max(0.5 C0/100, 0.05), plus a first-difference link sd 0.1 gal/%.
  * C0 is frozen when the state is created: the profile's tank size (entered or seeded), else [DEFAULT_C0].
- * Data per drive part (fills are part boundaries): trusted samples (ChunkFit steady mask) thinned to one per 30 s,
- * G(L_t) + F_t = k_drive with k eliminated by weighted centering; var = NS2 ((sigma_gauge g(L_t))^2 + 0.03^2),
- * EIV density from the pre-drive mean, iterated once. Drive weight min(1, 2 / sqrt(chi2/dof)) from the predictive
+ * A drive is one connect-to-disconnect capture ([PartRows.session]). Apply runs once per part (the span between
+ * hard breaks). Rows are block medians or piece endpoints ([INPUT]). Fuel on each row is relative to the part start.
+ * G(L_t) + F_t = k_drive with k eliminated by weighted centering; var = NS2 ((se_t * g(L_t))^2 + 0.03^2),
+ * EIV density from the pre-apply mean, iterated once. Row weight min(1, 2 / sqrt(chi2/dof)) from the predictive
  * residual before the update. Reported mean: Mahalanobis projection onto g_k >= 0.01 and, per tank epoch started
  * by a fill, G(top) - G(lowest) >= logged burn.
- * Updated only at drive end and at fill boundaries (never mid-drive). The state is replayed from the stored raw
- * drives when missing (bootstrap) and each drive part is applied once (keys recorded), so it is idempotent.
+ * Updated only at part end and at fill boundaries (never mid-part). The state is replayed from the stored raw
+ * captures when missing (bootstrap) and each part is applied once (keys recorded), so it is idempotent.
  */
 internal object Kalman {
-    const val VERSION = 1
+    const val VERSION = 2
     const val STATE = "kalman-state.txt"
     const val MODEL = "model-kalman.json"
     const val N = 100
-    const val THIN_S = 30.0
+    enum class Input { BLOCK_MEDIANS, PIECE_ENDPOINTS }
+    val INPUT = Input.BLOCK_MEDIANS
     const val SIG_F = 0.03
     const val HUBER_K = 2.0
     const val S_G_REL = 0.5
@@ -41,6 +43,12 @@ internal object Kalman {
     const val DEFAULT_C0 = 25.0
     /** Trust trigger: learned G(100) replaces the tank size once >= this % of gauge cells have >= 2 distinct drives. */
     const val TRUST_COV2 = 10
+
+    /** One apply packet. [session] is the connect-to-disconnect capture. [se] is parallel to [l] and [f]. */
+    class PartRows(
+        val key: String, val session: String, val t0: Double, val fuel: Double, val fillAtStart: Boolean,
+        val l: DoubleArray, val f: DoubleArray, val se: DoubleArray,
+    )
 
     class State(val c0: Double) {
         var ns2 = NS2_START
@@ -95,10 +103,10 @@ internal object Kalman {
             mu = DoubleArray(N) { max(x[it], G_FLOOR) }
         }
 
-        private fun terms(ls: DoubleArray, fs: DoubleArray, gm: DoubleArray): Triple<Array<DoubleArray>, DoubleArray, DoubleArray> {
+        private fun terms(ls: DoubleArray, fs: DoubleArray, se: DoubleArray, gm: DoubleArray): Triple<Array<DoubleArray>, DoubleArray, DoubleArray> {
             val n = ls.size
             val a = Array(n) { row(ls[it]) }
-            val v = DoubleArray(n) { val d = gm[min(ls[it].toInt(), N - 1).coerceAtLeast(0)]; ns2 * ((sig * d) * (sig * d) + SIG_F * SIG_F) }
+            val v = DoubleArray(n) { rowVar(ns2, se[it], gm[min(ls[it].toInt(), N - 1).coerceAtLeast(0)]) }
             var ws = 0.0; for (x in v) ws += 1 / x
             val am = DoubleArray(N); var ym = 0.0
             for (i in 0 until n) { val wm = 1 / v[i] / ws; for (k in 0 until N) am[k] += wm * a[i][k]; ym += wm * -fs[i] }
@@ -107,8 +115,8 @@ internal object Kalman {
             return Triple(ac, yc, v)
         }
 
-        fun badness(ls: DoubleArray, fs: DoubleArray): Double {
-            val (ac, yc, v) = terms(ls, fs, mu)
+        fun badness(ls: DoubleArray, fs: DoubleArray, se: DoubleArray): Double {
+            val (ac, yc, v) = terms(ls, fs, se, mu)
             val n = ls.size
             val r = DoubleArray(n) { yc[it] - dot(ac[it], mu) }
             val pa = Array(n) { mul(p, ac[it]) }
@@ -116,10 +124,10 @@ internal object Kalman {
             return dot(r, solveLin(s, r)) / max(n - 1, 1)
         }
 
-        fun update(ls: DoubleArray, fs: DoubleArray, w: Double) {
+        fun update(ls: DoubleArray, fs: DoubleArray, se: DoubleArray, w: Double) {
             val h0 = Array(N) { h[it].copyOf() }; val b0 = b.copyOf(); var gm = mu
             repeat(2) {
-                val (ac, yc, v) = terms(ls, fs, gm)
+                val (ac, yc, v) = terms(ls, fs, se, gm)
                 val nh = Array(N) { h0[it].copyOf() }; val nb = b0.copyOf()
                 for (i in ls.indices) {
                     val wi = w / v[i]; val r = ac[i]
@@ -129,24 +137,24 @@ internal object Kalman {
             }
         }
 
-        /** Apply one drive part (Python replay + prep epoch logic). Returns false if already applied. */
-        fun apply(d: ChunkFit.KDrive): Boolean {
+        /** Apply one part (Python replay + prep epoch logic). Returns false if already applied. */
+        fun apply(d: PartRows): Boolean {
             if (d.key in done) return false
             if (d.fillAtStart || epKey.isEmpty()) { epKey = d.key; epFill = d.fillAtStart; epTop = Double.NaN; epLow = Double.NaN; epLowF = 0.0; epF = 0.0 }
             var con: DoubleArray? = null
             if (d.l.isNotEmpty() && epFill) {
-                if (!epTop.isFinite()) epTop = med(d.l.take(3).toDoubleArray())
+                if (!epTop.isFinite()) epTop = d.l[0]
                 var j = 0; for (i in d.l.indices) if (d.l[i] < d.l[j]) j = i
                 if (!epLow.isFinite() || d.l[j] < epLow) { epLow = d.l[j]; epLowF = epF + d.f[j] }
                 if (epTop - epLow >= 10 && epLowF > 0) con = doubleArrayOf(epTop, epLow, epLowF)
             }
             epF += d.fuel
-            if (d.l.size >= 3) {
-                val bd = badness(d.l, d.f)
+            if (d.l.size >= 2) {
+                val bd = badness(d.l, d.f, d.se)
                 val w = if (bd > 0) min(1.0, HUBER_K / sqrt(bd)) else 1.0
-                update(d.l, d.f, w)
+                update(d.l, d.f, d.se, w)
                 if (bd.isFinite()) bad.add(bd)
-                if (RECALIBRATE && bad.size >= RECAL_MIN_DRIVES) ns2 *= med(bad.takeLast(RECAL_MIN_DRIVES).toDoubleArray()).coerceIn(0.5, 2.0)
+                if (RECALIBRATE && bad.size >= RECAL_MIN_DRIVES) ns2 *= Stats.med(bad.takeLast(RECAL_MIN_DRIVES).toDoubleArray()).coerceIn(0.5, 2.0)
             }
             if (con != null) { cons[epKey] = con; solve() }
             for (l in d.l) {
@@ -160,11 +168,11 @@ internal object Kalman {
 
     // ---------------- math ----------------
     fun row(l0: Double): DoubleArray { val l = min(max(l0, 0.0), 100.0); return DoubleArray(N) { (l - it).coerceIn(0.0, 1.0) } }
+    internal fun rowVar(ns2: Double, se: Double, gAtL: Double) = ns2 * ((se * gAtL) * (se * gAtL) + SIG_F * SIG_F)
     private fun conRow(c: DoubleArray): DoubleArray { val a = row(c[0]); val b = row(c[1]); return DoubleArray(N) { a[it] - b[it] } }
     private fun dot(a: DoubleArray, b: DoubleArray): Double { var s = 0.0; for (i in a.indices) s += a[i] * b[i]; return s }
     private fun mul(m: Array<DoubleArray>, v: DoubleArray) = DoubleArray(m.size) { dot(m[it], v) }
     private fun quad(m: Array<DoubleArray>, a: DoubleArray, b: DoubleArray) = dot(a, mul(m, b))
-    private fun med(x: DoubleArray) = ChunkFit.med(x)
 
     fun inverse(a: Array<DoubleArray>): Array<DoubleArray> {
         val n = a.size; val m = Array(n) { a[it].copyOf() }; val inv = Array(n) { i -> DoubleArray(n) { if (it == i) 1.0 else 0.0 } }
@@ -313,16 +321,17 @@ internal object Kalman {
     fun trustedTank(m: Model?): Double? = m?.takeIf { it.trusted && it.tank.isFinite() && it.tank > 0 }?.tank
 
     /**
-     * Drive end / fill: apply every stored drive part not yet applied, in time order (bootstrap when no state),
-     * then persist the state and model-kalman.json. [c0] is used only when the state is created.
+     * Part boundary (capture end or fill): apply every stored part not yet applied, in time order (bootstrap when
+     * no state), then persist the state and model-kalman.json. A drive is the capture ([PartRows.session]).
+     * Apply runs once per part. [c0] is used only when the state is created.
      */
     fun update(dir: File, sessions: List<FuelSession>, c0: Double?, openName: String? = null): State? = runCatching {
         if (sessions.isEmpty()) return@runCatching load(dir)
-        val (drives, sig) = ChunkFit.kalmanDrives(sessions, THIN_S, openName)
+        val (parts, sig) = inputs(sessions, openName)
         var s = load(dir)
         if (s == null && File(dir, STATE).isFile) {
             val kept = quarantineCorrupt(dir)
-            warn("kalman state kept as ${kept?.name} and rebuilt from the stored drives (${lastLoadError})")
+            warn("kalman state kept as ${kept?.name} and rebuilt from the stored captures (${lastLoadError})")
         }
         if (s == null) {
             val prior = storedC0(dir)
@@ -331,7 +340,7 @@ internal object Kalman {
         }
         s.sig = sig
         var n = 0
-        for (d in drives) if (s.apply(d)) n++
+        for (d in parts) if (s.apply(d)) n++
         if (n > 0 || !File(dir, STATE).isFile) {
             save(dir, s)
             AtomicFile.write(File(dir, MODEL), modelJson(s, System.currentTimeMillis()))
@@ -342,4 +351,41 @@ internal object Kalman {
         }
         s
     }.onFailure { e -> runCatching { FsLog.w("FuelSmooth", "kalman update failed; keeping $STATE: ${e.message}") } }.getOrNull()
+
+    /**
+     * One packet per part, in [Pieces.cut] order (the open session's last part is already omitted).
+     * Returns the packets and the pooled gauge σ.
+     */
+    fun inputs(sessions: List<FuelSession>, openName: String? = null): Pair<List<PartRows>, Double> {
+        val (parts, pieces) = Pieces.cut(sessions, openName)
+        val sig = parts.firstOrNull { it.sigma.isFinite() }?.sigma ?: 1.0
+        val by = pieces.groupBy { it.part }
+        val out = ArrayList<PartRows>(parts.size)
+        for (p in parts) {
+            val session = p.key.substringBefore('#')
+            // NaN rho is a non-moving part.
+            if (!p.rho.isFinite()) {
+                out.add(PartRows(p.key, session, p.t0, p.fuel, p.fillAtStart, doubleArrayOf(), doubleArrayOf(), doubleArrayOf()))
+                continue
+            }
+            val ls = ArrayList<Double>()
+            val fs = ArrayList<Double>()
+            val ses = ArrayList<Double>()
+            when (INPUT) {
+                Input.BLOCK_MEDIANS -> for (b in Pieces.blockMedians(p, p.nb)) {
+                    ls.add(b[1]); fs.add(b[2]); ses.add(b[3])
+                }
+                Input.PIECE_ENDPOINTS -> {
+                    val pcs = by[p.key].orEmpty().sortedWith(compareBy({ it.t0 }, { it.t1 }, { it.key }))
+                    for (c in pcs) {
+                        if (c.nS == 0 || c.nE == 0) continue
+                        ls.add(c.ls); fs.add(c.f0 - p.fStart); ses.add(c.seS)
+                        ls.add(c.le); fs.add(c.f1 - p.fStart); ses.add(c.seE)
+                    }
+                }
+            }
+            out.add(PartRows(p.key, session, p.t0, p.fuel, p.fillAtStart, ls.toDoubleArray(), fs.toDoubleArray(), ses.toDoubleArray()))
+        }
+        return out to sig
+    }
 }
