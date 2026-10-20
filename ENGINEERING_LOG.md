@@ -272,3 +272,8 @@
 
 - Approved plan: `sandbox/plans/release-shrink-icon-20261020-0005-plan.md`
 - Scope: release shrinks resources and is not debuggable; debug stays unminified, unshrunk, and debuggable. Session-end snapshot is logged only when BuildConfig.DEBUG. Launcher becomes lossless WebP, same pixels. No phone install. No --play.
+
+## 2026-10-20 - Execute start: no-play-version-tags-20261020-0333-plan.md
+
+- Approved plan: `sandbox/plans/no-play-version-tags-20261020-0333-plan.md`
+- Scope: a Play build commits app/versionCode.txt only and creates no git tag. versionName stays git describe on the real version tag, excluding *+* tags. Delete local tags v0.9.1+3, v0.9.2+4, and v0.9.2+5 after each subject is Play build: versionCode N. No phone install. No --play. No push.

@@ -39,7 +39,7 @@ android {
             commandLine(
                 "bash",
                 "-c",
-                "BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo 'HEAD') && (git describe --tags --match \"${'$'}{BRANCH_NAME}-start\" 2>/dev/null || git describe --always 2>/dev/null || echo 'dev')",
+                "BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo 'HEAD') && (git describe --tags --match \"${'$'}{BRANCH_NAME}-start\" 2>/dev/null || git describe --always --exclude '*+*' 2>/dev/null || echo 'dev')",
             )
         }.standardOutput.asText.orNull?.trim() ?: "dev"
         versionName = rawVersion
