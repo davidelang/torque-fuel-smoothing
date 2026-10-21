@@ -1002,11 +1002,11 @@ class PluginService : Service() {
         return loaded
     }
 
-    /** Kalman outputs: corrected = G(gauge) / G(100) x 100; remaining = G(gauge) + reserve. */
+    /** Kalman outputs: corrected = G(gauge) / G(98) x 100; remaining = G(gauge) + reserve. */
     private fun kalmanPublish(rt: TankRt): TankPublish? {
         val km = kalmanModel() ?: return null
         val sm = rt.math.smoothed?.takeIf { it.isFinite() } ?: return null
-        val corr = FuelV2.correctedPct(sm, { km.v(it) }, km.tank)
+        val corr = FuelV2.correctedPct(sm, { km.v(it) }, km.g98)
         if (!corr.isFinite()) return null
         val r = km.v(sm).coerceAtLeast(0.0)
         val reserve = priorFor(1).reserve
@@ -1040,7 +1040,7 @@ class PluginService : Service() {
         }
         pub(Pids.PLUGIN_TANK_CHUNK, "TankChk", priorFor(1).cap)
         pub(Pids.PLUGIN_TANK_BAND, "TankBand", bandModel()?.second)
-        pub(Pids.PLUGIN_TANK_KALMAN, "TankKal", kalmanModel()?.tank)
+        pub(Pids.PLUGIN_TANK_KALMAN, "TankKal", kalmanModel()?.g98)
     }
 
     private fun publishBand(t: ITorqueService, b: TankPublish) {
@@ -1202,7 +1202,7 @@ class PluginService : Service() {
                     Fingerprint.save(pd, Fingerprint.merge(Fingerprint.load(pd), o))
                 }
                 val tdir = ProfileStore.tankDir(filesDir, target, id); val np = nameplateFor(id)
-                submitRollup("rollup $target tank$id", { ProfileStore.rollup(tdir, np, openSessions, kalmanSeedFor(id)) }) { priorCache.clear() }
+                submitRollup("rollup $target tank$id", { ProfileStore.rollup(tdir, np, cfg.jumpPct, openSessions) }) { priorCache.clear() }
             }
             return
         }
@@ -1239,7 +1239,7 @@ class PluginService : Service() {
         val dir = ProfileStore.tankDir(filesDir, profileId, id); val np = nameplateFor(id)
         FsLog.i(TAG, "session close tank=$id samples=${closed.size} files=${rt.sessions.sessionCount()}; rollup queued")
         var summary = ""
-        submitRollup("rollup tank$id", { summary = ProfileStore.rollup(dir, np, openSessions, kalmanSeedFor(id)) }) {
+        submitRollup("rollup tank$id", { summary = ProfileStore.rollup(dir, np, cfg.jumpPct, openSessions) }) {
             priorCache.remove(id)
             publishTankGuess(id)
             FsLog.i(TAG, "tank$id $summary")
@@ -1404,7 +1404,7 @@ class PluginService : Service() {
             val open = rt.sessions.sessionId; val tid = rt.id
             var ok = false
             val bytes = open?.let { File(File(dir, "raw"), "$it.jsonl").length() }
-            submitRollup("fill update tank$tid", { ok = ProfileStore.fillUpdate(dir, np, open, bytes, kalmanSeedFor(tid)) }) {
+            submitRollup("fill update tank$tid", { ok = ProfileStore.fillUpdate(dir, np, open, cfg.jumpPct, bytes) }) {
                 if (ok) { priorCache.remove(tid); publishTankGuess(tid) }
             }
         }
@@ -1438,30 +1438,18 @@ class PluginService : Service() {
 
     private fun hasModel(id: Int): Boolean = ProfileStore.storedMap(ProfileStore.tankDir(filesDir, profileId, id)) != null
 
-    /** After an analysis cycle (drive end or fill): publish the learned capacity as the current tank guess. */
+    /** After an analysis cycle (drive end or fill): publish G(98) when the fit is complete and sd98 <= 1.5. A miss leaves the stored guess. */
     private fun publishTankGuess(id: Int) {
         if (id != 1 || quarantineDir != null) return
-        // Trust trigger: the Kalman G(100) replaces the entered/seeded tank size only once >= TRUST_COV2 % of the
-        // gauge is covered by 2+ distinct drives; before that the initial estimate stays (Kalman shown as provisional).
         val km = Kalman.loadModel(ProfileStore.tankDir(filesDir, profileId, id))
-        val cap = Kalman.trustedTank(km) ?: return
+        if (!Kalman.publishable(km)) return
+        val cap = km!!.g98
         if (ProfileStore.setTankGuess(filesDir, profileId, cap, true)) {
             prefsDirty = true
             // Only the plugin's per-profile setting changes: Torque's tankCapacity is not writable from the
             // plugin API (storeInProfile keys land under "plugin_"), so Torque's own figure stays as entered.
             FsLog.i(TAG, "tank guess for $profileId updated to learned capacity ${"%.1f".format(cap)} gal (Torque tankCapacity not writable; unchanged)")
         }
-    }
-
-    /**
-     * Kalman C0, self-contained (no Chunk/Band/raw-fit input): Torque's capacity, else a user-entered tank size
-     * (not one the plugin learned), else null -> Kalman.DEFAULT_C0. Used only when a Kalman state is created;
-     * an existing state (or the C0 stored in model-kalman.json) is never re-seeded.
-     */
-    private fun kalmanSeedFor(id: Int): Double? {
-        if (id <= 1) return torqueCapGal ?: cfg.tankGal?.takeIf { it > 0.0 && !cfg.tankEstimated }
-        val x = cfg.extra(id) ?: return null
-        return x.tankGal?.takeIf { it > 0.0 && !x.tankEstimated }
     }
 
     private fun nameplateFor(id: Int): Double? {

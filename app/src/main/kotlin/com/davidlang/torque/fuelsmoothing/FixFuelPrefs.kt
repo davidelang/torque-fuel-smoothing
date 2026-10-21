@@ -153,6 +153,17 @@ internal object FixFuelPrefs {
         return v.isFinite() && v > 0.0
     }
 
+    /**
+     * Range check with no log. Null raw is ([def], null). The second value is the original untrimmed string,
+     * or null when the trimmed text parses and [ok] accepts it.
+     */
+    internal fun clamp(raw: String?, def: Double, ok: (Double?) -> Boolean): Pair<Double, String?> {
+        if (raw == null) return def to null
+        val v = raw.trim().toDoubleOrNull()
+        if (ok(v)) return v!! to null
+        return def to raw
+    }
+
     /** Corrupt stored value: log, record it in [invalid], and fall back to [def] for runtime only. */
     private fun checked(
         p: SharedPreferences,
@@ -161,12 +172,13 @@ internal object FixFuelPrefs {
         ok: (Double?) -> Boolean,
         invalid: MutableMap<String, String>,
     ): Double {
-        val raw = p.getString(key, def.toString()) ?: def.toString()
-        val v = raw.trim().toDoubleOrNull()
-        if (ok(v)) return v!!
-        invalid[key] = raw
-        android.util.Log.w("FuelSmooth", "stored $key=\"$raw\" is out of range; using $def until corrected in settings")
-        return def
+        val raw = p.getString(key, null)
+        val (v, bad) = clamp(raw, def, ok)
+        if (bad != null) {
+            invalid[key] = bad
+            android.util.Log.w("FuelSmooth", "stored $key=\"$bad\" is out of range; using $def until corrected in settings")
+        }
+        return v
     }
 
     fun prefs(ctx: Context): SharedPreferences = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE)

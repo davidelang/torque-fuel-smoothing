@@ -286,3 +286,7 @@
 ## 2026-10-21 - Kalman lvfit6 port, phase 1
 
 - Plan sandbox/plans/kalman-lvfit6-port-20261021-0004-plan.md. Speed becomes km/h. Algorithm tests and the three van resource trees leave the repo. Estimator port is phase 2, after this commit.
+
+## 2026-10-21 - Kalman lvfit6 port, phase 2
+
+- Plan sandbox/plans/kalman-lvfit6-port-20261021-0004-plan.md. Kalman.VERSION 3 replaces the estimator with the level-from-fuel map. Pieces.ANALYSIS_VERSION stays 4.

@@ -357,9 +357,9 @@ internal object ProfileStore {
      * [exclude]: session ids still being recorded (never read mid-drive). Skipped entirely, outputs untouched,
      * when the included raw files and settings are unchanged since the last rollup (RollupCache.enabled).
      * A matching signature with a missing or empty rollup-summary.txt is rebuilt, not returned empty.
+     * [jumpPct] is the Kalman fill-break threshold.
      */
-    /** [kalmanC0]: Kalman prior scale used only when its state is created (self-contained seed; see PluginService.kalmanSeedFor). */
-    fun rollup(dir: File, nameplate: Double?, exclude: Set<String> = emptySet(), kalmanC0: Double? = nameplate): String {
+    fun rollup(dir: File, nameplate: Double?, jumpPct: Double, exclude: Set<String> = emptySet()): String {
         DataLock.lock()
         try {
             val raw = File(dir, "raw")
@@ -371,7 +371,7 @@ internal object ProfileStore {
             val sigFile = File(dir, ROLLUP_SIG)
             if (versionChanged(dir)) {
                 try {
-                    val r = reprocessAll(dir, nameplate, kalmanC0, exclude)
+                    val r = reprocessAll(dir, nameplate, jumpPct, exclude)
                     if (files.isNotEmpty()) AtomicFile.write(sigFile, sig)
                     return r
                 } finally {
@@ -388,7 +388,7 @@ internal object ProfileStore {
                 FsLog.w("FuelSmooth", "rollup summary missing or empty: ${summaryFile.path}")
             }
             try {
-                val r = rollupFull(dir, nameplate, exclude, kalmanC0)
+                val r = rollupFull(dir, nameplate, exclude, jumpPct)
                 if (files.isNotEmpty()) AtomicFile.write(sigFile, sig)
                 return r
             } finally {
@@ -407,14 +407,12 @@ internal object ProfileStore {
 
     /**
      * Archives the v1 products, then one rollupFull. Does not lock and does not call rollup.
-     * The Kalman C0 is the value stored before the rename, else [kalmanC0].
      */
-    fun reprocessAll(dir: File, nameplate: Double?, kalmanC0: Double?, exclude: Set<String>): String {
-        val c0 = Kalman.storedC0(dir) ?: kalmanC0
+    fun reprocessAll(dir: File, nameplate: Double?, jumpPct: Double, exclude: Set<String>): String {
         val old = analysisVersion(dir) ?: 1
         FsLog.i("FuelSmooth", "reprocess analysis v$old -> ${Pieces.ANALYSIS_VERSION}")
         for (name in ARCHIVE_PRODUCTS) archiveProduct(dir, name, old)
-        val text = rollupFull(dir, nameplate, exclude, c0)
+        val text = rollupFull(dir, nameplate, exclude, jumpPct)
         AtomicFile.write(File(dir, "analysis.version"), Pieces.ANALYSIS_VERSION.toString())
         return text
     }
@@ -443,7 +441,7 @@ internal object ProfileStore {
         }
     }
 
-    private fun rollupFull(dir: File, nameplate: Double?, exclude: Set<String>, kalmanC0: Double?): String {
+    private fun rollupFull(dir: File, nameplate: Double?, exclude: Set<String>, jumpPct: Double): String {
         val raw = File(dir, "raw")
         val rawFiles = if (raw.isDirectory) FuelV2.sessionFiles(raw, exclude) else emptyList()
         val prevSig = File(dir, ROLLUP_SIG).takeIf { it.isFile }?.readText()
@@ -468,7 +466,7 @@ internal object ProfileStore {
         } else if (model != null) {
             AtomicFile.write(File(dir, "model.json"), model.json)
         }
-        Kalman.update(dir, sessions, kalmanC0)
+        Kalman.update(dir, sessions, jumpPct)
         if (model != null) {
             val chunksOut = File(dir, "chunks.jsonl")
             chunksOut.writeText("")
@@ -532,7 +530,7 @@ internal object ProfileStore {
             "parts=${parts.size} pieces=${pieces.size} weak=$weak overSpan=$overSpan " +
             "chunkCap=${modelNum(File(dir, "model.json"), "capToZero")} " +
             "bandCap=${modelNum(File(dir, BandFit.FILE), "capToZero")} " +
-            "kalmanTank=${modelNum(File(dir, Kalman.MODEL), "tank")} lastGapPct=${lastGapPct(gap)}"
+            "kalmanTank=${modelNum(File(dir, Kalman.MODEL), "g98")} lastGapPct=${lastGapPct(gap)}"
         if (line.length <= SUMMARY_MAX) return line
         FsLog.w("FuelSmooth", "rollup summary truncated from ${line.length} to $SUMMARY_MAX (${File(dir, ROLLUP_SUMMARY).path})")
         return line.take(SUMMARY_MAX)
@@ -599,20 +597,20 @@ internal object ProfileStore {
      * [openBytes]: length of the open session's file when the update was queued; only complete lines up to it
      * are read (the recorder keeps appending meanwhile).
      */
-    fun fillUpdate(dir: File, nameplate: Double?, openName: String?, openBytes: Long? = null, kalmanC0: Double? = nameplate): Boolean {
+    fun fillUpdate(dir: File, nameplate: Double?, openName: String?, jumpPct: Double, openBytes: Long? = null): Boolean {
         DataLock.lock()
         try {
-            return fillUpdate0(dir, nameplate, openName, openBytes, kalmanC0)
+            return fillUpdate0(dir, nameplate, openName, jumpPct, openBytes)
         } finally {
             RollupCache.clear()
             DataLock.unlock()
         }
     }
 
-    private fun fillUpdate0(dir: File, nameplate: Double?, openName: String?, openBytes: Long?, kalmanC0: Double?): Boolean {
+    private fun fillUpdate0(dir: File, nameplate: Double?, openName: String?, jumpPct: Double, openBytes: Long?): Boolean {
         if (versionChanged(dir)) {
             val ex = if (openName != null) setOf(openName) else emptySet()
-            reprocessAll(dir, nameplate, kalmanC0, ex)
+            reprocessAll(dir, nameplate, jumpPct, ex)
         }
         val raw = File(dir, "raw")
         val caps = if (openName != null && openBytes != null) mapOf(openName to openBytes) else emptyMap()
@@ -620,7 +618,7 @@ internal object ProfileStore {
         val json = chunkUpdate(dir, sessions, nameplate, null, openName) ?: return false
         writeModelIfChanged(File(dir, "model.json"), json)
         BandFit.update(dir)
-        Kalman.update(dir, sessions, kalmanC0, openName)
+        Kalman.update(dir, sessions, jumpPct, openName)
         return true
     }
 
