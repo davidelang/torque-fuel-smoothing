@@ -290,3 +290,7 @@
 ## 2026-10-21 - Kalman lvfit6 port, phase 2
 
 - Plan sandbox/plans/kalman-lvfit6-port-20261021-0004-plan.md. Kalman.VERSION 3 replaces the estimator with the level-from-fuel map. Pieces.ANALYSIS_VERSION stays 4.
+
+## 2026-10-21 - Reviewer fix: place() and between-drive previous capture
+
+- Reviewer FAIL on kalman-lvfit6-port-20261021-0004-plan.md. place() attaches a logged fill or parked rise to the part that contains the sample. A between-drive rise uses the immediate previous non-empty capture, shortened to the samples it has.

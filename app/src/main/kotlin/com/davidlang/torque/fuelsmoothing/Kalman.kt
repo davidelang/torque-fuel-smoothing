@@ -279,7 +279,7 @@ internal object Kalman {
             val prts = ArrayList<Prt>()
             for (part in group) prts.add(Prt(part.key, name, part.t0, part.t1, part.fStart, part.fuel, false, blocksOf(part, t, f, l, v, flags)))
             placeBreaks(prts, rows, rL.toDoubleArray(), rV.toDoubleArray(), rT.toDoubleArray(), prevRise, jumpPct)
-            if (rL.size >= 60) prevRise = rL.toDoubleArray()
+            if (rL.isNotEmpty()) prevRise = rL.toDoubleArray()
             drives.add(prts)
         }
         val flat = ArrayList<Prt>()
@@ -385,14 +385,17 @@ internal object Kalman {
                 if (rise >= jump) place(parts, t[k])
             }
         }
-        if (prev != null && prev.size >= 60 && n >= 60) {
-            val btw = medOf(l.copyOfRange(0, 60)) - medOf(prev.copyOfRange(prev.size - 60, prev.size))
+        if (prev != null && prev.isNotEmpty() && n > 0) {
+            val a = min(60, n)
+            val b = min(60, prev.size)
+            val btw = medOf(l.copyOfRange(0, a)) - medOf(prev.copyOfRange(prev.size - b, prev.size))
             if (btw >= jump && parts.isNotEmpty()) parts[0].fill = true
         }
     }
 
+    /** The part that contains the sample. A shared edge belongs to the part that opens there. */
     private fun place(parts: List<Prt>, time: Double) {
-        parts.firstOrNull { it.t0 >= time - 1e-9 }?.fill = true
+        parts.lastOrNull { it.t0 <= time + 1e-9 && time <= it.t1 + 1e-9 }?.fill = true
     }
 
     /** At-speed rise across a stop. OR'd onto breaks already placed; does not clear them. */
