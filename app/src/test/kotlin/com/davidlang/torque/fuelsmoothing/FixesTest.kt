@@ -10,32 +10,7 @@ import java.io.File
 import java.nio.file.Files
 
 class FixesTest {
-    private fun fixtureDir(): File = File(checkNotNull(javaClass.classLoader!!.getResource("fuel-sessions")).toURI())
-    private fun fixtures(): List<FuelSession> = FuelV2.loadSessions(fixtureDir())
     private fun tmp(p: String): File = Files.createTempDirectory(p).toFile()
-
-    @Test
-    fun test57KalmanCorruptStateKeptAndRebuiltWithOriginalC0() {
-        val dir = tmp("kc")
-        val a = checkNotNull(Kalman.update(dir, fixtures(), 35.0))
-        val f = File(dir, Kalman.STATE)
-        val text = f.readText()
-        f.writeText(text.substring(0, text.length / 2)) // truncated write
-        assertNull(Kalman.load(dir))
-        assertNotNull(Kalman.lastLoadError)
-        // The profile's tank field changed meanwhile; the rebuild must still use the original C0 (35).
-        val b = checkNotNull(Kalman.update(dir, fixtures(), 99.0))
-        assertTrue(File(dir, "${Kalman.STATE}.corrupt").isFile)
-        assertEquals(text.length / 2, File(dir, "${Kalman.STATE}.corrupt").readText().length)
-        assertEquals(35.0, b.c0, 1e-12)
-        assertEquals(a.tank, b.tank, 1e-9)
-        // New-format file that lost "done" lines but kept its end line: count mismatch is detected.
-        val lines = File(dir, Kalman.STATE).readLines()
-        File(dir, Kalman.STATE).writeText((lines.filterNot { it.startsWith("end ") }.dropLast(2) + lines.last { it.startsWith("end ") }).joinToString("\n") + "\n")
-        assertNull(Kalman.load(dir))
-        File(dir, Kalman.MODEL).writeText("{\"version\":")
-        assertNull(Kalman.loadModel(dir)) // logged, not thrown
-    }
 
     @Test
     fun test58FuelSourceDetectionCandidatesAndPerProfileDefault() {
@@ -54,61 +29,6 @@ class FixesTest {
         val root = tmp("src"); File(root, "profiles/van").mkdirs(); File(root, "profiles/van/profile.json").writeText("{\"id\":\"van\",\"schema\":1}")
         assertEquals("ford_16c1" to true, FuelDetect.load(root, "van", "ford_16c1"))
         assertEquals("ford_16c1" to true, FuelDetect.load(root, "van", null)) // persisted per profile
-    }
-
-    private fun snapshot(dir: File): Map<String, String> = dir.walkTopDown()
-        .filter { it.isFile && !it.path.contains("/raw/") && it.name != ProfileStore.ROLLUP_SIG && !it.name.endsWith(".tmp") }
-        .associate { it.relativeTo(dir).path to it.readText().replace(Regex("\"(timestamp|ts|at)\":[0-9]+"), "") }
-
-    @Test
-    fun test59CachedIncrementalRollupIdenticalToUncached() {
-        val files = fixtureDir().listFiles()!!.filter { it.name.endsWith(".jsonl") }.sortedBy { it.name }
-        val a = File(tmp("ra"), "tank"); val b = File(tmp("rb"), "tank")
-        File(a, "raw").mkdirs(); File(b, "raw").mkdirs()
-        val batches = listOf(files.take(30), files.drop(30).take(30), files.drop(60))
-        try {
-            for (batch in batches) {
-                for (f in batch) { f.copyTo(File(a, "raw/${f.name}")); f.copyTo(File(b, "raw/${f.name}")) }
-                RollupCache.enabled = true
-                val ga = ProfileStore.rollup(a, 35.0)
-                RollupCache.enabled = false
-                val gb = ProfileStore.rollup(b, 35.0)
-                assertEquals(gb, ga)
-                assertEquals(snapshot(b), snapshot(a))
-            }
-            // Nothing new: skipped, outputs untouched.
-            RollupCache.enabled = true
-            val before = a.walkTopDown().filter { it.isFile && it.name != ProfileStore.ROLLUP_SIG }.associate { it.path to it.lastModified() }
-            Thread.sleep(20)
-            ProfileStore.rollup(a, 35.0)
-            assertEquals(before, a.walkTopDown().filter { it.isFile && it.name != ProfileStore.ROLLUP_SIG }.associate { it.path to it.lastModified() })
-            // An open session is never read.
-            val g1 = ProfileStore.rollup(a, 35.0, setOf(files.last().name.removeSuffix(".jsonl")))
-            assertFalse(g1.contains(files.last().name.removeSuffix(".jsonl")))
-        } finally { RollupCache.enabled = true }
-    }
-
-    @Test
-    fun test60BandLambdaCachePolicy() {
-        val dir = tmp("bl"); File(dir, "raw").mkdirs()
-        for (f in fixtureDir().listFiles()!!.filter { it.name.endsWith(".jsonl") }) f.copyTo(File(dir, "raw/${f.name}"))
-        ProfileStore.rollup(dir, 35.0)
-        val (ps, loaded) = Pieces.load(dir)
-        val ch = loaded.filter { it.overSpan || Pieces.FIT_WEAK || !it.weak }
-        val fresh = checkNotNull(BandFit.run(ps, ch))
-        val cached = checkNotNull(BandFit.cachedLambda(dir))
-        assertEquals(fresh.lambda, cached[0], 0.0)
-        assertTrue(BandFit.reuse(cached, ch))
-        // Reused λ gives exactly the fit at that λ.
-        val other = BandFit.LAMBDAS.first { it != fresh.lambda }
-        val forced = checkNotNull(BandFit.run(ps, ch, doubleArrayOf(other, 1.0, cached[2], cached[3])))
-        assertEquals(other, forced.lambda, 0.0)
-        assertEquals(BandFit.fit(ch, ps, other).first.toList(), forced.g.toList())
-        // Five more drives (or a big chunk-count change) re-chooses by LODO = fresh result.
-        val stale = doubleArrayOf(other, 1.0, cached[2] - BandFit.LAMBDA_EVERY, cached[3])
-        assertFalse(BandFit.reuse(stale, ch))
-        assertEquals(fresh.lambda, checkNotNull(BandFit.run(ps, ch, stale)).lambda, 0.0)
-        assertFalse(BandFit.reuse(doubleArrayOf(other, 1.0, cached[2], cached[3] * 2), ch))
     }
 
     @Test
@@ -130,41 +50,6 @@ class FixesTest {
         assertEquals(12.3, VolUnit.L.toGal(VolUnit.L.fromGal(12.3)), 1e-12)
         assertEquals(VolUnit.GAL, VolUnit.of(null)); assertEquals(VolUnit.L, VolUnit.of("L"))
         assertTrue(VolUnit.FALLBACK_HINT.contains("30 gal") && VolUnit.FALLBACK_HINT.contains("25 gal"))
-    }
-
-    private fun stateDump(s: Kalman.State) = listOf(s.c0, s.ns2, s.sig, s.tank).toString() + s.mu.toList() + s.done.toList() + s.cons.keys.toList() + (0..3).map { s.coverage(it) }
-
-    @Test
-    fun test63LegacyStateWithoutEndLineLoads() {
-        val dir = tmp("kl")
-        checkNotNull(Kalman.update(dir, fixtures(), 35.0))
-        val ref = checkNotNull(Kalman.load(dir))
-        val f = File(dir, Kalman.STATE)
-        val legacy = f.readLines().filterNot { it.startsWith("end ") }
-        f.writeText(legacy.joinToString("\n") + "\n")
-        val got = checkNotNull(Kalman.load(dir))
-        assertNull(Kalman.lastLoadError)
-        assertEquals(stateDump(ref), stateDump(got))
-        // An update on top of a legacy file keeps it (no .corrupt, same state); new writes add the end line.
-        assertEquals(stateDump(ref), stateDump(checkNotNull(Kalman.update(dir, fixtures(), 99.0))))
-        assertFalse(File(dir, "${Kalman.STATE}.corrupt").exists())
-        Kalman.save(dir, got)
-        assertEquals("end ${got.done.size}", f.readLines().last())
-    }
-
-    @Test
-    fun test64TruncatedLegacyStateSetAside() {
-        val dir = tmp("kt")
-        val a = checkNotNull(Kalman.update(dir, fixtures(), 35.0))
-        val f = File(dir, Kalman.STATE)
-        val legacy = f.readLines().filterNot { it.startsWith("end ") }.joinToString("\n")
-        val cut = legacy.substring(0, legacy.length / 3)
-        f.writeText(cut)
-        assertNull(Kalman.load(dir)); assertNotNull(Kalman.lastLoadError)
-        val b = checkNotNull(Kalman.update(dir, fixtures(), 99.0))
-        assertEquals(cut, File(dir, "${Kalman.STATE}.corrupt").readText())
-        assertEquals(35.0, b.c0, 1e-12)
-        assertEquals(a.tank, b.tank, 1e-9)
     }
 
     private fun poll(run: FuelDetect.Run, id: String, vals: List<Pair<Double?, Long?>>) { for ((v, u) in vals) run.report(id, v, u) }
@@ -220,31 +105,23 @@ class FixesTest {
     }
 
     @Test
-    fun test67RollupReleasesParsedSessions() {
-        val dir = tmp("rc"); File(dir, "raw").mkdirs()
-        for (f in fixtureDir().listFiles()!!.filter { it.name.endsWith(".jsonl") }.take(10)) f.copyTo(File(dir, "raw/${f.name}"))
-        ProfileStore.rollup(dir, 35.0)
-        assertEquals(0, RollupCache.size())
-        ProfileStore.fillUpdate(dir, 35.0, null)
-        assertEquals(0, RollupCache.size())
-    }
-
-    @Test
     fun test68OpenSessionReadOnlyUpToSubmitLength() {
-        val src = fixtureDir().listFiles()!!.filter { it.name.endsWith(".jsonl") }.maxBy { it.length() }
-        val dir = tmp("os"); val f = File(dir, src.name); src.copyTo(f)
-        val text = f.readText()
-        val cut = text.length / 2
-        val whole = text.lastIndexOf('\n', cut - 1) + 1
-        val partial = File(dir, "p.jsonl"); partial.writeText(text.substring(0, whole))
-        // Appends continue after the submit length, including a half-written line.
+        val line1 = "{\"t\":1000,\"lvl\":50.0,\"fuelGal\":0.0,\"spd\":0.0}\n"
+        val line2 = "{\"t\":2000,\"lvl\":49.0,\"fuelGal\":0.01,\"spd\":0.0}\n"
+        val line3 = "{\"t\":3000,\"lvl\":48.0,\"fuelGal\":0.02,\"spd\":0.0}\n"
+        val text = line1 + line2 + line3
+        val cut = line1.length + line2.length
+        val dir = tmp("os")
+        val f = File(dir, "s.jsonl")
+        f.writeText(text)
+        val partial = File(dir, "p.jsonl")
+        partial.writeText(text.substring(0, cut))
         f.appendText("{\"t\":9")
         val capped = checkNotNull(FuelV2.parseSession(f, cut.toLong()))
         val ref = checkNotNull(FuelV2.parseSession(partial))
         assertEquals(ref.t.toList(), capped.t.toList()); assertEquals(ref.raw.toList(), capped.raw.toList())
         assertEquals(ref.used.toList(), capped.used.toList())
-        val id = src.name.removeSuffix(".jsonl")
-        val s = FuelV2.loadSessions(dir, exclude = setOf("p"), caps = mapOf(id to cut.toLong()))
+        val s = FuelV2.loadSessions(dir, exclude = setOf("p"), caps = mapOf("s" to cut.toLong()))
         assertEquals(ref.t.size, s.single().t.size)
     }
 
@@ -297,9 +174,9 @@ class FixesTest {
         assertEquals(0.0, checkNotNull(FuelSources.toyotaLevel(0, "t").pct), 0.0)
         // The decode has no tank-size input at all (signature), and the litres reach the raw log row.
         val log = RawLog()
-        log.sample(1000L, 49.4, "toyota_7c0_2129", null, "", 30.0, "km/h", true, true, null, "TRACK", 49.4, lvlL = 63.0)
-        log.sample(2000L, 49.0, "toyota_7c0_2129", null, "", 30.0, "km/h", true, true, null, "TRACK", 49.0, lvlL = 62.5)
-        log.sample(3000L, 48.6, "toyota_7c0_2129", null, "", 30.0, "km/h", true, true, null, "TRACK", 48.6, lvlL = 62.0)
+        log.sample(1000L, 49.4, "toyota_7c0_2129", null, "", 30.0, true, true, null, "TRACK", 49.4, lvlL = 63.0)
+        log.sample(2000L, 49.0, "toyota_7c0_2129", null, "", 30.0, true, true, null, "TRACK", 49.0, lvlL = 62.5)
+        log.sample(3000L, 48.6, "toyota_7c0_2129", null, "", 30.0, true, true, null, "TRACK", 48.6, lvlL = 62.0)
         val lines = log.finish()
         assertTrue(lines.joinToString("\n"), lines.any { it.contains("\"lvlL\":63,") && it.contains("\"lvl\":49.4") })
     }
@@ -373,14 +250,6 @@ class FixesTest {
         assertFalse(detail.contains("1FDSS34L") || detail.contains("RZAA0F1") || detail.contains("AB12CD34"))
     }
 
-    private fun fillDetected(unit: Double, from: Double, to: Double): Boolean {
-        val m = FuelMath(); m.unit = unit
-        var t = 0L
-        repeat(60) { m.ingest(from, 0.0, nowMs = t); t += 1000 }
-        repeat(40) { m.ingest(to, 0.0, nowMs = t); t += 1000 }
-        return m.mode == TrackMode.FILL || (m.smoothed ?: 0.0) > (from + to) / 2
-    }
-
     @Test
     fun test78ToyotaFullScaleIsHighestSettledCountOnlyRising() {
         // Prius C 36 L = 72 counts: full reads 28.2 % on the fixed 255 scale.
@@ -402,12 +271,8 @@ class FixesTest {
         val svc = File("src/main/kotlin/com/davidlang/torque/fuelsmoothing/PluginService.kt").readText()
         val fillEnd = svc.substring(svc.indexOf("private fun onFillEnd"), svc.indexOf("private fun onFillEnd") + 400)
         assertFalse(fillEnd.contains("LevelScale"))
-        // Thresholds: 1/4 -> full on that tank (7 % -> 28 %) missed on the fixed scale, caught when scaled.
         val u = LevelScale.unit(seed, null)
         assertEquals(100.0, LevelScale.display(72 * 100.0 / 255.0, u), 1e-9)
-        assertFalse(fillDetected(1.0, 7.0, 28.0))
-        assertTrue(fillDetected(u, 7.0, 28.0))
-        assertTrue(fillDetected(1.0, 20.0, 80.0))
         assertEquals(72 * 100.0 / 255.0, checkNotNull(FuelSources.toyotaLevel(72, "t").pct), 1e-12)
     }
 
@@ -485,53 +350,4 @@ class FixesTest {
         assertEquals("ok", f.probes["live:ford_16c1"]); assertEquals("no", f.probes["ford2216C1"]); assertEquals(2, f.sessions)
     }
 
-    @Test
-    fun test85KalmanSeedSelfContainedAndNeverReseeded() {
-        val pd = Files.createTempDirectory("kseed").toFile(); val raw = File(pd, "raw"); raw.mkdirs()
-        File(checkNotNull(javaClass.classLoader!!.getResource("fuel-sessions")).toURI()).listFiles()!!.filter { it.name.endsWith(".jsonl") }.forEach { it.copyTo(File(raw, it.name)) }
-        ProfileStore.rollup(pd, 35.0, emptySet(), null)      // no Torque capacity, no user size -> default
-        assertEquals(Kalman.DEFAULT_C0, checkNotNull(Kalman.load(pd)).c0, 0.0)
-        File(pd, ProfileStore.ROLLUP_SIG).delete()
-        ProfileStore.rollup(pd, 35.0, emptySet(), 40.0)      // existing state: C0 stays
-        assertEquals(Kalman.DEFAULT_C0, checkNotNull(Kalman.load(pd)).c0, 0.0)
-        val pd2 = Files.createTempDirectory("kseed2").toFile(); raw.copyRecursively(File(pd2, "raw"))
-        ProfileStore.rollup(pd2, 33.0, emptySet(), 36.0)     // seed independent of the chunk/raw nameplate
-        assertEquals(36.0, checkNotNull(Kalman.load(pd2)).c0, 0.0)
-        val ps = File("src/main/kotlin/com/davidlang/torque/fuelsmoothing/PluginService.kt").readText()
-        val seed = ps.substringAfter("private fun kalmanSeedFor(id: Int): Double? {").substringBefore("private fun nameplateFor")
-        assertTrue(seed.contains("torqueCapGal") && seed.contains("!cfg.tankEstimated"))
-        for (bad in listOf("Chunk", "Band", "model", "nameplateFor", "nameplateGal")) assertFalse(bad, seed.contains(bad))
-    }
-
-    @Test
-    fun test99RollupSummaryOneLine() {
-        RollupCache.enabled = true
-        val dir = File(tmp("rsum"), "profiles/van")
-        val raw = File(dir, "raw")
-        raw.mkdirs()
-        File(raw, "1000-tiny.jsonl").writeText(
-            "{\"t\":1700000000000,\"lvl\":80.0,\"sm\":80.0,\"fuelGal\":0.0,\"spd\":0.0}\n" +
-                "{\"t\":1700000005000,\"lvl\":79.0,\"sm\":79.0,\"fuelGal\":0.02,\"spd\":40.0}\n",
-        )
-        val logDir = tmp("rsumlog")
-        FsLog.init(logDir)
-        val line = ProfileStore.rollup(dir, 35.0)
-        assertFalse(line.contains('\n'))
-        assertTrue(line.length <= 300)
-        assertEquals(line, File(dir, "rollup-summary.txt").readText())
-        assertTrue(File(dir, "gap.txt").isFile)
-        assertEquals(line, ProfileStore.rollup(dir, 35.0))
-        val stored = "stored-summary-line"
-        File(dir, "rollup-summary.txt").writeText(stored)
-        assertEquals(stored, ProfileStore.rollup(dir, 35.0))
-        assertTrue(File(dir, "rollup-summary.txt").delete())
-        val rebuilt = ProfileStore.rollup(dir, 35.0)
-        assertTrue(rebuilt.isNotEmpty())
-        assertFalse(rebuilt.contains('\n'))
-        assertTrue(rebuilt.length <= 300)
-        assertEquals(rebuilt, File(dir, "rollup-summary.txt").readText())
-        val log = File(logDir, "logs/events.log").readText()
-        assertTrue(log.contains("rollup summary missing or empty"))
-        assertTrue(log.contains(File(dir, "rollup-summary.txt").path))
-    }
 }

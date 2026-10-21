@@ -80,7 +80,6 @@ class PluginService : Service() {
     private var loggedFlowUnit: Boolean = false
     private var lastActive: String = FixFuelPrefs.ACTIVE_TANK1
     private var suppressFillUntilMs: Long = 0L
-    private var speedUnit: String = "mph"
     private var mpgPid: String? = null
     private var mpgUnit: String = "mpg"
     private var lastRawPct: Double? = null
@@ -376,7 +375,6 @@ class PluginService : Service() {
             .getOrNull() ?: return
         fordPid = r.ford
         speedPid = r.speed
-        if (r.speedUnit.isNotEmpty()) speedUnit = r.speedUnit
         fuelUsedPid = r.fuelUsed
         if (r.fuelUsedUnit.isNotEmpty()) fuelUsedUnit = r.fuelUsedUnit
         galHrPid = r.galHr ?: Pids.GAL_PER_HOUR
@@ -438,7 +436,7 @@ class PluginService : Service() {
         else if (cfg.write012f && !ecuFuelResolved) resolveEcuFuel(t)
         val now = System.currentTimeMillis()
         val speedRaw = speedPid?.let { readDouble(t, it) } ?: 0.0
-        val speedMph = FuelMath.toMph(speedRaw, speedUnit)
+        val speedKmh = speedRaw
         val active = resolveActiveTank(t)
         if (ecu != null && ecu != lastEcuConnected) {
             onEcu(ecu)
@@ -458,9 +456,9 @@ class PluginService : Service() {
             fuelDetect != null -> pumpFuelDetect(t)
             else -> pumpDetect(t, speedRaw)
         }
-        sampleTank(1, t, ecu, speedMph, now, speedRaw, skipFill)
+        sampleTank(1, t, ecu, speedKmh, now, speedRaw, skipFill)
         for (extra in cfg.extras) {
-            sampleTank(extra.id, t, ecu, speedMph, now, speedRaw, skipFill)
+            sampleTank(extra.id, t, ecu, speedKmh, now, speedRaw, skipFill)
         }
     }
 
@@ -468,7 +466,7 @@ class PluginService : Service() {
         id: Int,
         t: ITorqueService,
         ecu: Boolean?,
-        speedMph: Double,
+        speedKmh: Double,
         now: Long,
         speedRaw: Double,
         skipFill: Boolean,
@@ -503,7 +501,7 @@ class PluginService : Service() {
         if (id == 1) FsLog.change(TAG, "source", "${cfg.sourceId} ${src.how} $lastActive", "source ${cfg.sourceId} ${src.how} active=$lastActive")
         val raw = src.pct
         val logging0 = rt.sessions.isOpen && lastActive == id.toString()
-        if (!src.missing && ecu != false && rt.math.checkReanchor(raw, speedMph, now)) {
+        if (!src.missing && ecu != false && rt.math.checkReanchor(raw, speedKmh, now)) {
             FsLog.i(TAG, "tank$id level re-anchored to ${rt.math.smoothed} after sustained low readings (raw=$raw)")
             if (logging0) rt.sessions.mark("reanchor", now, "\"sm\":${rt.math.smoothed}")
         }
@@ -514,7 +512,7 @@ class PluginService : Service() {
             val held = rt.math.smoothed
             val dF = if (logging) integrateGalHr(t, now, rt) else 0.0
             if (logging) {
-                noteDistance(rt, speedMph, dF)
+                noteDistance(rt, speedKmh, dF)
                 rt.sessions.append(
                     sampleRow(
                         id, now, raw ?: Double.NaN, held ?: Double.NaN, speedRaw,
@@ -538,7 +536,7 @@ class PluginService : Service() {
         val prevMode = rt.math.mode
         val smoothed = rt.math.ingest(
             live,
-            speedMph,
+            speedKmh,
             nowMs = now,
             tauSec = cfg.tauSec,
             skewPctPerSec = cfg.skewPctPerSec,
@@ -554,7 +552,7 @@ class PluginService : Service() {
         }
         if (rt.math.mode == TrackMode.FILL && prevMode != TrackMode.FILL) {
             val delta = live - (before ?: live)
-            FsLog.i(TAG, "tank$id fill start Δ=${"%.1f".format(delta)} raw=$live speedMph=${"%.1f".format(speedMph)}")
+            FsLog.i(TAG, "tank$id fill start Δ=${"%.1f".format(delta)} raw=$live speedKmh=${"%.1f".format(speedKmh)}")
             if (logging) rt.sessions.mark("fillStart", now)
         }
         val fillEnded = prevMode == TrackMode.FILL && rt.math.mode != TrackMode.FILL
@@ -564,7 +562,7 @@ class PluginService : Service() {
         }
         val dF = if (logging) integrateGalHr(t, now, rt) else 0.0
         if (logging) {
-            noteDistance(rt, speedMph, dF)
+            noteDistance(rt, speedKmh, dF)
             rt.sessions.append(
                 sampleRow(
                     id, now, live, smoothed, speedRaw,
@@ -579,7 +577,7 @@ class PluginService : Service() {
         }
         if (id == 1) {
             publishFromSmoothed(t, live, smoothed)
-            val line = "track mode=${rt.math.mode} raw=$live smoothed=$smoothed speedMph=${"%.1f".format(speedMph)}"
+            val line = "track mode=${rt.math.mode} raw=$live smoothed=$smoothed speedKmh=${"%.1f".format(speedKmh)}"
             FsLog.change(TAG, "state1", "mode ${rt.math.mode}", line)
             if (line != lastLiveLine) {
                 lastLiveLine = line
@@ -613,7 +611,6 @@ class PluginService : Service() {
             fill = fill,
             ok = ok,
             why = why,
-            spdUnit = speedUnit,
             mode = mode.name,
             ecu = ecu,
             fuelUnit = rt?.lastFlowUnit?.ifBlank { null } ?: fuelUnitLabel(),
@@ -1514,7 +1511,7 @@ class PluginService : Service() {
         val session = FuelSession(
             "closed", DoubleArray(n) { samples[it].t / 1000.0 }, DoubleArray(n) { samples[it].rawPct },
             DoubleArray(n) { samples[it].smoothedPct }, DoubleArray(n) { samples[it].fuelUsedGal },
-            DoubleArray(n) { RawLog.gateSpeed(samples[it].speed, samples[it].spdUnit) }, BooleanArray(n) { samples[it].fill },
+            DoubleArray(n) { samples[it].speed }, BooleanArray(n) { samples[it].fill },
         )
         val k = Live.closeChunks(rt.ledger, session, prior.gpp, placeholderNMin(), prior.v, prior.v95)
         FsLog.i(TAG, "tank${rt.id} close: applied $k drive chunks to the ledger (rHat=${"%.2f".format(rt.ledger.rHat)})")
@@ -1527,8 +1524,8 @@ class PluginService : Service() {
         return ceil(2.0 * tau * scaled * scaled).toInt().coerceAtLeast(10)
     }
 
-    private fun noteDistance(rt: TankRt, speedMph: Double, dF: Double) {
-        val miles = if (speedMph.isFinite() && speedMph > 0.0) speedMph / 3600.0 else 0.0
+    private fun noteDistance(rt: TankRt, speedKmh: Double, dF: Double) {
+        val miles = if (speedKmh.isFinite() && speedKmh > 0.0) speedKmh / 3600.0 / FuelV2.KM_PER_MILE else 0.0
         val gal = if (dF.isFinite() && dF > 0.0) dF else 0.0
         if (miles == 0.0 && gal == 0.0) return
         rt.mpgWindow.add(miles, gal, 0.15 * priorFor(rt.id).cap)
@@ -1784,7 +1781,7 @@ class PluginService : Service() {
         val make = ProfileStore.profileField(filesDir, profileId, "make")
         val vin = ProfileStore.storedVin(filesDir, profileId)
         val speed = speedPid?.let { readDouble(t, it) } ?: 0.0
-        val driving = RawLog.gateSpeed(speed, speedUnit) > 0.0
+        val driving = speed > 0.0
         detectQueue = ArrayDeque(SourceProbe.commandsFor(vin, make, protocol, driving))
         detectTimeouts = 0
     }
@@ -1797,7 +1794,7 @@ class PluginService : Service() {
             return
         }
         val now = System.currentTimeMillis()
-        val driving = RawLog.gateSpeed(speedRaw, speedUnit) > 0.0
+        val driving = speedRaw > 0.0
         val gap = if (driving) q.first().minGapMs else 0L
         if (gap > 0L && now - lastDetectMs < gap) return
         val cmd = q.removeFirst()

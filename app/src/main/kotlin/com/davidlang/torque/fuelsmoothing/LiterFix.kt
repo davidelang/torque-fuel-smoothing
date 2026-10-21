@@ -3,7 +3,7 @@ package com.davidlang.torque.fuelsmoothing
 import kotlin.math.abs
 
 /**
- * Legacy liter-as-gallon decision from fix_liters.py.
+ * Legacy liter-as-gallon decision.
  * Cutoff is 2026-09-07 16:15 at fixed offset -07:00.
  */
 internal object LiterFix {

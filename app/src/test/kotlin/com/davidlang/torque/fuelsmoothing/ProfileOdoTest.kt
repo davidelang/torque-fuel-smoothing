@@ -166,18 +166,24 @@ class ProfileOdoTest {
             deleteRecursively()
             mkdirs()
         }
-        val names = fixtureNames().take(3)
+        val names = listOf("a.jsonl", "b.jsonl", "c.jsonl")
+        fun legacy(t0: Long): String {
+            return "{\"event\":\"open\",\"t0\":$t0}\n" +
+                "{\"t\":$t0,\"rawPct\":40.0,\"fuelUsedGal\":0.0,\"speed\":0}\n" +
+                "{\"t\":${t0 + 1000},\"rawPct\":39.5,\"fuelUsedGal\":0.01,\"speed\":0}\n"
+        }
+        val bodies = names.mapIndexed { i, _ -> legacy(1_000_000L + i * 10_000L) }
         File(root, "sessions").mkdirs()
         File(root, ProfileStore.IMPORT_DIR).mkdirs()
-        fixture(names[0]).copyTo(File(root, "sessions/${names[0]}"))
-        fixture(names[1]).copyTo(File(root, "sessions/${names[1]}"))
-        fixture(names[2]).copyTo(File(root, "${ProfileStore.IMPORT_DIR}/${names[2]}"))
+        File(root, "sessions/${names[0]}").writeText(bodies[0])
+        File(root, "sessions/${names[1]}").writeText(bodies[1])
+        File(root, "${ProfileStore.IMPORT_DIR}/${names[2]}").writeText(bodies[2])
         val now = ProfileStore.RESET_MS - 1L
         ProfileStore.migrate(root, null, null, now)
         val raw = File(root, "profiles/default/raw")
         assertEquals(names.sorted(), raw.list()!!.sorted())
         // Sources stay untouched.
-        assertTrue(File(root, "sessions/${names[0]}").readBytes().contentEquals(fixture(names[0]).readBytes()))
+        assertTrue(File(root, "sessions/${names[0]}").readBytes().contentEquals(bodies[0].toByteArray()))
         // Converted files carry the same samples.
         val src = FuelV2.loadSessions(File(root, "sessions")).first { it.name == names[0].removeSuffix(".jsonl") }
         val got = FuelV2.loadSessions(raw).first { it.name == src.name }
@@ -189,45 +195,6 @@ class ProfileOdoTest {
         ProfileStore.migrate(root, null, null, now)
         assertEquals(before, raw.listFiles()!!.associate { it.name to it.readText() })
     }
-
-    @Test
-    fun test16LearningRecordIsDedupedAndPruningCannotChangeTheFit() {
-        val dir = File("build/profile-odo-test16").apply {
-            deleteRecursively()
-            mkdirs()
-        }
-        val raw = File(dir, "raw").apply { mkdirs() }
-        for (n in fixtureNames()) fixture(n).copyTo(File(raw, n))
-        ProfileStore.rollup(dir, 35.0)
-        val model1 = File(dir, "model.json").readText()
-        val learn = File(dir, ProfileStore.LEARN_FILE)
-        val ids1 = learn.readLines().filter { it.isNotBlank() }
-        assertEquals(ids1.size, ProfileStore.learnedIds(learn).size)
-        assertTrue(ids1.any { it.contains("\"group\"") })
-        // Rollup again: no duplicate lines, same fit.
-        ProfileStore.rollup(dir, 35.0)
-        assertEquals(ids1, learn.readLines().filter { it.isNotBlank() })
-        assertEquals(model1, File(dir, "model.json").readText())
-        // Pruning with a huge old file present deletes nothing, so the fit is unchanged.
-        val big = File(raw, "0000000000000-old.bin")
-        ProfileStore.sparse(big, ProfileStore.RAW_CAP_BYTES + 1024)
-        for (f in raw.listFiles()!!) f.setLastModified(1_000L)
-        val count = raw.list()!!.size
-        ProfileStore.retainRaw(raw, ProfileStore.RESET_MS * 2)
-        assertEquals(count, raw.list()!!.size)
-        big.delete()
-        ProfileStore.rollup(dir, 35.0)
-        assertEquals(model1, File(dir, "model.json").readText())
-        assertEquals(ids1, learn.readLines().filter { it.isNotBlank() })
-    }
-
-    private fun fixtureDir(): File =
-        File(checkNotNull(javaClass.classLoader!!.getResource("fuel-sessions")).toURI())
-
-    private fun fixtureNames(): List<String> =
-        fixtureDir().list { _, n -> n.endsWith(".jsonl") }!!.sorted()
-
-    private fun fixture(name: String): File = File(fixtureDir(), name)
 
     private fun paths(root: File): List<String> {
         return root.walkTopDown().filter { it.isFile }.map { it.relativeTo(root).path }.sorted().toList()

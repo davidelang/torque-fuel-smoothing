@@ -748,7 +748,6 @@ internal object ProfileStore {
                 fuelRaw = null,
                 fuelUnit = "gal",
                 spd = row.spd,
-                spdUnit = "",
                 ecu = true,
                 ok = row.raw.isFinite() && row.raw >= 0.0,
                 why = if (row.raw.isFinite() && row.raw >= 0.0) null else "missing",

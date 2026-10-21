@@ -40,7 +40,7 @@ internal class FuelMath {
 
     fun ingest(
         raw: Double,
-        speedMph: Double,
+        speedKmh: Double,
         nowMs: Long = System.currentTimeMillis(),
         tauSec: Double = 0.0,
         skewPctPerSec: Double = SKEW_PCT_PER_SEC,
@@ -59,12 +59,12 @@ internal class FuelMath {
             return raw
         }
         if (mode == TrackMode.FILL) {
-            return followFill(speedMph, nowMs, sigmaPct)
+            return followFill(speedKmh, nowMs, sigmaPct)
         }
         // Fill candidate: stopped and well above the smoothed level. Confirmed only if it is sustained for
         // FILL_CONFIRM_SEC (a single glitch reading or a short spike never becomes a fill). While pending the
         // smoothed level is frozen rather than slewed toward the candidate.
-        if (!ignoreFill && speedMph <= FILL_ENTER_SPEED_MPH && raw - prev >= jumpPct * unit) {
+        if (!ignoreFill && speedKmh <= FILL_ENTER_SPEED_KMH && raw - prev >= jumpPct * unit) {
             val since = fillCandMs ?: nowMs.also { fillCandMs = it }
             if (nowMs - since >= FILL_CONFIRM_MS && medianSince(since) - prev >= jumpPct * unit) {
                 fillCandMs = null
@@ -98,9 +98,9 @@ internal class FuelMath {
      * drives away (anchor = median of the last stationary window, i.e. the final plateau) or when the level
      * really drops: 20 s median below the peak by more than max(3 %, 3 sigma) (anchor = that median).
      */
-    private fun followFill(speedMph: Double, nowMs: Long, sigmaPct: Double): Double {
+    private fun followFill(speedKmh: Double, nowMs: Long, sigmaPct: Double): Double {
         val med = median(nowMs - MEDIAN_MS)
-        if (speedMph > FILL_EXIT_SPEED_MPH) {
+        if (speedKmh > FILL_EXIT_SPEED_KMH) {
             val since = movingSinceMs ?: nowMs.also { movingSinceMs = it }
             if (nowMs - since >= FILL_EXIT_MOVE_MS) return endFill(fillStillMed)
             smoothed = fillStillMed
@@ -131,7 +131,7 @@ internal class FuelMath {
      * stopped, REANCHOR_MOVE_MS otherwise) and agree with each other, the smoothed level re-anchors to their
      * median. Returns true when it re-anchored.
      */
-    fun checkReanchor(raw: Double?, speedMph: Double, nowMs: Long): Boolean {
+    fun checkReanchor(raw: Double?, speedKmh: Double, nowMs: Long): Boolean {
         val s = smoothed
         if (raw == null || !raw.isFinite() || raw < GLITCH_RAW_PCT * unit || raw > 100.0 || s == null || s - raw <= DROP_HOLD_PT * unit || mode == TrackMode.FILL) {
             low.clear()
@@ -139,7 +139,7 @@ internal class FuelMath {
             return false
         }
         low.addLast(nowMs to raw)
-        if (speedMph > FILL_ENTER_SPEED_MPH) lowMoving = true
+        if (speedKmh > FILL_ENTER_SPEED_KMH) lowMoving = true
         val need = if (lowMoving) REANCHOR_MOVE_MS else REANCHOR_STOP_MS
         if (nowMs - low.first().first < need) return false
         val v = low.map { it.second }.sorted()
@@ -168,8 +168,8 @@ internal class FuelMath {
         const val GLITCH_RAW_PCT = 1.0
         const val DROP_HOLD_PT = 15.0
         const val FILL_JUMP_PCT = 25.0
-        const val FILL_ENTER_SPEED_MPH = 3.0
-        const val FILL_EXIT_SPEED_MPH = 5.0
+        const val FILL_ENTER_SPEED_KMH = 5.0
+        const val FILL_EXIT_SPEED_KMH = 8.0
         const val FILL_CONFIRM_MS = 20_000L
         const val FILL_EXIT_MOVE_MS = 10_000L
         const val FILL_DROP_MIN_PCT = 3.0
@@ -179,11 +179,6 @@ internal class FuelMath {
         const val REANCHOR_STOP_MS = 30_000L
         const val REANCHOR_MOVE_MS = 120_000L
         const val REANCHOR_SPREAD_PCT = 10.0
-
-        fun toMph(value: Double, unit: String): Double {
-            val u = unit.lowercase()
-            return if (u.contains("km")) value * 0.621371 else value
-        }
 
         fun crossedOnePercent(prev: Double?, now: Double): Boolean {
             if (prev == null) return true

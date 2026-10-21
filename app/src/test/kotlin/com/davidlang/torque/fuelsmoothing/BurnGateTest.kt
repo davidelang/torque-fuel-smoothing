@@ -82,9 +82,9 @@ class BurnGateTest {
     fun test22MissingLevelIsMinusOneAndIgnoredButFuelCounts() {
         val log = RawLog()
         log.addDelta(0.5)
-        log.sample(1_000L, 0.0, "ford_16c1", 3.3, "l/hr", 0.0, "km/h", true, false, "glitch<1", "HOLD", Double.NaN)
+        log.sample(1_000L, 0.0, "ford_16c1", 3.3, "l/hr", 0.0, true, false, "glitch<1", "HOLD", Double.NaN)
         log.addDelta(0.5)
-        log.sample(2_000L, 55.0, "ford_16c1", 3.3, "l/hr", 0.0, "km/h", true, true, null, "SKEW", 55.0)
+        log.sample(2_000L, 55.0, "ford_16c1", 3.3, "l/hr", 0.0, true, true, null, "SKEW", 55.0)
         val lines = log.finish()
         val rows = lines.filter { it.contains("\"lvl\"") }
         assertTrue(rows[0], rows[0].contains("\"lvl\":-1,"))

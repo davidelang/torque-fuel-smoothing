@@ -5,7 +5,7 @@ package com.davidlang.torque.fuelsmoothing
  * A fill event does not change it. Held rows are ok:false. A frozen run
  * (identical level, length >= 60, at least 30 samples with speed > 5)
  * is rewritten why:"frozen" and one event line.
- * Speed is compared as given unless spdUnit contains mph or km.
+ * Speed is km/h.
  */
 internal class RawLog {
     var fuelGal: Double = 0.0
@@ -49,7 +49,6 @@ internal class RawLog {
         fuelRaw: Double?,
         fuelUnit: String,
         spd: Double,
-        spdUnit: String,
         ecu: Boolean,
         ok: Boolean,
         why: String?,
@@ -57,7 +56,7 @@ internal class RawLog {
         sm: Double,
         lvlL: Double? = null,
     ) {
-        val pend = Pend(t, lvl, lvlSrc, fuelRaw, fuelUnit, spd, spdUnit, ecu, ok, why, mode, sm, fuelGal, lvlL)
+        val pend = Pend(t, lvl, lvlSrc, fuelRaw, fuelUnit, spd, ecu, ok, why, mode, sm, fuelGal, lvlL)
         if (runLvl != null && pend.lvl != runLvl) closeRun()
         if (runLvl == null) runLvl = pend.lvl
         if (latched) {
@@ -114,7 +113,7 @@ internal class RawLog {
 
     private fun fastCount(rows: List<Pend>): Int {
         var n = 0
-        for (row in rows) if (gateSpeed(row.spd, row.spdUnit) > 5.0) n++
+        for (row in rows) if (row.spd > 5.0) n++
         return n
     }
 
@@ -140,8 +139,6 @@ internal class RawLog {
             append(LiterFix.javaDouble(row.fuelGal))
             append(",\"spd\":")
             append(numOrNull(row.spd))
-            append(",\"spdUnit\":")
-            append(jsonString(row.spdUnit))
             append(",\"ecu\":")
             append(if (row.ecu) "true" else "false")
             append(",\"ok\":")
@@ -163,7 +160,6 @@ internal class RawLog {
         val fuelRaw: Double?,
         val fuelUnit: String,
         val spd: Double,
-        val spdUnit: String,
         val ecu: Boolean,
         val ok: Boolean,
         val why: String?,
@@ -174,15 +170,6 @@ internal class RawLog {
     )
 
     companion object {
-        fun gateSpeed(spd: Double, unit: String): Double {
-            val u = unit.lowercase()
-            return when {
-                u.contains("km") -> spd
-                u.contains("mph") || u.contains("mi/h") -> spd * FuelV2.KM_PER_MILE
-                else -> spd
-            }
-        }
-
         private fun numOrNull(x: Double): String {
             return if (x.isFinite()) LiterFix.javaDouble(x) else "null"
         }

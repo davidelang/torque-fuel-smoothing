@@ -282,3 +282,7 @@
 
 - Approved plan: `sandbox/plans/about-license-libraries-20261020-1506-plan.md`
 - Scope: About dialog lists the installed version, this app's copyright, and the open source libraries shipped in the release bundle. No phone install. No --play. No adb. No new Activity.
+
+## 2026-10-21 - Kalman lvfit6 port, phase 1
+
+- Plan sandbox/plans/kalman-lvfit6-port-20261021-0004-plan.md. Speed becomes km/h. Algorithm tests and the three van resource trees leave the repo. Estimator port is phase 2, after this commit.
