@@ -242,6 +242,21 @@ git_owner() {
   fi
 }
 
+# Clear skip-worktree only when the path is tracked. Untracked is not an error.
+clear_skip_worktree() {
+  local wt="$1" name="$2" tracked
+  tracked="$(git_owner "$wt" ls-files -- "$name")" || {
+    echo "ERROR: git ls-files failed for $name in $wt" >&2
+    exit 1
+  }
+  if [[ -n "$tracked" ]]; then
+    git_owner "$wt" update-index --no-skip-worktree -- "$name" || {
+      echo "ERROR: could not clear skip-worktree on $wt/$name" >&2
+      exit 1
+    }
+  fi
+}
+
 # --- move the two files in every worktree of this repo ---
 mapfile -t WORKTREES < <(git_owner "$SRC" worktree list --porcelain | awk '/^worktree / {print $2}')
 if [[ ${#WORKTREES[@]} -eq 0 ]]; then
@@ -297,7 +312,7 @@ move_tracked() {
     chattr -a -- "$src"
     RESEAL+=("$src")
   fi
-  git_owner "$wt" update-index --no-skip-worktree -- "$name" 2>/dev/null || true
+  clear_skip_worktree "$wt" "$name"
   git_owner "$wt" mv -- "$name" "work-history/$name"
   # The inode now lives at dest. A later failure must reseal that path.
   if [[ "$need_seal" -eq 1 ]]; then

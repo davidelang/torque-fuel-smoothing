@@ -451,7 +451,10 @@ resolve_one_grant() {
 
 git_common_grant() {
   local p
-  p="$(git -c safe.directory="$SCRIPT_DIR" -C "$SCRIPT_DIR" rev-parse --git-common-dir 2>/dev/null || true)"
+  if ! p="$(git -c safe.directory="$SCRIPT_DIR" -C "$SCRIPT_DIR" rev-parse --git-common-dir)"; then
+    echo "ERROR: git rev-parse --git-common-dir failed in $SCRIPT_DIR" >&2
+    return 1
+  fi
   [[ -z "$p" ]] && return 0
   if [[ "$p" != /* ]]; then
     p="$SCRIPT_DIR/$p"
