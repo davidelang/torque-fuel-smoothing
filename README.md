@@ -17,4 +17,4 @@ source ./env
 ./run-grok-planner
 ```
 
-Landlock (mutation-only) wraps agents via `agent-landlock` from `run-grok*`.
+Grok launchers confine the process with a custom sandbox profile (`extends=read-only`). Cursor launchers still wrap with `agent-landlock`.
