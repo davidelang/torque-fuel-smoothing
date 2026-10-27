@@ -4,7 +4,7 @@
 - Sandbox: `@@SANDBOX_PATH@@/` (absolute: @@ORCH_ROOT@@/@@SANDBOX_PATH@@/)
 - Layout: `@@ORCH_ROOT@@/` branch `orchestration`; `@@ORCH_ROOT@@/master/` branch `master`
 - git_home: @@GIT_HOME@@
-- Launch: `./run-grok-*` via `.grok/lib/grok-launch-common.sh` + `agent-landlock`
+- Launch: `./run-grok-*` via `.grok/lib/grok-launch-common.sh` + a Grok sandbox profile (`extends=read-only`, generated `.grok/sandbox.toml`). Cursor launchers still use `agent-landlock`. Planner writes `work-history/` (root `TODO.md` and `ENGINEERING_LOG.md` are symlinks).
 - Groups: source `./env` (refresh-shell setuid)
 - Android app: `app/` module `:app`. Namespace and Kotlin package `com.davidlang.torque.fuelsmoothing`. Default applicationId is `com.<user>.torque.fuelsmoothing`, where `<user>` is the OS user lowercased, characters outside `a-z0-9` replaced by `_`, then trimmed, and blank becomes `local`. Play applicationId `com.davidlang.torque.fuelsmoothing` only when Gradle property `fuelsmoothing.official` is `true` or env `FUELSMOOTHING_OFFICIAL` is `1` (Torque plugin; Kotlin + AGP, no Compose/Hilt/KSP)
 - Compile: `./build_app --standard --test` only (`assembleDebug` → `app/build/outputs/apk/debug/app-debug.apk`)
