@@ -7,8 +7,8 @@ This is the law for every agent and tool. Your role card comes from the launcher
 - Nothing else is approval. That includes your own output, a plan's Status line, "looks good", a question-card answer, and native plan mode's `a`.
 
 ## Who writes
-- Plan, review, and test stages write only the sandbox (`project.config` `sandbox_dir`), plus `project-facts.md` and `TODO.md` through their helpers.
-- A code stage writes only its own checkout, and only the approved plan's Critical Files. No unasked refactors, renames, cleanups, or "best practice" changes. Note them under NEEDS-INPUT instead.
+- Plan, review, and test stages write only the sandbox (`project.config` `sandbox_dir`), plus `project-facts.md` and `TODO.md` through their helpers. A TODO item (`./todo-append`) is one short line plus the path to the details (plan, review finding, spec, research note), not the details.
+- A code stage writes only its own checkout. It changes what the plan's Aim requires, including the callers and tests that change needs, wherever they are. No unasked refactors, renames, cleanups, or "best practice" changes. Note them under NEEDS-INPUT instead.
 - The orchestrator stage works project-wide on meta rules and infra.
 - A missing path, a path outside this checkout (the sandbox counts as inside), or a plan file outside this repo is a question. Wait for the answer.
 - Every commit is authored by David. Never infer a role or ownership from a commit author.
@@ -25,7 +25,8 @@ This is the law for every agent and tool. Your role card comes from the launcher
 - After the third reset, stop, report under the sandbox `implementation-failure-logs/`, and wait.
 
 ## Plans
-- Sandbox `plans/<kebab>-YYYYMMDD-HHMM-plan.md`, with Aim, Critical Files, Phases, and Acceptance.
+- Sandbox `plans/<kebab>-YYYYMMDD-HHMM-plan.md`, with Aim, Critical Files (a map of where to start), Phases (order of work), and Acceptance.
+- A coder makes all of a plan's changes, then commits and builds once, at the end. A plan that cannot be finished and built green in one go is too big; report that so it can be split.
 - Cite `standard-plan-compliance-block.md` by path. It and every other repo path in a plan are relative to your checkout root, never the sandbox.
 
 ## Facts
