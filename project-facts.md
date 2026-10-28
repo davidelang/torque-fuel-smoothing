@@ -4,7 +4,7 @@
 - Sandbox: `@@SANDBOX_PATH@@/` (absolute: @@ORCH_ROOT@@/@@SANDBOX_PATH@@/)
 - Layout: `@@ORCH_ROOT@@/` branch `orchestration`; `@@ORCH_ROOT@@/master/` branch `master`
 - git_home: @@GIT_HOME@@
-- Launch: `./run-grok-*` via `.grok/lib/grok-launch-common.sh` + a Grok sandbox profile (`extends=read-only`, generated `.grok/sandbox.toml`). Cursor launchers still use `agent-landlock`. Planner writes `work-history/` (root `TODO.md` and `ENGINEERING_LOG.md` are symlinks).
+- Launch: `./run-grok-*` via `.grok/lib/grok-launch-common.sh` + `agent-landlock` (Grok and cursor). Planner writes `work-history/` (root `TODO.md` and `ENGINEERING_LOG.md` are symlinks).
 - Groups: source `./env` (refresh-shell setuid)
 
 ## Build and commit
