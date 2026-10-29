@@ -169,16 +169,19 @@ internal class SessionStore(context: Context, private val tank: Int = 1, rawDir:
         drain(t, force = true)
         if (copy.isNotEmpty()) {
             val last = copy.last()
-            snapshotFile.writeText(
-                JSONObject()
-                    .put("sessionId", id)
-                    .put("tank", tank)
-                    .put("t", last.t)
-                    .put("rawPct", last.rawPct)
-                    .put("fuelUsedGal", last.fuelUsedGal)
-                    .put("speed", last.speed)
-                    .toString(),
-            )
+            runCatching {
+                fun num(v: Double): Any = if (v.isFinite()) v else JSONObject.NULL
+                snapshotFile.writeText(
+                    JSONObject()
+                        .put("sessionId", id)
+                        .put("tank", tank)
+                        .put("t", last.t)
+                        .put("rawPct", num(last.rawPct))
+                        .put("fuelUsedGal", num(last.fuelUsedGal))
+                        .put("speed", num(last.speed))
+                        .toString(),
+                )
+            }.onFailure { FsLog.w(TAG, "session-end snapshot: ${it.javaClass.simpleName} ${it.message}") }
         }
         file = null
         sessionId = null

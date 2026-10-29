@@ -294,3 +294,7 @@
 ## 2026-10-21 - Reviewer fix: place() and between-drive previous capture
 
 - Reviewer FAIL on kalman-lvfit6-port-20261021-0004-plan.md. place() attaches a logged fill or parked rise to the part that contains the sample. A between-drive rise uses the immediate previous non-empty capture, shortened to the samples it has.
+
+## 2026-10-28 - Fuel source sticks, drive end never throws
+
+- Plan sandbox/plans/fuel-source-sticks-20261028-1933-plan.md. Commit 1: a non-finite session-end snapshot number is JSON null, and a snapshot write failure is logged; close still clears the session and returns samples. Commit 2: one profile store, the service notice, and the page, including extra tanks.
