@@ -4,17 +4,49 @@ plugins {
     id("com.android.application")
 }
 
-val officialBuild = project.findProperty("fuelsmoothing.official")?.toString() == "true" ||
-    System.getenv("FUELSMOOTHING_OFFICIAL") == "1"
-val applicationUser = System.getProperty("user.name").orEmpty()
-    .lowercase()
-    .replace(Regex("[^a-z0-9]"), "_")
-    .trim('_')
-    .ifBlank { "local" }
-val fuelsmoothingApplicationId = if (officialBuild) {
-    "com.davidlang.torque.fuelsmoothing"
+val officialApplicationId = "com.davidlang.torque.fuelsmoothing"
+val applicationIdPattern = Regex("""^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)+$""")
+val officialProp = project.findProperty("fuelsmoothing.official")?.toString()
+if (officialProp != null && officialProp != "true") {
+    error("-Pfuelsmoothing.official must be true or unset")
+}
+val officialEnv = System.getenv("FUELSMOOTHING_OFFICIAL")
+if (officialEnv != null && officialEnv != "1") {
+    error("FUELSMOOTHING_OFFICIAL must be 1 or unset")
+}
+val officialChosen = officialProp == "true" || officialEnv == "1"
+val devProp = project.findProperty("fuelsmoothing.dev.package")?.toString()
+val devChosen = devProp != null
+if (officialChosen && devChosen) {
+    error(
+        "Set only one of -Pfuelsmoothing.official=true (or FUELSMOOTHING_OFFICIAL=1) " +
+            "and -Pfuelsmoothing.dev.package=<applicationId>.",
+    )
+}
+if (!officialChosen && !devChosen) {
+    error(
+        "Set -Pfuelsmoothing.official=true (or FUELSMOOTHING_OFFICIAL=1) " +
+            "for com.davidlang.torque.fuelsmoothing, or -Pfuelsmoothing.dev.package=<applicationId> " +
+            "for a dev package.",
+    )
+}
+val fuelsmoothingApplicationId = if (officialChosen) {
+    officialApplicationId
 } else {
-    "com.$applicationUser.torque.fuelsmoothing"
+    val devPackage = devProp ?: error("-Pfuelsmoothing.dev.package is empty")
+    if (devPackage.isEmpty()) {
+        error("-Pfuelsmoothing.dev.package is empty")
+    }
+    if (devPackage == officialApplicationId) {
+        error(
+            "com.davidlang.torque.fuelsmoothing requires -Pfuelsmoothing.official=true " +
+                "or FUELSMOOTHING_OFFICIAL=1",
+        )
+    }
+    if (!applicationIdPattern.matches(devPackage)) {
+        error("-Pfuelsmoothing.dev.package='$devPackage' is not an applicationId")
+    }
+    devPackage
 }
 
 val releaseStoreFile = System.getenv("FUELSMOOTHING_STORE_FILE")
@@ -33,17 +65,42 @@ android {
         applicationId = fuelsmoothingApplicationId
         minSdk = 21
         targetSdk = 36
-        versionCode = file("versionCode.txt").readText().trim().toInt()
-        val rawVersion = providers.exec {
+        val versionCodeText = try {
+            file("versionCode.txt").readText()
+        } catch (_: Exception) {
+            error("versionCode: app/versionCode.txt is missing or unreadable")
+        }
+        versionCode = versionCodeText.trim().toIntOrNull()
+            ?: error("versionCode: app/versionCode.txt is '${versionCodeText.trim()}', not an integer")
+        val described = providers.exec {
             workingDir = project.rootDir
+            isIgnoreExitValue = true
             commandLine(
                 "bash",
                 "-c",
-                "BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo 'HEAD') && (git describe --tags --match \"${'$'}{BRANCH_NAME}-start\" 2>/dev/null || git describe --always --exclude '*+*' 2>/dev/null || echo 'dev')",
+                "set -euo pipefail\n" +
+                    "BRANCH_NAME=\$(git rev-parse --abbrev-ref HEAD)\n" +
+                    "if git rev-parse --verify \"refs/tags/\${BRANCH_NAME}-start\" >/dev/null; then\n" +
+                    "  git describe --tags --match \"\${BRANCH_NAME}-start\"\n" +
+                    "else\n" +
+                    "  git describe --always --exclude '*+*'\n" +
+                    "fi\n",
             )
-        }.standardOutput.asText.orNull?.trim() ?: "dev"
+        }
+        val describeResult = described.result.get()
+        if (describeResult.exitValue != 0) {
+            val describeErr = described.standardError.asText.get().trim()
+            error(
+                "versionName: git describe failed" +
+                    if (describeErr.isEmpty()) "" else "\n$describeErr",
+            )
+        }
+        val rawVersion = described.standardOutput.asText.get().trim()
+        if (rawVersion.isEmpty()) {
+            error("versionName: git describe printed nothing")
+        }
         versionName = rawVersion
-        if (!officialBuild) {
+        if (!officialChosen) {
             resValue("string", "app_name", "Fuel Smoothing for Torque (local)")
         }
     }

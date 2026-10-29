@@ -302,3 +302,7 @@
 ## 2026-10-28 - Fuel source writes notify the service and the page
 
 - Plan sandbox/plans/fuel-source-sticks-20261028-1933-plan.md. Tank 1 source and confirmed flag live only in profile.json. An extra tank's source stays in extra_tanks. Each write notifies the service, which reloads and broadcasts SOURCE_CHANGED. The page reloads on that broadcast and on resume, and writes a source only from a spinner change, Confirm, or detect.
+
+## 2026-10-28 - Explicit package id, no fallback
+
+- Plan sandbox/plans/package-select-no-fallback-20261020-0526-plan.md. A build must pass `-Pfuelsmoothing.official=true` (or `FUELSMOOTHING_OFFICIAL=1`) or `-Pfuelsmoothing.dev.package`. Neither, both, or a bad value fails configuration. `versionName` and `versionCode` fail closed. No `user.name` package.

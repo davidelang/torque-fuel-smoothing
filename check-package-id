@@ -1,0 +1,52 @@
+#!/bin/bash
+# Configure-only probes: missing package choice, both choices, official alone.
+set -euo pipefail
+
+unset FUELSMOOTHING_OFFICIAL
+
+neither="Set -Pfuelsmoothing.official=true (or FUELSMOOTHING_OFFICIAL=1) for com.davidlang.torque.fuelsmoothing, or -Pfuelsmoothing.dev.package=<applicationId> for a dev package."
+only_one="Set only one of -Pfuelsmoothing.official=true (or FUELSMOOTHING_OFFICIAL=1) and -Pfuelsmoothing.dev.package=<applicationId>."
+
+code=0
+out=$(./gradlew :app:help 2>&1) || code=$?
+if [[ "$code" -eq 0 ]]; then
+  printf '%s\n' "$out"
+  echo "check-package-id: missing choice exited 0" >&2
+  exit 1
+fi
+if [[ "$out" != *"$neither"* ]]; then
+  printf '%s\n' "$out"
+  echo "check-package-id: missing choice did not print the neither sentence" >&2
+  exit 1
+fi
+echo "missing choice fails with the neither sentence:"
+printf '%s\n' "$out" | grep -F "$neither"
+
+code=0
+out=$(./gradlew :app:help -Pfuelsmoothing.official=true -Pfuelsmoothing.dev.package=com.example.torque.fuelsmoothing 2>&1) || code=$?
+if [[ "$code" -eq 0 ]]; then
+  printf '%s\n' "$out"
+  echo "check-package-id: both choices exited 0" >&2
+  exit 1
+fi
+if [[ "$out" != *"$only_one"* ]]; then
+  printf '%s\n' "$out"
+  echo "check-package-id: both choices did not print the only-one sentence" >&2
+  exit 1
+fi
+echo "both choices fail with the only-one sentence:"
+printf '%s\n' "$out" | grep -F "$only_one"
+
+code=0
+out=$(./gradlew :app:help -Pfuelsmoothing.official=true 2>&1) || code=$?
+if [[ "$code" -ne 0 ]]; then
+  printf '%s\n' "$out"
+  echo "check-package-id: official alone failed" >&2
+  exit 1
+fi
+if [[ "$out" == *"$neither"* ]]; then
+  printf '%s\n' "$out"
+  echo "check-package-id: official alone printed the neither sentence" >&2
+  exit 1
+fi
+echo "official alone does not print the neither sentence"
