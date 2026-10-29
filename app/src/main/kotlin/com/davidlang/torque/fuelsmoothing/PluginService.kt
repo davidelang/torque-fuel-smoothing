@@ -85,6 +85,7 @@ class PluginService : Service() {
     private var lastRawPct: Double? = null
     private var lastAuthPct: Double? = null
     private var lastEcuConnected: Boolean? = null
+    private var driveSourcesLogged: Boolean = false
     private var nameplateGal: Double? = null
     /** Torque's own profile capacity only (never the plugin's learned size); Kalman seed source. */
     private var torqueCapGal: Double? = null
@@ -721,6 +722,7 @@ class PluginService : Service() {
 
     private fun onEcuAway() {
         identity = null
+        driveSourcesLogged = false
         closeSession()
         if (tanks[1] == null) tanks[1] = makeRuntime(1)
     }
@@ -1208,7 +1210,7 @@ class PluginService : Service() {
         openTankSession(id)
     }
 
-    /** Tank 1 from profile.json and each extra tank from extra_tanks, once per session open. */
+    /** Tank 1 from profile.json and each extra tank from extra_tanks, once per drive. */
     private fun logDriveSources() {
         val (src, conf) = FuelDetect.load(filesDir, profileId)
         FsLog.i(TAG, "source=$src confirmed=$conf profile=$profileId")
@@ -1230,7 +1232,10 @@ class PluginService : Service() {
         val sid = rt.sessions.open(profileId = profileId, app = BuildConfig.VERSION_NAME)
         FsLog.reset()
         refreshOpen()
-        logDriveSources()
+        if (!driveSourcesLogged) {
+            logDriveSources()
+            driveSourcesLogged = true
+        }
         FsLog.i(TAG, "session open tank=$id $sid files=${rt.sessions.sessionCount()}")
         refreshRecording()
     }

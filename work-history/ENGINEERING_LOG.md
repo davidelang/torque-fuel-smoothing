@@ -306,3 +306,8 @@
 ## 2026-10-28 - Explicit package id, no fallback
 
 - Plan sandbox/plans/package-select-no-fallback-20261020-0526-plan.md. A build must pass `-Pfuelsmoothing.official=true` (or `FUELSMOOTHING_OFFICIAL=1`) or `-Pfuelsmoothing.dev.package`. Neither, both, or a bad value fails configuration. `versionName` and `versionCode` fail closed. No `user.name` package.
+
+## 2026-10-29 - Drive source once, official package from project.config
+
+- Approved plan: `sandbox/plans/drive-source-once-and-package-config-20261029-0537-plan.md`
+- Scope: log the fuel-source block once per drive, cleared on ECU disconnect and not on a tank switch. `./build_app --standard` reads `fuelsmoothing_official=1` from project.config and passes `-Pfuelsmoothing.official=true`. Compile and commit docs drop `--test`. No phone install. No adb. No --play.
