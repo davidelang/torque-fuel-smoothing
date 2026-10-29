@@ -298,3 +298,7 @@
 ## 2026-10-28 - Fuel source sticks, drive end never throws
 
 - Plan sandbox/plans/fuel-source-sticks-20261028-1933-plan.md. Commit 1: a non-finite session-end snapshot number is JSON null, and a snapshot write failure is logged; close still clears the session and returns samples. Commit 2: one profile store, the service notice, and the page, including extra tanks.
+
+## 2026-10-28 - Fuel source writes notify the service and the page
+
+- Plan sandbox/plans/fuel-source-sticks-20261028-1933-plan.md. Tank 1 source and confirmed flag live only in profile.json. An extra tank's source stays in extra_tanks. Each write notifies the service, which reloads and broadcasts SOURCE_CHANGED. The page reloads on that broadcast and on resume, and writes a source only from a spinner change, Confirm, or detect.

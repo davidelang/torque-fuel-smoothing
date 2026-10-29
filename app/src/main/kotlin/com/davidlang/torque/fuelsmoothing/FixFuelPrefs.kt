@@ -203,7 +203,7 @@ internal object FixFuelPrefs {
             invalid[KEY_TANK] = tankRaw
             android.util.Log.w("FuelSmooth", "stored $KEY_TANK=\"$tankRaw\" is invalid; treated as no tank guess")
         }
-        val src = FuelDetect.load(root, pid, if (p.contains(KEY_SOURCE)) p.getString(KEY_SOURCE, null) else null)
+        val src = FuelDetect.load(root, pid)
         val learnedRaw = p.getString(KEY_LEARNED, "") ?: ""
         val learned = learnedRaw.toDoubleOrNull()?.takeIf { it > 0.0 }
         return FixFuelConfig(
@@ -236,7 +236,6 @@ internal object FixFuelPrefs {
 
     fun save(
         ctx: Context,
-        sourceId: String,
         customName: String,
         tauSec: Double,
         skewPctPerSec: Double,
@@ -249,13 +248,7 @@ internal object FixFuelPrefs {
         feed012f: FeedMode = FeedMode.CORRECTED,
         primaryAlgo: MapAlgo = MapAlgo.CHUNK,
     ) {
-        // Per profile: a source the user picks (different from the stored one) is confirmed.
-        run {
-            val r = ctx.filesDir; val id = ProfileStore.activeId(r)
-            if (ProfileStore.profileField(r, id, "fuelSource") != sourceId) FuelDetect.store(r, id, sourceId, sourceId != FuelDetect.NONE)
-        }
         val e = prefs(ctx).edit()
-            .putString(KEY_SOURCE, sourceId)
             .putString(KEY_CUSTOM, customName)
             .putString(KEY_TAU, tauSec.toString())
             .putString(KEY_SKEW, skewPctPerSec.toString())
@@ -325,6 +318,27 @@ internal object FixFuelPrefs {
             if (t.id == id) t.copy(sourceStatus = status) else t
         }
         p.edit().putString(KEY_EXTRAS, extrasToJson(extras)).apply()
+    }
+
+    /** One extra tank's sourceId inside extra_tanks, then the shared source notice. Never the profile fuelSource. */
+    fun setExtraSourceId(ctx: Context, id: Int, sourceId: String) {
+        if (id !in 2..MAX_TANKS) return
+        val p = prefs(ctx)
+        val cur = parseExtras(p.getString(KEY_EXTRAS, "[]") ?: "[]")
+        val src = sourceId.ifBlank { DEFAULT_SOURCE_T2 }
+        val next = if (cur.any { it.id == id }) cur.map { if (it.id == id) it.copy(sourceId = src) else it }
+            else cur + ExtraTank(id = id, sourceId = src)
+        p.edit().putString(KEY_EXTRAS, extrasToJson(next)).apply()
+        PluginService.notifySourceChanged(ctx)
+    }
+
+    /** Drop one extra tank from extra_tanks, then the shared source notice. */
+    fun removeExtraTank(ctx: Context, id: Int) {
+        if (id !in 2..MAX_TANKS) return
+        val p = prefs(ctx)
+        val next = parseExtras(p.getString(KEY_EXTRAS, "[]") ?: "[]").filter { it.id != id }
+        p.edit().putString(KEY_EXTRAS, extrasToJson(next)).apply()
+        PluginService.notifySourceChanged(ctx)
     }
 
     fun extrasToJson(list: List<ExtraTank>): String {

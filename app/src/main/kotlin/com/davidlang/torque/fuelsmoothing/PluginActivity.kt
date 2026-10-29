@@ -2,7 +2,10 @@ package com.davidlang.torque.fuelsmoothing
 
 import android.Manifest
 import android.app.Activity
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -59,6 +62,7 @@ class PluginActivity : Activity() {
     private lateinit var profileName: EditText
     private lateinit var vehicleMake: EditText
     private lateinit var detectBtn: Button
+    private lateinit var confirmBtn: Button
     private lateinit var odoMiles: EditText
     private lateinit var gapText: TextView
     private lateinit var tipButton: Button
@@ -80,6 +84,27 @@ class PluginActivity : Activity() {
         override fun onNothingSelected(parent: AdapterView<*>?) {}
     }
     private var loading = true
+    private var loadedSourceId = FuelDetect.NONE
+    private val loadedExtraSource = HashMap<Int, String>()
+    private val sourceChanged = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            loading = true
+            loadIntoForm()
+            loading = false
+        }
+    }
+    private val sourceListen = object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            if (loading) return
+            val src = FuelSources.catalog.getOrNull(position)?.id ?: return
+            if (src == loadedSourceId) return
+            FuelDetect.store(filesDir, ProfileStore.activeId(filesDir), src, src != FuelDetect.NONE)
+            loadedSourceId = src
+            PluginService.notifySourceChanged(this@PluginActivity)
+            confirmBtn.visibility = View.GONE
+        }
+        override fun onNothingSelected(parent: AdapterView<*>?) {}
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -171,7 +196,7 @@ class PluginActivity : Activity() {
         vehicleMake = edit(InputType.TYPE_CLASS_TEXT)
         col.addView(vehicleMake)
 
-        col.addView(info("Fuel source", "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. None = detect on the next connect."))
+        col.addView(info("Fuel source", "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect."))
         val srcRow = LinearLayout(this)
         srcRow.orientation = LinearLayout.HORIZONTAL
         sourceSpinner = Spinner(this)
@@ -187,6 +212,19 @@ class PluginActivity : Activity() {
             }
         }
         srcRow.addView(detectBtn)
+        confirmBtn = smallButton("Confirm") {
+            val i = Intent(this, PluginService::class.java)
+                .setAction(PluginService.ACTION_CONFIRM_SOURCE)
+                .putExtra(PluginService.EXTRA_TARGET, ProfileStore.activeId(filesDir))
+                .putExtra(PluginService.EXTRA_SOURCE, loadedSourceId)
+            try {
+                if (Build.VERSION.SDK_INT >= 26) startForegroundService(i) else startService(i)
+            } catch (t: Throwable) {
+                FsLog.w(TAG, "confirm start ignored: ${t.javaClass.simpleName} ${t.message}")
+            }
+        }
+        confirmBtn.visibility = View.GONE
+        srcRow.addView(confirmBtn)
         col.addView(srcRow)
 
         col.addView(info("Custom long name", "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level."))
@@ -298,7 +336,7 @@ class PluginActivity : Activity() {
         selectPid.addTextChangedListener(watch)
         profileName.addTextChangedListener(watch)
         vehicleMake.addTextChangedListener(watch)
-        sourceSpinner.onItemSelectedListener = spinListen
+        sourceSpinner.onItemSelectedListener = sourceListen
         activeSpinner.onItemSelectedListener = spinListen
         showNotice.setOnCheckedChangeListener { _, _ -> if (!loading) persist() }
         feed012f.onItemSelectedListener = spinListen
@@ -321,11 +359,22 @@ class PluginActivity : Activity() {
 
     override fun onResume() {
         super.onResume()
-        if (::detectBtn.isInitialized) refreshProfile()
+        if (::detectBtn.isInitialized) {
+            loading = true
+            loadIntoForm()
+            loading = false
+        }
     }
 
     override fun onStart() {
         super.onStart()
+        val filter = IntentFilter(PluginService.ACTION_SOURCE_CHANGED)
+        if (Build.VERSION.SDK_INT >= 33) {
+            registerReceiver(sourceChanged, filter, Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            @Suppress("DEPRECATION")
+            registerReceiver(sourceChanged, filter)
+        }
         requestGrants()
         loading = true
         loadIntoForm()
@@ -347,10 +396,27 @@ class PluginActivity : Activity() {
         super.onPause()
     }
 
+    override fun onStop() {
+        unregisterReceiver(sourceChanged)
+        super.onStop()
+    }
+
     private fun loadIntoForm() {
+        val prior = loading
+        loading = true
+        try {
+            loadForm()
+        } finally {
+            loading = prior
+        }
+    }
+
+    private fun loadForm() {
         val c = FixFuelPrefs.load(this)
+        loadedSourceId = c.sourceId
         sourceSpinner.setSelection(FuelSources.indexOf(c.sourceId))
-        if (customName.text.toString() != c.customName) customName.setText(c.customName)
+        confirmBtn.visibility = if (c.sourceId != FuelDetect.NONE && !c.sourceConfirmed) View.VISIBLE else View.GONE
+        if (customName.text.toString() != c.customName && !customName.isFocused) customName.setText(c.customName)
         setIfBlankOrInit(tau, c.tauSec.toString())
         setIfBlankOrInit(skew, c.skewPctPerSec.toString())
         setIfBlankOrInit(jump, c.jumpPct.toString())
@@ -371,7 +437,7 @@ class PluginActivity : Activity() {
         live.text = listOf(st, lv).filter { it.isNotBlank() }.joinToString("\n")
         syncExtraCards(c.extras)
         refreshActiveSpinner(c.activeTank)
-        if (selectPid.text.toString() != c.selectPidName) selectPid.setText(c.selectPidName)
+        if (selectPid.text.toString() != c.selectPidName && !selectPid.isFocused) selectPid.setText(c.selectPidName)
         showNotice.isChecked = c.showFuelNotification
         feed012f.setSelection(c.feed012f.ordinal)
         primaryAlgo.setSelection(c.primaryAlgo.ordinal)
@@ -441,15 +507,27 @@ class PluginActivity : Activity() {
         bindCard(card, t)
         name.addTextChangedListener(watch)
         gal.addTextChangedListener(watch)
-        source.onItemSelectedListener = spinListen
+        source.onItemSelectedListener = extraSourceListen(card)
         remove.setOnClickListener { removeExtra(card) }
         extrasCol.addView(root)
         return card
     }
 
+    private fun extraSourceListen(card: ExtraCard) = object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            if (loading) return
+            val src = FuelSources.catalog.getOrNull(position)?.id ?: return
+            if (src == loadedExtraSource[card.id]) return
+            FixFuelPrefs.setExtraSourceId(this@PluginActivity, card.id, src)
+            loadedExtraSource[card.id] = src
+        }
+        override fun onNothingSelected(parent: AdapterView<*>?) {}
+    }
+
     private fun bindCard(card: ExtraCard, t: ExtraTank) {
+        loadedExtraSource[card.id] = t.sourceId
         card.source.setSelection(FuelSources.indexOf(t.sourceId))
-        if (card.customName.text.toString() != t.customName) card.customName.setText(t.customName)
+        if (card.customName.text.toString() != t.customName && !card.customName.isFocused) card.customName.setText(t.customName)
         val g = t.tankGal?.toString() ?: ""
         if (card.tank.text.toString() != g && !card.tank.isFocused) card.tank.setText(g)
         card.estimated.text = if (t.tankEstimated) "Tank ${t.id} shown is estimated usable from mapping." else ""
@@ -458,7 +536,15 @@ class PluginActivity : Activity() {
     private fun addExtra() {
         if (!canAddExtra()) return
         val id = FixFuelPrefs.nextExtraId(extraCards.map { ExtraTank(id = it.id) })
-        extraCards.add(buildCard(ExtraTank(id = id)))
+        FixFuelPrefs.setExtraSourceId(this, id, FixFuelPrefs.DEFAULT_SOURCE_T2)
+        if (extraCards.none { it.id == id }) {
+            loading = true
+            try {
+                extraCards.add(buildCard(ExtraTank(id = id, sourceId = FixFuelPrefs.DEFAULT_SOURCE_T2)))
+            } finally {
+                loading = false
+            }
+        }
         refreshAddBtn()
         refreshActiveSpinner(id.toString())
         persist()
@@ -473,6 +559,8 @@ class PluginActivity : Activity() {
     private fun removeExtra(card: ExtraCard) {
         extrasCol.removeView(card.root)
         extraCards.removeAll { it.id == card.id }
+        loadedExtraSource.remove(card.id)
+        FixFuelPrefs.removeExtraTank(this, card.id)
         val keep = if (activeTankFromSpinner() == card.id.toString()) FixFuelPrefs.ACTIVE_TANK1 else activeTankFromSpinner()
         refreshAddBtn()
         refreshActiveSpinner(keep)
@@ -524,8 +612,7 @@ class PluginActivity : Activity() {
             val old = prev[card.id]
             ExtraTank(
                 id = card.id,
-                sourceId = FuelSources.catalog.getOrNull(card.source.selectedItemPosition)?.id
-                    ?: FixFuelPrefs.DEFAULT_SOURCE_T2,
+                sourceId = old?.sourceId ?: FixFuelPrefs.DEFAULT_SOURCE_T2,
                 customName = card.customName.text.toString().trim(),
                 tankGal = card.tank.text.toString().toDoubleOrNull(),
                 learnedUsable = old?.learnedUsable,
@@ -591,10 +678,8 @@ class PluginActivity : Activity() {
             FsLog.i(TAG, "settings not saved: out-of-range field(s) shown in red")
             return
         }
-        val src = FuelSources.catalog.getOrNull(sourceSpinner.selectedItemPosition)?.id ?: FixFuelPrefs.DEFAULT_SOURCE
         FixFuelPrefs.save(
             this,
-            sourceId = src,
             customName = customName.text.toString().trim(),
             tauSec = tau.text.toString().trim().toDouble(),
             skewPctPerSec = skew.text.toString().trim().toDouble(),

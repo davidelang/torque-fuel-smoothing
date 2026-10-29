@@ -12,7 +12,7 @@ Quick start
 2. Enable this plugin in Torque → Settings → Plugins.
 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.
 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.
-5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. You can also pick it below.
+5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.
 6. Tank size (gal or L) is only a starting guess. The learned size replaces it once 10% of the gauge is covered by 2+ drives.
 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level, Corrected Fuel Level, Fuel Remaining and Plugin DTE. Band and Kalman maps have their own (band)/(kalman) PIDs.
 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from Chunk, Band or Kalman (independent of the Gauge map) onto your 012F gauge.

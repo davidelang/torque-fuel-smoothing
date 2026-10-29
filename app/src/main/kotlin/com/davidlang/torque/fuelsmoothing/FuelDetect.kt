@@ -134,23 +134,23 @@ internal object FuelDetect {
     }
 
     // ---------- per-profile storage ----------
-    /** (source id, confirmed). Legacy installs: an explicitly saved global source is adopted as confirmed. */
-    fun resolve(profileSource: String?, profileConfirmed: Boolean, legacyGlobal: String?): Pair<String, Boolean> = when {
-        !profileSource.isNullOrBlank() -> profileSource to profileConfirmed
-        !legacyGlobal.isNullOrBlank() -> legacyGlobal to true
-        else -> NONE to false
+    /** (source id, confirmed). A blank profile is none, unconfirmed. "none" is never confirmed. */
+    fun resolve(profileSource: String?, profileConfirmed: Boolean): Pair<String, Boolean> = when {
+        profileSource.isNullOrBlank() || profileSource == NONE -> NONE to false
+        else -> profileSource to profileConfirmed
     }
 
-    fun load(root: File, pid: String, legacyGlobal: String?): Pair<String, Boolean> {
+    /** Read-only. A profile with no fuelSource loads as none, unconfirmed. */
+    fun load(root: File, pid: String): Pair<String, Boolean> {
         val src = ProfileStore.profileField(root, pid, "fuelSource")
         val conf = ProfileStore.profileField(root, pid, "fuelSourceConfirmed") == "true"
-        val r = resolve(src, conf, legacyGlobal)
-        if (src.isNullOrBlank() && File(ProfileStore.profileDir(root, pid), "profile.json").isFile) store(root, pid, r.first, r.second)
-        return r
+        return resolve(src, conf)
     }
 
+    /** The only writer of fuelSource. "none" is stored unconfirmed. Caller notifies the service. */
     fun store(root: File, pid: String, id: String, confirmed: Boolean) {
-        ProfileStore.setProfileField(root, pid, "fuelSource", id)
-        ProfileStore.setProfileField(root, pid, "fuelSourceConfirmed", confirmed.toString())
+        val src = if (id.isBlank() || id == NONE) NONE else id
+        ProfileStore.setProfileField(root, pid, "fuelSource", src)
+        ProfileStore.setProfileField(root, pid, "fuelSourceConfirmed", (src != NONE && confirmed).toString())
     }
 }

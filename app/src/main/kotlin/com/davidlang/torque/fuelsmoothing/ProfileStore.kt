@@ -770,6 +770,8 @@ internal object ProfileStore {
         }
     }
 
+    fun profileIds(root: File): List<String> = profiles(root).map { it.id }
+
     private fun profiles(root: File): List<ProfileHit> {
         val dir = File(root, "profiles")
         val files = dir.listFiles { f -> f.isDirectory }?.sortedBy { it.name } ?: return emptyList()

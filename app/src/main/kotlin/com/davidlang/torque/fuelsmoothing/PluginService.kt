@@ -203,6 +203,40 @@ class PluginService : Service() {
         FsLog.verbose = getSharedPreferences(FixFuelPrefs.PREFS, MODE_PRIVATE).getBoolean(FsLog.KEY_VERBOSE, false)
     }
 
+    /** Reload cfg now, whether or not a preference changed, and tell the page. */
+    private fun onSourceNotice() {
+        cfg = FixFuelPrefs.load(this)
+        loadLevelScale()
+        prefsDirty = false
+        sendBroadcast(Intent(ACTION_SOURCE_CHANGED).setPackage(packageName))
+    }
+
+    /** Page-only signal after a detect finish that did not write a source. */
+    private fun announceSourceChanged() {
+        sendBroadcast(Intent(ACTION_SOURCE_CHANGED).setPackage(packageName))
+    }
+
+    /**
+     * A real legacy id (catalog id, not none) is stored confirmed on every profile that has no fuelSource.
+     * Anything else is stored as none, unconfirmed. The legacy key is then removed.
+     */
+    private fun migrateLegacySource() {
+        val p = FixFuelPrefs.prefs(this)
+        if (!p.contains(FixFuelPrefs.KEY_SOURCE)) return
+        val raw = p.getString(FixFuelPrefs.KEY_SOURCE, null)?.trim().orEmpty()
+        val real = FuelSources.byId(raw).id == raw && raw != FuelDetect.NONE
+        val id = if (real) raw else FuelDetect.NONE
+        var wrote = false
+        for (pid in ProfileStore.profileIds(filesDir)) {
+            if (ProfileStore.profileField(filesDir, pid, "fuelSource").isNullOrBlank()) {
+                FuelDetect.store(filesDir, pid, id, real)
+                wrote = true
+            }
+        }
+        p.edit().remove(FixFuelPrefs.KEY_SOURCE).apply()
+        if (wrote) notifySourceChanged(this)
+    }
+
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             torque = ITorqueService.Stub.asInterface(service)
@@ -246,6 +280,7 @@ class PluginService : Service() {
             ),
         )
         profileId = ProfileStore.activeId(filesDir)
+        migrateLegacySource()
         tanks[1] = makeRuntime(1)
         ensureChannel()
         TapStartNotice.cancel(this)
@@ -264,14 +299,20 @@ class PluginService : Service() {
             ACTION_OBD_DISCONNECTED -> onEcu(false)
             ACTION_Q_CONFIRM -> confirmQuarantine(intent.getStringExtra(EXTRA_TARGET))
             ACTION_CONFIRM_SOURCE -> {
-                val pid = intent.getStringExtra(EXTRA_TARGET); val src = intent.getStringExtra(EXTRA_SOURCE)
-                if (pid != null && src != null && ProfileStore.profileField(filesDir, pid, "fuelSource") == src) {
+                val pid = intent.getStringExtra(EXTRA_TARGET)
+                val src = intent.getStringExtra(EXTRA_SOURCE)
+                val stored = if (pid != null) ProfileStore.profileField(filesDir, pid, "fuelSource") else null
+                if (pid != null && src != null && stored == src && src != FuelDetect.NONE) {
                     FuelDetect.store(filesDir, pid, src, true)
-                    prefsDirty = true
+                    notifySourceChanged(this)
                     FsLog.i(TAG, "fuel source $src confirmed by user for $pid")
+                } else {
+                    FsLog.w(TAG, "confirm source mismatch: requested=$src stored=$stored")
+                    announceSourceChanged()
                 }
                 notificationManager()?.cancel(DETECT_NOTIF_ID)
             }
+            ACTION_SOURCE_CHANGED -> onSourceNotice()
             ACTION_DETECT -> {
                 bindTorque()
                 queueFuelDetect("manual")
@@ -1167,6 +1208,14 @@ class PluginService : Service() {
         openTankSession(id)
     }
 
+    /** Tank 1 from profile.json and each extra tank from extra_tanks, once per session open. */
+    private fun logDriveSources() {
+        val (src, conf) = FuelDetect.load(filesDir, profileId)
+        FsLog.i(TAG, "source=$src confirmed=$conf profile=$profileId")
+        val raw = FixFuelPrefs.prefs(this).getString(FixFuelPrefs.KEY_EXTRAS, "[]") ?: "[]"
+        for (t in FixFuelPrefs.parseExtras(raw)) FsLog.i(TAG, "tank=${t.id} source=${t.sourceId}")
+    }
+
     private fun openTankSession(id: Int) {
         val rt = tanks[id] ?: return
         if (rt.sessions.isOpen) return
@@ -1181,6 +1230,7 @@ class PluginService : Service() {
         val sid = rt.sessions.open(profileId = profileId, app = BuildConfig.VERSION_NAME)
         FsLog.reset()
         refreshOpen()
+        logDriveSources()
         FsLog.i(TAG, "session open tank=$id $sid files=${rt.sessions.sessionCount()}")
         refreshRecording()
     }
@@ -1727,12 +1777,13 @@ class PluginService : Service() {
         FsLog.i(TAG, "fuel source detection for $profileId: ${res.id} confirmed=${res.confirmed} level=${res.level} (${res.why}; tried ${run.tried})")
         if (res.id != null) {
             FuelDetect.store(filesDir, profileId, res.id, res.confirmed)
-            prefsDirty = true
+            notifySourceChanged(this)
             if (!detectNotifyAllowed()) Unit
             else if (res.confirmed) notifySimple("Fuel level source found", "Using ${FuelSources.byId(res.id).label} for ${profileName(profileId)} (${res.why}).")
             else notifyConfirmSource(res.id, res.level, res.why)
-        } else if (detectNotifyAllowed()) {
-            notifySimple("No fuel level source found", "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.")
+        } else {
+            if (detectNotifyAllowed()) notifySimple("No fuel level source found", "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.")
+            announceSourceChanged()
         }
     }
 
@@ -1741,7 +1792,7 @@ class PluginService : Service() {
         val nm = notificationManager() ?: return
         val flags = PendingIntent.FLAG_UPDATE_CURRENT or (if (Build.VERSION.SDK_INT >= 23) PendingIntent.FLAG_IMMUTABLE else 0)
         val text = "Detected ${FuelSources.byId(id).label}" + (level?.let { " reading ${"%.0f".format(it)} %" } ?: "") +
-            " for ${profileName(profileId)}. Check it matches the dash fuel gauge, then tap Confirm ($why)."
+            " for ${profileName(profileId)}. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification ($why)."
         val b = if (Build.VERSION.SDK_INT >= 26) Notification.Builder(this, CHANNEL_ID) else @Suppress("DEPRECATION") Notification.Builder(this)
         b.setSmallIcon(R.drawable.ic_stat_notify).setContentTitle("Confirm fuel level source").setContentText(text)
             .setStyle(Notification.BigTextStyle().bigText(text)).setAutoCancel(true)
@@ -1822,6 +1873,22 @@ class PluginService : Service() {
         const val DETECT_NOTIF_ID = 4243
         const val EXTRA_SOURCE = "source"
         val ACTION_CONFIRM_SOURCE: String get() = BuildConfig.APPLICATION_ID + ".CONFIRM_SOURCE"
+        val ACTION_SOURCE_CHANGED: String get() = BuildConfig.APPLICATION_ID + ".SOURCE_CHANGED"
+
+        /** Page sends this intent. Already inside the service, run the reload directly. */
+        fun notifySourceChanged(ctx: Context) {
+            val running = instance
+            if (running != null && ctx === running) {
+                running.onSourceNotice()
+                return
+            }
+            val i = Intent(ctx, PluginService::class.java).setAction(ACTION_SOURCE_CHANGED)
+            try {
+                if (Build.VERSION.SDK_INT >= 26) ctx.startForegroundService(i) else ctx.startService(i)
+            } catch (t: Throwable) {
+                FsLog.w(TAG, "source notice ignored: ${t.javaClass.simpleName} ${t.message}")
+            }
+        }
         const val ACTION_OBD_CONNECTED = "org.prowl.torque.OBD_CONNECTED"
         const val ACTION_OBD_DISCONNECTED = "org.prowl.torque.OBD_DISCONNECTED"
         const val ACTION_PID_QUERY = "org.prowl.torque.PID_QUERY"

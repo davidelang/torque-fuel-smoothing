@@ -21,14 +21,7 @@ class FixesTest {
         assertFalse(ford.any { it.startsWith("toyota") || it.startsWith("gm") })
         assertEquals(listOf("sae_012f"), FuelDetect.candidates(null, null, emptySet()))
         assertTrue("toyota_7c0_2129" in FuelDetect.candidates(null, "Toyota", emptySet()))
-        // New profile: none, unconfirmed (no Ford default). Legacy saved global source: adopted, confirmed.
-        assertEquals(FuelDetect.NONE to false, FuelDetect.resolve(null, false, null))
-        assertEquals("ford_16c1" to true, FuelDetect.resolve(null, false, "ford_16c1"))
-        assertEquals("gm_12c5" to false, FuelDetect.resolve("gm_12c5", false, "ford_16c1"))
         assertEquals("none", FuelSources.byId("bogus").id)
-        val root = tmp("src"); File(root, "profiles/van").mkdirs(); File(root, "profiles/van/profile.json").writeText("{\"id\":\"van\",\"schema\":1}")
-        assertEquals("ford_16c1" to true, FuelDetect.load(root, "van", "ford_16c1"))
-        assertEquals("ford_16c1" to true, FuelDetect.load(root, "van", null)) // persisted per profile
     }
 
     @Test
