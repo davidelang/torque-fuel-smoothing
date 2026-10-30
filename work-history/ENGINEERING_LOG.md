@@ -311,3 +311,9 @@
 
 - Approved plan: `sandbox/plans/drive-source-once-and-package-config-20261029-0537-plan.md`
 - Scope: log the fuel-source block once per drive, cleared on ECU disconnect and not on a tank switch. `./build_app --standard` reads `fuelsmoothing_official=1` from project.config and passes `-Pfuelsmoothing.official=true`. Compile and commit docs drop `--test`. No phone install. No adb. No --play.
+
+## 2026-10-30 - Rebuild a stale Kalman map when the vehicle is identified
+
+- Approved plan: `sandbox/plans/kalman-stale-startup-20261030-0927-plan.md`
+- Pieces.ANALYSIS_VERSION stays 4. The model loader now checks "version". rollup.sig is left as stored.
+- At the identity decision, a Kalman model or state file this version cannot read is renamed aside, the user is told once, and Kalman is refit from that profile's saved drives. Chunk and band stay as they are.

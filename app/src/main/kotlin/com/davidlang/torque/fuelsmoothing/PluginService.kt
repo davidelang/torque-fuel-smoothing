@@ -860,10 +860,84 @@ class PluginService : Service() {
         FsLog.i(TAG, "identity route: write=${quarantineDir?.path ?: target} suggest=${quarantineSuggest}")
         ProfileStore.setActiveId(filesDir, next)
         prefsDirty = true // tank size etc. are per profile
-        if (target == profileId && wasQ == quarantineDir) return
+        // Reconnect already set profileId in onCreate. That path still has to set a stale Kalman file aside.
+        if (target == profileId && wasQ == quarantineDir) {
+            rebuildStaleKalman(target)
+            return
+        }
         profileId = target
+        rebuildStaleKalman(target)
         priorCache.clear()
         for (id in tanks.keys.toList()) tanks[id] = makeRuntime(id)
+    }
+
+    /** Tank 1 lives in the profile directory. Later tanks are integer subdirectories of tanks/. */
+    private fun kalmanTankDirs(profile: String): List<Pair<Int, File>> {
+        val out = ArrayList<Pair<Int, File>>()
+        out.add(1 to ProfileStore.tankDir(filesDir, profile, 1))
+        val extra = File(ProfileStore.profileDir(filesDir, profile), "tanks").listFiles().orEmpty()
+            .mapNotNull { d -> if (!d.isDirectory) null else d.name.toIntOrNull()?.let { n -> n to d } }
+            .sortedBy { it.first }
+        out.addAll(extra)
+        return out
+    }
+
+    /** Rename a stale model, then a stale state file. A move that throws still counts as found. */
+    private fun asideStaleKalman(profile: String, tank: Int, dir: File): Boolean {
+        var stale = false
+        val model = Kalman.staleModel(dir)
+        if (model != null) {
+            stale = true
+            try {
+                val dst = Kalman.moveModel(dir, model.suffix)
+                if (dst != null) FsLog.i(TAG, "kalman model $profile tank$tank ${model.detail}; kept as ${dst.name}")
+            } catch (e: Exception) {
+                FsLog.w(TAG, "kalman model move failed profile=$profile tank=$tank: ${e.javaClass.simpleName}: ${e.message}")
+            }
+        }
+        try {
+            if (Kalman.quarantineState(dir)) stale = true
+        } catch (e: Exception) {
+            stale = true
+            FsLog.w(TAG, "kalman state move failed profile=$profile tank=$tank: ${e.javaClass.simpleName}: ${e.message}")
+        }
+        return stale
+    }
+
+    /**
+     * On the poll thread: set every stale file aside, post one notice, then one Kalman refit per stale tank.
+     * Does not roll up chunk or band, and does not rewrite rollup.sig.
+     */
+    private fun rebuildStaleKalman(target: String) {
+        val stale = ArrayList<Pair<Int, File>>()
+        for ((tank, dir) in kalmanTankDirs(target)) {
+            if (asideStaleKalman(target, tank, dir)) stale.add(tank to dir)
+        }
+        if (stale.isEmpty()) return
+        val who = profileName(target)
+        val text = "Fuel Smoothing found an unreadable Kalman map for $who and is rebuilding it from saved drives. " +
+            "Kalman gauges stay blank until that finishes; Chunk values are used meanwhile. " +
+            "With nothing to rebuild from, they stay blank until the next drive is saved."
+        notifySimple("Kalman map rebuilding", text)
+        FsLog.i(TAG, "kalman map rebuilding notice for $target")
+        for ((tank, dir) in stale) {
+            submitRollup("kalman refit (stale) tank$tank", {
+                ProfileStore.DataLock.lock()
+                try {
+                    val sessions = FuelV2.loadSessions(File(dir, "raw"), openSessions)
+                    if (sessions.isEmpty()) {
+                        FsLog.i(TAG, "kalman refit (stale) tank$tank: no sessions")
+                    } else {
+                        Kalman.update(dir, sessions, cfg.jumpPct, null)
+                        if (Kalman.loadModel(dir) == null) FsLog.w(TAG, "kalman refit (stale) tank$tank failed")
+                    }
+                } finally {
+                    ProfileStore.DataLock.unlock()
+                }
+            }) {
+                if (tank == 1 && profileId == target) publishTankGuess(1)
+            }
+        }
     }
 
     private fun profileName(id: String): String = ProfileStore.profileField(filesDir, id, "torqueProfileName")

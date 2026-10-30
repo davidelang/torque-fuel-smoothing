@@ -103,7 +103,7 @@ Invalid entries are shown in red and are not saved.
 - **Three gauge maps.** All three are refit at the end of each drive and after a fill, saved, and loaded at startup:
   - **Chunk fit** (default): averages the chunks per gauge band, weighting each by fuel covered and noise, with bounded influence so one odd drive can't dominate.
   - **Band fit:** a smooth continuous curve, with its smoothness chosen by leave-one-drive-out testing.
-  - **Kalman fit:** a running estimate of the fuel per 1% of gauge, updated once per drive, that also tracks how many different drives have covered each part of the gauge.
+  - **Kalman fit:** a running estimate of the fuel per 1% of gauge, updated once per drive, that also tracks how many different drives have covered each part of the gauge. After an update, an old Kalman map may be rebuilt from saved drives, with a notice; Kalman gauges use Chunk values until that finishes, or until the next drive is saved when there is nothing to rebuild from.
   - Each map's Corrected % = its fuel at the current gauge ÷ its own full-to-empty capacity, so 0% and 100% match the gauge and an overall scale error cancels out.
 - **Tank size.** The tank size you see is a guess until the plugin trusts what it has learned. It starts from Torque's profile capacity if set, otherwise from what you type. Once at least **10% of the gauge has been covered by two or more different drives**, the learned tank size (full to gauge 0, from the Kalman fit) replaces the guess. Before that, the setup page shows the running estimate as *provisional*, with gauge coverage by 1, 2 and 3 drives. You can edit the value; learning continues from it.
 

@@ -124,18 +124,23 @@ internal object Kalman {
         }
     }
 
-    /** Rename a state file that [load] cannot read. Version ≠ 3 → `.v2`; any other failure → `.corrupt`. */
-    fun quarantineState(dir: File) {
+    /**
+     * Rename a state file that [load] cannot read. Version ≠ 3 → `.v2`; any other failure → `.corrupt`.
+     * Returns true when the file was present and rejected. A file [load] accepts is not stale.
+     */
+    fun quarantineState(dir: File): Boolean {
         val f = File(dir, STATE)
-        if (!f.isFile) return
-        if (load(dir) != null) return
-        if (peekVersion(f) != VERSION) {
+        if (!f.isFile) return false
+        if (load(dir) != null) return false
+        val found = peekVersion(f)
+        if (found != VERSION) {
             val dst = moveState(dir, ".v2")
-            warn("kalman state version change; kept as ${dst?.name}")
+            warn("kalman state version change; kept as ${dst?.name} ($found vs $VERSION)")
         } else {
             val dst = moveState(dir, ".corrupt")
             warn("kalman state kept as ${dst?.name} (${lastLoadError})")
         }
+        return true
     }
 
     private fun peekVersion(f: File): Int? {
@@ -150,6 +155,20 @@ internal object Kalman {
         var dst = File(dir, "$STATE$suffix")
         var k = 1
         while (dst.exists()) dst = File(dir, "$STATE$suffix.${k++}")
+        if (!f.renameTo(dst)) {
+            f.copyTo(dst, overwrite = true)
+            f.delete()
+        }
+        return dst
+    }
+
+    /** Same move as [moveState], for [MODEL]. `.v2` / `.corrupt`, then `.1`, `.2` when that name is taken. */
+    fun moveModel(dir: File, suffix: String): File? {
+        val f = File(dir, MODEL)
+        if (!f.isFile) return null
+        var dst = File(dir, "$MODEL$suffix")
+        var k = 1
+        while (dst.exists()) dst = File(dir, "$MODEL$suffix.${k++}")
         if (!f.renameTo(dst)) {
             f.copyTo(dst, overwrite = true)
             f.delete()
@@ -220,17 +239,67 @@ internal object Kalman {
         }
     }
 
+    /** Why [MODEL] cannot be read, or null when the file is missing or this version can read it. Does not rename. */
+    class StaleModel(val suffix: String, val detail: String)
+
+    fun staleModel(dir: File): StaleModel? {
+        val f = File(dir, MODEL)
+        if (!f.isFile) return null
+        val t = try {
+            f.readText()
+        } catch (e: Exception) {
+            return StaleModel(".corrupt", "${e.javaClass.simpleName}: ${e.message}")
+        }
+        val ver = peekModelVersion(t)
+        if (ver.present && ver.number != null && ver.number != VERSION) {
+            return StaleModel(".v2", "version ${ver.number} vs $VERSION")
+        }
+        if (!ver.present) return StaleModel(".corrupt", "missing version")
+        if (ver.number == null) return StaleModel(".corrupt", "version not an integer")
+        return try {
+            modelBody(t)
+            null
+        } catch (e: Exception) {
+            val msg = e.message ?: e.javaClass.simpleName
+            val g = Regex("g has (\\d+)").find(msg)
+            val detail = if (g != null) "g ${g.groupValues[1]} vs $NB" else msg
+            StaleModel(".corrupt", detail)
+        }
+    }
+
+    private class ModelVersion(val present: Boolean, val number: Int?)
+
+    /** `"version"` as a JSON integer, before any read of `g`. A missing key is not present. */
+    private fun peekModelVersion(t: String): ModelVersion {
+        val raw = Regex("\"version\"\\s*:\\s*([^,}\\s]+)").find(t)?.groupValues?.get(1)
+            ?: return ModelVersion(false, null)
+        if (!Regex("-?[0-9]+").matches(raw)) return ModelVersion(true, null)
+        val n = raw.toIntOrNull() ?: return ModelVersion(true, null)
+        return ModelVersion(true, n)
+    }
+
     private fun parseModel(t: String): Model {
+        val ver = peekModelVersion(t)
+        if (!ver.present) throw IllegalStateException("missing version")
+        if (ver.number == null) throw IllegalStateException("version not an integer")
+        if (ver.number != VERSION) throw IllegalStateException("version ${ver.number}, expected $VERSION")
+        return try {
+            modelBody(t)
+        } catch (e: IllegalStateException) {
+            val n = Regex("^g has (\\d+)$").find(e.message ?: "")
+            if (n != null) warn("kalman model g has ${n.groupValues[1]} values, expected $NB")
+            throw e
+        }
+    }
+
+    private fun modelBody(t: String): Model {
         fun num(k: String): Double {
             val m = Regex("\"$k\":(-?[0-9.eE+-]+)").find(t) ?: throw IllegalStateException("missing $k")
             return m.groupValues[1].toDouble()
         }
         val body = Regex("\"g\":\\[([^\\]]*)]").find(t)?.groupValues?.get(1) ?: throw IllegalStateException("missing g")
         val g = if (body.isBlank()) DoubleArray(0) else body.split(',').map { it.trim().toDouble() }.toDoubleArray()
-        if (g.size != NB) {
-            warn("kalman model g has ${g.size} values, expected $NB")
-            throw IllegalStateException("g has ${g.size}")
-        }
+        if (g.size != NB) throw IllegalStateException("g has ${g.size}")
         return Model(g, num("g98"), num("sd98"), t.contains("\"complete\":true"))
     }
 
