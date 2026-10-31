@@ -15,33 +15,6 @@ internal object Live {
     }
 
     /**
-     * Recent-mpg window: the shortest suffix of (miles, gal) ticks holding >= want gal (all ticks while short),
-     * kept with running sums. Same result as rescanning the window each tick, amortized O(1).
-     */
-    class MpgWindow {
-        private val q = java.util.ArrayDeque<DoubleArray>()
-        private var miles = 0.0
-        private var gal = 0.0
-        var mpg = 0.0
-            private set
-        val size get() = q.size
-
-        fun add(m: Double, g: Double, want: Double) {
-            var work = 1
-            q.addLast(doubleArrayOf(m, g)); miles += m; gal += g
-            if (want > 0.0) {
-                while (q.size > 1 && gal - q.peekFirst()!![1] >= want) {
-                    val f = q.pollFirst()!!; miles -= f[0]; gal -= f[1]; work++
-                }
-            }
-            if (gal > 1e-9) mpg = miles / gal
-            lastTickWork = work
-        }
-
-        fun clear() { q.clear(); miles = 0.0; gal = 0.0 }
-    }
-
-    /**
      * Session close only: the ledger corrections from the drive's chunks, applied once (formerly re-chunked
      * every tick). [fuelNow] is the session fuel at close.
      */

@@ -82,7 +82,7 @@ class PluginReceiver : BroadcastReceiver() {
 }
 
 internal object TapStartNotice {
-    const val CHANNEL_ID = "fuel_tap"
+    const val CHANNEL_ID = "fuel_tap_start"
     const val NOTIF_ID = 351
 
     fun post(context: Context) {
@@ -91,7 +91,7 @@ internal object TapStartNotice {
         nm.createNotificationChannel(
             NotificationChannel(
                 CHANNEL_ID,
-                "Fuel Smoothing",
+                context.getString(R.string.tap_start_channel),
                 NotificationManager.IMPORTANCE_HIGH,
             ),
         )

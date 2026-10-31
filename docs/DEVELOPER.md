@@ -20,6 +20,10 @@ Import status:
 
     timeout 30 adb -s <serial> exec-out content read --uri content://<applicationId>.datatransfer/import-status
 
+The primary import reloads the running service in place. It does not stop the service and it has no restart step. Fallback is used only when the service is not running, the rollup executor is shut down or the sentinel does not finish, the archive has a root other than `files` and `shared_prefs`, or prefs apply / cache reload throws. That path stops the service, swaps both roots, writes status with the service stopped, and kills the process. Start the activity after that fallback:
+
+    adb shell am start -n <applicationId>/com.davidlang.torque.fuelsmoothing.PluginActivity
+
 Status file: `context.noBackupFilesDir/datatransfer/last-import.json`, read through `/import-status`.
 
 ## Migration

@@ -53,10 +53,9 @@ internal object Kalman {
     private val BAND_EDGES = doubleArrayOf(0.0, 5.0, 10.0, 20.0, 40.0, 60.0, 80.0, 90.0, 95.0, 101.0)
     private val BAND_SIG = doubleArrayOf(2.21, 2.17, 1.75, 1.89, 1.85, 2.00, 2.17, 2.19, 0.75)
     private const val SIG_MID = 1.85
-    private val GPP = doubleArrayOf(
-        0.088, 0.111, 0.132, 0.142, 0.145, 0.154, 0.197, 0.347, 0.36, 0.318,
-        0.316, 0.344, 0.394, 0.294, 0.34, 0.398, 0.497, 0.634, 0.928, 1.595,
-    )
+    /** Previous fit's gallons per point, loaded at the start of update. Null uses one flat ratio. */
+    private var slopeG: DoubleArray? = null
+    private var slopeFlat: Double = Double.NaN
 
     /** Last good free θ and per-segment hole/offset. Warm start only. */
     class State(val q: DoubleArray, val segs: List<SegPar>)
@@ -94,6 +93,8 @@ internal object Kalman {
      */
     fun update(dir: File, sessions: List<FuelSession>, jumpPct: Double, openName: String? = null): State? {
         return try {
+            slopeG = loadModel(dir)?.g
+            slopeFlat = if (slopeG == null) flatGpp(sessions) else Double.NaN
             quarantineState(dir)
             if (sessions.isEmpty()) return load(dir)
             if (!jumpPct.isFinite() || jumpPct < 10.0 || jumpPct > 100.0) {
@@ -110,7 +111,9 @@ internal object Kalman {
                 List(built.segs.size) { j -> SegPar(built.segs[j].key, built.first[j], out.z[j], out.o[j]) },
             )
             save(dir, state)
-            AtomicFile.write(File(dir, MODEL), modelJson(out.g, out.g98, out.sd98, built.breaks >= 2, System.currentTimeMillis()))
+            val modelFile = File(dir, MODEL)
+            if (!modelFile.isFile) FsLog.i("FuelSmooth", "kalman model was absent before this write")
+            AtomicFile.write(modelFile, modelJson(out.g, out.g98, out.sd98, built.breaks >= 2, System.currentTimeMillis()))
             runCatching {
                 FsLog.i(
                     "FuelSmooth",
@@ -605,13 +608,36 @@ internal object Kalman {
         if (idx.size < 15) return null
         val ls = DoubleArray(idx.size) { l[idx[it]] }
         val fs = DoubleArray(idx.size) { f[idx[it]] }
-        val sl = -1.0 / gpp(medOf(ls))
+        val gp = gpp(medOf(ls))
+        if (!gp.isFinite() || gp <= 0.0) return null
+        val sl = -1.0 / gp
         val f0 = medOf(fs)
         val adj = DoubleArray(idx.size) { ls[it] - sl * (fs[it] - f0) }
         return Side(sl, medOf(adj) - sl * f0, mad(adj), idx.size)
     }
 
-    private fun gpp(level: Double) = GPP[floor(level / 5.0).toInt().coerceIn(0, 19)]
+    /** Gallons per point on the 5-point bins. Previous model, else one flat ratio for every level. */
+    private fun gpp(level: Double): Double {
+        val g = slopeG
+        if (g != null && g.isNotEmpty()) return g[floor(level / 5.0).toInt().coerceIn(0, g.lastIndex)]
+        return slopeFlat
+    }
+
+    /** One gallons-per-point from the fuel and level rows in this fit. */
+    private fun flatGpp(sessions: List<FuelSession>): Double {
+        var fuel = 0.0
+        var level = 0.0
+        for (s in sessions) {
+            for (i in 1 until s.t.size) {
+                val df = s.used[i] - s.used[i - 1]
+                val dl = s.raw[i] - s.raw[i - 1]
+                if (!df.isFinite() || !dl.isFinite() || df <= 0.0 || dl == 0.0) continue
+                fuel += df
+                level += abs(dl)
+            }
+        }
+        return if (level > 0.0) fuel / level else Double.NaN
+    }
 
     private fun mad(x: DoubleArray): Double {
         if (x.isEmpty()) return Double.NaN

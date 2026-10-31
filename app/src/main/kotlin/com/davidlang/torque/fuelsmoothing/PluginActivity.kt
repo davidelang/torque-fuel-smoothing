@@ -16,6 +16,8 @@ import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
 import android.util.Log
+import android.graphics.Canvas
+import android.graphics.Paint
 import android.view.View
 import android.view.WindowInsets
 import android.widget.AdapterView
@@ -50,12 +52,14 @@ class PluginActivity : Activity() {
     private lateinit var tankUnit: Spinner
     private var shownUnit = VolUnit.GAL
     private lateinit var live: TextView
-    private lateinit var estimated: TextView
+    private lateinit var sizeChunk: TextView
+    private lateinit var sizeBand: TextView
+    private lateinit var sizeKalman: TextView
+    private lateinit var fitChart: FitChart
     private lateinit var extrasCol: LinearLayout
     private lateinit var addBtn: Button
     private lateinit var showNotice: CheckBox
     private lateinit var feed012f: Spinner
-    private lateinit var primaryAlgo: Spinner
     private lateinit var activeSpinner: Spinner
     private lateinit var selectPid: EditText
     private lateinit var profileNameView: TextView
@@ -231,7 +235,7 @@ class PluginActivity : Activity() {
         customName = edit(InputType.TYPE_CLASS_TEXT)
         col.addView(customName)
 
-        col.addView(info("Tank size", "Current guess. Seeded from Torque's vehicle profile or your entry, then learned from your drives (Kalman, once enough of the gauge is covered) and updated at fills and when Torque disconnects."))
+        col.addView(info("Tank size", getString(R.string.tank_size_info)))
         val tankRow = LinearLayout(this)
         tankRow.orientation = LinearLayout.HORIZONTAL
         tank = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
@@ -255,15 +259,19 @@ class PluginActivity : Activity() {
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+        sizeChunk = sizeView(0xFF1565C0.toInt())
+        sizeBand = sizeView(0xFF2E7D32.toInt())
+        sizeKalman = sizeView(0xFFE65100.toInt())
+        col.addView(sizeChunk)
+        col.addView(sizeBand)
+        col.addView(sizeKalman)
+        fitChart = FitChart(this)
+        col.addView(fitChart)
 
-        col.addView(info(getString(R.string.write_012f), "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman map. Independent of the Gauge map; Band/Kalman use Chunk until built."))
+        col.addView(info(getString(R.string.write_012f), getString(R.string.feed_012f_info)))
         feed012f = Spinner(this)
         feed012f.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, FeedMode.entries.map { it.label })
         col.addView(feed012f)
-        col.addView(info("Gauge map", "Which learned map drives the main Corrected %, Fuel Remaining and DTE PIDs. Each map also has its own PIDs (corrected, remaining, DTE, tank size)."))
-        primaryAlgo = Spinner(this)
-        primaryAlgo.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, MapAlgo.entries.map { it.label })
-        col.addView(primaryAlgo)
 
         showNotice = CheckBox(this)
         showNotice.text = getString(R.string.show_fuel_notification)
@@ -318,9 +326,6 @@ class PluginActivity : Activity() {
 
         // Details (below the settings).
         col.addView(label("Details"))
-        estimated = TextView(this)
-        estimated.textSize = 13f
-        col.addView(estimated)
         live = TextView(this)
         live.textSize = 13f
         col.addView(live)
@@ -340,7 +345,6 @@ class PluginActivity : Activity() {
         activeSpinner.onItemSelectedListener = spinListen
         showNotice.setOnCheckedChangeListener { _, _ -> if (!loading) persist() }
         feed012f.onItemSelectedListener = spinListen
-        primaryAlgo.onItemSelectedListener = spinListen
 
         scroll.addView(col)
         scroll.setOnApplyWindowInsetsListener { v, insets ->
@@ -426,12 +430,7 @@ class PluginActivity : Activity() {
         val tankStr = if (shownGal != null && c.tankGal != null && kotlin.math.abs(shownGal - c.tankGal) < 0.05) tank.text.toString() else VolUnit.show(c.tankGal, shownUnit)
         if (tank.text.toString() != tankStr && !tank.isFocused) tank.setText(tankStr)
         showStoredInvalid(c)
-        val km = Kalman.loadModel(ProfileStore.tankDir(filesDir, ProfileStore.activeId(filesDir), 1))
-        estimated.text = if (Kalman.publishable(km)) {
-            "Learned tank ${"%.1f".format(km!!.g98)} ± ${"%.1f".format(km.sd98)} gal"
-        } else {
-            ""
-        }
+        refreshSizes(c)
         val st = c.sourceStatus
         val lv = FixFuelPrefs.live(this)
         live.text = listOf(st, lv).filter { it.isNotBlank() }.joinToString("\n")
@@ -440,7 +439,6 @@ class PluginActivity : Activity() {
         if (selectPid.text.toString() != c.selectPidName && !selectPid.isFocused) selectPid.setText(c.selectPidName)
         showNotice.isChecked = c.showFuelNotification
         feed012f.setSelection(c.feed012f.ordinal)
-        primaryAlgo.setSelection(c.primaryAlgo.ordinal)
         refreshAddBtn()
         refreshProfile()
         refreshStatus(c)
@@ -500,10 +498,7 @@ class PluginActivity : Activity() {
         root.addView(label("Tank ${t.id} gallons"))
         val gal = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
         root.addView(gal)
-        val est = TextView(this)
-        est.textSize = 14f
-        root.addView(est)
-        val card = ExtraCard(t.id, root, source, name, gal, est)
+        val card = ExtraCard(t.id, root, source, name, gal)
         bindCard(card, t)
         name.addTextChangedListener(watch)
         gal.addTextChangedListener(watch)
@@ -530,7 +525,6 @@ class PluginActivity : Activity() {
         if (card.customName.text.toString() != t.customName && !card.customName.isFocused) card.customName.setText(t.customName)
         val g = t.tankGal?.toString() ?: ""
         if (card.tank.text.toString() != g && !card.tank.isFocused) card.tank.setText(g)
-        card.estimated.text = if (t.tankEstimated) "Tank ${t.id} shown is estimated usable from mapping." else ""
     }
 
     private fun addExtra() {
@@ -690,7 +684,6 @@ class PluginActivity : Activity() {
             selectPidName = selectPid.text.toString().trim(),
             showFuelNotification = showNotice.isChecked,
             feed012f = FeedMode.entries[feed012f.selectedItemPosition.coerceIn(0, FeedMode.entries.size - 1)],
-            primaryAlgo = MapAlgo.entries[primaryAlgo.selectedItemPosition.coerceIn(0, MapAlgo.entries.size - 1)],
         )
         val id = ProfileStore.activeId(filesDir)
         ProfileStore.setProfileField(filesDir, id, "name", profileName.text.toString().trim().ifBlank { "Vehicle 1" })
@@ -749,7 +742,7 @@ class PluginActivity : Activity() {
         val id = ProfileStore.activeId(filesDir)
         val name = ProfileStore.profileField(filesDir, id, "name") ?: "Vehicle 1"
         val src = FuelSources.byId(c.sourceId).label + if (c.sourceConfirmed) "" else " (unconfirmed)"
-        val tankTxt = c.tankGal?.let { "${VolUnit.show(it, shownUnit)} ${shownUnit.label}" + if (c.tankEstimated) " learned" else "" } ?: "tank ?"
+        val tankTxt = c.tankGal?.let { "${VolUnit.show(it, shownUnit)} ${shownUnit.label}" } ?: "tank ?"
         statusLine.text = "$name · $src · $tankTxt" + if (PluginService.ecuConnected) " · ECU connected" else ""
     }
 
@@ -951,13 +944,151 @@ class PluginActivity : Activity() {
         super.onDestroy()
     }
 
+    private fun sizeView(color: Int): TextView {
+        val t = TextView(this)
+        t.textSize = 14f
+        t.setTextColor(color)
+        return t
+    }
+
+    /** Own chunk size, else the user seed. Band and Kalman show only their own size. Kalman includes sd98 whenever a model is loaded. */
+    private fun refreshSizes(c: FixFuelConfig) {
+        val dir = ProfileStore.tankDir(filesDir, ProfileStore.activeId(filesDir), 1)
+        val chunk = ProfileStore.storedMap(dir)
+        val chunkGal = chunk?.third?.takeIf { it > 0.0 } ?: c.tankGal?.takeIf { it > 0.0 }
+        sizeChunk.text = getString(R.string.size_chunk, sizeText(chunkGal))
+        val band = BandFit.load(dir)
+        sizeBand.text = getString(R.string.size_band, sizeText(band?.second?.takeIf { it > 0.0 }))
+        val kal = Kalman.loadModel(dir)
+        sizeKalman.text = getString(R.string.size_kalman, kalmanSizeText(kal))
+        fitChart.setCurves(listOf(chunkCurve(chunk), bandCurve(band), kalmanCurve(kal)))
+    }
+
+    private fun sizeText(gal: Double?): String {
+        if (gal == null || !gal.isFinite() || gal <= 0.0) return getString(R.string.size_none)
+        return getString(R.string.size_gal, gal)
+    }
+
+    private fun kalmanSizeText(kal: Kalman.Model?): String {
+        if (kal == null) return getString(R.string.size_none)
+        val sd = kal.sd98.takeIf { it.isFinite() }
+        val gal = kal.g98.takeIf { it.isFinite() && it > 0.0 }
+        return when {
+            gal != null && sd != null -> getString(R.string.size_kalman_sd, gal, sd)
+            gal != null -> getString(R.string.size_gal, gal)
+            sd != null -> getString(R.string.size_none_sd, sd)
+            else -> getString(R.string.size_none)
+        }
+    }
+
+    private fun chunkCurve(stored: Triple<DoubleArray, DoubleArray, Double>?): (Double) -> Double {
+        if (stored == null || !(stored.third > 0.0)) return { 0.0 }
+        val (edges, g, cap) = stored
+        return { x -> residual(x) { FuelV2.correctedPct(x, { FuelV2.vAt(it, edges, g) }, cap) } }
+    }
+
+    private fun bandCurve(band: Pair<DoubleArray, Double>?): (Double) -> Double {
+        if (band == null || !(band.second > 0.0)) return { 0.0 }
+        val (g, cap) = band
+        return { x -> residual(x) { FuelV2.correctedPct(x, { BandFit.vAt(it, g) }, cap) } }
+    }
+
+    private fun kalmanCurve(kal: Kalman.Model?): (Double) -> Double {
+        if (kal == null || !(kal.g98 > 0.0)) return { 0.0 }
+        return { x -> residual(x) { FuelV2.correctedPct(x, { kal.v(it) }, kal.g98) } }
+    }
+
+    private fun residual(x: Double, corrected: () -> Double): Double {
+        val c = corrected()
+        return if (c.isFinite()) c - x else 0.0
+    }
+
+    /**
+     * Smoothed gauge on X, corrected percent minus smoothed percent on Y.
+     * One line per fit and a zero line. The axis includes every line and 0, so a 1:1 fit lies on zero.
+     */
+    private class FitChart(context: Context) : View(context) {
+        private val ys = Array(3) { FloatArray(101) }
+        private var yLo = -1.0
+        private var yHi = 1.0
+        private val line = Array(3) {
+            Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                style = Paint.Style.STROKE
+                strokeWidth = 3f * resources.displayMetrics.density
+            }
+        }
+        private val zero = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            style = Paint.Style.STROKE
+            color = android.graphics.Color.GRAY
+            strokeWidth = 2f * resources.displayMetrics.density
+        }
+        private val legend = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            textSize = 12f * resources.displayMetrics.density
+        }
+
+        init {
+            line[0].color = 0xFF1565C0.toInt()
+            line[1].color = 0xFF2E7D32.toInt()
+            line[2].color = 0xFFE65100.toInt()
+            val h = (180 * resources.displayMetrics.density).toInt()
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, h)
+        }
+
+        fun setCurves(curves: List<(Double) -> Double>) {
+            var lo = 0.0
+            var hi = 0.0
+            for (i in curves.indices) {
+                val f = curves[i]
+                for (x in 0..100) {
+                    val y = f(x.toDouble())
+                    val v = if (y.isFinite()) y else 0.0
+                    ys[i][x] = v.toFloat()
+                    if (v < lo) lo = v
+                    if (v > hi) hi = v
+                }
+            }
+            if (hi - lo < 1e-9) {
+                yLo = -1.0
+                yHi = 1.0
+            } else {
+                val pad = (hi - lo) * 0.05
+                yLo = minOf(0.0, lo - pad)
+                yHi = maxOf(0.0, hi + pad)
+            }
+            invalidate()
+        }
+
+        override fun onDraw(canvas: Canvas) {
+            val d = resources.displayMetrics.density
+            val padL = 8f * d
+            val padR = 8f * d
+            val padT = 22f * d
+            val padB = 8f * d
+            val w = width.toFloat()
+            val h = height.toFloat()
+            val span = (yHi - yLo).takeIf { it > 0.0 } ?: 1.0
+            fun px(x: Int) = padL + (w - padL - padR) * x / 100f
+            fun py(y: Float) = (padT + (h - padT - padB) * ((yHi - y.toDouble()) / span)).toFloat()
+            canvas.drawLine(padL, py(0f), w - padR, py(0f), zero)
+            for (i in 0..2) {
+                for (x in 0 until 100) canvas.drawLine(px(x), py(ys[i][x]), px(x + 1), py(ys[i][x + 1]), line[i])
+            }
+            val names = arrayOf("Chunk", "Band", "Kalman")
+            var lx = padL
+            for (i in names.indices) {
+                legend.color = line[i].color
+                canvas.drawText(names[i], lx, 14f * d, legend)
+                lx += legend.measureText(names[i]) + 16f * d
+            }
+        }
+    }
+
     private data class ExtraCard(
         val id: Int,
         val root: LinearLayout,
         val source: Spinner,
         val customName: EditText,
         val tank: EditText,
-        val estimated: TextView,
     )
 
     companion object {

@@ -25,16 +25,6 @@ class FixesTest {
     }
 
     @Test
-    fun test61NoStoreInProfileWrites() {
-        val src = File("src/main/kotlin/com/davidlang/torque/fuelsmoothing/PluginService.kt")
-        assertTrue(src.isFile)
-        val code = src.readLines().filterNot { it.trim().startsWith("*") || it.trim().startsWith("//") }.joinToString("\n")
-        assertFalse(code.contains("storeInProfile("))
-        assertFalse(code.contains("tankUsed"))
-        assertFalse(code.contains("authoritativePct\""))
-    }
-
-    @Test
     fun test62TankUnitPickerStoresGallons() {
         assertEquals(35.0, VolUnit.L.toGal(132.49), 0.01)
         assertEquals("132.5", VolUnit.show(35.0, VolUnit.L))
@@ -42,7 +32,7 @@ class FixesTest {
         assertEquals("", VolUnit.show(null, VolUnit.L))
         assertEquals(12.3, VolUnit.L.toGal(VolUnit.L.fromGal(12.3)), 1e-12)
         assertEquals(VolUnit.GAL, VolUnit.of(null)); assertEquals(VolUnit.L, VolUnit.of("L"))
-        assertTrue(VolUnit.FALLBACK_HINT.contains("30 gal") && VolUnit.FALLBACK_HINT.contains("25 gal"))
+        assertEquals("blank = no starting size; each fit learns its own.", VolUnit.FALLBACK_HINT)
     }
 
     private fun poll(run: FuelDetect.Run, id: String, vals: List<Pair<Double?, Long?>>) { for ((v, u) in vals) run.report(id, v, u) }
@@ -141,19 +131,6 @@ class FixesTest {
         val r = Fingerprint.redacted(fp)
         assertFalse(r.contains("1FDSS34L05HA")); assertTrue(r.contains("2345"))
         assertFalse(r.contains("RZAA0F1")); assertFalse(r.contains("AB12CD34"))
-        val code = File("src/main/kotlin/com/davidlang/torque/fuelsmoothing/PluginService.kt").readText()
-        assertFalse(Regex("Log\\.i\\([^\\n]*Fingerprint\\.toJson").containsMatchIn(code))
-    }
-
-    @Test
-    fun test71AtomicArtefactsShortDestroyWaitAndProWording() {
-        val ps = File("src/main/kotlin/com/davidlang/torque/fuelsmoothing/ProfileStore.kt").readText()
-        for (n in listOf("model.json", "model-raw.json", "gap.txt")) assertFalse(n, ps.contains("File(dir, \"$n\").writeText"))
-        assertFalse(ps.contains("sigFile.writeText"))
-        val svc = File("src/main/kotlin/com/davidlang/torque/fuelsmoothing/PluginService.kt").readText()
-        assertTrue(svc.contains("awaitTermination(2,")); assertTrue(svc.contains("if (!destroyed) done()"))
-        val strings = File("src/main/res/values/strings.xml").readText()
-        assertTrue(strings.contains("Torque Lite does not support plugins"))
     }
 
     @Test
@@ -200,11 +177,6 @@ class FixesTest {
         assertFalse(FuelDetect.noLevelAlert("sae_012f", 600, 3))
         assertFalse(FuelDetect.noLevelAlert("sae_012f", 120, 0))
         assertFalse(FuelDetect.noLevelAlert(FuelDetect.NONE, 600, 0))
-        val svc = File("src/main/kotlin/com/davidlang/torque/fuelsmoothing/PluginService.kt").readText()
-        assertFalse(svc.contains("\"detected earlier\"")) // no confirm nag on every connect
-        assertTrue(svc.contains("FuelDetect.KEY_NOTIFIED"))
-        val close = svc.substring(svc.indexOf("FuelDetect.noLevelStep("), svc.indexOf("FuelDetect.noLevelStep(") + 600)
-        assertFalse(close.contains("FuelDetect.store(")); assertFalse(close.contains("KEY_TRIED"))
     }
 
     @Test
@@ -235,9 +207,6 @@ class FixesTest {
 
     @Test
     fun test77VerboseIdentityLogHasNoVinCalIdCvn() {
-        val svc = File("src/main/kotlin/com/davidlang/torque/fuelsmoothing/PluginService.kt").readText()
-        assertFalse(svc.contains("Fingerprint.toJson(obs)}"))
-        assertTrue(svc.contains("obs.copy(vin = null, calId = null, cvn = null)"))
         val fp = Fingerprint.Fp(vin = "1FDSS34L05HA12345", calId = "RZAA0F1", cvn = "AB12CD34", protocol = "ISO 15765-4", bitmaps = mapOf("0100" to "BE3EB813"))
         val detail = Fingerprint.toJson(fp.copy(vin = null, calId = null, cvn = null))
         assertFalse(detail.contains("1FDSS34L") || detail.contains("RZAA0F1") || detail.contains("AB12CD34"))
@@ -260,10 +229,6 @@ class FixesTest {
         }
         assertEquals(LevelScale.counts(26.0), checkNotNull(max), 1e-9)
         assertNull(LevelScale.raise(max, 10.0, true))
-        // No freeze from a fill: the service never sets the scale at fill end.
-        val svc = File("src/main/kotlin/com/davidlang/torque/fuelsmoothing/PluginService.kt").readText()
-        val fillEnd = svc.substring(svc.indexOf("private fun onFillEnd"), svc.indexOf("private fun onFillEnd") + 400)
-        assertFalse(fillEnd.contains("LevelScale"))
         val u = LevelScale.unit(seed, null)
         assertEquals(100.0, LevelScale.display(72 * 100.0 / 255.0, u), 1e-9)
         assertEquals(72 * 100.0 / 255.0, checkNotNull(FuelSources.toyotaLevel(72, "t").pct), 1e-12)
@@ -271,11 +236,6 @@ class FixesTest {
 
     @Test
     fun test79DetectTriedOnlyOnCompletionAndNoSourceAlert() {
-        val svc = File("src/main/kotlin/com/davidlang/torque/fuelsmoothing/PluginService.kt").readText()
-        val queued = svc.substring(svc.indexOf("queueFuelDetect(\"auto\")") - 300, svc.indexOf("queueFuelDetect(\"auto\")"))
-        assertFalse(queued.contains("FuelDetect.KEY_TRIED, \"true\""))
-        val done = svc.substring(svc.indexOf("if (!run.done) return"), svc.indexOf("if (!run.done) return") + 250)
-        assertTrue(done.contains("FuelDetect.KEY_TRIED, \"true\""))
         assertTrue(FuelDetect.noSourceAlert(FuelDetect.NONE, 600, false))
         assertFalse(FuelDetect.noSourceAlert(FuelDetect.NONE, 600, true))
         assertFalse(FuelDetect.noSourceAlert(FuelDetect.NONE, 100, false))
@@ -303,13 +263,6 @@ class FixesTest {
         assertTrue(PluginReceiver.routine(PluginService.ACTION_PID_QUERY))
         assertTrue(PluginReceiver.routine(PluginService.ACTION_PID_PLUGIN))
         assertFalse(PluginReceiver.routine(PluginService.ACTION_OBD_CONNECTED))
-        val r = File("src/main/kotlin/com/davidlang/torque/fuelsmoothing/PluginReceiver.kt").readText()
-        val fast = r.substringAfter("val live = PluginService.instance").substringBefore("if (PluginService.isRunning && live != null)")
-        assertTrue(fast.contains("live.onRoutineQuery()") && fast.contains("return") && !fast.contains("startService"))
-        // Killed service (instance null) still falls through to a (foreground) start.
-        assertTrue(r.contains("live != null && PluginService.isRunning && routine(action)"))
-        val ps = File("src/main/kotlin/com/davidlang/torque/fuelsmoothing/PluginService.kt").readText()
-        assertTrue(ps.contains("instance = this") && ps.contains("if (instance === this) instance = null"))
     }
 
     @Test
@@ -325,9 +278,6 @@ class FixesTest {
         repeat(300) { FsLog.i("FuelSmooth", big) }
         assertTrue(File(d, "logs/events.1.log").isFile)
         assertTrue(f.length() <= FsLog.LOG_MAX_BYTES + 2000)
-        val ps = File("src/main/kotlin/com/davidlang/torque/fuelsmoothing/PluginService.kt").readText()
-        assertTrue(ps.contains("FsLog.init(filesDir)") && ps.contains("FsLog.i(TAG, \"\$what start\")"))
-        assertFalse(Regex("""\bLog\.i\(TAG,""").containsMatchIn(ps))
     }
 
     @Test

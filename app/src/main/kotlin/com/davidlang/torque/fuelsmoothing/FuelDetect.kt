@@ -150,7 +150,10 @@ internal object FuelDetect {
     /** The only writer of fuelSource. "none" is stored unconfirmed. Caller notifies the service. */
     fun store(root: File, pid: String, id: String, confirmed: Boolean) {
         val src = if (id.isBlank() || id == NONE) NONE else id
+        val (storedId, storedConfirmed) = load(root, pid)
+        val sameConfirmed = src == storedId && storedConfirmed && src != NONE
+        val flag = if (sameConfirmed) true else src != NONE && confirmed
         ProfileStore.setProfileField(root, pid, "fuelSource", src)
-        ProfileStore.setProfileField(root, pid, "fuelSourceConfirmed", (src != NONE && confirmed).toString())
+        ProfileStore.setProfileField(root, pid, "fuelSourceConfirmed", flag.toString())
     }
 }

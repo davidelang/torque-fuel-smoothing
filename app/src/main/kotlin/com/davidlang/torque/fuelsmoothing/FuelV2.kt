@@ -60,6 +60,7 @@ internal data class TankPublish(
     val mpgRecent: Double,
     val dte: Double,
     val dteGauge0: Double,
+    val sized: Boolean = true,
 )
 
 /**
@@ -248,10 +249,10 @@ internal object FuelV2 {
 
     /**
      * Prior scale only (the fit's low-weight LAM_PRIOR pulls toward t0/100 per %).
-     * Data first: 100× median ΔF/ΔL on drives spanning ≥ 5%; the user's tank guess
-     * is a seed used only when there is no such data yet; else 30.
+     * Data first: 100× median ΔF/ΔL on drives spanning ≥ 5%; else the user's tank guess.
+     * Null when neither exists. No 30 gal substitute.
      */
-    fun chooseT0(nameplate: Double?, sessions: List<FuelSession>): Double {
+    fun chooseT0(nameplate: Double?, sessions: List<FuelSession>): Double? {
         val ratios = ArrayList<Double>()
         for (s in sessions) {
             val fin = s.sm.indices.filter { s.sm[it].isFinite() }
@@ -270,7 +271,7 @@ internal object FuelV2 {
         }
         if (ratios.isNotEmpty()) return 100.0 * median(ratios.toDoubleArray())
         if (nameplate != null && nameplate > 0.0) return nameplate
-        return 30.0
+        return null
     }
 
     fun fuelSuspect(session: FuelSession, peers: List<FuelSession>): Boolean {

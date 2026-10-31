@@ -132,29 +132,49 @@ class DataTransferProvider : ContentProvider() {
             val ctx = context ?: throw IllegalStateException("datatransfer: provider has no context")
             val dataDir = ctx.filesDir.parentFile ?: throw IllegalStateException("datatransfer: no data dir")
             val status = File(ctx.noBackupFilesDir, "datatransfer/last-import.json")
-            val outcome = if (PluginService.recording) {
-                DataTransfer.importReplace(dataDir, input, true, status)
-            } else {
-                ctx.stopService(Intent(ctx, PluginService::class.java))
-                ProfileStore.DataLock.lock()
-                try {
-                    DataTransfer.importReplace(dataDir, input, PluginService.recording, status)
-                } finally {
-                    ProfileStore.DataLock.unlock()
+            val incoming = File(ctx.noBackupFilesDir, "datatransfer/incoming.tar")
+            incoming.parentFile?.mkdirs()
+            FileOutputStream(incoming).use { input.copyTo(it) }
+            if (PluginService.recording) {
+                val outcome = incoming.inputStream().use { DataTransfer.importReplace(dataDir, it, true, status) }
+                if (!outcome.ok) {
+                    val msg = "datatransfer: ${outcome.reason ?: "import refused"}"
+                    Log.e(TAG, msg)
+                    readEnd.closeWithError(msg)
+                    return
                 }
-            }
-            if (!outcome.ok) {
-                val msg = "datatransfer: ${outcome.reason ?: "import refused"}"
-                Log.e(TAG, msg)
-                readEnd.closeWithError(msg)
+                readEnd.close()
                 return
             }
+            val svc = PluginService.instance
+            val reloaded = svc != null && svc.importLive(dataDir, incoming, status)
+            if (reloaded) {
+                readEnd.close()
+                return
+            }
+            fallbackImport(ctx, dataDir, incoming, status)
             readEnd.close()
             Process.killProcess(Process.myPid())
         } catch (t: Throwable) {
             val msg = reason(t)
             Log.e(TAG, msg, t)
             runCatching { readEnd.closeWithError(msg) }
+        }
+    }
+
+    /** Stop, swap both roots, then the caller kills the process. Status says the service was stopped. */
+    private fun fallbackImport(ctx: android.content.Context, dataDir: File, incoming: File, status: File) {
+        ctx.stopService(Intent(ctx, PluginService::class.java))
+        ProfileStore.DataLock.lock()
+        try {
+            val outcome = incoming.inputStream().use {
+                DataTransfer.importReplace(dataDir, it, PluginService.recording, status, serviceStopped = true)
+            }
+            if (!outcome.ok) {
+                throw IllegalStateException(outcome.reason ?: "import refused")
+            }
+        } finally {
+            ProfileStore.DataLock.unlock()
         }
     }
 

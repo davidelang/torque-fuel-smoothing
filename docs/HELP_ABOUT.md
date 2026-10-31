@@ -13,9 +13,9 @@ Quick start
 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.
 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.
 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.
-6. Tank size (gal or L) is only a starting guess. The learned size replaces it once 10% of the gauge is covered by 2+ drives.
-7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level, Corrected Fuel Level, Fuel Remaining and Plugin DTE. Band and Kalman maps have their own (band)/(kalman) PIDs. After an update, an old Kalman map may be rebuilt from saved drives, with a notice; Kalman gauges use Chunk values until that finishes, or until the next drive is saved when there is nothing to rebuild from.
-8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from Chunk, Band or Kalman (independent of the Gauge map) onto your 012F gauge.
+6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.
+7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.
+8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.
 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.
 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.
 11. All data stays on this phone. No GPS or location is recorded.

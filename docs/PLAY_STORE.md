@@ -11,9 +11,9 @@ Fuel sloshes when you brake, accelerate, corner or park on a slope, so raw readi
 Features:
 • Slosh rejection: the smoothed level changes slowly and ignores short swings.
 • Fuel counted only while the engine runs (RPM above 0 and a fresh, updating flow reading); stale or held values are never counted.
-• Learns your tank from fuel burned vs. gauge movement over several partial tanks. Three gauge maps (Chunk, Band and Kalman) are refit after each drive and fill; you choose which one drives the main gauges, and each also publishes its own PIDs for comparison.
-• Learned tank size: replaces your initial guess once 10% of the gauge has been covered by at least two different drives.
-• Published Torque PIDs: Smoothed Fuel Level, Corrected Fuel Level (linearized %), Fuel Remaining and distance to empty, plus Corrected/Remaining/DTE for the Band and Kalman maps.
+• Learns your tank from fuel burned vs. gauge movement over several partial tanks. Chunk, Band and Kalman fits are refit after each drive and fill, and each publishes its own corrected percent, remaining fuel, distance to empty and tank size.
+• Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.
+• Published Torque PIDs: Smoothed Fuel Level, and for each fit Corrected %, Remaining, distance to empty and tank size. Distance to empty is Remaining times Torque's long-term mpg.
 • Feed back to Torque's stock Fuel Level (012F): Off, Smoothed or Corrected (Chunk, Band or Kalman), so existing gauges show it.
 • Automatic fill detection, including pump pauses.
 • Vehicle profiles tied to the Torque profile, with VIN/ECU fingerprinting: if the connected vehicle doesn't match, the drive is held aside and never learned into the wrong profile until you choose.

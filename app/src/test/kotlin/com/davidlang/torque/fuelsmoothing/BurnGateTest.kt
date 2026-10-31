@@ -107,16 +107,4 @@ class BurnGateTest {
         assertTrue(gap, gap.contains("loggedPct=0.0"))
     }
 
-    @Test
-    fun test20TorqueCapacityIsLitersSeed() {
-        assertEquals(35.0, TankSeed.parseTorqueCapacity("132.4894123")!!, 0.01)
-        assertEquals(15.0, TankSeed.parseTorqueCapacity("56.7811767")!!, 0.01)
-        assertEquals(18.5, TankSeed.parseTorqueCapacity("18.5 gal")!!, 1e-9)
-        assertEquals(70.0 * Units.GAL_PER_LITER, TankSeed.parseTorqueCapacity("70 L")!!, 1e-9)
-        assertNull(TankSeed.parseTorqueCapacity(""))
-        assertNull(TankSeed.parseTorqueCapacity("abc"))
-        assertNull(TankSeed.parseTorqueCapacity("-3"))
-        assertNull(TankSeed.parseTorqueCapacity(null))
-        assertNull(TankSeed.parseLitersOrGal("132.4894123"))
-    }
 }

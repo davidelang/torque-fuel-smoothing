@@ -37,7 +37,7 @@ internal object Pids {
     const val MODE_KALMAN_CORRECTED = "ffd015"
     const val MODE_KALMAN_REMAINING = "ffd016"
     const val MODE_KALMAN_DTE = "ffd017"
-    // Per-map PIDs that never follow the Gauge map (the main Corrected/Remaining/DTE do).
+    // Per-fit PIDs. ffd002–ffd004 are not registered and are not written.
     const val PLUGIN_CHUNK_CORRECTED = "[FuelSmooth] Corrected % (chunk)"
     const val PLUGIN_CHUNK_REMAINING = "[FuelSmooth] Remaining (chunk)"
     const val PLUGIN_CHUNK_DTE = "[FuelSmooth] DTE (chunk)"

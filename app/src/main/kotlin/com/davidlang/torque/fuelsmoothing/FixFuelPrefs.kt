@@ -32,8 +32,6 @@ internal data class FixFuelConfig(
     val showFuelNotification: Boolean = true,
     /** What the plugin feeds back into Torque's Fuel Level (012F). Default = previous behavior (corrected). */
     val feed012f: FeedMode = FeedMode.CORRECTED,
-    /** Which map drives the primary Corrected/Remaining/DTE and the Corrected 012F feed. */
-    val primaryAlgo: MapAlgo = MapAlgo.CHUNK,
     /** Stored values that failed validation: pref key -> raw stored text. Runtime uses defaults for these. */
     val invalid: Map<String, String> = emptyMap(),
 ) {
@@ -76,40 +74,26 @@ internal object FixFuelPrefs {
     const val KEY_SHOW_NOTICE = "show_fuel_notification"
     const val KEY_WRITE_012F = "write_012f"
     const val KEY_FEED_012F = "feed_012f"
-    /** Set once the old single "Corrected" feed has been mapped to the then-selected Gauge map. */
+    /** Set once a stored CORRECTED feed has been kept as Chunk, ignoring primary_algo. */
     const val KEY_FEED_V2 = "feed_012f_v2"
-    const val KEY_PRIMARY_ALGO = "primary_algo"
-
-    fun mapAlgo(stored: String?): MapAlgo = MapAlgo.entries.firstOrNull { it.name == stored } ?: MapAlgo.CHUNK
-
-    /** Primary output: Band or Kalman only when chosen and that model exists; otherwise chunk. */
-    fun <T> primary(algo: MapAlgo, chunk: T, band: T?, kalman: T? = null): T = when {
-        algo == MapAlgo.BAND && band != null -> band
-        algo == MapAlgo.KALMAN && kalman != null -> kalman
-        else -> chunk
-    }
 
     /** Stored mode, else the legacy checkbox (unchecked = OFF, checked/absent = CORRECTED). */
     fun feedMode(stored: String?, legacyChecked: Boolean?): FeedMode =
         FeedMode.entries.firstOrNull { it.name == stored } ?: if (legacyChecked == false) FeedMode.OFF else FeedMode.CORRECTED
 
-    /** One-time migration: the old "Corrected" followed the Gauge map, so it becomes that map's own feed. */
-    fun migrateFeed(mode: FeedMode, algo: MapAlgo): FeedMode = if (mode != FeedMode.CORRECTED) mode else when (algo) {
-        MapAlgo.CHUNK -> FeedMode.CORRECTED
-        MapAlgo.BAND -> FeedMode.CORRECTED_BAND
-        MapAlgo.KALMAN -> FeedMode.CORRECTED_KALMAN
-    }
+    /** A not-yet-migrated CORRECTED is Chunk. primary_algo is not read. */
+    fun migrateFeed(mode: FeedMode): FeedMode = if (mode == FeedMode.CORRECTED) FeedMode.CORRECTED else mode
 
     /**
-     * Value written to 012F, or null for no write. Each Corrected feed uses its own map, independent of the
-     * Gauge map; a Band/Kalman feed falls back to Chunk until that model exists (as the Gauge map does).
+     * Value written to 012F, or null for no write. Band and Kalman use the smoothed input when that map
+     * has no value. Chunk uses its own corrected percent.
      */
     fun feedValue(mode: FeedMode, smoothedPct: Double?, chunkPct: Double?, bandPct: Double?, kalmanPct: Double?): Double? = when (mode) {
         FeedMode.OFF -> null
         FeedMode.SMOOTHED -> smoothedPct?.takeIf { it.isFinite() }
         FeedMode.CORRECTED -> chunkPct?.takeIf { it.isFinite() }
-        FeedMode.CORRECTED_BAND -> (bandPct ?: chunkPct)?.takeIf { it.isFinite() }
-        FeedMode.CORRECTED_KALMAN -> (kalmanPct ?: chunkPct)?.takeIf { it.isFinite() }
+        FeedMode.CORRECTED_BAND -> (bandPct?.takeIf { it.isFinite() } ?: smoothedPct?.takeIf { it.isFinite() })
+        FeedMode.CORRECTED_KALMAN -> (kalmanPct?.takeIf { it.isFinite() } ?: smoothedPct?.takeIf { it.isFinite() })
     }
 
     /** Value written to 012F, or null for no write. */
@@ -193,7 +177,6 @@ internal object FixFuelPrefs {
             val legacy = p.getString(KEY_TANK, "")?.trim().orEmpty()
             if (legacy.isNotEmpty() && tankOk(legacy)) {
                 ProfileStore.setTankEntered(root, pid, legacy)
-                if (p.getBoolean(KEY_ESTIMATED, false)) ProfileStore.setProfileField(root, pid, "tankEstimated", "true")
             }
         }
         val (profTank, profEst) = ProfileStore.tankGuess(root, pid)
@@ -221,11 +204,10 @@ internal object FixFuelPrefs {
             activeTank = normalizeActive(p.getString(KEY_ACTIVE, ACTIVE_TANK1) ?: ACTIVE_TANK1),
             selectPidName = p.getString(KEY_SELECT_PID, "") ?: "",
             showFuelNotification = p.getBoolean(KEY_SHOW_NOTICE, true),
-            primaryAlgo = mapAlgo(p.getString(KEY_PRIMARY_ALGO, null)),
             feed012f = run {
                 val m = feedMode(p.getString(KEY_FEED_012F, null), if (p.contains(KEY_WRITE_012F)) p.getBoolean(KEY_WRITE_012F, true) else null)
                 if (p.getBoolean(KEY_FEED_V2, false)) m else {
-                    val n = migrateFeed(m, mapAlgo(p.getString(KEY_PRIMARY_ALGO, null)))
+                    val n = migrateFeed(m)
                     p.edit().putString(KEY_FEED_012F, n.name).putBoolean(KEY_FEED_V2, true).apply()
                     n
                 }
@@ -246,7 +228,6 @@ internal object FixFuelPrefs {
         selectPidName: String = "",
         showFuelNotification: Boolean = true,
         feed012f: FeedMode = FeedMode.CORRECTED,
-        primaryAlgo: MapAlgo = MapAlgo.CHUNK,
     ) {
         val e = prefs(ctx).edit()
             .putString(KEY_CUSTOM, customName)
@@ -265,7 +246,6 @@ internal object FixFuelPrefs {
             .putBoolean(KEY_SHOW_NOTICE, showFuelNotification)
             .putString(KEY_FEED_012F, feed012f.name)
             .putBoolean(KEY_FEED_V2, true)
-            .putString(KEY_PRIMARY_ALGO, primaryAlgo.name)
             .putBoolean(KEY_WRITE_012F, feed012f != FeedMode.OFF)
         e.apply()
     }
@@ -374,7 +354,7 @@ internal object FixFuelPrefs {
                         ?: o.optDouble("tankGal", Double.NaN).takeIf { it.isFinite() && it > 0.0 },
                     learnedUsable = o.optString("learnedUsable", "").toDoubleOrNull()?.takeIf { it > 0.0 }
                         ?: o.optDouble("learnedUsable", Double.NaN).takeIf { it.isFinite() && it > 0.0 },
-                    tankEstimated = o.optBoolean("estimated", false),
+                    tankEstimated = false.also { o.optBoolean("estimated", false) },
                     sourceStatus = o.optString("sourceStatus", ""),
                 )
             }.distinctBy { it.id }.sortedBy { it.id }
@@ -401,13 +381,6 @@ enum class FeedMode(val label: String) {
     CORRECTED_KALMAN("Corrected % (Kalman)"),
 }
 
-/** Gauge-map algorithm for the primary outputs. */
-enum class MapAlgo(val label: String) {
-    CHUNK("Chunk fit (default)"),
-    BAND("Band fit (smooth curve)"),
-    KALMAN("Kalman fit"),
-}
-
 /** Tank size entry/display unit (per profile, profile.json "tankUnit"). Stored values are always gallons. */
 enum class VolUnit(val label: String, val litersPer: Double) {
     GAL("gal", 3.785411784),
@@ -420,7 +393,7 @@ enum class VolUnit(val label: String, val litersPer: Double) {
         fun of(s: String?): VolUnit = entries.firstOrNull { it.name == s } ?: GAL
         /** Text for the entry field: one decimal, blank when unknown. */
         fun show(gal: Double?, u: VolUnit): String = gal?.takeIf { it.isFinite() && it > 0 }?.let { String.format(java.util.Locale.ROOT, "%.1f", u.fromGal(it)) } ?: ""
-        /** Shown when the tank size is blank: the neutral fallbacks used until drives take over. */
-        const val FALLBACK_HINT = "blank = unknown; fits start from neutral fallbacks (30 gal chunk/raw prior, 25 gal Kalman) until your drives take over"
+        /** Shown when the tank size is blank. */
+        const val FALLBACK_HINT = "blank = no starting size; each fit learns its own."
     }
 }

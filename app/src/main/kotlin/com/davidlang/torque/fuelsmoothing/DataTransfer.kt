@@ -15,6 +15,9 @@ import java.util.TimeZone
 
 internal data class ImportOutcome(val ok: Boolean, val reason: String?)
 
+/** files/ already live. [prefsDir] is the staged shared_prefs tree, not yet applied. */
+internal class StagedFiles(val prefsDir: File, val okJson: String)
+
 /**
  * Export copies files/ and shared_prefs/ under the data lock, then streams a ustar.
  * Import replaces whole roots and does not check manifest contents.
@@ -78,6 +81,7 @@ internal object DataTransfer {
         recording: Boolean,
         statusFile: File,
         rename: (File, File) -> Boolean = { from, to -> from.renameTo(to) },
+        serviceStopped: Boolean = false,
     ): ImportOutcome {
         if (recording) {
             writeStatus(statusFile, errorStatus("recording"))
@@ -85,7 +89,7 @@ internal object DataTransfer {
         }
         var committed = false
         try {
-            swap(dataDir, tar, statusFile, rename)
+            swap(dataDir, tar, statusFile, rename, serviceStopped, filesOnly = false)
             committed = true
             val old = File(dataDir, "datatransfer-old")
             if (old.exists() && !old.deleteRecursively()) throw IOException("datatransfer: cannot delete ${old.path}")
@@ -102,7 +106,36 @@ internal object DataTransfer {
         return ImportOutcome(true, null)
     }
 
-    private fun swap(dataDir: File, tar: InputStream, statusFile: File, rename: (File, File) -> Boolean) {
+    /**
+     * Moves only files/. shared_prefs stays staged for an in-process Editor apply.
+     * Does not write status. Throws before any live rename when the tar has another root.
+     */
+    fun importFilesOnly(
+        dataDir: File,
+        tar: InputStream,
+        rename: (File, File) -> Boolean = { from, to -> from.renameTo(to) },
+    ): StagedFiles {
+        val staged = swap(dataDir, tar, statusFile = null, rename, serviceStopped = false, filesOnly = true)
+        return staged ?: throw IOException("datatransfer: files-only import did not stage prefs")
+    }
+
+    fun writeStatusFile(file: File, text: String) = writeStatus(file, text)
+
+    /** Drops import scratch so a later full swap can run. Live trees are not restored. */
+    fun clearScratch(dataDir: File) {
+        val old = File(dataDir, "datatransfer-old")
+        if (old.exists() && !old.deleteRecursively()) throw IOException("datatransfer: cannot delete ${old.path}")
+        wipe(File(dataDir, "datatransfer-staging"))
+    }
+
+    private fun swap(
+        dataDir: File,
+        tar: InputStream,
+        statusFile: File?,
+        rename: (File, File) -> Boolean,
+        serviceStopped: Boolean,
+        filesOnly: Boolean,
+    ): StagedFiles? {
         if (!dataDir.isDirectory) throw IOException("datatransfer: data dir missing ${dataDir.path}")
         val staging = File(dataDir, "datatransfer-staging")
         val old = File(dataDir, "datatransfer-old")
@@ -135,8 +168,11 @@ internal object DataTransfer {
         val extras = top.filter { it.isDirectory }.map { it.name }
             .filter { it !in NEVER_ROOTS && it !in ALWAYS_ROOTS }
             .sorted()
-        val roots = ALWAYS_ROOTS + extras
-        for (name in roots) {
+        if (filesOnly && extras.isNotEmpty()) {
+            throw IOException("datatransfer: extra root needs restart: ${extras.joinToString()}")
+        }
+        val roots = if (filesOnly) listOf("files") else ALWAYS_ROOTS + extras
+        for (name in if (filesOnly) ALWAYS_ROOTS else roots) {
             val dir = File(staging, name)
             if (!dir.exists() && !dir.mkdirs()) throw IOException("datatransfer: cannot create empty root $name")
         }
@@ -160,7 +196,10 @@ internal object DataTransfer {
             if (back != null) t.addSuppressed(back)
             throw t
         }
-        writeStatus(statusFile, okStatus(manifestText != null, manifestError, mismatches, entryNames))
+        val json = okStatus(manifestText != null, manifestError, mismatches, entryNames, serviceStopped)
+        if (filesOnly) return StagedFiles(File(staging, "shared_prefs"), json)
+        writeStatus(statusFile ?: throw IOException("datatransfer: status file missing"), json)
+        return null
     }
 
     private class Move(val kind: Int, val root: String)
@@ -341,8 +380,10 @@ internal object DataTransfer {
         manifestError: String?,
         mismatches: List<String>,
         entries: List<String>,
+        serviceStopped: Boolean = false,
     ): String {
         val o = JSONObject().put("result", "ok").put("manifest", manifest)
+        if (serviceStopped) o.put("serviceStopped", true)
         if (manifestError != null) o.put("manifestError", manifestError)
         val mm = JSONArray()
         for (line in mismatches) mm.put(line)

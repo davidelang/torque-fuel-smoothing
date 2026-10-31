@@ -268,9 +268,9 @@ internal object ChunkFit {
         return g to active
     }
 
-    fun fit(ps: List<Part>, ch: List<Chunk>, nameplate: Double?, huberK: Double = HUBER_K): Result {
+    fun fit(ps: List<Part>, ch: List<Chunk>, nameplate: Double?, huberK: Double = HUBER_K): Result? {
         val dens0 = ps.lastOrNull()?.dens0 ?: Double.NaN
-        val t0 = if (dens0.isFinite()) 100 * dens0 else (nameplate?.takeIf { it > 0 } ?: 30.0)
+        val t0 = if (dens0.isFinite()) 100 * dens0 else nameplate?.takeIf { it > 0 } ?: return null
         val grp = groups(ch)
         val gUnc = fitInv(grp, t0 / 100.0, huberK)
         val (cons, plats) = epochsOf(ps, ch)

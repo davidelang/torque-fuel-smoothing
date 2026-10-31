@@ -447,25 +447,20 @@ internal object ProfileStore {
         val prevSig = File(dir, ROLLUP_SIG).takeIf { it.isFile }?.readText()
         val sessions = if (raw.isDirectory) FuelV2.loadSessions(raw, exclude) else emptyList()
         val t0 = FuelV2.chooseT0(nameplate, sessions)
-        val fitted = if (sessions.isEmpty()) {
+        val fitted = if (sessions.isEmpty() || t0 == null) {
             null
         } else {
             runCatching { FuelV2.replay(sessions, 1.0, t0) }
-                .onFailure { FsLog.w("FuelSmooth", "replay failed; keeping model.json: ${it.message}") }
+                .onFailure { FsLog.w("FuelSmooth", "replay failed; keeping model-raw.json: ${it.message}") }
                 .getOrNull()
         }
-        // A replay with zero chunks is just the prior; do not let it replace a learned model.
-        val model = fitted?.takeIf { it.chunks > 0 || !File(dir, "model.json").isFile }
-        // The chunk fit (ChunkFit, all stored chunks) is the authority for model.json; the raw replay is
-        // kept in model-raw.json for comparison. Falls back to the raw fit until a chunk group exists.
+        // A replay with zero chunks is just the prior; do not let it replace a previous raw replay.
+        val model = fitted?.takeIf { it.chunks > 0 || !File(dir, "model-raw.json").isFile }
+        // model.json is only the chunk fit. Raw replay stays in model-raw.json. No 0.95×1.07 seed file.
         val chunkFit = chunkUpdate(dir, sessions, nameplate, fitted, null)
         if (model != null) AtomicFile.write(File(dir, "model-raw.json"), model.json)
-        if (chunkFit != null) {
-            writeModelIfChanged(File(dir, "model.json"), chunkFit)
-            BandFit.update(dir)
-        } else if (model != null) {
-            AtomicFile.write(File(dir, "model.json"), model.json)
-        }
+        if (chunkFit != null) writeModelIfChanged(File(dir, "model.json"), chunkFit)
+        BandFit.update(dir)
         Kalman.update(dir, sessions, jumpPct)
         if (model != null) {
             val chunksOut = File(dir, "chunks.jsonl")
@@ -488,15 +483,6 @@ internal object ProfileStore {
                     fillsOut.appendText("{\"sessionId\":${jsonString(s.name)},\"t\":${s.t.first()}}\n")
                 }
             }
-        } else if (!File(dir, "model.json").isFile) {
-            // Seed only. A failed or empty replay must not overwrite a previously learned model.
-            val cap = (if (nameplate != null && nameplate > 0.0) nameplate else t0) * 0.95 * 1.07
-            AtomicFile.write(
-                File(dir, "model.json"),
-                "{\"active\":[],\"capToZero\":$cap,\"chunks\":0,\"edges\":[0.0,95.0],\"g\":[${t0 / 100.0}],\"gUnc\":[${t0 / 100.0}],\"nMin\":28,\"se\":[0.0],\"sigmaQ\":1.1,\"tau\":3.5}",
-            )
-            if (!File(dir, "chunks.jsonl").isFile) File(dir, "chunks.jsonl").writeText("")
-            if (!File(dir, "fills.jsonl").isFile) File(dir, "fills.jsonl").writeText("")
         }
         appendLearned(dir, sessions, model)
         val drives = File(dir, "drives.jsonl")
@@ -582,7 +568,7 @@ internal object ProfileStore {
             val added = Pieces.store(dir, sessions, openName)
             val (pp, pcs) = Pieces.load(dir)
             val (ps, ch) = ChunkFit.fromPieces(pp, pcs)
-            val r = ChunkFit.fit(ps, ch, nameplate)
+            val r = ChunkFit.fit(ps, ch, nameplate) ?: return@runCatching null
             val msg = "fit chunk v95=${"%.2f".format(r.v95)} cap=${"%.2f".format(r.capToZero)} chunks=${r.chunks} groups=${r.groups} " +
                 "newParts=$added active=${r.active}/${r.cons.size} | raw v95=${raw?.let { "%.2f".format(it.v95()) }} " +
                 "cap=${raw?.let { "%.2f".format(it.capToZero) }} authority=${if (r.groups > 0) "chunk" else "raw"}"
@@ -615,17 +601,18 @@ internal object ProfileStore {
         val raw = File(dir, "raw")
         val caps = if (openName != null && openBytes != null) mapOf(openName to openBytes) else emptyMap()
         val sessions = if (raw.isDirectory) FuelV2.loadSessions(raw, caps = caps) else return false
-        val json = chunkUpdate(dir, sessions, nameplate, null, openName) ?: return false
-        writeModelIfChanged(File(dir, "model.json"), json)
+        val json = chunkUpdate(dir, sessions, nameplate, null, openName)
+        if (json != null) writeModelIfChanged(File(dir, "model.json"), json)
         BandFit.update(dir)
         Kalman.update(dir, sessions, jumpPct, openName)
-        return true
+        return json != null
     }
 
     /** Keeps model.json (and its timestamp) unchanged when the refit gives the same result. */
     private fun writeModelIfChanged(f: File, json: String) {
         val strip = { x: String -> x.replace(Regex("\"timestamp\":[0-9]+"), "") }
         if (f.isFile && strip(f.readText()) == strip(json)) return
+        if (!f.isFile) FsLog.i("FuelSmooth", "chunk model was absent before this write")
         AtomicFile.write(f, json)
     }
 

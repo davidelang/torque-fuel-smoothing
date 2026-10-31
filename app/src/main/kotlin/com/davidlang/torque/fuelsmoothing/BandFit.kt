@@ -142,10 +142,12 @@ internal object BandFit {
     }
 
     fun run(ps: List<Pieces.Part>, ch: List<Pieces.Piece>, cached: DoubleArray? = null): Result? {
-        if (ch.size < 2) return null
+        if (ch.isEmpty()) return null
         var best = LAMBDAS[0]; var bestR = Double.POSITIVE_INFINITY
         var lamD = drives(ch); var lamN = ch.size
-        if (reuse(cached, ch)) { best = cached!![0]; bestR = cached[1]; lamD = cached[2].toInt(); lamN = cached[3].toInt() }
+        if (drives(ch) < 2) {
+            best = LAMBDAS[0]
+        } else if (reuse(cached, ch)) { best = cached!![0]; bestR = cached[1]; lamD = cached[2].toInt(); lamN = cached[3].toInt() }
         else for (l in LAMBDAS) { val r = lodo(ch, ps, l); if (r < bestR) { bestR = r; best = l } }
         val (g, act) = fit(ch, ps, best)
         val v95 = vAt(95.0, g)
@@ -188,7 +190,10 @@ internal object BandFit {
         val r = run(ps, ch, cachedLambda(dir)) ?: return@runCatching null
         val f = File(dir, FILE); val js = json(r, System.currentTimeMillis())
         val strip = { x: String -> x.replace(Regex("\"timestamp\":[0-9]+"), "") }
-        if (!f.isFile || strip(f.readText()) != strip(js)) AtomicFile.write(f, js)
+        if (!f.isFile || strip(f.readText()) != strip(js)) {
+            if (!f.isFile) FsLog.i("FuelSmooth", "band model was absent before this write")
+            AtomicFile.write(f, js)
+        }
         runCatching {
             FsLog.i("FuelSmooth", "fit band v95=${"%.2f".format(r.v95)} cap=${"%.2f".format(r.capToZero)} lambda=${r.lambda} lodoRms=${"%.3f".format(r.lodoRms)} chunks=${r.chunks} active=${r.activeCons}")
         }

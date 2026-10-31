@@ -322,3 +322,8 @@
 
 - Approved plan: sandbox/plans/fuel-counter-split-20261030-2125-plan.md
 - Analysis version is 5. A counter drop splits the drive in the loader, and identity queues ProfileStore.rollup.
+
+## 2026-10-31 - Each fuel fit publishes its own map from 1:1
+
+- Approved plan: sandbox/plans/plugin-fixes-rest-20261031-0933-plan.md
+- Each fit publishes its own map from 1:1, the gauge-map PIDs and the learned tank-size write are gone, and import reloads in place.

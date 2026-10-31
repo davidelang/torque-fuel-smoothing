@@ -45,35 +45,4 @@ internal object TankSeed {
         return v * Units.GAL_PER_LITER
     }
 
-    fun probe(t: ITorqueService): Pair<String, Double>? {
-        for (k in KEYS) {
-            val s = runCatching { t.getSettingString(k, "") }.getOrNull()
-            val p = runCatching { t.retrieveProfileData(k) }.getOrNull()
-            FsLog.i(TAG, "tank seed probe $k setting='${s ?: "null"}' profile='${p ?: "null"}'")
-            parseTorqueCapacity(p)?.let { return "retrieveProfileData:$k" to it }
-            parseTorqueCapacity(s)?.let { return "getSettingString:$k" to it }
-        }
-        return null
-    }
-
-    fun loadPersisted(t: ITorqueService): Double? {
-        return parseOwnGallons(runCatching { t.retrieveProfileData(PROFILE_KEY) }.getOrNull())
-    }
-
-    // Nothing is ever written back to Torque (David): the tank size lives in the plugin's profile only.
-
-    fun seed(t: ITorqueService): Double? {
-        val probed = probe(t)
-        if (probed != null) {
-            FsLog.i(TAG, "tank seed gal=${probed.second} from ${probed.first}")
-            return probed.second
-        }
-        val stored = loadPersisted(t)
-        if (stored != null) {
-            FsLog.i(TAG, "tank seed gal=$stored from persisted plugin profile")
-            return stored
-        }
-        FsLog.i(TAG, "tank seed none")
-        return null
-    }
 }

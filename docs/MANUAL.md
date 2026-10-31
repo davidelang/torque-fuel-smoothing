@@ -41,20 +41,13 @@ In Torque, add a display (gauge or digital readout) and pick these from the sens
 | PID | Short name | Unit | Meaning |
 |---|---|---|---|
 | [FuelSmooth] Smoothed Fuel Level | SmFuel | % | Raw gauge reading with slosh removed |
-| [FuelSmooth] Corrected Fuel Level | CorrFuel | % | Linearized percent from the learned tank map (fuel left ÷ usable tank) |
-| [FuelSmooth] Fuel Remaining | GalLeft | gal or L (follows Torque's volume unit) | Estimated fuel left |
-| [FuelSmooth] Plugin DTE | pDTE | mi or km (follows Torque's distance unit) | Distance to empty (experimental) |
-
-The four PIDs above follow the map chosen in **Gauge map** (see below). Each map also publishes its own set, so you can compare them on a dashboard:
-
-| PID | Map |
-|---|---|
-| [FuelSmooth] Corrected % (band) / Remaining (band) / DTE (band) | Band fit |
-| [FuelSmooth] Corrected % (kalman) / Remaining (kalman) / DTE (kalman) | Kalman fit |
+| [FuelSmooth] Corrected % (chunk) / Remaining (chunk) / DTE (chunk) / Tank size (chunk) | CorrChk / GalChk / DTEChk / TankChk | | Chunk fit. Corrected % is 1:1 until that fit has its own model |
+| [FuelSmooth] Corrected % (band) / Remaining (band) / DTE (band) / Tank size (band) | CorrBand / GalBand / DTEBand / TankBand | | Band fit. Remaining, DTE and tank size stay unpublished until that fit has its own size |
+| [FuelSmooth] Corrected % (kalman) / Remaining (kalman) / DTE (kalman) / Tank size (kalman) | CorrKal / GalKal / DTEKal / TankKal | | Kalman fit. Same rule as Band |
 
 Additional tanks publish `[FuelSmooth] Tank<N> Smoothed / Corrected / Remaining / DTE`.
 
-**Distance to empty** = fuel remaining × your recent fuel economy (from Torque's mpg reading over the last part of the drive).
+**Distance to empty** = Remaining gallons times Torque's long-term mpg. A blank or unknown mpg unit means DTE is not written.
 
 Until the plugin has learned enough, the Corrected and Remaining values are rough.
 
@@ -68,9 +61,7 @@ Until the plugin has learned enough, the Corrected and Remaining values are roug
 | Smoothing time τ seconds | 0 – 600 (0 = no extra averaging) | 0 | Extra exponential averaging on top of slosh rejection |
 | Max skew %/s | greater than 0, up to 10 | 0.05 | The most the smoothed level may change per second while driving |
 | Fill jump % | 10 – 100 | 25 | How much the level must jump while stopped to count as a fill. It is set high on purpose, because slosh can exceed 13% |
-| Tank size, current guess | blank or a number above 0, in gal or L (picker next to the field; stored as gallons) | Torque profile capacity | The **current guess** of the tank size. It starts from your Torque vehicle profile's tank capacity (or what you type) and is replaced with the learned size each time analysis runs (at fills and when Torque disconnects from the ECU). "Learned from your drives" appears when it shows the learned value |
-
-| Gauge map | Chunk fit (default) / Band fit (smooth curve) / Kalman fit | Chunk fit | Which learned map drives the Corrected, Remaining and DTE PIDs and the Corrected feed to 012F |
+| Tank size | blank or a number above 0, in gal or L (picker next to the field; stored as gallons) | blank | Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it. Blank means no starting size; each fit learns its own. |
 | Verbose logging | on/off | off | Adds per-second lines to the Android log (for troubleshooting). Off by default |
 
 Invalid entries are shown in red and are not saved.
@@ -103,9 +94,9 @@ Invalid entries are shown in red and are not saved.
 - **Three gauge maps.** All three are refit at the end of each drive and after a fill, saved, and loaded at startup:
   - **Chunk fit** (default): averages the chunks per gauge band, weighting each by fuel covered and noise, with bounded influence so one odd drive can't dominate.
   - **Band fit:** a smooth continuous curve, with its smoothness chosen by leave-one-drive-out testing.
-  - **Kalman fit:** a running estimate of the fuel per 1% of gauge, updated once per drive, that also tracks how many different drives have covered each part of the gauge. After an update, an old Kalman map may be rebuilt from saved drives, with a notice; Kalman gauges use Chunk values until that finishes, or until the next drive is saved when there is nothing to rebuild from.
+  - **Kalman fit:** a running estimate of the fuel per 1% of gauge, updated once per drive, that also tracks how many different drives have covered each part of the gauge. After an update, a notice says that fit reads 1:1 until its refit finishes.
   - Each map's Corrected % = its fuel at the current gauge ÷ its own full-to-empty capacity, so 0% and 100% match the gauge and an overall scale error cancels out.
-- **Tank size.** The tank size you see is a guess until the plugin trusts what it has learned. It starts from Torque's profile capacity if set, otherwise from what you type. Once at least **10% of the gauge has been covered by two or more different drives**, the learned tank size (full to gauge 0, from the Kalman fit) replaces the guess. Before that, the setup page shows the running estimate as *provisional*, with gauge coverage by 1, 2 and 3 drives. You can edit the value; learning continues from it.
+- **Tank size.** Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it. Blank means no starting size; each fit learns its own. Only the Chunk line can show that starting size. Band and Kalman show their own size, or no size yet.
 
 ## Fills
 - **Start.** A fill starts when the level rises at least the *Fill jump %* above the smoothed level while the vehicle is stopped, and stays up for about 20 seconds. A brief sensor glitch is not a fill.
@@ -133,14 +124,11 @@ Invalid entries are shown in red and are not saved.
 
 ## Torque PIDs published
 
-The main four follow the Gauge map; the per-map PIDs never do. A map not built yet is not published (tank size) or falls back to Chunk.
+Each fit publishes its own PIDs. A fit with no model publishes corrected percent as the smoothed percent (1:1) and does not write Remaining, DTE, or Tank size. Chunk may use the tank-size field for those three until it has its own size. A PID that is not written is left alone.
 
 | Name | Short | ID |
 |---|---|---|
 | [FuelSmooth] Smoothed Fuel Level | SmFuel | ffd001 |
-| [FuelSmooth] Corrected Fuel Level (Gauge map) | CorrFuel | ffd002 |
-| [FuelSmooth] Fuel Remaining (Gauge map) | GalLeft | ffd003 |
-| [FuelSmooth] Plugin DTE (Gauge map) | pDTE | ffd004 |
 | [FuelSmooth] Corrected % (chunk) | CorrChk | ffd018 |
 | [FuelSmooth] Remaining (chunk) | GalChk | ffd019 |
 | [FuelSmooth] DTE (chunk) | DTEChk | ffd01a |
