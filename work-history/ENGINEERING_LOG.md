@@ -327,3 +327,7 @@
 
 - Approved plan: sandbox/plans/plugin-fixes-rest-20261031-0933-plan.md
 - Each fit publishes its own map from 1:1, the gauge-map PIDs and the learned tank-size write are gone, and import reloads in place.
+
+## 2026-10-31 - In-place import no longer waits on the main thread
+
+- The in-place import no longer waits on the main thread, so a slow reload is not killed.

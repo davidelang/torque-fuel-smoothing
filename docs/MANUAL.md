@@ -91,11 +91,11 @@ Invalid entries are shown in red and are not saved.
 - Heavy calculations run only **at the end of a drive (ECU disconnect) or after a fill**. During a drive the last saved model is used.
 - After several partial tanks, the map and usable tank size settle. Fills and drives that cover a wide range of the gauge help the most.
 - **Missing levels.** When there is a fuel-flow reading but no valid level (no reply, a glitch, or an untrusted moment), the drive log stores the level as **-1**, never 0. -1 means "missing": it is skipped by every analysis, while the fuel burned is still counted.
-- **Three gauge maps.** All three are refit at the end of each drive and after a fill, saved, and loaded at startup:
+- **Three fits.** All three are refit at the end of each drive and after a fill, saved, and loaded at startup:
   - **Chunk fit** (default): averages the chunks per gauge band, weighting each by fuel covered and noise, with bounded influence so one odd drive can't dominate.
   - **Band fit:** a smooth continuous curve, with its smoothness chosen by leave-one-drive-out testing.
   - **Kalman fit:** a running estimate of the fuel per 1% of gauge, updated once per drive, that also tracks how many different drives have covered each part of the gauge. After an update, a notice says that fit reads 1:1 until its refit finishes.
-  - Each map's Corrected % = its fuel at the current gauge ÷ its own full-to-empty capacity, so 0% and 100% match the gauge and an overall scale error cancels out.
+  - Each fit's Corrected % = its fuel at the current gauge ÷ its own full-to-empty capacity, so 0% and 100% match the gauge and an overall scale error cancels out.
 - **Tank size.** Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it. Blank means no starting size; each fit learns its own. Only the Chunk line can show that starting size. Band and Kalman show their own size, or no size yet.
 
 ## Fills

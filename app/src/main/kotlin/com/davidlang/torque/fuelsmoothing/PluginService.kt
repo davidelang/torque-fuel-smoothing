@@ -176,16 +176,34 @@ class PluginService : Service() {
     /**
      * Primary import: finish queued rollups, swap files/, apply the two prefs files in place.
      * Returns false when that reload cannot be done. The caller then uses the stop-and-kill fallback.
-     * Fallback states: service not running, rollup executor shut down or the sentinel does not finish,
+     * Fallback states: service already destroyed, rollup executor shut down or the sentinel cannot be queued,
      * the archive has a root other than files and shared_prefs, or prefs apply / cache reload throws.
+     * The sentinel wait runs on the caller, not the main thread, and is not timed out: a slow rollup
+     * stays on this path and is not a fallback.
      */
     fun importLive(dataDir: File, tar: File, status: File): Boolean {
         if (destroyed) return false
+        if (!runOnMain { stopPolling(); true }) return false
+        if (!awaitRollupSentinel()) return false
+        if (destroyed) return false
+        return runOnMain { importLiveOnMain(dataDir, tar, status) }
+    }
+
+    /** Runs [block] on the main looper. The caller waits here, so this must not be used for the rollup sentinel. */
+    private fun runOnMain(block: () -> Boolean): Boolean {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            return try {
+                block()
+            } catch (t: Throwable) {
+                FsLog.w(TAG, "import reload failed: ${t.javaClass.simpleName} ${t.message}")
+                false
+            }
+        }
         val done = java.util.concurrent.CountDownLatch(1)
         val ok = booleanArrayOf(false)
         val posted = handler.post {
             try {
-                ok[0] = importLiveOnMain(dataDir, tar, status)
+                ok[0] = block()
             } catch (t: Throwable) {
                 FsLog.w(TAG, "import reload failed: ${t.javaClass.simpleName} ${t.message}")
                 ok[0] = false
@@ -194,13 +212,12 @@ class PluginService : Service() {
             }
         }
         if (!posted) return false
-        if (!done.await(15, java.util.concurrent.TimeUnit.MINUTES)) return false
+        done.await()
         return ok[0]
     }
 
     private fun importLiveOnMain(dataDir: File, tar: File, status: File): Boolean {
         stopPolling()
-        if (!awaitRollupSentinel()) return false
         var moved = false
         ProfileStore.DataLock.lock()
         try {
@@ -230,12 +247,15 @@ class PluginService : Service() {
         return true
     }
 
+    /** Queued rollups finish before this returns. No timeout and no executor shutdown. Not called on the main thread. */
     private fun awaitRollupSentinel(): Boolean {
+        if (Looper.myLooper() == Looper.getMainLooper()) return false
         if (rollupExec.isShutdown) return false
         val latch = java.util.concurrent.CountDownLatch(1)
         val queued = runCatching { rollupExec.execute { latch.countDown() } }.isSuccess
         if (!queued) return false
-        return latch.await(15, java.util.concurrent.TimeUnit.MINUTES)
+        latch.await()
+        return true
     }
 
     private fun applyStagedPrefs(prefsDir: File) {
