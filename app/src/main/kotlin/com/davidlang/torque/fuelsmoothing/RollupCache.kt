@@ -9,11 +9,12 @@ import java.io.File
  */
 internal object RollupCache {
     @Volatile var enabled: Boolean = true
-    private val parsed = HashMap<String, Pair<String, FuelSession?>>()
+    private val parsed = HashMap<String, Pair<String, List<FuelSession>>>()
 
     fun key(f: File) = "${f.length()}:${f.lastModified()}"
 
-    @Synchronized fun session(f: File, parse: (File) -> FuelSession?): FuelSession? {
+    /** Parsed parts of one raw file. A hit returns the stored list and does not call [parse]. */
+    @Synchronized fun session(f: File, parse: (File) -> List<FuelSession>): List<FuelSession> {
         if (!enabled) return parse(f)
         val k = key(f)
         parsed[f.path]?.let { if (it.first == k) return it.second }

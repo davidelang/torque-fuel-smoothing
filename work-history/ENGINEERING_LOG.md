@@ -317,3 +317,8 @@
 - Approved plan: `sandbox/plans/kalman-stale-startup-20261030-0927-plan.md`
 - Pieces.ANALYSIS_VERSION stays 4. The model loader now checks "version". rollup.sig is left as stored.
 - At the identity decision, a Kalman model or state file this version cannot read is renamed aside, the user is told once, and Kalman is refit from that profile's saved drives. Chunk and band stay as they are.
+
+## 2026-10-30 - Split a drive when the fuel counter drops
+
+- Approved plan: sandbox/plans/fuel-counter-split-20261030-2125-plan.md
+- Analysis version is 5. A counter drop splits the drive in the loader, and identity queues ProfileStore.rollup.

@@ -36,7 +36,7 @@ The report is `<repo root>/sandbox/research/endpoint-eval-<YYYYMMDD-HHMM>.md`. D
 
 ## Piece constants
 
-`ANALYSIS_VERSION` bumps when an analysis constant or method changes. The value after these plans is 4.
+`ANALYSIS_VERSION` bumps when an analysis constant or method changes. The value after these plans is 5.
 
 - `MAX_SPAN = 1.0` gauge points
 - `END_MIN_READINGS = 16`

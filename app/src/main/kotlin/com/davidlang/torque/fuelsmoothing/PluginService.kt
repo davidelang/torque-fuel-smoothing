@@ -860,13 +860,13 @@ class PluginService : Service() {
         FsLog.i(TAG, "identity route: write=${quarantineDir?.path ?: target} suggest=${quarantineSuggest}")
         ProfileStore.setActiveId(filesDir, next)
         prefsDirty = true // tank size etc. are per profile
-        // Reconnect already set profileId in onCreate. That path still has to set a stale Kalman file aside.
+        // Reconnect already set profileId in onCreate. Both paths still queue one job per tank.
         if (target == profileId && wasQ == quarantineDir) {
-            rebuildStaleKalman(target)
+            queueIdentityRollups(target)
             return
         }
         profileId = target
-        rebuildStaleKalman(target)
+        queueIdentityRollups(target)
         priorCache.clear()
         for (id in tanks.keys.toList()) tanks[id] = makeRuntime(id)
     }
@@ -905,36 +905,41 @@ class PluginService : Service() {
     }
 
     /**
-     * On the poll thread: set every stale file aside, post one notice, then one Kalman refit per stale tank.
-     * Does not roll up chunk or band, and does not rewrite rollup.sig.
+     * One rollup-executor job per tank directory. The version check runs in the job.
+     * A mismatch calls [ProfileStore.rollup] and stops. A match refits only a stale Kalman file.
+     * The rebuilding notice is posted at most once, and only from that refit.
      */
-    private fun rebuildStaleKalman(target: String) {
-        val stale = ArrayList<Pair<Int, File>>()
+    private fun queueIdentityRollups(target: String) {
+        val noticed = booleanArrayOf(false)
         for ((tank, dir) in kalmanTankDirs(target)) {
-            if (asideStaleKalman(target, tank, dir)) stale.add(tank to dir)
-        }
-        if (stale.isEmpty()) return
-        val who = profileName(target)
-        val text = "Fuel Smoothing found an unreadable Kalman map for $who and is rebuilding it from saved drives. " +
-            "Kalman gauges stay blank until that finishes; Chunk values are used meanwhile. " +
-            "With nothing to rebuild from, they stay blank until the next drive is saved."
-        notifySimple("Kalman map rebuilding", text)
-        FsLog.i(TAG, "kalman map rebuilding notice for $target")
-        for ((tank, dir) in stale) {
-            submitRollup("kalman refit (stale) tank$tank", {
-                ProfileStore.DataLock.lock()
-                try {
-                    val sessions = FuelV2.loadSessions(File(dir, "raw"), openSessions)
-                    if (sessions.isEmpty()) {
-                        FsLog.i(TAG, "kalman refit (stale) tank$tank: no sessions")
-                    } else {
-                        Kalman.update(dir, sessions, cfg.jumpPct, null)
-                        if (Kalman.loadModel(dir) == null) FsLog.w(TAG, "kalman refit (stale) tank$tank failed")
+            submitRollup("identity tank$tank", {
+                if (ProfileStore.versionChanged(dir)) {
+                    ProfileStore.rollup(dir, nameplateFor(tank), cfg.jumpPct, openSessions)
+                } else if (asideStaleKalman(target, tank, dir)) {
+                    if (!noticed[0]) {
+                        noticed[0] = true
+                        val who = profileName(target)
+                        val text = "Fuel Smoothing found an unreadable Kalman map for $who and is rebuilding it from saved drives. " +
+                            "Kalman gauges stay blank until that finishes; Chunk values are used meanwhile. " +
+                            "With nothing to rebuild from, they stay blank until the next drive is saved."
+                        notifySimple("Kalman map rebuilding", text)
+                        FsLog.i(TAG, "kalman map rebuilding notice for $target")
                     }
-                } finally {
-                    ProfileStore.DataLock.unlock()
+                    ProfileStore.DataLock.lock()
+                    try {
+                        val sessions = FuelV2.loadSessions(File(dir, "raw"), openSessions)
+                        if (sessions.isEmpty()) {
+                            FsLog.i(TAG, "kalman refit (stale) tank$tank: no sessions")
+                        } else {
+                            Kalman.update(dir, sessions, cfg.jumpPct, null)
+                            if (Kalman.loadModel(dir) == null) FsLog.w(TAG, "kalman refit (stale) tank$tank failed")
+                        }
+                    } finally {
+                        ProfileStore.DataLock.unlock()
+                    }
                 }
             }) {
+                priorCache.remove(tank)
                 if (tank == 1 && profileId == target) publishTankGuess(1)
             }
         }

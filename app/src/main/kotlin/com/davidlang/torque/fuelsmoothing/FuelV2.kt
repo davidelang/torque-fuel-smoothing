@@ -94,11 +94,15 @@ internal object FuelV2 {
     const val KM_PER_MILE = 1.609344
 
     /** [caps]: session id -> byte length; that file is read only up to its last complete line before it (uncached). */
-    fun loadSessions(dir: File, exclude: Set<String> = emptySet(), caps: Map<String, Long> = emptyMap()): List<FuelSession> =
-        sessionFiles(dir, exclude).mapNotNull { f ->
+    fun loadSessions(dir: File, exclude: Set<String> = emptySet(), caps: Map<String, Long> = emptyMap()): List<FuelSession> {
+        val out = ArrayList<FuelSession>()
+        for (f in sessionFiles(dir, exclude)) {
             val cap = caps[f.name.removeSuffix(".jsonl")]
-            if (cap != null) parseSession(f, cap) else RollupCache.session(f) { parseSession(it) }
+            val parts = if (cap != null) parseSession(f, cap) else RollupCache.session(f) { parseSession(it) }
+            out.addAll(parts)
         }
+        return out
+    }
 
     /** Raw session files in name (time) order, without [exclude] (open sessions, by session id). */
     fun sessionFiles(dir: File, exclude: Set<String> = emptySet()): List<File> =
@@ -115,7 +119,12 @@ internal object FuelV2 {
         return String(buf, 0, end, Charsets.UTF_8).split('\n')
     }
 
-    fun parseSession(file: File, maxBytes: Long? = null): FuelSession? {
+    /**
+     * One session per counter-monotonic part. A finite used more than 1e-9 below the previous finite used
+     * starts a part (that row is its first sample). Parts shorter than 2 samples are omitted. The last
+     * part keeps the file id; earlier parts are `<fileId>~<k>` with k from 1. Raw bytes are not rewritten.
+     */
+    fun parseSession(file: File, maxBytes: Long? = null): List<FuelSession> {
         val t = ArrayList<Double>()
         val raw = ArrayList<Double>()
         val sm = ArrayList<Double>()
@@ -140,18 +149,42 @@ internal object FuelV2 {
                 s.contains("\"fill\":true") || s.contains("\"fill\": true") || s.contains("\"mode\":\"FILL\""),
             )
         }
-        if (t.size < 2) return null
-        return (
-            FuelSession(
-                name = file.name.removeSuffix(".jsonl"),
-                t = t.toDoubleArray(),
-                raw = raw.toDoubleArray(),
-                sm = sm.toDoubleArray(),
-                used = used.toDoubleArray(),
-                spd = spd.toDoubleArray(),
-                fill = fill.toBooleanArray(),
+        val id = file.name.removeSuffix(".jsonl")
+        val start = ArrayList<Int>()
+        start.add(0)
+        var prev = Double.NaN
+        for (i in used.indices) {
+            val u = used[i]
+            if (u.isFinite() && prev.isFinite() && u < prev - 1e-9) {
+                FsLog.i("FuelSmooth", "fuel counter drop $id t=${t[i]} used $prev -> $u")
+                start.add(i)
+            }
+            if (u.isFinite()) prev = u
+        }
+        val tailAt = start.last()
+        val spans = ArrayList<Pair<Int, Int>>()
+        for (k in start.indices) {
+            val a = start[k]
+            val b = if (k + 1 < start.size) start[k + 1] else used.size
+            if (b - a >= 2) spans.add(a to b)
+        }
+        val out = ArrayList<FuelSession>(spans.size)
+        var part = 0
+        for ((a, b) in spans) {
+            val name = if (a == tailAt) id else "$id~${++part}"
+            out.add(
+                FuelSession(
+                    name = name,
+                    t = DoubleArray(b - a) { t[a + it] },
+                    raw = DoubleArray(b - a) { raw[a + it] },
+                    sm = DoubleArray(b - a) { sm[a + it] },
+                    used = DoubleArray(b - a) { used[a + it] },
+                    spd = DoubleArray(b - a) { spd[a + it] },
+                    fill = BooleanArray(b - a) { fill[a + it] },
+                ),
             )
-        )
+        }
+        return out
     }
 
     fun replay(sessions: List<FuelSession>, scale: Double, t0: Double): FuelModel {

@@ -10,7 +10,6 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sign
 import kotlin.math.sqrt
-import org.json.JSONObject
 
 /**
  * Level-from-fuel map (lvfit6). Twenty bins of 5 gauge points; G(L) is cumulative gallons from 0%.
@@ -101,7 +100,9 @@ internal object Kalman {
                 throw IllegalArgumentException("jumpPct $jumpPct outside 10..100")
             }
             fitName = sessions.last().name
-            val built = assemble(dir, sessions, openName, jumpPct)
+            val assembled = assemble(sessions, openName, jumpPct)
+            if (assembled.skippedAll) return load(dir)
+            val built = assembled.built
             if (built.segs.isEmpty()) throw IllegalStateException("no fit segments on $fitName")
             val out = solve(dir, built)
             val state = State(
@@ -313,8 +314,9 @@ internal object Kalman {
     )
     private class Seg(val key: String, val L: DoubleArray, val F: DoubleArray, val se: DoubleArray, val C0: Double, val ep: Int)
     private class Built(val segs: List<Seg>, val first: BooleanArray, val breaks: Int)
+    private class Assembled(val built: Built, val skippedAll: Boolean)
 
-    private fun assemble(dir: File, sessions: List<FuelSession>, openName: String?, jumpPct: Double): Built {
+    private fun assemble(sessions: List<FuelSession>, openName: String?, jumpPct: Double): Assembled {
         val (parts, _) = Pieces.cut(sessions, openName)
         val byDrive = ArrayList<ArrayList<Pieces.Part>>()
         for (p in parts) {
@@ -325,16 +327,24 @@ internal object Kalman {
         }
         val drives = ArrayList<ArrayList<Prt>>()
         var prevRise: DoubleArray? = null
+        var skipped = 0
         for (group in byDrive) {
             val s = group.first().session ?: throw IllegalStateException("raw file missing for drive ${group.first().key.substringBefore('#')}")
             val name = s.name
+            if (group.any { it.fuel < 0.0 }) {
+                warn("kalman skip $name: negative counter fuel on $name")
+                skipped++
+                continue
+            }
+            val rows = sessionRows(s)
+            try {
+                checkFuel(rows, name)
+            } catch (e: IllegalStateException) {
+                warn("kalman skip $name: ${e.message}")
+                skipped++
+                continue
+            }
             fitName = name
-            if (group.any { it.fuel < 0.0 }) throw IllegalStateException("negative counter fuel on $name")
-            val file = File(File(dir, "raw"), "$name.jsonl")
-            if (!file.isFile) throw IllegalStateException("raw file missing for drive $name")
-            val maxT = if (name == openName) group.maxOf { it.t1 } else null
-            val rows = readRows(file, maxT)
-            checkFuel(rows, name)
             val tt = ArrayList<Double>(); val ff = ArrayList<Double>(); val ll = ArrayList<Double>(); val vv = ArrayList<Double>()
             val rL = ArrayList<Double>(); val rV = ArrayList<Double>(); val rT = ArrayList<Double>()
             for (r in rows) {
@@ -355,37 +365,14 @@ internal object Kalman {
         for (d in drives) flat.addAll(d)
         refill(flat, jumpPct)
         collapse(flat)
-        return segments(drives)
+        val skippedAll = byDrive.isNotEmpty() && skipped == byDrive.size
+        return Assembled(segments(drives), skippedAll)
     }
 
-    private fun readRows(file: File, maxT: Double?): List<Row> {
-        val out = ArrayList<Row>()
-        file.bufferedReader().useLines { lines ->
-            for (line in lines) {
-                val s = line.trim()
-                if (s.isEmpty() || !s.contains("\"t\"") || s.contains("\"event\"")) continue
-                val o = try { JSONObject(s) } catch (_: Exception) { continue }
-                if (!o.has("t") || o.has("event")) continue
-                val t = o.getDouble("t") / 1000.0
-                if (maxT != null && t > maxT + 1e-6) continue
-                val l = when {
-                    o.has("rawPct") && !o.isNull("rawPct") -> o.getDouble("rawPct")
-                    o.has("lvl") && !o.isNull("lvl") -> o.getDouble("lvl")
-                    else -> Double.NaN
-                }
-                val f = when {
-                    o.has("fuelUsedGal") && !o.isNull("fuelUsedGal") -> o.getDouble("fuelUsedGal")
-                    o.has("fuelGal") && !o.isNull("fuelGal") -> o.getDouble("fuelGal")
-                    else -> Double.NaN
-                }
-                val v = when {
-                    o.has("speed") && !o.isNull("speed") -> o.getDouble("speed")
-                    o.has("spd") && !o.isNull("spd") -> o.getDouble("spd")
-                    else -> Double.NaN
-                }
-                out.add(Row(t, f, l, v, o.optBoolean("fill", false) || o.optString("mode") == "FILL"))
-            }
-        }
+    /** Rows already on the session. [FuelSession.t] is seconds; the raw file is not opened. */
+    private fun sessionRows(s: FuelSession): List<Row> {
+        val out = ArrayList<Row>(s.t.size)
+        for (i in s.t.indices) out.add(Row(s.t[i], s.used[i], s.raw[i], s.spd[i], s.fill[i]))
         return out
     }
 

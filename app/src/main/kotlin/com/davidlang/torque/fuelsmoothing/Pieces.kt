@@ -50,7 +50,7 @@ internal object Pieces {
     const val SE_TARGET = 0.7
     const val FIT_WEAK = true
     val ENDPOINT = EndpointMethod.PIECE_FIT
-    const val ANALYSIS_VERSION = 4
+    const val ANALYSIS_VERSION = 5
 
     enum class Side { START, END }
 
