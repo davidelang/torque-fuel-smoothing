@@ -261,22 +261,41 @@ internal object Pieces {
         if (nb <= 0) throw IllegalStateException("blockMedians nb=$nb on ${part.key}")
         val trust = trusted(s)
         val idx = (part.a until part.b).filter { trust[it] }.toIntArray()
-        val cnt = if (idx.size >= nb) (idx.size - nb) / nb + 1 else 0
+        val cnt = idx.size / nb
         val se = 1.25 * part.sigma * sqrt(2.0 * part.tau / nb)
         val out = ArrayList<DoubleArray>(cnt)
         for (b in 0 until cnt) {
-            val ii = idx.copyOfRange(b * nb, b * nb + nb)
+            // The last block takes the leftover samples at the end of the part.
+            val all = idx.copyOfRange(b * nb, if (b == cnt - 1) idx.size else b * nb + nb)
+            val ii = usableRun(s.t, all)
             out.add(
                 doubleArrayOf(
-                    Stats.med(DoubleArray(nb) { s.t[ii[it]] }),
-                    Stats.med(DoubleArray(nb) { s.raw[ii[it]] }),
-                    Stats.med(DoubleArray(nb) { s.used[ii[it]] - part.fStart }),
+                    Stats.med(DoubleArray(ii.size) { s.t[ii[it]] }),
+                    Stats.med(DoubleArray(ii.size) { s.raw[ii[it]] }),
+                    Stats.med(DoubleArray(ii.size) { s.used[ii[it]] - part.fStart }),
                     se,
                 ),
             )
         }
         return out
     }
+
+    /**
+     * A block extends across excluded stretches (trusted samples more than [BLOCK_GAP_S] apart) to keep its
+     * sample count; its point comes from its largest usable run, so it never sits inside an excluded stretch.
+     */
+    private fun usableRun(t: DoubleArray, ii: IntArray): IntArray {
+        var bestA = 0; var bestB = 0; var a = 0
+        for (k in 1..ii.size) {
+            if (k == ii.size || t[ii[k]] - t[ii[k - 1]] > BLOCK_GAP_S) {
+                if (k - a > bestB - bestA) { bestA = a; bestB = k }
+                a = k
+            }
+        }
+        return ii.copyOfRange(bestA, bestB)
+    }
+
+    private const val BLOCK_GAP_S = 10.0
 
     /** Today's ChunkFit.epochs, grouped by [Piece.part] (several pieces share one part). */
     fun epochs(ps: List<Part>, pieces: List<Piece>): Pair<List<DoubleArray>, List<DoubleArray>> {

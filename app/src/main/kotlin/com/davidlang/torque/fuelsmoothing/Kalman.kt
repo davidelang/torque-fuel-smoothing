@@ -48,7 +48,8 @@ internal object Kalman {
     private const val MINOFF = 0.5
     private const val K2 = 2.5
     private const val HOLD = 60.0
-    private const val LM_ITERS = 80
+    private const val LM_ITERS = 200
+    private const val COST_STOP = 1e-10
     private val LN_033 = ln(0.33)
     private val BAND_EDGES = doubleArrayOf(0.0, 5.0, 10.0, 20.0, 40.0, 60.0, 80.0, 90.0, 95.0, 101.0)
     private val BAND_SIG = doubleArrayOf(2.21, 2.17, 1.75, 1.89, 1.85, 2.00, 2.17, 2.19, 0.75)
@@ -420,7 +421,10 @@ internal object Kalman {
                 if (d > HI_C) d = HI_C
                 x.add(d)
             }
-            if (x.size < 5) throw IllegalStateException("block without raw samples: ${part.key}")
+            if (x.size < 5) {
+                warn("kalman skip ${part.key}: block without raw samples")
+                continue
+            }
             var nW = 0; var nF = 0
             for (i in idx) {
                 if (abs((f[i] - part.fStart) - bf) > 0.05) continue
@@ -760,15 +764,35 @@ internal object Kalman {
         return Solved(q, z, o, g, g98, sd98, iters, System.currentTimeMillis() - t0, stop)
     }
 
+    /**
+     * Starts from the saved map even when segments were added or removed. Segments whose key and fill
+     * flag match keep their saved z and o; any other segment gets the z the cold start would give it,
+     * computed from the saved map, and o = 0.
+     */
     private fun warmStart(dir: File, prob: Prob, segs: List<Seg>): DoubleArray? {
         val st = load(dir) ?: return null
-        if (st.q.size != NF || st.segs.size != segs.size) return null
-        for (j in segs.indices) {
-            if (st.segs[j].key != segs[j].key || st.segs[j].first != prob.first[j]) return null
+        if (st.q.size != NF) return null
+        val old = HashMap<String, Int>()
+        for (j in st.segs.indices) old[st.segs[j].key] = j
+        val gKnot = gk(full(st.q))
+        val k = DoubleArray(prob.ns)
+        val cnt = IntArray(prob.ns)
+        for (i in 0 until prob.n) {
+            val j = prob.seg[i]
+            k[j] += interpE(prob.L[i], gKnot) + prob.F[i]
+            cnt[j]++
         }
+        for (j in 0 until prob.ns) k[j] /= cnt[j]
         val p = DoubleArray(NF + 2 * prob.ns)
         for (i in 0 until NF) p[i] = st.q[i]
-        for (j in segs.indices) { p[NF + j] = st.segs[j].z; p[NF + prob.ns + j] = st.segs[j].o }
+        for (j in segs.indices) {
+            val m = old[segs[j].key]?.let { st.segs[it] }
+            if (m != null && m.first == prob.first[j]) {
+                p[NF + j] = m.z; p[NF + prob.ns + j] = m.o
+            } else {
+                p[NF + j] = if (prob.first[j]) k[j] else k[j - 1] - (prob.C0[j] - prob.C0[j - 1]) - k[j]
+            }
+        }
         return p
     }
 
@@ -882,10 +906,10 @@ internal object Kalman {
         return r.toDoubleArray()
     }
 
-    /** A warm stall may return. Every other stall, and LM_ITERS, still throw. */
+    /** A warm stall may return. Every other stall still throws. */
     private fun coldRetry(e: Exception): Boolean {
         val m = e.message ?: return false
-        return m.startsWith("non-finite residual") || m.startsWith("non-finite cost") || m.startsWith("LM_ITERS")
+        return m.startsWith("non-finite residual") || m.startsWith("non-finite cost")
     }
 
     private fun lm(prob: Prob, p0: DoubleArray, lv4: Boolean, label: String, acceptStall: Boolean): Triple<DoubleArray, Int, String> {
@@ -921,6 +945,7 @@ internal object Kalman {
                 var gnorm = 0.0
                 for (c in 0 until n) gnorm = max(gnorm, abs(jtr[c]) / scale[c])
                 if (gnorm < 1e-6) { done = true; stop = "grad"; break }
+                val oldCost = cost
                 var step = Double.POSITIVE_INFINITY
                 var improved = false
                 for (inner in 0 until 12) {
@@ -941,7 +966,8 @@ internal object Kalman {
                         break
                     } else lambda = min(lambda * 8.0, 1e12)
                 }
-                if (improved && step < 1e-8) { done = true; stop = "step" }
+                if (improved && step < 1e-8) { done = true; stop = "step"; break }
+                if (improved && (oldCost - cost) / oldCost < COST_STOP) { done = true; stop = "cost"; break }
                 if (!improved && lambda >= 1e12) {
                     if (acceptStall) { done = true; stop = "stall"; break }
                     throw IllegalStateException("fit did not converge on $fitName")
