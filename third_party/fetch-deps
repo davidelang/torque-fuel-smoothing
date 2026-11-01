@@ -244,14 +244,15 @@ PY
 # Optional TOML key: prints the value, or nothing when the key is absent (exit 3 of
 # pin_get). An unreadable or unparsable pin is an error, never "absent".
 pin_get_opt() {
-  local file="$1" key="$2" out rc
+  local file="$1" key="$2" out rc=0
   [[ "$file" == *.toml ]] || { echo "fetch-deps: pin_get_opt needs a .toml pin, got $file" >&2; return 2; }
   [[ -r "$file" ]] || { echo "fetch-deps: cannot read $file" >&2; return 2; }
-  if out="$(pin_get "$file" "$key")"; then
+  # rc from the assignment itself: after 'if …; fi' $? is 0, which hid every failure.
+  out="$(pin_get "$file" "$key")" || rc=$?
+  if [[ "$rc" -eq 0 ]]; then
     printf '%s\n' "$out"
     return 0
   fi
-  rc=$?
   [[ "$rc" -eq 3 ]] && return 0
   echo "fetch-deps: reading $key from $file failed (exit $rc)" >&2
   return "$rc"
@@ -601,7 +602,8 @@ fetch_one_source() {
         cp -a "$resolved" "$dest"
         ;;
       https://*|http://*)
-        src_tmp="$(mktemp)"
+        # Download beside the destination (same dir, so mv is a rename); never /tmp.
+        src_tmp="$(mktemp "$(dirname "$dest")/.$(basename "$dest").download.XXXXXX")" || { echo "    FAIL: cannot create a temp file beside $dest" >&2; return 1; }
         echo "    source fetch $url → $relpath"
         if command -v curl >/dev/null 2>&1; then
           if ! curl -fsSL --proto '=https,http' --proto-redir '=https,http' -o "$src_tmp" "$url"; then

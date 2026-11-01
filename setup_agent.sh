@@ -1,8 +1,8 @@
 #!/bin/bash
 # setup_agent.sh: Automate creation of agent worktrees
 # Usage (from orchestration root):
-#   ./setup_agent.sh [--force] branch-name
-#   source ./setup_agent.sh [--force] branch-name   # same end state
+#   ./setup_agent.sh [-f|--force] branch-name
+#   source ./setup_agent.sh [-f|--force] branch-name   # same end state
 # --force: overwrite dest tracked seed files that differ from orch.
 #
 # On success: exec a new interactive shell in the new worktree with project
@@ -15,25 +15,42 @@
 
 SETUP_FORCE=0
 BRANCH_NAME=""
-while [ $# -gt 0 ]; do
+_setup_usage() {
+    echo "Usage: ./setup_agent.sh [-f|--force] branch-name"
+    echo "  -f, --force  overwrite dest seed files that differ from orch"
+    echo "  -h, --help   print this usage and exit"
+}
+if ! parsed="$(getopt -o hf -l help,force -- "$@")"; then
+    if [ "${BASH_SOURCE[0]}" != "$0" ]; then
+        return 1
+    fi
+    exit 1
+fi
+eval set -- "$parsed"
+while true; do
     case "$1" in
-        -f|--force) SETUP_FORCE=1; shift ;;
         -h|--help)
-            echo "Usage: ./setup_agent.sh [--force] branch-name"
-            echo "  --force  overwrite dest seed files that differ from orch"
-            return 1 2>/dev/null || exit 1
-            ;;
-        *)
-            if [ -z "$BRANCH_NAME" ]; then
-                BRANCH_NAME="$1"
-            else
-                echo "Error: unexpected argument: $1"
-                return 1 2>/dev/null || exit 1
+            _setup_usage
+            if [ "${BASH_SOURCE[0]}" != "$0" ]; then
+                return 0
             fi
-            shift
+            exit 0
+            ;;
+        -f|--force) SETUP_FORCE=1; shift ;;
+        --) shift; break ;;
+        *)
+            echo "Error: unexpected argument: $1"
+            return 1 2>/dev/null || exit 1
             ;;
     esac
 done
+if [ $# -gt 1 ]; then
+    echo "Error: unexpected argument: $2"
+    return 1 2>/dev/null || exit 1
+fi
+if [ $# -eq 1 ]; then
+    BRANCH_NAME="$1"
+fi
 
 if [ -z "$BRANCH_NAME" ]; then
     echo "Usage: source ./setup_agent.sh [--force] branch-name   # or: ./setup_agent.sh [--force] branch-name"
@@ -315,7 +332,8 @@ re_smudge_stamped_files() {
     if ! git cat-file -e "HEAD:$f" 2>/dev/null; then
       continue
     fi
-    tmp="$(mktemp)"
+    # Beside the file it replaces (same directory, so mv is a rename); never /tmp.
+    tmp="$(mktemp "$(dirname "$f")/.$(basename "$f").smudge.XXXXXX")" || { echo "Error: cannot create a temp file next to $f"; return 1; }
     if ! git show "HEAD:$f" | bash ./filter-apply-config > "$tmp"; then
       echo "Error: manual smudge failed for $f"
       rm -f "$tmp"
