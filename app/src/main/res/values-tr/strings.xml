@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">Bahşişler Play Store sürümündedir</string>
+    <string name="help_body">Hızlı başlangıç\n
+1. Torque Pro uygulamasını kurun (ücretli sürüm; Torque Lite eklentileri desteklemez) ve OBD-II adaptörünü eşleştirin.\n
+2. Bu eklentiyi Torque → Ayarlar → Eklentiler yolundan etkinleştirin.\n
+3. Bildirimlere izin verin ve pil kullanımını Kısıtlanmamış yapın; böylece Torque bu eklentiyi arka planda başlatabilir.\n
+4. Torque içinde sürdüğünüz aracın profilini seçin. Veriler Torque profiline göre tutulur ve aracın VIN/ECU kimliğiyle karşılaştırılır.\n
+5. Yeni bir profilde yakıt kaynağı bağlanınca bulunur; sorulursa gösterge panelindeki göstergiyle karşılaştırın ve Onayla öğesine dokunun. Onayla, kurulum sayfasında ve bildirimdedir. Aşağıdan da seçebilirsiniz.\n
+6. Depo boyutu, Chunk uydurması kendi boyutunu öğrenene kadar başlangıç boyutudur. Eklenti bunu hiç değiştirmez; her uydurmanın öğrendiği boyut altında gösterilir.\n
+7. Torque içinde [FuelSmooth] Smoothed Fuel Level ve her uydurma için Corrected %, Remaining, DTE ve Tank size göstergeleri ekleyin. DTE, Remaining ile Torque uzun dönem mpg değerinin çarpımıdır. Yeniden uydurma sırasında bir uyarı, uydurma bitene kadar okumanın 1:1 olduğunu söyler.\n
+8. Yakıt seviyesini Torque uygulamasına geri verin: Kapalı, yumuşatılmış ya da Chunk, Band veya Kalman uydurmasından düzeltilmiş değer, 012F göstergenize.\n
+9. Yakıt yalnızca motor çalışırken sayılır. Eklenti yalnızca Torque ECU ile bağlıyken çalışır.\n
+10. Sürmeye ve depo doldurmaya devam edin; doğruluk birkaç kısmi depo boyunca artar. Yanlış araç profili? bildirimi çıkarsa bu sürüşle ne yapılacağını seçin.\n
+11. Tüm veriler bu telefonda kalır. GPS veya konum kaydedilmez.</string>
+    <string name="about_body">%1$s\nSürüm %2$s (%3$s)\nTorque Pro için bir eklenti. Torque veya Ian Hawkins ile bağlantılı değildir.\nTüm veriler bu telefonda kalır; GPS veya konum kaydedilmez.\n\nLisans\nCopyright David Lang. Tüm hakları saklıdır.</string>
+    <string name="open_source_notices">Açık kaynak kitaplıklar\nBu uygulama aşağıdaki kitaplıkları kullanır. Lisansları yukarıdaki telif hakkından ayrıdır.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), Play Billing gerektirir\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">Tam kılavuz (çevrimiçi)</string>
+    <string name="show_fuel_notification">Bildirimde yakıt seviyesini göster</string>
+    <string name="write_012f">Yakıt seviyesini Torque uygulamasına geri ver (012F üzerine yazar)</string>
+    <string name="running_quiet">Fuel Smoothing çalışıyor</string>
+    <string name="tap_to_start">Fuel Smoothing uygulamasını başlatmak için dokunun</string>
+    <string name="tap_to_start_text">Pilden veya arka plandan başlatma reddedildi. Eklentinin Torque ile çalışması için bir kez açın.</string>
+    <string name="tank2_help">Gerektiğinde ek depolar ekleyin (fabrika deposu 1 her zaman kalır). Vericileri PCM FLI ucuna bağlamayın (sahte dolum). Her ek deponun kendi Torque ek PID değeri olmalıdır (MCU Mode 22, benzersiz ad — 012F veya Ford 16C1 değil). Select-PID değeri 1 tabanlı depo kimliğidir. Gal/hr yalnızca etkin depoya yazılır.</string>
+    <string name="tap_start_channel">Başlatmak için dokunun</string>
+    <string name="tank_size_info">Depo boyutu, Chunk uydurması kendi boyutunu öğrenene kadar başlangıç boyutudur. Eklenti bunu hiç değiştirmez; her uydurmanın öğrendiği boyut altında gösterilir.</string>
+    <string name="feed_012f_info">Mevcut göstergelerin göstermesi için Torque stok Fuel Level (012F) üzerine bir değer yazar: Kapalı, yumuşatılmış ya da Chunk, Band veya Kalman uydurmasından düzeltilmiş. Henüz kurulmamış bir uydurma yumuşatılmış seviyeyi yazar.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">henüz boyut yok</string>
+    <string name="size_none_sd">henüz boyut yok ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">Yardım</string>
+    <string name="about">Hakkında</string>
+    <string name="need_torque">Torque Pro gerekir (ücretli). Torque Lite eklentileri desteklemez.</string>
+    <string name="get_torque">Torque Pro edinin</string>
+    <string name="privacy">Gizlilik</string>
+    <string name="send_feedback">Geri bildirim gönder</string>
+    <string name="tip">Bahşiş</string>
+    <string name="thanks">Teşekkürler</string>
+    <string name="close">Kapat</string>
+    <string name="ok">Tamam</string>
+    <string name="detect">Algıla</string>
+    <string name="confirm">Onayla</string>
+    <string name="save_pin">Sabitlemeyi kaydet</string>
+    <string name="add_tank">Ek depo ekle</string>
+    <string name="remove">Kaldır</string>
+    <string name="details">Ayrıntılar</string>
+    <string name="verbose_logging">Ayrıntılı günlük (hata ayıklama; saniyede satırlar)</string>
+    <string name="profile_name">Profil adı</string>
+    <string name="profile_name_info">Bu araç profilinin adı. Her Torque araç profilinin kendi eklenti profili, verisi ve öğrenilmiş haritaları vardır.</string>
+    <string name="make">Marka</string>
+    <string name="make_info">Araç markası (ör. Ford). Yalnızca algılamanın hangi markaya özgü yakıt PID değerlerini deneyebileceğini seçmek için kullanılır.</string>
+    <string name="fuel_source">Yakıt kaynağı</string>
+    <string name="fuel_source_info">Ham yakıt seviyesinin geldiği yer. Algıla (ECU bağlı olmalıdır) adayları salt okunur dener ve iki kaynak uyuşmazsa onay ister. Onayla, kurulum sayfasında ve bildirimdedir. Yok = sonraki bağlantıda algıla.</string>
+    <string name="custom_long_name">Özel uzun ad</string>
+    <string name="custom_long_name_info">Yalnızca “Uzun ada göre Torque ek PID” kaynağı için: seviyeyi bildiren Torque PID değerinin tam uzun adı.</string>
+    <string name="tank_size">Depo boyutu</string>
+    <string name="tank_hint">boş = başlangıç boyutu yok; her uydurma kendi boyutunu öğrenir.</string>
+    <string name="smoothing_tau">Yumuşatma τ saniye</string>
+    <string name="smoothing_tau_info">Yumuşatma süzgecinin zaman sabiti (0 = yumuşatma yok).</string>
+    <string name="max_skew" formatted="false">Azami eğiklik %/s</string>
+    <string name="max_skew_info">Yumuşatılmış seviyenin saniyede izleyebileceği en büyük değişim; bunun üstündeki çalkantı yok sayılır.</string>
+    <string name="fill_jump" formatted="false">Dolum sıçraması %</string>
+    <string name="fill_jump_info">Dururken dolum sayılan seviye yükselişi.</string>
+    <string name="odometer">Kilometre sayacı mil</string>
+    <string name="odometer_info">İsteğe bağlı: kilometre sayacı değerini girin ve bu profilin mesafesini sabitlemek için Sabitlemeyi kaydet öğesine dokunun.</string>
+    <string name="additional_tanks">Ek depolar</string>
+    <string name="active_tank">Etkin depo</string>
+    <string name="active_tank_info">Yakıt tüketiminin (gal/hr) yazıldığı depo. PID’den: bir Torque PID seçer (1 tabanlı depo kimliği).</string>
+    <string name="select_pid">Select-PID uzun adı</string>
+    <string name="select_pid_info">Yalnızca Etkin depo = PID’den iken: değeri depo kimliği olan Torque PID uzun adı.</string>
+    <string name="tank_n">Depo %1$d</string>
+    <string name="tank_n_source">Depo %1$d yakıt kaynağı</string>
+    <string name="tank_n_custom">Depo %1$d özel uzun adı (ör. [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">Depo %1$d galon</string>
+    <string name="from_pid">PID’den</string>
+    <string name="unconfirmed"> (onaylanmadı)</string>
+    <string name="ecu_connected"> · ECU bağlı</string>
+    <string name="tank_unknown">depo ?</string>
+    <string name="about_field">Yaklaşık %1$s</string>
+    <string name="err_tau">0 ile %1$s s</string>
+    <string name="err_skew">0 üstü, en çok %1$s %%/s</string>
+    <string name="err_jump">%1$s ile %2$s %%</string>
+    <string name="err_tank">boş veya 0’dan büyük bir sayı</string>
+    <string name="err_stored">kayıtlı değer aralık dışında</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">Yumuşatılmış %</string>
+    <string name="axis_error" formatted="false">Hata (%)</string>
+    <string name="feed_off">Kapalı</string>
+    <string name="feed_smoothed" formatted="false">Yumuşatılmış %</string>
+    <string name="feed_corrected_chunk" formatted="false">Düzeltilmiş % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Düzeltilmiş % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Düzeltilmiş % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">Henüz yok (bağlanınca Algıla)</string>
+    <string name="src_sae_012f">SAE 012F Fuel Tank Level</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler Fuel Level Average</string>
+    <string name="src_toyota_2129">Toyota cluster 2129 (yarım litre sayaçları)</string>
+    <string name="src_custom_name">Uzun ada göre Torque ek PID</string>
+    <string name="vehicle_default">Araç 1</string>
+    <string name="vehicle_dated">Araç %1$s</string>
+    <string name="binding_torque">Torque uygulamasına bağlanılıyor…</string>
+    <string name="status_waiting">Yakıt kaynağı bekleniyor</string>
+    <string name="status_raw">ham %1$.1f%%</string>
+    <string name="status_sess"> sürüş %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing sessiz</string>
+    <string name="map_refit_title">Harita yeniden uyduruluyor</string>
+    <string name="map_refit_body">Fuel Smoothing, %1$s için bir haritayı yeniden uyduruyor. Bu uydurma, yeniden uydurma bitene kadar 1:1 okur.</string>
+    <string name="no_source_title">Yakıt seviyesi kaynağı ayarlı değil</string>
+    <string name="no_source_body">Fuel Smoothing, %1$s için yakıt seviyesi kaynağına sahip değil. Kurulum sayfasını açıp Algıla öğesine dokunun veya bir kaynak seçin.</string>
+    <string name="no_level_title">Bu sürüşte yakıt seviyesi yok</string>
+    <string name="no_level_body">%1$s, %2$s için kullanılabilir bir seviye vermedi. Adaptör bağlantısını kontrol edin veya kurulum sayfasında Algıla çalıştırın.</string>
+    <string name="source_found_title">Yakıt seviyesi kaynağı bulundu</string>
+    <string name="source_found_body">%1$s, %2$s için kullanılıyor (%3$s).</string>
+    <string name="source_missing_title">Yakıt seviyesi kaynağı bulunamadı</string>
+    <string name="source_missing_body">Fuel Smoothing kurulumunu açıp bir kaynak seçin (veya PID değerini Torque içine ekleyin), ardından Algıla öğesine dokunun.</string>
+    <string name="confirm_source_title">Yakıt seviyesi kaynağını onaylayın</string>
+    <string name="confirm_source_body">%1$s algılandı, okuma %2$.0f %% (%3$s). Gösterge panelindeki göstergiyle eşleştiğini kontrol edin, ardından Onayla öğesine dokunun. Onayla, kurulum sayfasında ve bildirimdedir (%4$s).</string>
+    <string name="confirm_source_body_nolevel">%1$s, %2$s için algılandı. Gösterge panelindeki göstergiyle eşleştiğini kontrol edin, ardından Onayla öğesine dokunun. Onayla, kurulum sayfasında ve bildirimdedir (%3$s).</string>
+    <string name="recording_title">%1$s konumuna kaydediliyor</string>
+    <string name="recording_body">Bu araç %1$s (%2$s), ancak Torque profili “%3$s”. Veriler %1$s konumuna gider; Torque uygulamasını açıp profil değiştirmek için dokunun.</string>
+    <string name="wrong_vehicle_title">Yanlış araç profili?</string>
+    <string name="wrong_suggest_profile">Torque profili “%1$s”</string>
+    <string name="wrong_suggest_new">yeni bir araç profili</string>
+    <string name="wrong_vehicle_body">“%1$s” Torque profili bu araçla eşleşmiyor (%2$s). Öneri: %3$s. Saklamazsanız veriler tutulur ve sürüş sonunda atılır.</string>
+    <string name="keeping_title">Sürüş verileri saklanıyor</string>
+    <string name="keeping_body">Bu sürüş %1$s konumuna kaydedilecek. Torque eklenti API’si Torque profilleri oluşturamaz veya değiştiremez: Torque içinde “%2$s” adlı bir araç profili oluşturun veya seçin.</string>
+    <string name="action_new_profile">Yeni profil oluştur</string>
+    <string name="action_use">%1$s kullan</string>
+</resources>

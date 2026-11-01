@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">Maslahatlar Play Store versiyasida</string>
+    <string name="help_body">Tez boshlash\n
+1. Torque Pro o‘rnating (pullik versiya; Torque Lite plaginlarni qo‘llab-quvvatlamaydi) va OBD-II adapterini juftlang.\n
+2. Bu plaginni Torque → Sozlamalar → Plugins ichida yoqing.\n
+3. Bildirishnomalarga ruxsat bering va batareya sarfini Cheklovsiz qiling, shunda Torque bu plaginni fonda ishga tushira oladi.\n
+4. Torque ichida haydayotgan avtomobil profilini tanlang. Ma’lumot har bir Torque profili bo‘yicha saqlanadi va avtomobilning VIN/ECU identifikatori bilan tekshiriladi.\n
+5. Yangi profilda yoqilg‘i manbai ulanganida aniqlanadi; so‘ralsa, uni panel ko‘rsatkichi bilan solishtiring va Tasdiqlash tugmasini bosing. Tasdiqlash sozlash sahifasida va bildirishnomada. Uni pastdan ham tanlashingiz mumkin.\n
+6. Bak o‘lchami Chunk moslashuvining boshlang‘ich o‘lchami, u o‘zinikini o‘rganmaguncha. Plagin uni hech qachon o‘zgartirmaydi; har bir moslashuvning o‘rgangan o‘lchami uning ostida ko‘rsatiladi.\n
+7. Torque ichida [FuelSmooth] Smoothed Fuel Level va har bir moslashuvning Corrected %, Remaining, DTE hamda Tank size ko‘rsatkichlarini qo‘shing. DTE — Remaining ning Torque uzoq muddatli mpg ga ko‘paytmasi. Qayta moslashuv bildirishnomasi o‘sha moslashuv qayta moslashuv tugaguncha 1:1 o‘qiydi deb aytadi.\n
+8. Yoqilg‘i darajasini Torque ga qaytaring: O‘chiq, tekislangan yoki Chunk, Band yoxud Kalman moslashuvidan tuzatilgan, 012F ko‘rsatkichingizga.\n
+9. Yoqilg‘i faqat dvigatel ishlaganda hisoblanadi. Plagin faqat Torque ECU ga ulanganida ishlaydi.\n
+10. Haydashda va to‘ldirishda davom eting; aniqlik bir necha qisman bak davomida oshadi. Noto‘g‘ri avtomobil profili? bildirishnomasi chiqsa, o‘sha safar bilan nima qilishni tanlang.\n
+11. Barcha ma’lumot shu telefonda qoladi. GPS yoki joylashuv yozilmaydi.</string>
+    <string name="about_body">%1$s\nVersiya %2$s (%3$s)\nTorque Pro uchun plagin. Torque yoki Ian Hawkins bilan bog‘liq emas.\nBarcha ma’lumot shu telefonda qoladi; GPS yoki joylashuv yozilmaydi.\n\nLitsenziya\nCopyright David Lang. Barcha huquqlar himoyalangan.</string>
+    <string name="open_source_notices">Ochiq manba kutubxonalari\nBu ilova quyidagi kutubxonalardan foydalanadi. Ularning litsenziyalari yuqoridagi mualliflik huquqidan alohida.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), Play Billing talab qiladi\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">To‘liq qo‘llanma (onlayn)</string>
+    <string name="show_fuel_notification">Yoqilg‘i darajasini bildirishnomada ko‘rsatish</string>
+    <string name="write_012f">Yoqilg‘i darajasini Torque ga qaytarish (012F ni almashtiradi)</string>
+    <string name="running_quiet">Fuel Smoothing ishlayapti</string>
+    <string name="tap_to_start">Fuel Smoothing ni boshlash uchun bosing</string>
+    <string name="tap_to_start_text">Batareya yoki fondan ishga tushirish rad etildi. Plagin Torque bilan ishlashi uchun bir marta oching.</string>
+    <string name="tank2_help">Kerak bo‘lsa qo‘shimcha baklar qo‘shing (zavod baki 1 doim qoladi). Uzatkichlarni PCM FLI piniga almashtirmang (soxta to‘ldirish). Har bir qo‘shimcha bakka o‘z Torque qo‘shimcha PID i kerak (MCU Mode 22, noyob nom — 012F yoki Ford 16C1 emas). Select-PID qiymati 1 dan boshlanadigan bak id. Gal/hr faqat faol bakka yoziladi.</string>
+    <string name="tap_start_channel">Boshlash uchun bosing</string>
+    <string name="tank_size_info">Bak o‘lchami Chunk moslashuvining boshlang‘ich o‘lchami, u o‘zinikini o‘rganmaguncha. Plagin uni hech qachon o‘zgartirmaydi; har bir moslashuvning o‘rgangan o‘lchami uning ostida ko‘rsatiladi.</string>
+    <string name="feed_012f_info">Mavjud ko‘rsatkichlar ko‘rsin deb Torque zavod Fuel Level (012F) ustiga qiymat yozadi: O‘chiq, tekislangan yoki Chunk, Band yoxud Kalman moslashuvidan tuzatilgan. Hali qurilmagan moslashuv tekislangan darajani yozadi.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">hali o‘lcham yo‘q</string>
+    <string name="size_none_sd">hali o‘lcham yo‘q ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">Yordam</string>
+    <string name="about">Haqida</string>
+    <string name="need_torque">Torque Pro (pullik) kerak. Torque Lite plaginlarni qo‘llab-quvvatlamaydi.</string>
+    <string name="get_torque">Torque Pro olish</string>
+    <string name="privacy">Maxfiylik</string>
+    <string name="send_feedback">Fikr yuborish</string>
+    <string name="tip">Choychaqa</string>
+    <string name="thanks">Rahmat</string>
+    <string name="close">Yopish</string>
+    <string name="ok">OK</string>
+    <string name="detect">Aniqlash</string>
+    <string name="confirm">Tasdiqlash</string>
+    <string name="save_pin">Belgini saqlash</string>
+    <string name="add_tank">Qo‘shimcha bak qo‘shish</string>
+    <string name="remove">Olib tashlash</string>
+    <string name="details">Tafsilotlar</string>
+    <string name="verbose_logging">Batafsil jurnal (tuzatish; har soniyada qator)</string>
+    <string name="profile_name">Profil nomi</string>
+    <string name="profile_name_info">Bu avtomobil profilining nomi. Har bir Torque avtomobil profili o‘z plagin profilini, ma’lumotini va o‘rgangan xaritalarini oladi.</string>
+    <string name="make">Marka</string>
+    <string name="make_info">Avtomobil markasi (mas. Ford). Faqat aniqlash qaysi markaga xos yoqilg‘i PID larini sinashini tanlash uchun ishlatiladi.</string>
+    <string name="fuel_source">Yoqilg‘i manbai</string>
+    <string name="fuel_source_info">Xom yoqilg‘i darajasi qayerdan keladi. Aniqlash (ECU ulangan bo‘lishi kerak) nomzodlarni faqat o‘qish uchun o‘qiydi va ikki manba mos kelmasa tasdiq so‘raydi. Tasdiqlash sozlash sahifasida va bildirishnomada. Hech biri = keyingi ulanishda aniqlash.</string>
+    <string name="custom_long_name">Maxsus uzun nom</string>
+    <string name="custom_long_name_info">Faqat Torque extra PID by long name manbai uchun: darajani bildiruvchi Torque PID ning aniq uzun nomi.</string>
+    <string name="tank_size">Bak o‘lchami</string>
+    <string name="tank_hint">bo‘sh = boshlang‘ich o‘lcham yo‘q; har bir moslashuv o‘zinikini o‘rganadi.</string>
+    <string name="smoothing_tau">Tekislash τ soniya</string>
+    <string name="smoothing_tau_info">Tekislash filtrining vaqt doimiysi (0 = tekislash yo‘q).</string>
+    <string name="max_skew" formatted="false">Eng katta og‘ish %/s</string>
+    <string name="max_skew_info">Tekislangan daraja soniyasiga ergasha oladigan eng katta o‘zgarish; bundan ortiq chayqalish e’tiborga olinmaydi.</string>
+    <string name="fill_jump" formatted="false">To‘ldirish sakrashi %</string>
+    <string name="fill_jump_info">To‘xtab turganda darajaning ko‘tarilishi to‘ldirish hisoblanadi.</string>
+    <string name="odometer">Odometr millari</string>
+    <string name="odometer_info">Ixtiyoriy: odometr ko‘rsatkichini kiriting va bu profil uchun masofani bog‘lashga Belgini saqlash tugmasini bosing.</string>
+    <string name="additional_tanks">Qo‘shimcha baklar</string>
+    <string name="active_tank">Faol bak</string>
+    <string name="active_tank_info">Yoqilg‘i sarfi (gal/hr) qaysi bakka yoziladi. PID dan: Torque PID uni tanlaydi (1 dan boshlanadigan bak id).</string>
+    <string name="select_pid">Select-PID uzun nomi</string>
+    <string name="select_pid_info">Faqat Faol bak = PID dan bo‘lganda: qiymati bak id bo‘lgan Torque PID ning uzun nomi.</string>
+    <string name="tank_n">Bak %1$d</string>
+    <string name="tank_n_source">Bak %1$d yoqilg‘i manbai</string>
+    <string name="tank_n_custom">Bak %1$d maxsus uzun nom (mas. [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">Bak %1$d gallon</string>
+    <string name="from_pid">PID dan</string>
+    <string name="unconfirmed"> (tasdiqlanmagan)</string>
+    <string name="ecu_connected"> · ECU ulangan</string>
+    <string name="tank_unknown">bak ?</string>
+    <string name="about_field">%1$s haqida</string>
+    <string name="err_tau">0 dan %1$s s gacha</string>
+    <string name="err_skew">0 dan yuqori, eng ko‘pi %1$s %%/s</string>
+    <string name="err_jump">%1$s dan %2$s %% gacha</string>
+    <string name="err_tank">bo‘sh yoki 0 dan katta son</string>
+    <string name="err_stored">saqlangan qiymat oralig‘dan tashqarida</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">Tekislangan %</string>
+    <string name="axis_error" formatted="false">Xato (%)</string>
+    <string name="feed_off">O‘chiq</string>
+    <string name="feed_smoothed" formatted="false">Tekislangan %</string>
+    <string name="feed_corrected_chunk" formatted="false">Corrected % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Corrected % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Corrected % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">Hali hech biri (Aniqlash ulanganda ishlaydi)</string>
+    <string name="src_sae_012f">SAE 012F Fuel Tank Level</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler Fuel Level Average</string>
+    <string name="src_toyota_2129">Toyota cluster 2129 (half-litre counts)</string>
+    <string name="src_custom_name">Torque extra PID by long name</string>
+    <string name="vehicle_default">Avtomobil 1</string>
+    <string name="vehicle_dated">Avtomobil %1$s</string>
+    <string name="binding_torque">Torque ga bog‘lanmoqda…</string>
+    <string name="status_waiting">Yoqilg‘i manbai kutilmoqda</string>
+    <string name="status_raw">xom %1$.1f%%</string>
+    <string name="status_sess"> ses %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing jim</string>
+    <string name="map_refit_title">Xarita qayta moslanmoqda</string>
+    <string name="map_refit_body">Fuel Smoothing %1$s uchun xaritani qayta moslamoqda. O‘sha moslashuv qayta moslashuv tugaguncha 1:1 o‘qiydi.</string>
+    <string name="no_source_title">Yoqilg‘i darajasi manbai o‘rnatilmagan</string>
+    <string name="no_source_body">Fuel Smoothing da %1$s uchun yoqilg‘i darajasi manbai yo‘q. Sozlash sahifasini oching va Aniqlash tugmasini bosing yoki manba tanlang.</string>
+    <string name="no_level_title">Bu safarda yoqilg‘i darajasi yo‘q</string>
+    <string name="no_level_body">%1$s %2$s uchun yaroqli daraja bermadi. Adapter ulanishini tekshiring yoki sozlash sahifasida Aniqlash ishga tushiring.</string>
+    <string name="source_found_title">Yoqilg‘i darajasi manbai topildi</string>
+    <string name="source_found_body">%1$s %2$s uchun ishlatiladi (%3$s).</string>
+    <string name="source_missing_title">Yoqilg‘i darajasi manbai topilmadi</string>
+    <string name="source_missing_body">Fuel Smoothing sozlamasini oching va manba tanlang (yoki PID ni Torque ga qo‘shing), so‘ng Aniqlash tugmasini bosing.</string>
+    <string name="confirm_source_title">Yoqilg‘i darajasi manbaini tasdiqlang</string>
+    <string name="confirm_source_body">%1$s aniqlandi, ko‘rsatkich %2$.0f %% , %3$s uchun. Panel yoqilg‘i ko‘rsatkichiga mos kelishini tekshiring, so‘ng Tasdiqlash tugmasini bosing. Tasdiqlash sozlash sahifasida va bildirishnomada (%4$s).</string>
+    <string name="confirm_source_body_nolevel">%1$s aniqlandi, %2$s uchun. Panel yoqilg‘i ko‘rsatkichiga mos kelishini tekshiring, so‘ng Tasdiqlash tugmasini bosing. Tasdiqlash sozlash sahifasida va bildirishnomada (%3$s).</string>
+    <string name="recording_title">%1$s ga yozilmoqda</string>
+    <string name="recording_body">Bu avtomobil %1$s (%2$s), lekin Torque profili \'%3$s\'. Ma’lumot %1$s ga boradi; Torque ni ochib, profilni almashtirish uchun bosing.</string>
+    <string name="wrong_vehicle_title">Noto‘g‘ri avtomobil profili?</string>
+    <string name="wrong_suggest_profile">Torque profili \'%1$s\'</string>
+    <string name="wrong_suggest_new">yangi avtomobil profili</string>
+    <string name="wrong_vehicle_body">Torque profili \'%1$s\' bu avtomobilga mos kelmaydi (%2$s). Taklif: %3$s. Ma’lumot saqlanadi va saqlamasangiz safar oxirida o‘chiriladi.</string>
+    <string name="keeping_title">Safar ma’lumoti saqlanadi</string>
+    <string name="keeping_body">Bu safar %1$s ga saqlanadi. Torque plagin API si Torque profillarini yarata yoki almashtira olmaydi: Torque ichida \'%2$s\' nomli avtomobil profilini yarating yoki tanlang.</string>
+    <string name="action_new_profile">Yangi profil yaratish</string>
+    <string name="action_use">%1$s dan foydalanish</string>
+</resources>

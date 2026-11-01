@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">टीपा Play Store आवृत्तीवर आहेत</string>
+    <string name="help_body">जलद सुरुवात\n
+1. Torque Pro स्थापित करा (सशुल्क आवृत्ती; Torque Lite प्लगइन समर्थित करत नाही) आणि OBD-II अडॅप्टर जोडा.\n
+2. हे प्लगइन Torque → सेटिंग्ज → Plugins मध्ये सुरू करा.\n
+3. सूचनांना परवानगी द्या आणि बॅटरी वापर अनिर्बंध ठेवा जेणेकरून Torque हे प्लगइन पार्श्वभूमीत सुरू करू शकेल.\n
+4. Torque मध्ये तुम्ही चालवत असलेल्या वाहनाची प्रोफाइल निवडा. डेटा प्रत्येक Torque प्रोफाइलसाठी ठेवला जातो आणि वाहनाच्या VIN/ECU ओळखीशी तपासला जातो.\n
+5. नवीन प्रोफाइलवर इंधन स्रोत जोडताना सापडतो; विचारले तर डॅश गेजशी जुळवा आणि पुष्टी करा दाबा. पुष्टी करा सेटअप पानावर आणि सूचनेत आहे. खालीही निवडू शकता.\n
+6. टाकीचा आकार Chunk फिटचा सुरुवातीचा आकार आहे जोपर्यंत तो स्वतःचा शिकत नाही. प्लगइन तो कधीही बदलत नाही; प्रत्येक फिटचा शिकलेला आकार त्याखाली दिसतो.\n
+7. Torque मध्ये [FuelSmooth] Smoothed Fuel Level आणि प्रत्येक फिटचे Corrected %, Remaining, DTE व Tank size गेज जोडा. DTE म्हणजे Remaining गुणिले Torque चे दीर्घकालीन mpg. रीफिट दरम्यान सूचना सांगते की तो फिट 1:1 वाचतो जोपर्यंत रीफिट संपत नाही.\n
+8. इंधन पातळी Torque कडे परत पाठवा: बंद, गुळगुळीत, किंवा Chunk, Band अथवा Kalman फिटमधून दुरुस्त, तुमच्या 012F गेजवर.\n
+9. इंधन फक्त इंजिन चालू असताना मोजले जाते. प्लगइन फक्त Torque ECU ला जोडलेले असताना चालते.\n
+10. चालवत आणि भरत राहा; अचूकता अनेक आंशिक टाक्यांवर वाढते. चुकीची वाहन प्रोफाइल? सूचना आली तर त्या ड्राइव्हचे काय करायचे ते निवडा.\n
+11. सर्व डेटा या फोनवर राहतो. GPS किंवा स्थान नोंदवले जात नाही.</string>
+    <string name="about_body">%1$s\nआवृत्ती %2$s (%3$s)\nTorque Pro साठी प्लगइन. Torque किंवा Ian Hawkins शी संलग्न नाही.\nसर्व डेटा या फोनवर राहतो; GPS किंवा स्थान नोंदवले जात नाही.\n\nपरवाना\nCopyright David Lang. सर्व हक्क राखीव.</string>
+    <string name="open_source_notices">मुक्त स्रोत लायब्ररी\nहे अॅप खालील लायब्ररी वापरते. त्यांचे परवाने वरील कॉपीराइटपासून वेगळे आहेत.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), Play Billing साठी आवश्यक\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">संपूर्ण पुस्तिका (ऑनलाइन)</string>
+    <string name="show_fuel_notification">सूचनेत इंधन पातळी दाखवा</string>
+    <string name="write_012f">इंधन पातळी Torque कडे परत पाठवा (012F बदलते)</string>
+    <string name="running_quiet">Fuel Smoothing चालू आहे</string>
+    <string name="tap_to_start">Fuel Smoothing सुरू करण्यासाठी टॅप करा</string>
+    <string name="tap_to_start_text">बॅटरी किंवा पार्श्वभूमीतून सुरुवात नाकारली. एकदा उघडा जेणेकरून प्लगइन Torque सोबत चालू शकेल.</string>
+    <string name="tank2_help">गरजेनुसार अतिरिक्त टाक्या जोडा (कारखाना टाकी 1 नेहमी राहते). सेंडर PCM FLI पिनवर बदलू नका (खोटी भराई). प्रत्येक अतिरिक्त टाकीला स्वतःचा Torque अतिरिक्त PID हवा (MCU Mode 22, अनोखे नाव — 012F किंवा Ford 16C1 नाही). Select-PID मूल्य 1 पासून टाकी id आहे. Gal/hr फक्त सक्रिय टाकीवर लागते.</string>
+    <string name="tap_start_channel">सुरू करण्यासाठी टॅप करा</string>
+    <string name="tank_size_info">टाकीचा आकार Chunk फिटचा सुरुवातीचा आकार आहे जोपर्यंत तो स्वतःचा शिकत नाही. प्लगइन तो कधीही बदलत नाही; प्रत्येक फिटचा शिकलेला आकार त्याखाली दिसतो.</string>
+    <string name="feed_012f_info">असलेले गेज दाखवतील म्हणून Torque च्या कारखाना Fuel Level (012F) वर मूल्य लिहितो: बंद, गुळगुळीत, किंवा Chunk, Band अथवा Kalman फिटमधून दुरुस्त. अजून न बांधलेला फिट गुळगुळीत पातळी लिहितो.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">अजून आकार नाही</string>
+    <string name="size_none_sd">अजून आकार नाही ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">मदत</string>
+    <string name="about">विषयी</string>
+    <string name="need_torque">Torque Pro (सशुल्क) आवश्यक. Torque Lite प्लगइन समर्थित करत नाही.</string>
+    <string name="get_torque">Torque Pro मिळवा</string>
+    <string name="privacy">गोपनीयता</string>
+    <string name="send_feedback">अभिप्राय पाठवा</string>
+    <string name="tip">टिप</string>
+    <string name="thanks">धन्यवाद</string>
+    <string name="close">बंद</string>
+    <string name="ok">OK</string>
+    <string name="detect">शोधा</string>
+    <string name="confirm">पुष्टी करा</string>
+    <string name="save_pin">पिन जतन करा</string>
+    <string name="add_tank">अतिरिक्त टाकी जोडा</string>
+    <string name="remove">काढा</string>
+    <string name="details">तपशील</string>
+    <string name="verbose_logging">सविस्तर नोंद (डीबग; दर सेकंदाला ओळ)</string>
+    <string name="profile_name">प्रोफाइल नाव</string>
+    <string name="profile_name_info">या वाहन प्रोफाइलचे नाव. प्रत्येक Torque वाहन प्रोफाइलला स्वतःची प्लगइन प्रोफाइल, डेटा आणि शिकलेले नकाशे मिळतात.</string>
+    <string name="make">निर्माता</string>
+    <string name="make_info">वाहन निर्माता (उदा. Ford). शोध कोणते ब्रँड-विशिष्ट इंधन PID वापरेल ते निवडण्यासाठीच.</string>
+    <string name="fuel_source">इंधन स्रोत</string>
+    <string name="fuel_source_info">कच्ची इंधन पातळी कोठून येते. शोधा (ECU जोडलेला असावा) उमेदवार फक्त वाचतो आणि दोन स्रोत जुळत नसल्यास पुष्टी मागतो. पुष्टी करा सेटअप पानावर आणि सूचनेत आहे. काहीही नाही = पुढील जोडणीवर शोधा.</string>
+    <string name="custom_long_name">सानुकूल दीर्घ नाव</string>
+    <string name="custom_long_name_info">फक्त स्रोत Torque extra PID by long name साठी: पातळी सांगणाऱ्या Torque PID चे अचूक दीर्घ नाव.</string>
+    <string name="tank_size">टाकीचा आकार</string>
+    <string name="tank_hint">रिकामे = सुरुवातीचा आकार नाही; प्रत्येक फिट स्वतःचा शिकतो.</string>
+    <string name="smoothing_tau">गुळगुळीत τ सेकंद</string>
+    <string name="smoothing_tau_info">गुळगुळीत गाळणीचा काळ स्थिरांक (0 = गुळगुळीत नाही).</string>
+    <string name="max_skew" formatted="false">कमाल तिरकस %/s</string>
+    <string name="max_skew_info">प्रति सेकंद सर्वात मोठा बदल जो गुळगुळीत पातळी अनुसरू शकते; यापलीकडचे हलणे दुर्लक्षित.</string>
+    <string name="fill_jump" formatted="false">भराई उडी %</string>
+    <string name="fill_jump_info">थांबले असता पातळीची वाढ जी भराई मानली जाते.</string>
+    <string name="odometer">ओडोमीटर मैल</string>
+    <string name="odometer_info">ऐच्छिक: ओडोमीटर वाचन टाका आणि पिन जतन करा जेणेकरून या प्रोफाइलचे अंतर स्थिर होईल.</string>
+    <string name="additional_tanks">अतिरिक्त टाक्या</string>
+    <string name="active_tank">सक्रिय टाकी</string>
+    <string name="active_tank_info">इंधन खर्च (gal/hr) कोणत्या टाकीवर लावला जातो. PID वरून: Torque PID तो निवडतो (1 पासून टाकी id).</string>
+    <string name="select_pid">Select-PID दीर्घ नाव</string>
+    <string name="select_pid_info">फक्त सक्रिय टाकी = PID वरून असताना: ज्या Torque PID चे मूल्य टाकी id आहे त्याचे दीर्घ नाव.</string>
+    <string name="tank_n">टाकी %1$d</string>
+    <string name="tank_n_source">टाकी %1$d इंधन स्रोत</string>
+    <string name="tank_n_custom">टाकी %1$d सानुकूल दीर्घ नाव (उदा. [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">टाकी %1$d गॅलन</string>
+    <string name="from_pid">PID वरून</string>
+    <string name="unconfirmed"> (अपुष्ट)</string>
+    <string name="ecu_connected"> · ECU जोडलेला</string>
+    <string name="tank_unknown">टाकी ?</string>
+    <string name="about_field">%1$s विषयी</string>
+    <string name="err_tau">0 ते %1$s s</string>
+    <string name="err_skew">0 पेक्षा जास्त, जास्तीत जास्त %1$s %%/s</string>
+    <string name="err_jump">%1$s ते %2$s %%</string>
+    <string name="err_tank">रिकामे किंवा 0 पेक्षा मोठी संख्या</string>
+    <string name="err_stored">जतन केलेले मूल्य मर्यादेबाहेर</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">गुळगुळीत %</string>
+    <string name="axis_error" formatted="false">त्रुटी (%)</string>
+    <string name="feed_off">बंद</string>
+    <string name="feed_smoothed" formatted="false">गुळगुळीत %</string>
+    <string name="feed_corrected_chunk" formatted="false">Corrected % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Corrected % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Corrected % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">अजून काहीही नाही (शोधा जोडणीवर चालतो)</string>
+    <string name="src_sae_012f">SAE 012F Fuel Tank Level</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler Fuel Level Average</string>
+    <string name="src_toyota_2129">Toyota cluster 2129 (half-litre counts)</string>
+    <string name="src_custom_name">Torque extra PID by long name</string>
+    <string name="vehicle_default">वाहन 1</string>
+    <string name="vehicle_dated">वाहन %1$s</string>
+    <string name="binding_torque">Torque शी जोडत आहे…</string>
+    <string name="status_waiting">इंधन स्रोताची वाट</string>
+    <string name="status_raw">कच्चे %1$.1f%%</string>
+    <string name="status_sess"> सत्र %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing शांत</string>
+    <string name="map_refit_title">नकाशा पुन्हा फिट होत आहे</string>
+    <string name="map_refit_body">Fuel Smoothing %1$s साठी नकाशा पुन्हा फिट करत आहे. तो फिट 1:1 वाचतो जोपर्यंत रीफिट संपत नाही.</string>
+    <string name="no_source_title">इंधन पातळी स्रोत सेट नाही</string>
+    <string name="no_source_body">Fuel Smoothing कडे %1$s साठी इंधन पातळी स्रोत नाही. सेटअप पान उघडा आणि शोधा दाबा, किंवा स्रोत निवडा.</string>
+    <string name="no_level_title">या ड्राइव्हवर इंधन पातळी नाही</string>
+    <string name="no_level_body">%1$s ने %2$s साठी वापरण्याजोगी पातळी दिली नाही. अडॅप्टर जोडणी तपासा, किंवा सेटअप पानावर शोधा चालवा.</string>
+    <string name="source_found_title">इंधन पातळी स्रोत सापडला</string>
+    <string name="source_found_body">%1$s %2$s साठी वापरला जात आहे (%3$s).</string>
+    <string name="source_missing_title">इंधन पातळी स्रोत सापडला नाही</string>
+    <string name="source_missing_body">Fuel Smoothing सेटअप उघडा आणि स्रोत निवडा (किंवा Torque मध्ये PID जोडा), नंतर शोधा दाबा.</string>
+    <string name="confirm_source_title">इंधन पातळी स्रोताची पुष्टी करा</string>
+    <string name="confirm_source_body">%1$s सापडला, वाचन %2$.0f %% , %3$s साठी. डॅश इंधन गेजशी जुळते का तपासा, नंतर पुष्टी करा दाबा. पुष्टी करा सेटअप पानावर आणि सूचनेत आहे (%4$s).</string>
+    <string name="confirm_source_body_nolevel">%1$s सापडला, %2$s साठी. डॅश इंधन गेजशी जुळते का तपासा, नंतर पुष्टी करा दाबा. पुष्टी करा सेटअप पानावर आणि सूचनेत आहे (%3$s).</string>
+    <string name="recording_title">%1$s वर नोंद</string>
+    <string name="recording_body">हे वाहन %1$s आहे (%2$s), पण Torque ची प्रोफाइल \'%3$s\' आहे. डेटा %1$s कडे जातो; Torque उघडून प्रोफाइल बदलण्यासाठी टॅप करा.</string>
+    <string name="wrong_vehicle_title">चुकीची वाहन प्रोफाइल?</string>
+    <string name="wrong_suggest_profile">Torque प्रोफाइल \'%1$s\'</string>
+    <string name="wrong_suggest_new">नवी वाहन प्रोफाइल</string>
+    <string name="wrong_vehicle_body">Torque प्रोफाइल \'%1$s\' या वाहनाशी जुळत नाही (%2$s). सुचवलेले: %3$s. डेटा धरला जातो आणि तुम्ही ठेवला नाही तर ड्राइव्ह शेवटी टाकला जातो.</string>
+    <string name="keeping_title">ड्राइव्ह डेटा ठेवला जात आहे</string>
+    <string name="keeping_body">ही ड्राइव्ह %1$s वर जतन होईल. Torque चे प्लगइन API Torque प्रोफाइल तयार किंवा बदलू शकत नाही: Torque मध्ये \'%2$s\' नावाची वाहन प्रोफाइल तयार करा किंवा निवडा.</string>
+    <string name="action_new_profile">नवी प्रोफाइल तयार करा</string>
+    <string name="action_use">%1$s वापरा</string>
+</resources>

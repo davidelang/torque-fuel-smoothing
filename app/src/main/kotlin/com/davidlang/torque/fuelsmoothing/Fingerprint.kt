@@ -255,11 +255,10 @@ internal object Quarantine {
 
     fun rawDir(qdir: File, tank: Int): File = File(qdir, "t$tank")
 
-    /** Resolves a notification choice to a plugin profile id; NEW_PROFILE creates one ("Vehicle <date>"). */
-    fun confirmTarget(root: File, choice: String, nowMs: Long): String {
+    /** Resolves a notification choice to a plugin profile id. NEW_PROFILE creates one named [newName]. */
+    fun confirmTarget(root: File, choice: String, nowMs: Long, newName: String): String {
         if (choice != Fingerprint.NEW_PROFILE) return choice
-        val day = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.ROOT).format(java.util.Date(nowMs))
-        return ProfileStore.createProfile(root, "Vehicle $day", nowMs)
+        return ProfileStore.createProfile(root, newName, nowMs)
     }
 
     /** Returns the files moved. [target] null = discard (set aside, not learned). */

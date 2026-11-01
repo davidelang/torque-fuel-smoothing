@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">ඉඟි Play Store අනුවාදයේ ඇත</string>
+    <string name="help_body">ඉක්මන් ආරම්භය\n
+1. Torque Pro ස්ථාපනය කරන්න (ගෙවූ අනුවාදය; Torque Lite ප්ලගින සහාය නොදක්වයි) සහ OBD-II ඇඩැප්ටරය යුගල කරන්න.\n
+2. මෙම ප්ලගිනය Torque → සැකසුම් → Plugins තුළ සක්‍රිය කරන්න.\n
+3. දැනුම්දීම් ඉඩ දී බැටරි භාවිතය සීමා රහිත කරන්න, Torque හට මෙම ප්ලගිනය පසුබිමේ ආරම්භ කළ හැකි වන පරිදි.\n
+4. Torque තුළ ඔබ ධාවනය කරන වාහන පැතිකඩ තෝරන්න. දත්ත සෑම Torque පැතිකඩකටම තබා වාහන VIN/ECU අනන්‍යතාව සමඟ පරීක්ෂා කෙරේ.\n
+5. නව පැතිකඩක ඉන්ධන මූලාශ්‍රය සම්බන්ධ වීමේදී හමු වේ; ඇසුවහොත් ඩෑෂ් මාපකය සමඟ සසඳා තහවුරු කරන්න තට්ටු කරන්න. තහවුරු කරන්න සැකසුම් පිටුවේ සහ දැනුම්දීමේ ඇත. පහළින් ද තෝරා ගත හැක.\n
+6. ටැංකි ප්‍රමාණය Chunk ගැළපුමේ ආරම්භක ප්‍රමාණයයි, එය තමන්ගේ දේ ඉගෙන ගන්නා තුරු. ප්ලගිනය එය කිසි විටෙක වෙනස් නොකරයි; සෑම ගැළපුමක ඉගෙන ගත් ප්‍රමාණය එයට පහළින් පෙන්වයි.\n
+7. Torque තුළ [FuelSmooth] Smoothed Fuel Level සහ සෑම ගැළපුමක Corrected %, Remaining, DTE සහ Tank size මාපක එක් කරන්න. DTE යනු Remaining ගුණ Torque දිගුකාලීන mpg ය. නැවත ගැළපුමේ දැනුම්දීම කියන්නේ එම ගැළපුම 1:1 කියවන බවයි, නැවත ගැළපුම අවසන් වන තුරු.\n
+8. ඉන්ධන මට්ටම Torque වෙත ආපසු යවන්න: අක්‍රිය, සුමට, හෝ Chunk, Band හෝ Kalman ගැළපුමෙන් නිවැරදි කළ, ඔබේ 012F මාපකයට.\n
+9. ඉන්ධන එන්ජිම ධාවනය වන විට පමණක් ගණන් කෙරේ. ප්ලගිනය Torque ECU වෙත සම්බන්ධ වූ විට පමණක් ධාවනය වේ.\n
+10. ධාවනය කර පුරවමින් සිටින්න; නිරවද්‍යතාව පාර්ශ්වික ටැංකි කිහිපයක් මත වැඩේ. වැරදි වාහන පැතිකඩ? දැනුම්දීමක් ආවහොත් එම ධාවනයට කුමක් කළ යුතු ද තෝරන්න.\n
+11. සියලු දත්ත මෙම දුරකථනයේ රැඳේ. GPS හෝ ස්ථානය පටිගත නොවේ.</string>
+    <string name="about_body">%1$s\nඅනුවාදය %2$s (%3$s)\nTorque Pro සඳහා ප්ලගිනයකි. Torque හෝ Ian Hawkins සමඟ සම්බන්ධ නැත.\nසියලු දත්ත මෙම දුරකථනයේ රැඳේ; GPS හෝ ස්ථානය පටිගත නොවේ.\n\nබලපත්‍රය\nCopyright David Lang. සියලු හිමිකම් ඇවිරිණි.</string>
+    <string name="open_source_notices">විවෘත මූලාශ්‍ර පුස්තකාල\nමෙම යෙදුම පහත පුස්තකාල භාවිත කරයි. ඒවායේ බලපත්‍ර ඉහත ප්‍රකාශන හිමිකමින් වෙනම ය.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), Play Billing සඳහා අවශ්‍යයි\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">සම්පූර්ණ අත්පොත (මාර්ගගත)</string>
+    <string name="show_fuel_notification">දැනුම්දීමේ ඉන්ධන මට්ටම පෙන්වන්න</string>
+    <string name="write_012f">ඉන්ධන මට්ටම Torque වෙත ආපසු යවන්න (012F ප්‍රතිස්ථාපනය කරයි)</string>
+    <string name="running_quiet">Fuel Smoothing ධාවනය වේ</string>
+    <string name="tap_to_start">Fuel Smoothing ආරම්භ කිරීමට තට්ටු කරන්න</string>
+    <string name="tap_to_start_text">බැටරියෙන් හෝ පසුබිමෙන් ආරම්භය ප්‍රතික්ෂේප විය. ප්ලගිනය Torque සමඟ ධාවනය වීමට වරක් විවෘත කරන්න.</string>
+    <string name="tank2_help">අවශ්‍ය අමතර ටැංකි එක් කරන්න (කර්මාන්තශාලා ටැංකිය 1 සැමවිටම රැඳේ). යවන්නන් PCM FLI පින් එකට මාරු නොකරන්න (බොරු පිරවීම). සෑම අමතර ටැංකියකටම තම Torque අමතර PID එකක් අවශ්‍යයි (MCU Mode 22, අනන්‍ය නම — 012F හෝ Ford 16C1 නොවේ). Select-PID අගය 1 සිට ටැංකි id ය. Gal/hr ක්‍රියාකාරී ටැංකියට පමණක් ලියයි.</string>
+    <string name="tap_start_channel">ආරම්භ කිරීමට තට්ටු කරන්න</string>
+    <string name="tank_size_info">ටැංකි ප්‍රමාණය Chunk ගැළපුමේ ආරම්භක ප්‍රමාණයයි, එය තමන්ගේ දේ ඉගෙන ගන්නා තුරු. ප්ලගිනය එය කිසි විටෙක වෙනස් නොකරයි; සෑම ගැළපුමක ඉගෙන ගත් ප්‍රමාණය එයට පහළින් පෙන්වයි.</string>
+    <string name="feed_012f_info">පවතින මාපක පෙන්වීමට Torque කර්මාන්තශාලා Fuel Level (012F) මත අගයක් ලියයි: අක්‍රිය, සුමට, හෝ Chunk, Band හෝ Kalman ගැළපුමෙන් නිවැරදි කළ. තවම නිර්මාණය නොවූ ගැළපුම සුමට මට්ටම ලියයි.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">තවම ප්‍රමාණය නැත</string>
+    <string name="size_none_sd">තවම ප්‍රමාණය නැත ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">උදව්</string>
+    <string name="about">පිළිබඳ</string>
+    <string name="need_torque">Torque Pro (ගෙවූ) අවශ්‍යයි. Torque Lite ප්ලගින සහාය නොදක්වයි.</string>
+    <string name="get_torque">Torque Pro ලබා ගන්න</string>
+    <string name="privacy">පෞද්ගලිකත්වය</string>
+    <string name="send_feedback">ප්‍රතිචාර යවන්න</string>
+    <string name="tip">ඉඟිය</string>
+    <string name="thanks">ස්තූතියි</string>
+    <string name="close">වසන්න</string>
+    <string name="ok">OK</string>
+    <string name="detect">සොයන්න</string>
+    <string name="confirm">තහවුරු කරන්න</string>
+    <string name="save_pin">පින් සුරකින්න</string>
+    <string name="add_tank">අමතර ටැංකිය එක් කරන්න</string>
+    <string name="remove">ඉවත් කරන්න</string>
+    <string name="details">විස්තර</string>
+    <string name="verbose_logging">විස්තරාත්මක ලොගය (නිදොස්කරණය; තත්පරයකට පේළිය)</string>
+    <string name="profile_name">පැතිකඩ නම</string>
+    <string name="profile_name_info">මෙම වාහන පැතිකඩේ නම. සෑම Torque වාහන පැතිකඩකටම තම ප්ලගින පැතිකඩ, දත්ත සහ ඉගෙන ගත් සිතියම් ලැබේ.</string>
+    <string name="make">නිෂ්පාදක</string>
+    <string name="make_info">වාහන නිෂ්පාදක (උදා. Ford). සෙවීම කුමන වෙළඳ නාම ඉන්ධන PID උත්සාහ කරනවා ද තේරීමට පමණි.</string>
+    <string name="fuel_source">ඉන්ධන මූලාශ්‍රය</string>
+    <string name="fuel_source_info">අමු ඉන්ධන මට්ටම කොහෙන් එනවා ද. සොයන්න (ECU සම්බන්ධ විය යුතුය) අපේක්ෂකයන් කියවා පමණක් දෙකක් නොගැළපේ නම් තහවුරු කිරීම ඉල්ලයි. තහවුරු කරන්න සැකසුම් පිටුවේ සහ දැනුම්දීමේ ඇත. කිසිවක් නැත = ඊළඟ සම්බන්ධතාවේ සොයන්න.</string>
+    <string name="custom_long_name">අභිරුචි දිගු නම</string>
+    <string name="custom_long_name_info">මූලාශ්‍රය Torque extra PID by long name සඳහා පමණි: මට්ටම වාර්තා කරන Torque PID හි නිවැරදි දිගු නම.</string>
+    <string name="tank_size">ටැංකි ප්‍රමාණය</string>
+    <string name="tank_hint">හිස් = ආරම්භක ප්‍රමාණය නැත; සෑම ගැළපුමක්ම තමන්ගේ දේ ඉගෙන ගනී.</string>
+    <string name="smoothing_tau">සුමට කිරීම τ තත්පර</string>
+    <string name="smoothing_tau_info">සුමට පෙරහනේ කාල නියතය (0 = සුමට කිරීම නැත).</string>
+    <string name="max_skew" formatted="false">උපරිම ඇලය %/s</string>
+    <string name="max_skew_info">සුමට මට්ටම තත්පරයකට අනුගමනය කළ හැකි විශාලතම වෙනස; ඊට වඩා ඇල්ලීම නොසලකයි.</string>
+    <string name="fill_jump" formatted="false">පිරවුම් පැනීම %</string>
+    <string name="fill_jump_info">නැවතී සිටින විට මට්ටම ඉහළ යාම පිරවීමක් ලෙස ගණන් කෙරේ.</string>
+    <string name="odometer">ඔඩෝමීටර සැතපුම්</string>
+    <string name="odometer_info">විකල්ප: ඔඩෝමීටර කියවීම ඇතුළත් කර පින් සුරකින්න, මෙම පැතිකඩේ දුර නැංගුරම් කිරීමට.</string>
+    <string name="additional_tanks">අමතර ටැංකි</string>
+    <string name="active_tank">ක්‍රියාකාරී ටැංකිය</string>
+    <string name="active_tank_info">ඉන්ධන දහනය (gal/hr) කුමන ටැංකියට ලියනවා ද. PID වෙතින්: Torque PID එකක් එය තෝරයි (1 සිට ටැංකි id).</string>
+    <string name="select_pid">Select-PID දිගු නම</string>
+    <string name="select_pid_info">ක්‍රියාකාරී ටැංකිය = PID වෙතින් වූ විට පමණි: අගය ටැංකි id වන Torque PID හි දිගු නම.</string>
+    <string name="tank_n">ටැංකිය %1$d</string>
+    <string name="tank_n_source">ටැංකිය %1$d ඉන්ධන මූලාශ්‍රය</string>
+    <string name="tank_n_custom">ටැංකිය %1$d අභිරුචි දිගු නම (උදා. [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">ටැංකිය %1$d ගැලුම්</string>
+    <string name="from_pid">PID වෙතින්</string>
+    <string name="unconfirmed"> (තහවුරු නැත)</string>
+    <string name="ecu_connected"> · ECU සම්බන්ධයි</string>
+    <string name="tank_unknown">ටැංකිය ?</string>
+    <string name="about_field">%1$s පිළිබඳ</string>
+    <string name="err_tau">0 සිට %1$s s</string>
+    <string name="err_skew">0 ට ඉහළ, උපරිම %1$s %%/s</string>
+    <string name="err_jump">%1$s සිට %2$s %%</string>
+    <string name="err_tank">හිස් හෝ 0 ට වැඩි සංඛ්‍යාවක්</string>
+    <string name="err_stored">ගබඩා අගය පරාසයෙන් පිටත</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">සුමට %</string>
+    <string name="axis_error" formatted="false">දෝෂය (%)</string>
+    <string name="feed_off">අක්‍රිය</string>
+    <string name="feed_smoothed" formatted="false">සුමට %</string>
+    <string name="feed_corrected_chunk" formatted="false">Corrected % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Corrected % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Corrected % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">තවම කිසිවක් නැත (සොයන්න සම්බන්ධ වීමේදී ධාවනය වේ)</string>
+    <string name="src_sae_012f">SAE 012F Fuel Tank Level</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler Fuel Level Average</string>
+    <string name="src_toyota_2129">Toyota cluster 2129 (half-litre counts)</string>
+    <string name="src_custom_name">Torque extra PID by long name</string>
+    <string name="vehicle_default">වාහනය 1</string>
+    <string name="vehicle_dated">වාහනය %1$s</string>
+    <string name="binding_torque">Torque වෙත බැඳේ…</string>
+    <string name="status_waiting">ඉන්ධන මූලාශ්‍රය බලා සිටී</string>
+    <string name="status_raw">අමු %1$.1f%%</string>
+    <string name="status_sess"> සැසිය %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing නිහඬ</string>
+    <string name="map_refit_title">සිතියම නැවත ගැළපේ</string>
+    <string name="map_refit_body">Fuel Smoothing %1$s සඳහා සිතියමක් නැවත ගළපයි. එම ගැළපුම 1:1 කියවයි, නැවත ගැළපුම අවසන් වන තුරු.</string>
+    <string name="no_source_title">ඉන්ධන මට්ටම් මූලාශ්‍රය සකසා නැත</string>
+    <string name="no_source_body">Fuel Smoothing සතුව %1$s සඳහා ඉන්ධන මට්ටම් මූලාශ්‍රයක් නැත. සැකසුම් පිටුව විවෘත කර සොයන්න තට්ටු කරන්න, නැතහොත් මූලාශ්‍රයක් තෝරන්න.</string>
+    <string name="no_level_title">මෙම ධාවනයේ ඉන්ධන මට්ටමක් නැත</string>
+    <string name="no_level_body">%1$s %2$s සඳහා භාවිත කළ හැකි මට්ටමක් නොදුන්නේය. ඇඩැප්ටර සම්බන්ධතාව පරීක්ෂා කරන්න, නැතහොත් සැකසුම් පිටුවේ සොයන්න ධාවනය කරන්න.</string>
+    <string name="source_found_title">ඉන්ධන මට්ටම් මූලාශ්‍රය හමු විය</string>
+    <string name="source_found_body">%1$s %2$s සඳහා භාවිත වේ (%3$s).</string>
+    <string name="source_missing_title">ඉන්ධන මට්ටම් මූලාශ්‍රය හමු නොවීය</string>
+    <string name="source_missing_body">Fuel Smoothing සැකසුම විවෘත කර මූලාශ්‍රයක් තෝරන්න (හෝ Torque තුළ PID එක් කරන්න), ඉන්පසු සොයන්න තට්ටු කරන්න.</string>
+    <string name="confirm_source_title">ඉන්ධන මට්ටම් මූලාශ්‍රය තහවුරු කරන්න</string>
+    <string name="confirm_source_body">%1$s හමු විය, කියවීම %2$.0f %% , %3$s සඳහා. ඩෑෂ් ඉන්ධන මාපකයට ගැළපේ ද බලා තහවුරු කරන්න තට්ටු කරන්න. තහවුරු කරන්න සැකසුම් පිටුවේ සහ දැනුම්දීමේ ඇත (%4$s).</string>
+    <string name="confirm_source_body_nolevel">%1$s හමු විය, %2$s සඳහා. ඩෑෂ් ඉන්ධන මාපකයට ගැළපේ ද බලා තහවුරු කරන්න තට්ටු කරන්න. තහවුරු කරන්න සැකසුම් පිටුවේ සහ දැනුම්දීමේ ඇත (%3$s).</string>
+    <string name="recording_title">%1$s වෙත පටිගත කිරීම</string>
+    <string name="recording_body">මෙම වාහනය %1$s (%2$s), නමුත් Torque පැතිකඩ \'%3$s\' ය. දත්ත %1$s වෙත යයි; Torque විවෘත කර පැතිකඩ මාරු කිරීමට තට්ටු කරන්න.</string>
+    <string name="wrong_vehicle_title">වැරදි වාහන පැතිකඩ ද?</string>
+    <string name="wrong_suggest_profile">Torque පැතිකඩ \'%1$s\'</string>
+    <string name="wrong_suggest_new">නව වාහන පැතිකඩක්</string>
+    <string name="wrong_vehicle_body">Torque පැතිකඩ \'%1$s\' මෙම වාහනයට නොගැළපේ (%2$s). යෝජනාව: %3$s. දත්ත තබා ඔබ නොතැබුවහොත් ධාවනය අවසානයේ ඉවත දමයි.</string>
+    <string name="keeping_title">ධාවන දත්ත තබා ගනී</string>
+    <string name="keeping_body">මෙම ධාවනය %1$s වෙත සුරකිනු ඇත. Torque ප්ලගින API හට Torque පැතිකඩ සෑදීමට හෝ මාරු කිරීමට නොහැක: Torque තුළ \'%2$s\' නමින් වාහන පැතිකඩක් සාදන්න හෝ තෝරන්න.</string>
+    <string name="action_new_profile">නව පැතිකඩක් සාදන්න</string>
+    <string name="action_use">%1$s භාවිත කරන්න</string>
+</resources>

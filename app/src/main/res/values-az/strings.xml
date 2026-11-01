@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">İpucular Play Store versiyasındadır</string>
+    <string name="help_body">Sürətli başlanğıc\n
+1. Torque Pro quraşdırın (ödənişli versiya; Torque Lite plaginləri dəstəkləmir) və OBD-II adapterini cütləşdirin.\n
+2. Bu plagini Torque → Parametrlər → Plugins bölməsində aktiv edin.\n
+3. Bildirişlərə icazə verin və batareya istifadəsini Məhdudiyyətsiz edin ki, Torque bu plagini arxa fonda işə sala bilsin.\n
+4. Torque-da sürdüyünüz avtomobilin profilini seçin. Məlumat hər Torque profili üzrə saxlanılır və avtomobilin VIN/ECU kimliyi ilə yoxlanılır.\n
+5. Yeni profildə yanacaq mənbəyi qoşulanda aşkarlanır; soruşulsa, onu panel göstəricisi ilə müqayisə edin və Təsdiq edin. Təsdiq quraşdırma səhifəsində və bildirişdədir. Onu aşağıda da seçə bilərsiniz.\n
+6. Bak ölçüsü Chunk uyğunlaşmasının başlanğıc ölçüsüdür, özünü öyrənənə qədər. Plaqin onu heç vaxt dəyişmir; hər uyğunlaşmanın öyrəndiyi ölçü onun altında göstərilir.\n
+7. Torque-da [FuelSmooth] Smoothed Fuel Level və hər uyğunlaşmanın Corrected %, Remaining, DTE və Tank size göstəricilərini əlavə edin. DTE Remaining-in Torque-un uzunmüddətli mpg-sinə vurulmasıdır. Yenidən uyğunlaşma bildirişi deyir ki, həmin uyğunlaşma 1:1 oxuyur, yenidən uyğunlaşma bitənə qədər.\n
+8. Yanacaq səviyyəsini Torque-a qaytarın: Sönülü, hamarlanmış, və ya Chunk, Band ya Kalman uyğunlaşmasından düzəldilmiş, 012F göstəricinizə.\n
+9. Yanacaq yalnız mühərrik işləyəndə sayılır. Plaqin yalnız Torque ECU-ya qoşulu olanda işləyir.\n
+10. Sürməyə və doldurmağa davam edin; dəqiqlik bir neçə qismən bak üzərində artır. Yanlış avtomobil profili? bildirişi çıxsa, həmin gedişlə nə edəcəyinizi seçin.\n
+11. Bütün məlumat bu telefonda qalır. GPS və ya məkan yazılmır.</string>
+    <string name="about_body">%1$s\nVersiya %2$s (%3$s)\nTorque Pro üçün plagin. Torque və ya Ian Hawkins ilə əlaqəli deyil.\nBütün məlumat bu telefonda qalır; GPS və ya məkan yazılmır.\n\nLisenziya\nCopyright David Lang. Bütün hüquqlar qorunur.</string>
+    <string name="open_source_notices">Açıq mənbə kitabxanaları\nBu tətbiq aşağıdakı kitabxanalardan istifadə edir. Onların lisenziyaları yuxarıdakı müəllif hüququndan ayrıdır.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), Play Billing tərəfindən tələb olunur\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">Tam təlimat (onlayn)</string>
+    <string name="show_fuel_notification">Yanacaq səviyyəsini bildirişdə göstər</string>
+    <string name="write_012f">Yanacaq səviyyəsini Torque-a qaytar (012F-i əvəz edir)</string>
+    <string name="running_quiet">Fuel Smoothing işləyir</string>
+    <string name="tap_to_start">Fuel Smoothing-i başlatmaq üçün toxunun</string>
+    <string name="tap_to_start_text">Batareya və ya arxa fondan başlatma rədd edildi. Plaqinin Torque ilə işləməsi üçün bir dəfə açın.</string>
+    <string name="tank2_help">Lazım olduqca əlavə baklar əlavə edin (zavod bakı 1 həmişə qalır). Ötürücüləri PCM FLI pinine keçirməyin (yalançı doldurma). Hər əlavə baka öz Torque əlavə PID-i lazımdır (MCU Mode 22, unikal ad — 012F və ya Ford 16C1 deyil). Select-PID dəyəri 1-dən başlayan bak id-sidir. Gal/hr yalnız aktiv baka yazılır.</string>
+    <string name="tap_start_channel">Başlatmaq üçün toxunun</string>
+    <string name="tank_size_info">Bak ölçüsü Chunk uyğunlaşmasının başlanğıc ölçüsüdür, özünü öyrənənə qədər. Plaqin onu heç vaxt dəyişmir; hər uyğunlaşmanın öyrəndiyi ölçü onun altında göstərilir.</string>
+    <string name="feed_012f_info">Mövcud göstəricilərin görməsi üçün Torque-un zavod Fuel Level (012F) üzərinə dəyər yazır: Sönülü, hamarlanmış, və ya Chunk, Band ya Kalman uyğunlaşmasından düzəldilmiş. Hələ qurulmamış uyğunlaşma hamarlanmış səviyyəni yazır.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">hələ ölçü yoxdur</string>
+    <string name="size_none_sd">hələ ölçü yoxdur ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">Kömək</string>
+    <string name="about">Haqqında</string>
+    <string name="need_torque">Torque Pro (ödənişli) tələb olunur. Torque Lite plaginləri dəstəkləmir.</string>
+    <string name="get_torque">Torque Pro əldə et</string>
+    <string name="privacy">Məxfilik</string>
+    <string name="send_feedback">Rəy göndər</string>
+    <string name="tip">Bəxşiş</string>
+    <string name="thanks">Təşəkkür</string>
+    <string name="close">Bağla</string>
+    <string name="ok">OK</string>
+    <string name="detect">Aşkarla</string>
+    <string name="confirm">Təsdiq</string>
+    <string name="save_pin">İşarəni saxla</string>
+    <string name="add_tank">Əlavə bak əlavə et</string>
+    <string name="remove">Sil</string>
+    <string name="details">Təfərrüatlar</string>
+    <string name="verbose_logging">Ətraflı jurnal (sazlama; saniyədə bir sətir)</string>
+    <string name="profile_name">Profil adı</string>
+    <string name="profile_name_info">Bu avtomobil profilinin adı. Hər Torque avtomobil profili öz plagin profilini, məlumatını və öyrənilmiş xəritələrini alır.</string>
+    <string name="make">Marka</string>
+    <string name="make_info">Avtomobil markası (məs. Ford). Yalnız aşkarlamanın hansı markaya xas yanacaq PID-lərini sınayacağını seçmək üçün istifadə olunur.</string>
+    <string name="fuel_source">Yanacaq mənbəyi</string>
+    <string name="fuel_source_info">Xam yanacaq səviyyəsinin haradan gəldiyi. Aşkarla (ECU qoşulu olmalıdır) namizədləri yalnız oxuyur və iki mənbə uyğun gəlmirsə təsdiq istəyir. Təsdiq quraşdırma səhifəsində və bildirişdədir. Heç biri = növbəti qoşulmada aşkarla.</string>
+    <string name="custom_long_name">Xüsusi uzun ad</string>
+    <string name="custom_long_name_info">Yalnız Torque extra PID by long name mənbəyi üçün: səviyyəni bildirən Torque PID-in dəqiq uzun adı.</string>
+    <string name="tank_size">Bak ölçüsü</string>
+    <string name="tank_hint">boş = başlanğıc ölçü yoxdur; hər uyğunlaşma özünü öyrənir.</string>
+    <string name="smoothing_tau">Hamarlama τ saniyə</string>
+    <string name="smoothing_tau_info">Hamarlama süzgəcinin zaman sabiti (0 = hamarlama yoxdur).</string>
+    <string name="max_skew" formatted="false">Maks əyilmə %/s</string>
+    <string name="max_skew_info">Hamarlanmış səviyyənin saniyədə izləyə biləcəyi ən böyük dəyişmə; bundan artıq çalxalanma nəzərə alınmır.</string>
+    <string name="fill_jump" formatted="false">Doldurma sıçrayışı %</string>
+    <string name="fill_jump_info">Dayanmış halda səviyyənin qalxması doldurma sayılır.</string>
+    <string name="odometer">Odometr milləri</string>
+    <string name="odometer_info">İstəyə bağlı: odometr göstəricisini daxil edin və bu profil üçün məsafəni bağlamaq üçün İşarəni saxla.</string>
+    <string name="additional_tanks">Əlavə baklar</string>
+    <string name="active_tank">Aktiv bak</string>
+    <string name="active_tank_info">Yanacaq sərfiyyatının (gal/hr) hansı baka yazıldığı. PID-dən: Torque PID onu seçir (1-dən başlayan bak id).</string>
+    <string name="select_pid">Select-PID uzun adı</string>
+    <string name="select_pid_info">Yalnız Aktiv bak = PID-dən olduqda: dəyəri bak id olan Torque PID-in uzun adı.</string>
+    <string name="tank_n">Bak %1$d</string>
+    <string name="tank_n_source">Bak %1$d yanacaq mənbəyi</string>
+    <string name="tank_n_custom">Bak %1$d xüsusi uzun ad (məs. [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">Bak %1$d qallon</string>
+    <string name="from_pid">PID-dən</string>
+    <string name="unconfirmed"> (təsdiqlənməyib)</string>
+    <string name="ecu_connected"> · ECU qoşulub</string>
+    <string name="tank_unknown">bak ?</string>
+    <string name="about_field">%1$s haqqında</string>
+    <string name="err_tau">0-dan %1$s s-ə qədər</string>
+    <string name="err_skew">0-dan yuxarı, ən çoxu %1$s %%/s</string>
+    <string name="err_jump">%1$s-dən %2$s %%-ə qədər</string>
+    <string name="err_tank">boş və ya 0-dan böyük ədəd</string>
+    <string name="err_stored">saxlanılan dəyər aralıqdan kənardır</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">Hamarlanmış %</string>
+    <string name="axis_error" formatted="false">Xəta (%)</string>
+    <string name="feed_off">Sönülü</string>
+    <string name="feed_smoothed" formatted="false">Hamarlanmış %</string>
+    <string name="feed_corrected_chunk" formatted="false">Corrected % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Corrected % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Corrected % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">Hələ heç biri (Aşkarla qoşulanda işləyir)</string>
+    <string name="src_sae_012f">SAE 012F Fuel Tank Level</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler Fuel Level Average</string>
+    <string name="src_toyota_2129">Toyota cluster 2129 (half-litre counts)</string>
+    <string name="src_custom_name">Torque extra PID by long name</string>
+    <string name="vehicle_default">Avtomobil 1</string>
+    <string name="vehicle_dated">Avtomobil %1$s</string>
+    <string name="binding_torque">Torque-a bağlanır…</string>
+    <string name="status_waiting">Yanacaq mənbəyi gözlənilir</string>
+    <string name="status_raw">xam %1$.1f%%</string>
+    <string name="status_sess"> sessiya %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing səssiz</string>
+    <string name="map_refit_title">Xəritə yenidən uyğunlaşır</string>
+    <string name="map_refit_body">Fuel Smoothing %1$s üçün xəritəni yenidən uyğunlaşdırır. Həmin uyğunlaşma 1:1 oxuyur, yenidən uyğunlaşma bitənə qədər.</string>
+    <string name="no_source_title">Yanacaq səviyyəsi mənbəyi təyin edilməyib</string>
+    <string name="no_source_body">Fuel Smoothing-in %1$s üçün yanacaq səviyyəsi mənbəyi yoxdur. Quraşdırma səhifəsini açın və Aşkarla düyməsinə toxunun, və ya mənbə seçin.</string>
+    <string name="no_level_title">Bu gedişdə yanacaq səviyyəsi yoxdur</string>
+    <string name="no_level_body">%1$s, %2$s üçün istifadəyə yararlı səviyyə vermədi. Adapter bağlantısını yoxlayın və ya quraşdırma səhifəsində Aşkarla işlədin.</string>
+    <string name="source_found_title">Yanacaq səviyyəsi mənbəyi tapıldı</string>
+    <string name="source_found_body">%1$s, %2$s üçün istifadə olunur (%3$s).</string>
+    <string name="source_missing_title">Yanacaq səviyyəsi mənbəyi tapılmadı</string>
+    <string name="source_missing_body">Fuel Smoothing quraşdırmasını açın və mənbə seçin (və ya PID-i Torque-da əlavə edin), sonra Aşkarla düyməsinə toxunun.</string>
+    <string name="confirm_source_title">Yanacaq səviyyəsi mənbəyini təsdiq edin</string>
+    <string name="confirm_source_body">%1$s aşkarlandı, oxunuş %2$.0f %% , %3$s üçün. Panel yanacaq göstəricisi ilə uyğun olduğunu yoxlayın, sonra Təsdiq edin. Təsdiq quraşdırma səhifəsində və bildirişdədir (%4$s).</string>
+    <string name="confirm_source_body_nolevel">%1$s aşkarlandı, %2$s üçün. Panel yanacaq göstəricisi ilə uyğun olduğunu yoxlayın, sonra Təsdiq edin. Təsdiq quraşdırma səhifəsində və bildirişdədir (%3$s).</string>
+    <string name="recording_title">%1$s ünvanına yazılır</string>
+    <string name="recording_body">Bu avtomobil %1$s-dir (%2$s), amma Torque profili \'%3$s\'-dir. Məlumat %1$s ünvanına gedir; Torque-u açmaq və profili dəyişmək üçün toxunun.</string>
+    <string name="wrong_vehicle_title">Yanlış avtomobil profili?</string>
+    <string name="wrong_suggest_profile">Torque profili \'%1$s\'</string>
+    <string name="wrong_suggest_new">yeni avtomobil profili</string>
+    <string name="wrong_vehicle_body">Torque profili \'%1$s\' bu avtomobilə uyğun gəlmir (%2$s). Təklif: %3$s. Məlumat saxlanılır və saxlamasanız gedişin sonunda silinir.</string>
+    <string name="keeping_title">Gediş məlumatı saxlanılır</string>
+    <string name="keeping_body">Bu gediş %1$s ünvanına saxlanacaq. Torque-un plagin API-si Torque profillərini yarada və ya dəyişə bilmir: Torque-da \'%2$s\' adlı avtomobil profili yaradın və ya seçin.</string>
+    <string name="action_new_profile">Yeni profil yarat</string>
+    <string name="action_use">%1$s istifadə et</string>
+</resources>

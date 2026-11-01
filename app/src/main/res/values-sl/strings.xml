@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">Napitnine so v različici Play Store</string>
+    <string name="help_body">Hitri začetek\n
+1. Namestite Torque Pro (plačljivo različico; Torque Lite ne podpira vtičnikov) in seznanite adapter OBD-II.\n
+2. Omogočite ta vtičnik v Torque → Nastavitve → Vtičniki.\n
+3. Dovolite obvestila in nastavite porabo baterije na Neomejeno, da lahko Torque zažene ta vtičnik v ozadju.\n
+4. V Torque izberite profil vozila, ki ga vozite. Podatki se hranijo po profilu Torque in preverijo glede na identiteto VIN/ECU vozila.\n
+5. Pri novem profilu se vir goriva zazna ob povezavi; če ste pozvani, ga primerjajte s kazalnikom na armaturi in tapnite Potrdi. Potrdi je na strani nastavitve in v obvestilu. Izberete ga lahko tudi spodaj.\n
+6. Velikost rezervoarja je začetna velikost za prileganje Chunk, dokler se ne nauči svoje. Vtičnik je nikoli ne spremeni; naučena velikost vsakega prileganja je prikazana pod njim.\n
+7. V Torque dodajte kazalnike za [FuelSmooth] Smoothed Fuel Level in za vsako prileganje Corrected %, Remaining, DTE ter Tank size. DTE je Remaining krat dolgoročni mpg iz Torque. Obvestilo med ponovnim prileganjem pove, da prileganje bere 1:1, dokler se ponovno prileganje ne konča.\n
+8. Vrnite raven goriva v Torque: Izklopljeno, zglajeno ali popravljeno iz prileganja Chunk, Band ali Kalman na kazalnik 012F.\n
+9. Gorivo se šteje samo, ko motor teče. Vtičnik teče samo, ko je Torque povezan z ECU.\n
+10. Nadaljujte z vožnjo in točenjem; natančnost raste čez več delnih rezervoarjev. Če se pojavi obvestilo Napačen profil vozila?, izberite, kaj storiti s to vožnjo.\n
+11. Vsi podatki ostanejo v tem telefonu. GPS in lokacija se ne zapisujeta.</string>
+    <string name="about_body">%1$s\nRazličica %2$s (%3$s)\nVtičnik za Torque Pro. Ni povezan s Torque ali Ianom Hawkinsom.\nVsi podatki ostanejo v tem telefonu; GPS in lokacija se ne zapisujeta.\n\nLicenca\nCopyright David Lang. Vse pravice pridržane.</string>
+    <string name="open_source_notices">Knjižnice odprte kode\nTa aplikacija uporablja spodnje knjižnice. Njihove licence so ločene od avtorskih pravic zgoraj.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), zahteva Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">Celoten priročnik (v spletu)</string>
+    <string name="show_fuel_notification">Prikaži raven goriva v obvestilu</string>
+    <string name="write_012f">Vrni raven goriva v Torque (prepiše 012F)</string>
+    <string name="running_quiet">Fuel Smoothing teče</string>
+    <string name="tap_to_start">Tapnite za zagon Fuel Smoothing</string>
+    <string name="tap_to_start_text">Zagon iz baterije ali v ozadju je bil zavrnjen. Odprite enkrat, da lahko vtičnik deluje s Torque.</string>
+    <string name="tank2_help">Po potrebi dodajte dodatne rezervoarje (serijski rezervoar 1 vedno ostane). Ne preklopite tipal na pin PCM FLI (lažno točenje). Vsak dodatni rezervoar potrebuje lasten dodatni PID v Torque (MCU Mode 22, edinstveno ime — ne 012F ali Ford 16C1). Vrednost Select-PID je identifikator rezervoarja od 1. Gal/hr se bremeni samo aktivnemu rezervoarju.</string>
+    <string name="tap_start_channel">Tapnite za zagon</string>
+    <string name="tank_size_info">Velikost rezervoarja je začetna velikost za prileganje Chunk, dokler se ne nauči svoje. Vtičnik je nikoli ne spremeni; naučena velikost vsakega prileganja je prikazana pod njim.</string>
+    <string name="feed_012f_info">Zapiše vrednost na serijski Fuel Level (012F) v Torque, da jo obstoječi kazalniki pokažejo: Izklopljeno, zglajeno ali popravljeno iz prileganja Chunk, Band ali Kalman. Prileganje, ki še ni zgrajeno, zapiše zglajeno raven.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">velikosti še ni</string>
+    <string name="size_none_sd">velikosti še ni ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">Pomoč</string>
+    <string name="about">Vizitka</string>
+    <string name="need_torque">Potreben je Torque Pro (plačljiv). Torque Lite ne podpira vtičnikov.</string>
+    <string name="get_torque">Pridobite Torque Pro</string>
+    <string name="privacy">Zasebnost</string>
+    <string name="send_feedback">Pošlji povratne informacije</string>
+    <string name="tip">Napitnina</string>
+    <string name="thanks">Hvala</string>
+    <string name="close">Zapri</string>
+    <string name="ok">V redu</string>
+    <string name="detect">Zaznaj</string>
+    <string name="confirm">Potrdi</string>
+    <string name="save_pin">Shrani sidro</string>
+    <string name="add_tank">Dodaj rezervoar</string>
+    <string name="remove">Odstrani</string>
+    <string name="details">Podrobnosti</string>
+    <string name="verbose_logging">Podroben dnevnik (razhroščevanje; vrstice vsako sekundo)</string>
+    <string name="profile_name">Ime profila</string>
+    <string name="profile_name_info">Ime tega profila vozila. Vsak profil vozila v Torque dobi lasten profil vtičnika, podatke in naučene karte.</string>
+    <string name="make">Znamka</string>
+    <string name="make_info">Znamka vozila (npr. Ford). Služi le izbiri, katere PID goriva znamke lahko zaznavanje preizkusi.</string>
+    <string name="fuel_source">Vir goriva</string>
+    <string name="fuel_source_info">Od kod prihaja surova raven goriva. Zaznaj (ECU mora biti povezan) preizkusi kandidate samo za branje in prosi za potrditev, če se dva vira ne ujemata. Potrdi je na strani nastavitve in v obvestilu. Noben = zaznaj ob naslednji povezavi.</string>
+    <string name="custom_long_name">Dolgo ime po meri</string>
+    <string name="custom_long_name_info">Samo za vir »Dodatni PID Torque po dolgem imenu«: natančno dolgo ime PID v Torque, ki sporoča raven.</string>
+    <string name="tank_size">Velikost rezervoarja</string>
+    <string name="tank_hint">prazno = ni začetne velikosti; vsako prileganje se nauči svoje.</string>
+    <string name="smoothing_tau">Glajenje τ v sekundah</string>
+    <string name="smoothing_tau_info">Časovna konstanta filtra glajenja (0 = brez glajenja).</string>
+    <string name="max_skew" formatted="false">Najv. naklon %/s</string>
+    <string name="max_skew_info">Največja sprememba na sekundo, ki ji zglajena raven sme slediti; večje pljuskanje se prezre.</string>
+    <string name="fill_jump" formatted="false">Skok točenja %</string>
+    <string name="fill_jump_info">Dvig ravni med mirovanjem, ki šteje kot točenje.</string>
+    <string name="odometer">Števec kilometrov v miljah</string>
+    <string name="odometer_info">Neobvezno: vnesite odčitek števca in Shrani sidro, da zasidrate razdaljo tega profila.</string>
+    <string name="additional_tanks">Dodatni rezervoarji</string>
+    <string name="active_tank">Dejavni rezervoar</string>
+    <string name="active_tank_info">Rezervoar, ki se mu bremeni poraba (gal/hr). Iz PID: PID v Torque ga izbere (identifikator od 1).</string>
+    <string name="select_pid">Dolgo ime Select-PID</string>
+    <string name="select_pid_info">Samo ko je Dejavni rezervoar = Iz PID: dolgo ime PID v Torque, katerega vrednost je identifikator rezervoarja.</string>
+    <string name="tank_n">Rezervoar %1$d</string>
+    <string name="tank_n_source">Vir goriva rezervoarja %1$d</string>
+    <string name="tank_n_custom">Dolgo ime po meri rezervoarja %1$d (npr. [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">Galone rezervoarja %1$d</string>
+    <string name="from_pid">Iz PID</string>
+    <string name="unconfirmed"> (nepotrjeno)</string>
+    <string name="ecu_connected"> · ECU povezan</string>
+    <string name="tank_unknown">rezervoar ?</string>
+    <string name="about_field">Približno %1$s</string>
+    <string name="err_tau">0 do %1$s s</string>
+    <string name="err_skew">nad 0, največ %1$s %%/s</string>
+    <string name="err_jump">%1$s do %2$s %%</string>
+    <string name="err_tank">prazno ali število, večje od 0</string>
+    <string name="err_stored">shranjena vrednost je zunaj obsega</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">Zglajeno %</string>
+    <string name="axis_error" formatted="false">Napaka (%)</string>
+    <string name="feed_off">Izklopljeno</string>
+    <string name="feed_smoothed" formatted="false">Zglajeno %</string>
+    <string name="feed_corrected_chunk" formatted="false">Popravljeno % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Popravljeno % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Popravljeno % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">Še ni (Zaznaj ob povezavi)</string>
+    <string name="src_sae_012f">SAE 012F Fuel Tank Level</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler Fuel Level Average</string>
+    <string name="src_toyota_2129">Toyota cluster 2129 (števci po pol litra)</string>
+    <string name="src_custom_name">Dodatni PID Torque po dolgem imenu</string>
+    <string name="vehicle_default">Vozilo 1</string>
+    <string name="vehicle_dated">Vozilo %1$s</string>
+    <string name="binding_torque">Povezovanje s Torque…</string>
+    <string name="status_waiting">Čakanje na vir goriva</string>
+    <string name="status_raw">surovo %1$.1f%%</string>
+    <string name="status_sess"> vožnja %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing tiho</string>
+    <string name="map_refit_title">Ponovno prileganje karte</string>
+    <string name="map_refit_body">Fuel Smoothing ponovno prilega karto za %1$s. To prileganje bere 1:1, dokler se ponovno prileganje ne konča.</string>
+    <string name="no_source_title">Vir ravni goriva ni nastavljen</string>
+    <string name="no_source_body">Fuel Smoothing nima vira ravni goriva za %1$s. Odprite stran nastavitve in tapnite Zaznaj ali izberite vir.</string>
+    <string name="no_level_title">Na tej vožnji ni ravni goriva</string>
+    <string name="no_level_body">%1$s ni dal uporabne ravni za %2$s. Preverite povezavo adapterja ali zaženite Zaznaj na strani nastavitve.</string>
+    <string name="source_found_title">Vir ravni goriva je najden</string>
+    <string name="source_found_body">Uporablja se %1$s za %2$s (%3$s).</string>
+    <string name="source_missing_title">Vir ravni goriva ni najden</string>
+    <string name="source_missing_body">Odprite nastavitev Fuel Smoothing in izberite vir (ali dodajte PID v Torque), nato tapnite Zaznaj.</string>
+    <string name="confirm_source_title">Potrdite vir ravni goriva</string>
+    <string name="confirm_source_body">Zaznano %1$s, odčitek %2$.0f %% za %3$s. Preverite, da se ujema s kazalnikom na armaturi, nato tapnite Potrdi. Potrdi je na strani nastavitve in v obvestilu (%4$s).</string>
+    <string name="confirm_source_body_nolevel">Zaznano %1$s za %2$s. Preverite, da se ujema s kazalnikom na armaturi, nato tapnite Potrdi. Potrdi je na strani nastavitve in v obvestilu (%3$s).</string>
+    <string name="recording_title">Snemanje v %1$s</string>
+    <string name="recording_body">To vozilo je %1$s (%2$s), profil Torque pa je »%3$s«. Podatki gredo v %1$s; tapnite, da odprete Torque in preklopite profil.</string>
+    <string name="wrong_vehicle_title">Napačen profil vozila?</string>
+    <string name="wrong_suggest_profile">Profil Torque »%1$s«</string>
+    <string name="wrong_suggest_new">nov profil vozila</string>
+    <string name="wrong_vehicle_body">Profil Torque »%1$s« ne ustreza temu vozilu (%2$s). Predlog: %3$s. Podatki se zadržijo in ob koncu vožnje zavržejo, če jih ne obdržite.</string>
+    <string name="keeping_title">Ohranjanje podatkov vožnje</string>
+    <string name="keeping_body">Ta vožnja bo shranjena v %1$s. API vtičnika Torque ne more ustvariti ali preklopiti profilov Torque: v Torque ustvarite ali izberite profil vozila z imenom »%2$s«.</string>
+    <string name="action_new_profile">Ustvari nov profil</string>
+    <string name="action_use">Uporabi %1$s</string>
+</resources>

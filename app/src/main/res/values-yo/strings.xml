@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">Àwọn ìmọ̀ràn wà lórí ẹ̀yà Play Store</string>
+    <string name="help_body">Ìbẹ̀rẹ̀ kíákíá\n
+1. Fi Torque Pro sori ẹrọ (ẹ̀yà tí a sanwó; Torque Lite kò ṣe àtìlẹ́yìn fún àwọn plugin) kí o sì so àdàpítà OBD-II pọ̀.\n
+2. Tan plugin yìí ní Torque → Àwọn ètò → Plugins.\n
+3. Fàyè gba àwọn ìfitónilétí, kí o sì ṣètò lílò bátìrì sí Àìnídíwọ̀n kí Torque lè bẹ̀rẹ̀ plugin yìí ní abẹ́lẹ̀.\n
+4. Nínú Torque, yan prófàìlì ọkọ̀ tí o ń wa. A tọ́jú dáta fún prófàìlì Torque kọ̀ọ̀kan, a sì ṣàyẹ̀wò rẹ̀ sí ìdánimọ̀ VIN/ECU ọkọ̀.\n
+5. Lórí prófàìlì tuntun a máa rí orísun epo nígbà tí o bá so; bí a bá béèrè, fi wé gẹ́ẹ̀jì páànù kí o sì tẹ̀ Jẹ́rìísí. Jẹ́rìísí wà lórí ojúewé ètò àti nínú ìfitónilétí. O tún lè yàn án ní ìsàlẹ̀.\n
+6. Ìwọ̀n tánkì ni ìwọ̀n ìbẹ̀rẹ̀ fún Chunk fit títí tí yóò fi kọ́ tirẹ̀. Plugin kò yí i padà rí; ìwọ̀n tí fit kọ̀ọ̀kan kọ́ hàn ní abẹ́ rẹ̀.\n
+7. Nínú Torque, fi àwọn gẹ́ẹ̀jì kún fún [FuelSmooth] Smoothed Fuel Level àti Corrected %, Remaining, DTE àti Tank size fún fit kọ̀ọ̀kan. DTE ni Remaining ní ìsọdipúpọ̀ pẹ̀lú mpg gígùn Torque. Ìfitónilétí nígbà refit sọ pé fit yẹn ń ka 1:1 títí refit yóò fi parí.\n
+8. Da ìpele epo padà sí Torque: Pa, dídán, tàbí àtúnṣe láti Chunk, Band tàbí Kalman fit sí gẹ́ẹ̀jì 012F rẹ.\n
+9. A ń kà epo nígbà tí ẹ̀rọ ń ṣiṣẹ́ nìkan. Plugin ń ṣiṣẹ́ nígbà tí Torque bá so pọ̀ mọ́ ECU nìkan.\n
+10. Máa wa kí o sì máa kún; òtítọ́ ń pọ̀ sí lórí àwọn tánkì àìkún púpọ̀. Bí ìfitónilétí Prófàìlì ọkọ̀ tí kò tọ́? bá hàn, yan ohun tí o fẹ́ ṣe pẹ̀lú ìrìn yẹn.\n
+11. Gbogbo dáta dúró lórí fóònù yìí. A kò ṣe àkọsílẹ̀ GPS tàbí ibùdó.</string>
+    <string name="about_body">%1$s\nẸ̀yà %2$s (%3$s)\nPlugin fún Torque Pro. Kò ní í ṣe pẹ̀lú Torque tàbí Ian Hawkins.\nGbogbo dáta dúró lórí fóònù yìí; a kò ṣe àkọsílẹ̀ GPS tàbí ibùdó.\n\nÌwé-àṣẹ\nCopyright David Lang. A dá gbogbo ẹ̀tọ́ dúró.</string>
+    <string name="open_source_notices">Àwọn ilé-ìkàwé orísun ṣíṣí\nOhun èlò yìí ń lo àwọn ilé-ìkàwé ìsàlẹ̀. Àwọn ìwé-àṣẹ wọn yàtọ̀ sí àṣẹ-ọ̀rọ̀ òkè.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), Play Billing nílò\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">Ìtọ́sọ́nà kíkún (lórí ayélujára)</string>
+    <string name="show_fuel_notification">Fi ìpele epo hàn nínú ìfitónilétí</string>
+    <string name="write_012f">Da ìpele epo padà sí Torque (ó rọ́pò 012F)</string>
+    <string name="running_quiet">Fuel Smoothing ń ṣiṣẹ́</string>
+    <string name="tap_to_start">Tẹ̀ láti bẹ̀rẹ̀ Fuel Smoothing</string>
+    <string name="tap_to_start_text">A kọ̀ ìbẹ̀rẹ̀ láti bátìrì tàbí abẹ́lẹ̀. Ṣí ẹ̀ẹ̀kan kí plugin lè ṣiṣẹ́ pẹ̀lú Torque.</string>
+    <string name="tank2_help">Fi àwọn tánkì mìíràn kún bí ó bá yẹ (tánkì ilé-iṣẹ́ 1 máa wà). Má ṣe yí àwọn olùránṣẹ́ sí pini PCM FLI (kíkún èké). Tánkì kọ̀ọ̀kan mìíràn nílò PID àfikún Torque tirẹ̀ (MCU Mode 22, orúkọ àrà ọ̀tọ̀ — kì í ṣe 012F tàbí Ford 16C1). Iye Select-PID ni id tánkì láti 1. A ń gba Gal/hr lórí tánkì tó ń ṣiṣẹ́ nìkan.</string>
+    <string name="tap_start_channel">Tẹ̀ láti bẹ̀rẹ̀</string>
+    <string name="tank_size_info">Ìwọ̀n tánkì ni ìwọ̀n ìbẹ̀rẹ̀ fún Chunk fit títí tí yóò fi kọ́ tirẹ̀. Plugin kò yí i padà rí; ìwọ̀n tí fit kọ̀ọ̀kan kọ́ hàn ní abẹ́ rẹ̀.</string>
+    <string name="feed_012f_info">Ó ń kọ iye sórí Fuel Level ilé-iṣẹ́ Torque (012F) kí àwọn gẹ́ẹ̀jì tó wà lè fi hàn: Pa, dídán, tàbí àtúnṣe láti Chunk, Band tàbí Kalman fit. Fit tí a kò tíì kọ́ ń kọ ìpele dídán.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">kò tíì ní ìwọ̀n</string>
+    <string name="size_none_sd">kò tíì ní ìwọ̀n ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">Ìrànlọ́wọ́</string>
+    <string name="about">Nípa</string>
+    <string name="need_torque">Torque Pro (tí a sanwó) nílò. Torque Lite kò ṣe àtìlẹ́yìn fún àwọn plugin.</string>
+    <string name="get_torque">Gba Torque Pro</string>
+    <string name="privacy">Àṣírí</string>
+    <string name="send_feedback">Fi èsì ránṣẹ́</string>
+    <string name="tip">Èbùn</string>
+    <string name="thanks">O ṣeun</string>
+    <string name="close">Pa</string>
+    <string name="ok">OK</string>
+    <string name="detect">Wá</string>
+    <string name="confirm">Jẹ́rìísí</string>
+    <string name="save_pin">Fi àmì pamọ́</string>
+    <string name="add_tank">Fi tánkì mìíràn kún</string>
+    <string name="remove">Yọ kúrò</string>
+    <string name="details">Àlàyé</string>
+    <string name="verbose_logging">Àkọsílẹ̀ kíkún (àtúnṣe; ìlà ní ìṣẹ́jú-àáyá kọ̀ọ̀kan)</string>
+    <string name="profile_name">Orúkọ prófàìlì</string>
+    <string name="profile_name_info">Orúkọ prófàìlì ọkọ̀ yìí. Prófàìlì ọkọ̀ Torque kọ̀ọ̀kan ń gba prófàìlì plugin, dáta, àti àwọn máàpù tí ó kọ́.</string>
+    <string name="make">Olùṣẹ̀dá</string>
+    <string name="make_info">Olùṣẹ̀dá ọkọ̀ (bíi Ford). A ń lò ó láti yan PID epo àmì tí wíwá lè gbìyànjú nìkan.</string>
+    <string name="fuel_source">Orísun epo</string>
+    <string name="fuel_source_info">Ibi tí ìpele epo àìlọ́wọ́ ti ń wá. Wá (ECU gbọ́dọ̀ wà ní àsopọ̀) ń ka àwọn olùdíje fún kíkà nìkan, ó sì ń béèrè ìjẹ́rìísí àyàfi tí orísun méjì bá gba. Jẹ́rìísí wà lórí ojúewé ètò àti nínú ìfitónilétí. Kò sí = wá ní àsopọ̀ tó kàn.</string>
+    <string name="custom_long_name">Orúkọ gígùn àdáni</string>
+    <string name="custom_long_name_info">Fún orísun Torque extra PID by long name nìkan: orúkọ gígùn gangan PID Torque tó ń sọ ìpele.</string>
+    <string name="tank_size">Ìwọ̀n tánkì</string>
+    <string name="tank_hint">òfo = kò sí ìwọ̀n ìbẹ̀rẹ̀; fit kọ̀ọ̀kan ń kọ́ tirẹ̀.</string>
+    <string name="smoothing_tau">Ìdán τ ìṣẹ́jú-àáyá</string>
+    <string name="smoothing_tau_info">Àìyípadà àkókò fún àlẹ̀mọ́ ìdán (0 = kò sí ìdán).</string>
+    <string name="max_skew" formatted="false">Ìyípo tó pọ̀ jù %/s</string>
+    <string name="max_skew_info">Àyípadà tó tóbi jù lọ ní ìṣẹ́jú-àáyá tí ìpele dídán lè tẹ̀lé; a kò ka ìgbọ̀n tí ó ju èyí lọ.</string>
+    <string name="fill_jump" formatted="false">Ìfò kíkún %</string>
+    <string name="fill_jump_info">Ìgbéga ìpele nígbà ìdúró tí a ń kà sí kíkún.</string>
+    <string name="odometer">Màílì odómítà</string>
+    <string name="odometer_info">Àṣàyàn: tẹ kíkà odómítà kí o sì Fi àmì pamọ́ láti so ìjìnnà prófàìlì yìí mọ́lẹ̀.</string>
+    <string name="additional_tanks">Àwọn tánkì mìíràn</string>
+    <string name="active_tank">Tánkì tó ń ṣiṣẹ́</string>
+    <string name="active_tank_info">Tánkì wo ni a ń gba sísun epo (gal/hr) sí. Láti PID: PID Torque ń yàn án (id tánkì láti 1).</string>
+    <string name="select_pid">Orúkọ gígùn Select-PID</string>
+    <string name="select_pid_info">Nígbà tí Tánkì tó ń ṣiṣẹ́ = Láti PID nìkan: orúkọ gígùn PID Torque tí iye rẹ̀ jẹ́ id tánkì.</string>
+    <string name="tank_n">Tánkì %1$d</string>
+    <string name="tank_n_source">Orísun epo tánkì %1$d</string>
+    <string name="tank_n_custom">Orúkọ gígùn àdáni tánkì %1$d (bíi [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">Gálọ̀ọ̀nù tánkì %1$d</string>
+    <string name="from_pid">Láti PID</string>
+    <string name="unconfirmed"> (àìjẹ́rìísí)</string>
+    <string name="ecu_connected"> · ECU ti so</string>
+    <string name="tank_unknown">tánkì ?</string>
+    <string name="about_field">Nípa %1$s</string>
+    <string name="err_tau">0 sí %1$s s</string>
+    <string name="err_skew">lóke 0, kò ju %1$s %%/s lọ</string>
+    <string name="err_jump">%1$s sí %2$s %%</string>
+    <string name="err_tank">òfo tàbí nọ́ńbà tó ju 0 lọ</string>
+    <string name="err_stored">iye tí a pamọ́ ti kọjá ààlà</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">Dídán %</string>
+    <string name="axis_error" formatted="false">Àṣìṣe (%)</string>
+    <string name="feed_off">Pa</string>
+    <string name="feed_smoothed" formatted="false">Dídán %</string>
+    <string name="feed_corrected_chunk" formatted="false">Corrected % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Corrected % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Corrected % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">Kò sí síbẹ̀ (Wá ń ṣiṣẹ́ ní àsopọ̀)</string>
+    <string name="src_sae_012f">SAE 012F Fuel Tank Level</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler Fuel Level Average</string>
+    <string name="src_toyota_2129">Toyota cluster 2129 (half-litre counts)</string>
+    <string name="src_custom_name">Torque extra PID by long name</string>
+    <string name="vehicle_default">Ọkọ̀ 1</string>
+    <string name="vehicle_dated">Ọkọ̀ %1$s</string>
+    <string name="binding_torque">Ń so pọ̀ mọ́ Torque…</string>
+    <string name="status_waiting">Ń dúró de orísun epo</string>
+    <string name="status_raw">àìlọ́wọ́ %1$.1f%%</string>
+    <string name="status_sess"> ìgbà %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing dákẹ́</string>
+    <string name="map_refit_title">Máàpù ń tún fit</string>
+    <string name="map_refit_body">Fuel Smoothing ń tún máàpù fit fún %1$s. Fit yẹn ń ka 1:1 títí refit yóò fi parí.</string>
+    <string name="no_source_title">A kò ṣètò orísun ìpele epo</string>
+    <string name="no_source_body">Fuel Smoothing kò ní orísun ìpele epo fún %1$s. Ṣí ojúewé ètò kí o sì tẹ̀ Wá, tàbí yan orísun.</string>
+    <string name="no_level_title">Kò sí ìpele epo lórí ìrìn yìí</string>
+    <string name="no_level_body">%1$s kò fún %2$s ní ìpele tó ṣe é lò. Ṣàyẹ̀wò àsopọ̀ àdàpítà, tàbí ṣiṣẹ́ Wá lórí ojúewé ètò.</string>
+    <string name="source_found_title">A rí orísun ìpele epo</string>
+    <string name="source_found_body">A ń lo %1$s fún %2$s (%3$s).</string>
+    <string name="source_missing_title">A kò rí orísun ìpele epo</string>
+    <string name="source_missing_body">Ṣí ètò Fuel Smoothing kí o yan orísun (tàbí fi PID kún nínú Torque), lẹ́yìn náà tẹ̀ Wá.</string>
+    <string name="confirm_source_title">Jẹ́rìísí orísun ìpele epo</string>
+    <string name="confirm_source_body">A rí %1$s, kíkà %2$.0f %% fún %3$s. Ṣàyẹ̀wò pé ó bá gẹ́ẹ̀jì epo páànù mu, lẹ́yìn náà tẹ̀ Jẹ́rìísí. Jẹ́rìísí wà lórí ojúewé ètò àti nínú ìfitónilétí (%4$s).</string>
+    <string name="confirm_source_body_nolevel">A rí %1$s fún %2$s. Ṣàyẹ̀wò pé ó bá gẹ́ẹ̀jì epo páànù mu, lẹ́yìn náà tẹ̀ Jẹ́rìísí. Jẹ́rìísí wà lórí ojúewé ètò àti nínú ìfitónilétí (%3$s).</string>
+    <string name="recording_title">Ń ṣe àkọsílẹ̀ sí %1$s</string>
+    <string name="recording_body">Ọkọ̀ yìí jẹ́ %1$s (%2$s), ṣùgbọ́n prófàìlì Torque jẹ́ \'%3$s\'. Dáta ń lọ sí %1$s; tẹ̀ láti ṣí Torque kí o sì yí prófàìlì padà.</string>
+    <string name="wrong_vehicle_title">Prófàìlì ọkọ̀ tí kò tọ́?</string>
+    <string name="wrong_suggest_profile">Prófàìlì Torque \'%1$s\'</string>
+    <string name="wrong_suggest_new">prófàìlì ọkọ̀ tuntun</string>
+    <string name="wrong_vehicle_body">Prófàìlì Torque \'%1$s\' kò bá ọkọ̀ yìí mu (%2$s). Àbá: %3$s. A di dáta mú, a sì dá a sílẹ̀ ní òpin ìrìn àyàfi tí o bá pa á mọ́.</string>
+    <string name="keeping_title">A ń pa dáta ìrìn mọ́</string>
+    <string name="keeping_body">A ó fi ìrìn yìí pamọ́ sí %1$s. API plugin Torque kò lè dá tàbí yí prófàìlì Torque padà: nínú Torque, dá tàbí yan prófàìlì ọkọ̀ tó ún jẹ́ \'%2$s\'.</string>
+    <string name="action_new_profile">Dá prófàìlì tuntun</string>
+    <string name="action_use">Lo %1$s</string>
+</resources>

@@ -25,7 +25,6 @@ internal object ProfileStore {
     data class LedgerSeed(
         val fillAnchorGal: Double?,
         val burnSinceFillGal: Double,
-        val learnedUsable: Double?,
         val tankGal: Double?,
     )
 
@@ -35,6 +34,7 @@ internal object ProfileStore {
         root: File,
         torqueProfileName: String?,
         ledger: LedgerSeed?,
+        defaultName: String,
         nowMs: Long = System.currentTimeMillis(),
     ): File {
         renameDefaultToSlug(root)
@@ -53,8 +53,7 @@ internal object ProfileStore {
         }
         profile.mkdirs()
         File(profile, "raw").mkdirs()
-        val nameplate = ledger?.tankGal
-        marker.writeText(profileJson(DEFAULT_ID, "Vehicle 1", null, torqueProfileName, nowMs, nameplate))
+        marker.writeText(profileJson(DEFAULT_ID, defaultName, null, torqueProfileName, nowMs))
         val active = File(root, "active-profile.json")
         if (!active.isFile) active.writeText("{\"profileId\":\"$DEFAULT_ID\"}")
         File(profile, "ledger.json").writeText(ledgerJson(ledger))
@@ -187,30 +186,15 @@ internal object ProfileStore {
         if (!tmp.renameTo(f)) { f.writeText(text); tmp.delete() }
     }
 
-    /** Per-profile tank-size guess (gal) and whether it was learned (true) or entered/seeded (false). */
-    fun tankGuess(root: File, id: String): Pair<String?, Boolean> =
-        profileField(root, id, "tankGal") to (profileField(root, id, "tankEstimated") == "true")
+    /** Per-profile tank-size guess (gal), or null when the profile has none. */
+    fun tankGuess(root: File, id: String): String? = profileField(root, id, "tankGal")
 
-    /** Stores the profile's tank guess rounded to 0.1 gal; returns false when unchanged (< 0.1 gal, same flag). */
-    fun setTankGuess(root: File, id: String, gal: Double, estimated: Boolean): Boolean {
-        if (!gal.isFinite() || gal <= 0.0) return false
-        if (!File(profileDir(root, id), "profile.json").isFile) return false
-        val (oldRaw, oldEst) = tankGuess(root, id)
-        val rounded = Math.round(gal * 10.0) / 10.0
-        val old = oldRaw?.toDoubleOrNull()
-        if (old != null && kotlin.math.abs(old - rounded) < 0.1 && oldEst == estimated) return false
-        setProfileField(root, id, "tankGal", rounded.toString())
-        setProfileField(root, id, "tankEstimated", estimated.toString())
-        return true
-    }
-
-    /** Entered by the user: stored as typed (validated by the caller), never "estimated". Blank clears it. */
+    /** Entered by the user: stored as typed (validated by the caller). Blank clears it. */
     fun setTankEntered(root: File, id: String, raw: String) {
         if (!File(profileDir(root, id), "profile.json").isFile) return
         val old = profileField(root, id, "tankGal")
         if (old == raw.ifBlank { null }) return
         setProfileField(root, id, "tankGal", raw.ifBlank { null })
-        setProfileField(root, id, "tankEstimated", "false")
     }
 
     fun createProfile(root: File, name: String, nowMs: Long = System.currentTimeMillis()): String =
@@ -223,7 +207,7 @@ internal object ProfileStore {
         while (id in taken || id == DEFAULT_ID || File(root, "profiles/$id").exists()) id = "$base-${n++}"
         val dir = File(root, "profiles/$id")
         File(dir, "raw").mkdirs()
-        File(dir, "profile.json").writeText(profileJson(id, name, null, name, nowMs, null))
+        File(dir, "profile.json").writeText(profileJson(id, name, null, name, nowMs))
         File(dir, "ledger.json").writeText(ledgerJson(null))
         return id
     }
@@ -244,6 +228,10 @@ internal object ProfileStore {
         val base = profileDir(root, profileId)
         return if (tank <= 1) base else File(base, "tanks/$tank")
     }
+
+    /** Tank 1 is the profile directory. A directory under tanks/ uses its own number. */
+    fun tankNumber(dir: File): Int =
+        if (dir.parentFile?.name == "tanks") dir.name.toIntOrNull() ?: 1 else 1
 
     fun profileField(root: File, profileId: String, key: String): String? {
         val f = File(profileDir(root, profileId), "profile.json")
@@ -612,8 +600,14 @@ internal object ProfileStore {
     private fun writeModelIfChanged(f: File, json: String) {
         val strip = { x: String -> x.replace(Regex("\"timestamp\":[0-9]+"), "") }
         if (f.isFile && strip(f.readText()) == strip(json)) return
-        if (!f.isFile) FsLog.i("FuelSmooth", "chunk model was absent before this write")
+        if (!f.isFile) logOwnSize("chunk", f.parentFile, doubleField(json, "capToZero"))
         AtomicFile.write(f, json)
+    }
+
+    private fun logOwnSize(fit: String, dir: File?, gal: Double?) {
+        val tank = if (dir == null) 1 else tankNumber(dir)
+        val text = if (gal != null && gal.isFinite()) java.lang.String.format(java.util.Locale.US, "%.1f", gal) else "none"
+        FsLog.i("FuelSmooth", "fit_own_size fit=$fit tank=$tank gal=$text")
     }
 
     fun storedMap(dir: File): Triple<DoubleArray, DoubleArray, Double>? {
@@ -774,7 +768,6 @@ internal object ProfileStore {
         vin: String?,
         torqueProfileName: String?,
         createdMs: Long,
-        nameplateGal: Double?,
     ): String {
         return buildString {
             append("{\"id\":").append(jsonString(id))
@@ -782,7 +775,6 @@ internal object ProfileStore {
             append(",\"vin\":").append(if (vin == null) "null" else jsonString(vin))
             append(",\"torqueProfileName\":").append(if (torqueProfileName == null) "null" else jsonString(torqueProfileName))
             append(",\"createdMs\":").append(createdMs)
-            append(",\"nameplateGal\":").append(if (nameplateGal == null) "null" else nameplateGal.toString())
             append(",\"sources\":{},\"odometerPins\":[],\"schema\":").append(SCHEMA).append("}")
         }
     }
@@ -790,12 +782,10 @@ internal object ProfileStore {
     private fun ledgerJson(seed: LedgerSeed?): String {
         val anchor = seed?.fillAnchorGal
         val burn = seed?.burnSinceFillGal ?: 0.0
-        val learned = seed?.learnedUsable
         val tank = seed?.tankGal
         return buildString {
             append("{\"fillAnchorGal\":").append(if (anchor == null) "null" else anchor.toString())
             append(",\"burnSinceFillGal\":").append(burn)
-            append(",\"learnedUsable\":").append(if (learned == null) "null" else learned.toString())
             append(",\"tankGal\":").append(if (tank == null) "null" else tank.toString())
             append("}")
         }

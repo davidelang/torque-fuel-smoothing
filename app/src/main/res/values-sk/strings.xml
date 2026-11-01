@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">Prepitné je vo verzii Play Store</string>
+    <string name="help_body">Rýchly štart\n
+1. Nainštalujte Torque Pro (platenú verziu; Torque Lite pluginy nepodporuje) a spárujte adaptér OBD-II.\n
+2. Povoľte tento plugin v Torque → Nastavenia → Pluginy.\n
+3. Povoľte upozornenia a nastavte využitie batérie na Neobmedzené, aby Torque mohol spúšťať tento plugin na pozadí.\n
+4. V Torque vyberte profil vozidla, ktoré vediete. Údaje sa uchovávajú podľa profilu Torque a kontrolujú sa voči identite VIN/ECU vozidla.\n
+5. Pri novom profile sa zdroj paliva zistí pri pripojení; ak ste vyzvaní, porovnajte ho s ukazovateľom na palubnej doske a klepnite na Potvrdiť. Potvrdiť je na stránke nastavenia aj v upozornení. Môžete ho vybrať aj nižšie.\n
+6. Veľkosť nádrže je východisková veľkosť pre fit Chunk, kým sa nenaučí vlastnú. Plugin ju nikdy nemení; naučená veľkosť každého fitu je zobrazená pod ním.\n
+7. V Torque pridajte ukazovatele pre [FuelSmooth] Smoothed Fuel Level a pre každý fit Corrected %, Remaining, DTE a Tank size. DTE je Remaining krát dlhodobá spotreba mpg v Torque. Upozornenie počas prepočtu hovorí, že fit číta 1:1, kým sa prepočet neskončí.\n
+8. Posielajte hladinu paliva späť do Torque: Vypnuté, vyhladené alebo opravené z fitu Chunk, Band alebo Kalman na váš ukazovateľ 012F.\n
+9. Palivo sa počíta len keď motor beží. Plugin beží len keď je Torque pripojený k ECU.\n
+10. Jazdite ďalej a tankujte; presnosť rastie počas niekoľkých čiastočných nádrží. Ak sa objaví upozornenie Nesprávny profil vozidla?, zvoľte, čo s tou jazdou.\n
+11. Všetky údaje zostávajú v tomto telefóne. GPS ani poloha sa nezaznamenáva.</string>
+    <string name="about_body">%1$s\nVerzia %2$s (%3$s)\nPlugin pre Torque Pro. Nie je spojený s Torque ani Ianom Hawkinsom.\nVšetky údaje zostávajú v tomto telefóne; GPS ani poloha sa nezaznamenáva.\n\nLicencia\nCopyright David Lang. Všetky práva vyhradené.</string>
+    <string name="open_source_notices">Knižnice s otvoreným zdrojovým kódom\nTáto aplikácia používa knižnice nižšie. Ich licencie sú oddelené od copyrightu vyššie.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), vyžaduje Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">Úplný návod (online)</string>
+    <string name="show_fuel_notification">Zobraziť hladinu paliva v upozornení</string>
+    <string name="write_012f">Posielať hladinu paliva späť do Torque (prepíše 012F)</string>
+    <string name="running_quiet">Fuel Smoothing beží</string>
+    <string name="tap_to_start">Klepnutím spustite Fuel Smoothing</string>
+    <string name="tap_to_start_text">Spustenie z batérie alebo na pozadí bolo zamietnuté. Otvorte aplikáciu raz, aby plugin mohol bežať s Torque.</string>
+    <string name="tank2_help">Podľa potreby pridajte ďalšie nádrže (sériová nádrž 1 zostáva vždy). Neprepínajte snímače na pin PCM FLI (falošné tankovanie). Každá ďalšia nádrž potrebuje vlastný doplnkový PID Torque (MCU Mode 22, jedinečný názov — nie 012F ani Ford 16C1). Hodnota Select-PID je identifikátor nádrže od 1. Gal/hr sa účtujú len aktívnej nádrži.</string>
+    <string name="tap_start_channel">Klepnutím spustiť</string>
+    <string name="tank_size_info">Veľkosť nádrže je východisková veľkosť pre fit Chunk, kým sa nenaučí vlastnú. Plugin ju nikdy nemení; naučená veľkosť každého fitu je zobrazená pod ním.</string>
+    <string name="feed_012f_info">Zapíše hodnotu na sériový Fuel Level (012F) v Torque, aby ju ukazovali existujúce ukazovatele: Vypnuté, vyhladené alebo opravené z fitu Chunk, Band alebo Kalman. Fit, ktorý ešte nie je zostavený, zapíše vyhladenú hladinu.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">zatiaľ bez veľkosti</string>
+    <string name="size_none_sd">zatiaľ bez veľkosti ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">Pomocník</string>
+    <string name="about">O aplikácii</string>
+    <string name="need_torque">Vyžaduje Torque Pro (platené). Torque Lite pluginy nepodporuje.</string>
+    <string name="get_torque">Získať Torque Pro</string>
+    <string name="privacy">Súkromie</string>
+    <string name="send_feedback">Odoslať spätnú väzbu</string>
+    <string name="tip">Prepitné</string>
+    <string name="thanks">Ďakujeme</string>
+    <string name="close">Zavrieť</string>
+    <string name="ok">OK</string>
+    <string name="detect">Zistiť</string>
+    <string name="confirm">Potvrdiť</string>
+    <string name="save_pin">Uložiť kotvu</string>
+    <string name="add_tank">Pridať ďalšiu nádrž</string>
+    <string name="remove">Odstrániť</string>
+    <string name="details">Podrobnosti</string>
+    <string name="verbose_logging">Podrobný protokol (ladenie; riadky každú sekundu)</string>
+    <string name="profile_name">Názov profilu</string>
+    <string name="profile_name_info">Názov tohto profilu vozidla. Každý profil vozidla v Torque má vlastný profil pluginu, údaje a naučené mapy.</string>
+    <string name="make">Značka</string>
+    <string name="make_info">Značka vozidla (napr. Ford). Slúži len na výber značkových PID paliva, ktoré môže zisťovanie skúsiť.</string>
+    <string name="fuel_source">Zdroj paliva</string>
+    <string name="fuel_source_info">Odkiaľ pochádza surová hladina paliva. Zistiť (ECU musí byť pripojené) skúša kandidátov len na čítanie a žiada o potvrdenie, ak sa dva zdroje nezhodujú. Potvrdiť je na stránke nastavenia aj v upozornení. Žiadny = zistiť pri ďalšom pripojení.</string>
+    <string name="custom_long_name">Vlastný dlhý názov</string>
+    <string name="custom_long_name_info">Len pre zdroj „Doplnkový PID Torque podľa dlhého názvu“: presný dlhý názov PID Torque, ktorý hlási hladinu.</string>
+    <string name="tank_size">Veľkosť nádrže</string>
+    <string name="tank_hint">prázdne = bez východiskovej veľkosti; každý fit sa naučí vlastnú.</string>
+    <string name="smoothing_tau">Vyhladenie τ v sekundách</string>
+    <string name="smoothing_tau_info">Časová konštanta vyhladzovacieho filtra (0 = bez vyhladenia).</string>
+    <string name="max_skew" formatted="false">Max. sklon %/s</string>
+    <string name="max_skew_info">Najväčšia zmena za sekundu, ktorú smie vyhladená hladina sledovať; väčšie špliechanie sa ignoruje.</string>
+    <string name="fill_jump" formatted="false">Skok tankovania %</string>
+    <string name="fill_jump_info">Vzostup hladiny pri státí, ktorý sa počíta ako tankovanie.</string>
+    <string name="odometer">Počítadlo kilometrov v míľach</string>
+    <string name="odometer_info">Voliteľné: zadajte stav počítadla a Uložiť kotvu, aby ste ukotvili vzdialenosť tohto profilu.</string>
+    <string name="additional_tanks">Ďalšie nádrže</string>
+    <string name="active_tank">Aktívna nádrž</string>
+    <string name="active_tank_info">Nádrž, na ktorú sa účtuje spotreba (gal/hr). Z PID: PID Torque ju volí (identifikátor nádrže od 1).</string>
+    <string name="select_pid">Dlhý názov Select-PID</string>
+    <string name="select_pid_info">Len keď Aktívna nádrž = Z PID: dlhý názov PID Torque, ktorého hodnota je identifikátor nádrže.</string>
+    <string name="tank_n">Nádrž %1$d</string>
+    <string name="tank_n_source">Zdroj paliva nádrže %1$d</string>
+    <string name="tank_n_custom">Vlastný dlhý názov nádrže %1$d (napr. [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">Galóny nádrže %1$d</string>
+    <string name="from_pid">Z PID</string>
+    <string name="unconfirmed"> (nepotvrdené)</string>
+    <string name="ecu_connected"> · ECU pripojené</string>
+    <string name="tank_unknown">nádrž ?</string>
+    <string name="about_field">Asi %1$s</string>
+    <string name="err_tau">0 až %1$s s</string>
+    <string name="err_skew">nad 0, najviac %1$s %%/s</string>
+    <string name="err_jump">%1$s až %2$s %%</string>
+    <string name="err_tank">prázdne alebo číslo väčšie ako 0</string>
+    <string name="err_stored">uložená hodnota mimo rozsahu</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">Vyhladené %</string>
+    <string name="axis_error" formatted="false">Chyba (%)</string>
+    <string name="feed_off">Vypnuté</string>
+    <string name="feed_smoothed" formatted="false">Vyhladené %</string>
+    <string name="feed_corrected_chunk" formatted="false">Opravené % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Opravené % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Opravené % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">Zatiaľ žiadny (Zistiť pri pripojení)</string>
+    <string name="src_sae_012f">SAE 012F Fuel Tank Level</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler Fuel Level Average</string>
+    <string name="src_toyota_2129">Toyota cluster 2129 (počty po pol litri)</string>
+    <string name="src_custom_name">Doplnkový PID Torque podľa dlhého názvu</string>
+    <string name="vehicle_default">Vozidlo 1</string>
+    <string name="vehicle_dated">Vozidlo %1$s</string>
+    <string name="binding_torque">Pripájanie k Torque…</string>
+    <string name="status_waiting">Čaká sa na zdroj paliva</string>
+    <string name="status_raw">surové %1$.1f%%</string>
+    <string name="status_sess"> jazda %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing potichu</string>
+    <string name="map_refit_title">Prepočet mapy</string>
+    <string name="map_refit_body">Fuel Smoothing prepočítava mapu pre %1$s. Tento fit číta 1:1, kým sa prepočet neskončí.</string>
+    <string name="no_source_title">Nie je nastavený zdroj hladiny paliva</string>
+    <string name="no_source_body">Fuel Smoothing nemá zdroj hladiny paliva pre %1$s. Otvorte stránku nastavenia a klepnite na Zistiť, alebo zdroj vyberte.</string>
+    <string name="no_level_title">V tejto jazde nie je hladina paliva</string>
+    <string name="no_level_body">%1$s nedal použiteľnú hladinu pre %2$s. Skontrolujte pripojenie adaptéra alebo spustite Zistiť na stránke nastavenia.</string>
+    <string name="source_found_title">Zdroj hladiny paliva nájdený</string>
+    <string name="source_found_body">Používa sa %1$s pre %2$s (%3$s).</string>
+    <string name="source_missing_title">Zdroj hladiny paliva nenájdený</string>
+    <string name="source_missing_body">Otvorte nastavenie Fuel Smoothing a vyberte zdroj (alebo pridajte PID v Torque), potom klepnite na Zistiť.</string>
+    <string name="confirm_source_title">Potvrďte zdroj hladiny paliva</string>
+    <string name="confirm_source_body">Zistené %1$s, údaj %2$.0f %% pre %3$s. Overte, že zodpovedá ukazovateľu na palubnej doske, a klepnite na Potvrdiť. Potvrdiť je na stránke nastavenia aj v upozornení (%4$s).</string>
+    <string name="confirm_source_body_nolevel">Zistené %1$s pre %2$s. Overte, že zodpovedá ukazovateľu na palubnej doske, a klepnite na Potvrdiť. Potvrdiť je na stránke nastavenia aj v upozornení (%3$s).</string>
+    <string name="recording_title">Záznam do %1$s</string>
+    <string name="recording_body">Toto vozidlo je %1$s (%2$s), ale profil Torque je „%3$s“. Údaje idú do %1$s; klepnutím otvorte Torque a prepnite profil.</string>
+    <string name="wrong_vehicle_title">Nesprávny profil vozidla?</string>
+    <string name="wrong_suggest_profile">Profil Torque „%1$s“</string>
+    <string name="wrong_suggest_new">nový profil vozidla</string>
+    <string name="wrong_vehicle_body">Profil Torque „%1$s“ nezodpovedá tomuto vozidlu (%2$s). Návrh: %3$s. Údaje sú pozdržané a na konci jazdy zahodené, ak ich neponecháte.</string>
+    <string name="keeping_title">Ponechanie údajov jazdy</string>
+    <string name="keeping_body">Táto jazda sa uloží do %1$s. API pluginu Torque nevie vytvárať ani prepínať profily Torque: v Torque vytvorte alebo vyberte profil vozidla s názvom „%2$s“.</string>
+    <string name="action_new_profile">Vytvoriť nový profil</string>
+    <string name="action_use">Použiť %1$s</string>
+</resources>

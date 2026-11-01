@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">Amathiphu akunguqulo ye-Play Store</string>
+    <string name="help_body">Ukuqala okusheshayo\n
+1. Faka i-Torque Pro (inguqulo ekhokhelwayo; i-Torque Lite ayisekeli ama-plugin) bese ubhangqa i-adaptha ye-OBD-II.\n
+2. Vula le plugin ku-Torque → Izilungiselelo → Plugins.\n
+3. Vumela izaziso, bese usetha ukusetshenziswa kwebhethri kube Okungenamkhawulo ukuze i-Torque iqale le plugin ngemuva.\n
+4. Ku-Torque, khetha iphrofayela yemoto oyishayelayo. Idatha igcinwa ngephrofayela ngayinye ye-Torque futhi ihlolwa nobunikazi be-VIN/ECU yemoto.\n
+5. Kuphrofayela entsha umthombo kaphethiloli utholwa uma uxhuma; uma ubuzwa, uqhathanise negedi yedeshboard bese uthinta Qinisekisa. U-Qinisekisa usekhasini lokusetha nasesazisweni. Ungakhetha nangezansi.\n
+6. Usayizi wethangi uwusayizi wokuqala we-Chunk fit kuze ifunde owakhe. I-plugin ayiwushintshi; usayizi ofundiwe we-fit ngayinye uboniswa ngaphansi kwayo.\n
+7. Ku-Torque, engeza amagedi e-[FuelSmooth] Smoothed Fuel Level nawo wonke we-Corrected %, Remaining, DTE kanye ne-Tank size. I-DTE i-Remaining iphindaphindwe nge-mpg yesikhathi eside ye-Torque. Isaziso ngesikhathi se-refit sithi leyo fit ifunda u-1:1 kuze kuphele i-refit.\n
+8. Buyisela izinga likaphethiloli ku-Torque: Valiwe, bushelelezi, noma kulungisiwe kusuka ku-Chunk, Band noma Kalman fit kuya kugedi yakho ye-012F.\n
+9. Uphethiloli ubalwa kuphela ngenkathi injini isebenza. I-plugin isebenza kuphela ngenkathi i-Torque ixhunywe ku-ECU.\n
+10. Qhubeka ushayela futhi ugcwalisa; ukunemba kukhula emathangini amaningana angagcwele. Uma kuvela isaziso sephrofayela yemoto engalungile?, khetha okufanele kwenziwe ngaleyo ndawo yokushayela.\n
+11. Yonke idatha ihlala kule foni. Akukho GPS noma indawo eqoshiwayo.</string>
+    <string name="about_body">%1$s\nInguqulo %2$s (%3$s)\nI-plugin ye-Torque Pro. Ayihlangene ne-Torque noma no-Ian Hawkins.\nYonke idatha ihlala kule foni; akukho GPS noma indawo eqoshiwayo.\n\nIlayisensi\nCopyright David Lang. Wonke amalungelo agodliwe.</string>
+    <string name="open_source_notices">Imitapo yolwazi evulekile\nLe app isebenzisa imitapo engaphansi. Amalayisensi azo ahlukene nelungelo lobunikazi elingenhla.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), idingeka yi-Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">Incwadi ephelele (ku-inthanethi)</string>
+    <string name="show_fuel_notification">Bonisa izinga likaphethiloli esazisweni</string>
+    <string name="write_012f">Buyisela izinga likaphethiloli ku-Torque (kushintsha i-012F)</string>
+    <string name="running_quiet">I-Fuel Smoothing iyasebenza</string>
+    <string name="tap_to_start">Thepha ukuze uqale i-Fuel Smoothing</string>
+    <string name="tap_to_start_text">Ukuqala ngebhethri noma ngemuva kunqatshiwe. Vula kanye ukuze i-plugin isebenze ne-Torque.</string>
+    <string name="tank2_help">Engeza amathangi angaphezulu njengoba kudingeka (ithangi lefemula 1 lihlala njalo). Ungashintshi abathumeli baye kuphini ye-PCM FLI (ukugcwalisa okungamanga). Ithangi ngalinye elingeziwe lidinga i-PID eyengeziwe ye-Torque yalo (MCU Mode 22, igama eliyingqayizivele — hhayi i-012F noma i-Ford 16C1). Inani le-Select-PID yi-id yethangi eqala ku-1. I-Gal/hr ikhokhiswa ethangini elisebenzayo kuphela.</string>
+    <string name="tap_start_channel">Thepha ukuze uqale</string>
+    <string name="tank_size_info">Usayizi wethangi uwusayizi wokuqala we-Chunk fit kuze ifunde owakhe. I-plugin ayiwushintshi; usayizi ofundiwe we-fit ngayinye uboniswa ngaphansi kwayo.</string>
+    <string name="feed_012f_info">Ibhala inani ku-Fuel Level yefemula ye-Torque (012F) ukuze amagedi akhona akubonise: Valiwe, bushelelezi, noma kulungisiwe kusuka ku-Chunk, Band noma Kalman fit. I-fit engakakhiwa ibhala izinga elibushelelezi.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">awukho usayizi okwamanje</string>
+    <string name="size_none_sd">awukho usayizi okwamanje ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">Usizo</string>
+    <string name="about">Mayelana</string>
+    <string name="need_torque">Kudingeka i-Torque Pro (ekhokhelwayo). I-Torque Lite ayisekeli ama-plugin.</string>
+    <string name="get_torque">Thola i-Torque Pro</string>
+    <string name="privacy">Ubumfihlo</string>
+    <string name="send_feedback">Thumela impendulo</string>
+    <string name="tip">Ithiphu</string>
+    <string name="thanks">Ngiyabonga</string>
+    <string name="close">Vala</string>
+    <string name="ok">OK</string>
+    <string name="detect">Thola</string>
+    <string name="confirm">Qinisekisa</string>
+    <string name="save_pin">Londoloza uphini</string>
+    <string name="add_tank">Engeza ithangi</string>
+    <string name="remove">Susa</string>
+    <string name="details">Imininingwane</string>
+    <string name="verbose_logging">Ilogu enemininingwane (ukulungisa; umugqa ngomzuzwana ngamunye)</string>
+    <string name="profile_name">Igama lephrofayela</string>
+    <string name="profile_name_info">Igama lale phrofayela yemoto. Iphrofayela ngayinye yemoto ye-Torque ithola iphrofayela ye-plugin, idatha, namamephu afundiwe ayo.</string>
+    <string name="make">Umenzi</string>
+    <string name="make_info">Umenzi wemoto (isb. Ford). Kusetshenziswa ukukhetha ukuthi yimaphi ama-PID kaphethiloli omkhiqizo ukuthola okuzowazama.</string>
+    <string name="fuel_source">Umthombo kaphethiloli</string>
+    <string name="fuel_source_info">Izinga elingahluziwe likaphethiloli livela kuphi. Thola (i-ECU kumele ixhunyiwe) ifunda abangenele kuphela futhi icela ukuqinisekisa ngaphandle uma imithombo emibili ivumelana. U-Qinisekisa usekhasini lokusetha nasesazisweni. Akukho = thola ekuxhumaneni okulandelayo.</string>
+    <string name="custom_long_name">Igama elide elenziwe ngokwezifiso</string>
+    <string name="custom_long_name_info">Komthombo we-Torque extra PID by long name kuphela: igama elide eliqondile le-PID ye-Torque ebika izinga.</string>
+    <string name="tank_size">Usayizi wethangi</string>
+    <string name="tank_hint">akunalutho = awukho usayizi wokuqala; i-fit ngayinye ifunda eyayo.</string>
+    <string name="smoothing_tau">Ukubusheleleza τ imizuzwana</string>
+    <string name="smoothing_tau_info">Ukuma kwesikhathi kwesihlungi sokubusheleleza (0 = akukho ukubusheleleza).</string>
+    <string name="max_skew" formatted="false">Ukutsheliswa okuphezulu %/s</string>
+    <string name="max_skew_info">Ushintsho olukhulu ngomzuzwana izinga elibushelelezi elingalilandela; ukushukuma okudlula lokhu kuyashiywa.</string>
+    <string name="fill_jump" formatted="false">Ukugxuma kokugcwalisa %</string>
+    <string name="fill_jump_info">Ukukhuphuka kwezinga ngenkathi umile okubalwa njengokugcwalisa.</string>
+    <string name="odometer">Amamayela e-odometer</string>
+    <string name="odometer_info">Ongakukhetha: faka ukufundwa kwe-odometer bese Londoloza uphini ukuze ubambe ibanga lale phrofayela.</string>
+    <string name="additional_tanks">Amathangi angeziwe</string>
+    <string name="active_tank">Ithangi elisebenzayo</string>
+    <string name="active_tank_info">Ukushiswa kukaphethiloli (gal/hr) kukhokhiswa kuliphi ithangi. Kusuka ku-PID: i-PID ye-Torque ikhetha (i-id yethangi eqala ku-1).</string>
+    <string name="select_pid">Igama elide le-Select-PID</string>
+    <string name="select_pid_info">Kuphela uma Ithangi elisebenzayo = Kusuka ku-PID: igama elide le-PID ye-Torque inani layo okuyi-id yethangi.</string>
+    <string name="tank_n">Ithangi %1$d</string>
+    <string name="tank_n_source">Umthombo kaphethiloli wethangi %1$d</string>
+    <string name="tank_n_custom">Igama elide elenziwe ngokwezifiso lethangi %1$d (isb. [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">Amagaloni ethangi %1$d</string>
+    <string name="from_pid">Kusuka ku-PID</string>
+    <string name="unconfirmed"> (akuqinisekisiwe)</string>
+    <string name="ecu_connected"> · i-ECU ixhunyiwe</string>
+    <string name="tank_unknown">ithangi ?</string>
+    <string name="about_field">Mayelana no-%1$s</string>
+    <string name="err_tau">0 kuya ku-%1$s s</string>
+    <string name="err_skew">ngaphezu kuka-0, kungadluli ku-%1$s %%/s</string>
+    <string name="err_jump">%1$s kuya ku-%2$s %%</string>
+    <string name="err_tank">akunalutho noma inombolo engaphezu kuka-0</string>
+    <string name="err_stored">inani elilondoloziwe lingaphandle kobubanzi</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">Bushelelezi %</string>
+    <string name="axis_error" formatted="false">Iphutha (%)</string>
+    <string name="feed_off">Valiwe</string>
+    <string name="feed_smoothed" formatted="false">Bushelelezi %</string>
+    <string name="feed_corrected_chunk" formatted="false">Corrected % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Corrected % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Corrected % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">Akukho okwamanje (Thola usebenza ekuxhumaneni)</string>
+    <string name="src_sae_012f">SAE 012F Fuel Tank Level</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler Fuel Level Average</string>
+    <string name="src_toyota_2129">Toyota cluster 2129 (half-litre counts)</string>
+    <string name="src_custom_name">Torque extra PID by long name</string>
+    <string name="vehicle_default">Imoto 1</string>
+    <string name="vehicle_dated">Imoto %1$s</string>
+    <string name="binding_torque">Ixhuma ku-Torque…</string>
+    <string name="status_waiting">Ilindile umthombo kaphethiloli</string>
+    <string name="status_raw">elingahluziwe %1$.1f%%</string>
+    <string name="status_sess"> iseshini %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">I-Fuel Smoothing ithulile</string>
+    <string name="map_refit_title">Imephu iya-refit</string>
+    <string name="map_refit_body">I-Fuel Smoothing i-refit imephu ye-%1$s. Leyo fit ifunda u-1:1 kuze kuphele i-refit.</string>
+    <string name="no_source_title">Awukho umthombo wezinga likaphethiloli omisiwe</string>
+    <string name="no_source_body">I-Fuel Smoothing ayinawo umthombo wezinga likaphethiloli lwe-%1$s. Vula ikhasi lokusetha bese uthinta Thola, noma ukhethe umthombo.</string>
+    <string name="no_level_title">Alikho izinga likaphethiloli kulokhu kushayela</string>
+    <string name="no_level_body">I-%1$s ayinikezanga izinga elisebenzisekayo le-%2$s. Hlola ukuxhumana kwe-adaptha, noma usebenzise u-Thola ekhasini lokusetha.</string>
+    <string name="source_found_title">Kutholwe umthombo wezinga likaphethiloli</string>
+    <string name="source_found_body">Kusetshenziswa i-%1$s ye-%2$s (%3$s).</string>
+    <string name="source_missing_title">Awutholakalanga umthombo wezinga likaphethiloli</string>
+    <string name="source_missing_body">Vula ukusetha kwe-Fuel Smoothing bese ukhetha umthombo (noma ungeze i-PID ku-Torque), bese uthinta Thola.</string>
+    <string name="confirm_source_title">Qinisekisa umthombo wezinga likaphethiloli</string>
+    <string name="confirm_source_body">Kutholwe i-%1$s, ukufundwa okungu-%2$.0f %% kwe-%3$s. Hlola ukuthi kufana negedi kaphethiloli yedeshboard, bese uthinta Qinisekisa. U-Qinisekisa usekhasini lokusetha nasesazisweni (%4$s).</string>
+    <string name="confirm_source_body_nolevel">Kutholwe i-%1$s ye-%2$s. Hlola ukuthi kufana negedi kaphethiloli yedeshboard, bese uthinta Qinisekisa. U-Qinisekisa usekhasini lokusetha nasesazisweni (%3$s).</string>
+    <string name="recording_title">Kuyarekhodwa ku-%1$s</string>
+    <string name="recording_body">Le moto iyi-%1$s (%2$s), kodwa iphrofayela ye-Torque iyi-\'%3$s\'. Idatha iya ku-%1$s; thepha ukuze uvule i-Torque futhi ushintshe iphrofayela.</string>
+    <string name="wrong_vehicle_title">Iphrofayela yemoto engalungile?</string>
+    <string name="wrong_suggest_profile">Iphrofayela ye-Torque \'%1$s\'</string>
+    <string name="wrong_suggest_new">iphrofayela entsha yemoto</string>
+    <string name="wrong_vehicle_body">Iphrofayela ye-Torque \'%1$s\' ayifani nale moto (%2$s). Isiphakamiso: %3$s. Idatha ibanjwa bese ilahlwa ekupheleni kokushayela ngaphandle kokuthi uyigcine.</string>
+    <string name="keeping_title">Idatha yokushayela iyagcinwa</string>
+    <string name="keeping_body">Lokhu kushayela kuzolondolozwa ku-%1$s. I-API ye-plugin ye-Torque ayikwazi ukudala noma ukushintsha amaphrofayela e-Torque: ku-Torque, dala noma ukhethe iphrofayela yemoto ebizwa ngokuthi \'%2$s\'.</string>
+    <string name="action_new_profile">Dala iphrofayela entsha</string>
+    <string name="action_use">Sebenzisa i-%1$s</string>
+</resources>

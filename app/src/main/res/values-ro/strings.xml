@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">Bacșișurile sunt în versiunea Play Store</string>
+    <string name="help_body">Pornire rapidă\n
+1. Instalați Torque Pro (versiunea plătită; Torque Lite nu acceptă pluginuri) și asociați adaptorul OBD-II.\n
+2. Activați acest plugin în Torque → Setări → Pluginuri.\n
+3. Permiteți notificările și setați utilizarea bateriei pe Fără restricții, ca Torque să poată porni acest plugin în fundal.\n
+4. În Torque, selectați profilul vehiculului pe care îl conduceți. Datele sunt păstrate pentru fiecare profil Torque și verificate cu identitatea VIN/ECU a vehiculului.\n
+5. La un profil nou, sursa de combustibil este detectată la conectare; dacă vi se cere, comparați-o cu indicatorul de bord și atingeți Confirmare. Confirmare este pe pagina de configurare și în notificare. O puteți alege și mai jos.\n
+6. Mărimea rezervorului este mărimea de pornire pentru potrivirea Chunk până când își învață propria mărime. Pluginul nu o schimbă niciodată; mărimea învățată a fiecărei potriviri este afișată dedesubt.\n
+7. În Torque, adăugați indicatoare pentru [FuelSmooth] Smoothed Fuel Level și, pentru fiecare potrivire, Corrected %, Remaining, DTE și Tank size. DTE este Remaining înmulțit cu mpg-ul pe termen lung din Torque. O înștiințare în timpul unei reajustări spune că potrivirea citește 1:1 până se termină reajustarea.\n
+8. Trimiteți nivelul de combustibil înapoi în Torque: Oprit, netezit sau corectat din potrivirea Chunk, Band sau Kalman, pe indicatorul 012F.\n
+9. Combustibilul este numărat numai cât timp motorul funcționează. Pluginul rulează numai cât timp Torque este conectat la ECU.\n
+10. Continuați să conduceți și să alimentați; precizia crește pe parcursul mai multor rezervoare parțiale. Dacă apare notificarea Profil de vehicul greșit?, alegeți ce faceți cu acea deplasare.\n
+11. Toate datele rămân pe acest telefon. Nu se înregistrează nici GPS, nici locație.</string>
+    <string name="about_body">%1$s\nVersiune %2$s (%3$s)\nUn plugin pentru Torque Pro. Fără legătură cu Torque sau Ian Hawkins.\nToate datele rămân pe acest telefon; nu se înregistrează nici GPS, nici locație.\n\nLicență\nCopyright David Lang. Toate drepturile rezervate.</string>
+    <string name="open_source_notices">Biblioteci cu sursă deschisă\nAceastă aplicație folosește bibliotecile de mai jos. Licențele lor sunt separate de copyrightul de mai sus.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), cerut de Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">Manualul complet (online)</string>
+    <string name="show_fuel_notification">Afișează nivelul de combustibil în notificare</string>
+    <string name="write_012f">Trimite nivelul de combustibil înapoi în Torque (înlocuiește 012F)</string>
+    <string name="running_quiet">Fuel Smoothing rulează</string>
+    <string name="tap_to_start">Atingeți pentru a porni Fuel Smoothing</string>
+    <string name="tap_to_start_text">Pornirea de la baterie sau din fundal a fost refuzată. Deschideți o dată, ca pluginul să poată rula cu Torque.</string>
+    <string name="tank2_help">Adăugați rezervoare suplimentare după nevoie (rezervorul de serie 1 rămâne mereu). Nu comutați sondele pe pinul PCM FLI (plin fals). Fiecare rezervor suplimentar are nevoie de propriul PID suplimentar Torque (MCU Mode 22, nume unic — nu 012F sau Ford 16C1). Valoarea Select-PID este identificatorul rezervorului începând de la 1. Gal/hr se impută numai rezervorului activ.</string>
+    <string name="tap_start_channel">Atingeți pentru a porni</string>
+    <string name="tank_size_info">Mărimea rezervorului este mărimea de pornire pentru potrivirea Chunk până când își învață propria mărime. Pluginul nu o schimbă niciodată; mărimea învățată a fiecărei potriviri este afișată dedesubt.</string>
+    <string name="feed_012f_info">Scrie o valoare peste Fuel Level (012F) de serie din Torque, ca indicatoarele existente să o arate: Oprit, netezit sau corectat din potrivirea Chunk, Band sau Kalman. O potrivire încă neconstruită scrie nivelul netezit.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">încă nu are mărime</string>
+    <string name="size_none_sd">încă nu are mărime ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">Ajutor</string>
+    <string name="about">Despre</string>
+    <string name="need_torque">Necesită Torque Pro (plătit). Torque Lite nu acceptă pluginuri.</string>
+    <string name="get_torque">Obțineți Torque Pro</string>
+    <string name="privacy">Confidențialitate</string>
+    <string name="send_feedback">Trimiteți feedback</string>
+    <string name="tip">Bacșiș</string>
+    <string name="thanks">Mulțumim</string>
+    <string name="close">Închideți</string>
+    <string name="ok">OK</string>
+    <string name="detect">Detectare</string>
+    <string name="confirm">Confirmare</string>
+    <string name="save_pin">Salvați reperul</string>
+    <string name="add_tank">Adăugați un rezervor</string>
+    <string name="remove">Eliminați</string>
+    <string name="details">Detalii</string>
+    <string name="verbose_logging">Jurnal detaliat (depanare; linii în fiecare secundă)</string>
+    <string name="profile_name">Numele profilului</string>
+    <string name="profile_name_info">Numele acestui profil de vehicul. Fiecare profil de vehicul Torque primește propriul profil de plugin, date și hărți învățate.</string>
+    <string name="make">Marcă</string>
+    <string name="make_info">Marca vehiculului (de ex. Ford). Se folosește numai ca să aleagă ce PID-uri de combustibil specifice mărcii poate încerca detectarea.</string>
+    <string name="fuel_source">Sursă de combustibil</string>
+    <string name="fuel_source_info">De unde vine nivelul brut de combustibil. Detectare (ECU trebuie să fie conectat) încearcă candidații doar în citire și vă cere confirmarea, dacă două surse nu coincid. Confirmare este pe pagina de configurare și în notificare. Niciuna = detectare la următoarea conectare.</string>
+    <string name="custom_long_name">Nume lung personalizat</string>
+    <string name="custom_long_name_info">Numai pentru sursa „PID Torque suplimentar după numele lung”: numele lung exact al PID-ului Torque care raportează nivelul.</string>
+    <string name="tank_size">Mărime rezervor</string>
+    <string name="tank_hint">gol = fără mărime de pornire; fiecare potrivire o învață pe a sa.</string>
+    <string name="smoothing_tau">Netezire τ în secunde</string>
+    <string name="smoothing_tau_info">Constanta de timp a filtrului de netezire (0 = fără netezire).</string>
+    <string name="max_skew" formatted="false">Înclinare max. %/s</string>
+    <string name="max_skew_info">Cea mai mare schimbare pe secundă pe care nivelul netezit o poate urmări; clătinarea peste aceasta este ignorată.</string>
+    <string name="fill_jump" formatted="false">Salt de alimentare %</string>
+    <string name="fill_jump_info">Creșterea nivelului în staționare care contează ca alimentare.</string>
+    <string name="odometer">Odometru în mile</string>
+    <string name="odometer_info">Opțional: introduceți citirea odometrului și Salvați reperul ca să ancorați distanța pentru acest profil.</string>
+    <string name="additional_tanks">Rezervoare suplimentare</string>
+    <string name="active_tank">Rezervor activ</string>
+    <string name="active_tank_info">Rezervorul căruia i se impută consumul (gal/hr). Din PID: un PID Torque îl alege (identificator începând de la 1).</string>
+    <string name="select_pid">Nume lung Select-PID</string>
+    <string name="select_pid_info">Numai când Rezervor activ = Din PID: numele lung al PID-ului Torque a cărui valoare este identificatorul rezervorului.</string>
+    <string name="tank_n">Rezervorul %1$d</string>
+    <string name="tank_n_source">Sursa de combustibil a rezervorului %1$d</string>
+    <string name="tank_n_custom">Nume lung personalizat al rezervorului %1$d (de ex. [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">Galoane rezervor %1$d</string>
+    <string name="from_pid">Din PID</string>
+    <string name="unconfirmed"> (neconfirmat)</string>
+    <string name="ecu_connected"> · ECU conectat</string>
+    <string name="tank_unknown">rezervor ?</string>
+    <string name="about_field">Aproximativ %1$s</string>
+    <string name="err_tau">0 până la %1$s s</string>
+    <string name="err_skew">peste 0, cel mult %1$s %%/s</string>
+    <string name="err_jump">%1$s până la %2$s %%</string>
+    <string name="err_tank">gol sau un număr mai mare decât 0</string>
+    <string name="err_stored">valoare stocată în afara intervalului</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">Netezit %</string>
+    <string name="axis_error" formatted="false">Eroare (%)</string>
+    <string name="feed_off">Oprit</string>
+    <string name="feed_smoothed" formatted="false">Netezit %</string>
+    <string name="feed_corrected_chunk" formatted="false">Corectat % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Corectat % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Corectat % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">Niciuna încă (Detectare la conectare)</string>
+    <string name="src_sae_012f">SAE 012F Fuel Tank Level</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler Fuel Level Average</string>
+    <string name="src_toyota_2129">Toyota cluster 2129 (numărători de jumătate de litru)</string>
+    <string name="src_custom_name">PID Torque suplimentar după numele lung</string>
+    <string name="vehicle_default">Vehicul 1</string>
+    <string name="vehicle_dated">Vehicul %1$s</string>
+    <string name="binding_torque">Conectare la Torque…</string>
+    <string name="status_waiting">Se așteaptă sursa de combustibil</string>
+    <string name="status_raw">brut %1$.1f%%</string>
+    <string name="status_sess"> sesiune %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing silențios</string>
+    <string name="map_refit_title">Reajustarea hărții</string>
+    <string name="map_refit_body">Fuel Smoothing reajustează o hartă pentru %1$s. Potrivirea citește 1:1 până se termină reajustarea.</string>
+    <string name="no_source_title">Nicio sursă de nivel de combustibil</string>
+    <string name="no_source_body">Fuel Smoothing nu are o sursă de nivel de combustibil pentru %1$s. Deschideți pagina de configurare și atingeți Detectare, sau alegeți o sursă.</string>
+    <string name="no_level_title">Niciun nivel de combustibil în această deplasare</string>
+    <string name="no_level_body">%1$s nu a dat un nivel utilizabil pentru %2$s. Verificați conexiunea adaptorului sau rulați Detectare pe pagina de configurare.</string>
+    <string name="source_found_title">Sursă de nivel de combustibil găsită</string>
+    <string name="source_found_body">Se folosește %1$s pentru %2$s (%3$s).</string>
+    <string name="source_missing_title">Nicio sursă de nivel de combustibil găsită</string>
+    <string name="source_missing_body">Deschideți configurarea Fuel Smoothing și alegeți o sursă (sau adăugați PID-ul în Torque), apoi atingeți Detectare.</string>
+    <string name="confirm_source_title">Confirmați sursa nivelului de combustibil</string>
+    <string name="confirm_source_body">S-a detectat %1$s, citire %2$.0f %% pentru %3$s. Verificați că se potrivește cu indicatorul de bord, apoi atingeți Confirmare. Confirmare este pe pagina de configurare și în notificare (%4$s).</string>
+    <string name="confirm_source_body_nolevel">S-a detectat %1$s pentru %2$s. Verificați că se potrivește cu indicatorul de bord, apoi atingeți Confirmare. Confirmare este pe pagina de configurare și în notificare (%3$s).</string>
+    <string name="recording_title">Înregistrare în %1$s</string>
+    <string name="recording_body">Acest vehicul este %1$s (%2$s), dar profilul Torque este „%3$s”. Datele merg în %1$s; atingeți ca să deschideți Torque și să schimbați profilul.</string>
+    <string name="wrong_vehicle_title">Profil de vehicul greșit?</string>
+    <string name="wrong_suggest_profile">Profilul Torque „%1$s”</string>
+    <string name="wrong_suggest_new">un profil nou de vehicul</string>
+    <string name="wrong_vehicle_body">Profilul Torque „%1$s” nu corespunde acestui vehicul (%2$s). Sugestie: %3$s. Datele sunt reținute și eliminate la sfârșitul deplasării, dacă nu le păstrați.</string>
+    <string name="keeping_title">Păstrarea datelor deplasării</string>
+    <string name="keeping_body">Această deplasare va fi salvată în %1$s. API-ul de plugin Torque nu poate crea sau schimba profiluri Torque: în Torque, creați sau selectați un profil de vehicul numit „%2$s”.</string>
+    <string name="action_new_profile">Creați un profil nou</string>
+    <string name="action_use">Folosiți %1$s</string>
+</resources>

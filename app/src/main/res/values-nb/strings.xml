@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">Tips finnes i Play Store-utgaven</string>
+    <string name="help_body">Hurtigstart\n\nInstaller Torque Pro (den betalte utgaven; Torque Lite støtter ikke programtillegg) og par OBD-II-adapteren.\n\nSlå på dette programtillegget i Torque → Innstillinger → Programtillegg.\n\nTillat varsler, og sett batteribruk til Ubegrenset, så Torque kan starte dette programtillegget i bakgrunnen.\n\nVelg i Torque profilen for bilen du kjører. Data lagres per Torque-profil og sjekkes mot kjøretøyets VIN/ECU-identitet.\n\nI en ny profil oppdages drivstoffkilden når du kobler til. Hvis du blir spurt, sammenlign den med måleren og trykk på Bekreft. Bekreft finnes på oppsettssiden og i varselet. Du kan også velge den nedenfor.\n\nTankstørrelsen er startstørrelsen for Chunk-tilpasningen til den lærer sin egen. Programtillegget endrer den aldri. Hver tilpasnings lærte størrelse vises under den.\n\nLegg i Torque til målere for [FuelSmooth] Smoothed Fuel Level og for hver tilpasning Corrected %, Remaining, DTE og Tank size. DTE er Remaining ganger Torques langsiktige mpg. Et varsel under en ny tilpasning sier at den tilpasningen viser 1:1 til nytilpasningen er ferdig.\n\nSend drivstoffnivået tilbake til Torque: Av, Utjevnet eller Korrigert fra Chunk-, Band- eller Kalman-tilpasningen, til 012F-måleren.\n\nDrivstoff telles bare mens motoren går. Programtillegget kjører bare mens Torque er koblet til ECU.\n\nFortsett å kjøre og fylle. Nøyaktigheten bygges over flere delvise tanker. Hvis varselet «Feil kjøretøyprofil?» vises, velg hva som skal skje med den turen.\n\nAlle data blir på denne telefonen. Ingen GPS eller posisjon registreres.</string>
+    <string name="about_body">%1$s\nVersjon %2$s (%3$s)\nEt programtillegg for Torque Pro. Ikke tilknyttet Torque eller Ian Hawkins.\nAlle data blir på denne telefonen. Ingen GPS eller posisjon registreres.\n\nLisens\nCopyright David Lang. Alle rettigheter forbeholdes.</string>
+    <string name="open_source_notices">Åpen kildekode\nAppen bruker bibliotekene nedenfor. Lisensene deres er atskilt fra opphavsretten ovenfor.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), kreves av Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">Full håndbok (på nettet)</string>
+    <string name="show_fuel_notification">Vis drivstoffnivå i varselet</string>
+    <string name="write_012f">Send drivstoffnivået tilbake til Torque (skriver over 012F)</string>
+    <string name="running_quiet">Fuel Smoothing kjører</string>
+    <string name="tap_to_start">Trykk for å starte Fuel Smoothing</string>
+    <string name="tap_to_start_text">Start via batteri/bakgrunn ble avslått. Åpne én gang, så programtillegget kan kjøre sammen med Torque.</string>
+    <string name="tank2_help">Legg til flere tanker ved behov (originaltank 1 blir alltid). Ikke koble givere til pinnen PCM FLI (falsk fylling). Hver ekstra tank trenger sin egen ekstra Torque-PID (MCU Mode 22, unikt navn — ikke 012F eller Ford 16C1). Select-PID-verdien er tanknummeret fra 1. Gal/hr belastes bare den aktive tanken.</string>
+    <string name="tap_start_channel">Trykk for å starte</string>
+    <string name="tank_size_info">Tankstørrelsen er startstørrelsen for Chunk-tilpasningen til den lærer sin egen. Programtillegget endrer den aldri. Hver tilpasnings lærte størrelse vises under den.</string>
+    <string name="feed_012f_info">Skriver en verdi til Torques originale Fuel Level (012F), så eksisterende målere viser den: Av, Utjevnet eller Korrigert fra Chunk-, Band- eller Kalman-tilpasningen. En tilpasning som ikke er bygd ennå, skriver det utjevnede nivået.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">ingen størrelse ennå</string>
+    <string name="size_none_sd">ingen størrelse ennå ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">Hjelp</string>
+    <string name="about">Om</string>
+    <string name="need_torque">Krever Torque Pro (betalt). Torque Lite støtter ikke programtillegg.</string>
+    <string name="get_torque">Hent Torque Pro</string>
+    <string name="privacy">Personvern</string>
+    <string name="send_feedback">Send tilbakemelding</string>
+    <string name="tip">Tips</string>
+    <string name="thanks">Takk</string>
+    <string name="close">Lukk</string>
+    <string name="ok">OK</string>
+    <string name="detect">Oppdag</string>
+    <string name="confirm">Bekreft</string>
+    <string name="save_pin">Lagre pin</string>
+    <string name="add_tank">Legg til tank</string>
+    <string name="remove">Fjern</string>
+    <string name="details">Detaljer</string>
+    <string name="verbose_logging">Utførlig logg (feilsøking; logglinjer hvert sekund)</string>
+    <string name="profile_name">Profilnavn</string>
+    <string name="profile_name_info">Navnet på denne kjøretøyprofilen. Hver Torque-kjøretøyprofil får sin egen programtilleggsprofil, data og lærte kart.</string>
+    <string name="make">Merke</string>
+    <string name="make_info">Kjøretøymerke (f.eks. Ford). Brukes bare til å velge hvilke merkespesifikke drivstoff-PID-er oppdagelsen kan prøve.</string>
+    <string name="fuel_source">Drivstoffkilde</string>
+    <string name="fuel_source_info">Hvor det rå drivstoffnivået kommer fra. Oppdag (ECU må være koblet til) prøver kandidatene skrivebeskyttet og ber deg bekrefte hvis ikke to kilder er enige. Bekreft finnes på oppsettssiden og i varselet. Ingen = oppdag ved neste tilkobling.</string>
+    <string name="custom_long_name">Eget langt navn</string>
+    <string name="custom_long_name_info">Bare for kilden «Ekstra Torque-PID etter langt navn»: det nøyaktige lange navnet på Torque-PID-en som rapporterer nivået.</string>
+    <string name="tank_size">Tankstørrelse</string>
+    <string name="tank_hint">tomt = ingen startstørrelse; hver tilpasning lærer sin egen.</string>
+    <string name="smoothing_tau">Utjevning τ sekunder</string>
+    <string name="smoothing_tau_info">Tidskonstant for utjevningsfilteret (0 = ingen utjevning).</string>
+    <string name="max_skew" formatted="false">Maks skjevhet %/s</string>
+    <string name="max_skew_info">Største endring per sekund som det utjevnede nivået kan følge. Skvulping over det ignoreres.</string>
+    <string name="fill_jump" formatted="false">Fyllehopp %</string>
+    <string name="fill_jump_info">Nivåøkning ved stillstand som teller som fylling.</string>
+    <string name="odometer">Kilometerteller i miles</string>
+    <string name="odometer_info">Valgfritt: skriv inn tellerstanden og lagre pin for å forankre strekningen for denne profilen.</string>
+    <string name="additional_tanks">Flere tanker</string>
+    <string name="active_tank">Aktiv tank</string>
+    <string name="active_tank_info">Hvilken tank forbruket (gal/hr) belastes. Fra PID: en Torque-PID velger den (tanknummer fra 1).</string>
+    <string name="select_pid">Select-PID langt navn</string>
+    <string name="select_pid_info">Bare når Aktiv tank = Fra PID: det lange navnet på Torque-PID-en hvis verdi er tanknummeret.</string>
+    <string name="tank_n">Tank %1$d</string>
+    <string name="tank_n_source">Tank %1$d drivstoffkilde</string>
+    <string name="tank_n_custom">Tank %1$d eget langt navn (f.eks. [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">Tank %1$d gallon</string>
+    <string name="from_pid">Fra PID</string>
+    <string name="unconfirmed"> (ikke bekreftet)</string>
+    <string name="ecu_connected"> · ECU tilkoblet</string>
+    <string name="tank_unknown">tank ?</string>
+    <string name="about_field">Om %1$s</string>
+    <string name="err_tau">0 til %1$s s</string>
+    <string name="err_skew">over 0, høyst %1$s %%/s</string>
+    <string name="err_jump">%1$s til %2$s %%</string>
+    <string name="err_tank">tomt eller et tall over 0</string>
+    <string name="err_stored">lagret verdi utenfor området</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">Utjevnet %</string>
+    <string name="axis_error" formatted="false">Feil (%)</string>
+    <string name="feed_off">Av</string>
+    <string name="feed_smoothed" formatted="false">Utjevnet %</string>
+    <string name="feed_corrected_chunk" formatted="false">Korrigert % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Korrigert % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Korrigert % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">Ingen ennå (Oppdag ved tilkobling)</string>
+    <string name="src_sae_012f">SAE 012F tanknivå</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler gjennomsnitt av nivået</string>
+    <string name="src_toyota_2129">Toyota-instrumenter 2129 (half-litre counts)</string>
+    <string name="src_custom_name">Ekstra Torque-PID etter langt navn</string>
+    <string name="vehicle_default">Kjøretøy 1</string>
+    <string name="vehicle_dated">Kjøretøy %1$s</string>
+    <string name="binding_torque">Kobler til Torque…</string>
+    <string name="status_waiting">Venter på drivstoffkilde</string>
+    <string name="status_raw">rå %1$.1f%%</string>
+    <string name="status_sess"> tur %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing stille</string>
+    <string name="map_refit_title">Kartet tilpasses på nytt</string>
+    <string name="map_refit_body">Fuel Smoothing tilpasser et kart på nytt for %1$s. Den tilpasningen viser 1:1 til nytilpasningen er ferdig.</string>
+    <string name="no_source_title">Ingen drivstoffnivåkilde valgt</string>
+    <string name="no_source_body">Fuel Smoothing har ingen drivstoffnivåkilde for %1$s. Åpne oppsettssiden og trykk på Oppdag, eller velg en kilde.</string>
+    <string name="no_level_title">Ingen nivå på denne turen</string>
+    <string name="no_level_body">%1$s ga ikke et brukbart nivå for %2$s. Sjekk adaptertilkoblingen, eller kjør Oppdag på oppsettssiden.</string>
+    <string name="source_found_title">Drivstoffnivåkilde funnet</string>
+    <string name="source_found_body">Bruker %1$s for %2$s (%3$s).</string>
+    <string name="source_missing_title">Ingen drivstoffnivåkilde funnet</string>
+    <string name="source_missing_body">Åpne oppsettet for Fuel Smoothing og velg en kilde (eller legg til PID-en i Torque), og trykk deretter på Oppdag.</string>
+    <string name="confirm_source_title">Bekreft drivstoffnivåkilde</string>
+    <string name="confirm_source_body">Oppdaget %1$s, avlesning %2$.0f %% for %3$s. Sjekk at den stemmer med måleren, og trykk på Bekreft. Bekreft finnes på oppsettssiden og i varselet (%4$s).</string>
+    <string name="confirm_source_body_nolevel">Oppdaget %1$s for %2$s. Sjekk at den stemmer med måleren, og trykk på Bekreft. Bekreft finnes på oppsettssiden og i varselet (%3$s).</string>
+    <string name="recording_title">Lagrer til %1$s</string>
+    <string name="recording_body">Dette kjøretøyet er %1$s (%2$s), men Torque-profilen er \'%3$s\'. Data går til %1$s. Trykk for å åpne Torque og bytte profil.</string>
+    <string name="wrong_vehicle_title">Feil kjøretøyprofil?</string>
+    <string name="wrong_suggest_profile">Torque-profil \'%1$s\'</string>
+    <string name="wrong_suggest_new">en ny kjøretøyprofil</string>
+    <string name="wrong_vehicle_body">Torque-profilen \'%1$s\' stemmer ikke med dette kjøretøyet (%2$s). Forslag: %3$s. Data holdes og forkastes ved slutten av turen hvis du ikke beholder dem.</string>
+    <string name="keeping_title">Turdata beholdes</string>
+    <string name="keeping_body">Denne turen lagres i %1$s. Torques API for programtillegg kan ikke opprette eller bytte Torque-profiler: opprett eller velg i Torque en kjøretøyprofil med navnet \'%2$s\'.</string>
+    <string name="action_new_profile">Opprett ny profil</string>
+    <string name="action_use">Bruk %1$s</string>
+</resources>

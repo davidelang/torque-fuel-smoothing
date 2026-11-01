@@ -1,8 +1,10 @@
 package com.davidlang.torque.fuelsmoothing
 
+import androidx.annotation.StringRes
+
 internal data class FuelSource(
     val id: String,
-    val label: String,
+    @StringRes val label: Int,
     val longName: String? = null,
     val modePid: String? = null,
     val header: String? = null,
@@ -12,20 +14,20 @@ internal data class FuelSource(
 
 internal object FuelSources {
     val catalog: List<FuelSource> = listOf(
-        FuelSource("none", "None yet (Detect runs on connect)"),
-        FuelSource("sae_012f", "SAE 012F Fuel Tank Level", modePid = "012F"),
-        FuelSource("ford_16c1", "Mode 22 16C1", longName = "[FORD]Fuel Level"),
-        FuelSource("ford_f42f", "Ford Mode 22 F42F", longName = null, modePid = "22F42F"),
-        FuelSource("gm_12c5", "GM Mode 22 12C5 %", modePid = "2212C5", twoByteOk = true),
-        FuelSource("chrysler_21a2", "Chrysler 21A2 %", modePid = "21A2"),
-        FuelSource("chrysler_avg", "Chrysler Fuel Level Average", modePid = "228126"),
-        FuelSource("toyota_7c0_2129", "Toyota cluster 2129 (half-litre counts)", modePid = "2129", header = "7C0", litersToPct = true),
-        FuelSource("custom_name", "Torque extra PID by long name"),
+        FuelSource("none", R.string.src_none),
+        FuelSource("sae_012f", R.string.src_sae_012f, modePid = "012F"),
+        FuelSource("ford_16c1", R.string.src_ford_16c1, longName = "[FORD]Fuel Level"),
+        FuelSource("ford_f42f", R.string.src_ford_f42f, longName = null, modePid = "22F42F"),
+        FuelSource("gm_12c5", R.string.src_gm_12c5, modePid = "2212C5", twoByteOk = true),
+        FuelSource("chrysler_21a2", R.string.src_chrysler_21a2, modePid = "21A2"),
+        FuelSource("chrysler_avg", R.string.src_chrysler_avg, modePid = "228126"),
+        FuelSource("toyota_7c0_2129", R.string.src_toyota_2129, modePid = "2129", header = "7C0", litersToPct = true),
+        FuelSource("custom_name", R.string.src_custom_name),
     )
 
     fun byId(id: String): FuelSource = catalog.firstOrNull { it.id == id } ?: catalog.first { it.id == "none" }
 
-    fun labels(): Array<String> = catalog.map { it.label }.toTypedArray()
+    fun labels(resolve: (Int) -> String): Array<String> = catalog.map { resolve(it.label) }.toTypedArray()
 
     fun indexOf(id: String): Int {
         val i = catalog.indexOfFirst { it.id == id }
@@ -81,15 +83,15 @@ internal object FuelSources {
                     return toyotaLevel(data.substring(0, 2).toInt(16), "bus ${src.header ?: ""} $cmd")
                 }
                 if (src.twoByteOk) {
-                    val pct = gmLevel(data) ?: return Read(null, "bad reply ${src.label}", true)
+                    val pct = gmLevel(data) ?: return Read(null, "bad reply ${src.id}", true)
                     // A 2-byte form is trusted at detection only after it agrees with 012F (FuelDetect).
                     return Read(pct, "bus ${src.header ?: ""} $cmd ${minOf(data.length / 2, 2)}B", false, twoByte = data.length >= 4)
                 }
                 return Read(data.substring(0, 2).toInt(16) * 100.0 / 255.0, "bus ${src.header ?: ""} $cmd", false)
             }
-            return Read(null, "add extra PID set ${src.label}", true)
+            return Read(null, "add extra PID set ${src.id}", true)
         }
-        return Read(null, "missing ${src.label}", true)
+        return Read(null, "missing ${src.id}", true)
     }
 
     private fun bus(t: org.prowl.torque.remote.ITorqueService, header: String, command: String): Array<String>? {

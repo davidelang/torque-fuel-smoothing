@@ -148,6 +148,22 @@ android {
         aidl = true
         resValues = true
     }
+    androidResources {
+        localeFilters += listOf(
+            "en",
+            "be", "bg", "bs", "ca", "cs", "cy", "da", "de", "el",
+            "en-rAU", "en-rCA", "en-rGB", "en-rIN",
+            "es", "es-rUS", "et", "eu", "fi", "fr", "fr-rCA", "ga", "gl",
+            "hr", "hu", "is", "it", "lb", "lt", "lv", "mk", "mt", "nb", "nl",
+            "pl", "pt", "pt-rPT", "ro", "ru", "sk", "sl", "sq", "b+sr+Latn", "sr", "sv", "uk",
+            "hy", "ka", "az", "kk", "ky", "uz", "tr", "mn", "tg",
+            "as", "bn", "gu", "hi", "kn", "ml", "mr", "ne", "or", "pa", "si", "ta", "te",
+            "in", "km", "lo", "ms", "my", "th", "tl", "vi", "ja", "ko",
+            "zh-rCN", "zh-rHK", "zh-rTW",
+            "af", "am", "sw", "ha", "yo", "ig", "zu",
+        )
+        generateLocaleConfig = true
+    }
 }
 
 kotlin {

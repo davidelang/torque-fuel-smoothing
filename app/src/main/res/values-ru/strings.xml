@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">Чаевые есть в версии из Play Store</string>
+    <string name="help_body">Быстрый старт\n\nУстановите Torque Pro (платную версию; Torque Lite не поддерживает плагины) и сопрягите адаптер OBD-II.\n\nВключите этот плагин в Torque → Настройки → Плагины.\n\nРазрешите уведомления и поставьте расход батареи на Без ограничений, чтобы Torque мог запускать этот плагин в фоне.\n\nВ Torque выберите профиль автомобиля, на котором вы едете. Данные хранятся по профилю Torque и сверяются с личностью VIN/ECU автомобиля.\n\nВ новом профиле источник топлива определяется при подключении; если спросят, сравните его с указателем на панели и нажмите Подтвердить. Подтвердить есть на странице настройки и в уведомлении. Его также можно выбрать ниже.\n\nОбъём бака — это начальный размер подгонки Chunk, пока она не выучит свой. Плагин его не меняет; выученный размер каждой подгонки показан под ней.\n\nВ Torque добавьте приборы для [FuelSmooth] Smoothed Fuel Level и для каждой подгонки Corrected %, Remaining, DTE и Tank size. DTE — это Remaining, умноженный на долгосрочный mpg Torque. Сообщение во время пересчёта говорит, что эта подгонка показывает 1:1, пока пересчёт не закончится.\n\nВозвращайте уровень топлива в Torque: Выкл., Сглаженный или Исправленный из подгонки Chunk, Band или Kalman на прибор 012F.\n\nТопливо считается только при работающем двигателе. Плагин работает только пока Torque подключён к ECU.\n\nПродолжайте ездить и заправляться; точность растёт на нескольких неполных баках. Если появится уведомление «Неверный профиль автомобиля?», выберите, что делать с этой поездкой.\n\nВсе данные остаются на этом телефоне. GPS и местоположение не записываются.</string>
+    <string name="about_body">%1$s\nВерсия %2$s (%3$s)\nПлагин для Torque Pro. Не связан с Torque и Ian Hawkins.\nВсе данные остаются на этом телефоне; GPS и местоположение не записываются.\n\nЛицензия\nCopyright David Lang. Все права защищены.</string>
+    <string name="open_source_notices">Библиотеки с открытым кодом\nЭто приложение использует библиотеки ниже. Их лицензии отделены от авторского права выше.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), требуется для Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">Полное руководство (в сети)</string>
+    <string name="show_fuel_notification">Показывать уровень топлива в уведомлении</string>
+    <string name="write_012f">Возвращать уровень топлива в Torque (заменяет 012F)</string>
+    <string name="running_quiet">Fuel Smoothing работает</string>
+    <string name="tap_to_start">Нажмите, чтобы запустить Fuel Smoothing</string>
+    <string name="tap_to_start_text">Запуск от батареи/в фоне отклонён. Откройте один раз, чтобы плагин мог работать с Torque.</string>
+    <string name="tank2_help">Добавляйте дополнительные баки по необходимости (штатный бак 1 остаётся всегда). Не переключайте датчики на контакт PCM FLI (ложная заправка). Каждому дополнительному баку нужна своя дополнительная PID Torque (MCU Mode 22, уникальное имя — не 012F и не Ford 16C1). Значение Select-PID — номер бака от 1. Gal/hr списывается только с активного бака.</string>
+    <string name="tap_start_channel">Нажмите, чтобы запустить</string>
+    <string name="tank_size_info">Объём бака — это начальный размер подгонки Chunk, пока она не выучит свой. Плагин его не меняет; выученный размер каждой подгонки показан под ней.</string>
+    <string name="feed_012f_info">Записывает значение в штатный Fuel Level (012F) Torque, чтобы имеющиеся приборы его показывали: Выкл., Сглаженный или Исправленный из подгонки Chunk, Band или Kalman. Подгонка, которая ещё не построена, пишет сглаженный уровень.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">размера ещё нет</string>
+    <string name="size_none_sd">размера ещё нет ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">Справка</string>
+    <string name="about">О программе</string>
+    <string name="need_torque">Нужен Torque Pro (платный). Torque Lite не поддерживает плагины.</string>
+    <string name="get_torque">Получить Torque Pro</string>
+    <string name="privacy">Конфиденциальность</string>
+    <string name="send_feedback">Отправить отзыв</string>
+    <string name="tip">Чаевые</string>
+    <string name="thanks">Спасибо</string>
+    <string name="close">Закрыть</string>
+    <string name="ok">OK</string>
+    <string name="detect">Определить</string>
+    <string name="confirm">Подтвердить</string>
+    <string name="save_pin">Сохранить точку</string>
+    <string name="add_tank">Добавить ещё бак</string>
+    <string name="remove">Удалить</string>
+    <string name="details">Подробности</string>
+    <string name="verbose_logging">Подробный журнал (отладка; строки журнала каждую секунду)</string>
+    <string name="profile_name">Имя профиля</string>
+    <string name="profile_name_info">Имя этого профиля автомобиля. У каждого профиля автомобиля Torque свой профиль плагина, данные и выученные карты.</string>
+    <string name="make">Марка</string>
+    <string name="make_info">Марка автомобиля (напр. Ford). Нужна только чтобы выбрать, какие фирменные PID топлива можно пробовать при определении.</string>
+    <string name="fuel_source">Источник топлива</string>
+    <string name="fuel_source_info">Откуда берётся сырой уровень топлива. Определить (ECU должен быть подключён) проверяет кандидатов только на чтение и просит подтвердить, если два источника не совпали. Подтвердить есть на странице настройки и в уведомлении. Нет = определить при следующем подключении.</string>
+    <string name="custom_long_name">Своё длинное имя</string>
+    <string name="custom_long_name_info">Только для источника «Дополнительная PID Torque по длинному имени»: точное длинное имя PID Torque, которая сообщает уровень.</string>
+    <string name="tank_size">Объём бака</string>
+    <string name="tank_hint">пусто = нет начального размера; каждая подгонка учит свой.</string>
+    <string name="smoothing_tau">Сглаживание τ секунды</string>
+    <string name="smoothing_tau_info">Постоянная времени фильтра сглаживания (0 = без сглаживания).</string>
+    <string name="max_skew" formatted="false">Макс. перекос %/s</string>
+    <string name="max_skew_info">Наибольшее изменение в секунду, за которым может следовать сглаженный уровень; плеск сверх этого игнорируется.</string>
+    <string name="fill_jump" formatted="false">Скачок заправки %</string>
+    <string name="fill_jump_info">Рост уровня на месте, который считается заправкой.</string>
+    <string name="odometer">Одометр в милях</string>
+    <string name="odometer_info">Необязательно: введите показание одометра и Сохранить точку, чтобы закрепить расстояние этого профиля.</string>
+    <string name="additional_tanks">Дополнительные баки</string>
+    <string name="active_tank">Активный бак</string>
+    <string name="active_tank_info">На какой бак списывается расход (gal/hr). Из PID: PID Torque выбирает его (номер бака от 1).</string>
+    <string name="select_pid">Длинное имя Select-PID</string>
+    <string name="select_pid_info">Только если Активный бак = Из PID: длинное имя PID Torque, значение которой — номер бака.</string>
+    <string name="tank_n">Бак %1$d</string>
+    <string name="tank_n_source">Бак %1$d источник топлива</string>
+    <string name="tank_n_custom">Бак %1$d своё длинное имя (напр. [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">Бак %1$d галлоны</string>
+    <string name="from_pid">Из PID</string>
+    <string name="unconfirmed"> (не подтверждено)</string>
+    <string name="ecu_connected"> · ECU подключён</string>
+    <string name="tank_unknown">бак ?</string>
+    <string name="about_field">О параметре %1$s</string>
+    <string name="err_tau">от 0 до %1$s s</string>
+    <string name="err_skew">больше 0, не более %1$s %%/s</string>
+    <string name="err_jump">от %1$s до %2$s %%</string>
+    <string name="err_tank">пусто или число больше 0</string>
+    <string name="err_stored">сохранённое значение вне диапазона</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">Сглаженный %</string>
+    <string name="axis_error" formatted="false">Ошибка (%)</string>
+    <string name="feed_off">Выкл.</string>
+    <string name="feed_smoothed" formatted="false">Сглаженный %</string>
+    <string name="feed_corrected_chunk" formatted="false">Исправленный % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Исправленный % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Исправленный % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">Пока нет (Определить при подключении)</string>
+    <string name="src_sae_012f">SAE 012F уровень бака</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler средний уровень</string>
+    <string name="src_toyota_2129">Комбинация Toyota 2129 (half-litre counts)</string>
+    <string name="src_custom_name">Дополнительная PID Torque по длинному имени</string>
+    <string name="vehicle_default">Автомобиль 1</string>
+    <string name="vehicle_dated">Автомобиль %1$s</string>
+    <string name="binding_torque">Подключение к Torque…</string>
+    <string name="status_waiting">Ожидание источника топлива</string>
+    <string name="status_raw">сырой %1$.1f%%</string>
+    <string name="status_sess"> сессия %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing тихо</string>
+    <string name="map_refit_title">Пересчёт карты</string>
+    <string name="map_refit_body">Fuel Smoothing пересчитывает карту для %1$s. Эта подгонка показывает 1:1, пока пересчёт не закончится.</string>
+    <string name="no_source_title">Источник уровня не задан</string>
+    <string name="no_source_body">У Fuel Smoothing нет источника уровня для %1$s. Откройте страницу настройки и нажмите Определить либо выберите источник.</string>
+    <string name="no_level_title">Нет уровня в этой поездке</string>
+    <string name="no_level_body">%1$s не дал пригодного уровня для %2$s. Проверьте соединение адаптера или запустите Определить на странице настройки.</string>
+    <string name="source_found_title">Источник уровня найден</string>
+    <string name="source_found_body">Используется %1$s для %2$s (%3$s).</string>
+    <string name="source_missing_title">Источник уровня не найден</string>
+    <string name="source_missing_body">Откройте настройку Fuel Smoothing и выберите источник (или добавьте PID в Torque), затем нажмите Определить.</string>
+    <string name="confirm_source_title">Подтвердите источник уровня</string>
+    <string name="confirm_source_body">Обнаружен %1$s, показание %2$.0f %% для %3$s. Проверьте, что оно совпадает с указателем, и нажмите Подтвердить. Подтвердить есть на странице настройки и в уведомлении (%4$s).</string>
+    <string name="confirm_source_body_nolevel">Обнаружен %1$s для %2$s. Проверьте, что он совпадает с указателем, и нажмите Подтвердить. Подтвердить есть на странице настройки и в уведомлении (%3$s).</string>
+    <string name="recording_title">Запись в %1$s</string>
+    <string name="recording_body">Этот автомобиль — %1$s (%2$s), но профиль Torque — \'%3$s\'. Данные идут в %1$s; нажмите, чтобы открыть Torque и сменить профиль.</string>
+    <string name="wrong_vehicle_title">Неверный профиль автомобиля?</string>
+    <string name="wrong_suggest_profile">Профиль Torque \'%1$s\'</string>
+    <string name="wrong_suggest_new">новый профиль автомобиля</string>
+    <string name="wrong_vehicle_body">Профиль Torque \'%1$s\' не совпадает с этим автомобилем (%2$s). Предложение: %3$s. Данные удерживаются и отбрасываются в конце поездки, если вы их не сохраните.</string>
+    <string name="keeping_title">Данные поездки сохраняются</string>
+    <string name="keeping_body">Эта поездка будет сохранена в %1$s. API плагинов Torque не может создавать или переключать профили Torque: в Torque создайте или выберите профиль автомобиля с именем \'%2$s\'.</string>
+    <string name="action_new_profile">Создать новый профиль</string>
+    <string name="action_use">Использовать %1$s</string>
+</resources>

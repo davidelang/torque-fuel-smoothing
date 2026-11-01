@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">Bahshishi ziko kwenye toleo la Play Store</string>
+    <string name="help_body">Mwanzo wa haraka\n
+1. Sakinisha Torque Pro (toleo la kulipia; Torque Lite haiauni programu-jalizi) na oanisha adapta ya OBD-II.\n
+2. Washa programu-jalizi hii katika Torque → Mipangilio → Programu-jalizi.\n
+3. Ruhusu arifa na uweke matumizi ya betri kuwa Bila kikomo ili Torque iweze kuanzisha programu-jalizi hii chinichini.\n
+4. Katika Torque, chagua wasifu wa gari unaloendesha. Data huhifadhiwa kwa kila wasifu wa Torque na hukaguliwa dhidi ya utambulisho wa VIN/ECU wa gari.\n
+5. Kwenye wasifu mpya chanzo cha mafuta hugunduliwa unapounganisha; ukiombwa, linganisha na mita ya dashibodi na uguse Thibitisha. Thibitisha iko kwenye ukurasa wa usanidi na katika arifa. Unaweza pia kuichagua hapa chini.\n
+6. Ukubwa wa tangi ni ukubwa wa kuanzia wa ulinganifu wa Chunk hadi ujifunze wake. Programu-jalizi haibadilishi kamwe; ukubwa uliofunzwa wa kila ulinganifu huonyeshwa chini yake.\n
+7. Katika Torque, ongeza mita za [FuelSmooth] Smoothed Fuel Level na, kwa kila ulinganifu, Corrected %, Remaining, DTE na Tank size. DTE ni Remaining kuzidishwa na mpg ya muda mrefu ya Torque. Arifa wakati wa ulinganifu upya husema ulinganifu huo unasoma 1:1 hadi ulinganifu upya ukamilike.\n
+8. Rudisha kiwango cha mafuta kwa Torque: Imezimwa, iliyolainishwa, au iliyosahihishwa kutoka ulinganifu wa Chunk, Band au Kalman, kwenye mita yako ya 012F.\n
+9. Mafuta huhesabiwa tu injini inapoendesha. Programu-jalizi huendesha tu Torque ikiwa imeunganishwa na ECU.\n
+10. Endelea kuendesha na kujaza; usahihi hukua katika matangi kadhaa ya sehemu. Arifa ya Wasifu mbaya wa gari? ikitokea, chagua la kufanya na safari hiyo.\n
+11. Data yote hubaki kwenye simu hii. GPS wala mahali haparekodiwi.</string>
+    <string name="about_body">%1$s\nToleo %2$s (%3$s)\nProgramu-jalizi ya Torque Pro. Haihusiani na Torque wala Ian Hawkins.\nData yote hubaki kwenye simu hii; GPS wala mahali haparekodiwi.\n\nLeseni\nCopyright David Lang. Haki zote zimehifadhiwa.</string>
+    <string name="open_source_notices">Maktaba za chanzo huria\nProgramu hii hutumia maktaba zilizo hapa chini. Leseni zao zimetenganishwa na hakimiliki iliyo juu.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), inahitajika na Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">Mwongozo kamili (mtandaoni)</string>
+    <string name="show_fuel_notification">Onyesha kiwango cha mafuta katika arifa</string>
+    <string name="write_012f">Rudisha kiwango cha mafuta kwa Torque (hubadilisha 012F)</string>
+    <string name="running_quiet">Fuel Smoothing inaendesha</string>
+    <string name="tap_to_start">Gusa ili kuanzisha Fuel Smoothing</string>
+    <string name="tap_to_start_text">Kuanzisha kutoka betri au chinichini kumezuiwa. Fungua mara moja ili programu-jalizi iweze kuendesha na Torque.</string>
+    <string name="tank2_help">Ongeza matangi ya ziada kadri inavyohitajika (tangi ya kiwanda 1 hubaki daima). Usihamishe vitambuzi kwenye pini ya PCM FLI (kujaza kwa uongo). Kila tangi ya ziada inahitaji PID yake ya ziada ya Torque (MCU Mode 22, jina la kipekee — si 012F wala Ford 16C1). Thamani ya Select-PID ni kitambulisho cha tangi kuanzia 1. Gal/hr hutozwa tu kwa tangi inayotumika.</string>
+    <string name="tap_start_channel">Gusa ili kuanza</string>
+    <string name="tank_size_info">Ukubwa wa tangi ni ukubwa wa kuanzia wa ulinganifu wa Chunk hadi ujifunze wake. Programu-jalizi haibadilishi kamwe; ukubwa uliofunzwa wa kila ulinganifu huonyeshwa chini yake.</string>
+    <string name="feed_012f_info">Huandika thamani kwenye Fuel Level (012F) ya kiwanda ya Torque ili mita zilizopo zionyeshe: Imezimwa, iliyolainishwa, au iliyosahihishwa kutoka ulinganifu wa Chunk, Band au Kalman. Ulinganifu ambao bado haujajengwa huandika kiwango kilicholainishwa.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">bado hakuna ukubwa</string>
+    <string name="size_none_sd">bado hakuna ukubwa ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">Msaada</string>
+    <string name="about">Kuhusu</string>
+    <string name="need_torque">Inahitaji Torque Pro (inayolipiwa). Torque Lite haiauni programu-jalizi.</string>
+    <string name="get_torque">Pata Torque Pro</string>
+    <string name="privacy">Faragha</string>
+    <string name="send_feedback">Tuma maoni</string>
+    <string name="tip">Bahshishi</string>
+    <string name="thanks">Asante</string>
+    <string name="close">Funga</string>
+    <string name="ok">Sawa</string>
+    <string name="detect">Tambua</string>
+    <string name="confirm">Thibitisha</string>
+    <string name="save_pin">Hifadhi nanga</string>
+    <string name="add_tank">Ongeza tangi</string>
+    <string name="remove">Ondoa</string>
+    <string name="details">Maelezo</string>
+    <string name="verbose_logging">Kumbukumbu ya kina (utatuzi; mistari kila sekunde)</string>
+    <string name="profile_name">Jina la wasifu</string>
+    <string name="profile_name_info">Jina la wasifu huu wa gari. Kila wasifu wa gari wa Torque hupata wasifu wake wa programu-jalizi, data na ramani zilizofunzwa.</string>
+    <string name="make">Chapa</string>
+    <string name="make_info">Chapa ya gari (k.m. Ford). Hutumika tu kuchagua PID za mafuta za chapa ambazo utambuzi unaweza kujaribu.</string>
+    <string name="fuel_source">Chanzo cha mafuta</string>
+    <string name="fuel_source_info">Kiwango ghafi cha mafuta hutoka wapi. Tambua (ECU lazima iwe imeunganishwa) hujaribu wagombea kwa kusoma tu na kuomba uthibitisho ikiwa vyanzo viwili havilingani. Thibitisha iko kwenye ukurasa wa usanidi na katika arifa. Hakuna = tambua kwenye muunganisho ujao.</string>
+    <string name="custom_long_name">Jina refu maalum</string>
+    <string name="custom_long_name_info">Kwa chanzo „PID ya ziada ya Torque kwa jina refu“ pekee: jina refu kamili la PID ya Torque inayoripoti kiwango.</string>
+    <string name="tank_size">Ukubwa wa tangi</string>
+    <string name="tank_hint">tupu = hakuna ukubwa wa kuanzia; kila ulinganifu hujifunza wake.</string>
+    <string name="smoothing_tau">Ulainishaji τ kwa sekunde</string>
+    <string name="smoothing_tau_info">Kiwango cha muda cha kichujio cha ulainishaji (0 = hakuna ulainishaji).</string>
+    <string name="max_skew" formatted="false">Mwinamo wa juu %/s</string>
+    <string name="max_skew_info">Mabadiliko makubwa zaidi kwa sekunde ambayo kiwango kilicholainishwa kinaweza kufuata; mtikisiko zaidi ya hapo hupuuzwa.</string>
+    <string name="fill_jump" formatted="false">Mruko wa kujaza %</string>
+    <string name="fill_jump_info">Kupanda kwa kiwango ukiwa umesimama kunakohesabiwa kama kujaza.</string>
+    <string name="odometer">Odomita kwa maili</string>
+    <string name="odometer_info">Si lazima: weka usomaji wa odomita na Hifadhi nanga ili kutia nanga umbali wa wasifu huu.</string>
+    <string name="additional_tanks">Matangi ya ziada</string>
+    <string name="active_tank">Tangi inayotumika</string>
+    <string name="active_tank_info">Tangi ambayo matumizi (gal/hr) hutozwa. Kutoka PID: PID ya Torque huichagua (kitambulisho kuanzia 1).</string>
+    <string name="select_pid">Jina refu la Select-PID</string>
+    <string name="select_pid_info">Tu wakati Tangi inayotumika = Kutoka PID: jina refu la PID ya Torque ambayo thamani yake ni kitambulisho cha tangi.</string>
+    <string name="tank_n">Tangi %1$d</string>
+    <string name="tank_n_source">Chanzo cha mafuta cha tangi %1$d</string>
+    <string name="tank_n_custom">Jina refu maalum cha tangi %1$d (k.m. [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">Galoni za tangi %1$d</string>
+    <string name="from_pid">Kutoka PID</string>
+    <string name="unconfirmed"> (haijathibitishwa)</string>
+    <string name="ecu_connected"> · ECU imeunganishwa</string>
+    <string name="tank_unknown">tangi ?</string>
+    <string name="about_field">Takriban %1$s</string>
+    <string name="err_tau">0 hadi %1$s s</string>
+    <string name="err_skew">juu ya 0, isiyozidi %1$s %%/s</string>
+    <string name="err_jump">%1$s hadi %2$s %%</string>
+    <string name="err_tank">tupu au nambari kubwa kuliko 0</string>
+    <string name="err_stored">thamani iliyohifadhiwa iko nje ya masafa</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">Iliyolainishwa %</string>
+    <string name="axis_error" formatted="false">Hitilafu (%)</string>
+    <string name="feed_off">Imezimwa</string>
+    <string name="feed_smoothed" formatted="false">Iliyolainishwa %</string>
+    <string name="feed_corrected_chunk" formatted="false">Iliyosahihishwa % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Iliyosahihishwa % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Iliyosahihishwa % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">Bado hakuna (Tambua unapounganisha)</string>
+    <string name="src_sae_012f">SAE 012F Fuel Tank Level</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler Fuel Level Average</string>
+    <string name="src_toyota_2129">Toyota cluster 2129 (hesabu za nusu lita)</string>
+    <string name="src_custom_name">PID ya ziada ya Torque kwa jina refu</string>
+    <string name="vehicle_default">Gari 1</string>
+    <string name="vehicle_dated">Gari %1$s</string>
+    <string name="binding_torque">Inaunganisha na Torque…</string>
+    <string name="status_waiting">Inasubiri chanzo cha mafuta</string>
+    <string name="status_raw">ghafi %1$.1f%%</string>
+    <string name="status_sess"> safari %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing tulivu</string>
+    <string name="map_refit_title">Ramani inalinganishwa upya</string>
+    <string name="map_refit_body">Fuel Smoothing inalinganisha upya ramani ya %1$s. Ulinganifu huu unasoma 1:1 hadi ulinganifu upya ukamilike.</string>
+    <string name="no_source_title">Hakuna chanzo cha kiwango cha mafuta kilichowekwa</string>
+    <string name="no_source_body">Fuel Smoothing haina chanzo cha kiwango cha mafuta cha %1$s. Fungua ukurasa wa usanidi na uguse Tambua, au chagua chanzo.</string>
+    <string name="no_level_title">Hakuna kiwango cha mafuta katika safari hii</string>
+    <string name="no_level_body">%1$s haikutoa kiwango kinachotumika cha %2$s. Angalia muunganisho wa adapta, au endesha Tambua kwenye ukurasa wa usanidi.</string>
+    <string name="source_found_title">Chanzo cha kiwango cha mafuta kimepatikana</string>
+    <string name="source_found_body">Inatumia %1$s kwa %2$s (%3$s).</string>
+    <string name="source_missing_title">Hakuna chanzo cha kiwango cha mafuta kilichopatikana</string>
+    <string name="source_missing_body">Fungua usanidi wa Fuel Smoothing na uchague chanzo (au ongeza PID katika Torque), kisha gusa Tambua.</string>
+    <string name="confirm_source_title">Thibitisha chanzo cha kiwango cha mafuta</string>
+    <string name="confirm_source_body">Imetambuliwa %1$s, usomaji %2$.0f %% kwa %3$s. Angalia kuwa inalingana na mita ya dashibodi, kisha gusa Thibitisha. Thibitisha iko kwenye ukurasa wa usanidi na katika arifa (%4$s).</string>
+    <string name="confirm_source_body_nolevel">Imetambuliwa %1$s kwa %2$s. Angalia kuwa inalingana na mita ya dashibodi, kisha gusa Thibitisha. Thibitisha iko kwenye ukurasa wa usanidi na katika arifa (%3$s).</string>
+    <string name="recording_title">Inarekodi kwa %1$s</string>
+    <string name="recording_body">Gari hili ni %1$s (%2$s), lakini wasifu wa Torque ni „%3$s“. Data huenda kwa %1$s; gusa ili kufungua Torque na kubadilisha wasifu.</string>
+    <string name="wrong_vehicle_title">Wasifu mbaya wa gari?</string>
+    <string name="wrong_suggest_profile">Wasifu wa Torque „%1$s“</string>
+    <string name="wrong_suggest_new">wasifu mpya wa gari</string>
+    <string name="wrong_vehicle_body">Wasifu wa Torque „%1$s“ haulingani na gari hili (%2$s). Pendekezo: %3$s. Data huhifadhiwa na hutupwa mwishoni mwa safari isipokuwa ukiihifadhi.</string>
+    <string name="keeping_title">Data ya safari inahifadhiwa</string>
+    <string name="keeping_body">Safari hii itahifadhiwa kwa %1$s. API ya programu-jalizi ya Torque haiwezi kuunda au kubadilisha wasifu wa Torque: katika Torque, unda au chagua wasifu wa gari uitwao „%2$s“.</string>
+    <string name="action_new_profile">Unda wasifu mpya</string>
+    <string name="action_use">Tumia %1$s</string>
+</resources>

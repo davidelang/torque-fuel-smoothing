@@ -22,9 +22,6 @@ internal object Pids {
     const val DTE = "ff126a"
 
     const val PLUGIN_SMOOTHED = "[FuelSmooth] Smoothed Fuel Level"
-    const val PLUGIN_CORRECTED = "[FuelSmooth] Corrected Fuel Level"
-    const val PLUGIN_REMAINING = "[FuelSmooth] Fuel Remaining"
-    const val PLUGIN_DTE = "[FuelSmooth] Plugin DTE"
     const val PLUGIN_BAND_CORRECTED = "[FuelSmooth] Corrected % (band)"
     const val PLUGIN_BAND_REMAINING = "[FuelSmooth] Remaining (band)"
     const val PLUGIN_BAND_DTE = "[FuelSmooth] DTE (band)"
@@ -37,7 +34,6 @@ internal object Pids {
     const val MODE_KALMAN_CORRECTED = "ffd015"
     const val MODE_KALMAN_REMAINING = "ffd016"
     const val MODE_KALMAN_DTE = "ffd017"
-    // Per-fit PIDs. ffd002–ffd004 are not registered and are not written.
     const val PLUGIN_CHUNK_CORRECTED = "[FuelSmooth] Corrected % (chunk)"
     const val PLUGIN_CHUNK_REMAINING = "[FuelSmooth] Remaining (chunk)"
     const val PLUGIN_CHUNK_DTE = "[FuelSmooth] DTE (chunk)"
@@ -55,9 +51,6 @@ internal object Pids {
     const val PLUGIN_T2_REMAINING = "[FuelSmooth] Tank2 Remaining"
     const val PLUGIN_T2_DTE = "[FuelSmooth] Tank2 DTE"
     const val MODE_SMOOTHED = "ffd001"
-    const val MODE_CORRECTED = "ffd002"
-    const val MODE_REMAINING = "ffd003"
-    const val MODE_DTE = "ffd004"
 
     fun extraModePid(id: Int, which: Int): String {
         check(id in 2..8 && which in 1..4)

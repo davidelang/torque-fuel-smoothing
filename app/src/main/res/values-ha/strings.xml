@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">Shawarwari suna kan sigar Play Store</string>
+    <string name="help_body">Fara da sauri\n
+1. Saka Torque Pro (sigar da ake biya; Torque Lite ba ya goyan bayan plugins) kuma haɗa na\'urar OBD-II.\n
+2. Kunna wannan plugin a Torque → Saituna → Plugins.\n
+3. Ba da izinin sanarwa, kuma sa amfani da baturi ya zama Ba tare da iyaka ba domin Torque ya iya fara wannan plugin a bango.\n
+4. A Torque, zaɓi bayanan abin hawa da kake tuki. Ana ajiye bayanai ga kowane bayanan Torque kuma ana duba su da VIN/ECU na abin hawa.\n
+5. A sabon bayani ana gano tushen man lokacin haɗi; idan an tambaya, kwatanta da ma\'aunin dash sannan taɓa Tabbatar. Tabbatar yana kan shafin saiti da cikin sanarwa. Kuma za ka iya zaɓar shi a ƙasa.\n
+6. Girman tanki shine girman farawa na Chunk fit har sai ya koya nasa. Plugin ba ya canza shi; girman da kowane fit ya koya yana ƙarƙashinsa.\n
+7. A Torque, ƙara ma\'aunai na [FuelSmooth] Smoothed Fuel Level da Corrected %, Remaining, DTE da Tank size na kowane fit. DTE shine Remaining ninka mpg na dogon lokaci na Torque. Sanarwa a lokacin refit tana cewa wannan fit yana karantawa 1:1 har sai refit ya ƙare.\n
+8. Mayar da matakin man zuwa Torque: Kashe, daidaitacce, ko gyara daga Chunk, Band ko Kalman fit zuwa ma\'aunin 012F.\n
+9. Ana ƙirga man ne kawai yayin da injin ke aiki. Plugin yana aiki ne kawai yayin da Torque ya haɗu da ECU.\n
+10. Ci gaba da tuƙi da cikawa; daidaito yana ƙaruwa a kan tankuna da ba su cika ba. Idan sanarwar Kuskuren bayanan abin hawa? ta bayyana, zaɓi abin da za ka yi da wannan tuƙin.\n
+11. Duk bayanai suna kan wannan waya. Ba a rikodin GPS ko wuri ba.</string>
+    <string name="about_body">%1$s\nSigar %2$s (%3$s)\nPlugin na Torque Pro. Ba shi da alaƙa da Torque ko Ian Hawkins.\nDuk bayanai suna kan wannan waya; ba a rikodin GPS ko wuri ba.\n\nLasisi\nCopyright David Lang. An keɓe duk haƙƙoƙi.</string>
+    <string name="open_source_notices">Ɗakunan karatu na buɗaɗɗen tushe\nWannan manhaja tana amfani da ɗakunan karatu a ƙasa. Lasissunsu sun rabu da haƙƙin mallaka na sama.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), Play Billing yana buƙata\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">Cikakken jagora (yanar gizo)</string>
+    <string name="show_fuel_notification">Nuna matakin man a sanarwa</string>
+    <string name="write_012f">Mayar da matakin man zuwa Torque (yana maye gurbin 012F)</string>
+    <string name="running_quiet">Fuel Smoothing yana aiki</string>
+    <string name="tap_to_start">Taɓa don fara Fuel Smoothing</string>
+    <string name="tap_to_start_text">An ƙi farawa daga baturi ko bango. Buɗe sau ɗaya domin plugin ya yi aiki tare da Torque.</string>
+    <string name="tank2_help">Ƙara ƙarin tankuna idan ana buƙata (tankin masana\'anta 1 yana dawwama). Kada ka canza masu aikawa zuwa fil na PCM FLI (cikawa na ƙarya). Kowane ƙarin tanki yana buƙatar nasa ƙarin PID na Torque (MCU Mode 22, suna na musamman — ba 012F ko Ford 16C1 ba). Darajar Select-PID ita ce id na tanki daga 1. Ana cajin Gal/hr ne kawai ga tankin da ke aiki.</string>
+    <string name="tap_start_channel">Taɓa don farawa</string>
+    <string name="tank_size_info">Girman tanki shine girman farawa na Chunk fit har sai ya koya nasa. Plugin ba ya canza shi; girman da kowane fit ya koya yana ƙarƙashinsa.</string>
+    <string name="feed_012f_info">Yana rubuta daraja a kan Fuel Level na masana\'anta na Torque (012F) domin ma\'aunai da ke akwai su nuna: Kashe, daidaitacce, ko gyara daga Chunk, Band ko Kalman fit. Fit da ba a gina ba tukuna yana rubuta matakin da aka daidaita.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">babu girma tukuna</string>
+    <string name="size_none_sd">babu girma tukuna ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">Taimako</string>
+    <string name="about">Game da</string>
+    <string name="need_torque">Ana buƙatar Torque Pro (an biya). Torque Lite ba ya goyan bayan plugins.</string>
+    <string name="get_torque">Samu Torque Pro</string>
+    <string name="privacy">Sirri</string>
+    <string name="send_feedback">Aika ra\'ayi</string>
+    <string name="tip">Kyauta</string>
+    <string name="thanks">Na gode</string>
+    <string name="close">Rufe</string>
+    <string name="ok">OK</string>
+    <string name="detect">Gano</string>
+    <string name="confirm">Tabbatar</string>
+    <string name="save_pin">Ajiye alama</string>
+    <string name="add_tank">Ƙara tanki</string>
+    <string name="remove">Cire</string>
+    <string name="details">Cikakkun bayanai</string>
+    <string name="verbose_logging">Cikakken rajista (gyara; layi a kowane sakan)</string>
+    <string name="profile_name">Sunan bayani</string>
+    <string name="profile_name_info">Sunan wannan bayanan abin hawa. Kowane bayanan abin hawa na Torque yana samun nasa bayanin plugin, bayanai, da taswirorin da aka koya.</string>
+    <string name="make">Mai kera</string>
+    <string name="make_info">Mai kera abin hawa (misali Ford). Ana amfani da shi ne kawai don zaɓar waɗanne PID na man na alama za a gwada.</string>
+    <string name="fuel_source">Tushen man</string>
+    <string name="fuel_source_info">Daga ina matakin man ɗanyen yake zuwa. Gano (dole ECU ya haɗu) yana karanta ƴan takara don karatu kawai kuma yana neman tabbaci sai dai idan tushe biyu sun yarda. Tabbatar yana kan shafin saiti da cikin sanarwa. Babu = gano a haɗin gaba.</string>
+    <string name="custom_long_name">Dogayen suna na musamman</string>
+    <string name="custom_long_name_info">Ga tushen Torque extra PID by long name kawai: ainihin dogon sunan PID na Torque da ke ba da mataki.</string>
+    <string name="tank_size">Girman tanki</string>
+    <string name="tank_hint">fanko = babu girman farawa; kowane fit yana koyon nasa.</string>
+    <string name="smoothing_tau">Daidaitawa τ sakan</string>
+    <string name="smoothing_tau_info">Maɓalli na lokaci na tace daidaitawa (0 = babu daidaitawa).</string>
+    <string name="max_skew" formatted="false">Mafi karkata %/s</string>
+    <string name="max_skew_info">Mafi girman canji a sakan da matakin da aka daidaita zai iya bi; ana watsi da jijjiga da ta wuce wannan.</string>
+    <string name="fill_jump" formatted="false">Tsalle na cikawa %</string>
+    <string name="fill_jump_info">Hawan mataki yayin tsaye da ake ƙirga a matsayin cikawa.</string>
+    <string name="odometer">Mil na odometer</string>
+    <string name="odometer_info">Na zaɓi: shigar da karatun odometer sannan Ajiye alama don ɗaure nisa na wannan bayani.</string>
+    <string name="additional_tanks">Ƙarin tankuna</string>
+    <string name="active_tank">Tankin da ke aiki</string>
+    <string name="active_tank_info">Wane tanki ake cajin ƙonawar man (gal/hr). Daga PID: PID na Torque yana zaɓar shi (id na tanki daga 1).</string>
+    <string name="select_pid">Dogon suna na Select-PID</string>
+    <string name="select_pid_info">Kawai lokacin da Tankin da ke aiki = Daga PID: dogon sunan PID na Torque da darajarsa ita ce id na tanki.</string>
+    <string name="tank_n">Tanki %1$d</string>
+    <string name="tank_n_source">Tushen man na tanki %1$d</string>
+    <string name="tank_n_custom">Dogayen suna na musamman na tanki %1$d (misali [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">Galon na tanki %1$d</string>
+    <string name="from_pid">Daga PID</string>
+    <string name="unconfirmed"> (ba a tabbatar ba)</string>
+    <string name="ecu_connected"> · ECU ya haɗu</string>
+    <string name="tank_unknown">tanki ?</string>
+    <string name="about_field">Game da %1$s</string>
+    <string name="err_tau">0 zuwa %1$s s</string>
+    <string name="err_skew">sama da 0, iyakar %1$s %%/s</string>
+    <string name="err_jump">%1$s zuwa %2$s %%</string>
+    <string name="err_tank">fanko ko lamba sama da 0</string>
+    <string name="err_stored">darajar da aka ajiye ta fita daga iyaka</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">Daidaitacce %</string>
+    <string name="axis_error" formatted="false">Kuskure (%)</string>
+    <string name="feed_off">Kashe</string>
+    <string name="feed_smoothed" formatted="false">Daidaitacce %</string>
+    <string name="feed_corrected_chunk" formatted="false">Corrected % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Corrected % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Corrected % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">Babu tukuna (Gano yana aiki a haɗi)</string>
+    <string name="src_sae_012f">SAE 012F Fuel Tank Level</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler Fuel Level Average</string>
+    <string name="src_toyota_2129">Toyota cluster 2129 (half-litre counts)</string>
+    <string name="src_custom_name">Torque extra PID by long name</string>
+    <string name="vehicle_default">Abin hawa 1</string>
+    <string name="vehicle_dated">Abin hawa %1$s</string>
+    <string name="binding_torque">Ana haɗawa da Torque…</string>
+    <string name="status_waiting">Ana jiran tushen man</string>
+    <string name="status_raw">ɗanye %1$.1f%%</string>
+    <string name="status_sess"> zaman %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing shiru</string>
+    <string name="map_refit_title">Ana sake daidaita taswira</string>
+    <string name="map_refit_body">Fuel Smoothing yana sake daidaita taswira don %1$s. Wannan fit yana karantawa 1:1 har sai refit ya ƙare.</string>
+    <string name="no_source_title">Ba a saita tushen matakin man ba</string>
+    <string name="no_source_body">Fuel Smoothing ba shi da tushen matakin man na %1$s. Buɗe shafin saiti sannan taɓa Gano, ko zaɓi tushe.</string>
+    <string name="no_level_title">Babu matakin man a wannan tuƙin</string>
+    <string name="no_level_body">%1$s bai ba da mataki mai amfani ba ga %2$s. Duba haɗin na\'ura, ko gudanar da Gano a shafin saiti.</string>
+    <string name="source_found_title">An sami tushen matakin man</string>
+    <string name="source_found_body">Ana amfani da %1$s don %2$s (%3$s).</string>
+    <string name="source_missing_title">Ba a sami tushen matakin man ba</string>
+    <string name="source_missing_body">Buɗe saitin Fuel Smoothing sannan zaɓi tushe (ko ƙara PID a Torque), sannan taɓa Gano.</string>
+    <string name="confirm_source_title">Tabbatar da tushen matakin man</string>
+    <string name="confirm_source_body">An gano %1$s, karatu %2$.0f %% na %3$s. Duba ya dace da ma\'aunin man na dash, sannan taɓa Tabbatar. Tabbatar yana kan shafin saiti da cikin sanarwa (%4$s).</string>
+    <string name="confirm_source_body_nolevel">An gano %1$s na %2$s. Duba ya dace da ma\'aunin man na dash, sannan taɓa Tabbatar. Tabbatar yana kan shafin saiti da cikin sanarwa (%3$s).</string>
+    <string name="recording_title">Ana rikodi zuwa %1$s</string>
+    <string name="recording_body">Wannan abin hawa %1$s ne (%2$s), amma bayanin Torque \'%3$s\' ne. Bayanai suna zuwa %1$s; taɓa don buɗe Torque da canza bayani.</string>
+    <string name="wrong_vehicle_title">Kuskuren bayanan abin hawa?</string>
+    <string name="wrong_suggest_profile">Bayanin Torque \'%1$s\'</string>
+    <string name="wrong_suggest_new">sabon bayanin abin hawa</string>
+    <string name="wrong_vehicle_body">Bayanin Torque \'%1$s\' bai dace da wannan abin hawa ba (%2$s). Shawara: %3$s. Ana riƙe bayanai kuma a watsar da su a ƙarshen tuƙi sai dai idan ka ajiye su.</string>
+    <string name="keeping_title">Ana ajiye bayanan tuƙi</string>
+    <string name="keeping_body">Za a ajiye wannan tuƙin zuwa %1$s. API na plugin na Torque ba zai iya ƙirƙira ko canza bayanan Torque ba: a Torque, ƙirƙiri ko zaɓi bayanin abin hawa mai suna \'%2$s\'.</string>
+    <string name="action_new_profile">Ƙirƙiri sabon bayani</string>
+    <string name="action_use">Yi amfani da %1$s</string>
+</resources>

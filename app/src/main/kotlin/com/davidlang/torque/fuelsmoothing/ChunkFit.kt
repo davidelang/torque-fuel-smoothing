@@ -6,8 +6,6 @@ import kotlin.math.min
 import kotlin.math.sqrt
 
 /**
- * Gauge map and tank size fit from stored pieces: one chunk per piece.
- *
  * [fromPieces] maps pieces.jsonl onto parts and chunks. The map is refit from all of those chunks:
  * inverse overlap fit with weights fuel x 1/noise^2 and Huber (k=2) bounded influence, h >= H_MIN,
  * then lifted to satisfy hard constraints (logged burn within a tank epoch).

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">Бакшишите са във версията от Play Store</string>
+    <string name="help_body">Бърз старт\n
+1. Инсталирайте Torque Pro (платената версия; Torque Lite не поддържа приставки) и сдвоете адаптера OBD-II.\n
+2. Включете тази приставка в Torque → Настройки → Приставки.\n
+3. Разрешете известията и задайте използването на батерията на Неограничено, за да може Torque да стартира тази приставка на заден план.\n
+4. В Torque изберете профила на автомобила, който карате. Данните се пазят по профил на Torque и се сверяват с самоличността VIN/ECU на автомобила.\n
+5. При нов профил източникът на гориво се открива при свързване; ако бъдете попитани, сравнете го с показателя на таблото и докоснете Потвърди. Потвърди е на страницата за настройка и в известието. Може да го изберете и по-долу.\n
+6. Размерът на резервоара е началният размер за напасването Chunk, докато то не научи своя. Приставката никога не го променя; наученият размер на всяко напасване е показан под него.\n
+7. В Torque добавете показатели за [FuelSmooth] Smoothed Fuel Level и за всяко напасване Corrected %, Remaining, DTE и Tank size. DTE е Remaining по дългосрочния mpg на Torque. Известие по време на повторно напасване казва, че напасването чете 1:1, докато повторното напасване не завърши.\n
+8. Връщайте нивото на горивото към Torque: Изкл., изгладено или коригирано от напасването Chunk, Band или Kalman към показателя 012F.\n
+9. Горивото се брои само докато двигателят работи. Приставката работи само докато Torque е свързан към ECU.\n
+10. Продължавайте да карате и да зареждате; точността расте през няколко частични резервоара. Ако се появи известие Грешен профил на автомобила?, изберете какво да стане с това пътуване.\n
+11. Всички данни остават на този телефон. GPS и местоположение не се записват.</string>
+    <string name="about_body">%1$s\nВерсия %2$s (%3$s)\nПриставка за Torque Pro. Не е свързана с Torque или Ian Hawkins.\nВсички данни остават на този телефон; GPS и местоположение не се записват.\n\nЛиценз\nCopyright David Lang. Всички права запазени.</string>
+    <string name="open_source_notices">Библиотеки с отворен код\nТова приложение използва библиотеките по-долу. Техните лицензи са отделни от авторското право по-горе.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), изисква се от Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">Пълно ръководство (онлайн)</string>
+    <string name="show_fuel_notification">Показвай нивото на горивото в известието</string>
+    <string name="write_012f">Връщай нивото на горивото към Torque (замества 012F)</string>
+    <string name="running_quiet">Fuel Smoothing работи</string>
+    <string name="tap_to_start">Докоснете, за да стартирате Fuel Smoothing</string>
+    <string name="tap_to_start_text">Стартирането от батерията или на заден план е отказано. Отворете веднъж, за да може приставката да работи с Torque.</string>
+    <string name="tank2_help">Добавяйте допълнителни резервоари при нужда (заводският резервоар 1 винаги остава). Не превключвайте датчиците към извода PCM FLI (фалшиво зареждане). Всеки допълнителен резервоар се нуждае от собствен допълнителен PID в Torque (MCU Mode 22, уникално име — не 012F или Ford 16C1). Стойността на Select-PID е идентификаторът на резервоара от 1. Gal/hr се начислява само на активния резервоар.</string>
+    <string name="tap_start_channel">Докоснете за старт</string>
+    <string name="tank_size_info">Размерът на резервоара е началният размер за напасването Chunk, докато то не научи своя. Приставката никога не го променя; наученият размер на всяко напасване е показан под него.</string>
+    <string name="feed_012f_info">Записва стойност върху заводския Fuel Level (012F) на Torque, за да я показват съществуващите показатели: Изкл., изгладено или коригирано от напасването Chunk, Band или Kalman. Напасване, което още не е изградено, записва изгладеното ниво.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">още няма размер</string>
+    <string name="size_none_sd">още няма размер ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">Помощ</string>
+    <string name="about">За приложението</string>
+    <string name="need_torque">Изисква Torque Pro (платен). Torque Lite не поддържа приставки.</string>
+    <string name="get_torque">Вземете Torque Pro</string>
+    <string name="privacy">Поверителност</string>
+    <string name="send_feedback">Изпратете отзив</string>
+    <string name="tip">Бакшиш</string>
+    <string name="thanks">Благодарим</string>
+    <string name="close">Затвори</string>
+    <string name="ok">OK</string>
+    <string name="detect">Открий</string>
+    <string name="confirm">Потвърди</string>
+    <string name="save_pin">Запази опорната точка</string>
+    <string name="add_tank">Добави резервоар</string>
+    <string name="remove">Премахни</string>
+    <string name="details">Подробности</string>
+    <string name="verbose_logging">Подробен дневник (отстраняване на грешки; редове всяка секунда)</string>
+    <string name="profile_name">Име на профила</string>
+    <string name="profile_name_info">Името на този профил на автомобил. Всеки профил на автомобил в Torque получава собствен профил на приставката, данни и научени карти.</string>
+    <string name="make">Марка</string>
+    <string name="make_info">Марка на автомобила (напр. Ford). Служи само за избор кои маркови PID за гориво може да опита откриването.</string>
+    <string name="fuel_source">Източник на гориво</string>
+    <string name="fuel_source_info">Откъде идва суровото ниво на горивото. Открий (ECU трябва да е свързан) опитва кандидатите само за четене и иска потвърждение, ако два източника не съвпадат. Потвърди е на страницата за настройка и в известието. Няма = открий при следващото свързване.</string>
+    <string name="custom_long_name">Собствено дълго име</string>
+    <string name="custom_long_name_info">Само за източника „Допълнителен PID на Torque по дълго име“: точното дълго име на PID в Torque, който съобщава нивото.</string>
+    <string name="tank_size">Размер на резервоара</string>
+    <string name="tank_hint">празно = няма начален размер; всяко напасване научава своя.</string>
+    <string name="smoothing_tau">Изглаждане τ в секунди</string>
+    <string name="smoothing_tau_info">Времеконстанта на филтъра за изглаждане (0 = без изглаждане).</string>
+    <string name="max_skew" formatted="false">Макс. наклон %/s</string>
+    <string name="max_skew_info">Най-голямата промяна в секунда, която изгладеното ниво може да следва; плискането над нея се пренебрегва.</string>
+    <string name="fill_jump" formatted="false">Скок при зареждане %</string>
+    <string name="fill_jump_info">Покачване на нивото при спрял автомобил, което се брои за зареждане.</string>
+    <string name="odometer">Километраж в мили</string>
+    <string name="odometer_info">По желание: въведете показанието на километража и Запази опорната точка, за да закотвите разстоянието за този профил.</string>
+    <string name="additional_tanks">Допълнителни резервоари</string>
+    <string name="active_tank">Активен резервоар</string>
+    <string name="active_tank_info">Резервоарът, към който се начислява разходът (gal/hr). От PID: PID в Torque го избира (идентификатор от 1).</string>
+    <string name="select_pid">Дълго име на Select-PID</string>
+    <string name="select_pid_info">Само когато Активен резервоар = От PID: дългото име на PID в Torque, чиято стойност е идентификаторът на резервоара.</string>
+    <string name="tank_n">Резервоар %1$d</string>
+    <string name="tank_n_source">Източник на гориво на резервоар %1$d</string>
+    <string name="tank_n_custom">Собствено дълго име на резервоар %1$d (напр. [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">Галони на резервоар %1$d</string>
+    <string name="from_pid">От PID</string>
+    <string name="unconfirmed"> (непотвърдено)</string>
+    <string name="ecu_connected"> · ECU е свързан</string>
+    <string name="tank_unknown">резервоар ?</string>
+    <string name="about_field">Около %1$s</string>
+    <string name="err_tau">0 до %1$s s</string>
+    <string name="err_skew">над 0, най-много %1$s %%/s</string>
+    <string name="err_jump">%1$s до %2$s %%</string>
+    <string name="err_tank">празно или число над 0</string>
+    <string name="err_stored">записаната стойност е извън обхвата</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">Изгладено %</string>
+    <string name="axis_error" formatted="false">Грешка (%)</string>
+    <string name="feed_off">Изкл.</string>
+    <string name="feed_smoothed" formatted="false">Изгладено %</string>
+    <string name="feed_corrected_chunk" formatted="false">Коригирано % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Коригирано % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Коригирано % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">Все още няма (Открий при свързване)</string>
+    <string name="src_sae_012f">SAE 012F Fuel Tank Level</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler Fuel Level Average</string>
+    <string name="src_toyota_2129">Toyota cluster 2129 (броене по половин литър)</string>
+    <string name="src_custom_name">Допълнителен PID на Torque по дълго име</string>
+    <string name="vehicle_default">Автомобил 1</string>
+    <string name="vehicle_dated">Автомобил %1$s</string>
+    <string name="binding_torque">Свързване с Torque…</string>
+    <string name="status_waiting">Изчаква се източник на гориво</string>
+    <string name="status_raw">сурово %1$.1f%%</string>
+    <string name="status_sess"> пътуване %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing тихо</string>
+    <string name="map_refit_title">Повторно напасване на картата</string>
+    <string name="map_refit_body">Fuel Smoothing напасва отново карта за %1$s. Това напасване чете 1:1, докато повторното напасване не завърши.</string>
+    <string name="no_source_title">Няма зададен източник на ниво на горивото</string>
+    <string name="no_source_body">Fuel Smoothing няма източник на ниво на горивото за %1$s. Отворете страницата за настройка и докоснете Открий, или изберете източник.</string>
+    <string name="no_level_title">Няма ниво на горивото за това пътуване</string>
+    <string name="no_level_body">%1$s не даде използваемо ниво за %2$s. Проверете връзката на адаптера или пуснете Открий на страницата за настройка.</string>
+    <string name="source_found_title">Намерен е източник на ниво на горивото</string>
+    <string name="source_found_body">Използва се %1$s за %2$s (%3$s).</string>
+    <string name="source_missing_title">Не е намерен източник на ниво на горивото</string>
+    <string name="source_missing_body">Отворете настройката на Fuel Smoothing и изберете източник (или добавете PID в Torque), после докоснете Открий.</string>
+    <string name="confirm_source_title">Потвърдете източника на ниво на горивото</string>
+    <string name="confirm_source_body">Открито е %1$s, показание %2$.0f %% за %3$s. Проверете дали съвпада с показателя на таблото, после докоснете Потвърди. Потвърди е на страницата за настройка и в известието (%4$s).</string>
+    <string name="confirm_source_body_nolevel">Открито е %1$s за %2$s. Проверете дали съвпада с показателя на таблото, после докоснете Потвърди. Потвърди е на страницата за настройка и в известието (%3$s).</string>
+    <string name="recording_title">Запис към %1$s</string>
+    <string name="recording_body">Този автомобил е %1$s (%2$s), но профилът на Torque е „%3$s“. Данните отиват в %1$s; докоснете, за да отворите Torque и да смените профила.</string>
+    <string name="wrong_vehicle_title">Грешен профил на автомобила?</string>
+    <string name="wrong_suggest_profile">Профил на Torque „%1$s“</string>
+    <string name="wrong_suggest_new">нов профил на автомобил</string>
+    <string name="wrong_vehicle_body">Профилът на Torque „%1$s“ не съвпада с този автомобил (%2$s). Предложение: %3$s. Данните се задържат и се изхвърлят в края на пътуването, освен ако не ги запазите.</string>
+    <string name="keeping_title">Запазване на данните от пътуването</string>
+    <string name="keeping_body">Това пътуване ще бъде запазено в %1$s. API на приставката на Torque не може да създава или сменя профили на Torque: в Torque създайте или изберете профил на автомобил с име „%2$s“.</string>
+    <string name="action_new_profile">Създай нов профил</string>
+    <string name="action_use">Използвай %1$s</string>
+</resources>

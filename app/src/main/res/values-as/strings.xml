@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">টিপছ Play Store সংস্কৰণত আছে</string>
+    <string name="help_body">দ্ৰুত আৰম্ভ\n
+1. Torque Pro ইনষ্টল কৰক (পৰিশোধিত সংস্কৰণ; Torque Lite-এ প্লাগইন সমৰ্থন নকৰে) আৰু OBD-II এডাপ্টাৰ যোৰা লাওক.\n
+2. এই প্লাগইনটো Torque → ছেটিংছ → Plugins-ত সক্ৰিয় কৰক.\n
+3. জাননীৰ অনুমতি দিয়ক আৰু বেটাৰী ব্যৱহাৰ অসীমিত ৰাখক যাতে Torque-এ এই প্লাগইন পটভূমিত আৰম্ভ কৰিব পাৰে.\n
+4. Torque-ত আপুনি চলাই থকা বাহনৰ প্ৰফাইল বাছক. তথ্য প্ৰতিটো Torque প্ৰফাইলত ৰখা হয় আৰু বাহনৰ VIN/ECU পৰিচয়ৰ সৈতে পৰীক্ষা কৰা হয়.\n
+5. নতুন প্ৰফাইলত ইন্ধনৰ উৎস সংযোগত ধৰা পৰে; সুধিলে ডেছ গেজৰ সৈতে মিলাওক আৰু নিশ্চিত কৰক টিপক. নিশ্চিত কৰক ছেটআপ পৃষ্ঠা আৰু জাননীত আছে. তলৰ পৰাও বাছিব পাৰে.\n
+6. টেংকৰ আকাৰ Chunk ফিটৰ আৰম্ভণিৰ আকাৰ, নিজে নশিকা পৰ্যন্ত. প্লাগইনে ইয়াক কেতিয়াও সলনি নকৰে; প্ৰতিটো ফিটৰ শিকা আকাৰ তাৰ তলত দেখুওৱা হয়.\n
+7. Torque-ত [FuelSmooth] Smoothed Fuel Level আৰু প্ৰতিটো ফিটৰ Corrected %, Remaining, DTE আৰু Tank size-ৰ গেজ যোগ কৰক. DTE হৈছে Remaining গুণ Torque-ৰ দীৰ্ঘম্যাদী mpg. ৰিফিটৰ সময়ত জাননীয়ে কয় যে সেই ফিট 1:1 পঢ়ে যেতিয়ালৈকে ৰিফিট শেষ নহয়.\n
+8. ইন্ধনৰ স্তৰ Torque-লৈ ঘূৰাই পঠাওক: বন্ধ, মসৃণ, বা Chunk, Band বা Kalman ফিটৰ পৰা শুধৰোৱা, আপোনাৰ 012F গেজলৈ.\n
+9. ইন্ধন কেৱল ইঞ্জিন চলি থকা সময়ত গণনা হয়. প্লাগইন কেৱল Torque ECU-ৰ সৈতে সংযোজিত হ’লেহে চলে.\n
+10. চলাই থাকক আৰু ভৰাই থাকক; সঠিকতা কেইবাটাও আংশিক টেংকত বাঢ়ে. ভুল বাহন প্ৰফাইল? জাননী আহিলে সেই ড্ৰাইভৰ কি কৰিব বাছক.\n
+11. সকলো তথ্য এই ফোনত থাকে. কোনো GPS বা অৱস্থান ৰেকৰ্ড নহয়.</string>
+    <string name="about_body">%1$s\nসংস্কৰণ %2$s (%3$s)\nTorque Pro-ৰ বাবে প্লাগইন. Torque বা Ian Hawkins-ৰ সৈতে জড়িত নহয়.\nসকলো তথ্য এই ফোনত থাকে; কোনো GPS বা অৱস্থান ৰেকৰ্ড নহয়.\n\nঅনুজ্ঞা\nCopyright David Lang. সকলো স্বত্ব সংৰক্ষিত.</string>
+    <string name="open_source_notices">মুক্ত উৎস লাইব্ৰেৰী\nএই এপে তলৰ লাইব্ৰেৰী ব্যৱহাৰ কৰে. সিহঁতৰ অনুজ্ঞা ওপৰৰ কপিৰাইটৰ পৰা পৃথক.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), Play Billing-এ লাগে\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">সম্পূৰ্ণ হাতপুথি (অনলাইন)</string>
+    <string name="show_fuel_notification">জাননীত ইন্ধনৰ স্তৰ দেখুৱাওক</string>
+    <string name="write_012f">ইন্ধনৰ স্তৰ Torque-লৈ ঘূৰাই পঠাওক (012F সলনি কৰে)</string>
+    <string name="running_quiet">Fuel Smoothing চলি আছে</string>
+    <string name="tap_to_start">Fuel Smoothing আৰম্ভ কৰিবলৈ টিপক</string>
+    <string name="tap_to_start_text">বেটাৰী বা পটভূমিৰ পৰা আৰম্ভ নাকচ হ’ল. এবাৰ খোলক যাতে প্লাগইন Torque-ৰ সৈতে চলিব পাৰে.</string>
+    <string name="tank2_help">প্ৰয়োজন অনুসৰি অতিৰিক্ত টেংক যোগ কৰক (কাৰখানাৰ টেংক 1 সদায় থাকে). চেণ্ডাৰ PCM FLI পিনলৈ নিসলনি কৰিব (মিছা ভৰোৱা). প্ৰতিটো অতিৰিক্ত টেংকৰ নিজৰ Torque অতিৰিক্ত PID লাগে (MCU Mode 22, অদ্বিতীয় নাম — 012F বা Ford 16C1 নহয়). Select-PID মান 1-ৰ পৰা টেংক id. Gal/hr কেৱল সক্ৰিয় টেংকত ধৰা হয়.</string>
+    <string name="tap_start_channel">আৰম্ভ কৰিবলৈ টিপক</string>
+    <string name="tank_size_info">টেংকৰ আকাৰ Chunk ফিটৰ আৰম্ভণিৰ আকাৰ, নিজে নশিকা পৰ্যন্ত. প্লাগইনে ইয়াক কেতিয়াও সলনি নকৰে; প্ৰতিটো ফিটৰ শিকা আকাৰ তাৰ তলত দেখুওৱা হয়.</string>
+    <string name="feed_012f_info">থকা গেজে দেখুৱাবলৈ Torque-ৰ কাৰখানা Fuel Level (012F)-ত মান লিখে: বন্ধ, মসৃণ, বা Chunk, Band বা Kalman ফিটৰ পৰা শুধৰোৱা. এতিয়াও নিৰ্মিত নোহোৱা ফিটে মসৃণ স্তৰ লিখে.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">এতিয়াও আকাৰ নাই</string>
+    <string name="size_none_sd">এতিয়াও আকাৰ নাই ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">সহায়</string>
+    <string name="about">বিষয়ে</string>
+    <string name="need_torque">Torque Pro (পৰিশোধিত) লাগে. Torque Lite-এ প্লাগইন সমৰ্থন নকৰে.</string>
+    <string name="get_torque">Torque Pro লওক</string>
+    <string name="privacy">গোপনীয়তা</string>
+    <string name="send_feedback">মতামত পঠাওক</string>
+    <string name="tip">টিপ</string>
+    <string name="thanks">ধন্যবাদ</string>
+    <string name="close">বন্ধ</string>
+    <string name="ok">OK</string>
+    <string name="detect">চিনাক্ত</string>
+    <string name="confirm">নিশ্চিত কৰক</string>
+    <string name="save_pin">পিন সাঁচক</string>
+    <string name="add_tank">অতিৰিক্ত টেংক যোগ</string>
+    <string name="remove">আঁতৰাওক</string>
+    <string name="details">বিৱৰণ</string>
+    <string name="verbose_logging">বিস্তৃত লগ (ডিবাগ; প্ৰতি ছেকেণ্ডত শাৰী)</string>
+    <string name="profile_name">প্ৰফাইলৰ নাম</string>
+    <string name="profile_name_info">এই বাহন প্ৰফাইলৰ নাম. প্ৰতিটো Torque বাহন প্ৰফাইলে নিজৰ প্লাগইন প্ৰফাইল, তথ্য আৰু শিকা মানচিত্ৰ পায়.</string>
+    <string name="make">নিৰ্মাতা</string>
+    <string name="make_info">বাহন নিৰ্মাতা (যেনে Ford). চিনাক্তকৰণে কোন ব্ৰেণ্ডৰ ইন্ধন PID চেষ্টা কৰিব সেয়া বাছিবলৈহে.</string>
+    <string name="fuel_source">ইন্ধনৰ উৎস</string>
+    <string name="fuel_source_info">কেঁচা ইন্ধনৰ স্তৰ ক’ৰ পৰা আহে. চিনাক্ত (ECU সংযোজিত হ’ব লাগিব) প্ৰাৰ্থীক কেৱল পঢ়ে আৰু দুটা উৎস নিমিলে নিশ্চিত কৰিবলৈ কয়. নিশ্চিত কৰক ছেটআপ পৃষ্ঠা আৰু জাননীত আছে. একো নাই = পৰৱৰ্তী সংযোগত চিনাক্ত.</string>
+    <string name="custom_long_name">কাষ্টম দীঘল নাম</string>
+    <string name="custom_long_name_info">কেৱল উৎস Torque extra PID by long name-ৰ বাবে: স্তৰ জনাই দিয়া Torque PID-ৰ সঠিক দীঘল নাম.</string>
+    <string name="tank_size">টেংকৰ আকাৰ</string>
+    <string name="tank_hint">খালী = আৰম্ভণিৰ আকাৰ নাই; প্ৰতিটো ফিটে নিজৰ শিকে.</string>
+    <string name="smoothing_tau">মসৃণকৰণ τ ছেকেণ্ড</string>
+    <string name="smoothing_tau_info">মসৃণকৰণ ফিল্টাৰৰ সময় ধ্ৰুৱক (0 = মসৃণকৰণ নাই).</string>
+    <string name="max_skew" formatted="false">সৰ্বাধিক হেলনী %/s</string>
+    <string name="max_skew_info">প্ৰতি ছেকেণ্ডত সৰ্ববৃহৎ সলনি যাক মসৃণ স্তৰে অনুসৰণ কৰিব পাৰে; তাৰ বাহিৰৰ দোলন উপেক্ষিত.</string>
+    <string name="fill_jump" formatted="false">ভৰোৱাৰ জাঁপ %</string>
+    <string name="fill_jump_info">ৰৈ থকা অৱস্থাত স্তৰৰ বৃদ্ধি যাক ভৰোৱা বুলি গণনা কৰা হয়.</string>
+    <string name="odometer">অডোমিটাৰ মাইল</string>
+    <string name="odometer_info">ঐচ্ছিক: অডোমিটাৰ পঢ়া সুমুৱাওক আৰু পিন সাঁচক যাতে এই প্ৰফাইলৰ দূৰত্ব আবদ্ধ হয়.</string>
+    <string name="additional_tanks">অতিৰিক্ত টেংক</string>
+    <string name="active_tank">সক্ৰিয় টেংক</string>
+    <string name="active_tank_info">ইন্ধন খৰচ (gal/hr) কোন টেংকত ধৰা হয়. PID-ৰ পৰা: Torque PID-এ সেয়া বাছে (1-ৰ পৰা টেংক id).</string>
+    <string name="select_pid">Select-PID দীঘল নাম</string>
+    <string name="select_pid_info">কেৱল সক্ৰিয় টেংক = PID-ৰ পৰা হ’লে: যাৰ মান টেংক id, সেই Torque PID-ৰ দীঘল নাম.</string>
+    <string name="tank_n">টেংক %1$d</string>
+    <string name="tank_n_source">টেংক %1$d ইন্ধনৰ উৎস</string>
+    <string name="tank_n_custom">টেংক %1$d কাষ্টম দীঘল নাম (যেনে [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">টেংক %1$d গেলন</string>
+    <string name="from_pid">PID-ৰ পৰা</string>
+    <string name="unconfirmed"> (অনিশ্চিত)</string>
+    <string name="ecu_connected"> · ECU সংযোজিত</string>
+    <string name="tank_unknown">টেংক ?</string>
+    <string name="about_field">%1$s বিষয়ে</string>
+    <string name="err_tau">0 ৰ পৰা %1$s s</string>
+    <string name="err_skew">0 ৰ ওপৰত, সৰ্বাধিক %1$s %%/s</string>
+    <string name="err_jump">%1$s ৰ পৰা %2$s %%</string>
+    <string name="err_tank">খালী বা 0 তকৈ ডাঙৰ সংখ্যা</string>
+    <string name="err_stored">সঞ্চিত মান পৰিসৰৰ বাহিৰত</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">মসৃণ %</string>
+    <string name="axis_error" formatted="false">ত্ৰুটি (%)</string>
+    <string name="feed_off">বন্ধ</string>
+    <string name="feed_smoothed" formatted="false">মসৃণ %</string>
+    <string name="feed_corrected_chunk" formatted="false">Corrected % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Corrected % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Corrected % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">এতিয়াও একো নাই (চিনাক্ত সংযোগত চলে)</string>
+    <string name="src_sae_012f">SAE 012F Fuel Tank Level</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler Fuel Level Average</string>
+    <string name="src_toyota_2129">Toyota cluster 2129 (half-litre counts)</string>
+    <string name="src_custom_name">Torque extra PID by long name</string>
+    <string name="vehicle_default">বাহন 1</string>
+    <string name="vehicle_dated">বাহন %1$s</string>
+    <string name="binding_torque">Torque-ৰ সৈতে বান্ধিছে…</string>
+    <string name="status_waiting">ইন্ধনৰ উৎসৰ বাবে অপেক্ষা</string>
+    <string name="status_raw">কেঁচা %1$.1f%%</string>
+    <string name="status_sess"> ছেশন %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing নিৰৱ</string>
+    <string name="map_refit_title">মানচিত্ৰ পুনৰ ফিট হৈছে</string>
+    <string name="map_refit_body">Fuel Smoothing-এ %1$s-ৰ বাবে মানচিত্ৰ পুনৰ ফিট কৰিছে. সেই ফিট 1:1 পঢ়ে যেতিয়ালৈকে ৰিফিট শেষ নহয়.</string>
+    <string name="no_source_title">ইন্ধনৰ স্তৰৰ উৎস নিৰ্ধাৰিত নহয়</string>
+    <string name="no_source_body">Fuel Smoothing-ৰ %1$s-ৰ বাবে ইন্ধনৰ স্তৰৰ উৎস নাই. ছেটআপ পৃষ্ঠা খুলি চিনাক্ত টিপক, বা উৎস বাছক.</string>
+    <string name="no_level_title">এই ড্ৰাইভত ইন্ধনৰ স্তৰ নাই</string>
+    <string name="no_level_body">%1$s-এ %2$s-ৰ বাবে ব্যৱহাৰযোগ্য স্তৰ নিদিলে. এডাপ্টাৰ সংযোগ পৰীক্ষা কৰক, বা ছেটআপ পৃষ্ঠাত চিনাক্ত চলাওক.</string>
+    <string name="source_found_title">ইন্ধনৰ স্তৰৰ উৎস পোৱা গ’ল</string>
+    <string name="source_found_body">%1$s %2$s-ৰ বাবে ব্যৱহৃত (%3$s).</string>
+    <string name="source_missing_title">ইন্ধনৰ স্তৰৰ উৎস পোৱা নগ’ল</string>
+    <string name="source_missing_body">Fuel Smoothing ছেটআপ খুলি উৎস বাছক (বা Torque-ত PID যোগ কৰক), তাৰ পিছত চিনাক্ত টিপক.</string>
+    <string name="confirm_source_title">ইন্ধনৰ স্তৰৰ উৎস নিশ্চিত কৰক</string>
+    <string name="confirm_source_body">%1$s ধৰা পৰিল, পঢ়া %2$.0f %% , %3$s-ৰ বাবে. ডেছৰ ইন্ধন গেজৰ সৈতে মিলেনে চাই নিশ্চিত কৰক টিপক. নিশ্চিত কৰক ছেটআপ পৃষ্ঠা আৰু জাননীত আছে (%4$s).</string>
+    <string name="confirm_source_body_nolevel">%1$s ধৰা পৰিল, %2$s-ৰ বাবে. ডেছৰ ইন্ধন গেজৰ সৈতে মিলেনে চাই নিশ্চিত কৰক টিপক. নিশ্চিত কৰক ছেটআপ পৃষ্ঠা আৰু জাননীত আছে (%3$s).</string>
+    <string name="recording_title">%1$s-লৈ ৰেকৰ্ড</string>
+    <string name="recording_body">এই বাহন %1$s (%2$s), কিন্তু Torque-ৰ প্ৰফাইল \'%3$s\'. তথ্য %1$s-লৈ যায়; Torque খুলি প্ৰফাইল সলনি কৰিবলৈ টিপক.</string>
+    <string name="wrong_vehicle_title">ভুল বাহন প্ৰফাইল?</string>
+    <string name="wrong_suggest_profile">Torque প্ৰফাইল \'%1$s\'</string>
+    <string name="wrong_suggest_new">নতুন বাহন প্ৰফাইল</string>
+    <string name="wrong_vehicle_body">Torque প্ৰফাইল \'%1$s\' এই বাহনৰ সৈতে নিমিলে (%2$s). পৰামৰ্শ: %3$s. তথ্য ৰখা হয় আৰু আপুনি নাৰাখিলে ড্ৰাইভ শেষত পেলোৱা হয়.</string>
+    <string name="keeping_title">ড্ৰাইভৰ তথ্য ৰখা হৈছে</string>
+    <string name="keeping_body">এই ড্ৰাইভ %1$s-ত সাঁচিব. Torque-ৰ প্লাগইন API-এ Torque প্ৰফাইল সৃষ্টি বা সলনি কৰিব নোৱাৰে: Torque-ত \'%2$s\' নামৰ বাহন প্ৰফাইল সৃষ্টি বা বাছক.</string>
+    <string name="action_new_profile">নতুন প্ৰফাইল সৃষ্টি</string>
+    <string name="action_use">%1$s ব্যৱহাৰ কৰক</string>
+</resources>

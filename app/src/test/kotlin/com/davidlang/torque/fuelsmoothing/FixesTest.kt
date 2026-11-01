@@ -32,7 +32,6 @@ class FixesTest {
         assertEquals("", VolUnit.show(null, VolUnit.L))
         assertEquals(12.3, VolUnit.L.toGal(VolUnit.L.fromGal(12.3)), 1e-12)
         assertEquals(VolUnit.GAL, VolUnit.of(null)); assertEquals(VolUnit.L, VolUnit.of("L"))
-        assertEquals("blank = no starting size; each fit learns its own.", VolUnit.FALLBACK_HINT)
     }
 
     private fun poll(run: FuelDetect.Run, id: String, vals: List<Pair<Double?, Long?>>) { for ((v, u) in vals) run.report(id, v, u) }

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">Ndụmọdụ dị na nsụgharị Play Store</string>
+    <string name="help_body">Mmalite ngwa ngwa\n
+1. Wụnye Torque Pro (nsụgharị akwụrụ ụgwọ; Torque Lite anaghị akwado plugins) wee jikọọ OBD-II adapter.\n
+2. Gbanye plugin a na Torque → Ntọala → Plugins.\n
+3. Kwe ka ọkwa, wee tọọ ojiji batrị ka Ọnweghị oke ka Torque wee nwee ike ịmalite plugin a n\'azụ.\n
+4. Na Torque, họrọ profaịlụ ụgbọala ị na-anya. A na-echekwa data maka profaịlụ Torque ọ bụla ma lelee ya na VIN/ECU nke ụgbọala.\n
+5. Na profaịlụ ọhụrụ a na-achọpụta isi mmanụ ọkụ mgbe ị jikọrọ; ọ bụrụ na a jụọ, tụnyere ya na gauge dash wee kpatụ Kwenye. Kwenye dị na ibe ntọala na n\'ọkwa. Ị nwekwara ike ịhọrọ ya n\'okpuru.\n
+6. Nha tankị bụ nha mmalite nke Chunk fit ruo mgbe ọ mụtara nke ya. Plugin anaghị agbanwe ya; nha nke fit ọ bụla mụtara na-apụta n\'okpuru ya.\n
+7. Na Torque, tinye gauge maka [FuelSmooth] Smoothed Fuel Level na Corrected %, Remaining, DTE na Tank size nke fit ọ bụla. DTE bụ Remaining mụbara mpg ogologo oge nke Torque. Ọkwa n\'oge refit na-ekwu na fit ahụ na-agụ 1:1 ruo mgbe refit gwụrụ.\n
+8. Weghachi ọkwa mmanụ ọkụ na Torque: Gbanyụọ, mee ka ọ dị larịị, ma ọ bụ dozie site na Chunk, Band ma ọ bụ Kalman fit gaa na gauge 012F gị.\n
+9. A na-agụ mmanụ ọkụ naanị mgbe injin na-arụ ọrụ. Plugin na-arụ ọrụ naanị mgbe Torque jikọrọ na ECU.\n
+10. Nọgide na-anya ma na-ejupụta; izi ezi na-eto n\'ọtụtụ tankị na-ejupụtaghị. Ọ bụrụ na ọkwa Profaịlụ ụgbọala na-ezighi ezi? pụta, họrọ ihe ị ga-eme na njem ahụ.\n
+11. Data niile na-anọ na ekwentị a. Enweghị GPS ma ọ bụ ebe edere.</string>
+    <string name="about_body">%1$s\nNsụgharị %2$s (%3$s)\nPlugin maka Torque Pro. Ọ metụtaghị Torque ma ọ bụ Ian Hawkins.\nData niile na-anọ na ekwentị a; enweghị GPS ma ọ bụ ebe edere.\n\nIkikere\nCopyright David Lang. Ikike niile echekwara.</string>
+    <string name="open_source_notices">Ọbá akwụkwọ mepere emepe\nNgwa a na-eji ọbá akwụkwọ ndị dị n\'okpuru. Ikikere ha kewapụrụ na nwebisiinka dị n\'elu.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), Play Billing chọrọ ya\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">Akwụkwọ ntuziaka zuru ezu (ịntanetị)</string>
+    <string name="show_fuel_notification">Gosi ọkwa mmanụ ọkụ n\'ọkwa</string>
+    <string name="write_012f">Weghachi ọkwa mmanụ ọkụ na Torque (ọ na-anọchi 012F)</string>
+    <string name="running_quiet">Fuel Smoothing na-arụ ọrụ</string>
+    <string name="tap_to_start">Kpatụ iji malite Fuel Smoothing</string>
+    <string name="tap_to_start_text">A jụrụ mmalite site na batrị ma ọ bụ n\'azụ. Mepee otu ugboro ka plugin wee rụọ ọrụ na Torque.</string>
+    <string name="tank2_help">Tinye tankị ndị ọzọ dị ka ọ dị mkpa (tankị ụlọ ọrụ 1 na-anọgide). Atụgharịla ndị na-eziga na pin PCM FLI (njupụta ụgha). Tankị ọzọ ọ bụla chọrọ PID mgbakwunye Torque nke ya (MCU Mode 22, aha pụrụ iche — ọ bụghị 012F ma ọ bụ Ford 16C1). Uru Select-PID bụ id tankị site na 1. A na-ana Gal/hr naanị na tankị na-arụ ọrụ.</string>
+    <string name="tap_start_channel">Kpatụ iji malite</string>
+    <string name="tank_size_info">Nha tankị bụ nha mmalite nke Chunk fit ruo mgbe ọ mụtara nke ya. Plugin anaghị agbanwe ya; nha nke fit ọ bụla mụtara na-apụta n\'okpuru ya.</string>
+    <string name="feed_012f_info">Ọ na-ede uru na Fuel Level ụlọ ọrụ nke Torque (012F) ka gauge ndị dị adị gosi ya: Gbanyụọ, mee ka ọ dị larịị, ma ọ bụ dozie site na Chunk, Band ma ọ bụ Kalman fit. Fit a na-arụbeghị na-ede ọkwa larịị.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">enwebeghị nha</string>
+    <string name="size_none_sd">enwebeghị nha ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">Enyemaka</string>
+    <string name="about">Gbasara</string>
+    <string name="need_torque">Torque Pro (akwụrụ ụgwọ) dị mkpa. Torque Lite anaghị akwado plugins.</string>
+    <string name="get_torque">Nweta Torque Pro</string>
+    <string name="privacy">Nzuzo</string>
+    <string name="send_feedback">Zipu nzaghachi</string>
+    <string name="tip">Onyinye</string>
+    <string name="thanks">Daalụ</string>
+    <string name="close">Mechie</string>
+    <string name="ok">OK</string>
+    <string name="detect">Chọpụta</string>
+    <string name="confirm">Kwenye</string>
+    <string name="save_pin">Chekwaa pin</string>
+    <string name="add_tank">Tinye tankị ọzọ</string>
+    <string name="remove">Wepụ</string>
+    <string name="details">Nkọwa</string>
+    <string name="verbose_logging">Ndekọ zuru ezu (ndozi; ahịrị kwa sekọnd)</string>
+    <string name="profile_name">Aha profaịlụ</string>
+    <string name="profile_name_info">Aha profaịlụ ụgbọala a. Profaịlụ ụgbọala Torque ọ bụla na-enweta profaịlụ plugin nke ya, data, na map ọ mụtara.</string>
+    <string name="make">Onye mere</string>
+    <string name="make_info">Onye mere ụgbọala (dịka Ford). A na-eji ya naanị ịhọrọ PID mmanụ ọkụ nke ụdị nke nchọpụta nwere ike ịnwale.</string>
+    <string name="fuel_source">Isi mmanụ ọkụ</string>
+    <string name="fuel_source_info">Ebe ọkwa mmanụ ọkụ a na-esighị esi na-esi. Chọpụta (ECU ga-ejikọrịrị) na-agụ ndị ga-abụ naanị ịgụ ma na-arịọ nkwenye ma ọ bụrụ na isi abụọ ekwekọghị. Kwenye dị na ibe ntọala na n\'ọkwa. Ọ dịghị = chọpụta na njikọ na-esote.</string>
+    <string name="custom_long_name">Aha ogologo ahaziri</string>
+    <string name="custom_long_name_info">Naanị maka isi Torque extra PID by long name: aha ogologo kpọmkwem nke PID Torque na-akọ ọkwa.</string>
+    <string name="tank_size">Nha tankị</string>
+    <string name="tank_hint">efu = enweghị nha mmalite; fit ọ bụla na-amụta nke ya.</string>
+    <string name="smoothing_tau">Ime larịị τ sekọnd</string>
+    <string name="smoothing_tau_info">Nkwekorịta oge nke nzacha ime larịị (0 = enweghị ime larịị).</string>
+    <string name="max_skew" formatted="false">Mkpagharị kachasị %/s</string>
+    <string name="max_skew_info">Mgbanwe kachasị kwa sekọnd nke ọkwa larịị nwere ike iso; a na-eleghara ịma jijiji gafere nke a anya.</string>
+    <string name="fill_jump" formatted="false">Mwụli njupụta %</string>
+    <string name="fill_jump_info">Ịrị elu nke ọkwa mgbe a kwụsịrị nke a na-agụ dị ka njupụta.</string>
+    <string name="odometer">Maịlị odometer</string>
+    <string name="odometer_info">Nhọrọ: tinye ọgụgụ odometer wee Chekwaa pin iji kwado anya nke profaịlụ a.</string>
+    <string name="additional_tanks">Tankị ndị ọzọ</string>
+    <string name="active_tank">Tankị na-arụ ọrụ</string>
+    <string name="active_tank_info">Tankị nke a na-ana ọkụ mmanụ ọkụ (gal/hr). Site na PID: PID Torque na-ahọrọ ya (id tankị site na 1).</string>
+    <string name="select_pid">Aha ogologo Select-PID</string>
+    <string name="select_pid_info">Naanị mgbe Tankị na-arụ ọrụ = Site na PID: aha ogologo nke PID Torque nke uru ya bụ id tankị.</string>
+    <string name="tank_n">Tankị %1$d</string>
+    <string name="tank_n_source">Isi mmanụ ọkụ nke tankị %1$d</string>
+    <string name="tank_n_custom">Aha ogologo ahaziri nke tankị %1$d (dịka [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">Galọn nke tankị %1$d</string>
+    <string name="from_pid">Site na PID</string>
+    <string name="unconfirmed"> (akwenyeghị)</string>
+    <string name="ecu_connected"> · ECU jikọrọ</string>
+    <string name="tank_unknown">tankị ?</string>
+    <string name="about_field">Gbasara %1$s</string>
+    <string name="err_tau">0 ruo %1$s s</string>
+    <string name="err_skew">karịa 0, ọ naghị agafe %1$s %%/s</string>
+    <string name="err_jump">%1$s ruo %2$s %%</string>
+    <string name="err_tank">efu ma ọ bụ nọmba karịrị 0</string>
+    <string name="err_stored">uru echekwara apụọla na oke</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">Larịị %</string>
+    <string name="axis_error" formatted="false">Njehie (%)</string>
+    <string name="feed_off">Gbanyụọ</string>
+    <string name="feed_smoothed" formatted="false">Larịị %</string>
+    <string name="feed_corrected_chunk" formatted="false">Corrected % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Corrected % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Corrected % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">Ọ dịbeghị (Chọpụta na-arụ ọrụ na njikọ)</string>
+    <string name="src_sae_012f">SAE 012F Fuel Tank Level</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler Fuel Level Average</string>
+    <string name="src_toyota_2129">Toyota cluster 2129 (half-litre counts)</string>
+    <string name="src_custom_name">Torque extra PID by long name</string>
+    <string name="vehicle_default">Ụgbọala 1</string>
+    <string name="vehicle_dated">Ụgbọala %1$s</string>
+    <string name="binding_torque">Na-ejikọ na Torque…</string>
+    <string name="status_waiting">Na-eche isi mmanụ ọkụ</string>
+    <string name="status_raw">esighị esi %1$.1f%%</string>
+    <string name="status_sess"> nnọkọ %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing jụụ</string>
+    <string name="map_refit_title">Map na-eme refit</string>
+    <string name="map_refit_body">Fuel Smoothing na-eme refit map maka %1$s. Fit ahụ na-agụ 1:1 ruo mgbe refit gwụrụ.</string>
+    <string name="no_source_title">Esetoghị isi ọkwa mmanụ ọkụ</string>
+    <string name="no_source_body">Fuel Smoothing enweghị isi ọkwa mmanụ ọkụ maka %1$s. Mepee ibe ntọala wee kpatụ Chọpụta, ma ọ bụ họrọ isi.</string>
+    <string name="no_level_title">Enweghị ọkwa mmanụ ọkụ na njem a</string>
+    <string name="no_level_body">%1$s enyeghị ọkwa bara uru maka %2$s. Lelee njikọ adapter, ma ọ bụ mee Chọpụta na ibe ntọala.</string>
+    <string name="source_found_title">Achọtara isi ọkwa mmanụ ọkụ</string>
+    <string name="source_found_body">A na-eji %1$s maka %2$s (%3$s).</string>
+    <string name="source_missing_title">Achọtaghị isi ọkwa mmanụ ọkụ</string>
+    <string name="source_missing_body">Mepee ntọala Fuel Smoothing wee họrọ isi (ma ọ bụ tinye PID na Torque), wee kpatụ Chọpụta.</string>
+    <string name="confirm_source_title">Kwenye isi ọkwa mmanụ ọkụ</string>
+    <string name="confirm_source_body">Achọpụtara %1$s, ọgụgụ %2$.0f %% maka %3$s. Lelee na ọ dabara na gauge mmanụ ọkụ dash, wee kpatụ Kwenye. Kwenye dị na ibe ntọala na n\'ọkwa (%4$s).</string>
+    <string name="confirm_source_body_nolevel">Achọpụtara %1$s maka %2$s. Lelee na ọ dabara na gauge mmanụ ọkụ dash, wee kpatụ Kwenye. Kwenye dị na ibe ntọala na n\'ọkwa (%3$s).</string>
+    <string name="recording_title">Na-edekọ na %1$s</string>
+    <string name="recording_body">Ụgbọala a bụ %1$s (%2$s), mana profaịlụ Torque bụ \'%3$s\'. Data na-aga na %1$s; kpatụ iji mepee Torque ma gbanwee profaịlụ.</string>
+    <string name="wrong_vehicle_title">Profaịlụ ụgbọala na-ezighi ezi?</string>
+    <string name="wrong_suggest_profile">Profaịlụ Torque \'%1$s\'</string>
+    <string name="wrong_suggest_new">profaịlụ ụgbọala ọhụrụ</string>
+    <string name="wrong_vehicle_body">Profaịlụ Torque \'%1$s\' adabaghị na ụgbọala a (%2$s). Aro: %3$s. A na-ejide data ma tụfuo ya na njedebe njem ma ọ bụrụ na ị naghị edobe ya.</string>
+    <string name="keeping_title">A na-edobe data njem</string>
+    <string name="keeping_body">A ga-echekwa njem a na %1$s. API plugin nke Torque enweghị ike ịmepụta ma ọ bụ gbanwee profaịlụ Torque: na Torque, mepụta ma ọ bụ họrọ profaịlụ ụgbọala aha ya bụ \'%2$s\'.</string>
+    <string name="action_new_profile">Mepụta profaịlụ ọhụrụ</string>
+    <string name="action_use">Jiri %1$s</string>
+</resources>

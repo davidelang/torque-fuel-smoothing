@@ -191,7 +191,10 @@ internal object BandFit {
         val f = File(dir, FILE); val js = json(r, System.currentTimeMillis())
         val strip = { x: String -> x.replace(Regex("\"timestamp\":[0-9]+"), "") }
         if (!f.isFile || strip(f.readText()) != strip(js)) {
-            if (!f.isFile) FsLog.i("FuelSmooth", "band model was absent before this write")
+            if (!f.isFile) {
+                val gal = r.capToZero.takeIf { it.isFinite() }?.let { java.lang.String.format(java.util.Locale.US, "%.1f", it) } ?: "none"
+                FsLog.i("FuelSmooth", "fit_own_size fit=band tank=${ProfileStore.tankNumber(dir)} gal=$gal")
+            }
             AtomicFile.write(f, js)
         }
         runCatching {

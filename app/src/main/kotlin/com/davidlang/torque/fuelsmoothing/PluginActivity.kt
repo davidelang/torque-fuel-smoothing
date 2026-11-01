@@ -19,6 +19,15 @@ import android.util.Log
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.view.View
+import java.text.DecimalFormatSymbols
+import java.util.Locale
+import kotlin.math.abs
+import kotlin.math.ceil
+import kotlin.math.floor
+import kotlin.math.log10
+import kotlin.math.max
+import kotlin.math.pow
+import kotlin.math.roundToInt
 import android.view.WindowInsets
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -125,24 +134,27 @@ class PluginActivity : Activity() {
         val title = TextView(this)
         title.text = getString(R.string.app_name)
         title.textSize = 20f
+        title.primary()
         title.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         head.addView(title)
-        head.addView(smallButton("Help") { showPage("Help", helpPage) })
-        head.addView(smallButton("About") { showPage("About", aboutPage) })
+        head.addView(smallButton(getString(R.string.help)) { showPage(getString(R.string.help), helpPage) })
+        head.addView(smallButton(getString(R.string.about)) { showPage(getString(R.string.about), aboutPage) })
         col.addView(head)
 
         statusLine = TextView(this)
         statusLine.textSize = 13f
+        statusLine.primary()
         statusLine.maxLines = 2
         statusLine.ellipsize = android.text.TextUtils.TruncateAt.END
         col.addView(statusLine)
 
         if (!torqueInstalled()) {
             val need = TextView(this)
-            need.text = "Requires Torque Pro (paid). Torque Lite does not support plugins."
+            need.text = getString(R.string.need_torque)
             need.textSize = 14f
+            need.primary()
             col.addView(need)
-            col.addView(smallButton("Get Torque Pro") {
+            col.addView(smallButton(getString(R.string.get_torque)) {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=org.prowl.torque")))
             })
         }
@@ -153,6 +165,7 @@ class PluginActivity : Activity() {
         val help = TextView(this)
         help.text = getString(R.string.help_body)
         help.textSize = 14f
+        help.primary()
         helpPage.addView(help)
         val manual = Button(this)
         manual.text = getString(R.string.manual_button)
@@ -165,21 +178,22 @@ class PluginActivity : Activity() {
         aboutPage = LinearLayout(this)
         aboutPage.orientation = LinearLayout.VERTICAL
         val about = TextView(this)
-        about.text = getString(R.string.about_body, versionName(), versionCode()) + "\n\n" + getString(R.string.open_source_notices)
+        about.text = getString(R.string.about_body, getString(R.string.app_name), versionName(), versionCode()) + "\n\n" + getString(R.string.open_source_notices)
         about.textSize = 14f
+        about.primary()
         aboutPage.addView(about)
         val privacy = Button(this)
-        privacy.text = "Privacy"
+        privacy.text = getString(R.string.privacy)
         privacy.setOnClickListener {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.privacy_policy_url))))
         }
         aboutPage.addView(privacy)
         val feedback = Button(this)
-        feedback.text = "Send feedback"
+        feedback.text = getString(R.string.send_feedback)
         feedback.setOnClickListener { sendFeedback() }
         aboutPage.addView(feedback)
         tipButton = Button(this)
-        tipButton.text = "Tip"
+        tipButton.text = getString(R.string.tip)
         tipButton.setOnClickListener { onTipClicked() }
         aboutPage.addView(tipButton)
         tipChoices = LinearLayout(this)
@@ -187,27 +201,28 @@ class PluginActivity : Activity() {
         aboutPage.addView(tipChoices)
         thanksView = TextView(this)
         thanksView.textSize = 14f
+        thanksView.primary()
         aboutPage.addView(thanksView)
         // Google Play Billing connects only when the user taps Tip, or to finish a recorded tip (no network use otherwise).
         TipReconciler.run(this, "app start")
 
         // ---- Settings ----
         profileNameView = TextView(this)   // kept for refreshProfile; the name is in the status line
-        col.addView(info("Profile name", "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps."))
+        col.addView(info(getString(R.string.profile_name), getString(R.string.profile_name_info)))
         profileName = edit(InputType.TYPE_CLASS_TEXT)
         col.addView(profileName)
-        col.addView(info("Make", "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try."))
+        col.addView(info(getString(R.string.make), getString(R.string.make_info)))
         vehicleMake = edit(InputType.TYPE_CLASS_TEXT)
         col.addView(vehicleMake)
 
-        col.addView(info("Fuel source", "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect."))
+        col.addView(info(getString(R.string.fuel_source), getString(R.string.fuel_source_info)))
         val srcRow = LinearLayout(this)
         srcRow.orientation = LinearLayout.HORIZONTAL
         sourceSpinner = Spinner(this)
-        sourceSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, FuelSources.labels())
+        sourceSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, FuelSources.labels { getString(it) })
         sourceSpinner.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         srcRow.addView(sourceSpinner)
-        detectBtn = smallButton("Detect") {
+        detectBtn = smallButton(getString(R.string.detect)) {
             val i = Intent(this, PluginService::class.java).setAction(PluginService.ACTION_DETECT)
             try {
                 if (Build.VERSION.SDK_INT >= 26) startForegroundService(i) else startService(i)
@@ -216,7 +231,7 @@ class PluginActivity : Activity() {
             }
         }
         srcRow.addView(detectBtn)
-        confirmBtn = smallButton("Confirm") {
+        confirmBtn = smallButton(getString(R.string.confirm)) {
             val i = Intent(this, PluginService::class.java)
                 .setAction(PluginService.ACTION_CONFIRM_SOURCE)
                 .putExtra(PluginService.EXTRA_TARGET, ProfileStore.activeId(filesDir))
@@ -231,19 +246,19 @@ class PluginActivity : Activity() {
         srcRow.addView(confirmBtn)
         col.addView(srcRow)
 
-        col.addView(info("Custom long name", "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level."))
+        col.addView(info(getString(R.string.custom_long_name), getString(R.string.custom_long_name_info)))
         customName = edit(InputType.TYPE_CLASS_TEXT)
         col.addView(customName)
 
-        col.addView(info("Tank size", getString(R.string.tank_size_info)))
+        col.addView(info(getString(R.string.tank_size), getString(R.string.tank_size_info)))
         val tankRow = LinearLayout(this)
         tankRow.orientation = LinearLayout.HORIZONTAL
         tank = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
-        tank.hint = VolUnit.FALLBACK_HINT
+        tank.hint = getString(R.string.tank_hint)
         tank.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         tankRow.addView(tank)
         tankUnit = Spinner(this)
-        tankUnit.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, VolUnit.entries.map { it.label })
+        tankUnit.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, VolUnit.entries.map { getString(it.label) })
         tankRow.addView(tankUnit)
         col.addView(tankRow)
         tankUnit.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -259,64 +274,63 @@ class PluginActivity : Activity() {
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
-        sizeChunk = sizeView(0xFF1565C0.toInt())
-        sizeBand = sizeView(0xFF2E7D32.toInt())
-        sizeKalman = sizeView(0xFFE65100.toInt())
-        col.addView(sizeChunk)
-        col.addView(sizeBand)
-        col.addView(sizeKalman)
+        sizeChunk = sizeLine(col, 0xFF1565C0.toInt())
+        sizeBand = sizeLine(col, 0xFF2E7D32.toInt())
+        sizeKalman = sizeLine(col, 0xFFE65100.toInt())
         fitChart = FitChart(this)
         col.addView(fitChart)
 
         col.addView(info(getString(R.string.write_012f), getString(R.string.feed_012f_info)))
         feed012f = Spinner(this)
-        feed012f.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, FeedMode.entries.map { it.label })
+        feed012f.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, FeedMode.entries.map { getString(it.label) })
         col.addView(feed012f)
 
         showNotice = CheckBox(this)
         showNotice.text = getString(R.string.show_fuel_notification)
+        showNotice.primary()
         col.addView(showNotice)
 
-        col.addView(info("Smoothing τ seconds", "Time constant of the smoothing filter (0 = no smoothing)."))
+        col.addView(info(getString(R.string.smoothing_tau), getString(R.string.smoothing_tau_info)))
         tau = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
         col.addView(tau)
-        col.addView(info("Max skew %/s", "Largest change per second the smoothed level may follow; slosh beyond this is ignored."))
+        col.addView(info(getString(R.string.max_skew), getString(R.string.max_skew_info)))
         skew = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
         col.addView(skew)
-        col.addView(info("Fill jump %", "Rise in level while stopped that counts as a fill."))
+        col.addView(info(getString(R.string.fill_jump), getString(R.string.fill_jump_info)))
         jump = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
         col.addView(jump)
 
-        col.addView(info("Odometer miles", "Optional: enter the odometer reading and Save pin to anchor distance for this profile."))
+        col.addView(info(getString(R.string.odometer), getString(R.string.odometer_info)))
         val odoRow = LinearLayout(this)
         odoRow.orientation = LinearLayout.HORIZONTAL
         odoMiles = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
         odoMiles.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         odoRow.addView(odoMiles)
-        odoRow.addView(smallButton("Save pin") {
+        odoRow.addView(smallButton(getString(R.string.save_pin)) {
             val miles = odoMiles.text.toString().toDoubleOrNull() ?: return@smallButton
             val id = ProfileStore.activeId(filesDir)
             ProfileStore.addPin(filesDir, id, miles, System.currentTimeMillis())
         })
         col.addView(odoRow)
 
-        col.addView(info("Additional tanks", getString(R.string.tank2_help)))
+        col.addView(info(getString(R.string.additional_tanks), getString(R.string.tank2_help)))
         extrasCol = LinearLayout(this)
         extrasCol.orientation = LinearLayout.VERTICAL
         col.addView(extrasCol)
         addBtn = Button(this)
-        addBtn.text = "Add additional tank"
+        addBtn.text = getString(R.string.add_tank)
         addBtn.setOnClickListener { addExtra() }
         col.addView(addBtn)
-        col.addView(info("Active tank", "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id)."))
+        col.addView(info(getString(R.string.active_tank), getString(R.string.active_tank_info)))
         activeSpinner = Spinner(this)
         col.addView(activeSpinner)
-        col.addView(info("Select-PID long name", "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id."))
+        col.addView(info(getString(R.string.select_pid), getString(R.string.select_pid_info)))
         selectPid = edit(InputType.TYPE_CLASS_TEXT)
         col.addView(selectPid)
 
         val verbose = android.widget.CheckBox(this)
-        verbose.text = "Verbose logging (debug; per-second log lines)"
+        verbose.text = getString(R.string.verbose_logging)
+        verbose.primary()
         verbose.isChecked = FixFuelPrefs.prefs(this).getBoolean(FsLog.KEY_VERBOSE, false)
         verbose.setOnCheckedChangeListener { _, on ->
             FixFuelPrefs.prefs(this).edit().putBoolean(FsLog.KEY_VERBOSE, on).apply()
@@ -325,12 +339,14 @@ class PluginActivity : Activity() {
         col.addView(verbose)
 
         // Details (below the settings).
-        col.addView(label("Details"))
+        col.addView(label(getString(R.string.details)))
         live = TextView(this)
         live.textSize = 13f
+        live.primary()
         col.addView(live)
         gapText = TextView(this)
         gapText.textSize = 12f
+        gapText.primary()
         col.addView(gapText)
 
         customName.addTextChangedListener(watch)
@@ -446,7 +462,7 @@ class PluginActivity : Activity() {
 
     private fun refreshProfile() {
         val id = ProfileStore.activeId(filesDir)
-        val name = ProfileStore.profileField(filesDir, id, "name") ?: "Vehicle 1"
+        val name = ProfileStore.profileField(filesDir, id, "name") ?: getString(R.string.vehicle_default)
         profileNameView.text = name
         if (!profileName.isFocused && profileName.text.toString() != name) profileName.setText(name)
         val make = ProfileStore.profileField(filesDir, id, "make") ?: ""
@@ -480,22 +496,23 @@ class PluginActivity : Activity() {
         val head = LinearLayout(this)
         head.orientation = LinearLayout.HORIZONTAL
         val title = TextView(this)
-        title.text = "Tank ${t.id}"
+        title.text = getString(R.string.tank_n, t.id)
         title.textSize = 16f
+        title.primary()
         title.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         val remove = Button(this)
-        remove.text = "Remove"
+        remove.text = getString(R.string.remove)
         head.addView(title)
         head.addView(remove)
         root.addView(head)
-        root.addView(label("Tank ${t.id} fuel source"))
+        root.addView(label(getString(R.string.tank_n_source, t.id)))
         val source = Spinner(this)
-        source.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, FuelSources.labels())
+        source.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, FuelSources.labels { getString(it) })
         root.addView(source)
-        root.addView(label("Tank ${t.id} custom long name (e.g. [FuelSmooth] Tank${t.id} Level)"))
+        root.addView(label(getString(R.string.tank_n_custom, t.id)))
         val name = edit(InputType.TYPE_CLASS_TEXT)
         root.addView(name)
-        root.addView(label("Tank ${t.id} gallons"))
+        root.addView(label(getString(R.string.tank_n_gallons, t.id)))
         val gal = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
         root.addView(gal)
         val card = ExtraCard(t.id, root, source, name, gal)
@@ -583,9 +600,9 @@ class PluginActivity : Activity() {
     }
 
     private fun activeLabels(): Array<String> {
-        val names = mutableListOf("Tank 1")
-        extraCards.sortedBy { it.id }.forEach { names.add("Tank ${it.id}") }
-        names.add("From PID")
+        val names = mutableListOf(getString(R.string.tank_n, 1))
+        extraCards.sortedBy { it.id }.forEach { names.add(getString(R.string.tank_n, it.id)) }
+        names.add(getString(R.string.from_pid))
         return names.toTypedArray()
     }
 
@@ -609,8 +626,6 @@ class PluginActivity : Activity() {
                 sourceId = old?.sourceId ?: FixFuelPrefs.DEFAULT_SOURCE_T2,
                 customName = card.customName.text.toString().trim(),
                 tankGal = card.tank.text.toString().toDoubleOrNull(),
-                learnedUsable = old?.learnedUsable,
-                tankEstimated = old?.tankEstimated ?: false,
                 sourceStatus = old?.sourceStatus ?: "",
             )
         }
@@ -642,14 +657,14 @@ class PluginActivity : Activity() {
     private fun formValid(): Boolean {
         var ok = true
         ok = markField(tau, FixFuelPrefs.tauOk(tau.text.toString().trim().toDoubleOrNull()),
-            "0 to ${FixFuelPrefs.MAX_TAU} s") && ok
+            getString(R.string.err_tau, oneDecimal(FixFuelPrefs.MAX_TAU))) && ok
         ok = markField(skew, FixFuelPrefs.skewOk(skew.text.toString().trim().toDoubleOrNull()),
-            "above 0, at most ${FixFuelPrefs.MAX_SKEW} %/s") && ok
+            getString(R.string.err_skew, oneDecimal(FixFuelPrefs.MAX_SKEW))) && ok
         ok = markField(jump, FixFuelPrefs.jumpOk(jump.text.toString().trim().toDoubleOrNull()),
-            "${FixFuelPrefs.MIN_JUMP} to ${FixFuelPrefs.MAX_JUMP} %") && ok
-        ok = markField(tank, FixFuelPrefs.tankOk(tank.text.toString()), "blank or a number above 0") && ok
+            getString(R.string.err_jump, oneDecimal(FixFuelPrefs.MIN_JUMP), oneDecimal(FixFuelPrefs.MAX_JUMP))) && ok
+        ok = markField(tank, FixFuelPrefs.tankOk(tank.text.toString()), getString(R.string.err_tank)) && ok
         for (card in extraCards) {
-            ok = markField(card.tank, FixFuelPrefs.tankOk(card.tank.text.toString()), "blank or a number above 0") && ok
+            ok = markField(card.tank, FixFuelPrefs.tankOk(card.tank.text.toString()), getString(R.string.err_tank)) && ok
         }
         return ok
     }
@@ -659,7 +674,7 @@ class PluginActivity : Activity() {
         fun show(key: String, e: EditText) {
             val raw = c.invalid[key] ?: return
             if (!e.isFocused && e.text.toString() != raw) e.setText(raw)
-            markField(e, false, "stored value out of range")
+            markField(e, false, getString(R.string.err_stored))
         }
         show(FixFuelPrefs.KEY_TAU, tau)
         show(FixFuelPrefs.KEY_SKEW, skew)
@@ -686,10 +701,10 @@ class PluginActivity : Activity() {
             feed012f = FeedMode.entries[feed012f.selectedItemPosition.coerceIn(0, FeedMode.entries.size - 1)],
         )
         val id = ProfileStore.activeId(filesDir)
-        ProfileStore.setProfileField(filesDir, id, "name", profileName.text.toString().trim().ifBlank { "Vehicle 1" })
+        ProfileStore.setProfileField(filesDir, id, "name", profileName.text.toString().trim().ifBlank { getString(R.string.vehicle_default) })
         val make = vehicleMake.text.toString().trim()
         ProfileStore.setProfileField(filesDir, id, "make", if (make.isEmpty()) null else make)
-        profileNameView.text = ProfileStore.profileField(filesDir, id, "name") ?: "Vehicle 1"
+        profileNameView.text = ProfileStore.profileField(filesDir, id, "name") ?: getString(R.string.vehicle_default)
     }
 
     private lateinit var statusLine: TextView
@@ -717,10 +732,16 @@ class PluginActivity : Activity() {
         val i = TextView(this)
         i.text = "ⓘ"
         i.textSize = 18f
+        i.primary()
         i.setPadding(24, 16, 8, 0)
-        i.contentDescription = "About $text"
+        i.contentDescription = getString(R.string.about_field, text)
         i.setOnClickListener {
-            android.app.AlertDialog.Builder(this).setTitle(text).setMessage(explanation).setPositiveButton("OK", null).show()
+            val body = TextView(this)
+            body.text = explanation
+            body.textSize = 14f
+            body.primary()
+            body.setPadding(PAD, PAD / 2, PAD, 0)
+            android.app.AlertDialog.Builder(this).setTitle(text).setView(body).setPositiveButton(getString(R.string.ok), null).show()
         }
         row.addView(i)
         return row
@@ -732,7 +753,7 @@ class PluginActivity : Activity() {
         val sv = ScrollView(this)
         page.setPadding(PAD, PAD / 2, PAD, 0)
         sv.addView(page)
-        android.app.AlertDialog.Builder(this).setTitle(title).setView(sv).setPositiveButton("Close", null)
+        android.app.AlertDialog.Builder(this).setTitle(title).setView(sv).setPositiveButton(getString(R.string.close), null)
             .setOnDismissListener { sv.removeView(page) }.show()
     }
 
@@ -740,19 +761,38 @@ class PluginActivity : Activity() {
     private fun refreshStatus(c: FixFuelConfig) {
         if (!::statusLine.isInitialized) return
         val id = ProfileStore.activeId(filesDir)
-        val name = ProfileStore.profileField(filesDir, id, "name") ?: "Vehicle 1"
-        val src = FuelSources.byId(c.sourceId).label + if (c.sourceConfirmed) "" else " (unconfirmed)"
-        val tankTxt = c.tankGal?.let { "${VolUnit.show(it, shownUnit)} ${shownUnit.label}" } ?: "tank ?"
-        statusLine.text = "$name · $src · $tankTxt" + if (PluginService.ecuConnected) " · ECU connected" else ""
+        val name = ProfileStore.profileField(filesDir, id, "name") ?: getString(R.string.vehicle_default)
+        val src = getString(FuelSources.byId(c.sourceId).label) + if (c.sourceConfirmed) "" else getString(R.string.unconfirmed)
+        val tankTxt = c.tankGal?.let { "${VolUnit.show(it, shownUnit)} ${getString(shownUnit.label)}" } ?: getString(R.string.tank_unknown)
+        statusLine.text = "$name · $src · $tankTxt" + if (PluginService.ecuConnected) getString(R.string.ecu_connected) else ""
     }
 
     private fun label(s: String): TextView {
         val t = TextView(this)
         t.text = s
         t.textSize = 13f
+        t.primary()
         t.setPadding(0, 12, 0, 0)
         return t
     }
+
+    private fun textPrimary(): Int {
+        val a = obtainStyledAttributes(intArrayOf(android.R.attr.textColorPrimary))
+        val c = a.getColor(0, android.graphics.Color.BLACK)
+        a.recycle()
+        return c
+    }
+
+    private fun TextView.primary(): TextView {
+        setTextColor(textPrimary())
+        return this
+    }
+
+    private fun activityLocale(): Locale =
+        if (Build.VERSION.SDK_INT >= 24) resources.configuration.locales[0]
+        else @Suppress("DEPRECATION") resources.configuration.locale
+
+    private fun oneDecimal(v: Double): String = String.format(activityLocale(), "%.1f", v)
 
     private fun edit(input: Int): EditText {
         val e = EditText(this)
@@ -800,7 +840,7 @@ class PluginActivity : Activity() {
         val body = "App version: ${versionName()}\nAndroid version: ${Build.VERSION.RELEASE}\nDevice model: ${Build.MANUFACTURER} ${Build.MODEL}\n"
         val uri = Uri.parse(
             "mailto:david+fuelsmoothing@lang.hm?subject=" +
-                Uri.encode("Fuel Smoothing") +
+                Uri.encode(getString(R.string.app_name)) +
                 "&body=" +
                 Uri.encode(body),
         )
@@ -926,7 +966,7 @@ class PluginActivity : Activity() {
             client.consumeAsync(params) { result, _ ->
                 if (result.responseCode == BillingClient.BillingResponseCode.OK) {
                     TipStore.clear(this)
-                    runOnUiThread { thanksView.text = "Thanks" }
+                    runOnUiThread { thanksView.text = getString(R.string.thanks) }
                 }
             }
         }
@@ -944,10 +984,21 @@ class PluginActivity : Activity() {
         super.onDestroy()
     }
 
-    private fun sizeView(color: Int): TextView {
+    private fun sizeLine(parent: LinearLayout, color: Int): TextView {
+        val row = LinearLayout(this)
+        row.orientation = LinearLayout.HORIZONTAL
+        row.gravity = android.view.Gravity.CENTER_VERTICAL
+        val sw = View(this)
+        val d = resources.displayMetrics.density
+        val s = (12 * d).toInt()
+        sw.setBackgroundColor(color)
+        sw.layoutParams = LinearLayout.LayoutParams(s, s).apply { marginEnd = (8 * d).toInt() }
         val t = TextView(this)
         t.textSize = 14f
-        t.setTextColor(color)
+        t.primary()
+        row.addView(sw)
+        row.addView(t)
+        parent.addView(row)
         return t
     }
 
@@ -1005,33 +1056,43 @@ class PluginActivity : Activity() {
 
     /**
      * Smoothed gauge on X, corrected percent minus smoothed percent on Y.
-     * One line per fit and a zero line. The axis includes every line and 0, so a 1:1 fit lies on zero.
+     * One shared y range includes every line and 0, so a 1:1 fit lies on zero.
      */
     private class FitChart(context: Context) : View(context) {
         private val ys = Array(3) { FloatArray(101) }
         private var yLo = -1.0
         private var yHi = 1.0
+        private var yStep = 1.0
+        private var flat = true
+        private val d = resources.displayMetrics.density
         private val line = Array(3) {
             Paint(Paint.ANTI_ALIAS_FLAG).apply {
                 style = Paint.Style.STROKE
-                strokeWidth = 3f * resources.displayMetrics.density
+                strokeWidth = 3f * d
             }
         }
         private val zero = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             style = Paint.Style.STROKE
             color = android.graphics.Color.GRAY
-            strokeWidth = 2f * resources.displayMetrics.density
+            strokeWidth = 2f * d
         }
-        private val legend = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            textSize = 12f * resources.displayMetrics.density
+        private val grid = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            style = Paint.Style.STROKE
+            color = android.graphics.Color.GRAY
+            alpha = 64
+            strokeWidth = 1f * d
         }
+        private val labelPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { textSize = 12f * d }
+        private val titlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { textSize = 12f * d }
 
         init {
             line[0].color = 0xFF1565C0.toInt()
             line[1].color = 0xFF2E7D32.toInt()
             line[2].color = 0xFFE65100.toInt()
-            val h = (180 * resources.displayMetrics.density).toInt()
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, h)
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+            )
         }
 
         fun setCurves(curves: List<(Double) -> Double>) {
@@ -1048,38 +1109,184 @@ class PluginActivity : Activity() {
                 }
             }
             if (hi - lo < 1e-9) {
+                flat = true
                 yLo = -1.0
                 yHi = 1.0
+                yStep = 1.0
             } else {
+                flat = false
                 val pad = (hi - lo) * 0.05
-                yLo = minOf(0.0, lo - pad)
-                yHi = maxOf(0.0, hi + pad)
+                val lo0 = minOf(0.0, lo - pad)
+                val hi0 = maxOf(0.0, hi + pad)
+                yStep = chooseStep(lo0, hi0)
+                yLo = floor(lo0 / yStep + 1e-9) * yStep
+                yHi = ceil(hi0 / yStep - 1e-9) * yStep
             }
+            requestLayout()
             invalidate()
         }
 
+        override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+            val m = margins()
+            val h = m.top + plotHeight() + m.bottom
+            setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), ceil(h.toDouble()).toInt())
+        }
+
         override fun onDraw(canvas: Canvas) {
-            val d = resources.displayMetrics.density
-            val padL = 8f * d
-            val padR = 8f * d
-            val padT = 22f * d
-            val padB = 8f * d
-            val w = width.toFloat()
-            val h = height.toFloat()
+            val m = margins()
+            val plotL = m.left
+            val plotT = m.top
+            val plotR = width - m.right
+            val plotB = height - m.bottom
             val span = (yHi - yLo).takeIf { it > 0.0 } ?: 1.0
-            fun px(x: Int) = padL + (w - padL - padR) * x / 100f
-            fun py(y: Float) = (padT + (h - padT - padB) * ((yHi - y.toDouble()) / span)).toFloat()
-            canvas.drawLine(padL, py(0f), w - padR, py(0f), zero)
+            fun px(x: Int) = plotL + (plotR - plotL) * x / 100f
+            fun py(y: Double) = (plotT + (plotB - plotT) * ((yHi - y) / span)).toFloat()
+            val ink = textPrimary()
+            labelPaint.color = ink
+            titlePaint.color = ink
+            for (x in X_TICKS) canvas.drawLine(px(x), plotT, px(x), plotB, grid)
+            for (y in yTicks()) canvas.drawLine(plotL, py(y), plotR, py(y), grid)
+            canvas.drawLine(plotL, py(0.0), plotR, py(0.0), zero)
             for (i in 0..2) {
-                for (x in 0 until 100) canvas.drawLine(px(x), py(ys[i][x]), px(x + 1), py(ys[i][x + 1]), line[i])
+                for (x in 0 until 100) canvas.drawLine(px(x), py(ys[i][x].toDouble()), px(x + 1), py(ys[i][x + 1].toDouble()), line[i])
             }
-            val names = arrayOf("Chunk", "Band", "Kalman")
-            var lx = padL
+            val half = lineHeight(labelPaint) / 2f
+            val gap = 4f * d
+            labelPaint.textAlign = Paint.Align.RIGHT
+            for (y in yTicks()) {
+                val base = py(y) - (labelPaint.ascent() + labelPaint.descent()) / 2f
+                canvas.drawText(yLabel(y), plotL - gap, base, labelPaint)
+            }
+            labelPaint.textAlign = Paint.Align.CENTER
+            for (x in X_TICKS) {
+                canvas.drawText(xLabel(x), px(x), plotB + half - labelPaint.ascent(), labelPaint)
+            }
+            titlePaint.textAlign = Paint.Align.CENTER
+            val xTitle = context.getString(R.string.axis_smoothed)
+            canvas.drawText(xTitle, (plotL + plotR) / 2f, plotB + half + lineHeight(labelPaint) - titlePaint.ascent(), titlePaint)
+            val yTitle = context.getString(R.string.axis_error)
+            val tw = titlePaint.measureText(yTitle)
+            val cx = lineHeight(titlePaint) / 2f
+            val cy = (plotT + plotB) / 2f
+            titlePaint.textAlign = Paint.Align.LEFT
+            canvas.save()
+            canvas.rotate(-90f, cx, cy)
+            canvas.drawText(yTitle, cx - tw / 2f, cy - (titlePaint.ascent() + titlePaint.descent()) / 2f, titlePaint)
+            canvas.restore()
+            val names = arrayOf(
+                context.getString(R.string.legend_chunk),
+                context.getString(R.string.legend_band),
+                context.getString(R.string.legend_kalman),
+            )
+            val sample = 14f * d
+            var lx = plotL
+            val legendBase = -labelPaint.ascent()
+            val legendMid = lineHeight(labelPaint) / 2f
+            labelPaint.textAlign = Paint.Align.LEFT
             for (i in names.indices) {
-                legend.color = line[i].color
-                canvas.drawText(names[i], lx, 14f * d, legend)
-                lx += legend.measureText(names[i]) + 16f * d
+                canvas.drawLine(lx, legendMid, lx + sample, legendMid, line[i])
+                canvas.drawText(names[i], lx + sample + gap, legendBase, labelPaint)
+                lx += sample + gap + labelPaint.measureText(names[i]) + 12f * d
             }
+        }
+
+        private fun plotHeight(): Float {
+            val base = 150f * d
+            return max(base, titlePaint.measureText(context.getString(R.string.axis_error)))
+        }
+
+        private class Box(val left: Float, val top: Float, val right: Float, val bottom: Float)
+
+        private fun margins(): Box {
+            val gap = 4f * d
+            var yW = 0f
+            for (y in yTicks()) yW = max(yW, labelPaint.measureText(yLabel(y)))
+            val half = lineHeight(labelPaint) / 2f
+            val left = yW + gap + lineHeight(titlePaint)
+            val right = labelPaint.measureText(xLabel(100)) / 2f
+            val top = lineHeight(labelPaint) + half
+            val bottom = half + lineHeight(labelPaint) + lineHeight(titlePaint)
+            return Box(left, top, right, bottom)
+        }
+
+        private fun yTicks(): List<Double> {
+            if (flat) return listOf(-1.0, 0.0, 1.0)
+            val n = ((yHi - yLo) / yStep).roundToInt().coerceAtLeast(1)
+            return List(n + 1) { i -> yLo + i * yStep }
+        }
+
+        private fun yLabel(v: Double): String {
+            val dec = decimals(yStep)
+            val eps = 0.5 * 10.0.pow(-dec)
+            val shown = if (abs(v) < eps) 0.0 else v
+            val body = formatNum(abs(shown), dec)
+            return when {
+                shown > eps -> "+$body"
+                shown < -eps -> "${DecimalFormatSymbols.getInstance(activityLocale()).minusSign}$body"
+                else -> body
+            }
+        }
+
+        private fun xLabel(x: Int): String = formatNum(x.toDouble(), 0)
+
+        private fun formatNum(v: Double, dec: Int): String {
+            val fmt = java.text.DecimalFormat()
+            fmt.decimalFormatSymbols = DecimalFormatSymbols.getInstance(activityLocale())
+            fmt.isGroupingUsed = false
+            fmt.minimumFractionDigits = dec
+            fmt.maximumFractionDigits = dec
+            return fmt.format(v)
+        }
+
+        private fun decimals(step: Double): Int {
+            if (step >= 1.0 - 1e-9) return 0
+            return ceil(-log10(step) - 1e-9).toInt().coerceIn(0, 6)
+        }
+
+        private fun chooseStep(lo: Double, hi: Double): Double {
+            var step = niceStep((hi - lo).coerceAtLeast(1e-9))
+            repeat(8) {
+                val a = floor(lo / step + 1e-9) * step
+                val b = ceil(hi / step - 1e-9) * step
+                val n = ((b - a) / step).roundToInt() + 1
+                step = when {
+                    n > 6 -> bump(step, true)
+                    n < 4 -> bump(step, false)
+                    else -> return step
+                }
+            }
+            return step
+        }
+
+        private fun niceStep(span: Double): Double {
+            val raw = (span / 5.0).coerceAtLeast(1e-9)
+            val pow = 10.0.pow(floor(log10(raw)))
+            val err = raw / pow
+            val mant = when {
+                err < 1.5 -> 1.0
+                err < 3.5 -> 2.0
+                err < 7.5 -> 5.0
+                else -> 10.0
+            }
+            return mant * pow
+        }
+
+        private fun bump(step: Double, up: Boolean): Double {
+            val pow = 10.0.pow(floor(log10(step) + 1e-12))
+            val m = step / pow
+            val seq = doubleArrayOf(1.0, 2.0, 5.0, 10.0)
+            val i = seq.indices.minByOrNull { abs(seq[it] - m) } ?: 0
+            return if (up) {
+                if (i < seq.lastIndex) seq[i + 1] * pow else 2.0 * pow * 10.0
+            } else {
+                if (i > 0) seq[i - 1] * pow else 5.0 * pow / 10.0
+            }
+        }
+
+        private fun lineHeight(p: Paint): Float = p.fontMetrics.descent - p.fontMetrics.ascent
+
+        companion object {
+            private val X_TICKS = intArrayOf(0, 25, 50, 75, 100)
         }
     }
 

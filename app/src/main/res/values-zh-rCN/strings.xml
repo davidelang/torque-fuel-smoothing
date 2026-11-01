@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">打赏只在 Play Store 版本中提供</string>
+    <string name="help_body">快速开始\n\n安装 Torque Pro（付费版；Torque Lite 不支持插件）并配对 OBD-II 适配器。\n\n在 Torque → 设置 → 插件 中启用此插件。\n\n允许通知，并把电池用量设为不受限制，以便 Torque 能在后台启动此插件。\n\n在 Torque 中选择您正在驾驶的车辆配置。数据按 Torque 配置保存，并与车辆的 VIN/ECU 身份核对。\n\n新配置会在连接时检测燃油来源；若询问，请对照仪表燃油表并点按确认。确认位于设置页和通知中。也可以在下方选择。\n\n油箱容量是 Chunk 拟合的起始容量，直到它学会自己的容量。插件从不更改它；每个拟合学到的容量显示在下方。\n\n在 Torque 中为 [FuelSmooth] Smoothed Fuel Level 以及每个拟合的 Corrected %、Remaining、DTE 和 Tank size 添加仪表。DTE 是 Remaining 乘以 Torque 的长期 mpg。重新拟合时的通知会说明该拟合在完成前读数为 1:1。\n\n把燃油液位回写到 Torque：关、平滑，或来自 Chunk、Band 或 Kalman 拟合的已校正值，写到 012F 仪表。\n\n只在发动机运转时统计燃油。插件只在 Torque 连接到 ECU 时运行。\n\n继续驾驶和加油；精度会在几个不满的油箱后提高。若出现“车辆配置不对？”通知，请选择如何处理该次行程。\n\n所有数据都留在这部手机上。不记录 GPS 或位置。</string>
+    <string name="about_body">%1$s\n版本 %2$s (%3$s)\nTorque Pro 的插件。与 Torque 或 Ian Hawkins 无关。\n所有数据都留在这部手机上；不记录 GPS 或位置。\n\n许可\nCopyright David Lang. 保留所有权利。</string>
+    <string name="open_source_notices">开放源代码库\n本应用使用下列库。它们的许可与上面的版权是分开的。\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), Play Billing 所需要\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">完整手册（在线）</string>
+    <string name="show_fuel_notification">在通知中显示燃油液位</string>
+    <string name="write_012f">把燃油液位回写到 Torque（覆盖 012F）</string>
+    <string name="running_quiet">Fuel Smoothing 正在运行</string>
+    <string name="tap_to_start">点按以启动 Fuel Smoothing</string>
+    <string name="tap_to_start_text">电池/后台启动被拒绝。请打开一次，插件才能随 Torque 运行。</string>
+    <string name="tank2_help">按需要添加额外油箱（原厂油箱 1 始终保留）。不要把传感器接到 PCM FLI 针脚（会假加油）。每个额外油箱需要自己的 Torque 附加 PID（MCU Mode 22，名称唯一——不要用 012F 或 Ford 16C1）。Select-PID 的值是从 1 起的油箱编号。Gal/hr 只记到当前油箱。</string>
+    <string name="tap_start_channel">点按以启动</string>
+    <string name="tank_size_info">油箱容量是 Chunk 拟合的起始容量，直到它学会自己的容量。插件从不更改它；每个拟合学到的容量显示在下方。</string>
+    <string name="feed_012f_info">向 Torque 的原厂 Fuel Level (012F) 写入数值，让现有仪表显示它：关、平滑，或来自 Chunk、Band 或 Kalman 拟合的已校正值。尚未建立的拟合写入平滑液位。</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">还没有容量</string>
+    <string name="size_none_sd">还没有容量 ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">帮助</string>
+    <string name="about">关于</string>
+    <string name="need_torque">需要 Torque Pro（付费）。Torque Lite 不支持插件。</string>
+    <string name="get_torque">获取 Torque Pro</string>
+    <string name="privacy">隐私</string>
+    <string name="send_feedback">发送反馈</string>
+    <string name="tip">打赏</string>
+    <string name="thanks">谢谢</string>
+    <string name="close">关闭</string>
+    <string name="ok">OK</string>
+    <string name="detect">检测</string>
+    <string name="confirm">确认</string>
+    <string name="save_pin">保存标记</string>
+    <string name="add_tank">添加额外油箱</string>
+    <string name="remove">移除</string>
+    <string name="details">详情</string>
+    <string name="verbose_logging">详细日志（调试；每秒一行日志）</string>
+    <string name="profile_name">配置名称</string>
+    <string name="profile_name_info">此车辆配置的名称。每个 Torque 车辆配置都有自己的插件配置、数据和学到的图谱。</string>
+    <string name="make">品牌</string>
+    <string name="make_info">车辆品牌（例如 Ford）。只用于选择检测可以尝试哪些品牌燃油 PID。</string>
+    <string name="fuel_source">燃油来源</string>
+    <string name="fuel_source_info">原始燃油液位从哪里来。检测（需要连上 ECU）只读地尝试各个候选，并请您确认，除非两个来源一致。确认位于设置页和通知中。无 = 下次连接时检测。</string>
+    <string name="custom_long_name">自定义长名称</string>
+    <string name="custom_long_name_info">仅用于来源“按长名称的 Torque 附加 PID”：报告液位的那条 Torque PID 的确切长名称。</string>
+    <string name="tank_size">油箱容量</string>
+    <string name="tank_hint">留空 = 没有起始容量；每个拟合自己学习。</string>
+    <string name="smoothing_tau">平滑 τ 秒</string>
+    <string name="smoothing_tau_info">平滑滤波器的时间常数（0 = 不平滑）。</string>
+    <string name="max_skew" formatted="false">最大斜率 %/s</string>
+    <string name="max_skew_info">平滑液位每秒最多跟随的变化；超过此值的晃动会被忽略。</string>
+    <string name="fill_jump" formatted="false">加油跳变 %</string>
+    <string name="fill_jump_info">停车时液位上升多少算一次加油。</string>
+    <string name="odometer">里程表英里</string>
+    <string name="odometer_info">可选：输入里程表读数并保存标记，以此固定此配置的距离。</string>
+    <string name="additional_tanks">额外油箱</string>
+    <string name="active_tank">当前油箱</string>
+    <string name="active_tank_info">燃油消耗 (gal/hr) 记到哪个油箱。来自 PID：由一条 Torque PID 选择（油箱编号从 1 起）。</string>
+    <string name="select_pid">Select-PID 长名称</string>
+    <string name="select_pid_info">仅当当前油箱 = 来自 PID：其数值为油箱编号的那条 Torque PID 的长名称。</string>
+    <string name="tank_n">油箱 %1$d</string>
+    <string name="tank_n_source">油箱 %1$d 燃油来源</string>
+    <string name="tank_n_custom">油箱 %1$d 自定义长名称（例如 [FuelSmooth] Tank%1$d Level）</string>
+    <string name="tank_n_gallons">油箱 %1$d 加仑</string>
+    <string name="from_pid">来自 PID</string>
+    <string name="unconfirmed"> （未确认）</string>
+    <string name="ecu_connected"> · ECU 已连接</string>
+    <string name="tank_unknown">油箱 ?</string>
+    <string name="about_field">关于 %1$s</string>
+    <string name="err_tau">0 到 %1$s s</string>
+    <string name="err_skew">大于 0，至多 %1$s %%/s</string>
+    <string name="err_jump">%1$s 到 %2$s %%</string>
+    <string name="err_tank">留空或大于 0 的数字</string>
+    <string name="err_stored">保存的值超出范围</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">平滑 %</string>
+    <string name="axis_error" formatted="false">误差 (%)</string>
+    <string name="feed_off">关</string>
+    <string name="feed_smoothed" formatted="false">平滑 %</string>
+    <string name="feed_corrected_chunk" formatted="false">已校正 % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">已校正 % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">已校正 % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">还没有（连接时检测）</string>
+    <string name="src_sae_012f">SAE 012F 油箱液位</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler 燃油液位平均值</string>
+    <string name="src_toyota_2129">Toyota 仪表 2129（half-litre counts）</string>
+    <string name="src_custom_name">按长名称的 Torque 附加 PID</string>
+    <string name="vehicle_default">车辆 1</string>
+    <string name="vehicle_dated">车辆 %1$s</string>
+    <string name="binding_torque">正在连接 Torque…</string>
+    <string name="status_waiting">正在等待燃油来源</string>
+    <string name="status_raw">原始 %1$.1f%%</string>
+    <string name="status_sess"> 行程 %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing 安静</string>
+    <string name="map_refit_title">正在重新拟合图谱</string>
+    <string name="map_refit_body">Fuel Smoothing 正在为 %1$s 重新拟合图谱。该拟合在完成前读数为 1:1。</string>
+    <string name="no_source_title">未设置燃油液位来源</string>
+    <string name="no_source_body">Fuel Smoothing 没有 %1$s 的燃油液位来源。请打开设置页并点按检测，或选择一个来源。</string>
+    <string name="no_level_title">本次行程没有燃油液位</string>
+    <string name="no_level_body">%1$s 没有为 %2$s 提供可用液位。请检查适配器连接，或在设置页运行检测。</string>
+    <string name="source_found_title">已找到燃油液位来源</string>
+    <string name="source_found_body">正在为 %2$s 使用 %1$s（%3$s）。</string>
+    <string name="source_missing_title">未找到燃油液位来源</string>
+    <string name="source_missing_body">打开 Fuel Smoothing 设置并选择来源（或在 Torque 中添加 PID），然后点按检测。</string>
+    <string name="confirm_source_title">确认燃油液位来源</string>
+    <string name="confirm_source_body">检测到 %1$s，对 %3$s 的读数为 %2$.0f %%。请核对是否与仪表燃油表一致，然后点按确认。确认位于设置页和通知中（%4$s）。</string>
+    <string name="confirm_source_body_nolevel">为 %2$s 检测到 %1$s。请核对是否与仪表燃油表一致，然后点按确认。确认位于设置页和通知中（%3$s）。</string>
+    <string name="recording_title">正在记录到 %1$s</string>
+    <string name="recording_body">此车辆是 %1$s（%2$s），但 Torque 的配置是“%3$s”。数据记入 %1$s；点按以打开 Torque 并切换配置。</string>
+    <string name="wrong_vehicle_title">车辆配置不对？</string>
+    <string name="wrong_suggest_profile">Torque 配置“%1$s”</string>
+    <string name="wrong_suggest_new">一个新的车辆配置</string>
+    <string name="wrong_vehicle_body">Torque 配置“%1$s”与此车辆不符（%2$s）。建议：%3$s。数据会暂存，并在行程结束时丢弃，除非您保留。</string>
+    <string name="keeping_title">正在保留行程数据</string>
+    <string name="keeping_body">此次行程将保存到 %1$s。Torque 的插件 API 不能创建或切换 Torque 配置：请在 Torque 中创建或选择名为“%2$s”的车辆配置。</string>
+    <string name="action_new_profile">创建新配置</string>
+    <string name="action_use">使用 %1$s</string>
+</resources>

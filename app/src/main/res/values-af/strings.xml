@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">Fooitjies is in die Play Store-weergawe</string>
+    <string name="help_body">Vinnige begin\n
+1. Installeer Torque Pro (die betaalde weergawe; Torque Lite ondersteun nie inproppe nie) en bind die OBD-II-adapter.\n
+2. Skakel hierdie inprop in by Torque → Instellings → Inproppe.\n
+3. Laat kennisgewings toe en stel batterygebruik op Onbeperk sodat Torque hierdie inprop op die agtergrond kan begin.\n
+4. Kies in Torque die profiel van die voertuig wat jy bestuur. Data word per Torque-profiel gehou en teen die voertuig se VIN/ECU-identiteit nagegaan.\n
+5. Op ’n nuwe profiel word die brandstofbron bespeur wanneer jy koppel; as gevra word, vergelyk dit met die meter op die paneelbord en tik Bevestig. Bevestig is op die opstelbladsy en in die kennisgewing. Jy kan dit ook hieronder kies.\n
+6. Tenkgrootte is die begrootte vir die Chunk-passing totdat dit sy eie leer. Die inprop verander dit nooit; elke passing se geleerde grootte word daaronder gewys.\n
+7. Voeg in Torque meters by vir [FuelSmooth] Smoothed Fuel Level en vir elke passing Corrected %, Remaining, DTE en Tank size. DTE is Remaining maal Torque se langtermyn-mpg. ’n Kennisgewing tydens ’n herpassing sê dat die passing 1:1 lees totdat die herpassing klaar is.\n
+8. Stuur die brandstofvlak terug na Torque: Af, glad gemaak, of reggestel uit die Chunk-, Band- of Kalman-passing, na jou 012F-meter.\n
+9. Brandstof word net getel terwyl die enjin loop. Die inprop loop net terwyl Torque aan die ECU gekoppel is.\n
+10. Hou aan ry en volmaak; akkuraatheid groei oor verskeie gedeeltelike tenks. As ’n Verkeerde voertuigprofiel?-kennisgewing verskyn, kies wat met daardie rit gebeur.\n
+11. Alle data bly op hierdie foon. Geen GPS of ligging word opgeneem nie.</string>
+    <string name="about_body">%1$s\nWeergawe %2$s (%3$s)\n’n Inprop vir Torque Pro. Nie verbonde aan Torque of Ian Hawkins nie.\nAlle data bly op hierdie foon; geen GPS of ligging word opgeneem nie.\n\nLisensie\nCopyright David Lang. Alle regte voorbehou.</string>
+    <string name="open_source_notices">Oopbronbiblioteke\nHierdie app gebruik die biblioteke hieronder. Hul lisensies is apart van die kopiereg hierbo.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), vereis deur Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">Volledige handleiding (aanlyn)</string>
+    <string name="show_fuel_notification">Wys brandstofvlak in die kennisgewing</string>
+    <string name="write_012f">Stuur brandstofvlak terug na Torque (vervang 012F)</string>
+    <string name="running_quiet">Fuel Smoothing loop</string>
+    <string name="tap_to_start">Tik om Fuel Smoothing te begin</string>
+    <string name="tap_to_start_text">Begin vanaf die battery of op die agtergrond is geweier. Maak een keer oop sodat die inprop met Torque kan loop.</string>
+    <string name="tank2_help">Voeg ekstra tenks by soos nodig (fabriekstenk 1 bly altyd). Moenie senders na die PCM FLI-pen oorskakel nie (valse vul). Elke ekstra tenk het sy eie Torque-ekstra-PID nodig (MCU Mode 22, unieke naam — nie 012F of Ford 16C1 nie). Die Select-PID-waarde is die tenk-id vanaf 1. Gal/hr word net aan die aktiewe tenk gehef.</string>
+    <string name="tap_start_channel">Tik om te begin</string>
+    <string name="tank_size_info">Tenkgrootte is die begrootte vir die Chunk-passing totdat dit sy eie leer. Die inprop verander dit nooit; elke passing se geleerde grootte word daaronder gewys.</string>
+    <string name="feed_012f_info">Skryf ’n waarde op Torque se fabriek-Fuel Level (012F) sodat bestaande meters dit wys: Af, glad gemaak, of reggestel uit die Chunk-, Band- of Kalman-passing. ’n Passing wat nog nie gebou is nie, skryf die gladgemaakte vlak.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">nog geen grootte</string>
+    <string name="size_none_sd">nog geen grootte ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">Hulp</string>
+    <string name="about">Meer oor</string>
+    <string name="need_torque">Vereis Torque Pro (betaal). Torque Lite ondersteun nie inproppe nie.</string>
+    <string name="get_torque">Kry Torque Pro</string>
+    <string name="privacy">Privaatheid</string>
+    <string name="send_feedback">Stuur terugvoer</string>
+    <string name="tip">Fooitjie</string>
+    <string name="thanks">Dankie</string>
+    <string name="close">Maak toe</string>
+    <string name="ok">OK</string>
+    <string name="detect">Bespeur</string>
+    <string name="confirm">Bevestig</string>
+    <string name="save_pin">Stoor anker</string>
+    <string name="add_tank">Voeg tenk by</string>
+    <string name="remove">Verwyder</string>
+    <string name="details">Besonderhede</string>
+    <string name="verbose_logging">Breedvoerige log (ontfout; reëls elke sekonde)</string>
+    <string name="profile_name">Profielnaam</string>
+    <string name="profile_name_info">Die naam van hierdie voertuigprofiel. Elke Torque-voertuigprofiel kry sy eie inpropprofiel, data en geleerde kaarte.</string>
+    <string name="make">Merk</string>
+    <string name="make_info">Voertuigmerk (bv. Ford). Word net gebruik om te kies watter merkspesifieke brandstof-PID’s bespeuring mag probeer.</string>
+    <string name="fuel_source">Brandstofbron</string>
+    <string name="fuel_source_info">Waar die rou brandstofvlak vandaan kom. Bespeur (die ECU moet gekoppel wees) probeer kandidate net-lees en vra bevestiging as twee bronne nie saamstem nie. Bevestig is op die opstelbladsy en in die kennisgewing. Geen = bespeur by die volgende koppeling.</string>
+    <string name="custom_long_name">Pasgemaakte lang naam</string>
+    <string name="custom_long_name_info">Net vir die bron „Torque-ekstra-PID volgens lang naam”: die presiese lang naam van die Torque-PID wat die vlak rapporteer.</string>
+    <string name="tank_size">Tenkgrootte</string>
+    <string name="tank_hint">leeg = geen begrootte; elke passing leer sy eie.</string>
+    <string name="smoothing_tau">Gladmaak τ in sekondes</string>
+    <string name="smoothing_tau_info">Tydkonstante van die gladmaakfilter (0 = geen gladmaak).</string>
+    <string name="max_skew" formatted="false">Maks. skeefheid %/s</string>
+    <string name="max_skew_info">Die grootste verandering per sekonde wat die gladgemaakte vlak mag volg; geskud bo dit word geïgnoreer.</string>
+    <string name="fill_jump" formatted="false">Vulsprong %</string>
+    <string name="fill_jump_info">Styging in vlak terwyl jy stilstaan wat as ’n vul tel.</string>
+    <string name="odometer">Kilometerteller in myl</string>
+    <string name="odometer_info">Opsioneel: voer die kilometertellerlesing in en Stoor anker om hierdie profiel se afstand te anker.</string>
+    <string name="additional_tanks">Bykomende tenks</string>
+    <string name="active_tank">Aktiewe tenk</string>
+    <string name="active_tank_info">Die tenk waaraan die verbruik (gal/hr) gehef word. Van PID: ’n Torque-PID kies dit (id vanaf 1).</string>
+    <string name="select_pid">Select-PID lang naam</string>
+    <string name="select_pid_info">Net wanneer Aktiewe tenk = Van PID: die lang naam van die Torque-PID waarvan die waarde die tenk-id is.</string>
+    <string name="tank_n">Tenk %1$d</string>
+    <string name="tank_n_source">Tenk %1$d brandstofbron</string>
+    <string name="tank_n_custom">Tenk %1$d pasgemaakte lang naam (bv. [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">Tenk %1$d gelling</string>
+    <string name="from_pid">Van PID</string>
+    <string name="unconfirmed"> (onbevestig)</string>
+    <string name="ecu_connected"> · ECU gekoppel</string>
+    <string name="tank_unknown">tenk ?</string>
+    <string name="about_field">Ongeveer %1$s</string>
+    <string name="err_tau">0 tot %1$s s</string>
+    <string name="err_skew">bo 0, hoogstens %1$s %%/s</string>
+    <string name="err_jump">%1$s tot %2$s %%</string>
+    <string name="err_tank">leeg of ’n getal bo 0</string>
+    <string name="err_stored">gebergde waarde buite bereik</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">Glad gemaak %</string>
+    <string name="axis_error" formatted="false">Fout (%)</string>
+    <string name="feed_off">Af</string>
+    <string name="feed_smoothed" formatted="false">Glad gemaak %</string>
+    <string name="feed_corrected_chunk" formatted="false">Reggestel % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Reggestel % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Reggestel % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">Nog geen (Bespeur by koppel)</string>
+    <string name="src_sae_012f">SAE 012F Fuel Tank Level</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler Fuel Level Average</string>
+    <string name="src_toyota_2129">Toyota cluster 2129 (halfliter-tellings)</string>
+    <string name="src_custom_name">Torque-ekstra-PID volgens lang naam</string>
+    <string name="vehicle_default">Voertuig 1</string>
+    <string name="vehicle_dated">Voertuig %1$s</string>
+    <string name="binding_torque">Koppel aan Torque…</string>
+    <string name="status_waiting">Wag vir brandstofbron</string>
+    <string name="status_raw">rou %1$.1f%%</string>
+    <string name="status_sess"> rit %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing stil</string>
+    <string name="map_refit_title">Kaart word herpas</string>
+    <string name="map_refit_body">Fuel Smoothing pas ’n kaart vir %1$s weer. Hierdie passing lees 1:1 totdat die herpassing klaar is.</string>
+    <string name="no_source_title">Geen brandstofvlakbron gestel nie</string>
+    <string name="no_source_body">Fuel Smoothing het geen brandstofvlakbron vir %1$s nie. Maak die opstelbladsy oop en tik Bespeur, of kies ’n bron.</string>
+    <string name="no_level_title">Geen brandstofvlak op hierdie rit nie</string>
+    <string name="no_level_body">%1$s het geen bruikbare vlak vir %2$s gegee nie. Kontroleer die adapterverbinding, of laat Bespeur op die opstelbladsy loop.</string>
+    <string name="source_found_title">Brandstofvlakbron gevind</string>
+    <string name="source_found_body">Gebruik %1$s vir %2$s (%3$s).</string>
+    <string name="source_missing_title">Geen brandstofvlakbron gevind nie</string>
+    <string name="source_missing_body">Maak Fuel Smoothing-opstelling oop en kies ’n bron (of voeg die PID in Torque by), tik dan Bespeur.</string>
+    <string name="confirm_source_title">Bevestig die brandstofvlakbron</string>
+    <string name="confirm_source_body">%1$s bespeur, lesing %2$.0f %% vir %3$s. Kontroleer dat dit by die paneelbordmeter pas, tik dan Bevestig. Bevestig is op die opstelbladsy en in die kennisgewing (%4$s).</string>
+    <string name="confirm_source_body_nolevel">%1$s bespeur vir %2$s. Kontroleer dat dit by die paneelbordmeter pas, tik dan Bevestig. Bevestig is op die opstelbladsy en in die kennisgewing (%3$s).</string>
+    <string name="recording_title">Neem op na %1$s</string>
+    <string name="recording_body">Hierdie voertuig is %1$s (%2$s), maar Torque se profiel is „%3$s“. Data gaan na %1$s; tik om Torque oop te maak en profiele te wissel.</string>
+    <string name="wrong_vehicle_title">Verkeerde voertuigprofiel?</string>
+    <string name="wrong_suggest_profile">Torque-profiel „%1$s“</string>
+    <string name="wrong_suggest_new">’n nuwe voertuigprofiel</string>
+    <string name="wrong_vehicle_body">Torque-profiel „%1$s“ pas nie by hierdie voertuig nie (%2$s). Voorstel: %3$s. Data word gehou en aan die einde van die rit weggegooi tensy jy dit hou.</string>
+    <string name="keeping_title">Ritdata word gehou</string>
+    <string name="keeping_body">Hierdie rit sal na %1$s gestoor word. Torque se inprop-API kan nie Torque-profiele skep of wissel nie: skep of kies in Torque ’n voertuigprofiel met die naam „%2$s“.</string>
+    <string name="action_new_profile">Skep nuwe profiel</string>
+    <string name="action_use">Gebruik %1$s</string>
+</resources>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">குறிப்புகள் Play Store பதிப்பில் உள்ளன</string>
+    <string name="help_body">விரைவு தொடக்கம்\n
+1. Torque Pro நிறுவவும் (கட்டண பதிப்பு; Torque Lite செருகுநிரல்களை ஆதரிக்காது) மற்றும் OBD-II இணைப்பியை இணைக்கவும்.\n
+2. இந்த செருகுநிரலை Torque → அமைப்புகள் → Plugins இல் இயக்கவும்.\n
+3. அறிவிப்புகளை அனுமதித்து பேட்டரி பயன்பாட்டை கட்டுப்பாடின்றி வைக்கவும், Torque இந்த செருகுநிரலை பின்னணியில் தொடங்க.\n
+4. Torque இல் நீங்கள் ஓட்டும் வாகன சுயவிவரத்தை தேர்ந்தெடுக்கவும். தரவு ஒவ்வொரு Torque சுயவிவரத்திற்கும் வைக்கப்பட்டு வாகன VIN/ECU அடையாளத்துடன் சரிபார்க்கப்படுகிறது.\n
+5. புதிய சுயவிவரத்தில் எரிபொருள் மூலம் இணைக்கும்போது கண்டறியப்படுகிறது; கேட்டால் டாஷ் அளவோடு ஒப்பிட்டு உறுதிப்படுத்து என்பதைத் தட்டவும். உறுதிப்படுத்து அமைப்புப் பக்கத்திலும் அறிவிப்பிலும் உள்ளது. கீழேயும் தேர்ந்தெடுக்கலாம்.\n
+6. தொட்டி அளவு Chunk பொருத்தத்தின் தொடக்க அளவு, அது தன்னுடையதைக் கற்கும் வரை. செருகுநிரல் அதை ஒருபோதும் மாற்றாது; ஒவ்வொரு பொருத்தத்தின் கற்ற அளவும் அதன் கீழ் காட்டப்படும்.\n
+7. Torque இல் [FuelSmooth] Smoothed Fuel Level மற்றும் ஒவ்வொரு பொருத்தத்தின் Corrected %, Remaining, DTE, Tank size அளவுகோல்களைச் சேர்க்கவும். DTE என்பது Remaining முறை Torque நீண்டகால mpg. மறுபொருத்த அறிவிப்பு அந்த பொருத்தம் 1:1 படிக்கும் என்று சொல்கிறது, மறுபொருத்தம் முடியும் வரை.\n
+8. எரிபொருள் அளவை Torque க்குத் திருப்பவும்: அணை, மென்மை, அல்லது Chunk, Band அல்லது Kalman பொருத்தத்திலிருந்து திருத்தம், உங்கள் 012F அளவுகோலில்.\n
+9. எரிபொருள் இயந்திரம் ஓடும்போது மட்டும் கணக்கிடப்படும். செருகுநிரல் Torque ECU உடன் இணைந்திருக்கும்போது மட்டும் இயங்கும்.\n
+10. ஓட்டி நிரப்பிக் கொண்டே இருங்கள்; துல்லியம் பல பகுதி தொட்டிகளில் வளரும். தவறான வாகன சுயவிவரமா? அறிவிப்பு வந்தால் அந்த பயணத்தை என்ன செய்வது என்று தேர்ந்தெடுக்கவும்.\n
+11. எல்லா தரவும் இந்த தொலைபேசியில் இருக்கும். GPS அல்லது இடம் பதிவு செய்யப்படாது.</string>
+    <string name="about_body">%1$s\nபதிப்பு %2$s (%3$s)\nTorque Pro க்கான செருகுநிரல். Torque அல்லது Ian Hawkins உடன் இணைந்ததல்ல.\nஎல்லா தரவும் இந்த தொலைபேசியில் இருக்கும்; GPS அல்லது இடம் பதிவு செய்யப்படாது.\n\nஉரிமம்\nCopyright David Lang. அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை.</string>
+    <string name="open_source_notices">திறந்த மூல நூலகங்கள்\nஇந்த செயலி கீழுள்ள நூலகங்களைப் பயன்படுத்துகிறது. அவற்றின் உரிமங்கள் மேலுள்ள பதிப்புரிமையிலிருந்து தனி.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), Play Billing க்குத் தேவை\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">முழு கையேடு (இணையம்)</string>
+    <string name="show_fuel_notification">அறிவிப்பில் எரிபொருள் அளவைக் காட்டு</string>
+    <string name="write_012f">எரிபொருள் அளவை Torque க்குத் திருப்பு (012F ஐ மாற்றுகிறது)</string>
+    <string name="running_quiet">Fuel Smoothing இயங்குகிறது</string>
+    <string name="tap_to_start">Fuel Smoothing தொடங்க தட்டவும்</string>
+    <string name="tap_to_start_text">பேட்டரி அல்லது பின்னணி தொடக்கம் மறுக்கப்பட்டது. செருகுநிரல் Torque உடன் இயங்க ஒருமுறை திறக்கவும்.</string>
+    <string name="tank2_help">தேவைப்படும் கூடுதல் தொட்டிகளைச் சேர்க்கவும் (தொழிற்சாலை தொட்டி 1 எப்போதும் இருக்கும்). அனுப்பிகளை PCM FLI முளைக்கு மாற்ற வேண்டாம் (பொய் நிரப்பு). ஒவ்வொரு கூடுதல் தொட்டிக்கும் தனி Torque கூடுதல் PID வேண்டும் (MCU Mode 22, தனிப் பெயர் — 012F அல்லது Ford 16C1 அல்ல). Select-PID மதிப்பு 1 இலிருந்து தொட்டி id. Gal/hr செயலில் உள்ள தொட்டிக்கு மட்டும் எழுதப்படும்.</string>
+    <string name="tap_start_channel">தொடங்க தட்டவும்</string>
+    <string name="tank_size_info">தொட்டி அளவு Chunk பொருத்தத்தின் தொடக்க அளவு, அது தன்னுடையதைக் கற்கும் வரை. செருகுநிரல் அதை ஒருபோதும் மாற்றாது; ஒவ்வொரு பொருத்தத்தின் கற்ற அளவும் அதன் கீழ் காட்டப்படும்.</string>
+    <string name="feed_012f_info">இருக்கும் அளவுகோல்கள் காட்ட Torque இன் தொழிற்சாலை Fuel Level (012F) இல் மதிப்பை எழுதுகிறது: அணை, மென்மை, அல்லது Chunk, Band அல்லது Kalman பொருத்தத்திலிருந்து திருத்தம். இன்னும் கட்டப்படாத பொருத்தம் மென்மை அளவை எழுதும்.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">இன்னும் அளவு இல்லை</string>
+    <string name="size_none_sd">இன்னும் அளவு இல்லை ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">உதவி</string>
+    <string name="about">பற்றி</string>
+    <string name="need_torque">Torque Pro (கட்டணம்) தேவை. Torque Lite செருகுநிரல்களை ஆதரிக்காது.</string>
+    <string name="get_torque">Torque Pro பெறுக</string>
+    <string name="privacy">தனியுரிமை</string>
+    <string name="send_feedback">கருத்து அனுப்பு</string>
+    <string name="tip">உதவித்தொகை</string>
+    <string name="thanks">நன்றி</string>
+    <string name="close">மூடு</string>
+    <string name="ok">OK</string>
+    <string name="detect">கண்டறி</string>
+    <string name="confirm">உறுதிப்படுத்து</string>
+    <string name="save_pin">முளையை சேமி</string>
+    <string name="add_tank">கூடுதல் தொட்டி சேர்</string>
+    <string name="remove">நீக்கு</string>
+    <string name="details">விவரம்</string>
+    <string name="verbose_logging">விரிவான பதிவு (பிழைதிருத்தம்; ஒவ்வொரு வினாடியும் வரி)</string>
+    <string name="profile_name">சுயவிவரப் பெயர்</string>
+    <string name="profile_name_info">இந்த வாகன சுயவிவரத்தின் பெயர். ஒவ்வொரு Torque வாகன சுயவிவரமும் தன் செருகுநிரல் சுயவிவரம், தரவு, கற்ற வரைபடங்களைப் பெறும்.</string>
+    <string name="make">தயாரிப்பாளர்</string>
+    <string name="make_info">வாகன தயாரிப்பாளர் (எ.கா. Ford). கண்டறிதல் எந்த பிராண்டின் எரிபொருள் PID முயலும் என்பதைத் தேர்ந்தெடுக்க மட்டும்.</string>
+    <string name="fuel_source">எரிபொருள் மூலம்</string>
+    <string name="fuel_source_info">கச்சா எரிபொருள் அளவு எங்கிருந்து வருகிறது. கண்டறி (ECU இணைந்திருக்க வேண்டும்) வேட்பாளர்களை படிக்க மட்டும் செய்து இரண்டு மூலங்கள் ஒன்றவில்லை என்றால் உறுதி கேட்கும். உறுதிப்படுத்து அமைப்புப் பக்கத்திலும் அறிவிப்பிலும் உள்ளது. எதுவுமில்லை = அடுத்த இணைப்பில் கண்டறி.</string>
+    <string name="custom_long_name">தனி நீண்ட பெயர்</string>
+    <string name="custom_long_name_info">மூலம் Torque extra PID by long name க்கு மட்டும்: அளவைச் சொல்லும் Torque PID இன் சரியான நீண்ட பெயர்.</string>
+    <string name="tank_size">தொட்டி அளவு</string>
+    <string name="tank_hint">வெறுமை = தொடக்க அளவு இல்லை; ஒவ்வொரு பொருத்தமும் தன்னுடையதைக் கற்கும்.</string>
+    <string name="smoothing_tau">மென்மை τ வினாடி</string>
+    <string name="smoothing_tau_info">மென்மை வடிகட்டியின் நேர மாறிலி (0 = மென்மை இல்லை).</string>
+    <string name="max_skew" formatted="false">அதிகபட்ச சாய்வு %/s</string>
+    <string name="max_skew_info">மென்மை அளவு வினாடிக்கு பின்தொடரக்கூடிய பெரிய மாற்றம்; இதை மீறிய அலைவு புறக்கணிக்கப்படும்.</string>
+    <string name="fill_jump" formatted="false">நிரப்பு தாவல் %</string>
+    <string name="fill_jump_info">நிறுத்தத்தில் அளவு உயர்வு நிரப்பாகக் கணக்கிடப்படும்.</string>
+    <string name="odometer">ஓடோமீட்டர் மைல்</string>
+    <string name="odometer_info">விருப்பம்: ஓடோமீட்டர் அளவை உள்ளிட்டு முளையை சேமிக்கவும், இந்த சுயவிவர தூரம் நிலைக்க.</string>
+    <string name="additional_tanks">கூடுதல் தொட்டிகள்</string>
+    <string name="active_tank">செயலில் உள்ள தொட்டி</string>
+    <string name="active_tank_info">எரிபொருள் எரிப்பு (gal/hr) எந்த தொட்டிக்கு எழுதப்படும். PID இலிருந்து: Torque PID அதைத் தேர்ந்தெடுக்கும் (1 இலிருந்து தொட்டி id).</string>
+    <string name="select_pid">Select-PID நீண்ட பெயர்</string>
+    <string name="select_pid_info">செயலில் உள்ள தொட்டி = PID இலிருந்து என்றால் மட்டும்: மதிப்பு தொட்டி id ஆக உள்ள Torque PID இன் நீண்ட பெயர்.</string>
+    <string name="tank_n">தொட்டி %1$d</string>
+    <string name="tank_n_source">தொட்டி %1$d எரிபொருள் மூலம்</string>
+    <string name="tank_n_custom">தொட்டி %1$d தனி நீண்ட பெயர் (எ.கா. [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">தொட்டி %1$d கேலன்</string>
+    <string name="from_pid">PID இலிருந்து</string>
+    <string name="unconfirmed"> (உறுதிப்படுத்தாதது)</string>
+    <string name="ecu_connected"> · ECU இணைந்துள்ளது</string>
+    <string name="tank_unknown">தொட்டி ?</string>
+    <string name="about_field">%1$s பற்றி</string>
+    <string name="err_tau">0 முதல் %1$s s</string>
+    <string name="err_skew">0 க்கு மேல், அதிகபட்சம் %1$s %%/s</string>
+    <string name="err_jump">%1$s முதல் %2$s %%</string>
+    <string name="err_tank">வெறுமை அல்லது 0 க்கு மேல் எண்</string>
+    <string name="err_stored">சேமித்த மதிப்பு வரம்புக்கு வெளியே</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">மென்மை %</string>
+    <string name="axis_error" formatted="false">பிழை (%)</string>
+    <string name="feed_off">அணை</string>
+    <string name="feed_smoothed" formatted="false">மென்மை %</string>
+    <string name="feed_corrected_chunk" formatted="false">Corrected % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Corrected % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Corrected % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">இன்னும் எதுவுமில்லை (கண்டறி இணைப்பில் இயங்கும்)</string>
+    <string name="src_sae_012f">SAE 012F Fuel Tank Level</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler Fuel Level Average</string>
+    <string name="src_toyota_2129">Toyota cluster 2129 (half-litre counts)</string>
+    <string name="src_custom_name">Torque extra PID by long name</string>
+    <string name="vehicle_default">வாகனம் 1</string>
+    <string name="vehicle_dated">வாகனம் %1$s</string>
+    <string name="binding_torque">Torque உடன் இணைகிறது…</string>
+    <string name="status_waiting">எரிபொருள் மூலத்திற்காக காத்திருக்கிறது</string>
+    <string name="status_raw">கச்சா %1$.1f%%</string>
+    <string name="status_sess"> அமர்வு %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing அமைதி</string>
+    <string name="map_refit_title">வரைபடம் மறுபொருத்தம்</string>
+    <string name="map_refit_body">Fuel Smoothing %1$s க்கு வரைபடத்தை மறுபொருத்தம் செய்கிறது. அந்த பொருத்தம் 1:1 படிக்கும், மறுபொருத்தம் முடியும் வரை.</string>
+    <string name="no_source_title">எரிபொருள் அளவு மூலம் அமைக்கப்படவில்லை</string>
+    <string name="no_source_body">Fuel Smoothing க்கு %1$s க்கான எரிபொருள் அளவு மூலம் இல்லை. அமைப்புப் பக்கத்தைத் திறந்து கண்டறி தட்டவும், அல்லது மூலத்தைத் தேர்ந்தெடுக்கவும்.</string>
+    <string name="no_level_title">இந்த பயணத்தில் எரிபொருள் அளவு இல்லை</string>
+    <string name="no_level_body">%1$s %2$s க்கு பயன்படும் அளவைத் தரவில்லை. இணைப்பி இணைப்பைச் சரிபார்க்கவும், அல்லது அமைப்புப் பக்கத்தில் கண்டறி இயக்கவும்.</string>
+    <string name="source_found_title">எரிபொருள் அளவு மூலம் கிடைத்தது</string>
+    <string name="source_found_body">%1$s %2$s க்கு பயன்படுகிறது (%3$s).</string>
+    <string name="source_missing_title">எரிபொருள் அளவு மூலம் கிடைக்கவில்லை</string>
+    <string name="source_missing_body">Fuel Smoothing அமைப்பைத் திறந்து மூலத்தைத் தேர்ந்தெடுக்கவும் (அல்லது Torque இல் PID சேர்க்கவும்), பிறகு கண்டறி தட்டவும்.</string>
+    <string name="confirm_source_title">எரிபொருள் அளவு மூலத்தை உறுதிப்படுத்தவும்</string>
+    <string name="confirm_source_body">%1$s கண்டறியப்பட்டது, வாசிப்பு %2$.0f %% , %3$s க்கு. டாஷ் எரிபொருள் அளவுகோலுடன் பொருந்துகிறதா பார்த்து உறுதிப்படுத்து தட்டவும். உறுதிப்படுத்து அமைப்புப் பக்கத்திலும் அறிவிப்பிலும் உள்ளது (%4$s).</string>
+    <string name="confirm_source_body_nolevel">%1$s கண்டறியப்பட்டது, %2$s க்கு. டாஷ் எரிபொருள் அளவுகோலுடன் பொருந்துகிறதா பார்த்து உறுதிப்படுத்து தட்டவும். உறுதிப்படுத்து அமைப்புப் பக்கத்திலும் அறிவிப்பிலும் உள்ளது (%3$s).</string>
+    <string name="recording_title">%1$s இல் பதிவு</string>
+    <string name="recording_body">இந்த வாகனம் %1$s (%2$s), ஆனால் Torque சுயவிவரம் \'%3$s\'. தரவு %1$s க்குச் செல்கிறது; Torque திறந்து சுயவிவரத்தை மாற்ற தட்டவும்.</string>
+    <string name="wrong_vehicle_title">தவறான வாகன சுயவிவரமா?</string>
+    <string name="wrong_suggest_profile">Torque சுயவிவரம் \'%1$s\'</string>
+    <string name="wrong_suggest_new">புதிய வாகன சுயவிவரம்</string>
+    <string name="wrong_vehicle_body">Torque சுயவிவரம் \'%1$s\' இந்த வாகனத்துடன் பொருந்தவில்லை (%2$s). பரிந்துரை: %3$s. தரவு வைக்கப்பட்டு நீங்கள் வைக்காவிட்டால் பயண முடிவில் விடப்படும்.</string>
+    <string name="keeping_title">பயண தரவு வைக்கப்படுகிறது</string>
+    <string name="keeping_body">இந்த பயணம் %1$s இல் சேமிக்கப்படும். Torque செருகுநிரல் API Torque சுயவிவரங்களை உருவாக்கவோ மாற்றவோ முடியாது: Torque இல் \'%2$s\' என்ற வாகன சுயவிவரத்தை உருவாக்கவும் அல்லது தேர்ந்தெடுக்கவும்.</string>
+    <string name="action_new_profile">புதிய சுயவிவரம் உருவாக்கு</string>
+    <string name="action_use">%1$s பயன்படுத்து</string>
+</resources>

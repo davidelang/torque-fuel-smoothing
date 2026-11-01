@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">നുറുങ്ങുകൾ Play Store പതിപ്പിലാണ്</string>
+    <string name="help_body">വേഗത്തിലുള്ള തുടക്കം\n
+1. Torque Pro ഇൻസ്റ്റാൾ ചെയ്യുക (പണമടച്ച പതിപ്പ്; Torque Lite പ്ലഗിനുകൾ പിന്തുണയ്ക്കില്ല) ഒപ്പം OBD-II അഡാപ്റ്റർ ജോടിയാക്കുക.\n
+2. ഈ പ്ലഗിൻ Torque → ക്രമീകരണം → Plugins ൽ പ്രവർത്തനക്ഷമമാക്കുക.\n
+3. അറിയിപ്പുകൾ അനുവദിച്ച് ബാറ്ററി ഉപയോഗം നിയന്ത്രണമില്ലാതാക്കുക, Torque ഈ പ്ലഗിൻ പശ്ചാത്തലത്തിൽ തുടങ്ങാൻ.\n
+4. Torque ൽ നിങ്ങൾ ഓടിക്കുന്ന വാഹന പ്രൊഫൈൽ തിരഞ്ഞെടുക്കുക. ഡാറ്റ ഓരോ Torque പ്രൊഫൈലിനും സൂക്ഷിക്കുകയും വാഹന VIN/ECU തിരിച്ചറിയലുമായി പരിശോധിക്കുകയും ചെയ്യുന്നു.\n
+5. പുതിയ പ്രൊഫൈലിൽ ഇന്ധന ഉറവിടം ബന്ധിപ്പിക്കുമ്പോൾ കണ്ടെത്തുന്നു; ചോദിച്ചാൽ ഡാഷ് ഗേജുമായി താരതമ്യം ചെയ്ത് സ്ഥിരീകരിക്കുക അമർത്തുക. സ്ഥിരീകരിക്കുക സജ്ജീകരണ പേജിലും അറിയിപ്പിലും ഉണ്ട്. താഴെ നിന്നും തിരഞ്ഞെടുക്കാം.\n
+6. ടാങ്ക് വലുപ്പം Chunk ഫിറ്റിന്റെ ആരംഭ വലുപ്പമാണ്, അത് സ്വന്തം പഠിക്കും വരെ. പ്ലഗിൻ അത് ഒരിക്കലും മാറ്റില്ല; ഓരോ ഫിറ്റിന്റെയും പഠിച്ച വലുപ്പം അതിനു താഴെ കാണിക്കും.\n
+7. Torque ൽ [FuelSmooth] Smoothed Fuel Level ഉം ഓരോ ഫിറ്റിന്റെയും Corrected %, Remaining, DTE, Tank size ഗേജുകളും ചേർക്കുക. DTE എന്നത് Remaining ഗുണം Torque ദീർഘകാല mpg ആണ്. റീഫിറ്റ് സമയത്തെ അറിയിപ്പ് ആ ഫിറ്റ് 1:1 വായിക്കുമെന്ന് പറയുന്നു, റീഫിറ്റ് തീരും വരെ.\n
+8. ഇന്ധന നില Torque ലേക്ക് തിരികെ നൽകുക: ഓഫ്, മിനുസം, അല്ലെങ്കിൽ Chunk, Band അല്ലെങ്കിൽ Kalman ഫിറ്റിൽ നിന്ന് തിരുത്തിയത്, നിങ്ങളുടെ 012F ഗേജിലേക്ക്.\n
+9. ഇന്ധനം എൻജിൻ ഓടുമ്പോൾ മാത്രം കണക്കാക്കുന്നു. പ്ലഗിൻ Torque ECU യുമായി ബന്ധിപ്പിച്ചിരിക്കുമ്പോൾ മാത്രം പ്രവർത്തിക്കും.\n
+10. ഓടിച്ചും നിറച്ചും തുടരുക; കൃത്യത പല ഭാഗിക ടാങ്കുകളിലൂടെ വളരും. തെറ്റായ വാഹന പ്രൊഫൈലോ? അറിയിപ്പ് വന്നാൽ ആ യാത്രയ്ക്ക് എന്ത് ചെയ്യണമെന്ന് തിരഞ്ഞെടുക്കുക.\n
+11. എല്ലാ ഡാറ്റയും ഈ ഫോണിൽ തന്നെ നിൽക്കും. GPS അല്ലെങ്കിൽ സ്ഥാനം രേഖപ്പെടുത്തില്ല.</string>
+    <string name="about_body">%1$s\nപതിപ്പ് %2$s (%3$s)\nTorque Pro യ്ക്കുള്ള പ്ലഗിൻ. Torque അല്ലെങ്കിൽ Ian Hawkins മായി ബന്ധമില്ല.\nഎല്ലാ ഡാറ്റയും ഈ ഫോണിൽ തന്നെ നിൽക്കും; GPS അല്ലെങ്കിൽ സ്ഥാനം രേഖപ്പെടുത്തില്ല.\n\nലൈസൻസ്\nCopyright David Lang. എല്ലാ അവകാശങ്ങളും നിക്ഷിപ്തം.</string>
+    <string name="open_source_notices">ഓപ്പൺ സോഴ്സ് ലൈബ്രറികൾ\nഈ ആപ്പ് താഴെയുള്ള ലൈബ്രറികൾ ഉപയോഗിക്കുന്നു. അവയുടെ ലൈസൻസുകൾ മുകളിലെ പകർപ്പവകാശത്തിൽ നിന്ന് വേറെ.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), Play Billing ന് വേണ്ടത്\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">പൂർണ്ണ മാനുവൽ (ഓൺലൈൻ)</string>
+    <string name="show_fuel_notification">അറിയിപ്പിൽ ഇന്ധന നില കാണിക്കുക</string>
+    <string name="write_012f">ഇന്ധന നില Torque ലേക്ക് തിരികെ നൽകുക (012F മാറ്റുന്നു)</string>
+    <string name="running_quiet">Fuel Smoothing പ്രവർത്തിക്കുന്നു</string>
+    <string name="tap_to_start">Fuel Smoothing തുടങ്ങാൻ ടാപ്പ് ചെയ്യുക</string>
+    <string name="tap_to_start_text">ബാറ്ററി അല്ലെങ്കിൽ പശ്ചാത്തല തുടക്കം നിരസിച്ചു. പ്ലഗിൻ Torque യോടൊപ്പം ഓടാൻ ഒരിക്കൽ തുറക്കുക.</string>
+    <string name="tank2_help">വേണ്ട അധിക ടാങ്കുകൾ ചേർക്കുക (ഫാക്ടറി ടാങ്ക് 1 എപ്പോഴും നിൽക്കും). സെൻഡറുകൾ PCM FLI പിന്നിലേക്ക് മാറ്റരുത് (കള്ള നിറയ്ക്കൽ). ഓരോ അധിക ടാങ്കിനും സ്വന്തം Torque അധിക PID വേണം (MCU Mode 22, അദ്വിതീയ പേര് — 012F അല്ലെങ്കിൽ Ford 16C1 അല്ല). Select-PID മൂല്യം 1 മുതലുള്ള ടാങ്ക് id. Gal/hr സജീവ ടാങ്കിൽ മാത്രം എഴുതുന്നു.</string>
+    <string name="tap_start_channel">തുടങ്ങാൻ ടാപ്പ് ചെയ്യുക</string>
+    <string name="tank_size_info">ടാങ്ക് വലുപ്പം Chunk ഫിറ്റിന്റെ ആരംഭ വലുപ്പമാണ്, അത് സ്വന്തം പഠിക്കും വരെ. പ്ലഗിൻ അത് ഒരിക്കലും മാറ്റില്ല; ഓരോ ഫിറ്റിന്റെയും പഠിച്ച വലുപ്പം അതിനു താഴെ കാണിക്കും.</string>
+    <string name="feed_012f_info">നിലവിലുള്ള ഗേജുകൾ കാണിക്കാൻ Torque ഫാക്ടറി Fuel Level (012F) ൽ മൂല്യം എഴുതുന്നു: ഓഫ്, മിനുസം, അല്ലെങ്കിൽ Chunk, Band അല്ലെങ്കിൽ Kalman ഫിറ്റിൽ നിന്ന് തിരുത്തിയത്. ഇനിയും നിർമിച്ചിട്ടില്ലാത്ത ഫിറ്റ് മിനുസ നില എഴുതും.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">ഇനിയും വലുപ്പമില്ല</string>
+    <string name="size_none_sd">ഇനിയും വലുപ്പമില്ല ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">സഹായം</string>
+    <string name="about">കുറിച്ച്</string>
+    <string name="need_torque">Torque Pro (പണമടച്ചത്) വേണം. Torque Lite പ്ലഗിനുകൾ പിന്തുണയ്ക്കില്ല.</string>
+    <string name="get_torque">Torque Pro നേടുക</string>
+    <string name="privacy">സ്വകാര്യത</string>
+    <string name="send_feedback">പ്രതികരണം അയയ്ക്കുക</string>
+    <string name="tip">ടിപ്പ്</string>
+    <string name="thanks">നന്ദി</string>
+    <string name="close">അടയ്ക്കുക</string>
+    <string name="ok">OK</string>
+    <string name="detect">കണ്ടെത്തുക</string>
+    <string name="confirm">സ്ഥിരീകരിക്കുക</string>
+    <string name="save_pin">പിൻ സംരക്ഷിക്കുക</string>
+    <string name="add_tank">അധിക ടാങ്ക് ചേർക്കുക</string>
+    <string name="remove">നീക്കം ചെയ്യുക</string>
+    <string name="details">വിശദാംശം</string>
+    <string name="verbose_logging">വിശദ ലോഗ് (ഡീബഗ്; ഓരോ സെക്കൻഡിലും വരി)</string>
+    <string name="profile_name">പ്രൊഫൈൽ പേര്</string>
+    <string name="profile_name_info">ഈ വാഹന പ്രൊഫൈലിന്റെ പേര്. ഓരോ Torque വാഹന പ്രൊഫൈലും സ്വന്തം പ്ലഗിൻ പ്രൊഫൈൽ, ഡാറ്റ, പഠിച്ച ഭൂപടങ്ങൾ നേടുന്നു.</string>
+    <string name="make">നിർമാതാവ്</string>
+    <string name="make_info">വാഹന നിർമാതാവ് (ഉദാ. Ford). കണ്ടെത്തൽ ഏത് ബ്രാൻഡ് ഇന്ധന PID പരീക്ഷിക്കും എന്ന് തിരഞ്ഞെടുക്കാൻ മാത്രം.</string>
+    <string name="fuel_source">ഇന്ധന ഉറവിടം</string>
+    <string name="fuel_source_info">അസംസ്കൃത ഇന്ധന നില എവിടെ നിന്ന് വരുന്നു. കണ്ടെത്തുക (ECU ബന്ധിപ്പിച്ചിരിക്കണം) സ്ഥാനാർത്ഥികളെ വായിക്കുക മാത്രം ചെയ്ത് രണ്ട് ഉറവിടങ്ങൾ യോജിച്ചില്ലെങ്കിൽ സ്ഥിരീകരണം ചോദിക്കും. സ്ഥിരീകരിക്കുക സജ്ജീകരണ പേജിലും അറിയിപ്പിലും ഉണ്ട്. ഒന്നുമില്ല = അടുത്ത ബന്ധത്തിൽ കണ്ടെത്തുക.</string>
+    <string name="custom_long_name">ഇഷ്ട നീണ്ട പേര്</string>
+    <string name="custom_long_name_info">ഉറവിടം Torque extra PID by long name ന് മാത്രം: നില അറിയിക്കുന്ന Torque PID യുടെ കൃത്യമായ നീണ്ട പേര്.</string>
+    <string name="tank_size">ടാങ്ക് വലുപ്പം</string>
+    <string name="tank_hint">ശൂന്യം = ആരംഭ വലുപ്പമില്ല; ഓരോ ഫിറ്റും സ്വന്തം പഠിക്കും.</string>
+    <string name="smoothing_tau">മിനുസം τ സെക്കൻഡ്</string>
+    <string name="smoothing_tau_info">മിനുസ ഫിൽറ്ററിന്റെ സമയ സ്ഥിരാങ്കം (0 = മിനുസമില്ല).</string>
+    <string name="max_skew" formatted="false">പരമാവധി ചരിവ് %/s</string>
+    <string name="max_skew_info">മിനുസ നില സെക്കൻഡിൽ പിന്തുടരാവുന്ന ഏറ്റവും വലിയ മാറ്റം; ഇതിലധികമുള്ള ആടൽ അവഗണിക്കും.</string>
+    <string name="fill_jump" formatted="false">നിറയ്ക്കൽ ചാട്ടം %</string>
+    <string name="fill_jump_info">നിന്നിരിക്കുമ്പോൾ നിലയുടെ ഉയർച്ച നിറയ്ക്കലായി കണക്കാക്കും.</string>
+    <string name="odometer">ഓഡോമീറ്റർ മൈൽ</string>
+    <string name="odometer_info">ഐച്ഛികം: ഓഡോമീറ്റർ വായന നൽകി പിൻ സംരക്ഷിക്കുക, ഈ പ്രൊഫൈലിന്റെ ദൂരം ഉറപ്പിക്കാൻ.</string>
+    <string name="additional_tanks">അധിക ടാങ്കുകൾ</string>
+    <string name="active_tank">സജീവ ടാങ്ക്</string>
+    <string name="active_tank_info">ഇന്ധന ചെലവ് (gal/hr) ഏത് ടാങ്കിലേക്ക് എഴുതുന്നു. PID ൽ നിന്ന്: Torque PID അത് തിരഞ്ഞെടുക്കും (1 മുതലുള്ള ടാങ്ക് id).</string>
+    <string name="select_pid">Select-PID നീണ്ട പേര്</string>
+    <string name="select_pid_info">സജീവ ടാങ്ക് = PID ൽ നിന്ന് ആകുമ്പോൾ മാത്രം: മൂല്യം ടാങ്ക് id ആയ Torque PID യുടെ നീണ്ട പേര്.</string>
+    <string name="tank_n">ടാങ്ക് %1$d</string>
+    <string name="tank_n_source">ടാങ്ക് %1$d ഇന്ധന ഉറവിടം</string>
+    <string name="tank_n_custom">ടാങ്ക് %1$d ഇഷ്ട നീണ്ട പേര് (ഉദാ. [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">ടാങ്ക് %1$d ഗാലൻ</string>
+    <string name="from_pid">PID ൽ നിന്ന്</string>
+    <string name="unconfirmed"> (സ്ഥിരീകരിച്ചിട്ടില്ല)</string>
+    <string name="ecu_connected"> · ECU ബന്ധിപ്പിച്ചു</string>
+    <string name="tank_unknown">ടാങ്ക് ?</string>
+    <string name="about_field">%1$s കുറിച്ച്</string>
+    <string name="err_tau">0 മുതൽ %1$s s വരെ</string>
+    <string name="err_skew">0 ന് മുകളിൽ, പരമാവധി %1$s %%/s</string>
+    <string name="err_jump">%1$s മുതൽ %2$s %% വരെ</string>
+    <string name="err_tank">ശൂന്യം അല്ലെങ്കിൽ 0 ന് മുകളിലുള്ള സംഖ്യ</string>
+    <string name="err_stored">സൂക്ഷിച്ച മൂല്യം പരിധിക്ക് പുറത്ത്</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">മിനുസം %</string>
+    <string name="axis_error" formatted="false">പിശക് (%)</string>
+    <string name="feed_off">ഓഫ്</string>
+    <string name="feed_smoothed" formatted="false">മിനുസം %</string>
+    <string name="feed_corrected_chunk" formatted="false">Corrected % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Corrected % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Corrected % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">ഇനിയും ഒന്നുമില്ല (കണ്ടെത്തുക ബന്ധത്തിൽ ഓടും)</string>
+    <string name="src_sae_012f">SAE 012F Fuel Tank Level</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler Fuel Level Average</string>
+    <string name="src_toyota_2129">Toyota cluster 2129 (half-litre counts)</string>
+    <string name="src_custom_name">Torque extra PID by long name</string>
+    <string name="vehicle_default">വാഹനം 1</string>
+    <string name="vehicle_dated">വാഹനം %1$s</string>
+    <string name="binding_torque">Torque ലേക്ക് ബന്ധിപ്പിക്കുന്നു…</string>
+    <string name="status_waiting">ഇന്ധന ഉറവിടത്തിനായി കാത്തിരിക്കുന്നു</string>
+    <string name="status_raw">അസംസ്കൃത %1$.1f%%</string>
+    <string name="status_sess"> സെഷൻ %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing നിശബ്ദം</string>
+    <string name="map_refit_title">ഭൂപടം വീണ്ടും ഫിറ്റ് ചെയ്യുന്നു</string>
+    <string name="map_refit_body">Fuel Smoothing %1$s ന് ഭൂപടം വീണ്ടും ഫിറ്റ് ചെയ്യുന്നു. ആ ഫിറ്റ് 1:1 വായിക്കും, റീഫിറ്റ് തീരും വരെ.</string>
+    <string name="no_source_title">ഇന്ധന നില ഉറവിടം സജ്ജമല്ല</string>
+    <string name="no_source_body">Fuel Smoothing ന് %1$s നുള്ള ഇന്ധന നില ഉറവിടമില്ല. സജ്ജീകരണ പേജ് തുറന്ന് കണ്ടെത്തുക അമർത്തുക, അല്ലെങ്കിൽ ഉറവിടം തിരഞ്ഞെടുക്കുക.</string>
+    <string name="no_level_title">ഈ യാത്രയിൽ ഇന്ധന നിലയില്ല</string>
+    <string name="no_level_body">%1$s %2$s ന് ഉപയോഗയോഗ്യമായ നില നൽകിയില്ല. അഡാപ്റ്റർ ബന്ധം പരിശോധിക്കുക, അല്ലെങ്കിൽ സജ്ജീകരണ പേജിൽ കണ്ടെത്തുക പ്രവർത്തിപ്പിക്കുക.</string>
+    <string name="source_found_title">ഇന്ധന നില ഉറവിടം കണ്ടെത്തി</string>
+    <string name="source_found_body">%1$s %2$s ന് ഉപയോഗിക്കുന്നു (%3$s).</string>
+    <string name="source_missing_title">ഇന്ധന നില ഉറവിടം കണ്ടെത്തിയില്ല</string>
+    <string name="source_missing_body">Fuel Smoothing സജ്ജീകരണം തുറന്ന് ഉറവിടം തിരഞ്ഞെടുക്കുക (അല്ലെങ്കിൽ Torque ൽ PID ചേർക്കുക), പിന്നെ കണ്ടെത്തുക അമർത്തുക.</string>
+    <string name="confirm_source_title">ഇന്ധന നില ഉറവിടം സ്ഥിരീകരിക്കുക</string>
+    <string name="confirm_source_body">%1$s കണ്ടെത്തി, വായന %2$.0f %% , %3$s ന്. ഡാഷ് ഇന്ധന ഗേജുമായി ചേരുന്നുണ്ടോ നോക്കി സ്ഥിരീകരിക്കുക അമർത്തുക. സ്ഥിരീകരിക്കുക സജ്ജീകരണ പേജിലും അറിയിപ്പിലും ഉണ്ട് (%4$s).</string>
+    <string name="confirm_source_body_nolevel">%1$s കണ്ടെത്തി, %2$s ന്. ഡാഷ് ഇന്ധന ഗേജുമായി ചേരുന്നുണ്ടോ നോക്കി സ്ഥിരീകരിക്കുക അമർത്തുക. സ്ഥിരീകരിക്കുക സജ്ജീകരണ പേജിലും അറിയിപ്പിലും ഉണ്ട് (%3$s).</string>
+    <string name="recording_title">%1$s ലേക്ക് രേഖ</string>
+    <string name="recording_body">ഈ വാഹനം %1$s ആണ് (%2$s), പക്ഷേ Torque പ്രൊഫൈൽ \'%3$s\' ആണ്. ഡാറ്റ %1$s ലേക്ക് പോകുന്നു; Torque തുറന്ന് പ്രൊഫൈൽ മാറ്റാൻ ടാപ്പ് ചെയ്യുക.</string>
+    <string name="wrong_vehicle_title">തെറ്റായ വാഹന പ്രൊഫൈലോ?</string>
+    <string name="wrong_suggest_profile">Torque പ്രൊഫൈൽ \'%1$s\'</string>
+    <string name="wrong_suggest_new">പുതിയ വാഹന പ്രൊഫൈൽ</string>
+    <string name="wrong_vehicle_body">Torque പ്രൊഫൈൽ \'%1$s\' ഈ വാഹനവുമായി ചേരുന്നില്ല (%2$s). നിർദേശം: %3$s. ഡാറ്റ സൂക്ഷിക്കുകയും നിങ്ങൾ വയ്ക്കാത്തപക്ഷം യാത്ര അവസാനം ഉപേക്ഷിക്കുകയും ചെയ്യും.</string>
+    <string name="keeping_title">യാത്രാ ഡാറ്റ സൂക്ഷിക്കുന്നു</string>
+    <string name="keeping_body">ഈ യാത്ര %1$s ലേക്ക് സംരക്ഷിക്കും. Torque പ്ലഗിൻ API Torque പ്രൊഫൈലുകൾ സൃഷ്ടിക്കാനോ മാറ്റാനോ കഴിയില്ല: Torque ൽ \'%2$s\' എന്ന വാഹന പ്രൊഫൈൽ സൃഷ്ടിക്കുകയോ തിരഞ്ഞെടുക്കുകയോ ചെയ്യുക.</string>
+    <string name="action_new_profile">പുതിയ പ്രൊഫൈൽ സൃഷ്ടിക്കുക</string>
+    <string name="action_use">%1$s ഉപയോഗിക്കുക</string>
+</resources>

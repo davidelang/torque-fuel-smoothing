@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">Маслиҳатҳо дар версияи Play Store ҳастанд</string>
+    <string name="help_body">Оғози зуд\n
+1. Torque Pro насб кунед (версияи пулакӣ; Torque Lite плагинҳоро дастгирӣ намекунад) ва адаптери OBD-II-ро ҷуфт кунед.\n
+2. Ин плагинро дар Torque → Танзимот → Plugins фаъол кунед.\n
+3. Ба огоҳиҳо иҷозат диҳед ва истифодаи батареяро Бемаҳдуд гузоред, то Torque ин плагинро дар замина оғоз кунад.\n
+4. Дар Torque профили мошинеро, ки меронед, интихоб кунед. Маълумот барои ҳар профили Torque нигоҳ дошта мешавад ва бо ҳувияти VIN/ECU-и мошин санҷида мешавад.\n
+5. Дар профили нав манбаи сӯзишворӣ ҳангоми пайваст шудан ёфт мешавад; агар пурсанд, онро бо нишондиҳандаи панел муқоиса кунед ва Тасдиқро пахш кунед. Тасдиқ дар саҳифаи танзим ва дар огоҳӣ аст. Шумо метавонед онро дар поён низ интихоб кунед.\n
+6. Андозаи бак андозаи оғозини мувофиқати Chunk аст, то он андозаи худро ёд гирад. Плагин онро ҳеҷ гоҳ тағйир намедиҳад; андозаи омӯхтаи ҳар мувофиқат зери он нишон дода мешавад.\n
+7. Дар Torque нишондиҳандаҳо барои [FuelSmooth] Smoothed Fuel Level ва барои ҳар мувофиқат Corrected %, Remaining, DTE ва Tank size илова кунед. DTE ин Remaining зарб ба mpg-и дарозмуддати Torque аст. Огоҳӣ ҳангоми мувофиқати дубора мегӯяд, ки он мувофиқат то анҷом 1:1 мехонад.\n
+8. Сатҳи сӯзишвориро ба Torque баргардонед: Хомӯш, ҳамвор, ё ислоҳшуда аз мувофиқати Chunk, Band ё Kalman ба нишондиҳандаи 012F.\n
+9. Сӯзишворӣ танҳо ҳангоми кори муҳаррик ҳисоб мешавад. Плагин танҳо вақте кор мекунад, ки Torque ба ECU пайваст бошад.\n
+10. Рондан ва пур карданро давом диҳед; дақиқӣ дар чанд баки қисман меафзояд. Агар огоҳии Профили нодурусти мошин? пайдо шавад, интихоб кунед, ки бо он сафар чӣ кунед.\n
+11. Ҳамаи маълумот дар ин телефон мемонад. GPS ё макон сабт намешавад.</string>
+    <string name="about_body">%1$s\nВерсия %2$s (%3$s)\nПлагин барои Torque Pro. Бо Torque ё Ian Hawkins вобаста нест.\nҲамаи маълумот дар ин телефон мемонад; GPS ё макон сабт намешавад.\n\nИҷозатнома\nCopyright David Lang. Ҳамаи ҳуқуқҳо ҳифз шудаанд.</string>
+    <string name="open_source_notices">Китобхонаҳои манбаи кушод\nИн барнома китобхонаҳои зерро истифода мебарад. Иҷозатномаҳои онҳо аз ҳуқуқи муаллифи боло ҷудоанд.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), аз ҷониби Play Billing талаб мешавад\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">Дастури пурра (онлайн)</string>
+    <string name="show_fuel_notification">Сатҳи сӯзишвориро дар огоҳӣ нишон диҳед</string>
+    <string name="write_012f">Сатҳи сӯзишвориро ба Torque баргардон (012F-ро иваз мекунад)</string>
+    <string name="running_quiet">Fuel Smoothing кор мекунад</string>
+    <string name="tap_to_start">Барои оғози Fuel Smoothing пахш кунед</string>
+    <string name="tap_to_start_text">Оғоз аз батарея ё замина рад шуд. Як бор кушоед, то плагин бо Torque кор кунад.</string>
+    <string name="tank2_help">Бакҳои иловагиро ҳангоми лозим илова кунед (баки заводӣ 1 ҳамеша мемонад). Фиристандаҳоро ба пинҳои PCM FLI нагузаронед (пуркунии дурӯғ). Ҳар баки иловагӣ PID-и иловагии худро дар Torque лозим дорад (MCU Mode 22, номи беназир — на 012F ва на Ford 16C1). Қимати Select-PID ин id-и бак аз 1 аст. Gal/hr танҳо ба баки фаъол навишта мешавад.</string>
+    <string name="tap_start_channel">Барои оғоз пахш кунед</string>
+    <string name="tank_size_info">Андозаи бак андозаи оғозини мувофиқати Chunk аст, то он андозаи худро ёд гирад. Плагин онро ҳеҷ гоҳ тағйир намедиҳад; андозаи омӯхтаи ҳар мувофиқат зери он нишон дода мешавад.</string>
+    <string name="feed_012f_info">Қиматро ба Fuel Level-и заводии Torque (012F) менависад, то нишондиҳандаҳои мавҷуда онро нишон диҳанд: Хомӯш, ҳамвор, ё ислоҳшуда аз мувофиқати Chunk, Band ё Kalman. Мувофиқате, ки ҳанӯз сохта нашудааст, сатҳи ҳамворро менависад.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">ҳанӯз андоза нест</string>
+    <string name="size_none_sd">ҳанӯз андоза нест ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">Кумак</string>
+    <string name="about">Дар бора</string>
+    <string name="need_torque">Torque Pro (пулакӣ) лозим аст. Torque Lite плагинҳоро дастгирӣ намекунад.</string>
+    <string name="get_torque">Гирифтани Torque Pro</string>
+    <string name="privacy">Махфият</string>
+    <string name="send_feedback">Фиристодани назар</string>
+    <string name="tip">Инъом</string>
+    <string name="thanks">Ташаккур</string>
+    <string name="close">Пӯшидан</string>
+    <string name="ok">OK</string>
+    <string name="detect">Ёфтан</string>
+    <string name="confirm">Тасдиқ</string>
+    <string name="save_pin">Нишонаро захира кардан</string>
+    <string name="add_tank">Баки иловагӣ илова кардан</string>
+    <string name="remove">Хориҷ кардан</string>
+    <string name="details">Тафсилот</string>
+    <string name="verbose_logging">Сабти муфассал (ислоҳ; сатр дар ҳар сония)</string>
+    <string name="profile_name">Номи профил</string>
+    <string name="profile_name_info">Номи ин профили мошин. Ҳар профили мошини Torque профили плагин, маълумот ва харитаҳои омӯхтаи худро мегирад.</string>
+    <string name="make">Тамға</string>
+    <string name="make_info">Тамғаи мошин (мас. Ford). Танҳо барои интихоби он, ки ёфтан кадом PID-ҳои сӯзишвории хоси тамғаро санҷад.</string>
+    <string name="fuel_source">Манбаи сӯзишворӣ</string>
+    <string name="fuel_source_info">Сатҳи хоми сӯзишворӣ аз куҷо меояд. Ёфтан (ECU бояд пайваст бошад) номзадҳоро танҳо барои хондан мехонад ва агар ду манба мувофиқ набошанд, тасдиқ мепурсад. Тасдиқ дар саҳифаи танзим ва дар огоҳӣ аст. Ҳеҷ кадом = ёфтан дар пайвасти навбатӣ.</string>
+    <string name="custom_long_name">Номи дарози махсус</string>
+    <string name="custom_long_name_info">Танҳо барои манбаи Torque extra PID by long name: номи дарози дақиқи PID-и Torque, ки сатҳро хабар медиҳад.</string>
+    <string name="tank_size">Андозаи бак</string>
+    <string name="tank_hint">холӣ = андозаи оғоз нест; ҳар мувофиқат андозаи худро меомӯзад.</string>
+    <string name="smoothing_tau">Ҳамворкунии τ сония</string>
+    <string name="smoothing_tau_info">Собити вақти филтри ҳамворкунӣ (0 = бе ҳамворкунӣ).</string>
+    <string name="max_skew" formatted="false">Ҳадди каҷӣ %/s</string>
+    <string name="max_skew_info">Бузургтарин тағйир дар як сония, ки сатҳи ҳамвор метавонад пайравӣ кунад; лапиш аз ин беш нодида гирифта мешавад.</string>
+    <string name="fill_jump" formatted="false">Ҷаҳиши пуркунӣ %</string>
+    <string name="fill_jump_info">Болоравии сатҳ ҳангоми ист, ки пуркунӣ ҳисоб мешавад.</string>
+    <string name="odometer">Милҳои одометр</string>
+    <string name="odometer_info">Ихтиёрӣ: нишондиҳандаи одометрро ворид кунед ва Нишонаро захира кунед, то масофа барои ин профил лангар шавад.</string>
+    <string name="additional_tanks">Бакҳои иловагӣ</string>
+    <string name="active_tank">Баки фаъол</string>
+    <string name="active_tank_info">Хароҷоти сӯзишворӣ (gal/hr) ба кадом бак навишта мешавад. Аз PID: PID-и Torque онро интихоб мекунад (id-и бак аз 1).</string>
+    <string name="select_pid">Номи дарози Select-PID</string>
+    <string name="select_pid_info">Танҳо вақте Баки фаъол = Аз PID: номи дарози PID-и Torque, ки қиматаш id-и бак аст.</string>
+    <string name="tank_n">Бак %1$d</string>
+    <string name="tank_n_source">Манбаи сӯзишвории баки %1$d</string>
+    <string name="tank_n_custom">Номи дарози махсуси баки %1$d (мас. [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">Галлонҳои баки %1$d</string>
+    <string name="from_pid">Аз PID</string>
+    <string name="unconfirmed"> (тасдиқнашуда)</string>
+    <string name="ecu_connected"> · ECU пайваст аст</string>
+    <string name="tank_unknown">бак ?</string>
+    <string name="about_field">Дар бораи %1$s</string>
+    <string name="err_tau">аз 0 то %1$s s</string>
+    <string name="err_skew">болотар аз 0, ҳадди аксар %1$s %%/s</string>
+    <string name="err_jump">аз %1$s то %2$s %%</string>
+    <string name="err_tank">холӣ ё рақами болотар аз 0</string>
+    <string name="err_stored">қимати захирашуда берун аз ҳудуд аст</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">Ҳамвор %</string>
+    <string name="axis_error" formatted="false">Хато (%)</string>
+    <string name="feed_off">Хомӯш</string>
+    <string name="feed_smoothed" formatted="false">Ҳамвор %</string>
+    <string name="feed_corrected_chunk" formatted="false">Corrected % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Corrected % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Corrected % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">Ҳанӯз ҳеҷ кадом (Ёфтан ҳангоми пайваст кор мекунад)</string>
+    <string name="src_sae_012f">SAE 012F Fuel Tank Level</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler Fuel Level Average</string>
+    <string name="src_toyota_2129">Toyota cluster 2129 (half-litre counts)</string>
+    <string name="src_custom_name">Torque extra PID by long name</string>
+    <string name="vehicle_default">Мошин 1</string>
+    <string name="vehicle_dated">Мошин %1$s</string>
+    <string name="binding_torque">Ба Torque пайваст мешавад…</string>
+    <string name="status_waiting">Интизори манбаи сӯзишворӣ</string>
+    <string name="status_raw">хом %1$.1f%%</string>
+    <string name="status_sess"> сессия %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing ором</string>
+    <string name="map_refit_title">Харита аз нав мувофиқ мешавад</string>
+    <string name="map_refit_body">Fuel Smoothing харитаро барои %1$s аз нав мувофиқ мекунад. Он мувофиқат то анҷоми мувофиқати дубора 1:1 мехонад.</string>
+    <string name="no_source_title">Манбаи сатҳи сӯзишворӣ танзим нашудааст</string>
+    <string name="no_source_body">Fuel Smoothing барои %1$s манбаи сатҳи сӯзишворӣ надорад. Саҳифаи танзимро кушоед ва Ёфтанро пахш кунед, ё манба интихоб кунед.</string>
+    <string name="no_level_title">Дар ин сафар сатҳи сӯзишворӣ нест</string>
+    <string name="no_level_body">%1$s барои %2$s сатҳи қобили истифода надод. Пайвасти адаптерро санҷед, ё Ёфтанро дар саҳифаи танзим иҷро кунед.</string>
+    <string name="source_found_title">Манбаи сатҳи сӯзишворӣ ёфт шуд</string>
+    <string name="source_found_body">%1$s барои %2$s истифода мешавад (%3$s).</string>
+    <string name="source_missing_title">Манбаи сатҳи сӯзишворӣ ёфт нашуд</string>
+    <string name="source_missing_body">Танзими Fuel Smoothing-ро кушоед ва манба интихоб кунед (ё PID-ро дар Torque илова кунед), сипас Ёфтанро пахш кунед.</string>
+    <string name="confirm_source_title">Манбаи сатҳи сӯзишвориро тасдиқ кунед</string>
+    <string name="confirm_source_body">%1$s ёфт шуд, хониш %2$.0f %% барои %3$s. Санҷед, ки бо нишондиҳандаи сӯзишвории панел мувофиқ аст, сипас Тасдиқро пахш кунед. Тасдиқ дар саҳифаи танзим ва дар огоҳӣ аст (%4$s).</string>
+    <string name="confirm_source_body_nolevel">%1$s барои %2$s ёфт шуд. Санҷед, ки бо нишондиҳандаи сӯзишвории панел мувофиқ аст, сипас Тасдиқро пахш кунед. Тасдиқ дар саҳифаи танзим ва дар огоҳӣ аст (%3$s).</string>
+    <string name="recording_title">Сабт ба %1$s</string>
+    <string name="recording_body">Ин мошин %1$s аст (%2$s), аммо профили Torque \'%3$s\' аст. Маълумот ба %1$s меравад; барои кушодани Torque ва иваз кардани профил пахш кунед.</string>
+    <string name="wrong_vehicle_title">Профили нодурусти мошин?</string>
+    <string name="wrong_suggest_profile">Профили Torque \'%1$s\'</string>
+    <string name="wrong_suggest_new">профили нави мошин</string>
+    <string name="wrong_vehicle_body">Профили Torque \'%1$s\' бо ин мошин мувофиқ нест (%2$s). Пешниҳод: %3$s. Маълумот нигоҳ дошта мешавад ва агар нигоҳ надоред, дар охири сафар партофта мешавад.</string>
+    <string name="keeping_title">Маълумоти сафар нигоҳ дошта мешавад</string>
+    <string name="keeping_body">Ин сафар ба %1$s захира мешавад. API-и плагини Torque наметавонад профилҳои Torque-ро эҷод ё иваз кунад: дар Torque профили мошин бо номи \'%2$s\' эҷод ё интихоб кунед.</string>
+    <string name="action_new_profile">Эҷоди профили нав</string>
+    <string name="action_use">Истифодаи %1$s</string>
+</resources>

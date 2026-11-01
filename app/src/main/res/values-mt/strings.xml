@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">Il-pariri huma fil-verżjoni Play Store</string>
+    <string name="help_body">Bidu malajr\n
+1. Installa Torque Pro (il-verżjoni mħallsa; Torque Lite ma jappoġġjax plugins) u qabbad l-adapter OBD-II.\n
+2. Ixgħel dan il-plugin f\'Torque → Settings → Plugins.\n
+3. Ħalli n-notifiki u waqqaf l-użu tal-batterija fuq Bla limitu biex Torque jkun jista\' jibda dan il-plugin fl-isfond.\n
+4. F\'Torque agħżel il-profil tal-vettura li qed issuq. Id-data tinżamm skont il-profil ta\' Torque u tiġi ċċekkjata mal-identità VIN/ECU tal-vettura.\n
+5. Fuq profil ġdid is-sors tal-fjuwil jinstab meta tikkonnettja; jekk tintalab, qabblu mal-kejl tad-daxxbord u miss Ikkonferma. Ikkonferma huwa fil-paġna tas-setup u fin-notifika. Tista\' tagħżlu wkoll hawn taħt.\n
+6. Id-daqs tat-tank huwa d-daqs tal-bidu għall-aġġustament Chunk sakemm jitgħallem tiegħu. Il-plugin qatt ma jibdlu; id-daqs mitgħallem ta\' kull aġġustament jidher taħtu.\n
+7. F\'Torque żid gauges għal [FuelSmooth] Smoothed Fuel Level u, għal kull aġġustament, Corrected %, Remaining, DTE u Tank size. DTE huwa Remaining darbiet il-mpg fit-tul ta\' Torque. Avviż waqt aġġustament mill-ġdid jgħid li l-aġġustament jaqra 1:1 sakemm jispiċċa.\n
+8. Erġa\' ibgħat il-livell tal-fjuwil lil Torque: Mitfi, illixxat, jew ikkoreġut mill-aġġustament Chunk, Band jew Kalman, fuq il-gauge 012F.\n
+9. Il-fjuwil jingħadd biss waqt li l-magna tkun mixgħula. Il-plugin jaħdem biss waqt li Torque jkun imqabbad mal-ECU.\n
+10. Kompli ssuq u imla; l-eżattezza tikber fuq diversi tankijiet parzjali. Jekk tidher notifika Profil tal-vettura ħażin?, agħżel x\'jagħmel b\'dik il-vjaġġ.\n
+11. Id-data kollha tibqa\' fuq dan it-telefon. La GPS u lanqas lokazzjoni ma tiġi rreġistrata.</string>
+    <string name="about_body">%1$s\nVerżjoni %2$s (%3$s)\nPlugin għal Torque Pro. Mhux marbut ma\' Torque jew Ian Hawkins.\nId-data kollha tibqa\' fuq dan it-telefon; la GPS u lanqas lokazzjoni ma tiġi rreġistrata.\n\nLiċenzja\nCopyright David Lang. Id-drittijiet kollha riżervati.</string>
+    <string name="open_source_notices">Libreriji open source\nDin l-app tuża l-libreriji t\'hawn taħt. Il-liċenzji tagħhom huma separati mid-drittijiet tal-awtur t\'hawn fuq.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), meħtieġ minn Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">Manwal sħiħ (online)</string>
+    <string name="show_fuel_notification">Uri l-livell tal-fjuwil fin-notifika</string>
+    <string name="write_012f">Erġa\' ibgħat il-livell tal-fjuwil lil Torque (jieħu post 012F)</string>
+    <string name="running_quiet">Fuel Smoothing qed jaħdem</string>
+    <string name="tap_to_start">Miss biex tibda Fuel Smoothing</string>
+    <string name="tap_to_start_text">Il-bidu mill-batterija jew fl-isfond ġie miċħud. Iftaħ darba biex il-plugin ikun jista\' jaħdem ma\' Torque.</string>
+    <string name="tank2_help">Żid tankijiet żejda kif meħtieġ (it-tank tal-fabbrika 1 jibqa\' dejjem). Tgħaqqadx is-sensers mal-pin PCM FLI (mili falz). Kull tank żejjed jeħtieġ il-PID żejjed tiegħu ta\' Torque (MCU Mode 22, isem uniku — mhux 012F jew Ford 16C1). Il-valur Select-PID huwa l-identifikatur tat-tank minn 1. Gal/hr jitniżżel biss mat-tank attiv.</string>
+    <string name="tap_start_channel">Miss biex tibda</string>
+    <string name="tank_size_info">Id-daqs tat-tank huwa d-daqs tal-bidu għall-aġġustament Chunk sakemm jitgħallem tiegħu. Il-plugin qatt ma jibdlu; id-daqs mitgħallem ta\' kull aġġustament jidher taħtu.</string>
+    <string name="feed_012f_info">Jikteb valur fuq il-Fuel Level (012F) tal-fabbrika ta\' Torque biex il-gauges eżistenti juruh: Mitfi, illixxat, jew ikkoreġut mill-aġġustament Chunk, Band jew Kalman. Aġġustament li għadu mhux mibni jikteb il-livell illixxat.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">għad m\'hemmx daqs</string>
+    <string name="size_none_sd">għad m\'hemmx daqs ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">Għajnuna</string>
+    <string name="about">Dwar</string>
+    <string name="need_torque">Jeħtieġ Torque Pro (imħallas). Torque Lite ma jappoġġjax plugins.</string>
+    <string name="get_torque">Ikseb Torque Pro</string>
+    <string name="privacy">Privatezza</string>
+    <string name="send_feedback">Ibgħat feedback</string>
+    <string name="tip">Tip</string>
+    <string name="thanks">Grazzi</string>
+    <string name="close">Agħlaq</string>
+    <string name="ok">OK</string>
+    <string name="detect">Sib</string>
+    <string name="confirm">Ikkonferma</string>
+    <string name="save_pin">Issejvja l-ankra</string>
+    <string name="add_tank">Żid tank</string>
+    <string name="remove">Neħħi</string>
+    <string name="details">Dettalji</string>
+    <string name="verbose_logging">Log dettaljat (debug; linji kull sekonda)</string>
+    <string name="profile_name">Isem il-profil</string>
+    <string name="profile_name_info">L-isem ta\' dan il-profil tal-vettura. Kull profil ta\' vettura ta\' Torque jieħu l-profil tal-plugin, id-data u l-mapep mitgħallma tiegħu.</string>
+    <string name="make">Marka</string>
+    <string name="make_info">Il-marka tal-vettura (eż. Ford). Tintuża biss biex tagħżel liema PID tal-fjuwil tal-marka t-tfittxija tista\' tipprova.</string>
+    <string name="fuel_source">Sors tal-fjuwil</string>
+    <string name="fuel_source_info">Minn fejn jiġi l-livell mhux ipproċessat tal-fjuwil. Sib (l-ECU jrid ikun imqabbad) jipprova l-kandidati għall-qari biss u jitlob konferma jekk żewġ sorsi ma jaqblux. Ikkonferma huwa fil-paġna tas-setup u fin-notifika. Xejn = sib fil-konnessjoni li jmiss.</string>
+    <string name="custom_long_name">Isem twil personalizzat</string>
+    <string name="custom_long_name_info">Biss għas-sors „PID żejjed ta\' Torque skont l-isem twil”: l-isem twil eżatt tal-PID ta\' Torque li jirrapporta l-livell.</string>
+    <string name="tank_size">Daqs tat-tank</string>
+    <string name="tank_hint">vojt = l-ebda daqs tal-bidu; kull aġġustament jitgħallem tiegħu.</string>
+    <string name="smoothing_tau">Illixxar τ f\'sekondi</string>
+    <string name="smoothing_tau_info">Il-kostanti tal-ħin tal-filtru tal-illixxar (0 = l-ebda illixxar).</string>
+    <string name="max_skew" formatted="false">Inklinazzjoni maks. %/s</string>
+    <string name="max_skew_info">L-akbar bidla kull sekonda li l-livell illixxat jista\' jsegwi; it-tbandil lil hinn minn dan jiġi injorat.</string>
+    <string name="fill_jump" formatted="false">Qabża ta\' mili %</string>
+    <string name="fill_jump_info">Tlugħ fil-livell waqt li tkun wieqaf li jgħodd bħala mili.</string>
+    <string name="odometer">Odometru f\'mili</string>
+    <string name="odometer_info">Fakultattiv: daħħal il-qari tal-odometru u Issejvja l-ankra biex tannkra d-distanza ta\' dan il-profil.</string>
+    <string name="additional_tanks">Tankijiet żejda</string>
+    <string name="active_tank">Tank attiv</string>
+    <string name="active_tank_info">It-tank li jħallas il-konsum (gal/hr). Mill-PID: PID ta\' Torque jagħżlu (identifikatur minn 1).</string>
+    <string name="select_pid">Isem twil ta\' Select-PID</string>
+    <string name="select_pid_info">Biss meta Tank attiv = Mill-PID: l-isem twil tal-PID ta\' Torque li l-valur tiegħu huwa l-identifikatur tat-tank.</string>
+    <string name="tank_n">Tank %1$d</string>
+    <string name="tank_n_source">Sors tal-fjuwil tat-tank %1$d</string>
+    <string name="tank_n_custom">Isem twil personalizzat tat-tank %1$d (eż. [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">Galluni tat-tank %1$d</string>
+    <string name="from_pid">Mill-PID</string>
+    <string name="unconfirmed"> (mhux ikkonfermat)</string>
+    <string name="ecu_connected"> · ECU imqabbad</string>
+    <string name="tank_unknown">tank ?</string>
+    <string name="about_field">Madwar %1$s</string>
+    <string name="err_tau">0 sa %1$s s</string>
+    <string name="err_skew">aktar minn 0, l-aktar %1$s %%/s</string>
+    <string name="err_jump">%1$s sa %2$s %%</string>
+    <string name="err_tank">vojt jew numru akbar minn 0</string>
+    <string name="err_stored">valur maħżun barra mill-firxa</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">Illixxat %</string>
+    <string name="axis_error" formatted="false">Żball (%)</string>
+    <string name="feed_off">Mitfi</string>
+    <string name="feed_smoothed" formatted="false">Illixxat %</string>
+    <string name="feed_corrected_chunk" formatted="false">Ikkoreġut % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Ikkoreġut % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Ikkoreġut % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">Xejn għad (Sib meta tikkonnettja)</string>
+    <string name="src_sae_012f">SAE 012F Fuel Tank Level</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler Fuel Level Average</string>
+    <string name="src_toyota_2129">Toyota cluster 2129 (għadd ta\' nofs litru)</string>
+    <string name="src_custom_name">PID żejjed ta\' Torque skont l-isem twil</string>
+    <string name="vehicle_default">Vettura 1</string>
+    <string name="vehicle_dated">Vettura %1$s</string>
+    <string name="binding_torque">Qed jingħaqad ma\' Torque…</string>
+    <string name="status_waiting">Jistenna s-sors tal-fjuwil</string>
+    <string name="status_raw">mhux ipproċessat %1$.1f%%</string>
+    <string name="status_sess"> vjaġġ %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing kwiet</string>
+    <string name="map_refit_title">L-mappa qed terġa\' tiġi aġġustata</string>
+    <string name="map_refit_body">Fuel Smoothing qed jerġa\' jaġġusta mappa għal %1$s. Dan l-aġġustament jaqra 1:1 sakemm jispiċċa.</string>
+    <string name="no_source_title">L-ebda sors tal-livell tal-fjuwil ma ġie ssettjat</string>
+    <string name="no_source_body">Fuel Smoothing m\'għandux sors tal-livell tal-fjuwil għal %1$s. Iftaħ il-paġna tas-setup u miss Sib, jew agħżel sors.</string>
+    <string name="no_level_title">L-ebda livell tal-fjuwil f\'din il-vjaġġ</string>
+    <string name="no_level_body">%1$s ma tax livell utli għal %2$s. Iċċekkja l-konnessjoni tal-adapter, jew ixgħel Sib fil-paġna tas-setup.</string>
+    <string name="source_found_title">Instab sors tal-livell tal-fjuwil</string>
+    <string name="source_found_body">Qed jintuża %1$s għal %2$s (%3$s).</string>
+    <string name="source_missing_title">Ma nstab l-ebda sors tal-livell tal-fjuwil</string>
+    <string name="source_missing_body">Iftaħ is-setup ta\' Fuel Smoothing u agħżel sors (jew żid il-PID f\'Torque), imbagħad miss Sib.</string>
+    <string name="confirm_source_title">Ikkonferma s-sors tal-livell tal-fjuwil</string>
+    <string name="confirm_source_body">Instab %1$s, qari %2$.0f %% għal %3$s. Iċċekkja li jaqbel mal-kejl tad-daxxbord, imbagħad miss Ikkonferma. Ikkonferma huwa fil-paġna tas-setup u fin-notifika (%4$s).</string>
+    <string name="confirm_source_body_nolevel">Instab %1$s għal %2$s. Iċċekkja li jaqbel mal-kejl tad-daxxbord, imbagħad miss Ikkonferma. Ikkonferma huwa fil-paġna tas-setup u fin-notifika (%3$s).</string>
+    <string name="recording_title">Qed jirreġistra f\'%1$s</string>
+    <string name="recording_body">Din il-vettura hija %1$s (%2$s), iżda l-profil ta\' Torque huwa „%3$s”. Id-data tmur f\'%1$s; miss biex tiftaħ Torque u tbiddel il-profil.</string>
+    <string name="wrong_vehicle_title">Profil tal-vettura ħażin?</string>
+    <string name="wrong_suggest_profile">Profil ta\' Torque „%1$s”</string>
+    <string name="wrong_suggest_new">profil ġdid ta\' vettura</string>
+    <string name="wrong_vehicle_body">Il-profil ta\' Torque „%1$s” ma jaqbilx ma\' din il-vettura (%2$s). Suġġeriment: %3$s. Id-data tinżamm u tintrema fl-aħħar tal-vjaġġ jekk ma żżommhiex.</string>
+    <string name="keeping_title">Id-data tal-vjaġġ qed tinżamm</string>
+    <string name="keeping_body">Din il-vjaġġ se tiġi ssejvjata f\'%1$s. L-API tal-plugin ta\' Torque ma tistax toħloq jew tbiddel profili ta\' Torque: f\'Torque, oħloq jew agħżel profil ta\' vettura bl-isem „%2$s”.</string>
+    <string name="action_new_profile">Oħloq profil ġdid</string>
+    <string name="action_use">Uża %1$s</string>
+</resources>

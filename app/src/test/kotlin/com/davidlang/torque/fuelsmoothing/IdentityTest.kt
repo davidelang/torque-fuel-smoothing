@@ -26,7 +26,7 @@ class IdentityTest {
     /** Legacy layout: profiles/default named by Torque "Van", active = default. */
     private fun legacyRoot(): File {
         val root = tmp()
-        ProfileStore.migrate(root, null, null, 1L)
+        ProfileStore.migrate(root, null, null, "Vehicle 1", 1L)
         ProfileStore.setProfileField(root, "default", "torqueProfileName", "Van")
         val raw = File(root, "profiles/default/raw")
         File(raw, "1791667223532-4865ff23.jsonl").writeText("{\"t\":1,\"lvl\":50}\n")
@@ -49,7 +49,7 @@ class IdentityTest {
         for (k in before.keys) if (k != "profile.json") assertEquals(k, before[k], after[k])
         // Idempotent: again is a no-op, and migrate keeps using van.
         assertNull(ProfileStore.renameDefaultToSlug(root))
-        ProfileStore.migrate(root, null, null, 2L)
+        ProfileStore.migrate(root, null, null, "Vehicle 1", 2L)
         assertFalse(File(root, "profiles/default").exists())
         assertEquals(after, snapshot(File(root, "profiles/van")))
     }
@@ -61,7 +61,7 @@ class IdentityTest {
         File(root, "profiles/rename-journal.json").writeText("{\"from\":\"default\",\"to\":\"van\"}")
         assertTrue(File(root, "profiles/default").renameTo(File(root, "profiles/van")))
         assertEquals("default", ProfileStore.activeId(root))
-        ProfileStore.migrate(root, null, null, 3L)
+        ProfileStore.migrate(root, null, null, "Vehicle 1", 3L)
         assertEquals("van", ProfileStore.activeId(root))
         assertEquals("van", ProfileStore.profileField(root, "van", "id"))
         assertFalse(File(root, "profiles/rename-journal.json").exists())
@@ -102,7 +102,7 @@ class IdentityTest {
 
     private fun twoProfiles(): File {
         val root = tmp()
-        ProfileStore.migrate(root, null, null, 1L)
+        ProfileStore.migrate(root, null, null, "Vehicle 1", 1L)
         ProfileStore.setProfileField(root, "default", "torqueProfileName", "Van")
         ProfileStore.renameDefaultToSlug(root)
         val carId = ProfileStore.createProfile(root, "Car", 2L)
@@ -154,10 +154,12 @@ class IdentityTest {
         assertEquals(listOf(Fingerprint.NEW_PROFILE), Fingerprint.actions(null))
         val root = twoProfiles()
         val vanBefore = snapshot(File(root, "profiles/van"))
-        val id = Quarantine.confirmTarget(root, Fingerprint.NEW_PROFILE, 1_791_700_000_000L)
+        val now = 1_791_700_000_000L
+        val day = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.ROOT).format(java.util.Date(now))
+        val id = Quarantine.confirmTarget(root, Fingerprint.NEW_PROFILE, now, "Vehicle $day")
         assertTrue(id, id.startsWith("vehicle-2026-"))
         assertTrue(File(root, "profiles/$id/profile.json").isFile)
-        assertEquals("car", Quarantine.confirmTarget(root, "car", 0L))
+        assertEquals("car", Quarantine.confirmTarget(root, "car", 0L, "Vehicle 1"))
         val moved = Quarantine.resolve(root, quarantinedSession(root, 3000L), 1, id)
         assertEquals(File(root, "profiles/$id/raw/3000-abcd.jsonl").path, moved.single().path)
         assertEquals(vanBefore, snapshot(File(root, "profiles/van")))
@@ -171,10 +173,6 @@ class IdentityTest {
         assertEquals(FeedMode.OFF, FixFuelPrefs.feedMode(null, false))
         assertEquals(FeedMode.SMOOTHED, FixFuelPrefs.feedMode("SMOOTHED", false))
         assertEquals(FeedMode.CORRECTED, FixFuelPrefs.feedMode("bogus", null))
-        assertNull(FixFuelPrefs.feedValue(FeedMode.OFF, 40.0, 35.0))
-        assertEquals(40.0, FixFuelPrefs.feedValue(FeedMode.SMOOTHED, 40.0, 35.0)!!, 0.0)
-        assertEquals(35.0, FixFuelPrefs.feedValue(FeedMode.CORRECTED, 40.0, 35.0)!!, 0.0)
-        assertNull(FixFuelPrefs.feedValue(FeedMode.CORRECTED, 40.0, Double.NaN))
     }
 
     @Test

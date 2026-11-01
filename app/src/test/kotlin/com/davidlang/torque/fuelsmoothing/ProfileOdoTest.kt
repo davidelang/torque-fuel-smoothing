@@ -37,7 +37,8 @@ class ProfileOdoTest {
         val dir = ProfileStore.migrate(
             root,
             "E350",
-            ProfileStore.LedgerSeed(10.0, 1.5, null, 30.0),
+            ProfileStore.LedgerSeed(10.0, 1.5, 30.0),
+            "Vehicle 1",
             now,
         )
         assertEquals("default", dir.name)
@@ -55,10 +56,10 @@ class ProfileOdoTest {
         assertTrue(File(dir, "profile.json").isFile)
         assertTrue(File(dir, "ledger.json").readText().contains("10"))
         // The next migrate renames default to the Torque-name slug (e350) once; after that it is a no-op.
-        ProfileStore.migrate(root, "E350", null, now)
+        ProfileStore.migrate(root, "E350", null, "Vehicle 1", now)
         assertFalse(File(root, "profiles/default").exists())
         val before = paths(root)
-        ProfileStore.migrate(root, "E350", null, now)
+        ProfileStore.migrate(root, "E350", null, "Vehicle 1", now)
         assertEquals(before, paths(root))
         assertFalse(File(root, "profiles/default/legacy").exists())
         assertTrue(File(sessions, "1791007200000-abcd.jsonl").isFile)
@@ -179,7 +180,7 @@ class ProfileOdoTest {
         File(root, "sessions/${names[1]}").writeText(bodies[1])
         File(root, "${ProfileStore.IMPORT_DIR}/${names[2]}").writeText(bodies[2])
         val now = ProfileStore.RESET_MS - 1L
-        ProfileStore.migrate(root, null, null, now)
+        ProfileStore.migrate(root, null, null, "Vehicle 1", now)
         val raw = File(root, "profiles/default/raw")
         assertEquals(names.sorted(), raw.list()!!.sorted())
         // Sources stay untouched.
@@ -192,7 +193,7 @@ class ProfileOdoTest {
         assertEquals(src.raw.last(), got.raw.last(), 1e-9)
         val before = raw.listFiles()!!.associate { it.name to it.readText() }
         assertEquals(0, ProfileStore.importLegacy(root, "default"))
-        ProfileStore.migrate(root, null, null, now)
+        ProfileStore.migrate(root, null, null, "Vehicle 1", now)
         assertEquals(before, raw.listFiles()!!.associate { it.name to it.readText() })
     }
 

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">Mae\'r awgrymiadau ar fersiwn Play Store</string>
+    <string name="help_body">Cychwyn cyflym\n
+1. Gosodwch Torque Pro (y fersiwn taledig; nid yw Torque Lite yn cynnal ategion) a phârwyoch yr addasydd OBD-II.\n
+2. Galluogwch yr ategyn hwn yn Torque → Gosodiadau → Ategion.\n
+3. Caniatewch hysbysiadau a gosodwch ddefnydd batri i Ddigyfyngiad fel y gall Torque gychwyn yr ategyn hwn yn y cefndir.\n
+4. Yn Torque, dewiswch broffil y cerbyd rydych yn ei yrru. Cedwir data fesul proffil Torque a\'i wirio yn erbyn hunaniaeth VIN/ECU y cerbyd.\n
+5. Ar broffil newydd canfyddir ffynhonnell y tanwydd wrth gysylltu; os gofynnir, cymharwch hi â mesurydd y dangosfwrdd a thapio Cadarnhau. Mae Cadarnhau ar y dudalen gosod ac yn yr hysbysiad. Gallwch ei ddewis isod hefyd.\n
+6. Maint y tanc yw maint cychwyn ffitiad Chunk nes iddo ddysgu ei faint ei hun. Nid yw\'r ategyn byth yn ei newid; dangosir maint dysgedig pob ffitiad oddi tano.\n
+7. Yn Torque, ychwanegwch fesuryddion ar gyfer [FuelSmooth] Smoothed Fuel Level ac, ar gyfer pob ffitiad, Corrected %, Remaining, DTE a Tank size. DTE yw Remaining wedi\'i luosi ag mpg hirdymor Torque. Dywed hysbysiad yn ystod ailffitio fod y ffitiad yn darllen 1:1 nes i\'r ailffitio orffen.\n
+8. Anfonwch lefel y tanwydd yn ôl i Torque: I ffwrdd, llyfn, neu wedi\'i gywiro o ffitiad Chunk, Band neu Kalman, ar eich mesurydd 012F.\n
+9. Dim ond tra bo\'r injan yn rhedeg y cyfrifir tanwydd. Dim ond tra bo Torque wedi\'i gysylltu â\'r ECU y mae\'r ategyn yn rhedeg.\n
+10. Daliwch ati i yrru ac i lenwi; mae cywirdeb yn tyfu dros sawl tanc rhannol. Os yw hysbysiad Proffil cerbyd anghywir? yn ymddangos, dewiswch beth i\'w wneud â\'r daith honno.\n
+11. Mae\'r holl ddata\'n aros ar y ffôn hwn. Ni chofnodir GPS na lleoliad.</string>
+    <string name="about_body">%1$s\nFersiwn %2$s (%3$s)\nAtegyn ar gyfer Torque Pro. Nid yw\'n gysylltiedig â Torque nac Ian Hawkins.\nMae\'r holl ddata\'n aros ar y ffôn hwn; ni chofnodir GPS na lleoliad.\n\nTrwydded\nCopyright David Lang. Cedwir pob hawl.</string>
+    <string name="open_source_notices">Llyfrgelloedd cod agored\nMae\'r ap hwn yn defnyddio\'r llyfrgelloedd isod. Mae eu trwyddedau ar wahân i\'r hawlfraint uchod.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), yn ofynnol gan Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">Llawlyfr llawn (ar-lein)</string>
+    <string name="show_fuel_notification">Dangos lefel y tanwydd yn yr hysbysiad</string>
+    <string name="write_012f">Anfon lefel y tanwydd yn ôl i Torque (yn disodli 012F)</string>
+    <string name="running_quiet">Mae Fuel Smoothing yn rhedeg</string>
+    <string name="tap_to_start">Tapiwch i gychwyn Fuel Smoothing</string>
+    <string name="tap_to_start_text">Gwrthodwyd cychwyn o\'r batri neu yn y cefndir. Agorwch unwaith fel y gall yr ategyn redeg gyda Torque.</string>
+    <string name="tank2_help">Ychwanegwch danciau ychwanegol yn ôl yr angen (mae tanc ffatri 1 yn aros bob amser). Peidiwch â newid synwyryddion i\'r pin PCM FLI (llenwad ffug). Mae angen ei PID ychwanegol Torque ei hun ar bob tanc ychwanegol (MCU Mode 22, enw unigryw — nid 012F na Ford 16C1). Gwerth Select-PID yw dynodwr y tanc gan ddechrau o 1. Codir gal/hr ar y tanc gweithredol yn unig.</string>
+    <string name="tap_start_channel">Tapiwch i gychwyn</string>
+    <string name="tank_size_info">Maint y tanc yw maint cychwyn ffitiad Chunk nes iddo ddysgu ei faint ei hun. Nid yw\'r ategyn byth yn ei newid; dangosir maint dysgedig pob ffitiad oddi tano.</string>
+    <string name="feed_012f_info">Ysgrifenna werth ar Fuel Level (012F) ffatri Torque fel bod mesuryddion presennol yn ei ddangos: I ffwrdd, llyfn, neu wedi\'i gywiro o ffitiad Chunk, Band neu Kalman. Mae ffitiad nad yw wedi\'i adeiladu eto yn ysgrifennu\'r lefel lyfn.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">dim maint eto</string>
+    <string name="size_none_sd">dim maint eto ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">Cymorth</string>
+    <string name="about">Ynghylch</string>
+    <string name="need_torque">Angen Torque Pro (taledig). Nid yw Torque Lite yn cynnal ategion.</string>
+    <string name="get_torque">Cael Torque Pro</string>
+    <string name="privacy">Preifatrwydd</string>
+    <string name="send_feedback">Anfon adborth</string>
+    <string name="tip">Awgrym</string>
+    <string name="thanks">Diolch</string>
+    <string name="close">Cau</string>
+    <string name="ok">Iawn</string>
+    <string name="detect">Canfod</string>
+    <string name="confirm">Cadarnhau</string>
+    <string name="save_pin">Cadw\'r angor</string>
+    <string name="add_tank">Ychwanegu tanc</string>
+    <string name="remove">Tynnu</string>
+    <string name="details">Manylion</string>
+    <string name="verbose_logging">Cofnod manwl (dadfygio; llinellau bob eiliad)</string>
+    <string name="profile_name">Enw\'r proffil</string>
+    <string name="profile_name_info">Enw proffil y cerbyd hwn. Mae pob proffil cerbyd Torque yn cael ei broffil ategyn, ei ddata a\'i fapiau dysgedig ei hun.</string>
+    <string name="make">Gwneuthuriad</string>
+    <string name="make_info">Gwneuthuriad y cerbyd (e.e. Ford). Dim ond i ddewis pa PID tanwydd y gwneuthuriad y gall y canfyddiad eu rhoi ar brawf y caiff ei ddefnyddio.</string>
+    <string name="fuel_source">Ffynhonnell tanwydd</string>
+    <string name="fuel_source_info">O ble y daw lefel amrwd y tanwydd. Mae Canfod (rhaid i\'r ECU fod wedi\'i gysylltu) yn rhoi\'r ymgeiswyr ar brawf i\'w darllen yn unig ac yn gofyn am gadarnhad os nad yw dwy ffynhonnell yn cytuno. Mae Cadarnhau ar y dudalen gosod ac yn yr hysbysiad. Dim = canfod ar y cysylltiad nesaf.</string>
+    <string name="custom_long_name">Enw hir personol</string>
+    <string name="custom_long_name_info">Ar gyfer y ffynhonnell „PID ychwanegol Torque yn ôl enw hir“ yn unig: enw hir union y PID Torque sy\'n adrodd y lefel.</string>
+    <string name="tank_size">Maint y tanc</string>
+    <string name="tank_hint">gwag = dim maint cychwyn; mae pob ffitiad yn dysgu ei faint ei hun.</string>
+    <string name="smoothing_tau">Llyfnhau τ mewn eiliadau</string>
+    <string name="smoothing_tau_info">Cysonyn amser yr hidlydd llyfnhau (0 = dim llyfnhau).</string>
+    <string name="max_skew" formatted="false">Gogwydd mwyaf %/s</string>
+    <string name="max_skew_info">Y newid mwyaf yr eiliad y gall y lefel lyfn ei ddilyn; anwybyddir siglo y tu hwnt i hynny.</string>
+    <string name="fill_jump" formatted="false">Naid llenwi %</string>
+    <string name="fill_jump_info">Cynnydd yn y lefel wrth sefyll sy\'n cyfrif fel llenwad.</string>
+    <string name="odometer">Odomedr mewn milltiroedd</string>
+    <string name="odometer_info">Dewisol: rhowch ddarlleniad yr odomedr a Chadw\'r angor i angori pellter y proffil hwn.</string>
+    <string name="additional_tanks">Tanciau ychwanegol</string>
+    <string name="active_tank">Tanc gweithredol</string>
+    <string name="active_tank_info">Y tanc y codir y defnydd (gal/hr) arno. O PID: mae PID Torque yn ei ddewis (dynodwr o 1).</string>
+    <string name="select_pid">Enw hir Select-PID</string>
+    <string name="select_pid_info">Dim ond pan fo Tanc gweithredol = O PID: enw hir y PID Torque y mae ei werth yn ddynodwr y tanc.</string>
+    <string name="tank_n">Tanc %1$d</string>
+    <string name="tank_n_source">Ffynhonnell tanwydd tanc %1$d</string>
+    <string name="tank_n_custom">Enw hir personol tanc %1$d (e.e. [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">Galwyni tanc %1$d</string>
+    <string name="from_pid">O PID</string>
+    <string name="unconfirmed"> (heb gadarnhau)</string>
+    <string name="ecu_connected"> · ECU wedi cysylltu</string>
+    <string name="tank_unknown">tanc ?</string>
+    <string name="about_field">Tua %1$s</string>
+    <string name="err_tau">0 i %1$s s</string>
+    <string name="err_skew">uwchlaw 0, %1$s %%/s ar y mwyaf</string>
+    <string name="err_jump">%1$s i %2$s %%</string>
+    <string name="err_tank">gwag neu rif uwchlaw 0</string>
+    <string name="err_stored">gwerth wedi\'i storio y tu allan i\'r amrediad</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">Llyfn %</string>
+    <string name="axis_error" formatted="false">Gwall (%)</string>
+    <string name="feed_off">I ffwrdd</string>
+    <string name="feed_smoothed" formatted="false">Llyfn %</string>
+    <string name="feed_corrected_chunk" formatted="false">Wedi\'i gywiro % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Wedi\'i gywiro % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Wedi\'i gywiro % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">Dim eto (Canfod wrth gysylltu)</string>
+    <string name="src_sae_012f">SAE 012F Fuel Tank Level</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler Fuel Level Average</string>
+    <string name="src_toyota_2129">Toyota cluster 2129 (cyfrif hanner litr)</string>
+    <string name="src_custom_name">PID ychwanegol Torque yn ôl enw hir</string>
+    <string name="vehicle_default">Cerbyd 1</string>
+    <string name="vehicle_dated">Cerbyd %1$s</string>
+    <string name="binding_torque">Yn cysylltu â Torque…</string>
+    <string name="status_waiting">Yn aros am ffynhonnell tanwydd</string>
+    <string name="status_raw">amrwd %1$.1f%%</string>
+    <string name="status_sess"> taith %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing tawel</string>
+    <string name="map_refit_title">Yn ailffitio\'r map</string>
+    <string name="map_refit_body">Mae Fuel Smoothing yn ailffitio map ar gyfer %1$s. Mae\'r ffitiad hwn yn darllen 1:1 nes i\'r ailffitio orffen.</string>
+    <string name="no_source_title">Nid oes ffynhonnell lefel tanwydd wedi\'i gosod</string>
+    <string name="no_source_body">Nid oes gan Fuel Smoothing ffynhonnell lefel tanwydd ar gyfer %1$s. Agorwch y dudalen gosod a thapio Canfod, neu dewiswch ffynhonnell.</string>
+    <string name="no_level_title">Dim lefel tanwydd ar y daith hon</string>
+    <string name="no_level_body">Ni roddodd %1$s lefel ddefnyddiadwy ar gyfer %2$s. Gwiriwch gysylltiad yr addasydd, neu redeg Canfod ar y dudalen gosod.</string>
+    <string name="source_found_title">Daethpwyd o hyd i ffynhonnell lefel tanwydd</string>
+    <string name="source_found_body">Yn defnyddio %1$s ar gyfer %2$s (%3$s).</string>
+    <string name="source_missing_title">Ni ddaethpwyd o hyd i ffynhonnell lefel tanwydd</string>
+    <string name="source_missing_body">Agorwch osodiad Fuel Smoothing a dewis ffynhonnell (neu ychwanegu\'r PID yn Torque), yna tapiwch Canfod.</string>
+    <string name="confirm_source_title">Cadarnhewch ffynhonnell lefel y tanwydd</string>
+    <string name="confirm_source_body">Canfuwyd %1$s, darlleniad %2$.0f %% ar gyfer %3$s. Gwiriwch ei fod yn cyfateb i fesurydd y dangosfwrdd, yna tapiwch Cadarnhau. Mae Cadarnhau ar y dudalen gosod ac yn yr hysbysiad (%4$s).</string>
+    <string name="confirm_source_body_nolevel">Canfuwyd %1$s ar gyfer %2$s. Gwiriwch ei fod yn cyfateb i fesurydd y dangosfwrdd, yna tapiwch Cadarnhau. Mae Cadarnhau ar y dudalen gosod ac yn yr hysbysiad (%3$s).</string>
+    <string name="recording_title">Yn recordio i %1$s</string>
+    <string name="recording_body">Y cerbyd hwn yw %1$s (%2$s), ond proffil Torque yw „%3$s“. Mae data\'n mynd i %1$s; tapiwch i agor Torque a newid proffil.</string>
+    <string name="wrong_vehicle_title">Proffil cerbyd anghywir?</string>
+    <string name="wrong_suggest_profile">Proffil Torque „%1$s“</string>
+    <string name="wrong_suggest_new">proffil cerbyd newydd</string>
+    <string name="wrong_vehicle_body">Nid yw proffil Torque „%1$s“ yn cyfateb i\'r cerbyd hwn (%2$s). Awgrym: %3$s. Cedwir data a\'i daflu ar ddiwedd y daith oni bai eich bod yn ei gadw.</string>
+    <string name="keeping_title">Yn cadw data\'r daith</string>
+    <string name="keeping_body">Bydd y daith hon yn cael ei chadw i %1$s. Ni all API ategyn Torque greu na newid proffiliau Torque: yn Torque, crëwch neu dewiswch broffil cerbyd o\'r enw „%2$s“.</string>
+    <string name="action_new_profile">Creu proffil newydd</string>
+    <string name="action_use">Defnyddio %1$s</string>
+</resources>

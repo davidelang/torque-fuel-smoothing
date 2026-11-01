@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">Arbatpinigiai yra Play Store versijoje</string>
+    <string name="help_body">Sparti pradžia\n
+1. Įdiekite Torque Pro (mokamą versiją; Torque Lite nepalaiko papildinių) ir susiekite OBD-II adapterį.\n
+2. Įjunkite šį papildinį per Torque → Nuostatos → Papildiniai.\n
+3. Leiskite pranešimus ir nustatykite akumuliatoriaus naudojimą į Neribojama, kad Torque galėtų paleisti šį papildinį fone.\n
+4. Torque programoje pasirinkite vairuojamo automobilio profilį. Duomenys saugomi pagal Torque profilį ir tikrinami pagal automobilio VIN/ECU tapatybę.\n
+5. Naujo profilio degalų šaltinis aptinkamas prisijungus; jei prašoma, palyginkite jį su prietaisų skydelio rodmeniu ir palieskite Patvirtinti. Patvirtinti yra sąrankos puslapyje ir pranešime. Galite pasirinkti ir žemiau.\n
+6. Bakos dydis yra Chunk pritaikymo pradinis dydis, kol jis išmoks savąjį. Papildinys jo niekada nekeičia; kiekvieno pritaikymo išmoktas dydis rodomas po juo.\n
+7. Torque programoje pridėkite rodmenis [FuelSmooth] Smoothed Fuel Level ir kiekvienam pritaikymui Corrected %, Remaining, DTE bei Tank size. DTE yra Remaining padaugintas iš Torque ilgalaikio mpg. Pranešimas pakartotinio pritaikymo metu sako, kad pritaikymas skaito 1:1, kol pritaikymas baigsis.\n
+8. Grąžinkite degalų lygį į Torque: Išjungta, išlyginta arba pataisyta iš Chunk, Band ar Kalman pritaikymo į 012F rodmenį.\n
+9. Degalai skaičiuojami tik veikiant varikliui. Papildinys veikia tik kai Torque prijungtas prie ECU.\n
+10. Važiuokite toliau ir pilkite degalus; tikslumas auga per kelias dalines bakas. Jei pasirodo pranešimas Neteisingas automobilio profilis?, pasirinkite, ką daryti su ta kelione.\n
+11. Visi duomenys lieka šiame telefone. GPS ir vieta neįrašomi.</string>
+    <string name="about_body">%1$s\nVersija %2$s (%3$s)\nPapildinys programai Torque Pro. Nesusijęs su Torque ar Ian Hawkins.\nVisi duomenys lieka šiame telefone; GPS ir vieta neįrašomi.\n\nLicencija\nCopyright David Lang. Visos teisės saugomos.</string>
+    <string name="open_source_notices">Atvirojo kodo bibliotekos\nŠi programa naudoja toliau nurodytas bibliotekas. Jų licencijos yra atskiros nuo pirmiau nurodytų autoriaus teisių.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), reikalauja Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">Visa instrukcija (internete)</string>
+    <string name="show_fuel_notification">Rodyti degalų lygį pranešime</string>
+    <string name="write_012f">Grąžinti degalų lygį į Torque (pakeičia 012F)</string>
+    <string name="running_quiet">Fuel Smoothing veikia</string>
+    <string name="tap_to_start">Palieskite, kad paleistumėte Fuel Smoothing</string>
+    <string name="tap_to_start_text">Paleidimas iš akumuliatoriaus arba fone atmestas. Atidarykite kartą, kad papildinys galėtų veikti su Torque.</string>
+    <string name="tank2_help">Prireikus pridėkite papildomų bakų (gamyklinė 1-a bakas visada lieka). Nejunkite jutiklių prie PCM FLI kaiščio (netikras pylimas). Kiekvienai papildomai bakai reikia savo Torque papildomo PID (MCU Mode 22, unikalus vardas — ne 012F ir ne Ford 16C1). Select-PID reikšmė yra bakos identifikatorius nuo 1. Gal/hr priskiriama tik aktyviai bakai.</string>
+    <string name="tap_start_channel">Palieskite, kad paleistumėte</string>
+    <string name="tank_size_info">Bakos dydis yra Chunk pritaikymo pradinis dydis, kol jis išmoks savąjį. Papildinys jo niekada nekeičia; kiekvieno pritaikymo išmoktas dydis rodomas po juo.</string>
+    <string name="feed_012f_info">Įrašo reikšmę į Torque gamyklinį Fuel Level (012F), kad esami rodmenys ją rodytų: Išjungta, išlyginta arba pataisyta iš Chunk, Band ar Kalman pritaikymo. Dar nesudarytas pritaikymas įrašo išlygintą lygį.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">dydžio dar nėra</string>
+    <string name="size_none_sd">dydžio dar nėra ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">Žinynas</string>
+    <string name="about">Apie</string>
+    <string name="need_torque">Reikia Torque Pro (mokama). Torque Lite nepalaiko papildinių.</string>
+    <string name="get_torque">Gauti Torque Pro</string>
+    <string name="privacy">Privatumas</string>
+    <string name="send_feedback">Siųsti atsiliepimą</string>
+    <string name="tip">Arbatpinigiai</string>
+    <string name="thanks">Ačiū</string>
+    <string name="close">Uždaryti</string>
+    <string name="ok">Gerai</string>
+    <string name="detect">Aptikti</string>
+    <string name="confirm">Patvirtinti</string>
+    <string name="save_pin">Įrašyti atramą</string>
+    <string name="add_tank">Pridėti baką</string>
+    <string name="remove">Pašalinti</string>
+    <string name="details">Išsamiau</string>
+    <string name="verbose_logging">Išsamus žurnalas (derinimas; eilutės kas sekundę)</string>
+    <string name="profile_name">Profilio pavadinimas</string>
+    <string name="profile_name_info">Šio automobilio profilio pavadinimas. Kiekvienas Torque automobilio profilis turi savo papildinio profilį, duomenis ir išmoktus žemėlapius.</string>
+    <string name="make">Markė</string>
+    <string name="make_info">Automobilio markė (pvz., Ford). Naudojama tik pasirinkti, kuriuos markės degalų PID aptikimas gali bandyti.</string>
+    <string name="fuel_source">Degalų šaltinis</string>
+    <string name="fuel_source_info">Iš kur ateina neapdorotas degalų lygis. Aptikti (ECU turi būti prijungtas) bando kandidatus tik skaitymui ir prašo patvirtinti, jei du šaltiniai nesutampa. Patvirtinti yra sąrankos puslapyje ir pranešime. Nėra = aptikti kitą kartą prisijungus.</string>
+    <string name="custom_long_name">Tinkintas ilgas vardas</string>
+    <string name="custom_long_name_info">Tik šaltiniui „Torque papildomas PID pagal ilgą vardą“: tikslus Torque PID, kuris praneša lygį, ilgas vardas.</string>
+    <string name="tank_size">Bakos dydis</string>
+    <string name="tank_hint">tuščia = nėra pradinio dydžio; kiekvienas pritaikymas išmoksta savąjį.</string>
+    <string name="smoothing_tau">Lyginimas τ sekundėmis</string>
+    <string name="smoothing_tau_info">Lyginimo filtro laiko konstanta (0 = be lyginimo).</string>
+    <string name="max_skew" formatted="false">Didž. posvyris %/s</string>
+    <string name="max_skew_info">Didžiausias pokytis per sekundę, kurį išlygintas lygis gali sekti; didesnis teliuskavimas ignoruojamas.</string>
+    <string name="fill_jump" formatted="false">Pylimo šuolis %</string>
+    <string name="fill_jump_info">Lygio kilimas stovint, kuris skaičiuojamas kaip pylimas.</string>
+    <string name="odometer">Odometras myliomis</string>
+    <string name="odometer_info">Nebūtina: įveskite odometro rodmenį ir Įrašyti atramą, kad įtvirtintumėte šio profilio atstumą.</string>
+    <string name="additional_tanks">Papildomos bakos</string>
+    <string name="active_tank">Aktyvi baka</string>
+    <string name="active_tank_info">Baka, kuriai priskiriamos sąnaudos (gal/hr). Iš PID: Torque PID ją pasirenka (identifikatorius nuo 1).</string>
+    <string name="select_pid">Select-PID ilgas vardas</string>
+    <string name="select_pid_info">Tik kai Aktyvi baka = Iš PID: Torque PID, kurio reikšmė yra bakos identifikatorius, ilgas vardas.</string>
+    <string name="tank_n">Baka %1$d</string>
+    <string name="tank_n_source">Bakos %1$d degalų šaltinis</string>
+    <string name="tank_n_custom">Bakos %1$d tinkintas ilgas vardas (pvz., [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">Bakos %1$d galonai</string>
+    <string name="from_pid">Iš PID</string>
+    <string name="unconfirmed"> (nepatvirtinta)</string>
+    <string name="ecu_connected"> · ECU prijungtas</string>
+    <string name="tank_unknown">baka ?</string>
+    <string name="about_field">Apie %1$s</string>
+    <string name="err_tau">0 iki %1$s s</string>
+    <string name="err_skew">daugiau nei 0, daugiausia %1$s %%/s</string>
+    <string name="err_jump">%1$s iki %2$s %%</string>
+    <string name="err_tank">tuščia arba skaičius didesnis už 0</string>
+    <string name="err_stored">įrašyta reikšmė už intervalo ribų</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">Išlyginta %</string>
+    <string name="axis_error" formatted="false">Paklaida (%)</string>
+    <string name="feed_off">Išjungta</string>
+    <string name="feed_smoothed" formatted="false">Išlyginta %</string>
+    <string name="feed_corrected_chunk" formatted="false">Pataisyta % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Pataisyta % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Pataisyta % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">Dar nėra (Aptikti prisijungus)</string>
+    <string name="src_sae_012f">SAE 012F Fuel Tank Level</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler Fuel Level Average</string>
+    <string name="src_toyota_2129">Toyota cluster 2129 (pusės litro skaičiai)</string>
+    <string name="src_custom_name">Torque papildomas PID pagal ilgą vardą</string>
+    <string name="vehicle_default">Automobilis 1</string>
+    <string name="vehicle_dated">Automobilis %1$s</string>
+    <string name="binding_torque">Jungiamasi prie Torque…</string>
+    <string name="status_waiting">Laukiama degalų šaltinio</string>
+    <string name="status_raw">neapdorota %1$.1f%%</string>
+    <string name="status_sess"> kelionė %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing tyliai</string>
+    <string name="map_refit_title">Žemėlapio pritaikymas iš naujo</string>
+    <string name="map_refit_body">Fuel Smoothing iš naujo pritaiko žemėlapį %1$s. Šis pritaikymas skaito 1:1, kol pritaikymas baigsis.</string>
+    <string name="no_source_title">Nenustatytas degalų lygio šaltinis</string>
+    <string name="no_source_body">Fuel Smoothing neturi degalų lygio šaltinio %1$s. Atidarykite sąrankos puslapį ir palieskite Aptikti arba pasirinkite šaltinį.</string>
+    <string name="no_level_title">Šioje kelionėje nėra degalų lygio</string>
+    <string name="no_level_body">%1$s nedavė tinkamo lygio %2$s. Patikrinkite adapterio ryšį arba paleiskite Aptikti sąrankos puslapyje.</string>
+    <string name="source_found_title">Rastas degalų lygio šaltinis</string>
+    <string name="source_found_body">Naudojama %1$s %2$s (%3$s).</string>
+    <string name="source_missing_title">Degalų lygio šaltinis nerastas</string>
+    <string name="source_missing_body">Atidarykite Fuel Smoothing sąranką ir pasirinkite šaltinį (arba pridėkite PID Torque programoje), tada palieskite Aptikti.</string>
+    <string name="confirm_source_title">Patvirtinkite degalų lygio šaltinį</string>
+    <string name="confirm_source_body">Aptikta %1$s, rodmuo %2$.0f %% %3$s. Patikrinkite, ar sutampa su prietaisų skydelio rodmeniu, ir palieskite Patvirtinti. Patvirtinti yra sąrankos puslapyje ir pranešime (%4$s).</string>
+    <string name="confirm_source_body_nolevel">Aptikta %1$s %2$s. Patikrinkite, ar sutampa su prietaisų skydelio rodmeniu, ir palieskite Patvirtinti. Patvirtinti yra sąrankos puslapyje ir pranešime (%3$s).</string>
+    <string name="recording_title">Įrašoma į %1$s</string>
+    <string name="recording_body">Šis automobilis yra %1$s (%2$s), bet Torque profilis yra „%3$s“. Duomenys keliauja į %1$s; palieskite, kad atidarytumėte Torque ir pakeistumėte profilį.</string>
+    <string name="wrong_vehicle_title">Neteisingas automobilio profilis?</string>
+    <string name="wrong_suggest_profile">Torque profilis „%1$s“</string>
+    <string name="wrong_suggest_new">naujas automobilio profilis</string>
+    <string name="wrong_vehicle_body">Torque profilis „%1$s“ neatitinka šio automobilio (%2$s). Pasiūlymas: %3$s. Duomenys laikomi ir kelionės pabaigoje atmetami, jei jų nepasiliekate.</string>
+    <string name="keeping_title">Kelionės duomenys paliekami</string>
+    <string name="keeping_body">Ši kelionė bus įrašyta į %1$s. Torque papildinio API negali kurti ar keisti Torque profilių: Torque programoje sukurkite arba pasirinkite automobilio profilį pavadinimu „%2$s“.</string>
+    <string name="action_new_profile">Sukurti naują profilį</string>
+    <string name="action_use">Naudoti %1$s</string>
+</resources>

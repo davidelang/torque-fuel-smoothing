@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">Þjórfé er í Play Store útgáfunni</string>
+    <string name="help_body">Fljótleg byrjun\n
+1. Settu upp Torque Pro (greidda útgáfan; Torque Lite styður ekki viðbætur) og paraðu OBD-II millistykkið.\n
+2. Virkjaðu þessa viðbót í Torque → Stillingar → Viðbætur.\n
+3. Leyfðu tilkynningar og stilltu rafhlöðunotkun á Ótakmarkað svo Torque geti ræst þessa viðbót í bakgrunni.\n
+4. Í Torque skaltu velja snið ökutækisins sem þú ekur. Gögn eru geymd eftir Torque sniði og borin saman við VIN/ECU auðkenni ökutækisins.\n
+5. Á nýju sniði greinist eldsneytisuppspretta við tengingu; ef beðið er, berðu hana saman við mæli mælaborðsins og ýttu á Staðfesta. Staðfesta er á uppsetningarsíðunni og í tilkynningunni. Þú getur líka valið hana hér fyrir neðan.\n
+6. Tankstærð er upphafsstærð Chunk aðlögunar þar til hún lærir sína eigin. Viðbótin breytir henni aldrei; lærð stærð hverrar aðlögunar birtist undir henni.\n
+7. Í Torque skaltu bæta við mælum fyrir [FuelSmooth] Smoothed Fuel Level og fyrir hverja aðlögun Corrected %, Remaining, DTE og Tank size. DTE er Remaining margfaldað með langtíma mpg í Torque. Tilkynning meðan enduraðlögun stendur segir að aðlögunin lesi 1:1 þar til enduraðlögun lýkur.\n
+8. Sendu eldsneytisstig til baka í Torque: Slökkt, sléttað eða leiðrétt úr Chunk, Band eða Kalman aðlögun á 012F mælinn.\n
+9. Eldsneyti er aðeins talið meðan vélin gengur. Viðbótin keyrir aðeins meðan Torque er tengt við ECU.\n
+10. Haltu áfram að aka og fylla á; nákvæmni eykst yfir nokkra hlutatanka. Ef tilkynningin Rangt ökutækjasnið? birtist skaltu velja hvað verður um þá ferð.\n
+11. Öll gögn eru áfram í þessum síma. Hvorki GPS né staðsetning er skráð.</string>
+    <string name="about_body">%1$s\nÚtgáfa %2$s (%3$s)\nViðbót fyrir Torque Pro. Ekki tengd Torque eða Ian Hawkins.\nÖll gögn eru áfram í þessum síma; hvorki GPS né staðsetning er skráð.\n\nLeyfi\nCopyright David Lang. Allur réttur áskilinn.</string>
+    <string name="open_source_notices">Opinn hugbúnaður\nÞetta forrit notar safnið hér að neðan. Leyfi þeirra eru aðskilin frá höfundarrétti hér að ofan.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), krafist af Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">Allur handbók (á netinu)</string>
+    <string name="show_fuel_notification">Sýna eldsneytisstig í tilkynningu</string>
+    <string name="write_012f">Senda eldsneytisstig til baka í Torque (yfirskrifar 012F)</string>
+    <string name="running_quiet">Fuel Smoothing er í gangi</string>
+    <string name="tap_to_start">Ýttu til að ræsa Fuel Smoothing</string>
+    <string name="tap_to_start_text">Ræsing af rafhlöðu eða í bakgrunni var hafnað. Opnaðu einu sinni svo viðbótin geti keyrt með Torque.</string>
+    <string name="tank2_help">Bættu við aukatönkum eftir þörfum (verksmiðjutankur 1 er alltaf eftir). Ekki tengja skynjara á PCM FLI pinnann (fölsk áfylling). Hver aukatankur þarf sinn eigin auka PID í Torque (MCU Mode 22, einkvæmt nafn — ekki 012F eða Ford 16C1). Gildi Select-PID er auðkenni tanksins frá 1. Gal/hr er aðeins fært á virka tankinn.</string>
+    <string name="tap_start_channel">Ýttu til að ræsa</string>
+    <string name="tank_size_info">Tankstærð er upphafsstærð Chunk aðlögunar þar til hún lærir sína eigin. Viðbótin breytir henni aldrei; lærð stærð hverrar aðlögunar birtist undir henni.</string>
+    <string name="feed_012f_info">Skrifar gildi á verksmiðju Fuel Level (012F) í Torque svo núverandi mælar sýni það: Slökkt, sléttað eða leiðrétt úr Chunk, Band eða Kalman aðlögun. Aðlögun sem er ekki enn byggð skrifar sléttaða stigið.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">engin stærð enn</string>
+    <string name="size_none_sd">engin stærð enn ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">Hjálp</string>
+    <string name="about">Um</string>
+    <string name="need_torque">Krefst Torque Pro (greitt). Torque Lite styður ekki viðbætur.</string>
+    <string name="get_torque">Sækja Torque Pro</string>
+    <string name="privacy">Persónuvernd</string>
+    <string name="send_feedback">Senda athugasemd</string>
+    <string name="tip">Þjórfé</string>
+    <string name="thanks">Takk</string>
+    <string name="close">Loka</string>
+    <string name="ok">Í lagi</string>
+    <string name="detect">Greina</string>
+    <string name="confirm">Staðfesta</string>
+    <string name="save_pin">Vista akkeri</string>
+    <string name="add_tank">Bæta við tanki</string>
+    <string name="remove">Fjarlægja</string>
+    <string name="details">Nánar</string>
+    <string name="verbose_logging">Ítarleg skráning (kembing; línur á hverri sekúndu)</string>
+    <string name="profile_name">Heiti sniðs</string>
+    <string name="profile_name_info">Heiti þessa ökutækjasniðs. Hvert Torque ökutækjasnið fær sitt viðbótarsnið, gögn og lærð kort.</string>
+    <string name="make">Tegund</string>
+    <string name="make_info">Tegund ökutækis (t.d. Ford). Notað aðeins til að velja hvaða tegundarbundna eldsneytis PID greining má reyna.</string>
+    <string name="fuel_source">Eldsneytisuppspretta</string>
+    <string name="fuel_source_info">Hvaðan hrátt eldsneytisstig kemur. Greina (ECU verður að vera tengt) reynir frambjóðendur aðeins til lesturs og biður um staðfestingu ef tvær uppsprettur stemma ekki. Staðfesta er á uppsetningarsíðunni og í tilkynningunni. Ekkert = greina við næstu tengingu.</string>
+    <string name="custom_long_name">Sérsniðið langt nafn</string>
+    <string name="custom_long_name_info">Aðeins fyrir uppsprettuna „Auka PID Torque eftir löngu nafni“: nákvæmt langt nafn þess Torque PID sem tilkynnir stigið.</string>
+    <string name="tank_size">Tankstærð</string>
+    <string name="tank_hint">tómt = engin upphafsstærð; hver aðlögun lærir sína eigin.</string>
+    <string name="smoothing_tau">Sléttun τ í sekúndum</string>
+    <string name="smoothing_tau_info">Tímastuðull sléttunarsíunnar (0 = engin sléttun).</string>
+    <string name="max_skew" formatted="false">Hámarkshalli %/s</string>
+    <string name="max_skew_info">Mesta breyting á sekúndu sem sléttaða stigið má fylgja; skvett yfir það er hunsað.</string>
+    <string name="fill_jump" formatted="false">Áfyllingarstökk %</string>
+    <string name="fill_jump_info">Hækkun stigs í kyrrstöðu sem telst áfylling.</string>
+    <string name="odometer">Kílómetramælir í mílum</string>
+    <string name="odometer_info">Valfrjálst: sláðu inn álestur mælisins og Vista akkeri til að festa vegalengd þessa sniðs.</string>
+    <string name="additional_tanks">Aukatankar</string>
+    <string name="active_tank">Virkur tankur</string>
+    <string name="active_tank_info">Tankurinn sem eyðslan (gal/hr) er færð á. Úr PID: Torque PID velur hann (auðkenni frá 1).</string>
+    <string name="select_pid">Langt nafn Select-PID</string>
+    <string name="select_pid_info">Aðeins þegar Virkur tankur = Úr PID: langt nafn þess Torque PID sem gildið er tankauðkenni.</string>
+    <string name="tank_n">Tankur %1$d</string>
+    <string name="tank_n_source">Eldsneytisuppspretta tanks %1$d</string>
+    <string name="tank_n_custom">Sérsniðið langt nafn tanks %1$d (t.d. [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">Gallon tanks %1$d</string>
+    <string name="from_pid">Úr PID</string>
+    <string name="unconfirmed"> (óstaðfest)</string>
+    <string name="ecu_connected"> · ECU tengt</string>
+    <string name="tank_unknown">tankur ?</string>
+    <string name="about_field">Um %1$s</string>
+    <string name="err_tau">0 til %1$s s</string>
+    <string name="err_skew">yfir 0, mest %1$s %%/s</string>
+    <string name="err_jump">%1$s til %2$s %%</string>
+    <string name="err_tank">tómt eða tala stærri en 0</string>
+    <string name="err_stored">vistað gildi utan bils</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">Sléttað %</string>
+    <string name="axis_error" formatted="false">Villa (%)</string>
+    <string name="feed_off">Slökkt</string>
+    <string name="feed_smoothed" formatted="false">Sléttað %</string>
+    <string name="feed_corrected_chunk" formatted="false">Leiðrétt % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Leiðrétt % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Leiðrétt % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">Ekkert enn (Greina við tengingu)</string>
+    <string name="src_sae_012f">SAE 012F Fuel Tank Level</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler Fuel Level Average</string>
+    <string name="src_toyota_2129">Toyota cluster 2129 (hálfs lítra talningar)</string>
+    <string name="src_custom_name">Auka PID Torque eftir löngu nafni</string>
+    <string name="vehicle_default">Ökutæki 1</string>
+    <string name="vehicle_dated">Ökutæki %1$s</string>
+    <string name="binding_torque">Tengist við Torque…</string>
+    <string name="status_waiting">Bíð eftir eldsneytisuppsprettu</string>
+    <string name="status_raw">hrátt %1$.1f%%</string>
+    <string name="status_sess"> ferð %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing hljótt</string>
+    <string name="map_refit_title">Enduraðlögun korts</string>
+    <string name="map_refit_body">Fuel Smoothing enduraðlagar kort fyrir %1$s. Þessi aðlögun les 1:1 þar til enduraðlögun lýkur.</string>
+    <string name="no_source_title">Engin uppspretta eldsneytisstigs sett</string>
+    <string name="no_source_body">Fuel Smoothing hefur enga uppsprettu eldsneytisstigs fyrir %1$s. Opnaðu uppsetningarsíðuna og ýttu á Greina, eða veldu uppsprettu.</string>
+    <string name="no_level_title">Ekkert eldsneytisstig á þessari ferð</string>
+    <string name="no_level_body">%1$s gaf ekkert nothæft stig fyrir %2$s. Athugaðu tengingu millistykkisins eða keyrðu Greina á uppsetningarsíðunni.</string>
+    <string name="source_found_title">Uppspretta eldsneytisstigs fannst</string>
+    <string name="source_found_body">Notar %1$s fyrir %2$s (%3$s).</string>
+    <string name="source_missing_title">Engin uppspretta eldsneytisstigs fannst</string>
+    <string name="source_missing_body">Opnaðu uppsetningu Fuel Smoothing og veldu uppsprettu (eða bættu PID við í Torque) og ýttu svo á Greina.</string>
+    <string name="confirm_source_title">Staðfestu uppsprettu eldsneytisstigs</string>
+    <string name="confirm_source_body">Greindist %1$s, álestur %2$.0f %% fyrir %3$s. Athugaðu að það stemmi við mæli mælaborðsins og ýttu á Staðfesta. Staðfesta er á uppsetningarsíðunni og í tilkynningunni (%4$s).</string>
+    <string name="confirm_source_body_nolevel">Greindist %1$s fyrir %2$s. Athugaðu að það stemmi við mæli mælaborðsins og ýttu á Staðfesta. Staðfesta er á uppsetningarsíðunni og í tilkynningunni (%3$s).</string>
+    <string name="recording_title">Skráir í %1$s</string>
+    <string name="recording_body">Þetta ökutæki er %1$s (%2$s), en snið Torque er „%3$s“. Gögn fara í %1$s; ýttu til að opna Torque og skipta um snið.</string>
+    <string name="wrong_vehicle_title">Rangt ökutækjasnið?</string>
+    <string name="wrong_suggest_profile">Torque snið „%1$s“</string>
+    <string name="wrong_suggest_new">nýtt ökutækjasnið</string>
+    <string name="wrong_vehicle_body">Torque snið „%1$s“ stemmir ekki við þetta ökutæki (%2$s). Tillaga: %3$s. Gögn eru geymd og hent í lok ferðar nema þú geymir þau.</string>
+    <string name="keeping_title">Gögn ferðarinnar geymd</string>
+    <string name="keeping_body">Þessi ferð verður vistuð í %1$s. API viðbótar Torque getur ekki búið til eða skipt um Torque snið: í Torque skaltu búa til eða velja ökutækjasnið sem heitir „%2$s“.</string>
+    <string name="action_new_profile">Búa til nýtt snið</string>
+    <string name="action_use">Nota %1$s</string>
+</resources>

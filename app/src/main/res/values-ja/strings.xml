@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">チップは Play Store 版にあります</string>
+    <string name="help_body">クイックスタート\n\nTorque Pro（有料版。Torque Lite はプラグインに対応していません）をインストールし、OBD-II アダプターをペアリングします。\n\nTorque → 設定 → プラグイン で、このプラグインを有効にします。\n\n通知を許可し、バッテリー使用量を制限なしにして、Torque がこのプラグインをバックグラウンドで起動できるようにします。\n\nTorque で、運転中の車両のプロファイルを選びます。データは Torque のプロファイルごとに保存され、車両の VIN/ECU 識別と照合されます。\n\n新しいプロファイルでは、接続時に燃料ソースが検出されます。尋ねられたら、計器の燃料計と比べて確認をタップします。確認は設定ページと通知にあります。下から選ぶこともできます。\n\nタンク容量は、Chunk のフィットが自分の容量を学ぶまでの初期値です。プラグインはそれを変えません。各フィットが学んだ容量はその下に表示されます。\n\nTorque に、[FuelSmooth] Smoothed Fuel Level と、各フィットの Corrected %、Remaining、DTE、Tank size のゲージを追加します。DTE は Remaining に Torque の長期 mpg を掛けた値です。再フィット中の通知は、再フィットが終わるまでそのフィットが 1:1 を示すと伝えます。\n\n燃料レベルを Torque に戻します。オフ、平滑、または Chunk、Band、Kalman のフィットからの補正を、012F のゲージへ送ります。\n\n燃料が数えられるのはエンジンが動いている間だけです。プラグインが動くのは、Torque が ECU に接続している間だけです。\n\n走りと給油を続けてください。精度は何回かの部分的なタンクで上がります。「車両プロファイルが違いますか？」という通知が出たら、その走行をどうするか選んでください。\n\nデータはすべてこの端末に残ります。GPS も位置も記録しません。</string>
+    <string name="about_body">%1$s\nバージョン %2$s (%3$s)\nTorque Pro 用のプラグインです。Torque および Ian Hawkins とは関係ありません。\nデータはすべてこの端末に残ります。GPS も位置も記録しません。\n\nライセンス\nCopyright David Lang. 無断転載を禁じます。</string>
+    <string name="open_source_notices">オープンソースライブラリ\nこのアプリは下のライブラリを使います。そのライセンスは上の著作権とは別です。\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), Play Billing が必要とするため\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">詳細マニュアル（オンライン）</string>
+    <string name="show_fuel_notification">通知に燃料レベルを表示する</string>
+    <string name="write_012f">燃料レベルを Torque に戻す（012F を上書き）</string>
+    <string name="running_quiet">Fuel Smoothing は動作中です</string>
+    <string name="tap_to_start">タップして Fuel Smoothing を開始</string>
+    <string name="tap_to_start_text">バッテリー／バックグラウンドでの開始が拒否されました。一度開くと、プラグインが Torque と一緒に動作できます。</string>
+    <string name="tank2_help">必要に応じてタンクを追加します（純正タンク 1 は常に残ります）。センサーを PCM FLI ピンに切り替えないでください（誤った給油になります）。追加タンクには、それぞれ独自の Torque 追加 PID（MCU Mode 22、一意の名前。012F でも Ford 16C1 でもない）が必要です。Select-PID の値は 1 から始まるタンク番号です。Gal/hr はアクティブなタンクにだけ計上されます。</string>
+    <string name="tap_start_channel">タップして開始</string>
+    <string name="tank_size_info">タンク容量は、Chunk のフィットが自分の容量を学ぶまでの初期値です。プラグインはそれを変えません。各フィットが学んだ容量はその下に表示されます。</string>
+    <string name="feed_012f_info">Torque の純正 Fuel Level (012F) に値を書き、既存のゲージに見せます。オフ、平滑、または Chunk、Band、Kalman のフィットからの補正です。まだできていないフィットは平滑レベルを書きます。</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">まだ容量なし</string>
+    <string name="size_none_sd">まだ容量なし ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">ヘルプ</string>
+    <string name="about">概要</string>
+    <string name="need_torque">Torque Pro（有料）が必要です。Torque Lite はプラグインに対応していません。</string>
+    <string name="get_torque">Torque Pro を入手</string>
+    <string name="privacy">プライバシー</string>
+    <string name="send_feedback">フィードバックを送る</string>
+    <string name="tip">チップ</string>
+    <string name="thanks">ありがとう</string>
+    <string name="close">閉じる</string>
+    <string name="ok">OK</string>
+    <string name="detect">検出</string>
+    <string name="confirm">確認</string>
+    <string name="save_pin">ピンを保存</string>
+    <string name="add_tank">タンクを追加</string>
+    <string name="remove">削除</string>
+    <string name="details">詳細</string>
+    <string name="verbose_logging">詳細ログ（デバッグ。1 秒ごとのログ行）</string>
+    <string name="profile_name">プロファイル名</string>
+    <string name="profile_name_info">この車両プロファイルの名前です。Torque の車両プロファイルごとに、プラグインのプロファイル、データ、学習したマップが分かれます。</string>
+    <string name="make">メーカー</string>
+    <string name="make_info">車両のメーカー（例: Ford）です。検出が試すメーカー別の燃料 PID を選ぶためだけに使います。</string>
+    <string name="fuel_source">燃料ソース</string>
+    <string name="fuel_source_info">生の燃料レベルの出どころです。検出（ECU の接続が必要）は候補を読み取り専用で試し、二つのソースが一致しない限り確認を求めます。確認は設定ページと通知にあります。なし = 次の接続で検出します。</string>
+    <string name="custom_long_name">カスタムの長い名前</string>
+    <string name="custom_long_name_info">ソース「長い名前で指定する Torque 追加 PID」だけの項目です。レベルを報告する Torque PID の長い名前を正確に入れます。</string>
+    <string name="tank_size">タンク容量</string>
+    <string name="tank_hint">空欄 = 初期容量なし。各フィットが自分で学びます。</string>
+    <string name="smoothing_tau">平滑化 τ 秒</string>
+    <string name="smoothing_tau_info">平滑化フィルタの時定数です（0 = 平滑化なし）。</string>
+    <string name="max_skew" formatted="false">最大スキュー %/s</string>
+    <string name="max_skew_info">平滑レベルが追従できる、1 秒あたりの最大変化です。これを超える揺れは無視します。</string>
+    <string name="fill_jump" formatted="false">給油ジャンプ %</string>
+    <string name="fill_jump_info">停車中のレベル上昇のうち、給油とみなす量です。</string>
+    <string name="odometer">オドメーター（マイル）</string>
+    <string name="odometer_info">任意です。オドメーターの値を入れてピンを保存すると、このプロファイルの距離の基準になります。</string>
+    <string name="additional_tanks">追加タンク</string>
+    <string name="active_tank">アクティブなタンク</string>
+    <string name="active_tank_info">消費 (gal/hr) をどのタンクに計上するかです。PID から: Torque の PID が選びます（タンク番号は 1 から）。</string>
+    <string name="select_pid">Select-PID の長い名前</string>
+    <string name="select_pid_info">アクティブなタンク = PID からのときだけ: 値がタンク番号である Torque PID の長い名前です。</string>
+    <string name="tank_n">タンク %1$d</string>
+    <string name="tank_n_source">タンク %1$d の燃料ソース</string>
+    <string name="tank_n_custom">タンク %1$d のカスタムの長い名前（例: [FuelSmooth] Tank%1$d Level）</string>
+    <string name="tank_n_gallons">タンク %1$d ガロン</string>
+    <string name="from_pid">PID から</string>
+    <string name="unconfirmed"> （未確認）</string>
+    <string name="ecu_connected"> · ECU 接続中</string>
+    <string name="tank_unknown">タンク ?</string>
+    <string name="about_field">%1$s について</string>
+    <string name="err_tau">0 から %1$s s</string>
+    <string name="err_skew">0 より大きく、最大 %1$s %%/s</string>
+    <string name="err_jump">%1$s から %2$s %%</string>
+    <string name="err_tank">空欄、または 0 より大きい数</string>
+    <string name="err_stored">保存された値が範囲外です</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">平滑 %</string>
+    <string name="axis_error" formatted="false">誤差 (%)</string>
+    <string name="feed_off">オフ</string>
+    <string name="feed_smoothed" formatted="false">平滑 %</string>
+    <string name="feed_corrected_chunk" formatted="false">補正 % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">補正 % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">補正 % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">まだなし（接続時に検出）</string>
+    <string name="src_sae_012f">SAE 012F タンクレベル</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler 燃料レベル平均</string>
+    <string name="src_toyota_2129">Toyota メーター 2129（half-litre counts）</string>
+    <string name="src_custom_name">長い名前で指定する Torque 追加 PID</string>
+    <string name="vehicle_default">車両 1</string>
+    <string name="vehicle_dated">車両 %1$s</string>
+    <string name="binding_torque">Torque に接続しています…</string>
+    <string name="status_waiting">燃料ソースを待っています</string>
+    <string name="status_raw">生 %1$.1f%%</string>
+    <string name="status_sess"> 走行 %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing 静音</string>
+    <string name="map_refit_title">マップを再フィット中</string>
+    <string name="map_refit_body">Fuel Smoothing は %1$s のマップを再フィットしています。再フィットが終わるまで、そのフィットは 1:1 を示します。</string>
+    <string name="no_source_title">燃料レベルのソースが未設定です</string>
+    <string name="no_source_body">Fuel Smoothing には %1$s の燃料レベルのソースがありません。設定ページを開いて検出をタップするか、ソースを選んでください。</string>
+    <string name="no_level_title">この走行には燃料レベルがありません</string>
+    <string name="no_level_body">%1$s は %2$s に使えるレベルを出しませんでした。アダプターの接続を確認するか、設定ページで検出を実行してください。</string>
+    <string name="source_found_title">燃料レベルのソースが見つかりました</string>
+    <string name="source_found_body">%2$s に %1$s を使っています（%3$s）。</string>
+    <string name="source_missing_title">燃料レベルのソースが見つかりません</string>
+    <string name="source_missing_body">Fuel Smoothing の設定を開き、ソースを選ぶか Torque に PID を追加してから、検出をタップしてください。</string>
+    <string name="confirm_source_title">燃料レベルのソースを確認</string>
+    <string name="confirm_source_body">%1$s を検出しました。%3$s の読みは %2$.0f %% です。計器の燃料計と合うか見てから確認をタップしてください。確認は設定ページと通知にあります（%4$s）。</string>
+    <string name="confirm_source_body_nolevel">%2$s について %1$s を検出しました。計器の燃料計と合うか見てから確認をタップしてください。確認は設定ページと通知にあります（%3$s）。</string>
+    <string name="recording_title">%1$s に記録中</string>
+    <string name="recording_body">この車両は %1$s（%2$s）ですが、Torque のプロファイルは「%3$s」です。データは %1$s に入ります。タップして Torque を開き、プロファイルを切り替えてください。</string>
+    <string name="wrong_vehicle_title">車両プロファイルが違いますか？</string>
+    <string name="wrong_suggest_profile">Torque プロファイル「%1$s」</string>
+    <string name="wrong_suggest_new">新しい車両プロファイル</string>
+    <string name="wrong_vehicle_body">Torque プロファイル「%1$s」はこの車両（%2$s）と一致しません。提案: %3$s。データは保持され、残さない限り走行の終わりに破棄されます。</string>
+    <string name="keeping_title">走行データを残します</string>
+    <string name="keeping_body">この走行は %1$s に保存されます。Torque のプラグイン API は Torque のプロファイルを作成したり切り替えたりできません。Torque で「%2$s」という名前の車両プロファイルを作成または選択してください。</string>
+    <string name="action_new_profile">新しいプロファイルを作成</string>
+    <string name="action_use">%1$s を使う</string>
+</resources>

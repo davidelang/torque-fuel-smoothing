@@ -2,6 +2,7 @@ package com.davidlang.torque.fuelsmoothing
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.annotation.StringRes
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -10,8 +11,6 @@ internal data class ExtraTank(
     val sourceId: String = FixFuelPrefs.DEFAULT_SOURCE_T2,
     val customName: String = "",
     val tankGal: Double? = null,
-    val learnedUsable: Double? = null,
-    val tankEstimated: Boolean = false,
     val sourceStatus: String = "",
 )
 
@@ -23,8 +22,6 @@ internal data class FixFuelConfig(
     val skewPctPerSec: Double,
     val jumpPct: Double,
     val tankGal: Double?,
-    val learnedUsable: Double?,
-    val tankEstimated: Boolean,
     val sourceStatus: String,
     val extras: List<ExtraTank> = emptyList(),
     val activeTank: String = FixFuelPrefs.ACTIVE_TANK1,
@@ -42,8 +39,6 @@ internal data class FixFuelConfig(
     val sourceId2: String get() = extra2?.sourceId ?: FixFuelPrefs.DEFAULT_SOURCE_T2
     val customName2: String get() = extra2?.customName ?: ""
     val tankGal2: Double? get() = extra2?.tankGal
-    val learnedUsable2: Double? get() = extra2?.learnedUsable
-    val tankEstimated2: Boolean get() = extra2?.tankEstimated ?: false
     val sourceStatus2: String get() = extra2?.sourceStatus ?: ""
 
     fun extra(id: Int): ExtraTank? = extras.firstOrNull { it.id == id }
@@ -57,16 +52,12 @@ internal object FixFuelPrefs {
     const val KEY_SKEW = "skew_pct_per_sec"
     const val KEY_JUMP = "jump_pct"
     const val KEY_TANK = "tank_gal"
-    const val KEY_LEARNED = "learned_usable"
-    const val KEY_ESTIMATED = "tank_estimated"
     const val KEY_STATUS = "source_status"
     const val KEY_LIVE = "live_status"
     const val KEY_T2_ON = "tank2_enabled"
     const val KEY_SOURCE2 = "source_id_2"
     const val KEY_CUSTOM2 = "custom_name_2"
     const val KEY_TANK2 = "tank_gal_2"
-    const val KEY_LEARNED2 = "learned_usable_2"
-    const val KEY_ESTIMATED2 = "tank_estimated_2"
     const val KEY_STATUS2 = "source_status_2"
     const val KEY_ACTIVE = "active_tank"
     const val KEY_SELECT_PID = "select_pid_name"
@@ -96,12 +87,6 @@ internal object FixFuelPrefs {
         FeedMode.CORRECTED_KALMAN -> (kalmanPct?.takeIf { it.isFinite() } ?: smoothedPct?.takeIf { it.isFinite() })
     }
 
-    /** Value written to 012F, or null for no write. */
-    fun feedValue(mode: FeedMode, smoothedPct: Double?, correctedPct: Double?): Double? = when (mode) {
-        FeedMode.OFF -> null
-        FeedMode.SMOOTHED -> smoothedPct?.takeIf { it.isFinite() }
-        else -> correctedPct?.takeIf { it.isFinite() }
-    }
     const val KEY_FILL_ANCHOR = "fill_anchor_gal"
     const val KEY_SINCE_FILL = "since_fill_used_gal"
 
@@ -179,7 +164,7 @@ internal object FixFuelPrefs {
                 ProfileStore.setTankEntered(root, pid, legacy)
             }
         }
-        val (profTank, profEst) = ProfileStore.tankGuess(root, pid)
+        val profTank = ProfileStore.tankGuess(root, pid)
         val tankRaw = profTank ?: ""
         val tank = tankRaw.toDoubleOrNull()?.takeIf { it.isFinite() && it > 0.0 }
         if (!tankOk(tankRaw)) {
@@ -187,8 +172,6 @@ internal object FixFuelPrefs {
             android.util.Log.w("FuelSmooth", "stored $KEY_TANK=\"$tankRaw\" is invalid; treated as no tank guess")
         }
         val src = FuelDetect.load(root, pid)
-        val learnedRaw = p.getString(KEY_LEARNED, "") ?: ""
-        val learned = learnedRaw.toDoubleOrNull()?.takeIf { it > 0.0 }
         return FixFuelConfig(
             sourceId = src.first,
             sourceConfirmed = src.second,
@@ -197,8 +180,6 @@ internal object FixFuelPrefs {
             skewPctPerSec = checked(p, KEY_SKEW, DEFAULT_SKEW, ::skewOk, invalid),
             jumpPct = checked(p, KEY_JUMP, DEFAULT_JUMP, ::jumpOk, invalid),
             tankGal = tank,
-            learnedUsable = learned,
-            tankEstimated = profEst,
             sourceStatus = p.getString(KEY_STATUS, "") ?: "",
             extras = parseExtras(p.getString(KEY_EXTRAS, "[]") ?: "[]"),
             activeTank = normalizeActive(p.getString(KEY_ACTIVE, ACTIVE_TANK1) ?: ACTIVE_TANK1),
@@ -237,7 +218,7 @@ internal object FixFuelPrefs {
         // Per profile. A value typed by the user is a guess, not a learned estimate (unchanged value keeps the flag).
         val root = ctx.filesDir
         val pid = ProfileStore.activeId(root)
-        val oldTank = ProfileStore.tankGuess(root, pid).first?.toDoubleOrNull()
+        val oldTank = ProfileStore.tankGuess(root, pid)?.toDoubleOrNull()
         val newRaw = if (tankGal != null && tankGal.isFinite() && tankGal > 0.0) tankGal.toString() else ""
         if (oldTank == null || tankGal == null || kotlin.math.abs(oldTank - tankGal) >= 0.05) ProfileStore.setTankEntered(root, pid, newRaw)
         e.putString(KEY_EXTRAS, extrasToJson(extras))
@@ -328,12 +309,9 @@ internal object FixFuelPrefs {
                 .put("id", t.id)
                 .put("sourceId", t.sourceId)
                 .put("customName", t.customName)
-                .put("estimated", t.tankEstimated)
                 .put("sourceStatus", t.sourceStatus)
             if (t.tankGal != null && t.tankGal > 0.0) o.put("tankGal", t.tankGal)
             else o.put("tankGal", "")
-            if (t.learnedUsable != null && t.learnedUsable > 0.0) o.put("learnedUsable", t.learnedUsable)
-            else o.put("learnedUsable", "")
             arr.put(o)
         }
         return arr.toString()
@@ -352,9 +330,6 @@ internal object FixFuelPrefs {
                     customName = o.optString("customName", ""),
                     tankGal = o.optString("tankGal", "").toDoubleOrNull()?.takeIf { it > 0.0 }
                         ?: o.optDouble("tankGal", Double.NaN).takeIf { it.isFinite() && it > 0.0 },
-                    learnedUsable = o.optString("learnedUsable", "").toDoubleOrNull()?.takeIf { it > 0.0 }
-                        ?: o.optDouble("learnedUsable", Double.NaN).takeIf { it.isFinite() && it > 0.0 },
-                    tankEstimated = false.also { o.optBoolean("estimated", false) },
                     sourceStatus = o.optString("sourceStatus", ""),
                 )
             }.distinctBy { it.id }.sortedBy { it.id }
@@ -373,18 +348,18 @@ internal object FixFuelPrefs {
 
 /** Feed-back of fuel level into Torque's 012F slot. */
 /** Names are persisted (R8 keeps them): CORRECTED stays the Chunk feed; Band/Kalman added. */
-enum class FeedMode(val label: String) {
-    OFF("Off"),
-    SMOOTHED("Smoothed %"),
-    CORRECTED("Corrected % (Chunk)"),
-    CORRECTED_BAND("Corrected % (Band)"),
-    CORRECTED_KALMAN("Corrected % (Kalman)"),
+enum class FeedMode(@StringRes val label: Int) {
+    OFF(R.string.feed_off),
+    SMOOTHED(R.string.feed_smoothed),
+    CORRECTED(R.string.feed_corrected_chunk),
+    CORRECTED_BAND(R.string.feed_corrected_band),
+    CORRECTED_KALMAN(R.string.feed_corrected_kalman),
 }
 
 /** Tank size entry/display unit (per profile, profile.json "tankUnit"). Stored values are always gallons. */
-enum class VolUnit(val label: String, val litersPer: Double) {
-    GAL("gal", 3.785411784),
-    L("L", 1.0);
+enum class VolUnit(@StringRes val label: Int, val litersPer: Double) {
+    GAL(R.string.unit_gal, 3.785411784),
+    L(R.string.unit_l, 1.0);
 
     fun toGal(v: Double): Double = v * litersPer / GAL.litersPer
     fun fromGal(g: Double): Double = g * GAL.litersPer / litersPer
@@ -393,7 +368,5 @@ enum class VolUnit(val label: String, val litersPer: Double) {
         fun of(s: String?): VolUnit = entries.firstOrNull { it.name == s } ?: GAL
         /** Text for the entry field: one decimal, blank when unknown. */
         fun show(gal: Double?, u: VolUnit): String = gal?.takeIf { it.isFinite() && it > 0 }?.let { String.format(java.util.Locale.ROOT, "%.1f", u.fromGal(it)) } ?: ""
-        /** Shown when the tank size is blank. */
-        const val FALLBACK_HINT = "blank = no starting size; each fit learns its own."
     }
 }

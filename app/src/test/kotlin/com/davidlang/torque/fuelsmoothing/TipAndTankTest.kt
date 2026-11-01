@@ -43,20 +43,14 @@ class TipAndTankTest {
     @Test
     fun test42TankSizeIsPerProfile() {
         val root = Files.createTempDirectory("tank").toFile()
-        ProfileStore.migrate(root, null, null, 1L)
+        ProfileStore.migrate(root, null, null, "Vehicle 1", 1L)
         val other = ProfileStore.createProfile(root, "Car", 2L)
         ProfileStore.setTankEntered(root, "default", "35")
-        assertEquals("35" to false, ProfileStore.tankGuess(root, "default"))
-        assertEquals(null to false, ProfileStore.tankGuess(root, other))
-        // Learned capacity replaces the guess for that profile only; tiny changes are not rewritten.
-        assertTrue(ProfileStore.setTankGuess(root, "default", 32.03, true))
-        assertEquals("32.0" to true, ProfileStore.tankGuess(root, "default"))
-        assertFalse(ProfileStore.setTankGuess(root, "default", 32.04, true))
-        assertTrue(ProfileStore.setTankGuess(root, other, 13.2, false))
-        assertEquals("32.0" to true, ProfileStore.tankGuess(root, "default"))
-        // Typing a value marks it as entered (not learned).
+        assertEquals("35", ProfileStore.tankGuess(root, "default"))
+        assertEquals(null, ProfileStore.tankGuess(root, other))
+        ProfileStore.setTankEntered(root, other, "13.2")
         ProfileStore.setTankEntered(root, "default", "34.5")
-        assertEquals("34.5" to false, ProfileStore.tankGuess(root, "default"))
-        assertEquals("13.2" to false, ProfileStore.tankGuess(root, other))
+        assertEquals("34.5", ProfileStore.tankGuess(root, "default"))
+        assertEquals("13.2", ProfileStore.tankGuess(root, other))
     }
 }

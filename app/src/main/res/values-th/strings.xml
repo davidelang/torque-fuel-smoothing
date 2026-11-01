@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">เคล็ดลับอยู่บนรุ่น Play Store</string>
+    <string name="help_body">เริ่มต้นอย่างเร็ว\n
+1. ติดตั้ง Torque Pro (รุ่นที่ต้องซื้อ Torque Lite ไม่รองรับปลั๊กอิน) และจับคู่อะแดปเตอร์ OBD-II.\n
+2. เปิดปลั๊กอินนี้ใน Torque → การตั้งค่า → Plugins.\n
+3. อนุญาตการแจ้งเตือน และตั้งการใช้แบตเตอรี่เป็นไม่จำกัด เพื่อให้ Torque เริ่มปลั๊กอินนี้ในพื้นหลังได้.\n
+4. ใน Torque เลือกโปรไฟล์รถที่คุณขับ ข้อมูลถูกเก็บตามโปรไฟล์ Torque และตรวจกับตัวตน VIN/ECU ของรถ.\n
+5. บนโปรไฟล์ใหม่ แหล่งน้ำมันถูกตรวจเมื่อเชื่อมต่อ ถ้าถูกถาม ให้เทียบกับเกจ์แผงหน้าปัดแล้วแตะยืนยัน ยืนยันอยู่ที่หน้าตั้งค่าและในการแจ้งเตือน คุณเลือกด้านล่างได้ด้วย.\n
+6. ขนาดถังคือขนาดเริ่มต้นของฟิต Chunk จนกว่ามันจะเรียนรู้ของตัวเอง ปลั๊กอินไม่เปลี่ยนค่านั้น ขนาดที่แต่ละฟิตเรียนรู้แสดงอยู่ใต้ฟิตนั้น.\n
+7. ใน Torque เพิ่มเกจ์สำหรับ [FuelSmooth] Smoothed Fuel Level และ Corrected %, Remaining, DTE กับ Tank size ของแต่ละฟิต DTE คือ Remaining คูณ mpg ระยะยาวของ Torque ประกาศระหว่างรีฟิตบอกว่าฟิตนั้นอ่าน 1:1 จนกว่ารีฟิตจะเสร็จ.\n
+8. ส่งระดับน้ำมันกลับไป Torque: ปิด ทำให้เรียบ หรือแก้จากฟิต Chunk, Band หรือ Kalman ไปยังเกจ์ 012F.\n
+9. นับน้ำมันเฉพาะตอนเครื่องยนต์ทำงาน ปลั๊กอินทำงานเฉพาะตอน Torque เชื่อมต่อกับ ECU.\n
+10. ขับและเติมต่อไป ความแม่นยำเพิ่มจากถังบางส่วนหลายครั้ง ถ้ามีการแจ้งเตือนโปรไฟล์รถผิด? ให้เลือกว่าจะทำอย่างไรกับการขับนั้น.\n
+11. ข้อมูลทั้งหมดอยู่บนโทรศัพท์นี้ ไม่บันทึก GPS หรือตำแหน่ง.</string>
+    <string name="about_body">%1$s\nรุ่น %2$s (%3$s)\nปลั๊กอินสำหรับ Torque Pro ไม่ได้เกี่ยวข้องกับ Torque หรือ Ian Hawkins.\nข้อมูลทั้งหมดอยู่บนโทรศัพท์นี้ ไม่บันทึก GPS หรือตำแหน่ง.\n\nสัญญาอนุญาต\nCopyright David Lang. สงวนลิขสิทธิ์.</string>
+    <string name="open_source_notices">ไลบรารีโอเพนซอร์ส\nแอปนี้ใช้ไลบรารีด้านล่าง สัญญาอนุญาตของไลบรารีแยกจากลิขสิทธิ์ด้านบน.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), จำเป็นสำหรับ Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">คู่มือฉบับเต็ม (ออนไลน์)</string>
+    <string name="show_fuel_notification">แสดงระดับน้ำมันในการแจ้งเตือน</string>
+    <string name="write_012f">ส่งระดับน้ำมันกลับไป Torque (แทนที่ 012F)</string>
+    <string name="running_quiet">Fuel Smoothing กำลังทำงาน</string>
+    <string name="tap_to_start">แตะเพื่อเริ่ม Fuel Smoothing</string>
+    <string name="tap_to_start_text">การเริ่มจากแบตเตอรี่หรือพื้นหลังถูกปฏิเสธ เปิดครั้งหนึ่งเพื่อให้ปลั๊กอินทำงานกับ Torque.</string>
+    <string name="tank2_help">เพิ่มถังตามต้องการ (ถังโรงงาน 1 อยู่เสมอ) อย่าสลับตัวส่งไปที่พิน PCM FLI (เติมปลอม) แต่ละถังเพิ่มต้องมี PID เพิ่มของ Torque ของตัวเอง (MCU Mode 22 ชื่อไม่ซ้ำ ไม่ใช่ 012F หรือ Ford 16C1) ค่า Select-PID คือรหัสถังเริ่มที่ 1 Gal/hr คิดเฉพาะถังที่ใช้งาน.</string>
+    <string name="tap_start_channel">แตะเพื่อเริ่ม</string>
+    <string name="tank_size_info">ขนาดถังคือขนาดเริ่มต้นของฟิต Chunk จนกว่ามันจะเรียนรู้ของตัวเอง ปลั๊กอินไม่เปลี่ยนค่านั้น ขนาดที่แต่ละฟิตเรียนรู้แสดงอยู่ใต้ฟิตนั้น.</string>
+    <string name="feed_012f_info">เขียนค่าลง Fuel Level โรงงานของ Torque (012F) เพื่อให้เกจ์เดิมแสดง: ปิด ทำให้เรียบ หรือแก้จากฟิต Chunk, Band หรือ Kalman ฟิตที่ยังไม่สร้างจะเขียนระดับที่ทำให้เรียบ.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">ยังไม่มีขนาด</string>
+    <string name="size_none_sd">ยังไม่มีขนาด ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">ช่วยเหลือ</string>
+    <string name="about">เกี่ยวกับ</string>
+    <string name="need_torque">ต้องใช้ Torque Pro (แบบซื้อ) Torque Lite ไม่รองรับปลั๊กอิน.</string>
+    <string name="get_torque">รับ Torque Pro</string>
+    <string name="privacy">ความเป็นส่วนตัว</string>
+    <string name="send_feedback">ส่งความคิดเห็น</string>
+    <string name="tip">ทิป</string>
+    <string name="thanks">ขอบคุณ</string>
+    <string name="close">ปิด</string>
+    <string name="ok">OK</string>
+    <string name="detect">ตรวจหา</string>
+    <string name="confirm">ยืนยัน</string>
+    <string name="save_pin">บันทึกหมุด</string>
+    <string name="add_tank">เพิ่มถังเพิ่มเติม</string>
+    <string name="remove">นำออก</string>
+    <string name="details">รายละเอียด</string>
+    <string name="verbose_logging">บันทึกละเอียด (ดีบัก บรรทัดทุกวินาที)</string>
+    <string name="profile_name">ชื่อโปรไฟล์</string>
+    <string name="profile_name_info">ชื่อโปรไฟล์รถนี้ โปรไฟล์รถ Torque แต่ละอันได้โปรไฟล์ปลั๊กอิน ข้อมูล และแผนที่ที่เรียนรู้ของตัวเอง.</string>
+    <string name="make">ยี่ห้อ</string>
+    <string name="make_info">ยี่ห้อรถ (เช่น Ford) ใช้เลือกเพียงว่าการตรวจหาจะลอง PID น้ำมันเฉพาะยี่ห้อใด.</string>
+    <string name="fuel_source">แหล่งน้ำมัน</string>
+    <string name="fuel_source_info">ระดับน้ำมันดิบมาจากที่ใด ตรวจหา (ต้องเชื่อมต่อ ECU) อ่านผู้สมัครแบบอ่านอย่างเดียว และขอให้ยืนยันถ้าสองแหล่งไม่ตรงกัน ยืนยันอยู่ที่หน้าตั้งค่าและในการแจ้งเตือน ไม่มี = ตรวจหาในการเชื่อมต่อครั้งถัดไป.</string>
+    <string name="custom_long_name">ชื่อยาวกำหนดเอง</string>
+    <string name="custom_long_name_info">เฉพาะแหล่ง Torque extra PID by long name: ชื่อยาวที่ตรงของ PID Torque ที่รายงานระดับ.</string>
+    <string name="tank_size">ขนาดถัง</string>
+    <string name="tank_hint">ว่าง = ไม่มีขนาดเริ่มต้น แต่ละฟิตเรียนรู้ของตัวเอง.</string>
+    <string name="smoothing_tau">การทำให้เรียบ τ วินาที</string>
+    <string name="smoothing_tau_info">ค่าคงที่เวลาของตัวกรองการทำให้เรียบ (0 = ไม่ทำให้เรียบ).</string>
+    <string name="max_skew" formatted="false">ความเอียงสูงสุด %/s</string>
+    <string name="max_skew_info">การเปลี่ยนแปลงต่อวินาทีที่มากที่สุดที่ระดับที่ทำให้เรียบตามได้ การกระเพื่อมเกินนี้ถูกละเว้น.</string>
+    <string name="fill_jump" formatted="false">การกระโดดตอนเติม %</string>
+    <string name="fill_jump_info">ระดับที่สูงขึ้นขณะหยุด ซึ่งนับเป็นการเติม.</string>
+    <string name="odometer">ไมล์มาตรวัดระยะ</string>
+    <string name="odometer_info">ไม่บังคับ: ใส่ค่ามาตรวัดระยะแล้วบันทึกหมุด เพื่อยึดระยะทางของโปรไฟล์นี้.</string>
+    <string name="additional_tanks">ถังเพิ่มเติม</string>
+    <string name="active_tank">ถังที่ใช้งาน</string>
+    <string name="active_tank_info">การเผาผลาญน้ำมัน (gal/hr) คิดเข้าถังใด จาก PID: PID ของ Torque เลือกถัง (รหัสถังเริ่มที่ 1).</string>
+    <string name="select_pid">ชื่อยาว Select-PID</string>
+    <string name="select_pid_info">เฉพาะเมื่อถังที่ใช้งาน = จาก PID: ชื่อยาวของ PID Torque ที่ค่าเป็นรหัสถัง.</string>
+    <string name="tank_n">ถัง %1$d</string>
+    <string name="tank_n_source">แหล่งน้ำมันถัง %1$d</string>
+    <string name="tank_n_custom">ชื่อยาวกำหนดเองของถัง %1$d (เช่น [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">แกลลอนถัง %1$d</string>
+    <string name="from_pid">จาก PID</string>
+    <string name="unconfirmed"> (ยังไม่ยืนยัน)</string>
+    <string name="ecu_connected"> · ECU เชื่อมต่อแล้ว</string>
+    <string name="tank_unknown">ถัง ?</string>
+    <string name="about_field">เกี่ยวกับ %1$s</string>
+    <string name="err_tau">0 ถึง %1$s s</string>
+    <string name="err_skew">มากกว่า 0 ไม่เกิน %1$s %%/s</string>
+    <string name="err_jump">%1$s ถึง %2$s %%</string>
+    <string name="err_tank">ว่าง หรือตัวเลขมากกว่า 0</string>
+    <string name="err_stored">ค่าที่เก็บอยู่นอกช่วง</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">ทำให้เรียบ %</string>
+    <string name="axis_error" formatted="false">ค่าคลาดเคลื่อน (%)</string>
+    <string name="feed_off">ปิด</string>
+    <string name="feed_smoothed" formatted="false">ทำให้เรียบ %</string>
+    <string name="feed_corrected_chunk" formatted="false">Corrected % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Corrected % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Corrected % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">ยังไม่มี (ตรวจหาทำงานตอนเชื่อมต่อ)</string>
+    <string name="src_sae_012f">SAE 012F Fuel Tank Level</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler Fuel Level Average</string>
+    <string name="src_toyota_2129">Toyota cluster 2129 (half-litre counts)</string>
+    <string name="src_custom_name">Torque extra PID by long name</string>
+    <string name="vehicle_default">รถ 1</string>
+    <string name="vehicle_dated">รถ %1$s</string>
+    <string name="binding_torque">กำลังเชื่อมกับ Torque…</string>
+    <string name="status_waiting">กำลังรอแหล่งน้ำมัน</string>
+    <string name="status_raw">ดิบ %1$.1f%%</string>
+    <string name="status_sess"> เซสชัน %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing เงียบ</string>
+    <string name="map_refit_title">กำลังรีฟิตแผนที่</string>
+    <string name="map_refit_body">Fuel Smoothing กำลังรีฟิตแผนที่สำหรับ %1$s ฟิตนั้นอ่าน 1:1 จนกว่ารีฟิตจะเสร็จ.</string>
+    <string name="no_source_title">ยังไม่ได้ตั้งแหล่งระดับน้ำมัน</string>
+    <string name="no_source_body">Fuel Smoothing ไม่มีแหล่งระดับน้ำมันสำหรับ %1$s เปิดหน้าตั้งค่าแล้วแตะตรวจหา หรือเลือกแหล่ง.</string>
+    <string name="no_level_title">ไม่มีการอ่านระดับน้ำมันในการขับนี้</string>
+    <string name="no_level_body">%1$s ไม่ได้ให้ระดับที่ใช้ได้สำหรับ %2$s ตรวจการเชื่อมต่ออะแดปเตอร์ หรือรันตรวจหาที่หน้าตั้งค่า.</string>
+    <string name="source_found_title">พบแหล่งระดับน้ำมัน</string>
+    <string name="source_found_body">ใช้ %1$s สำหรับ %2$s (%3$s).</string>
+    <string name="source_missing_title">ไม่พบแหล่งระดับน้ำมัน</string>
+    <string name="source_missing_body">เปิดการตั้งค่า Fuel Smoothing แล้วเลือกแหล่ง (หรือเพิ่ม PID ใน Torque) จากนั้นแตะตรวจหา.</string>
+    <string name="confirm_source_title">ยืนยันแหล่งระดับน้ำมัน</string>
+    <string name="confirm_source_body">ตรวจพบ %1$s อ่านได้ %2$.0f %% สำหรับ %3$s ตรวจว่าตรงกับเกจ์น้ำมันแผงหน้าปัด แล้วแตะยืนยัน ยืนยันอยู่ที่หน้าตั้งค่าและในการแจ้งเตือน (%4$s).</string>
+    <string name="confirm_source_body_nolevel">ตรวจพบ %1$s สำหรับ %2$s ตรวจว่าตรงกับเกจ์น้ำมันแผงหน้าปัด แล้วแตะยืนยัน ยืนยันอยู่ที่หน้าตั้งค่าและในการแจ้งเตือน (%3$s).</string>
+    <string name="recording_title">กำลังบันทึกไปที่ %1$s</string>
+    <string name="recording_body">รถคันนี้คือ %1$s (%2$s) แต่โปรไฟล์ Torque คือ \'%3$s\' ข้อมูลไปที่ %1$s แตะเพื่อเปิด Torque และสลับโปรไฟล์.</string>
+    <string name="wrong_vehicle_title">โปรไฟล์รถผิดหรือไม่?</string>
+    <string name="wrong_suggest_profile">โปรไฟล์ Torque \'%1$s\'</string>
+    <string name="wrong_suggest_new">โปรไฟล์รถใหม่</string>
+    <string name="wrong_vehicle_body">โปรไฟล์ Torque \'%1$s\' ไม่ตรงกับรถคันนี้ (%2$s) แนะนำ: %3$s ข้อมูลถูกพักไว้และทิ้งเมื่อจบการขับ เว้นแต่คุณจะเก็บไว้.</string>
+    <string name="keeping_title">กำลังเก็บข้อมูลการขับ</string>
+    <string name="keeping_body">การขับนี้จะถูกบันทึกไปที่ %1$s API ปลั๊กอินของ Torque สร้างหรือสลับโปรไฟล์ Torque ไม่ได้ ใน Torque ให้สร้างหรือเลือกโปรไฟล์รถชื่อ \'%2$s\'.</string>
+    <string name="action_new_profile">สร้างโปรไฟล์ใหม่</string>
+    <string name="action_use">ใช้ %1$s</string>
+</resources>

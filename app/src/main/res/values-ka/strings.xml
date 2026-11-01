@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">რჩევები Play Store-ის ვერსიაშია</string>
+    <string name="help_body">სწრაფი დასაწყისი\n
+1. დააყენეთ Torque Pro (ფასიანი ვერსია. Torque Lite არ უჭერს მხარს მოდულებს) და დააწყვილეთ OBD-II ადაპტერი.\n
+2. ჩართეთ ეს მოდული Torque → პარამეტრები → Plugins.\n
+3. დაუშვით შეტყობინებები და ბატარეის გამოყენება დააყენეთ შეუზღუდავზე, რომ Torque-მ ეს მოდული ფონში გაუშვას.\n
+4. Torque-ში აირჩიეთ იმ მანქანის პროფილი, რომლითაც მართავთ. მონაცემები ინახება Torque-ის პროფილის მიხედვით და მოწმდება მანქანის VIN/ECU იდენტობასთან.\n
+5. ახალ პროფილზე საწვავის წყარო ერთვება შეერთებისას. თუ გკითხავენ, შეადარეთ ის დაფის საზომს და შეეხეთ დადასტურებას. დადასტურება არის გამართვის გვერდზე და შეტყობინებაში. შეგიძლიათ აირჩიოთ ის ქვემოთაც.\n
+6. ავზის ზომა Chunk მორგების საწყისი ზომაა, სანამ ის საკუთარს ისწავლის. მოდული მას არასოდეს ცვლის. ყოველი მორგების ნასწავლი ზომა ნაჩვენებია მის ქვემოთ.\n
+7. Torque-ში დაამატეთ საზომები [FuelSmooth] Smoothed Fuel Level-ისთვის და ყოველი მორგების Corrected %, Remaining, DTE და Tank size-ისთვის. DTE არის Remaining გამრავლებული Torque-ის გრძელვადიან mpg-ზე. ხელახალი მორგების შეტყობინება ამბობს, რომ ეს მორგება კითხულობს 1:1, სანამ ხელახალი მორგება არ დასრულდება.\n
+8. საწვავის დონე დააბრუნეთ Torque-ში. გამორთული, გლუვი, ან გასწორებული Chunk, Band ან Kalman მორგებიდან თქვენს 012F საზომზე.\n
+9. საწვავი ითვლება მხოლოდ ძრავის მუშაობისას. მოდული მუშაობს მხოლოდ მაშინ, როცა Torque დაკავშირებულია ECU-სთან.\n
+10. განაგრძეთ ტარება და შევსება. სიზუსტე იზრდება რამდენიმე ნაწილობრივ ავზზე. თუ გამოჩნდება არასწორი მანქანის პროფილი? შეტყობინება, აირჩიეთ რა მოუვიდეს ამ მგზავრობას.\n
+11. ყველა მონაცემი რჩება ამ ტელეფონზე. GPS ან მდებარეობა არ იწერება.</string>
+    <string name="about_body">%1$s\nვერსია %2$s (%3$s)\nმოდული Torque Pro-სთვის. არ არის დაკავშირებული Torque-თან ან Ian Hawkins-თან.\nყველა მონაცემი რჩება ამ ტელეფონზე. GPS ან მდებარეობა არ იწერება.\n\nლიცენზია\nCopyright David Lang. ყველა უფლება დაცულია.</string>
+    <string name="open_source_notices">ღია კოდის ბიბლიოთეკები\nეს აპი იყენებს ქვემოთ მოცემულ ბიბლიოთეკებს. მათი ლიცენზიები ცალკეა ზემოთ მოცემული საავტორო უფლებისგან.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), საჭიროა Play Billing-ისთვის\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">სრული სახელმძღვანელო (ონლაინ)</string>
+    <string name="show_fuel_notification">საწვავის დონის ჩვენება შეტყობინებაში</string>
+    <string name="write_012f">საწვავის დონის დაბრუნება Torque-ში (ანაცვლებს 012F)</string>
+    <string name="running_quiet">Fuel Smoothing მუშაობს</string>
+    <string name="tap_to_start">შეეხეთ Fuel Smoothing-ის დასაწყებად</string>
+    <string name="tap_to_start_text">ბატარეიდან ან ფონიდან გაშვება უარყოფილია. გახსენით ერთხელ, რომ მოდული იმუშაოს Torque-თან.</string>
+    <string name="tank2_help">დაამატეთ დამატებითი ავზები საჭიროებისამებრ (ქარხნული ავზი 1 ყოველთვის რჩება). არ გადართოთ გადამცემები PCM FLI კონტაქტზე (ცრუ შევსება). ყოველ დამატებით ავზს სჭირდება საკუთარი Torque-ის დამატებითი PID (MCU Mode 22, უნიკალური სახელი — არა 012F ან Ford 16C1). Select-PID მნიშვნელობა არის ავზის id 1-იდან. Gal/hr ირიცხება მხოლოდ აქტიურ ავზზე.</string>
+    <string name="tap_start_channel">შეეხეთ დასაწყებად</string>
+    <string name="tank_size_info">ავზის ზომა Chunk მორგების საწყისი ზომაა, სანამ ის საკუთარს ისწავლის. მოდული მას არასოდეს ცვლის. ყოველი მორგების ნასწავლი ზომა ნაჩვენებია მის ქვემოთ.</string>
+    <string name="feed_012f_info">წერს მნიშვნელობას Torque-ის ქარხნულ Fuel Level (012F) ზე, რომ არსებულმა საზომებმა აჩვენონ ის. გამორთული, გლუვი, ან გასწორებული Chunk, Band ან Kalman მორგებიდან. ჯერ აუწყობელი მორგება წერს გლუვ დონეს.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">ზომა ჯერ არ არის</string>
+    <string name="size_none_sd">ზომა ჯერ არ არის ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">დახმარება</string>
+    <string name="about">შესახებ</string>
+    <string name="need_torque">საჭიროა Torque Pro (ფასიანი). Torque Lite არ უჭერს მხარს მოდულებს.</string>
+    <string name="get_torque">Torque Pro-ს მიღება</string>
+    <string name="privacy">კონფიდენციალობა</string>
+    <string name="send_feedback">გამოხმაურების გაგზავნა</string>
+    <string name="tip">დამატებითი</string>
+    <string name="thanks">მადლობა</string>
+    <string name="close">დახურვა</string>
+    <string name="ok">OK</string>
+    <string name="detect">აღმოჩენა</string>
+    <string name="confirm">დადასტურება</string>
+    <string name="save_pin">ნიშნულის შენახვა</string>
+    <string name="add_tank">დამატებითი ავზის დამატება</string>
+    <string name="remove">წაშლა</string>
+    <string name="details">დეტალები</string>
+    <string name="verbose_logging">დაწვრილებითი ჟურნალი (გამართვა. სტრიქონი ყოველ წამში)</string>
+    <string name="profile_name">პროფილის სახელი</string>
+    <string name="profile_name_info">ამ მანქანის პროფილის სახელი. Torque-ის ყოველი მანქანის პროფილი იღებს საკუთარ მოდულის პროფილს, მონაცემებს და ნასწავლ რუკებს.</string>
+    <string name="make">მარკა</string>
+    <string name="make_info">მანქანის მარკა (მაგ. Ford). გამოიყენება მხოლოდ იმის ასარჩევად, მარკის რომელი საწვავის PID-ები სცადოს აღმოჩენამ.</string>
+    <string name="fuel_source">საწვავის წყარო</string>
+    <string name="fuel_source_info">საიდან მოდის ნედლი საწვავის დონე. აღმოჩენა (საჭიროა ECU-ს კავშირი) კითხულობს კანდიდატებს მხოლოდ წასაკითხად და ითხოვს დადასტურებას, თუ ორი წყარო არ ემთხვევა. დადასტურება არის გამართვის გვერდზე და შეტყობინებაში. არცერთი = აღმოჩენა შემდეგ შეერთებაზე.</string>
+    <string name="custom_long_name">საკუთარი გრძელი სახელი</string>
+    <string name="custom_long_name_info">მხოლოდ წყაროსთვის Torque extra PID by long name. Torque PID-ის ზუსტი გრძელი სახელი, რომელიც აცხადებს დონეს.</string>
+    <string name="tank_size">ავზის ზომა</string>
+    <string name="tank_hint">ცარიელი = საწყისი ზომა არ არის. ყოველი მორგება სწავლობს საკუთარს.</string>
+    <string name="smoothing_tau">გლუვვის τ წამი</string>
+    <string name="smoothing_tau_info">გლუვვის ფილტრის დროის მუდმივა (0 = გლუვვის გარეშე).</string>
+    <string name="max_skew" formatted="false">მაქს. გადახრა %/s</string>
+    <string name="max_skew_info">უდიდესი ცვლილება წამში, რომელსაც გლუვი დონე შეიძლება მიჰყვეს. ამაზე მეტი რხევა იგნორირდება.</string>
+    <string name="fill_jump" formatted="false">შევსების ნახტომი %</string>
+    <string name="fill_jump_info">დონის აწევა გაჩერებისას, რომელიც ითვლება შევსებად.</string>
+    <string name="odometer">ოდომეტრის მილები</string>
+    <string name="odometer_info">არასავალდებულო. შეიყვანეთ ოდომეტრის ჩვენება და ნიშნულის შენახვა, რომ ამ პროფილის მანძილი დამაგრდეს.</string>
+    <string name="additional_tanks">დამატებითი ავზები</string>
+    <string name="active_tank">აქტიური ავზი</string>
+    <string name="active_tank_info">რომელ ავზზე ირიცხება საწვავის ხარჯი (gal/hr). PID-იდან. Torque PID ირჩევს მას (ავზის id 1-იდან).</string>
+    <string name="select_pid">Select-PID გრძელი სახელი</string>
+    <string name="select_pid_info">მხოლოდ როცა აქტიური ავზი = PID-იდან. Torque PID-ის გრძელი სახელი, რომლის მნიშვნელობა ავზის id-ია.</string>
+    <string name="tank_n">ავზი %1$d</string>
+    <string name="tank_n_source">ავზი %1$d საწვავის წყარო</string>
+    <string name="tank_n_custom">ავზი %1$d საკუთარი გრძელი სახელი (მაგ. [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">ავზი %1$d გალონი</string>
+    <string name="from_pid">PID-იდან</string>
+    <string name="unconfirmed"> (დაუდასტურებელი)</string>
+    <string name="ecu_connected"> · ECU დაკავშირებულია</string>
+    <string name="tank_unknown">ავზი ?</string>
+    <string name="about_field">შესახებ %1$s</string>
+    <string name="err_tau">0-დან %1$s s-მდე</string>
+    <string name="err_skew">0-ზე მეტი, მაქსიმუმ %1$s %%/s</string>
+    <string name="err_jump">%1$s-დან %2$s %%-მდე</string>
+    <string name="err_tank">ცარიელი ან 0-ზე მეტი რიცხვი</string>
+    <string name="err_stored">შენახული მნიშვნელობა დიაპაზონს გარეთაა</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">გლუვი %</string>
+    <string name="axis_error" formatted="false">ცდომილება (%)</string>
+    <string name="feed_off">გამორთული</string>
+    <string name="feed_smoothed" formatted="false">გლუვი %</string>
+    <string name="feed_corrected_chunk" formatted="false">Corrected % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Corrected % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Corrected % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">ჯერ არცერთი (აღმოჩენა ეშვება შეერთებაზე)</string>
+    <string name="src_sae_012f">SAE 012F Fuel Tank Level</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler Fuel Level Average</string>
+    <string name="src_toyota_2129">Toyota cluster 2129 (half-litre counts)</string>
+    <string name="src_custom_name">Torque extra PID by long name</string>
+    <string name="vehicle_default">მანქანა 1</string>
+    <string name="vehicle_dated">მანქანა %1$s</string>
+    <string name="binding_torque">უკავშირდება Torque-ს…</string>
+    <string name="status_waiting">ელოდება საწვავის წყაროს</string>
+    <string name="status_raw">ნედლი %1$.1f%%</string>
+    <string name="status_sess"> სეს %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing ჩუმი</string>
+    <string name="map_refit_title">რუკის ხელახალი მორგება</string>
+    <string name="map_refit_body">Fuel Smoothing ხელახლა არგებს რუკას %1$s-ისთვის. ეს მორგება კითხულობს 1:1, სანამ ხელახალი მორგება არ დასრულდება.</string>
+    <string name="no_source_title">საწვავის დონის წყარო არ არის დაყენებული</string>
+    <string name="no_source_body">Fuel Smoothing-ს არ აქვს საწვავის დონის წყარო %1$s-ისთვის. გახსენით გამართვის გვერდი და შეეხეთ აღმოჩენას, ან აირჩიეთ წყარო.</string>
+    <string name="no_level_title">ამ მგზავრობაზე საწვავის დონე არ არის</string>
+    <string name="no_level_body">%1$s-მ გამოსაყენებელი დონე არ მისცა %2$s-ს. შეამოწმეთ ადაპტერის კავშირი, ან გაუშვით აღმოჩენა გამართვის გვერდზე.</string>
+    <string name="source_found_title">საწვავის დონის წყარო ნაპოვნია</string>
+    <string name="source_found_body">გამოიყენება %1$s %2$s-ისთვის (%3$s).</string>
+    <string name="source_missing_title">საწვავის დონის წყარო ვერ მოიძებნა</string>
+    <string name="source_missing_body">გახსენით Fuel Smoothing-ის გამართვა და აირჩიეთ წყარო (ან დაამატეთ PID Torque-ში), შემდეგ შეეხეთ აღმოჩენას.</string>
+    <string name="confirm_source_title">დაადასტურეთ საწვავის დონის წყარო</string>
+    <string name="confirm_source_body">აღმოჩენილია %1$s, ჩვენება %2$.0f %% %3$s-ისთვის. შეამოწმეთ, რომ ემთხვევა დაფის საწვავის საზომს, შემდეგ შეეხეთ დადასტურებას. დადასტურება არის გამართვის გვერდზე და შეტყობინებაში (%4$s).</string>
+    <string name="confirm_source_body_nolevel">აღმოჩენილია %1$s %2$s-ისთვის. შეამოწმეთ, რომ ემთხვევა დაფის საწვავის საზომს, შემდეგ შეეხეთ დადასტურებას. დადასტურება არის გამართვის გვერდზე და შეტყობინებაში (%3$s).</string>
+    <string name="recording_title">ჩაწერა %1$s-ში</string>
+    <string name="recording_body">ეს მანქანა არის %1$s (%2$s), მაგრამ Torque-ის პროფილი არის \'%3$s\'. მონაცემები მიდის %1$s-ში. შეეხეთ Torque-ის გასახსნელად და პროფილის შესაცვლელად.</string>
+    <string name="wrong_vehicle_title">არასწორი მანქანის პროფილი?</string>
+    <string name="wrong_suggest_profile">Torque-ის პროფილი \'%1$s\'</string>
+    <string name="wrong_suggest_new">ახალი მანქანის პროფილი</string>
+    <string name="wrong_vehicle_body">Torque-ის პროფილი \'%1$s\' არ ემთხვევა ამ მანქანას (%2$s). შემოთავაზებული: %3$s. მონაცემები ინახება და მგზავრობის ბოლოს იშლება, თუ არ შეინახავთ.</string>
+    <string name="keeping_title">მგზავრობის მონაცემები ინახება</string>
+    <string name="keeping_body">ეს მგზავრობა შეინახება %1$s-ში. Torque-ის მოდულის API ვერ ქმნის ან ცვლის Torque-ის პროფილებს. Torque-ში შექმენით ან აირჩიეთ მანქანის პროფილი სახელით \'%2$s\'.</string>
+    <string name="action_new_profile">ახალი პროფილის შექმნა</string>
+    <string name="action_use">გამოყენება %1$s</string>
+</resources>

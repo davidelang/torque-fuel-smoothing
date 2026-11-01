@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">ምክሮች በPlay Store እትም ላይ ናቸው</string>
+    <string name="help_body">ፈጣን ጅምር\n
+1. Torque Pro ይጫኑ (የሚከፈልበት እትም፤ Torque Lite ተሰኪዎችን አይደግፍም) እና OBD-II አስማሚን ያጣምሩ።\n
+2. ይህን ተሰኪ በTorque → ቅንብሮች → Plugins ያብሩ።\n
+3. ማሳወቂያዎችን ይፍቀዱ እና የባትሪ አጠቃቀምን ያልተገደበ ያድርጉ፤ Torque ይህን ተሰኪ በጀርባ እንዲጀምር።\n
+4. በTorque እየነዱት ያለውን የተሽከርካሪ መገለጫ ይምረጡ። ውሂብ በእያንዳንዱ የTorque መገለጫ ይቀመጣል እና ከተሽከርካሪው VIN/ECU ማንነት ጋር ይፈተሻል።\n
+5. በአዲስ መገለጫ የነዳጅ ምንጭ ሲገናኙ ይገኛል፤ ከተጠየቁ ከዳሽ መለኪያ ጋር ያወዳድሩ እና አረጋግጥን ይንኩ። አረጋግጥ በማዋቀሪያ ገጽ እና በማሳወቂያ ውስጥ ነው። ከታችም መምረጥ ይችላሉ።\n
+6. የታንክ መጠን የChunk fit መነሻ መጠን ነው፤ የራሱን እስኪማር ድረስ። ተሰኪው ፈጽሞ አይቀይረውም፤ የእያንዳንዱ fit የተማረው መጠን ከሱ በታች ይታያል።\n
+7. በTorque ለ[FuelSmooth] Smoothed Fuel Level እና ለእያንዳንዱ fit Corrected %፣ Remaining፣ DTE እና Tank size መለኪያዎችን ይጨምሩ። DTE ማለት Remaining በTorque የረጅም ጊዜ mpg ተባዝቶ ነው። በrefit ጊዜ ማሳወቂያ ያ fit 1:1 ያነባል ይላል፤ refit እስኪያልቅ።\n
+8. የነዳጅ ደረጃን ወደ Torque ይመልሱ፦ ጠፍቷል፣ ለስላሳ፣ ወይም ከChunk፣ Band ወይም Kalman fit የተስተካከለ፣ ወደ 012F መለኪያዎ።\n
+9. ነዳጅ የሚቆጠረው ሞተር ሲሰራ ብቻ ነው። ተሰኪው Torque ከECU ጋር ሲገናኝ ብቻ ይሰራል።\n
+10. መንዳትና መሙላትን ይቀጥሉ፤ ትክክለኛነት በብዙ ከፊል ታንኮች ላይ ያድጋል። የተሳሳተ የተሽከርካሪ መገለጫ? ማሳወቂያ ቢመጣ፣ በዚያ ጉዞ ምን እንደሚደረግ ይምረጡ።\n
+11. ሁሉም ውሂብ በዚህ ስልክ ላይ ይቆያል። GPS ወይም ቦታ አይመዘገብም።</string>
+    <string name="about_body">%1$s\nእትም %2$s (%3$s)\nለTorque Pro ተሰኪ። ከTorque ወይም ከIan Hawkins ጋር አልተያያዘም።\nሁሉም ውሂብ በዚህ ስልክ ላይ ይቆያል፤ GPS ወይም ቦታ አይመዘገብም።\n\nፈቃድ\nCopyright David Lang. መብቱ በህግ የተጠበቀ ነው።</string>
+    <string name="open_source_notices">ክፍት ምንጭ ቤተ-መጻሕፍት\nይህ መተግበሪያ ከታች ያሉትን ቤተ-መጻሕፍት ይጠቀማል። ፈቃዶቻቸው ከላይ ካለው የቅጂ መብት ተለይተዋል።\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms)፣ በPlay Billing የሚፈለግ\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">ሙሉ መመሪያ (በመስመር ላይ)</string>
+    <string name="show_fuel_notification">የነዳጅ ደረጃን በማሳወቂያ አሳይ</string>
+    <string name="write_012f">የነዳጅ ደረጃን ወደ Torque መልስ (012Fን ይተካል)</string>
+    <string name="running_quiet">Fuel Smoothing እየሰራ ነው</string>
+    <string name="tap_to_start">Fuel Smoothing ለመጀመር ይንኩ</string>
+    <string name="tap_to_start_text">ከባትሪ ወይም ከጀርባ መጀመር ተከልክሏል። ተሰኪው ከTorque ጋር እንዲሰራ አንድ ጊዜ ይክፈቱ።</string>
+    <string name="tank2_help">እንደ አስፈላጊነቱ ተጨማሪ ታንኮችን ይጨምሩ (የፋብሪካ ታንክ 1 ሁልጊዜ ይቆያል)። አስተላላፊዎችን ወደ PCM FLI ፒን አይቀይሩ (የሐሰት ሙሌት)። እያንዳንዱ ተጨማሪ ታንክ የራሱን የTorque ተጨማሪ PID ይፈልጋል (MCU Mode 22፣ ልዩ ስም — 012F ወይም Ford 16C1 አይደለም)። የSelect-PID እሴት ከ1 የሚጀምር የታንክ id ነው። Gal/hr በንቁ ታንክ ላይ ብቻ ይቆጠራል።</string>
+    <string name="tap_start_channel">ለመጀመር ይንኩ</string>
+    <string name="tank_size_info">የታንክ መጠን የChunk fit መነሻ መጠን ነው፤ የራሱን እስኪማር ድረስ። ተሰኪው ፈጽሞ አይቀይረውም፤ የእያንዳንዱ fit የተማረው መጠን ከሱ በታች ይታያል።</string>
+    <string name="feed_012f_info">ያሉ መለኪያዎች እንዲያሳዩ በTorque የፋብሪካ Fuel Level (012F) ላይ እሴት ይጽፋል፦ ጠፍቷል፣ ለስላሳ፣ ወይም ከChunk፣ Band ወይም Kalman fit የተስተካከለ። ገና ያልተገነባ fit ለስላሳ ደረጃን ይጽፋል።</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">ገና መጠን የለም</string>
+    <string name="size_none_sd">ገና መጠን የለም ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">እገዛ</string>
+    <string name="about">ስለ</string>
+    <string name="need_torque">Torque Pro (የሚከፈልበት) ያስፈልጋል። Torque Lite ተሰኪዎችን አይደግፍም።</string>
+    <string name="get_torque">Torque Pro ያግኙ</string>
+    <string name="privacy">ግላዊነት</string>
+    <string name="send_feedback">አስተያየት ላክ</string>
+    <string name="tip">ምክር ክፍያ</string>
+    <string name="thanks">አመሰግናለሁ</string>
+    <string name="close">ዝጋ</string>
+    <string name="ok">OK</string>
+    <string name="detect">ፈልግ</string>
+    <string name="confirm">አረጋግጥ</string>
+    <string name="save_pin">ፒን አስቀምጥ</string>
+    <string name="add_tank">ተጨማሪ ታንክ ጨምር</string>
+    <string name="remove">አስወግድ</string>
+    <string name="details">ዝርዝር</string>
+    <string name="verbose_logging">ዝርዝር መዝገብ (ማረም፤ በየሰከንዱ መስመር)</string>
+    <string name="profile_name">የመገለጫ ስም</string>
+    <string name="profile_name_info">የዚህ የተሽከርካሪ መገለጫ ስም። እያንዳንዱ የTorque የተሽከርካሪ መገለጫ የራሱን የተሰኪ መገለጫ፣ ውሂብ እና የተማሩ ካርታዎች ያገኛል።</string>
+    <string name="make">አምራች</string>
+    <string name="make_info">የተሽከርካሪ አምራች (ለምሳሌ Ford)። ፍለጋ የትኛውን የምርት ነዳጅ PID እንደሚሞክር ለመምረጥ ብቻ ይጠቅማል።</string>
+    <string name="fuel_source">የነዳጅ ምንጭ</string>
+    <string name="fuel_source_info">ጥሬ የነዳጅ ደረጃ ከየት እንደሚመጣ። ፈልግ (ECU መገናኘት አለበት) እጩዎችን ለንባብ ብቻ ያነባል እና ሁለት ምንጮች ካልተስማሙ ማረጋገጫ ይጠይቃል። አረጋግጥ በማዋቀሪያ ገጽ እና በማሳወቂያ ውስጥ ነው። የለም = በሚቀጥለው ግንኙነት ፈልግ።</string>
+    <string name="custom_long_name">ብጁ ረጅም ስም</string>
+    <string name="custom_long_name_info">ለምንጭ Torque extra PID by long name ብቻ፦ ደረጃውን የሚገልጽ የTorque PID ትክክለኛ ረጅም ስም።</string>
+    <string name="tank_size">የታንክ መጠን</string>
+    <string name="tank_hint">ባዶ = የመነሻ መጠን የለም፤ እያንዳንዱ fit የራሱን ይማራል።</string>
+    <string name="smoothing_tau">ማለስለሻ τ ሰከንድ</string>
+    <string name="smoothing_tau_info">የማለስለሻ ማጣሪያ የጊዜ ቋሚ (0 = ማለስለሻ የለም)።</string>
+    <string name="max_skew" formatted="false">ከፍተኛ ዝንባሌ %/s</string>
+    <string name="max_skew_info">ለስላሳ ደረጃ በሰከንድ ሊከተል የሚችለው ትልቁ ለውጥ፤ ከዚህ በላይ መንቀጥቀጥ ችላ ይባላል።</string>
+    <string name="fill_jump" formatted="false">የመሙያ ዝላይ %</string>
+    <string name="fill_jump_info">ቆሞ ሳለ የደረጃ ጭማሪ እንደ መሙላት ይቆጠራል።</string>
+    <string name="odometer">የኦዶሜትር ማይሎች</string>
+    <string name="odometer_info">አማራጭ፦ የኦዶሜትር ንባብ ያስገቡ እና ፒን አስቀምጥን በመጫን የዚህ መገለጫ ርቀት ይያዝ።</string>
+    <string name="additional_tanks">ተጨማሪ ታንኮች</string>
+    <string name="active_tank">ንቁ ታንክ</string>
+    <string name="active_tank_info">የነዳጅ ማቃጠል (gal/hr) ወደ የትኛው ታንክ እንደሚቆጠር። ከPID፦ Torque PID ይመርጠዋል (ከ1 የሚጀምር የታንክ id)።</string>
+    <string name="select_pid">የSelect-PID ረጅም ስም</string>
+    <string name="select_pid_info">ንቁ ታንክ = ከPID ሲሆን ብቻ፦ እሴቱ የታንክ id የሆነ የTorque PID ረጅም ስም።</string>
+    <string name="tank_n">ታንክ %1$d</string>
+    <string name="tank_n_source">የታንክ %1$d የነዳጅ ምንጭ</string>
+    <string name="tank_n_custom">የታንክ %1$d ብጁ ረጅም ስም (ለምሳሌ [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">የታንክ %1$d ጋሎን</string>
+    <string name="from_pid">ከPID</string>
+    <string name="unconfirmed"> (ያልተረጋገጠ)</string>
+    <string name="ecu_connected"> · ECU ተገናኝቷል</string>
+    <string name="tank_unknown">ታንክ ?</string>
+    <string name="about_field">ስለ %1$s</string>
+    <string name="err_tau">ከ0 እስከ %1$s s</string>
+    <string name="err_skew">ከ0 በላይ፣ ቢበዛ %1$s %%/s</string>
+    <string name="err_jump">ከ%1$s እስከ %2$s %%</string>
+    <string name="err_tank">ባዶ ወይም ከ0 በላይ ቁጥር</string>
+    <string name="err_stored">የተቀመጠው እሴት ከክልል ውጭ ነው</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">ለስላሳ %</string>
+    <string name="axis_error" formatted="false">ስህተት (%)</string>
+    <string name="feed_off">ጠፍቷል</string>
+    <string name="feed_smoothed" formatted="false">ለስላሳ %</string>
+    <string name="feed_corrected_chunk" formatted="false">Corrected % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Corrected % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Corrected % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">ገና የለም (ፈልግ ሲገናኝ ይሰራል)</string>
+    <string name="src_sae_012f">SAE 012F Fuel Tank Level</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler Fuel Level Average</string>
+    <string name="src_toyota_2129">Toyota cluster 2129 (half-litre counts)</string>
+    <string name="src_custom_name">Torque extra PID by long name</string>
+    <string name="vehicle_default">ተሽከርካሪ 1</string>
+    <string name="vehicle_dated">ተሽከርካሪ %1$s</string>
+    <string name="binding_torque">ከTorque ጋር እየተገናኘ…</string>
+    <string name="status_waiting">የነዳጅ ምንጭ በመጠበቅ ላይ</string>
+    <string name="status_raw">ጥሬ %1$.1f%%</string>
+    <string name="status_sess"> ክፍለ ጊዜ %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing ጸጥታ</string>
+    <string name="map_refit_title">ካርታ እየተስተካከለ ነው</string>
+    <string name="map_refit_body">Fuel Smoothing ለ%1$s ካርታ እያስተካከለ ነው። ያ fit 1:1 ያነባል፤ refit እስኪያልቅ።</string>
+    <string name="no_source_title">የነዳጅ ደረጃ ምንጭ አልተቀናበረም</string>
+    <string name="no_source_body">Fuel Smoothing ለ%1$s የነዳጅ ደረጃ ምንጭ የለውም። የማዋቀሪያ ገጹን ይክፈቱ እና ፈልግን ይንኩ፣ ወይም ምንጭ ይምረጡ።</string>
+    <string name="no_level_title">በዚህ ጉዞ የነዳጅ ደረጃ የለም</string>
+    <string name="no_level_body">%1$s ለ%2$s ጥቅም ላይ የሚውል ደረጃ አልሰጠም። የአስማሚውን ግንኙነት ይመልከቱ፣ ወይም በማዋቀሪያ ገጽ ፈልግን ያሂዱ።</string>
+    <string name="source_found_title">የነዳጅ ደረጃ ምንጭ ተገኝቷል</string>
+    <string name="source_found_body">%1$s ለ%2$s ጥቅም ላይ ውሏል (%3$s)።</string>
+    <string name="source_missing_title">የነዳጅ ደረጃ ምንጭ አልተገኘም</string>
+    <string name="source_missing_body">የFuel Smoothing ማዋቀሪያን ይክፈቱ እና ምንጭ ይምረጡ (ወይም PIDን በTorque ይጨምሩ)፣ ከዚያ ፈልግን ይንኩ።</string>
+    <string name="confirm_source_title">የነዳጅ ደረጃ ምንጭን ያረጋግጡ</string>
+    <string name="confirm_source_body">%1$s ተገኝቷል፣ ንባብ %2$.0f %% ለ%3$s። ከዳሽ የነዳጅ መለኪያ ጋር እንደሚስማማ ይመልከቱ፣ ከዚያ አረጋግጥን ይንኩ። አረጋግጥ በማዋቀሪያ ገጽ እና በማሳወቂያ ውስጥ ነው (%4$s)።</string>
+    <string name="confirm_source_body_nolevel">%1$s ለ%2$s ተገኝቷል። ከዳሽ የነዳጅ መለኪያ ጋር እንደሚስማማ ይመልከቱ፣ ከዚያ አረጋግጥን ይንኩ። አረጋግጥ በማዋቀሪያ ገጽ እና በማሳወቂያ ውስጥ ነው (%3$s)።</string>
+    <string name="recording_title">ወደ %1$s በመመዝገብ ላይ</string>
+    <string name="recording_body">ይህ ተሽከርካሪ %1$s ነው (%2$s)፣ ነገር ግን የTorque መገለጫ \'%3$s\' ነው። ውሂብ ወደ %1$s ይሄዳል፤ Torqueን ለመክፈት እና መገለጫ ለመቀየር ይንኩ።</string>
+    <string name="wrong_vehicle_title">የተሳሳተ የተሽከርካሪ መገለጫ?</string>
+    <string name="wrong_suggest_profile">የTorque መገለጫ \'%1$s\'</string>
+    <string name="wrong_suggest_new">አዲስ የተሽከርካሪ መገለጫ</string>
+    <string name="wrong_vehicle_body">የTorque መገለጫ \'%1$s\' ከዚህ ተሽከርካሪ ጋር አይስማማም (%2$s)። ሐሳብ፦ %3$s። ውሂብ ይያዛል እና ካላስቀመጡት በጉዞ መጨረሻ ይጣላል።</string>
+    <string name="keeping_title">የጉዞ ውሂብ እየተቀመጠ ነው</string>
+    <string name="keeping_body">ይህ ጉዞ ወደ %1$s ይቀመጣል። የTorque ተሰኪ API የTorque መገለጫዎችን መፍጠር ወይም መቀየር አይችልም፦ በTorque \'%2$s\' የሚባል የተሽከርካሪ መገለጫ ይፍጠሩ ወይም ይምረጡ።</string>
+    <string name="action_new_profile">አዲስ መገለጫ ፍጠር</string>
+    <string name="action_use">%1$s ተጠቀም</string>
+</resources>

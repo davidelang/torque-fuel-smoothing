@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Fuel Smoothing for Torque</string>
-    <string name="privacy_policy_url">https://play.landing.lang.hm/fuel-smoothing/privacy/</string>
+    <string name="app_name" translatable="false">Fuel Smoothing for Torque</string>
+    <string name="privacy_policy_url" translatable="false">https://play.landing.lang.hm/fuel-smoothing/privacy/</string>
     <string name="tips_play_only">Tips are on the Play Store version</string>
     <string name="help_body">Quick start\n
 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n
@@ -15,9 +15,9 @@
 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n
 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n
 11. All data stays on this phone. No GPS or location is recorded.</string>
-    <string name="about_body">Fuel Smoothing for Torque\nVersion %1$s (%2$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.</string>
+    <string name="about_body">%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.</string>
     <string name="open_source_notices">Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
-    <string name="manual_url">https://play.landing.lang.hm/fuel-smoothing/manual/</string>
+    <string name="manual_url" translatable="false">https://play.landing.lang.hm/fuel-smoothing/manual/</string>
     <string name="manual_button">Full manual (online)</string>
     <string name="show_fuel_notification">Show fuel level in notification</string>
     <string name="write_012f">Feed fuel level back to Torque (overrides 012F)</string>
@@ -35,4 +35,110 @@
     <string name="size_none_sd">no size yet ± %1$.1f gal</string>
     <string name="size_gal">%1$.1f gal</string>
     <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">Help</string>
+    <string name="about">About</string>
+    <string name="need_torque">Requires Torque Pro (paid). Torque Lite does not support plugins.</string>
+    <string name="get_torque">Get Torque Pro</string>
+    <string name="privacy">Privacy</string>
+    <string name="send_feedback">Send feedback</string>
+    <string name="tip">Tip</string>
+    <string name="thanks">Thanks</string>
+    <string name="close">Close</string>
+    <string name="ok">OK</string>
+    <string name="detect">Detect</string>
+    <string name="confirm">Confirm</string>
+    <string name="save_pin">Save pin</string>
+    <string name="add_tank">Add additional tank</string>
+    <string name="remove">Remove</string>
+    <string name="details">Details</string>
+    <string name="verbose_logging">Verbose logging (debug; per-second log lines)</string>
+    <string name="profile_name">Profile name</string>
+    <string name="profile_name_info">The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.</string>
+    <string name="make">Make</string>
+    <string name="make_info">Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.</string>
+    <string name="fuel_source">Fuel source</string>
+    <string name="fuel_source_info">Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.</string>
+    <string name="custom_long_name">Custom long name</string>
+    <string name="custom_long_name_info">Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.</string>
+    <string name="tank_size">Tank size</string>
+    <string name="tank_hint">blank = no starting size; each fit learns its own.</string>
+    <string name="smoothing_tau">Smoothing τ seconds</string>
+    <string name="smoothing_tau_info">Time constant of the smoothing filter (0 = no smoothing).</string>
+    <string name="max_skew" formatted="false">Max skew %/s</string>
+    <string name="max_skew_info">Largest change per second the smoothed level may follow; slosh beyond this is ignored.</string>
+    <string name="fill_jump" formatted="false">Fill jump %</string>
+    <string name="fill_jump_info">Rise in level while stopped that counts as a fill.</string>
+    <string name="odometer">Odometer miles</string>
+    <string name="odometer_info">Optional: enter the odometer reading and Save pin to anchor distance for this profile.</string>
+    <string name="additional_tanks">Additional tanks</string>
+    <string name="active_tank">Active tank</string>
+    <string name="active_tank_info">Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).</string>
+    <string name="select_pid">Select-PID long name</string>
+    <string name="select_pid_info">Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.</string>
+    <string name="tank_n">Tank %1$d</string>
+    <string name="tank_n_source">Tank %1$d fuel source</string>
+    <string name="tank_n_custom">Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">Tank %1$d gallons</string>
+    <string name="from_pid">From PID</string>
+    <string name="unconfirmed"> (unconfirmed)</string>
+    <string name="ecu_connected"> · ECU connected</string>
+    <string name="tank_unknown">tank ?</string>
+    <string name="about_field">About %1$s</string>
+    <string name="err_tau">0 to %1$s s</string>
+    <string name="err_skew">above 0, at most %1$s %%/s</string>
+    <string name="err_jump">%1$s to %2$s %%</string>
+    <string name="err_tank">blank or a number above 0</string>
+    <string name="err_stored">stored value out of range</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">Smoothed %</string>
+    <string name="axis_error" formatted="false">Error (%)</string>
+    <string name="feed_off">Off</string>
+    <string name="feed_smoothed" formatted="false">Smoothed %</string>
+    <string name="feed_corrected_chunk" formatted="false">Corrected % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Corrected % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Corrected % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">None yet (Detect runs on connect)</string>
+    <string name="src_sae_012f">SAE 012F Fuel Tank Level</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler Fuel Level Average</string>
+    <string name="src_toyota_2129">Toyota cluster 2129 (half-litre counts)</string>
+    <string name="src_custom_name">Torque extra PID by long name</string>
+    <string name="vehicle_default">Vehicle 1</string>
+    <string name="vehicle_dated">Vehicle %1$s</string>
+    <string name="binding_torque">Binding to Torque…</string>
+    <string name="status_waiting">Waiting for fuel source</string>
+    <string name="status_raw">raw %1$.1f%%</string>
+    <string name="status_sess"> sess %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing quiet</string>
+    <string name="map_refit_title">Map refitting</string>
+    <string name="map_refit_body">Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.</string>
+    <string name="no_source_title">No fuel level source set</string>
+    <string name="no_source_body">Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.</string>
+    <string name="no_level_title">No fuel level this drive</string>
+    <string name="no_level_body">%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.</string>
+    <string name="source_found_title">Fuel level source found</string>
+    <string name="source_found_body">Using %1$s for %2$s (%3$s).</string>
+    <string name="source_missing_title">No fuel level source found</string>
+    <string name="source_missing_body">Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.</string>
+    <string name="confirm_source_title">Confirm fuel level source</string>
+    <string name="confirm_source_body">Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).</string>
+    <string name="confirm_source_body_nolevel">Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).</string>
+    <string name="recording_title">Recording to %1$s</string>
+    <string name="recording_body">This vehicle is %1$s (%2$s), but Torque\'s profile is \'%3$s\'. Data goes to %1$s; tap to open Torque and switch profiles.</string>
+    <string name="wrong_vehicle_title">Wrong vehicle profile?</string>
+    <string name="wrong_suggest_profile">Torque profile \'%1$s\'</string>
+    <string name="wrong_suggest_new">a new vehicle profile</string>
+    <string name="wrong_vehicle_body">Torque profile \'%1$s\' doesn\'t match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.</string>
+    <string name="keeping_title">Keeping drive data</string>
+    <string name="keeping_body">This drive will be saved to %1$s. Torque\'s plugin API can\'t create or switch Torque profiles: in Torque, create/select a vehicle profile named \'%2$s\'.</string>
+    <string name="action_new_profile">Create new profile</string>
+    <string name="action_use">Use %1$s</string>
 </resources>

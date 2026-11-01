@@ -112,13 +112,16 @@ internal object Kalman {
             )
             save(dir, state)
             val modelFile = File(dir, MODEL)
-            if (!modelFile.isFile) FsLog.i("FuelSmooth", "kalman model was absent before this write")
+            if (!modelFile.isFile) {
+                val gal = out.g98.takeIf { it.isFinite() }?.let { java.lang.String.format(java.util.Locale.US, "%.1f", it) } ?: "none"
+                FsLog.i("FuelSmooth", "fit_own_size fit=kalman tank=${ProfileStore.tankNumber(dir)} gal=$gal")
+            }
             AtomicFile.write(modelFile, modelJson(out.g, out.g98, out.sd98, built.breaks >= 2, System.currentTimeMillis()))
             runCatching {
                 FsLog.i(
                     "FuelSmooth",
                     "fit kalman g98=${"%.2f".format(out.g98)} sd98=${"%.2f".format(out.sd98)} complete=${built.breaks >= 2} " +
-                        "breaks=${built.breaks} iter=${out.iters} ms=${out.ms}",
+                        "breaks=${built.breaks} iter=${out.iters} ms=${out.ms} stop=${out.stop}",
                 )
             }
             state
@@ -707,7 +710,7 @@ internal object Kalman {
 
     private class Solved(
         val q: DoubleArray, val z: DoubleArray, val o: DoubleArray,
-        val g: DoubleArray, val g98: Double, val sd98: Double, val iters: Int, val ms: Long,
+        val g: DoubleArray, val g98: Double, val sd98: Double, val iters: Int, val ms: Long, val stop: String,
     )
 
     private fun solve(dir: File, built: Built): Solved {
@@ -731,19 +734,20 @@ internal object Kalman {
         val t0 = System.currentTimeMillis()
         val warm = warmStart(dir, prob, segs)
         var iters = 0
+        var stop = "grad"
         val p = try {
             if (warm != null) {
-                val (x, it) = lm(prob, warm, false, "lvfit6-warm")
-                iters = it; x
+                val (x, it, st) = lm(prob, warm, false, "lvfit6-warm", true)
+                iters = it; stop = st; x
             } else {
-                val (x, it) = lm(prob, coldStart(prob), false, "lvfit6")
-                iters = it; x
+                val (x, it, st) = lm(prob, coldStart(prob), false, "lvfit6", false)
+                iters = it; stop = st; x
             }
         } catch (e: Exception) {
-            if (warm == null) throw e
+            if (warm == null || !coldRetry(e)) throw e
             warn("kalman warm start failed; retrying cold: ${e.message}")
-            val (x, it) = lm(prob, coldStart(prob), false, "lvfit6-cold")
-            iters = it; x
+            val (x, it, st) = lm(prob, coldStart(prob), false, "lvfit6-cold", false)
+            iters = it; stop = st; x
         }
         val q = p.copyOfRange(0, NF)
         val z = p.copyOfRange(NF, NF + ns)
@@ -753,7 +757,7 @@ internal object Kalman {
         val g98 = gallons(g, 98.0)
         val sd98 = sd98(prob, p)
         if (!g98.isFinite() || !sd98.isFinite()) throw IllegalStateException("non-finite G(98) on $fitName")
-        return Solved(q, z, o, g, g98, sd98, iters, System.currentTimeMillis() - t0)
+        return Solved(q, z, o, g, g98, sd98, iters, System.currentTimeMillis() - t0, stop)
     }
 
     private fun warmStart(dir: File, prob: Prob, segs: List<Seg>): DoubleArray? {
@@ -769,7 +773,7 @@ internal object Kalman {
     }
 
     private fun coldStart(prob: Prob): DoubleArray {
-        val p4 = lm(prob, lv4Start(prob), true, "lvfit4").first
+        val p4 = lm(prob, lv4Start(prob), true, "lvfit4", false).first
         val k4 = p4.copyOfRange(NF, NF + prob.ns)
         val p = DoubleArray(NF + 2 * prob.ns)
         for (i in 0 until NF) p[i] = p4[i]
@@ -878,7 +882,13 @@ internal object Kalman {
         return r.toDoubleArray()
     }
 
-    private fun lm(prob: Prob, p0: DoubleArray, lv4: Boolean, label: String): Pair<DoubleArray, Int> {
+    /** A warm stall may return. Every other stall, and LM_ITERS, still throw. */
+    private fun coldRetry(e: Exception): Boolean {
+        val m = e.message ?: return false
+        return m.startsWith("non-finite residual") || m.startsWith("non-finite cost") || m.startsWith("LM_ITERS")
+    }
+
+    private fun lm(prob: Prob, p0: DoubleArray, lv4: Boolean, label: String, acceptStall: Boolean): Triple<DoubleArray, Int, String> {
         val t0 = System.currentTimeMillis()
         var iters = 0
         try {
@@ -886,8 +896,10 @@ internal object Kalman {
             var r = residual(prob, p, lv4)
             if (r.any { !it.isFinite() }) throw IllegalStateException("non-finite residual on $fitName")
             var cost = sumsq(r)
+            if (!cost.isFinite()) throw IllegalStateException("non-finite cost on $fitName")
             var lambda = 1e-3
             var done = false
+            var stop = "grad"
             while (iters < LM_ITERS && !done) {
                 iters++
                 val J = jacobian(prob, p, r, lv4)
@@ -908,7 +920,7 @@ internal object Kalman {
                 for (a in 0 until n) for (b in 0 until a) jtj[a][b] = jtj[b][a]
                 var gnorm = 0.0
                 for (c in 0 until n) gnorm = max(gnorm, abs(jtr[c]) / scale[c])
-                if (gnorm < 1e-6) { done = true; break }
+                if (gnorm < 1e-6) { done = true; stop = "grad"; break }
                 var step = Double.POSITIVE_INFINITY
                 var improved = false
                 for (inner in 0 until 12) {
@@ -919,6 +931,7 @@ internal object Kalman {
                     val r2 = residual(prob, p2, lv4)
                     if (r2.any { !it.isFinite() }) throw IllegalStateException("non-finite residual on $fitName")
                     val cost2 = sumsq(r2)
+                    if (!cost2.isFinite()) throw IllegalStateException("non-finite cost on $fitName")
                     step = 0.0
                     for (c in 0 until n) step = max(step, abs(delta[c]) / max(1.0, abs(p[c])))
                     if (cost2 < cost) {
@@ -928,12 +941,15 @@ internal object Kalman {
                         break
                     } else lambda = min(lambda * 8.0, 1e12)
                 }
-                if (improved && step < 1e-8) done = true
-                if (!improved && lambda >= 1e12) throw IllegalStateException("fit did not converge on $fitName")
+                if (improved && step < 1e-8) { done = true; stop = "step" }
+                if (!improved && lambda >= 1e12) {
+                    if (acceptStall) { done = true; stop = "stall"; break }
+                    throw IllegalStateException("fit did not converge on $fitName")
+                }
             }
-            if (!done) throw IllegalStateException("fit did not converge on $fitName")
+            if (!done) throw IllegalStateException("LM_ITERS on $fitName")
             runCatching { FsLog.i("FuelSmooth", "fit kalman $label iter=$iters ms=${System.currentTimeMillis() - t0}") }
-            return p to iters
+            return Triple(p, iters, stop)
         } catch (e: Exception) {
             runCatching { FsLog.w("FuelSmooth", "fit kalman $label failed iter=$iters ms=${System.currentTimeMillis() - t0}: ${e.message}") }
             throw e
