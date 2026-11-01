@@ -1058,7 +1058,7 @@ class PluginActivity : Activity() {
      * Smoothed gauge on X, corrected percent minus smoothed percent on Y.
      * One shared y range includes every line and 0, so a 1:1 fit lies on zero.
      */
-    private class FitChart(context: Context) : View(context) {
+    private inner class FitChart(context: Context) : View(context) {
         private val ys = Array(3) { FloatArray(101) }
         private var yLo = -1.0
         private var yHi = 1.0
