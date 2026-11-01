@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">Tip ana ing versi Play Store</string>
+    <string name="help_body">Wiwitan cepet\n1. Pasang Torque Pro (versi mbayar; Torque Lite ora ndhukung plugin) lan pasangake adaptor OBD-II panjenengan.\n2. Uripake plugin iki ing Torque → Setelan → Plugin.\n3. Idini kabar, lan setel panggunaan baterei dadi Ora diwatesi supaya Torque bisa miwiti plugin iki ing latar mburi.\n4. Ing Torque, pilih profil kendaraan kanggo mobil sing panjenengan kemudikake. Data disimpen saben profil Torque lan dicocogake karo identitas VIN/ECU kendaraan.\n5. Ing profil anyar, sumber bahan bakar dideteksi nalika nyambung; yen ditakoni, bandingake karo jarum ing dasbor banjur tutul Konfirmasi. Konfirmasi ana ing kaca setelan lan ing kabar. Panjenengan uga bisa milih ing ngisor.\n6. Ukuran tangki iku ukuran wiwitan kanggo pas Chunk nganti dheweke sinau ukurane dhewe. Plugin ora nate ngowahi; ukuran sing disinaoni saben pas dituduhake ing ngisore.\n7. Ing Torque, tambahake jarum kanggo [FuelSmooth] Smoothed Fuel Level lan, kanggo saben pas, Corrected %, Remaining, DTE lan Tank size. DTE yaiku Remaining dikali mpg jangka dawa Torque. Kabar nalika pas dipas maneh ngandhakake yen pas kuwi maca 1:1 nganti pas maneh rampung.\n8. Balikake level bahan bakar menyang Torque: Mati, Dilus, utawa Didandani saka pas Chunk, Band utawa Kalman menyang jarum 012F panjenengan.\n9. Bahan bakar mung dietung nalika mesin mlaku. Plugin mung mlaku nalika Torque kasambung karo ECU.\n10. Terusake nyopir lan ngisi; akurasi mundhak sajroning sawetara tangki sebagian. Yen kabar Profil kendaraan salah? muncul, pilih apa sing ditindakake kanggo lelungan kuwi.\n11. Kabeh data tetep ing ponsel iki. Ora ana GPS utawa lokasi sing direkam.</string>
+    <string name="about_body">%1$s\nVersi %2$s (%3$s)\nPlugin kanggo Torque Pro. Ora kagandheng karo Torque utawa Ian Hawkins.\nKabeh data tetep ing ponsel iki; ora ana GPS utawa lokasi sing direkam.\n\nLisensi\nCopyright David Lang. Kabeh hak dilindhungi.</string>
+    <string name="open_source_notices">Pustaka sumber mbukak\nAplikasi iki nganggo pustaka ing ngisor. Lisensine kapisah saka hak cipta ing ndhuwur.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), dibutuhake dening Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">Pandhuan lengkap (online)</string>
+    <string name="show_fuel_notification">Tuduhake level bahan bakar ing kabar</string>
+    <string name="write_012f">Balikake level bahan bakar menyang Torque (nindhes 012F)</string>
+    <string name="running_quiet">Fuel Smoothing mlaku</string>
+    <string name="tap_to_start">Tutul kanggo miwiti Fuel Smoothing</string>
+    <string name="tap_to_start_text">Wiwitan baterei utawa latar mburi ditolak. Bukak sapisan supaya plugin bisa mlaku karo Torque.</string>
+    <string name="tank2_help">Tambahake tangki tambahan yen perlu (tangki pabrik 1 tansah tetep). Aja nyambungake sensor menyang pin PCM FLI (ngisi palsu). Saben tangki tambahan butuh PID tambahan Torque dhewe (MCU Mode 22, jeneng unik — dudu 012F utawa Ford 16C1). Nilai Select-PID yaiku id tangki wiwit 1. Gal/hr mung dibebanke menyang tangki sing aktif.</string>
+    <string name="tap_start_channel">Tutul kanggo miwiti</string>
+    <string name="tank_size_info">Ukuran tangki iku ukuran wiwitan kanggo pas Chunk nganti dheweke sinau ukurane dhewe. Plugin ora nate ngowahi; ukuran sing disinaoni saben pas dituduhake ing ngisore.</string>
+    <string name="feed_012f_info">Nulis nilai menyang Fuel Level baku Torque (012F) supaya jarum sing wis ana nuduhake: Mati, Dilus, utawa Didandani saka pas Chunk, Band utawa Kalman. Pas sing durung digawe nulis level sing dilusake.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">durung ana ukuran</string>
+    <string name="size_none_sd">durung ana ukuran ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">Pitulung</string>
+    <string name="about">Bab</string>
+    <string name="need_torque">Butuh Torque Pro (mbayar). Torque Lite ora ndhukung plugin.</string>
+    <string name="get_torque">Entukake Torque Pro</string>
+    <string name="privacy">Privasi</string>
+    <string name="send_feedback">Kirim tanggapan</string>
+    <string name="tip">Tip</string>
+    <string name="thanks">Matur nuwun</string>
+    <string name="close">Tutup</string>
+    <string name="ok">OK</string>
+    <string name="detect">Deteksi</string>
+    <string name="confirm">Konfirmasi</string>
+    <string name="save_pin">Simpen pin</string>
+    <string name="add_tank">Tambah tangki tambahan</string>
+    <string name="remove">Busak</string>
+    <string name="details">Rincian</string>
+    <string name="verbose_logging">Log rinci (debug; baris log saben detik)</string>
+    <string name="profile_name">Jeneng profil</string>
+    <string name="profile_name_info">Jeneng profil kendaraan iki. Saben profil kendaraan Torque entuk profil plugin dhewe, data dhewe, lan peta sing disinaoni.</string>
+    <string name="make">Merek</string>
+    <string name="make_info">Merek kendaraan (contone Ford). Mung dienggo milih PID bahan bakar khusus merek sing bisa dicoba deteksi.</string>
+    <string name="fuel_source">Sumber bahan bakar</string>
+    <string name="fuel_source_info">Asal level bahan bakar mentah. Deteksi (ECU kudu kasambung) nyoba calon kanthi maca wae lan njaluk panjenengan konfirmasi kajaba rong sumber cocog. Konfirmasi ana ing kaca setelan lan ing kabar. Ora ana = deteksi nalika sambungan sabanjure.</string>
+    <string name="custom_long_name">Jeneng dawa khusus</string>
+    <string name="custom_long_name_info">Mung kanggo sumber «PID tambahan Torque miturut jeneng dawa»: jeneng dawa sing pas saka PID Torque sing nglapurake level.</string>
+    <string name="tank_size">Ukuran tangki</string>
+    <string name="tank_hint">kosong = ora ana ukuran wiwitan; saben pas sinau ukurane dhewe.</string>
+    <string name="smoothing_tau">Nglus τ detik</string>
+    <string name="smoothing_tau_info">Konstanta wektu saka filter nglus (0 = ora nglus).</string>
+    <string name="max_skew" formatted="false">Miring maks %/s</string>
+    <string name="max_skew_info">Owah paling gedhe saben detik sing bisa dilacak level sing dilusake; goyangan ngluwihi iki dilirwakake.</string>
+    <string name="fill_jump" formatted="false">Lompatan ngisi %</string>
+    <string name="fill_jump_info">Munggahing level nalika mandheg sing dietung minangka ngisi.</string>
+    <string name="odometer">Odometer ing miles</string>
+    <string name="odometer_info">Opsional: lebokake wacan odometer lan Simpen pin kanggo njangkar jarak profil iki.</string>
+    <string name="additional_tanks">Tangki tambahan</string>
+    <string name="active_tank">Tangki aktif</string>
+    <string name="active_tank_info">Tangki endi sing dibebani pembakaran bahan bakar (gal/hr). Saka PID: PID Torque milih (id tangki wiwit 1).</string>
+    <string name="select_pid">Jeneng dawa Select-PID</string>
+    <string name="select_pid_info">Mung nalika Tangki aktif = Saka PID: jeneng dawa PID Torque sing nilaine id tangki.</string>
+    <string name="tank_n">Tangki %1$d</string>
+    <string name="tank_n_source">Sumber bahan bakar tangki %1$d</string>
+    <string name="tank_n_custom">Jeneng dawa khusus tangki %1$d (contone [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">Tangki %1$d gallons</string>
+    <string name="from_pid">Saka PID</string>
+    <string name="unconfirmed"> (durung dikonfirmasi)</string>
+    <string name="ecu_connected"> · ECU kasambung</string>
+    <string name="tank_unknown">tangki ?</string>
+    <string name="about_field">Bab %1$s</string>
+    <string name="err_tau">0 nganti %1$s s</string>
+    <string name="err_skew">ndhuwur 0, paling akeh %1$s %%/s</string>
+    <string name="err_jump">%1$s nganti %2$s %%</string>
+    <string name="err_tank">kosong utawa angka ndhuwur 0</string>
+    <string name="err_stored">nilai kasimpen njedhul saka rentang</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">Dilus %</string>
+    <string name="axis_error" formatted="false">Kasalahan (%)</string>
+    <string name="feed_off">Mati</string>
+    <string name="feed_smoothed" formatted="false">Dilus %</string>
+    <string name="feed_corrected_chunk" formatted="false">Didandani % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Didandani % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Didandani % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">Durung ana (Deteksi mlaku nalika nyambung)</string>
+    <string name="src_sae_012f">SAE 012F level tangki bahan bakar</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Rata-rata level bahan bakar Chrysler</string>
+    <string name="src_toyota_2129">Kluster Toyota 2129 (etungan setengah liter)</string>
+    <string name="src_custom_name">PID tambahan Torque miturut jeneng dawa</string>
+    <string name="vehicle_default">Kendaraan 1</string>
+    <string name="vehicle_dated">Kendaraan %1$s</string>
+    <string name="binding_torque">Nyambung menyang Torque…</string>
+    <string name="status_waiting">Ngenteni sumber bahan bakar</string>
+    <string name="status_raw">mentah %1$.1f%%</string>
+    <string name="status_sess"> lelungan %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing meneng</string>
+    <string name="map_refit_title">Peta dipas maneh</string>
+    <string name="map_refit_body">Fuel Smoothing mas maneh peta kanggo %1$s. Pas kuwi maca 1:1 nganti pas maneh rampung.</string>
+    <string name="no_source_title">Sumber level bahan bakar durung disetel</string>
+    <string name="no_source_body">Fuel Smoothing ora duwe sumber level bahan bakar kanggo %1$s. Bukak kaca setelan lan tutul Deteksi, utawa pilih sumber.</string>
+    <string name="no_level_title">Ora ana level bahan bakar ing lelungan iki</string>
+    <string name="no_level_body">%1$s ora menehi level sing bisa dienggo kanggo %2$s. Priksa sambungan adaptor, utawa jalanke Deteksi ing kaca setelan.</string>
+    <string name="source_found_title">Sumber level bahan bakar ketemu</string>
+    <string name="source_found_body">Nganggo %1$s kanggo %2$s (%3$s).</string>
+    <string name="source_missing_title">Sumber level bahan bakar ora ketemu</string>
+    <string name="source_missing_body">Bukak setelan Fuel Smoothing lan pilih sumber (utawa tambahake PID ing Torque), banjur tutul Deteksi.</string>
+    <string name="confirm_source_title">Konfirmasi sumber level bahan bakar</string>
+    <string name="confirm_source_body">Kedeteksi %1$s maca %2$.0f %% kanggo %3$s. Priksa cocog karo jarum bahan bakar dasbor, banjur tutul Konfirmasi. Konfirmasi ana ing kaca setelan lan ing kabar (%4$s).</string>
+    <string name="confirm_source_body_nolevel">Kedeteksi %1$s kanggo %2$s. Priksa cocog karo jarum bahan bakar dasbor, banjur tutul Konfirmasi. Konfirmasi ana ing kaca setelan lan ing kabar (%3$s).</string>
+    <string name="recording_title">Ngrekam menyang %1$s</string>
+    <string name="recording_body">Kendaraan iki %1$s (%2$s), nanging profil Torque yaiku \'%3$s\'. Data menyang %1$s; tutul kanggo mbukak Torque lan ngganti profil.</string>
+    <string name="wrong_vehicle_title">Profil kendaraan salah?</string>
+    <string name="wrong_suggest_profile">Profil Torque \'%1$s\'</string>
+    <string name="wrong_suggest_new">profil kendaraan anyar</string>
+    <string name="wrong_vehicle_body">Profil Torque \'%1$s\' ora cocog karo kendaraan iki (%2$s). Saran: %3$s. Data ditahan lan dibuwang ing pungkasane lelungan kajaba panjenengan nyimpen.</string>
+    <string name="keeping_title">Data lelungan disimpen</string>
+    <string name="keeping_body">Lelungan iki bakal disimpen menyang %1$s. API plugin Torque ora bisa nggawe utawa ngganti profil Torque: ing Torque, gawe utawa pilih profil kendaraan aran \'%2$s\'.</string>
+    <string name="action_new_profile">Gawe profil anyar</string>
+    <string name="action_use">Enggo %1$s</string>
+</resources>

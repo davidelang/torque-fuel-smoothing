@@ -333,3 +333,5 @@
 - The in-place import no longer waits on the main thread, so a slow reload is not killed.
 
 ## 2026-10-31 - Accept a warm Kalman stall, translate the setup screen, and drop the dead fuel fields.
+
+## 2026-10-31 - Add the 19 locales missing from the language list.

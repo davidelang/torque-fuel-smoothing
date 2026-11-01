@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">Mancia è en la versiun da Play Store</string>
+    <string name="help_body">Cumenzament svelt\n1. Installescha Torque Pro (la versiun pajada; Torque Lite na sustegna nagins plugins) e pareglia tes adapter OBD-II.\n2. Activescha quest plugin en Torque → Parameters → Plugins.\n3. Permetta avis e metta l\'utilisaziun da la batteria sin Senza restricziuns, uschia che Torque po aviar quest plugin en il fund davos.\n4. En Torque tscherna il profil dal vehichel per l\'auto che ti mainas. Las datas vegnan tegnidas per profil da Torque e cumparegliadas cun l\'identitad VIN/ECU dal vehichel.\n5. Tar in nov profil vegn la funtauna da carburant scuvrida cura che ti collieschas; sche ti vegns dumandà, cumpareglia ella cun l\'indicatur sin il tablou e smatga sin Confermar. Confermar è sin la pagina da configuraziun ed en l\'avis. Ti pos era la tscherner sut.\n6. La grondezza dal tank è la grondezza da partenza per l\'agiustament Chunk fin ch\'el emprende la sia. Il plugin na la mida mai; la grondezza emprendida da mintga agiustament vegn mussada sut el.\n7. En Torque agiunta indicaturs per [FuelSmooth] Smoothed Fuel Level e per mintga agiustament Corrected %, Remaining, DTE e Tank size. DTE è Remaining multiplicà cun il mpg a lunga vista da Torque. In avis durant ina reagiustaziun di che quel agiustament legia 1:1 fin che la reagiustaziun è finida.\n8. Returna il livel da carburant a Torque: Orà, Llischà u Curregì da l\'agiustament Chunk, Band u Kalman sin tes indicatur 012F.\n9. Carburant vegn mo dumbrà durant che il motor va. Il plugin va mo durant che Torque è collià cun l\'ECU.\n10. Continuescha a manar ed a plainar; la precision crescha sur plirs tanks parzials. Sch\'i cumpara l\'avis Fals profil da vehichel?, tscherna tge far cun quella cursa.\n11. Tut las datas restan sin quest telefon. Nagina GPS ni posiziun vegn registrada.</string>
+    <string name="about_body">%1$s\nVersiun %2$s (%3$s)\nIn plugin per Torque Pro. Betg affilià cun Torque ni cun Ian Hawkins.\nTut las datas restan sin quest telefon; nagina GPS ni posiziun vegn registrada.\n\nLicenza\nCopyright David Lang. Tut ils dretgs resalvads.</string>
+    <string name="open_source_notices">Bibliotecas da code avert\nQuesta app dovra las bibliotecas sut. Lur licenzas èn separadas dal dretg d\'autur survart.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), basegnads da Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">Manual cumplet (online)</string>
+    <string name="show_fuel_notification">Mussar il livel da carburant en l\'avis</string>
+    <string name="write_012f">Returnar il livel da carburant a Torque (surscriva 012F)</string>
+    <string name="running_quiet">Fuel Smoothing va</string>
+    <string name="tap_to_start">Smatga per aviar Fuel Smoothing</string>
+    <string name="tap_to_start_text">L\'aviament da la batteria u dal fund davos è vegnì refusà. Avra ina giada, uschia che il plugin po ir cun Torque.</string>
+    <string name="tank2_help">Agiunta tanks supplementars sche necessari (il tank da seria 1 resta adina). Na colliescha betg sensors cun il pin PCM FLI (plain fals). Mintga tank supplementar dovra ses agen PID supplementar da Torque (MCU Mode 22, num unic — betg 012F ni Ford 16C1). La valur da Select-PID è l\'id dal tank cumenzond cun 1. Gal/hr vegn mo mess al tank activ.</string>
+    <string name="tap_start_channel">Smatga per aviar</string>
+    <string name="tank_size_info">La grondezza dal tank è la grondezza da partenza per l\'agiustament Chunk fin ch\'el emprende la sia. Il plugin na la mida mai; la grondezza emprendida da mintga agiustament vegn mussada sut el.</string>
+    <string name="feed_012f_info">Scriva ina valur sin il Fuel Level da seria da Torque (012F), uschia che indicaturs existents la mussan: Orà, Llischà u Curregì da l\'agiustament Chunk, Band u Kalman. In agiustament anc betg construì scriva il livel llischà.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">anc nagina grondezza</string>
+    <string name="size_none_sd">anc nagina grondezza ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">Agid</string>
+    <string name="about">Davart</string>
+    <string name="need_torque">Basegna Torque Pro (pajà). Torque Lite na sustegna nagins plugins.</string>
+    <string name="get_torque">Retschaiver Torque Pro</string>
+    <string name="privacy">Protecziun da datas</string>
+    <string name="send_feedback">Trametter resun</string>
+    <string name="tip">Mancia</string>
+    <string name="thanks">Grazia</string>
+    <string name="close">Serrar</string>
+    <string name="ok">OK</string>
+    <string name="detect">Scuvrir</string>
+    <string name="confirm">Confermar</string>
+    <string name="save_pin">Memorisar il pin</string>
+    <string name="add_tank">Agiuntar in tank supplementar</string>
+    <string name="remove">Allontanar</string>
+    <string name="details">Detagls</string>
+    <string name="verbose_logging">Protocol detaglià (debug; lingias da protocol per secunda)</string>
+    <string name="profile_name">Num dal profil</string>
+    <string name="profile_name_info">Il num da quest profil da vehichel. Mintga profil da vehichel da Torque survegn ses agen profil dal plugin, atgnas datas e cartas emprendidas.</string>
+    <string name="make">Marca</string>
+    <string name="make_info">Marca dal vehichel (p.ex. Ford). Vegn mo duvrada per tscherner tge PID da carburant specifics per la marca la scuverta po empruvar.</string>
+    <string name="fuel_source">Funtauna da carburant</string>
+    <string name="fuel_source_info">Da nua che vegn il livel da carburant brut. Scuvrir (l\'ECU sto esser collià) emprova ils candidats mo en lectura e ta dumonda da confermar, sche betg duas funtaunas correspundan. Confermar è sin la pagina da configuraziun ed en l\'avis. Nagina = scuvrir a la proxima colliaziun.</string>
+    <string name="custom_long_name">Agen num lung</string>
+    <string name="custom_long_name_info">Mo per la funtauna «PID supplementar da Torque tenor num lung»: il num lung exact dal PID da Torque che rapporta il livel.</string>
+    <string name="tank_size">Grondezza dal tank</string>
+    <string name="tank_hint">vid = nagina grondezza da partenza; mintga agiustament emprende la sia.</string>
+    <string name="smoothing_tau">Llischament τ secundas</string>
+    <string name="smoothing_tau_info">Constanta da temp dal filter da llischament (0 = nagin llischament).</string>
+    <string name="max_skew" formatted="false">Sbies max. %/s</string>
+    <string name="max_skew_info">La pli gronda midada per secunda che il livel llischà dastga suandar; sbrinzlas sur quai vegnan ignoradas.</string>
+    <string name="fill_jump" formatted="false">Sigl da plain %</string>
+    <string name="fill_jump_info">Augment dal livel durant ch\'i stat, che vala sco plain.</string>
+    <string name="odometer">Contachilometers en miles</string>
+    <string name="odometer_info">Opziunal: endatescha la lectura dal contachilometers e Memorisar il pin per fixar la distanza per quest profil.</string>
+    <string name="additional_tanks">Tanks supplementars</string>
+    <string name="active_tank">Tank activ</string>
+    <string name="active_tank_info">A tge tank che vegn mess il consum (gal/hr). Da PID: in PID da Torque al tscherna (id dal tank cumenzond cun 1).</string>
+    <string name="select_pid">Num lung da Select-PID</string>
+    <string name="select_pid_info">Mo sche Tank activ = Da PID: il num lung dal PID da Torque che ha sco valur l\'id dal tank.</string>
+    <string name="tank_n">Tank %1$d</string>
+    <string name="tank_n_source">Funtauna da carburant dal tank %1$d</string>
+    <string name="tank_n_custom">Agen num lung dal tank %1$d (p.ex. [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">Tank %1$d gallons</string>
+    <string name="from_pid">Da PID</string>
+    <string name="unconfirmed"> (betg confermà)</string>
+    <string name="ecu_connected"> · ECU collià</string>
+    <string name="tank_unknown">tank ?</string>
+    <string name="about_field">Davart %1$s</string>
+    <string name="err_tau">0 fin %1$s s</string>
+    <string name="err_skew">sur 0, maximalmain %1$s %%/s</string>
+    <string name="err_jump">%1$s fin %2$s %%</string>
+    <string name="err_tank">vid u in dumber sur 0</string>
+    <string name="err_stored">valur memorisada ordaifer la zona</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">Llischà %</string>
+    <string name="axis_error" formatted="false">Errur (%)</string>
+    <string name="feed_off">Orà</string>
+    <string name="feed_smoothed" formatted="false">Llischà %</string>
+    <string name="feed_corrected_chunk" formatted="false">Curregì % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Curregì % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Curregì % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">Anc nagina (Scuvrir va cura che ti collieschas)</string>
+    <string name="src_sae_012f">SAE 012F livel dal tank da carburant</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Media dal livel da carburant Chrysler</string>
+    <string name="src_toyota_2129">Cumbiinstrument Toyota 2129 (dumbradivas d\'in mez liter)</string>
+    <string name="src_custom_name">PID supplementar da Torque tenor num lung</string>
+    <string name="vehicle_default">Vehichel 1</string>
+    <string name="vehicle_dated">Vehichel %1$s</string>
+    <string name="binding_torque">Colliar cun Torque…</string>
+    <string name="status_waiting">Spetgar sin la funtauna da carburant</string>
+    <string name="status_raw">brut %1$.1f%%</string>
+    <string name="status_sess"> cursa %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing silenzius</string>
+    <string name="map_refit_title">Reagiustar la carta</string>
+    <string name="map_refit_body">Fuel Smoothing reagiustescha ina carta per %1$s. Quel agiustament legia 1:1 fin che la reagiustaziun è finida.</string>
+    <string name="no_source_title">Nagina funtauna dal livel da carburant definida</string>
+    <string name="no_source_body">Fuel Smoothing n\'ha nagina funtauna dal livel da carburant per %1$s. Avra la pagina da configuraziun e smatga sin Scuvrir, u tscherna ina funtauna.</string>
+    <string name="no_level_title">Nagin livel da carburant sin questa cursa</string>
+    <string name="no_level_body">%1$s n\'ha dà nagin livel utilisabel per %2$s. Controllescha la colliaziun da l\'adapter, u aviescha Scuvrir sin la pagina da configuraziun.</string>
+    <string name="source_found_title">Funtauna dal livel da carburant chattada</string>
+    <string name="source_found_body">Dovra %1$s per %2$s (%3$s).</string>
+    <string name="source_missing_title">Nagina funtauna dal livel da carburant chattada</string>
+    <string name="source_missing_body">Avra la configuraziun da Fuel Smoothing e tscherna ina funtauna (u agiunta il PID en Torque), lura smatga sin Scuvrir.</string>
+    <string name="confirm_source_title">Confermar la funtauna dal livel da carburant</string>
+    <string name="confirm_source_body">Scuvrì %1$s cun ina lectura da %2$.0f %% per %3$s. Controllescha ch\'ella correspundia a l\'indicatur sin il tablou, lura smatga sin Confermar. Confermar è sin la pagina da configuraziun ed en l\'avis (%4$s).</string>
+    <string name="confirm_source_body_nolevel">Scuvrì %1$s per %2$s. Controllescha ch\'ella correspundia a l\'indicatur sin il tablou, lura smatga sin Confermar. Confermar è sin la pagina da configuraziun ed en l\'avis (%3$s).</string>
+    <string name="recording_title">Registrar en %1$s</string>
+    <string name="recording_body">Quest vehichel è %1$s (%2$s), ma il profil da Torque è \'%3$s\'. Las datas van a %1$s; smatga per avrir Torque e midar il profil.</string>
+    <string name="wrong_vehicle_title">Fals profil da vehichel?</string>
+    <string name="wrong_suggest_profile">Profil da Torque \'%1$s\'</string>
+    <string name="wrong_suggest_new">in nov profil da vehichel</string>
+    <string name="wrong_vehicle_body">Il profil da Torque \'%1$s\' na correspunda betg a quest vehichel (%2$s). Proposta: %3$s. Las datas vegnan tegnidas e stizzadas a la fin da la cursa, sche ti na las tegnas betg.</string>
+    <string name="keeping_title">Las datas da la cursa vegnan tegnidas</string>
+    <string name="keeping_body">Questa cursa vegn memorisada en %1$s. L\'API da plugins da Torque na po betg crear ni midar profils da Torque: en Torque, creescha u tscherna in profil da vehichel numnà \'%2$s\'.</string>
+    <string name="action_new_profile">Crear in nov profil</string>
+    <string name="action_use">Dovrar %1$s</string>
+</resources>

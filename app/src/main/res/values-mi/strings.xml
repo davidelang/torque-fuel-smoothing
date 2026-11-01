@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">Kei te putanga Play Store ngā takoha</string>
+    <string name="help_body">Tīmatanga tere\n1. Tāutahia a Torque Pro (te putanga utu; kāore a Torque Lite e tautoko monohanga) ka takiruatia tō urutau OBD-II.\n2. Whakahohea tēnei monohanga i Torque → Tautuhinga → Monohanga.\n3. Tukua ngā whakamōhiotanga, ā, whakatakotoria te whakamahi pūhiko ki Kāore he rāhuitanga kia taea ai e Torque te tīmata i tēnei monohanga i te papamuri.\n4. I Torque, tīpakohia te kōtaha waka mō te motokā e taraiwa ana koe. Ka puritia ngā raraunga mō ia kōtaha Torque, ā, ka tirohia ki te tuakiri VIN/ECU o te waka.\n5. I te kōtaha hōu ka kitea te pūtake hinu ina tūhono koe; ki te pātaitia, whakatauritea ki te ine i te papatohu ka pāwhiritia Whakaū. Kei te whārangi tatūnga, kei te whakamōhiotanga hoki a Whakaū. Ka taea hoki te tīpako i raro nei.\n6. Ko te rahi o te taika te rahi tīmatanga mō te urutau Chunk kia ako ra anō i tōna ake. Kāore te monohanga e huri i tērā; ka whakaaturia te rahi kua akohia o ia urutau i raro iho.\n7. I Torque, tāpirihia ngā ine mō [FuelSmooth] Smoothed Fuel Level me, mō ia urutau, Corrected %, Remaining, DTE me Tank size. Ko DTE ko Remaining whakareatia ki te mpg wā-roa o Torque. E kī ana tētahi pānui i te wā whakahou ka pānui taua urutau i te 1:1 kia mutu rā anō te whakahou.\n8. Whakahokia te taumata hinu ki a Torque: Weto, Rēmana, Whakatika rānei mai i te urutau Chunk, Band, Kalman rānei ki tō ine 012F.\n9. Ka tatauria te hinu anake i te wā e rere ana te mīhini. Ka rere te monohanga anake i te wā e tūhono ana a Torque ki te ECU.\n10. Haere tonu ki te taraiwa, ki te whakakī; ka tipu te tika i roto i ētahi taika wāhanga. Ki te puta te whakamōhiotanga Kōtaha waka hē?, kōwhiria he aha mō taua haerenga.\n11. Ka noho ngā raraunga katoa ki tēnei waea. Kāore he GPS, he tauwāhi rānei e tāruatia ana.</string>
+    <string name="about_body">%1$s\nPutanga %2$s (%3$s)\nHe monohanga mō Torque Pro. Kāore e pā ana ki a Torque, ki a Ian Hawkins rānei.\nKa noho ngā raraunga katoa ki tēnei waea; kāore he GPS, he tauwāhi rānei e tāruatia ana.\n\nRaihana\nCopyright David Lang. Kei te rāhuitia ngā motika katoa.</string>
+    <string name="open_source_notices">Ngā puna tuwhera\nKa whakamahi tēnei taupānga i ngā puna i raro nei. He wehe ō rātou raihana i te manatārua i runga ake.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), e hiahiatia ana e Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">Pukapuka aratohu katoa (ipurangi)</string>
+    <string name="show_fuel_notification">Whakaaturia te taumata hinu i te whakamōhiotanga</string>
+    <string name="write_012f">Whakahokia te taumata hinu ki a Torque (ka tuhirua i a 012F)</string>
+    <string name="running_quiet">Kei te rere a Fuel Smoothing</string>
+    <string name="tap_to_start">Pāwhiria kia tīmata a Fuel Smoothing</string>
+    <string name="tap_to_start_text">I whakapeka te tīmatanga pūhiko, papamuri rānei. Huakina kia kotahi kia taea ai e te monohanga te rere me Torque.</string>
+    <string name="tank2_help">Tāpirihia ētahi taika anō ina hiahiatia (ka noho tonu te taika wheketere 1). Kaua e tūhono i ngā pūoko ki te pine PCM FLI (whakakī teka). Ia taika anō me whai tana ake PID tāpiri Torque (MCU Mode 22, ingoa ahurei — ehara i te 012F, i a Ford 16C1 rānei). Ko te uara Select-PID te id taika timata i te 1. Ka namaa a Gal/hr ki te taika hohe anake.</string>
+    <string name="tap_start_channel">Pāwhiria kia tīmata</string>
+    <string name="tank_size_info">Ko te rahi o te taika te rahi tīmatanga mō te urutau Chunk kia ako ra anō i tōna ake. Kāore te monohanga e huri i tērā; ka whakaaturia te rahi kua akohia o ia urutau i raro iho.</string>
+    <string name="feed_012f_info">Ka tuhi i tētahi uara ki te Fuel Level tūturu a Torque (012F) kia whakaatu ngā ine o nāianei: Weto, Rēmana, Whakatika rānei mai i te urutau Chunk, Band, Kalman rānei. Ko te urutau kāore anō kia hangaia ka tuhi i te taumata rēmana.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">kāore anō he rahi</string>
+    <string name="size_none_sd">kāore anō he rahi ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">Āwhina</string>
+    <string name="about">Mō</string>
+    <string name="need_torque">Me Torque Pro (utu). Kāore a Torque Lite e tautoko monohanga.</string>
+    <string name="get_torque">Tikina a Torque Pro</string>
+    <string name="privacy">Tūmataitinga</string>
+    <string name="send_feedback">Tukua he urupare</string>
+    <string name="tip">Takoha</string>
+    <string name="thanks">Ngā mihi</string>
+    <string name="close">Kati</string>
+    <string name="ok">OK</string>
+    <string name="detect">Tautuhi</string>
+    <string name="confirm">Whakaū</string>
+    <string name="save_pin">Tiaki i te pine</string>
+    <string name="add_tank">Tāpiri taika anō</string>
+    <string name="remove">Tango</string>
+    <string name="details">Ngā taipitopito</string>
+    <string name="verbose_logging">Takiuru kōrero (patuiro; rārangi takiuru ia hēkona)</string>
+    <string name="profile_name">Ingoa kōtaha</string>
+    <string name="profile_name_info">Te ingoa o tēnei kōtaha waka. Ia kōtaha waka Torque ka whiwhi i tana ake kōtaha monohanga, ōna ake raraunga me ngā mahere kua akohia.</string>
+    <string name="make">Waitohu</string>
+    <string name="make_info">Waitohu waka (hei tauira Ford). Ka whakamahia anake hei kōwhiri ko ēhea PID hinu motuhake o te waitohu ka whakamātauhia e te tautuhi.</string>
+    <string name="fuel_source">Pūtake hinu</string>
+    <string name="fuel_source_info">Nō hea te taumata hinu mata. Tautuhi (me tūhono te ECU) ka whakamātau i ngā kaitono pānui anake, ā, ka tono kia whakaū engari kia rite ngā pūtake e rua. Kei te whārangi tatūnga, kei te whakamōhiotanga hoki a Whakaū. Kāore = tautuhi i te tūhononga o muri.</string>
+    <string name="custom_long_name">Ingoa roa ritenga</string>
+    <string name="custom_long_name_info">Mō te pūtake «PID tāpiri Torque mā te ingoa roa» anake: te ingoa roa tika o te PID Torque e pūrongo ana i te taumata.</string>
+    <string name="tank_size">Rahi o te taika</string>
+    <string name="tank_hint">putu = kāore he rahi tīmatanga; ka ako ia urutau i tōna ake.</string>
+    <string name="smoothing_tau">Whakaene τ hēkona</string>
+    <string name="smoothing_tau_info">Te tau pūmau o te tātari whakaene (0 = kāore he whakaene).</string>
+    <string name="max_skew" formatted="false">Hāngai mōrahi %/s</string>
+    <string name="max_skew_info">Te huringa nui rawa ia hēkona ka whāia e te taumata rēmana; ka warewarehia te rutu i tua atu.</string>
+    <string name="fill_jump" formatted="false">Peke whakakī %</string>
+    <string name="fill_jump_info">Te pikinga o te taumata i a koe e tū ana e tatauria ana hei whakakī.</string>
+    <string name="odometer">Ine huarahi i ngā miles</string>
+    <string name="odometer_info">Kōwhiringa: whakaurua te pānui ine huarahi ka Tiaki i te pine hei here i te tawhiti mō tēnei kōtaha.</string>
+    <string name="additional_tanks">Ētahi taika anō</string>
+    <string name="active_tank">Taika hohe</string>
+    <string name="active_tank_info">Ko tēhea taika ka namaa te tahunga hinu (gal/hr). Mai i te PID: mā tētahi PID Torque e kōwhiri (id taika timata i te 1).</string>
+    <string name="select_pid">Ingoa roa o Select-PID</string>
+    <string name="select_pid_info">Ina anake ko Taika hohe = Mai i te PID: te ingoa roa o te PID Torque ko tana uara te id taika.</string>
+    <string name="tank_n">Taika %1$d</string>
+    <string name="tank_n_source">Pūtake hinu o te taika %1$d</string>
+    <string name="tank_n_custom">Ingoa roa ritenga o te taika %1$d (hei tauira [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">Ngā gallons o te taika %1$d</string>
+    <string name="from_pid">Mai i te PID</string>
+    <string name="unconfirmed"> (kāore i whakaūngia)</string>
+    <string name="ecu_connected"> · Kua tūhono te ECU</string>
+    <string name="tank_unknown">taika ?</string>
+    <string name="about_field">Mō %1$s</string>
+    <string name="err_tau">0 ki te %1$s s</string>
+    <string name="err_skew">i runga ake i te 0, kaua e nui ake i te %1$s %%/s</string>
+    <string name="err_jump">%1$s ki te %2$s %%</string>
+    <string name="err_tank">putu, he tau rānei i runga ake i te 0</string>
+    <string name="err_stored">he uara kua tiakina kei waho o te awhe</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">Rēmana %</string>
+    <string name="axis_error" formatted="false">Hapa (%)</string>
+    <string name="feed_off">Weto</string>
+    <string name="feed_smoothed" formatted="false">Rēmana %</string>
+    <string name="feed_corrected_chunk" formatted="false">Whakatika % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Whakatika % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Whakatika % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">Kāore anō (ka rere a Tautuhi ina tūhono)</string>
+    <string name="src_sae_012f">SAE 012F taumata taika hinu</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Tauwaenga taumata hinu Chrysler</string>
+    <string name="src_toyota_2129">Rōpū ine Toyota 2129 (ngā tatau haurua-rita)</string>
+    <string name="src_custom_name">PID tāpiri Torque mā te ingoa roa</string>
+    <string name="vehicle_default">Waka 1</string>
+    <string name="vehicle_dated">Waka %1$s</string>
+    <string name="binding_torque">E tūhono ana ki a Torque…</string>
+    <string name="status_waiting">E tatari ana ki te pūtake hinu</string>
+    <string name="status_raw">mata %1$.1f%%</string>
+    <string name="status_sess"> haerenga %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing mārie</string>
+    <string name="map_refit_title">E whakahou ana i te mahere</string>
+    <string name="map_refit_body">Kei te whakahou a Fuel Smoothing i tētahi mahere mō %1$s. Ka pānui taua urutau i te 1:1 kia mutu rā anō te whakahou.</string>
+    <string name="no_source_title">Kāore he pūtake taumata hinu i whakatakotoria</string>
+    <string name="no_source_body">Kāore he pūtake taumata hinu a Fuel Smoothing mō %1$s. Huakina te whārangi tatūnga ka pāwhiritia Tautuhi, tīpakohia rānei he pūtake.</string>
+    <string name="no_level_title">Kāore he taumata hinu i tēnei haerenga</string>
+    <string name="no_level_body">Kāore i homai e %1$s tētahi taumata whaihua mō %2$s. Tirohia te tūhononga urutau, whakahaerea rānei a Tautuhi i te whārangi tatūnga.</string>
+    <string name="source_found_title">Kua kitea te pūtake taumata hinu</string>
+    <string name="source_found_body">E whakamahi ana i a %1$s mō %2$s (%3$s).</string>
+    <string name="source_missing_title">Kāore i kitea he pūtake taumata hinu</string>
+    <string name="source_missing_body">Huakina te tatūnga o Fuel Smoothing ka tīpakohia he pūtake (tāpirihia rānei te PID ki Torque), kātahi ka pāwhiritia Tautuhi.</string>
+    <string name="confirm_source_title">Whakaūngia te pūtake taumata hinu</string>
+    <string name="confirm_source_body">Kua tautuhia a %1$s e pānui ana i te %2$.0f %% mō %3$s. Tirohia mehemea e rite ana ki te ine hinu o te papatohu, kātahi ka pāwhiritia Whakaū. Kei te whārangi tatūnga, kei te whakamōhiotanga hoki a Whakaū (%4$s).</string>
+    <string name="confirm_source_body_nolevel">Kua tautuhia a %1$s mō %2$s. Tirohia mehemea e rite ana ki te ine hinu o te papatohu, kātahi ka pāwhiritia Whakaū. Kei te whārangi tatūnga, kei te whakamōhiotanga hoki a Whakaū (%3$s).</string>
+    <string name="recording_title">E tāhopu ana ki %1$s</string>
+    <string name="recording_body">Ko tēnei waka ko %1$s (%2$s), engari ko te kōtaha Torque ko \'%3$s\'. Ka haere ngā raraunga ki %1$s; pāwhiria kia huaki a Torque ka whakawhiti i te kōtaha.</string>
+    <string name="wrong_vehicle_title">Kōtaha waka hē?</string>
+    <string name="wrong_suggest_profile">Kōtaha Torque \'%1$s\'</string>
+    <string name="wrong_suggest_new">tētahi kōtaha waka hōu</string>
+    <string name="wrong_vehicle_body">Kāore te kōtaha Torque \'%1$s\' e rite ana ki tēnei waka (%2$s). Huatau: %3$s. Ka puritia ngā raraunga, ā, ka ākiritia i te mutunga o te haerenga ki te kore koe e pupuri.</string>
+    <string name="keeping_title">E puritia ana ngā raraunga haerenga</string>
+    <string name="keeping_body">Ka tiakina tēnei haerenga ki %1$s. Kāore e taea e te API monohanga o Torque te hanga, te whakawhiti rānei i ngā kōtaha Torque: i Torque, hangaia, tīpakohia rānei tētahi kōtaha waka ko \'%2$s\' te ingoa.</string>
+    <string name="action_new_profile">Waihanga kōtaha hōu</string>
+    <string name="action_use">Whakamahia %1$s</string>
+</resources>

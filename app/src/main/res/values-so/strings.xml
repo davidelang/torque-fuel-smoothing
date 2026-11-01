@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">Cashuuraduhu waxay ku jiraan nooca Play Store</string>
+    <string name="help_body">Bilow degdeg ah\n1. Ku rakib Torque Pro (nooca lacagta leh; Torque Lite ma taageero plugins) oo isku xir adapterkaaga OBD-II.\n2. Daar plugin-kan gudaha Torque → Settings → Plugins.\n3. Oggolow ogeysiisyada, oo isticmaalka baytariga u deji Aan xadidnayn si Torque u bilaabi karo plugin-kan gadaal.\n4. Torque gudaheed, dooro astaanta gaariga ee baabuurka aad wado. Xogta waxaa lagu hayaa astaanta Torque, waxaana lala barbardhigaa aqoonsiga VIN/ECU ee gaariga.\n5. Astaanta cusub, isha shidaalka waa la baadhaa markaad ku xirto; haddii lagu weydiiyo, la barbar dhig cabbirka dashboard-ka kadibna taabo Xaqiiji. Xaqiiji wuxuu ku yaal bogga dejinta iyo ogeysiiska. Waxaad sidoo kale ka dooran kartaa hoos.\n6. Cabbirka taangigu waa cabbirka bilowga ee la-qabsiga Chunk ilaa uu barto midkiisa. Plugin-ku waligiis ma beddelo; cabbirka la bartay ee la-qabsiga kasta ayaa hoostiisa lagu muujiyaa.\n7. Torque gudaheed, ku dar cabbirro [FuelSmooth] Smoothed Fuel Level iyo, la-qabsiga kasta, Corrected %, Remaining, DTE iyo Tank size. DTE waa Remaining lagu dhufto mpg-ga muddada dheer ee Torque. Ogeyn inta la-qabsiga dib loo habeynayo waxay sheegaysaa in la-qabsigaasi akhriyo 1:1 ilaa dib-u-habeyntu dhammaato.\n8. Heerka shidaalka ku celi Torque: Dami, Jilicsan, ama Saxan oo ka yimid la-qabsiga Chunk, Band ama Kalman ee cabbirkaaga 012F.\n9. Shidaalka waxaa la tiriyaa oo keliya inta mishiinku socdo. Plugin-ku wuxuu shaqeeyaa oo keliya inta Torque ku xiran yahay ECU.\n10. Sii wad wadista iyo buuxinta; saxnaantu waxay kor u kacdaa dhowr taangi oo qayb ah. Haddii ogeysiiska Astaanta gaariga khaldan? soo baxdo, dooro waxa lagula sameeyo safarkaas.\n11. Dhammaan xogtu waxay ku sii nagtaa telefoonkan. GPS ama goob lama duubo.</string>
+    <string name="about_body">%1$s\nNooca %2$s (%3$s)\nPlugin loogu talagalay Torque Pro. Kuma xidhna Torque ama Ian Hawkins.\nDhammaan xogtu waxay ku sii nagtaa telefoonkan; GPS ama goob lama duubo.\n\nShatiga\nCopyright David Lang. Dhammaan xuquuqda way xifdisan yihiin.</string>
+    <string name="open_source_notices">Maktabadaha isha furan\nApp-kan wuxuu isticmaalaa maktabadaha hoose. Shatiyadoodu way ka madax bannaan yihiin xuquuqda daabacaadda sare.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), oo ay u baahan tahay Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">Buugga buuxa (khadka)</string>
+    <string name="show_fuel_notification">Muuji heerka shidaalka ogeysiiska</string>
+    <string name="write_012f">Heerka shidaalka ku celi Torque (wuxuu dhaafaa 012F)</string>
+    <string name="running_quiet">Fuel Smoothing wuu socdaa</string>
+    <string name="tap_to_start">Taabo si aad u bilowdo Fuel Smoothing</string>
+    <string name="tap_to_start_text">Bilowga baytariga ama gadaasha waa la diiday. Mar fur si plugin-ku ugu shaqeeyo Torque.</string>
+    <string name="tank2_help">Ku dar taangiyo dheeraad ah marka loo baahdo (taangiga warshadda 1 wuu sii joogaa). Ha ku xirin dareemayaasha biinka PCM FLI (buuxin been ah). Taangi kasta oo dheeri ah wuxuu u baahan yahay PID dheeri ah oo Torque ah (MCU Mode 22, magac gaar ah — ma aha 012F ama Ford 16C1). Qiimaha Select-PID waa aqoonsiga taangiga ee ka bilaabma 1. Gal/hr waxaa lagu dallacaa taangiga firfircoon oo keliya.</string>
+    <string name="tap_start_channel">Taabo si aad u bilowdo</string>
+    <string name="tank_size_info">Cabbirka taangigu waa cabbirka bilowga ee la-qabsiga Chunk ilaa uu barto midkiisa. Plugin-ku waligiis ma beddelo; cabbirka la bartay ee la-qabsiga kasta ayaa hoostiisa lagu muujiyaa.</string>
+    <string name="feed_012f_info">Wuxuu qiime ku qoraa Fuel Level caadiga ah ee Torque (012F) si cabbirada jira u muujiyaan: Dami, Jilicsan, ama Saxan oo ka yimid la-qabsiga Chunk, Band ama Kalman. La-qabsiga aan weli la dhisin wuxuu qoraa heerka la jilciyey.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">weli cabbir ma jiro</string>
+    <string name="size_none_sd">weli cabbir ma jiro ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">Caawimaad</string>
+    <string name="about">Ku saabsan</string>
+    <string name="need_torque">Waxay u baahan tahay Torque Pro (lacag leh). Torque Lite ma taageero plugins.</string>
+    <string name="get_torque">Hel Torque Pro</string>
+    <string name="privacy">Asturnaanta</string>
+    <string name="send_feedback">Soo dir jawaab celin</string>
+    <string name="tip">Cashuurad</string>
+    <string name="thanks">Mahadsanid</string>
+    <string name="close">Xir</string>
+    <string name="ok">OK</string>
+    <string name="detect">Baadh</string>
+    <string name="confirm">Xaqiiji</string>
+    <string name="save_pin">Kaydi pin</string>
+    <string name="add_tank">Ku dar taangi dheeraad ah</string>
+    <string name="remove">Ka saar</string>
+    <string name="details">Faahfaahin</string>
+    <string name="verbose_logging">Diiwaan faahfaahsan (ciribtir; safaf diiwaan ilbiriqsigii)</string>
+    <string name="profile_name">Magaca astaanta</string>
+    <string name="profile_name_info">Magaca astaantan gaariga. Astaanta gaariga ee Torque mid kasta waxay heshaa astaanteeda plugin, xogteeda iyo khariidado la bartay.</string>
+    <string name="make">Nooca</string>
+    <string name="make_info">Nooca gaariga (tusaale Ford). Waxaa loo isticmaalaa oo keliya in la doorto PID-yada shidaalka ee noocaas ah ee baadhitaanku isku dayi karo.</string>
+    <string name="fuel_source">Isha shidaalka</string>
+    <string name="fuel_source_info">Halka heerka shidaalka cayri ka yimaado. Baadh (ECU waa inuu ku xiran yahay) wuxuu tijaabiyaa musharraxiinta akhris ahaan oo keliya, wuxuuna ku weydiistaa xaqiijin haddii aan laba ilo is waafaqin. Xaqiiji wuxuu ku yaal bogga dejinta iyo ogeysiiska. Midna = baadh marka xigta ee la xidho.</string>
+    <string name="custom_long_name">Magac dheer gaar ah</string>
+    <string name="custom_long_name_info">Kaliya isha «PID dheeri ah oo Torque ah magaca dheer»: magaca dheer ee saxda ah ee PID-ka Torque ee sheega heerka.</string>
+    <string name="tank_size">Cabbirka taangiga</string>
+    <string name="tank_hint">madhan = bilow cabbir ma jiro; la-qabsiga kasta wuxuu bartaa midkiisa.</string>
+    <string name="smoothing_tau">Jilcin τ ilbiriqsi</string>
+    <string name="smoothing_tau_info">Joogtada waqtiga ee shaandhada jilcinta (0 = jilcin ma jiro).</string>
+    <string name="max_skew" formatted="false">Leexashada ugu badan %/s</string>
+    <string name="max_skew_info">Isbeddelka ugu weyn ilbiriqsigii ee heerka la jilciyey raaci karo; gariirka ka sarreeya waa la iska indhatiraa.</string>
+    <string name="fill_jump" formatted="false">Boodka buuxinta %</string>
+    <string name="fill_jump_info">Kor u kaca heerka intaad taagan tahay oo loo tiriyo buuxin.</string>
+    <string name="odometer">Odometerka miles</string>
+    <string name="odometer_info">Ikhtiyaari: geli akhriska odometerka oo Kaydi pin si aad u xirto masaafo astaantan.</string>
+    <string name="additional_tanks">Taangiyo dheeraad ah</string>
+    <string name="active_tank">Taangiga firfircoon</string>
+    <string name="active_tank_info">Taangiga ay ku dhacdo gubashada shidaalka (gal/hr). Ka yimid PID: PID Torque ayaa dooranaya (aqoonsiga taangiga ee ka bilaabma 1).</string>
+    <string name="select_pid">Magaca dheer ee Select-PID</string>
+    <string name="select_pid_info">Kaliya marka Taangiga firfircoon = Ka yimid PID: magaca dheer ee PID-ka Torque ee qiimihiisu yahay aqoonsiga taangiga.</string>
+    <string name="tank_n">Taangi %1$d</string>
+    <string name="tank_n_source">Isha shidaalka ee taangi %1$d</string>
+    <string name="tank_n_custom">Magac dheer gaar ah oo taangi %1$d (tusaale [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">Taangi %1$d gallons</string>
+    <string name="from_pid">Ka yimid PID</string>
+    <string name="unconfirmed"> (aan la xaqiijin)</string>
+    <string name="ecu_connected"> · ECU waa ku xiran yahay</string>
+    <string name="tank_unknown">taangi ?</string>
+    <string name="about_field">Ku saabsan %1$s</string>
+    <string name="err_tau">0 ilaa %1$s s</string>
+    <string name="err_skew">ka sarreeya 0, ugu badnaan %1$s %%/s</string>
+    <string name="err_jump">%1$s ilaa %2$s %%</string>
+    <string name="err_tank">madhan ama tiro ka weyn 0</string>
+    <string name="err_stored">qiime la kaydiyey oo ka baxsan xadka</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">Jilicsan %</string>
+    <string name="axis_error" formatted="false">Khalad (%)</string>
+    <string name="feed_off">Dami</string>
+    <string name="feed_smoothed" formatted="false">Jilicsan %</string>
+    <string name="feed_corrected_chunk" formatted="false">Saxan % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Saxan % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Saxan % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">Weli ma jiro (Baadh ayaa socda marka la xidho)</string>
+    <string name="src_sae_012f">SAE 012F heerka taangiga shidaalka</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Celceliska heerka shidaalka Chrysler</string>
+    <string name="src_toyota_2129">Kooxda Toyota 2129 (tirinta nus-litir)</string>
+    <string name="src_custom_name">PID dheeri ah oo Torque ah magaca dheer</string>
+    <string name="vehicle_default">Gaari 1</string>
+    <string name="vehicle_dated">Gaari %1$s</string>
+    <string name="binding_torque">Ku xiridda Torque…</string>
+    <string name="status_waiting">Sugidda isha shidaalka</string>
+    <string name="status_raw">cayri %1$.1f%%</string>
+    <string name="status_sess"> safar %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing aamusan</string>
+    <string name="map_refit_title">Khariidada dib ayaa loo habeynayaa</string>
+    <string name="map_refit_body">Fuel Smoothing waxay dib u habeynaysaa khariidad %1$s. La-qabsigaas wuxuu akhriyaa 1:1 ilaa dib-u-habeyntu dhammaato.</string>
+    <string name="no_source_title">Isha heerka shidaalka lama dejin</string>
+    <string name="no_source_body">Fuel Smoothing ma laha il heer shidaal oo loogu talagalay %1$s. Fur bogga dejinta oo taabo Baadh, ama dooro il.</string>
+    <string name="no_level_title">Heer shidaal ma jiro safarkan</string>
+    <string name="no_level_body">%1$s ma siinin heer la isticmaali karo %2$s. Hubi xidhiidhka adapterka, ama Baadh ka socodsii bogga dejinta.</string>
+    <string name="source_found_title">Isha heerka shidaalka waa la helay</string>
+    <string name="source_found_body">Waxaa la isticmaalayaa %1$s %2$s (%3$s).</string>
+    <string name="source_missing_title">Isha heerka shidaalka lama helin</string>
+    <string name="source_missing_body">Fur dejinta Fuel Smoothing oo dooro il (ama ku dar PID-ka Torque), kadib taabo Baadh.</string>
+    <string name="confirm_source_title">Xaqiiji isha heerka shidaalka</string>
+    <string name="confirm_source_body">Waa la baadhay %1$s oo akhrinaya %2$.0f %% %3$s. Hubi inuu la mid yahay cabbirka shidaalka ee dashboard-ka, kadib taabo Xaqiiji. Xaqiiji wuxuu ku yaal bogga dejinta iyo ogeysiiska (%4$s).</string>
+    <string name="confirm_source_body_nolevel">Waa la baadhay %1$s %2$s. Hubi inuu la mid yahay cabbirka shidaalka ee dashboard-ka, kadib taabo Xaqiiji. Xaqiiji wuxuu ku yaal bogga dejinta iyo ogeysiiska (%3$s).</string>
+    <string name="recording_title">Waxaa loo duubayaa %1$s</string>
+    <string name="recording_body">Gaarigan waa %1$s (%2$s), laakiin astaanta Torque waa \'%3$s\'. Xogtu waxay aaddaa %1$s; taabo si aad u furto Torque oo aad u bedesho astaanta.</string>
+    <string name="wrong_vehicle_title">Astaanta gaariga khaldan?</string>
+    <string name="wrong_suggest_profile">Astaanta Torque \'%1$s\'</string>
+    <string name="wrong_suggest_new">astaanta gaari cusub</string>
+    <string name="wrong_vehicle_body">Astaanta Torque \'%1$s\' kuma habboona gaarigan (%2$s). Soo jeedin: %3$s. Xogta waa la hayaa, waana la tuuraa dhammaadka safarka haddii aadan haysan.</string>
+    <string name="keeping_title">Xogta safarka waa la hayaa</string>
+    <string name="keeping_body">Safarkan waxaa lagu kaydin doonaa %1$s. API-ga plugin ee Torque ma abuuri karo ama ma beddeli karo astaamaha Torque: Torque gudaheed, abuuro ama dooro astaanta gaariga oo lagu magacaabo \'%2$s\'.</string>
+    <string name="action_new_profile">Samee astaanta cusub</string>
+    <string name="action_use">Isticmaal %1$s</string>
+</resources>

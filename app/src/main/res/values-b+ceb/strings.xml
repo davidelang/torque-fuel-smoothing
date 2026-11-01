@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">Ang mga tip anaa sa bersiyon sa Play Store</string>
+    <string name="help_body">Dali nga pagsugod\n1. I-install ang Torque Pro (ang bayad nga bersiyon; ang Torque Lite dili mosuporta og mga plugin) ug ipares ang imong OBD-II adapter.\n2. I-on kini nga plugin sa Torque → Mga setting → Mga plugin.\n3. Tugoti ang mga pahibalo, ug ibutang ang paggamit sa baterya sa Walay utlanan aron masugdan sa Torque kini nga plugin sa luyo.\n4. Sa Torque, pilia ang profile sa sakyanan sa awto nga imong gimaneho. Ang datos gitipigan matag profile sa Torque ug gitandi sa identidad nga VIN/ECU sa sakyanan.\n5. Sa bag-ong profile, ang tinubdan sa sugnod mamatikdan kung magkonektar ka; kung pangutan-on, itandi kini sa gauge sa dashboard dayon pindota ang Kumpirma. Ang Kumpirma anaa sa panid sa setup ug sa pahibalo. Mahimo usab nimo kining pilion sa ubos.\n6. Ang gidak-on sa tangke mao ang sugod nga gidak-on alang sa pagkasibo sa Chunk hangtod makakat-on kini sa iyang kaugalingon. Ang plugin dili gyud mag-usab niini; ang nakat-unan nga gidak-on sa matag pagkasibo gipakita sa ilawom.\n7. Sa Torque, idugang ang mga gauge alang sa [FuelSmooth] Smoothed Fuel Level ug, alang sa matag pagkasibo, Corrected %, Remaining, DTE ug Tank size. Ang DTE mao ang Remaining pilo sa long-term nga mpg sa Torque. Usa ka pahibalo samtang nag-refit nag-ingon nga kana nga pagkasibo mobasa og 1:1 hangtod mahuman ang refit.\n8. Ibalik ang lebel sa sugnod ngadto sa Torque: Palong, Hinapsay, o Gitul-id gikan sa pagkasibo sa Chunk, Band o Kalman ngadto sa imong 012F gauge.\n9. Ang sugnod iihap lamang samtang nagdagan ang makina. Ang plugin modagan lamang samtang ang Torque konektado sa ECU.\n10. Padayon sa pagdrayb ug pagpuno; ang katukma motubo sa daghang partial nga tangke. Kung mogawas ang pahibalo Sayop nga profile sa sakyanan?, pilia kung unsa ang buhaton niana nga biyahe.\n11. Ang tanang datos magpabilin niini nga telepono. Walay GPS o lokasyon nga marekord.</string>
+    <string name="about_body">%1$s\nBersiyon %2$s (%3$s)\nUsa ka plugin alang sa Torque Pro. Dili kauban sa Torque o ni Ian Hawkins.\nAng tanang datos magpabilin niini nga telepono; walay GPS o lokasyon nga marekord.\n\nLisensya\nCopyright David Lang. Tanang katungod gigahin.</string>
+    <string name="open_source_notices">Mga librarya nga open source\nKini nga app naggamit sa mga librarya sa ubos. Ang ilang mga lisensya bulag sa copyright sa ibabaw.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), gikinahanglan sa Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">Bug-os nga manwal (online)</string>
+    <string name="show_fuel_notification">Ipakita ang lebel sa sugnod sa pahibalo</string>
+    <string name="write_012f">Ibalik ang lebel sa sugnod ngadto sa Torque (mopatong sa 012F)</string>
+    <string name="running_quiet">Nagdagan ang Fuel Smoothing</string>
+    <string name="tap_to_start">Pindota aron sugdan ang Fuel Smoothing</string>
+    <string name="tap_to_start_text">Ang pagsugod sa baterya o sa luyo gidumilian. Ablihi kausa aron ang plugin makadagan uban sa Torque.</string>
+    <string name="tank2_help">Idugang ang dugang nga mga tangke kung gikinahanglan (ang tangke sa pabrika 1 kanunay magpabilin). Ayaw ikonektar ang mga sensor sa pin nga PCM FLI (bakak nga pagpuno). Ang matag dugang nga tangke nagkinahanglan sa kaugalingong dugang nga PID sa Torque (MCU Mode 22, talagsaong ngalan — dili 012F o Ford 16C1). Ang bili sa Select-PID mao ang id sa tangke sugod sa 1. Ang Gal/hr i-charge lamang sa aktibong tangke.</string>
+    <string name="tap_start_channel">Pindota aron sugdan</string>
+    <string name="tank_size_info">Ang gidak-on sa tangke mao ang sugod nga gidak-on alang sa pagkasibo sa Chunk hangtod makakat-on kini sa iyang kaugalingon. Ang plugin dili gyud mag-usab niini; ang nakat-unan nga gidak-on sa matag pagkasibo gipakita sa ilawom.</string>
+    <string name="feed_012f_info">Nagsulat og bili sa stock nga Fuel Level sa Torque (012F) aron ipakita sa kasamtangang mga gauge: Palong, Hinapsay, o Gitul-id gikan sa pagkasibo sa Chunk, Band o Kalman. Ang pagkasibo nga wala pa matukod mosulat sa hinapsay nga lebel.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">wala pay gidak-on</string>
+    <string name="size_none_sd">wala pay gidak-on ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">Tabang</string>
+    <string name="about">Mahitungod</string>
+    <string name="need_torque">Nagkinahanglan og Torque Pro (bayad). Ang Torque Lite dili mosuporta og mga plugin.</string>
+    <string name="get_torque">Kuhaa ang Torque Pro</string>
+    <string name="privacy">Pribasidad</string>
+    <string name="send_feedback">Ipadala ang feedback</string>
+    <string name="tip">Tip</string>
+    <string name="thanks">Salamat</string>
+    <string name="close">Sirhi</string>
+    <string name="ok">OK</string>
+    <string name="detect">Detekta</string>
+    <string name="confirm">Kumpirma</string>
+    <string name="save_pin">I-save ang pin</string>
+    <string name="add_tank">Idugang ang dugang nga tangke</string>
+    <string name="remove">Tangtanga</string>
+    <string name="details">Mga detalye</string>
+    <string name="verbose_logging">Detalyadong pag-log (debug; mga linya sa log matag segundo)</string>
+    <string name="profile_name">Ngalan sa profile</string>
+    <string name="profile_name_info">Ang ngalan niini nga profile sa sakyanan. Ang matag profile sa sakyanan sa Torque makakuha sa kaugalingong profile sa plugin, datos, ug nakat-unan nga mga mapa.</string>
+    <string name="make">Tatak</string>
+    <string name="make_info">Tatak sa sakyanan (pananglitan Ford). Gigamit lamang sa pagpili kung unsang mga PID sa sugnod nga piho sa tatak ang mahimong sulayan sa deteksyon.</string>
+    <string name="fuel_source">Tinubdan sa sugnod</string>
+    <string name="fuel_source_info">Asa gikan ang hilaw nga lebel sa sugnod. Detekta (ang ECU kinahanglan konektado) mosulay sa mga kandidato sa pagbasa lamang ug mangayo kanimo nga kumpirmahon gawas kon duha ka tinubdan magkauyon. Ang Kumpirma anaa sa panid sa setup ug sa pahibalo. Wala = detekta sa sunod nga koneksyon.</string>
+    <string name="custom_long_name">Kaugalingong taas nga ngalan</string>
+    <string name="custom_long_name_info">Alang lamang sa tinubdan nga «dugang nga PID sa Torque pinaagi sa taas nga ngalan»: ang eksaktong taas nga ngalan sa PID sa Torque nga nagtaho sa lebel.</string>
+    <string name="tank_size">Gidak-on sa tangke</string>
+    <string name="tank_hint">walay sulod = walay sugod nga gidak-on; ang matag pagkasibo makakat-on sa iyang kaugalingon.</string>
+    <string name="smoothing_tau">Pagpahapsay τ segundo</string>
+    <string name="smoothing_tau_info">Ang time constant sa filter sa pagpahapsay (0 = walay pagpahapsay).</string>
+    <string name="max_skew" formatted="false">Pinakadako nga hilig %/s</string>
+    <string name="max_skew_info">Pinakadako nga kausaban matag segundo nga masunod sa hinapsay nga lebel; ang pag-uyog lapas niini dili tagdon.</string>
+    <string name="fill_jump" formatted="false">Lukso sa pagpuno %</string>
+    <string name="fill_jump_info">Pagsaka sa lebel samtang hunong nga ihapon nga pagpuno.</string>
+    <string name="odometer">Odometer sa miles</string>
+    <string name="odometer_info">Opsyonal: isulod ang pagbasa sa odometer ug I-save ang pin aron i-angkla ang gilay-on alang niini nga profile.</string>
+    <string name="additional_tanks">Dugang nga mga tangke</string>
+    <string name="active_tank">Aktibong tangke</string>
+    <string name="active_tank_info">Asa nga tangke i-charge ang pagsunog sa sugnod (gal/hr). Gikan sa PID: usa ka PID sa Torque ang mopili (id sa tangke sugod sa 1).</string>
+    <string name="select_pid">Taas nga ngalan sa Select-PID</string>
+    <string name="select_pid_info">Lamang kung Aktibong tangke = Gikan sa PID: ang taas nga ngalan sa PID sa Torque kansang bili mao ang id sa tangke.</string>
+    <string name="tank_n">Tangke %1$d</string>
+    <string name="tank_n_source">Tinubdan sa sugnod sa tangke %1$d</string>
+    <string name="tank_n_custom">Kaugalingong taas nga ngalan sa tangke %1$d (pananglitan [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">Tangke %1$d gallons</string>
+    <string name="from_pid">Gikan sa PID</string>
+    <string name="unconfirmed"> (wala nakumpirma)</string>
+    <string name="ecu_connected"> · ECU konektado</string>
+    <string name="tank_unknown">tangke ?</string>
+    <string name="about_field">Mahitungod sa %1$s</string>
+    <string name="err_tau">0 hangtod %1$s s</string>
+    <string name="err_skew">labaw sa 0, labing daghan %1$s %%/s</string>
+    <string name="err_jump">%1$s hangtod %2$s %%</string>
+    <string name="err_tank">walay sulod o numero nga labaw sa 0</string>
+    <string name="err_stored">gitipigan nga bili gawas sa sakop</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">Hinapsay %</string>
+    <string name="axis_error" formatted="false">Sayop (%)</string>
+    <string name="feed_off">Palong</string>
+    <string name="feed_smoothed" formatted="false">Hinapsay %</string>
+    <string name="feed_corrected_chunk" formatted="false">Gitul-id % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Gitul-id % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Gitul-id % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">Wala pa (ang Detekta modagan kung magkonektar)</string>
+    <string name="src_sae_012f">SAE 012F lebel sa tangke sa sugnod</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Average nga lebel sa sugnod sa Chrysler</string>
+    <string name="src_toyota_2129">Cluster sa Toyota 2129 (mga ihap sa tunga sa litro)</string>
+    <string name="src_custom_name">Dugang nga PID sa Torque pinaagi sa taas nga ngalan</string>
+    <string name="vehicle_default">Sakyanan 1</string>
+    <string name="vehicle_dated">Sakyanan %1$s</string>
+    <string name="binding_torque">Nagkonektar sa Torque…</string>
+    <string name="status_waiting">Naghulat sa tinubdan sa sugnod</string>
+    <string name="status_raw">hilaw %1$.1f%%</string>
+    <string name="status_sess"> biyahe %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing hilom</string>
+    <string name="map_refit_title">Ang mapa gi-refit</string>
+    <string name="map_refit_body">Ang Fuel Smoothing nag-refit og mapa alang sa %1$s. Kana nga pagkasibo mobasa og 1:1 hangtod mahuman ang refit.</string>
+    <string name="no_source_title">Walay tinubdan sa lebel sa sugnod nga gitakda</string>
+    <string name="no_source_body">Ang Fuel Smoothing walay tinubdan sa lebel sa sugnod alang sa %1$s. Ablihi ang panid sa setup ug pindota ang Detekta, o pagpili og tinubdan.</string>
+    <string name="no_level_title">Walay lebel sa sugnod niini nga biyahe</string>
+    <string name="no_level_body">Ang %1$s wala maghatag ug magamit nga lebel alang sa %2$s. Susiha ang koneksyon sa adapter, o padagana ang Detekta sa panid sa setup.</string>
+    <string name="source_found_title">Nakit-an ang tinubdan sa lebel sa sugnod</string>
+    <string name="source_found_body">Gigamit ang %1$s alang sa %2$s (%3$s).</string>
+    <string name="source_missing_title">Walay nakit-an nga tinubdan sa lebel sa sugnod</string>
+    <string name="source_missing_body">Ablihi ang setup sa Fuel Smoothing ug pagpili og tinubdan (o idugang ang PID sa Torque), dayon pindota ang Detekta.</string>
+    <string name="confirm_source_title">Kumpirmaha ang tinubdan sa lebel sa sugnod</string>
+    <string name="confirm_source_body">Namatikdan ang %1$s nga nagbasa og %2$.0f %% alang sa %3$s. Susiha nga mohaum kini sa gauge sa sugnod sa dashboard, dayon pindota ang Kumpirma. Ang Kumpirma anaa sa panid sa setup ug sa pahibalo (%4$s).</string>
+    <string name="confirm_source_body_nolevel">Namatikdan ang %1$s alang sa %2$s. Susiha nga mohaum kini sa gauge sa sugnod sa dashboard, dayon pindota ang Kumpirma. Ang Kumpirma anaa sa panid sa setup ug sa pahibalo (%3$s).</string>
+    <string name="recording_title">Nagrekord ngadto sa %1$s</string>
+    <string name="recording_body">Kini nga sakyanan mao ang %1$s (%2$s), apan ang profile sa Torque mao ang \'%3$s\'. Ang datos moadto sa %1$s; pindota aron ablihan ang Torque ug ibaylo ang profile.</string>
+    <string name="wrong_vehicle_title">Sayop nga profile sa sakyanan?</string>
+    <string name="wrong_suggest_profile">Profile sa Torque \'%1$s\'</string>
+    <string name="wrong_suggest_new">usa ka bag-ong profile sa sakyanan</string>
+    <string name="wrong_vehicle_body">Ang profile sa Torque \'%1$s\' dili mohaum niini nga sakyanan (%2$s). Sugyot: %3$s. Ang datos gikuptan ug ilabay sa katapusan sa biyahe gawas kon imong tipigan.</string>
+    <string name="keeping_title">Ang datos sa biyahe gitipigan</string>
+    <string name="keeping_body">Kini nga biyahe itipigan sa %1$s. Ang plugin API sa Torque dili makahimo o makabaylo og mga profile sa Torque: sa Torque, paghimo o pagpili og profile sa sakyanan nga ginganlan og \'%2$s\'.</string>
+    <string name="action_new_profile">Paghimo og bag-ong profile</string>
+    <string name="action_use">Gamita ang %1$s</string>
+</resources>

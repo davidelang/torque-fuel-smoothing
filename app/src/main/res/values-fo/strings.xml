@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">Drykkjupeningur er í Play Store-útgávuni</string>
+    <string name="help_body">Skjótt byrjan\n1. Legg Torque Pro inn (hina goldnu útgávuna; Torque Lite stuðlar ikki plugins) og par tín OBD-II-adapter.\n2. Ger hetta plugin virkið í Torque → Stillingar → Plugins.\n3. Loyv fráboðanum, og set battaríbrúk til Óavmarkað, so Torque kann byrja hetta plugin í bakgrundini.\n4. Vel í Torque akfarsprofilin fyri bilin, tú koyrir. Dáta verða goymd fyri hvønn Torque-profil og kannað móti VIN/ECU-samleikanum hjá akfarinum.\n5. Á einum nýggjum profili verður brennievniskeldan uppdagað, tá tú bindur í; verður tú spurdur, ber hana saman við mátaran á instrumentborðinum og trýst á Vátta. Vátta er á uppsetingarsíðuni og í fráboðanini. Tú kanst eisini velja hana niðanfyri.\n6. Tangastødd er byrjanarstøddin hjá Chunk-tillagingini, til hon lærir sína egnu. Plugin broytir hana ongantíð; lærda støddin hjá hvørjari tillaging sæst undir henni.\n7. Legg í Torque málarar afturat fyri [FuelSmooth] Smoothed Fuel Level og fyri hvørja tillaging Corrected %, Remaining, DTE og Tank size. DTE er Remaining faldað við langtíðar mpg hjá Torque. Ein boð undir endurtillaging sigur, at tann tillagingin lesur 1:1, til endurtillagingin er liðug.\n8. Send brennievnisstøðuna aftur til Torque: Av, Slættað ella Rættað úr Chunk-, Band- ella Kalman-tillagingini á tín 012F-mátara.\n9. Brennievni verður bert talt, meðan motorurin gongur. Plugin koyrir bert, meðan Torque er bundið at ECU.\n10. Halt fram at koyra og fylla; neyvleikin veksur yvir fleiri lutvíst fyltar tangar. Kemur fráboðanin Skeivt akfarsprofil?, vel hvat skal henda við teirri ferðini.\n11. Øll dáta verða verandi á hesum telefoninum. Eingin GPS ella staðseting verður skrásett.</string>
+    <string name="about_body">%1$s\nÚtgáva %2$s (%3$s)\nEitt plugin til Torque Pro. Ikki knýtt at Torque ella Ian Hawkins.\nØll dáta verða verandi á hesum telefoninum; eingin GPS ella staðseting verður skrásett.\n\nLoyvi\nCopyright David Lang. Øll rættindi vard.</string>
+    <string name="open_source_notices">Opin keldu-bókasøvn\nHenda appið brúkar bókasøvnini niðanfyri. Loyvini teirra eru skild frá upphavsrættinum omanfyri.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), kravd av Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">Full vegleiðing (á netinum)</string>
+    <string name="show_fuel_notification">Vís brennievnisstøðu í fráboðan</string>
+    <string name="write_012f">Send brennievnisstøðu aftur til Torque (yvirskrivar 012F)</string>
+    <string name="running_quiet">Fuel Smoothing koyrir</string>
+    <string name="tap_to_start">Trýst fyri at byrja Fuel Smoothing</string>
+    <string name="tap_to_start_text">Byrjan frá battarí ella bakgrund varð noktað. Lat upp eina ferð, so plugin kann koyra saman við Torque.</string>
+    <string name="tank2_help">Legg eyka tangar afturat eftir tørvi (verksmiðjutangi 1 verður altíð verandi). Bind ikki gjevarar í PCM FLI-pinnin (skeiv áfylling). Hvør eyka tangi krevur sín egna eyka-PID í Torque (MCU Mode 22, unikt navn — ikki 012F ella Ford 16C1). Virðið á Select-PID er tanganummar frá 1. Gal/hr verður bert skrivað á virkna tangan.</string>
+    <string name="tap_start_channel">Trýst fyri at byrja</string>
+    <string name="tank_size_info">Tangastødd er byrjanarstøddin hjá Chunk-tillagingini, til hon lærir sína egnu. Plugin broytir hana ongantíð; lærda støddin hjá hvørjari tillaging sæst undir henni.</string>
+    <string name="feed_012f_info">Skrivar eitt virði á upprunaliga Fuel Level hjá Torque (012F), so verandi málarar vísa tað: Av, Slættað ella Rættað úr Chunk-, Band- ella Kalman-tillagingini. Ein tillaging, sum enn ikki er bygd, skrivar slættaðu støðuna.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">eingin stødd enn</string>
+    <string name="size_none_sd">eingin stødd enn ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">Hjálp</string>
+    <string name="about">Um</string>
+    <string name="need_torque">Krevur Torque Pro (goldið). Torque Lite stuðlar ikki plugins.</string>
+    <string name="get_torque">Fá Torque Pro</string>
+    <string name="privacy">Privatlív</string>
+    <string name="send_feedback">Send viðmerking</string>
+    <string name="tip">Drykkjupeningur</string>
+    <string name="thanks">Takk</string>
+    <string name="close">Lat aftur</string>
+    <string name="ok">OK</string>
+    <string name="detect">Uppdaga</string>
+    <string name="confirm">Vátta</string>
+    <string name="save_pin">Goym pin</string>
+    <string name="add_tank">Legg eyka tanga afturat</string>
+    <string name="remove">Tak burtur</string>
+    <string name="details">Smálutir</string>
+    <string name="verbose_logging">Útgreinað logg (feilfinning; logglinjur hvørt sekund)</string>
+    <string name="profile_name">Profilnavn</string>
+    <string name="profile_name_info">Navnið á hesum akfarsprofili. Hvør akfarsprofilur í Torque fær sín egna plugin-profil, egin dáta og lærd kort.</string>
+    <string name="make">Merki</string>
+    <string name="make_info">Akfarsmerki (t.d. Ford). Verður bert brúkt til at velja, hvørji merkisbundin brennievnis-PID uppdagan kann royna.</string>
+    <string name="fuel_source">Brennievniskelda</string>
+    <string name="fuel_source_info">Hvaðani ráa brennievnisstøðan kemur. Uppdaga (ECU skal vera bundin í) roynir kanditatarnar bert lesandi og biður teg vátta, uttan so at tvær keldur eru samdar. Vátta er á uppsetingarsíðuni og í fráboðanini. Ongin = uppdaga við næsta sambandi.</string>
+    <string name="custom_long_name">Serligt langt navn</string>
+    <string name="custom_long_name_info">Bert fyri kelduna «eyka-PID í Torque eftir longum navni»: nágreiniliga langa navnið á PID í Torque, sum sigur støðuna.</string>
+    <string name="tank_size">Tangastødd</string>
+    <string name="tank_hint">tómt = eingin byrjanarstødd; hvør tillaging lærir sína egnu.</string>
+    <string name="smoothing_tau">Sløtting τ sekund</string>
+    <string name="smoothing_tau_info">Tíðarkonstanturin hjá sløtingarfiltinum (0 = eingin sløtting).</string>
+    <string name="max_skew" formatted="false">Maks sveiggj %/s</string>
+    <string name="max_skew_info">Størsta broyting um sekundið, sum slættaða støðan má fylgja; skvettur oman fyri hetta verður loypt um.</string>
+    <string name="fill_jump" formatted="false">Áfyllingarhopp %</string>
+    <string name="fill_jump_info">Hækking í støðu, meðan tú stendur stillur, sum telist sum áfylling.</string>
+    <string name="odometer">Kilometurteljari í miles</string>
+    <string name="odometer_info">Valfrítt: skriva kilometurteljarin og Goym pin fyri at festa frástøðuna fyri henda profilin.</string>
+    <string name="additional_tanks">Eyka tangar</string>
+    <string name="active_tank">Virkin tangi</string>
+    <string name="active_tank_info">Hvørjum tanga brennievnisnýtslan (gal/hr) verður skrivað á. Frá PID: ein PID í Torque velur hann (tanganummar frá 1).</string>
+    <string name="select_pid">Langt navn á Select-PID</string>
+    <string name="select_pid_info">Bert tá Virkin tangi = Frá PID: langa navnið á PID í Torque, sum hevur tanganummarið sum virði.</string>
+    <string name="tank_n">Tangi %1$d</string>
+    <string name="tank_n_source">Brennievniskelda hjá tanga %1$d</string>
+    <string name="tank_n_custom">Serligt langt navn hjá tanga %1$d (t.d. [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">Tangi %1$d gallons</string>
+    <string name="from_pid">Frá PID</string>
+    <string name="unconfirmed"> (óváttað)</string>
+    <string name="ecu_connected"> · ECU bundin í</string>
+    <string name="tank_unknown">tangi ?</string>
+    <string name="about_field">Um %1$s</string>
+    <string name="err_tau">0 til %1$s s</string>
+    <string name="err_skew">yvir 0, í mesta lagi %1$s %%/s</string>
+    <string name="err_jump">%1$s til %2$s %%</string>
+    <string name="err_tank">tómt ella eitt tal yvir 0</string>
+    <string name="err_stored">goymt virði uttan fyri økið</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">Slættað %</string>
+    <string name="axis_error" formatted="false">Feilur (%)</string>
+    <string name="feed_off">Av</string>
+    <string name="feed_smoothed" formatted="false">Slættað %</string>
+    <string name="feed_corrected_chunk" formatted="false">Rættað % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Rættað % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Rættað % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">Ongin enn (Uppdaga koyrir við sambandi)</string>
+    <string name="src_sae_012f">SAE 012F støða í brennievnistanga</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Miðal brennievnisstøða hjá Chrysler</string>
+    <string name="src_toyota_2129">Toyota-instrument 2129 (tøl av hálvum litrum)</string>
+    <string name="src_custom_name">Eyka-PID í Torque eftir longum navni</string>
+    <string name="vehicle_default">Akfar 1</string>
+    <string name="vehicle_dated">Akfar %1$s</string>
+    <string name="binding_torque">Bindur til Torque…</string>
+    <string name="status_waiting">Bíðar eftir brennievniskeldu</string>
+    <string name="status_raw">rá %1$.1f%%</string>
+    <string name="status_sess"> ferð %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing still</string>
+    <string name="map_refit_title">Kort verður endurtillagað</string>
+    <string name="map_refit_body">Fuel Smoothing endurtillagar eitt kort fyri %1$s. Tann tillagingin lesur 1:1, til endurtillagingin er liðug.</string>
+    <string name="no_source_title">Eingin kelda til brennievnisstøðu sett</string>
+    <string name="no_source_body">Fuel Smoothing hevur onga keldu til brennievnisstøðu fyri %1$s. Lat uppsetingarsíðuna upp og trýst á Uppdaga, ella vel eina keldu.</string>
+    <string name="no_level_title">Eingin brennievnisstøða á hesari ferðini</string>
+    <string name="no_level_body">%1$s gav onga brúkiliga støðu fyri %2$s. Kanna sambandið við adapterin, ella koyr Uppdaga á uppsetingarsíðuni.</string>
+    <string name="source_found_title">Kelda til brennievnisstøðu funnin</string>
+    <string name="source_found_body">Brúkar %1$s fyri %2$s (%3$s).</string>
+    <string name="source_missing_title">Eingin kelda til brennievnisstøðu funnin</string>
+    <string name="source_missing_body">Lat uppsetingina hjá Fuel Smoothing upp og vel eina keldu (ella legg PID afturat í Torque), og trýst síðan á Uppdaga.</string>
+    <string name="confirm_source_title">Vátta keldu til brennievnisstøðu</string>
+    <string name="confirm_source_body">Uppdagaði %1$s, sum vísir %2$.0f %% fyri %3$s. Kanna, at tað samsvarar við mátaran á instrumentborðinum, og trýst síðan á Vátta. Vátta er á uppsetingarsíðuni og í fráboðanini (%4$s).</string>
+    <string name="confirm_source_body_nolevel">Uppdagaði %1$s fyri %2$s. Kanna, at tað samsvarar við mátaran á instrumentborðinum, og trýst síðan á Vátta. Vátta er á uppsetingarsíðuni og í fráboðanini (%3$s).</string>
+    <string name="recording_title">Tekur upp til %1$s</string>
+    <string name="recording_body">Hetta akfarið er %1$s (%2$s), men profilurin í Torque er \'%3$s\'. Dáta fara til %1$s; trýst fyri at lata Torque upp og skifta profil.</string>
+    <string name="wrong_vehicle_title">Skeivt akfarsprofil?</string>
+    <string name="wrong_suggest_profile">Torque-profil \'%1$s\'</string>
+    <string name="wrong_suggest_new">eitt nýtt akfarsprofil</string>
+    <string name="wrong_vehicle_body">Profilurin í Torque \'%1$s\' samsvarar ikki við hetta akfarið (%2$s). Uppskot: %3$s. Dáta verða hildin og blakað, tá ferðin endar, uttan so at tú varðveitir tey.</string>
+    <string name="keeping_title">Ferðardáta verða varðveitt</string>
+    <string name="keeping_body">Henda ferðin verður goymd í %1$s. Plugin-API hjá Torque kann ikki stovna ella skifta profilar í Torque: stovna ella vel í Torque ein akfarsprofil við navninum \'%2$s\'.</string>
+    <string name="action_new_profile">Stovna nýggjan profil</string>
+    <string name="action_use">Nýt %1$s</string>
+</resources>

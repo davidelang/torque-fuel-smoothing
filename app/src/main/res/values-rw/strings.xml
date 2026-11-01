@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">Amatipsi ari mu verisiyo ya Play Store</string>
+    <string name="help_body">Gutangira vuba\n1. Shyiramo Torque Pro (verisiyo yishyurwa; Torque Lite idashyigikira plugins) hanyuma uhuze adapter yawe ya OBD-II.\n2. Fungura iyi plugin muri Torque → Igenamiterere → Plugins.\n3. Emera imenyesha, kandi ushyire ikoreshwa rya batiri kuri Nta gipimo kugira ngo Torque ishobore gutangiza iyi plugin inyuma.\n4. Muri Torque, hitamo profil y\'imodoka y\'imodoka uyobora. Amakuru abikwa kuri buri profil ya Torque kandi ageragezwa n\'umwirondoro VIN/ECU w\'imodoka.\n5. Ku profil nshya, inkomoko y\'amavuta imenywa iyo uhuza; niba ubajijwe, uyigereranye n\'igipimo cyo ku kibaho hanyuma ukande Emeza. Emeza iri ku ipaji yo gushiraho no mu menyesha. Ushobora kandi kuyihitamo hepfo.\n6. Ingano y\'itanki ni ingano yo gutangiriraho y\'guhuza Chunk kugeza yige iya yo. Plugin ntigira icyo ihindura; ingano buri guhuza kwize igaragara hepfo yayo.\n7. Muri Torque, ongeraho ibipimo bya [FuelSmooth] Smoothed Fuel Level n\'ibya buri guhuza: Corrected %, Remaining, DTE na Tank size. DTE ni Remaining ikubye mpg y\'igihe kirekire ya Torque. Itangazo mu gihe cyo kongera guhuza rivuga ko uko guhuza gusoma 1:1 kugeza kongera guhuza kurangira.\n8. Subiza urwego rw\'amavuta kuri Torque: Kuzimya, Kurambura, cyangwa Gukosora biva mu guhuza Chunk, Band cyangwa Kalman ku gipimo cyawe cya 012F.\n9. Amavuta abarwa gusa igihe moteri ikora. Plugin ikora gusa igihe Torque ifatanyije na ECU.\n10. Komeza kuyobora no kuzuza; ukuri kurushaho kuboneka ku matanki atuzuye menshi. Niba imenyesha Profil y\'imodoka itari yo? igaragara, hitamo icyo ukora kuri urwo rugendo.\n11. Amakuru yose aguma kuri iyi telefoni. Nta GPS cyangwa ahantu bifashwe.</string>
+    <string name="about_body">%1$s\nVerisiyo %2$s (%3$s)\nPlugin ya Torque Pro. Ntabwo ifitanye isano na Torque cyangwa Ian Hawkins.\nAmakuru yose aguma kuri iyi telefoni; nta GPS cyangwa ahantu bifashwe.\n\nUruhushya\nCopyright David Lang. Uburenganzira bwose burabitswe.</string>
+    <string name="open_source_notices">Amabhuku y\'inkomoko ifunguye\nIyi porogaramu ikoresha amabhuku ari hepfo. Amapatenti yayo atandukanye n\'uburenganzira bw\'umwanditsi bwo hejuru.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), bisabwa na Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">Inyobora yuzuye (ku murongo)</string>
+    <string name="show_fuel_notification">Erekana urwego rw\'amavuta mu menyesha</string>
+    <string name="write_012f">Subiza urwego rw\'amavuta kuri Torque (yandika hejuru ya 012F)</string>
+    <string name="running_quiet">Fuel Smoothing irakora</string>
+    <string name="tap_to_start">Kanda utangire Fuel Smoothing</string>
+    <string name="tap_to_start_text">Gutangira ku batiri cyangwa inyuma byanzwe. Fungura rimwe kugira ngo plugin ikore hamwe na Torque.</string>
+    <string name="tank2_help">Ongeraho izindi tanki uko bikenewe (itanki ya ruganda 1 iguma). Ntuhure abatanga ku pin ya PCM FLI (kuzuza binyoma). Buri tanki y\'inyongera ikeneye PID y\'inyongera ya Torque (MCU Mode 22, izina ryihariye — si 012F cyangwa Ford 16C1). Agaciro ka Select-PID ni id y\'itanki itangirira kuri 1. Gal/hr ishyirwa ku tanki ikora gusa.</string>
+    <string name="tap_start_channel">Kanda utangire</string>
+    <string name="tank_size_info">Ingano y\'itanki ni ingano yo gutangiriraho y\'guhuza Chunk kugeza yige iya yo. Plugin ntigira icyo ihindura; ingano buri guhuza kwize igaragara hepfo yayo.</string>
+    <string name="feed_012f_info">Yandika agaciro ku Fuel Level isanzwe ya Torque (012F) kugira ngo ibipimo bisanzwe kibyerekane: Kuzimya, Kurambura, cyangwa Gukosora biva mu guhuza Chunk, Band cyangwa Kalman. Guhuza kutarabakwa gusa kwandika urwego rwarambuye.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">ntago ingano iraboneka</string>
+    <string name="size_none_sd">ntago ingano iraboneka ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">Ubufasha</string>
+    <string name="about">Ibyerekeye</string>
+    <string name="need_torque">Ikeneye Torque Pro (yishyurwa). Torque Lite idashyigikira plugins.</string>
+    <string name="get_torque">Bona Torque Pro</string>
+    <string name="privacy">Ibanga</string>
+    <string name="send_feedback">Ohereza ibitekerezo</string>
+    <string name="tip">Itipsi</string>
+    <string name="thanks">Urakoze</string>
+    <string name="close">Funga</string>
+    <string name="ok">OK</string>
+    <string name="detect">Menya</string>
+    <string name="confirm">Emeza</string>
+    <string name="save_pin">Bika pin</string>
+    <string name="add_tank">Ongeraho indi tanki</string>
+    <string name="remove">Kuraho</string>
+    <string name="details">Ibisobanuro</string>
+    <string name="verbose_logging">Kwandika birambuye (debug; imirongo ya log buri segonda)</string>
+    <string name="profile_name">Izina rya profil</string>
+    <string name="profile_name_info">Izina rya iyi profil y\'imodoka. Buri profil y\'imodoka ya Torque ibona profil ya plugin yayo, amakuru yayo n\'amakarita yize.</string>
+    <string name="make">Ikirango</string>
+    <string name="make_info">Ikirango cy\'imodoka (urugero Ford). Ikoreshwa gusa mu guhitamo PID z\'amavuta z\'ikirango kumenya gushobora kugerageza.</string>
+    <string name="fuel_source">Inkomoko y\'amavuta</string>
+    <string name="fuel_source_info">Urwego rw\'amavuta rudatunganyije ruva he. Menya (ECU igomba kuba ihujwe) igerageza abashoboka isoma gusa kandi ikagusaba kwemeza keretse inkomoko ebyiri bihuye. Emeza iri ku ipaji yo gushiraho no mu menyesha. Nta na kimwe = menya ku ihuzwa rikurikira.</string>
+    <string name="custom_long_name">Izina rirerire ryihariye</string>
+    <string name="custom_long_name_info">Gusa ku nkomoko «PID y\'inyongera ya Torque ukurikije izina rirerire»: izina rirerire nyaryo rya PID ya Torque itanga urwego.</string>
+    <string name="tank_size">Ingano y\'itanki</string>
+    <string name="tank_hint">ubusa = nta ngano yo gutangiriraho; buri guhuza kwigira kwayo.</string>
+    <string name="smoothing_tau">Kurambura τ amasegonda</string>
+    <string name="smoothing_tau_info">Igihe gihoraho cy\'akayunguruzo ko kurambura (0 = nta kurambura).</string>
+    <string name="max_skew" formatted="false">Kunyuranuka ntarengwa %/s</string>
+    <string name="max_skew_info">Ihunduka rinini buri segonda urwego rwarambuye rushobora gukurikira; kunyeganyega kurenze ibyo ntikibarwa.</string>
+    <string name="fill_jump" formatted="false">Gusimbuka k\'uzuza %</string>
+    <string name="fill_jump_info">Kuzamuka k\'urwego uri ahagaze kubarwa nk\'uzuza.</string>
+    <string name="odometer">Kilometero muri miles</string>
+    <string name="odometer_info">Bitari ngombwa: andika kilometero hanyuma Bika pin kugira ngo ushyireho intera ya iyi profil.</string>
+    <string name="additional_tanks">Izindi tanki</string>
+    <string name="active_tank">Itanki ikora</string>
+    <string name="active_tank_info">Itanki ishyirwaho gushya amavuta (gal/hr). Iva kuri PID: PID ya Torque iyitoranya (id y\'itanki itangirira kuri 1).</string>
+    <string name="select_pid">Izina rirerire rya Select-PID</string>
+    <string name="select_pid_info">Gusa iyo Itanki ikora = Iva kuri PID: izina rirerire rya PID ya Torque ifite id y\'itanki nk\'agaciro.</string>
+    <string name="tank_n">Itanki %1$d</string>
+    <string name="tank_n_source">Inkomoko y\'amavuta y\'itanki %1$d</string>
+    <string name="tank_n_custom">Izina rirerire ryihariye ry\'itanki %1$d (urugero [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">Itanki %1$d gallons</string>
+    <string name="from_pid">Iva kuri PID</string>
+    <string name="unconfirmed"> (bitaremezwa)</string>
+    <string name="ecu_connected"> · ECU ihujwe</string>
+    <string name="tank_unknown">itanki ?</string>
+    <string name="about_field">Ibyerekeye %1$s</string>
+    <string name="err_tau">0 kugeza %1$s s</string>
+    <string name="err_skew">hejuru ya 0, ntarenze %1$s %%/s</string>
+    <string name="err_jump">%1$s kugeza %2$s %%</string>
+    <string name="err_tank">ubusa cyangwa umubare urenze 0</string>
+    <string name="err_stored">agaciro kabitswe karenze urugero</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">Kwarambuye %</string>
+    <string name="axis_error" formatted="false">Ikosa (%)</string>
+    <string name="feed_off">Kuzimya</string>
+    <string name="feed_smoothed" formatted="false">Kurambura %</string>
+    <string name="feed_corrected_chunk" formatted="false">Gukosora % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Gukosora % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Gukosora % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">Nta na kimwe (Menya ikora iyo uhuza)</string>
+    <string name="src_sae_012f">SAE 012F urwego rw\'itanki y\'amavuta</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Impuzandengo y\'urwego rw\'amavuta ya Chrysler</string>
+    <string name="src_toyota_2129">Itsinda rya Toyota 2129 (kubara igice cya litiro)</string>
+    <string name="src_custom_name">PID y\'inyongera ya Torque ukurikije izina rirerire</string>
+    <string name="vehicle_default">Imodoka 1</string>
+    <string name="vehicle_dated">Imodoka %1$s</string>
+    <string name="binding_torque">Guhuza na Torque…</string>
+    <string name="status_waiting">Gutegereza inkomoko y\'amavuta</string>
+    <string name="status_raw">rudatunganyije %1$.1f%%</string>
+    <string name="status_sess"> urugendo %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing ituje</string>
+    <string name="map_refit_title">Ikarita irongera guhuzwa</string>
+    <string name="map_refit_body">Fuel Smoothing irongera guhuza ikarita ya %1$s. Uko guhuza gusoma 1:1 kugeza kongera guhuza kurangira.</string>
+    <string name="no_source_title">Nta nkomoko y\'urwego rw\'amavuta yashyizweho</string>
+    <string name="no_source_body">Fuel Smoothing nta nkomoko y\'urwego rw\'amavuta ifite ya %1$s. Fungura ipaji yo gushiraho ukande Menya, cyangwa hitamo inkomoko.</string>
+    <string name="no_level_title">Nta rwego rw\'amavuta kuri uru rugendo</string>
+    <string name="no_level_body">%1$s nta rwego rukoreshwa yatanzwe kuri %2$s. Suzuma ihuzwa ry\'adapter, cyangwa ukore Menya ku ipaji yo gushiraho.</string>
+    <string name="source_found_title">Inkomoko y\'urwego rw\'amavuta yabonetse</string>
+    <string name="source_found_body">Ikoresha %1$s kuri %2$s (%3$s).</string>
+    <string name="source_missing_title">Nta nkomoko y\'urwego rw\'amavuta yabonetse</string>
+    <string name="source_missing_body">Fungura igenamiterere rya Fuel Smoothing uhitemo inkomoko (cyangwa wongere PID muri Torque), hanyuma ukande Menya.</string>
+    <string name="confirm_source_title">Emeza inkomoko y\'urwego rw\'amavuta</string>
+    <string name="confirm_source_body">Hamenyekanye %1$s isoma %2$.0f %% kuri %3$s. Suzuma ko ihuye n\'igipimo cy\'amavuta ku kibaho, hanyuma ukande Emeza. Emeza iri ku ipaji yo gushiraho no mu menyesha (%4$s).</string>
+    <string name="confirm_source_body_nolevel">Hamenyekanye %1$s kuri %2$s. Suzuma ko ihuye n\'igipimo cy\'amavuta ku kibaho, hanyuma ukande Emeza. Emeza iri ku ipaji yo gushiraho no mu menyesha (%3$s).</string>
+    <string name="recording_title">Kwandika kuri %1$s</string>
+    <string name="recording_body">Iyi modoka ni %1$s (%2$s), ariko profil ya Torque ni \'%3$s\'. Amakuru ajya kuri %1$s; kanda ufungure Torque uhindure profil.</string>
+    <string name="wrong_vehicle_title">Profil y\'imodoka itari yo?</string>
+    <string name="wrong_suggest_profile">Profil ya Torque \'%1$s\'</string>
+    <string name="wrong_suggest_new">profil nshya y\'imodoka</string>
+    <string name="wrong_vehicle_body">Profil ya Torque \'%1$s\' ihuye n\'iyi modoka (%2$s). Igitekerezo: %3$s. Amakuru abikwa kandi ajugunywa ku mpera y\'urugendo keretse uyabika.</string>
+    <string name="keeping_title">Amakuru y\'urugendo arabikwa</string>
+    <string name="keeping_body">Uru rugendo ruzabikwa muri %1$s. API ya plugin ya Torque ntishobora gukora cyangwa guhindura profil za Torque: muri Torque, kora cyangwa hitamo profil y\'imodoka yitwa \'%2$s\'.</string>
+    <string name="action_new_profile">Kora profil nshya</string>
+    <string name="action_use">Koresha %1$s</string>
+</resources>

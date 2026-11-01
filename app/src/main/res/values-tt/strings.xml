@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_play_only">Чаевые Play Store версиясендә</string>
+    <string name="help_body">Тиз башлау\n1. Torque Pro урнаштырыгыз (түләүле версия; Torque Lite плагиннарны тәэмин итми) һәм OBD-II адаптерыгызны парлагыз.\n2. Бу плагинны Torque → Көйләүләр → Плагиннар эчендә кабызыгыз.\n3. Хәбәрләргә рөхсәт бирегез һәм батарея куллануны Чикләнмәгән итеп куегыз, Torque бу плагинны фонда кабыза алсын.\n4. Torque-да сез йөрткән автомобиль өчен транспорт профилен сайлагыз. Мәгълүматлар һәр Torque профиле буенча саклана һәм транспортның VIN/ECU шәхесе белән чагыштырыла.\n5. Яңа профильдә тоташканда ягулык чыганагы ачыклана; соралса, аны панель күрсәткече белән чагыштырыгыз һәм Раслау басыгыз. Раслау көйләү битендә һәм хәбәрдә. Аны аста да сайлап була.\n6. Бак зурлыгы — Chunk туры китерүе үз зурлыгын өйрәнгәнче башлангыч зурлык. Плагин аны беркайчан да үзгәртми; һәр туры китерүнең өйрәнгән зурлыгы аның астында күрсәтелә.\n7. Torque-да [FuelSmooth] Smoothed Fuel Level һәм һәр туры китерү өчен Corrected %, Remaining, DTE һәм Tank size күрсәткечләрен өстәгез. DTE — Remaining-ны Torque-ның озак вакытлы mpg-на тапкырлау. Яңадан туры китерү вакытындагы хәбәр әлеге туры китерү яңадан туры китерү беткәнче 1:1 укый дип әйтә.\n8. Ягулык дәрәҗәсен Torque-га кире бирегез: Сүндерелгән, Шомартылган яки Chunk, Band яки Kalman туры китерүеннән Төзәтелгән, сезнең 012F күрсәткечегезгә.\n9. Ягулык бары тик двигатель эшләгәндә генә исәпләнә. Плагин бары тик Torque ECU-га тоташканда гына эшли.\n10. Йөрүне һәм тутыруны дәвам итегез; төгәллек берничә өлешчә бакта үсә. Ялгыш транспорт профиле? хәбәре чыкса, бу йөреш белән нәрсә эшләргә сайлагыз.\n11. Барлык мәгълүматлар бу телефонда кала. GPS яки урын язылмый.</string>
+    <string name="about_body">%1$s\nВерсия %2$s (%3$s)\nTorque Pro өчен плагин. Torque яки Ian Hawkins белән бәйләнешсез.\nБарлык мәгълүматлар бу телефонда кала; GPS яки урын язылмый.\n\nЛицензия\nCopyright David Lang. Барлык хокуклар сакланган.</string>
+    <string name="open_source_notices">Ачык чыганаклы китапханәләр\nБу кушымта түбәндәге китапханәләрне куллана. Аларның лицензияләре өстәге авторлык хокукыннан аерым.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), Play Billing өчен кирәк\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html</string>
+    <string name="manual_button">Тулы кулланма (онлайн)</string>
+    <string name="show_fuel_notification">Ягулык дәрәҗәсен хәбәрдә күрсәтү</string>
+    <string name="write_012f">Ягулык дәрәҗәсен Torque-га кире бирү (012F өстенә яза)</string>
+    <string name="running_quiet">Fuel Smoothing эшли</string>
+    <string name="tap_to_start">Fuel Smoothing башлау өчен басыгыз</string>
+    <string name="tap_to_start_text">Батарея яки фоннан башлау кире кагылды. Плагин Torque белән эшли алсын өчен бер тапкыр ачыгыз.</string>
+    <string name="tank2_help">Кирәк булса өстәмә баклар өстәгез (завод багы 1 һәрвакыт кала). Датчикларны PCM FLI пинына тоташтырмагыз (ялган тутыру). Һәр өстәмә бакка үз Torque өстәмә PID-ы кирәк (MCU Mode 22, уникаль исем — 012F яки Ford 16C1 түгел). Select-PID кыйммәте — 1-дән башланган бак id-сы. Gal/hr бары тик актив бакка языла.</string>
+    <string name="tap_start_channel">Башлау өчен басыгыз</string>
+    <string name="tank_size_info">Бак зурлыгы — Chunk туры китерүе үз зурлыгын өйрәнгәнче башлангыч зурлык. Плагин аны беркайчан да үзгәртми; һәр туры китерүнең өйрәнгән зурлыгы аның астында күрсәтелә.</string>
+    <string name="feed_012f_info">Бар булган күрсәткечләр күрсәтсен өчен Torque-ның гадәти Fuel Level (012F) өстенә кыйммәт яза: Сүндерелгән, Шомартылган яки Chunk, Band яки Kalman туры китерүеннән Төзәтелгән. Әле төзелмәгән туры китерү шомартылган дәрәҗәне яза.</string>
+    <string name="size_chunk">Chunk: %1$s</string>
+    <string name="size_band">Band: %1$s</string>
+    <string name="size_kalman">Kalman: %1$s</string>
+    <string name="size_none">зурлык әле юк</string>
+    <string name="size_none_sd">зурлык әле юк ± %1$.1f gal</string>
+    <string name="size_gal">%1$.1f gal</string>
+    <string name="size_kalman_sd">%1$.1f ± %2$.1f gal</string>
+    <string name="help">Ярдәм</string>
+    <string name="about">Турында</string>
+    <string name="need_torque">Torque Pro кирәк (түләүле). Torque Lite плагиннарны тәэмин итми.</string>
+    <string name="get_torque">Torque Pro алу</string>
+    <string name="privacy">Хосусыйлык</string>
+    <string name="send_feedback">Фикер җибәрү</string>
+    <string name="tip">Чаевые</string>
+    <string name="thanks">Рәхмәт</string>
+    <string name="close">Ябу</string>
+    <string name="ok">OK</string>
+    <string name="detect">Ачыклау</string>
+    <string name="confirm">Раслау</string>
+    <string name="save_pin">Пинны саклау</string>
+    <string name="add_tank">Өстәмә бак өстәү</string>
+    <string name="remove">Бетерү</string>
+    <string name="details">Нечкәлекләр</string>
+    <string name="verbose_logging">Җентекле журнал (төзәтү; һәр секундта журнал юллары)</string>
+    <string name="profile_name">Профиль исеме</string>
+    <string name="profile_name_info">Бу транспорт профиленең исеме. Һәр Torque транспорт профиленең үз плагин профиле, үз мәгълүматлары һәм өйрәнелгән карталары була.</string>
+    <string name="make">Марка</string>
+    <string name="make_info">Транспорт маркасы (мәсәлән Ford). Бары тик ачыклауның кайсы маркага хас ягулык PID-ларын сынап карый алуын сайлау өчен кулланыла.</string>
+    <string name="fuel_source">Ягулык чыганагы</string>
+    <string name="fuel_source_info">Чи ягулык дәрәҗәсе кайдан килә. Ачыклау (ECU тоташкан булырга тиеш) кандидатларны уку гына белән сыный һәм, ике чыганак туры килмәсә, раслауны сорый. Раслау көйләү битендә һәм хәбәрдә. Юк = киләсе тоташуда ачыклау.</string>
+    <string name="custom_long_name">Үз озын исем</string>
+    <string name="custom_long_name_info">Бары тик «озын исем буенча Torque өстәмә PID» чыганагы өчен: дәрәҗәне хәбәр итүче Torque PID-ының төгәл озын исеме.</string>
+    <string name="tank_size">Бак зурлыгы</string>
+    <string name="tank_hint">буш = башлангыч зурлык юк; һәр туры китерү үзенекен өйрәнә.</string>
+    <string name="smoothing_tau">Шомарту τ секунд</string>
+    <string name="smoothing_tau_info">Шомарту фильтрының вакыт даимилеге (0 = шомарту юк).</string>
+    <string name="max_skew" formatted="false">Макс. кыйшаю %/s</string>
+    <string name="max_skew_info">Шомартылган дәрәҗә секундына иярергә мөмкин булган иң зур үзгәреш; моның өстендәге чайкалу исәпкә алынмый.</string>
+    <string name="fill_jump" formatted="false">Тутыру сикерүе %</string>
+    <string name="fill_jump_info">Туктап торганда дәрәҗәнең тутыру булып саналган күтәрелүе.</string>
+    <string name="odometer">Одометр милядә</string>
+    <string name="odometer_info">Ихтыяри: одометр күрсәткечен кертегез һәм бу профиль өчен араны беркетү өчен Пинны саклау басыгыз.</string>
+    <string name="additional_tanks">Өстәмә баклар</string>
+    <string name="active_tank">Актив бак</string>
+    <string name="active_tank_info">Ягулык яндыруы (gal/hr) кайсы бакка языла. PID-тан: Torque PID-ы аны сайлый (1-дән башланган бак id-сы).</string>
+    <string name="select_pid">Select-PID озын исеме</string>
+    <string name="select_pid_info">Бары тик Актив бак = PID-тан булганда: кыйммәте бак id-сы булган Torque PID-ының озын исеме.</string>
+    <string name="tank_n">Бак %1$d</string>
+    <string name="tank_n_source">Бак %1$d ягулык чыганагы</string>
+    <string name="tank_n_custom">Бак %1$d үз озын исеме (мәсәлән [FuelSmooth] Tank%1$d Level)</string>
+    <string name="tank_n_gallons">Бак %1$d gallons</string>
+    <string name="from_pid">PID-тан</string>
+    <string name="unconfirmed"> (расланмаган)</string>
+    <string name="ecu_connected"> · ECU тоташкан</string>
+    <string name="tank_unknown">бак ?</string>
+    <string name="about_field">%1$s турында</string>
+    <string name="err_tau">0-дән %1$s s кадәр</string>
+    <string name="err_skew">0-дән югары, күп дигәндә %1$s %%/s</string>
+    <string name="err_jump">%1$s-дән %2$s %% кадәр</string>
+    <string name="err_tank">буш яки 0-дән зур сан</string>
+    <string name="err_stored">сакланган кыйммәт чиктән тыш</string>
+    <string name="legend_chunk">Chunk</string>
+    <string name="legend_band">Band</string>
+    <string name="legend_kalman">Kalman</string>
+    <string name="axis_smoothed" formatted="false">Шомартылган %</string>
+    <string name="axis_error" formatted="false">Хата (%)</string>
+    <string name="feed_off">Сүндерелгән</string>
+    <string name="feed_smoothed" formatted="false">Шомартылган %</string>
+    <string name="feed_corrected_chunk" formatted="false">Төзәтелгән % (Chunk)</string>
+    <string name="feed_corrected_band" formatted="false">Төзәтелгән % (Band)</string>
+    <string name="feed_corrected_kalman" formatted="false">Төзәтелгән % (Kalman)</string>
+    <string name="unit_gal">gal</string>
+    <string name="unit_l">L</string>
+    <string name="src_none">Әле юк (Ачыклау тоташканда эшли)</string>
+    <string name="src_sae_012f">SAE 012F ягулык багы дәрәҗәсе</string>
+    <string name="src_ford_16c1">Mode 22 16C1</string>
+    <string name="src_ford_f42f">Ford Mode 22 F42F</string>
+    <string name="src_gm_12c5" formatted="false">GM Mode 22 12C5 %</string>
+    <string name="src_chrysler_21a2" formatted="false">Chrysler 21A2 %</string>
+    <string name="src_chrysler_avg">Chrysler ягулык дәрәҗәсе уртача</string>
+    <string name="src_toyota_2129">Toyota панель 2129 (ярты литр санаулары)</string>
+    <string name="src_custom_name">Озын исем буенча Torque өстәмә PID</string>
+    <string name="vehicle_default">Транспорт 1</string>
+    <string name="vehicle_dated">Транспорт %1$s</string>
+    <string name="binding_torque">Torque-га тоташу…</string>
+    <string name="status_waiting">Ягулык чыганагы көтелә</string>
+    <string name="status_raw">чи %1$.1f%%</string>
+    <string name="status_sess"> йөреш %1$s</string>
+    <string name="channel_fuel">Fuel Smoothing</string>
+    <string name="channel_quiet">Fuel Smoothing тыныч</string>
+    <string name="map_refit_title">Карта яңадан туры китерелә</string>
+    <string name="map_refit_body">Fuel Smoothing %1$s өчен картаны яңадан туры китерә. Бу туры китерү яңадан туры китерү беткәнче 1:1 укый.</string>
+    <string name="no_source_title">Ягулык дәрәҗәсе чыганагы куелмаган</string>
+    <string name="no_source_body">Fuel Smoothing-та %1$s өчен ягулык дәрәҗәсе чыганагы юк. Көйләү битен ачыгыз һәм Ачыклау басыгыз, яки чыганак сайлагыз.</string>
+    <string name="no_level_title">Бу йөрештә ягулык дәрәҗәсе юк</string>
+    <string name="no_level_body">%1$s %2$s өчен кулланырлык дәрәҗә бирмәде. Адаптер тоташуын тикшерегез яки көйләү битендә Ачыклау эшләтегез.</string>
+    <string name="source_found_title">Ягулык дәрәҗәсе чыганагы табылды</string>
+    <string name="source_found_body">%1$s %2$s өчен кулланыла (%3$s).</string>
+    <string name="source_missing_title">Ягулык дәрәҗәсе чыганагы табылмады</string>
+    <string name="source_missing_body">Fuel Smoothing көйләвен ачыгыз һәм чыганак сайлагыз (яки PID-ны Torque-да өстәгез), аннан соң Ачыклау басыгыз.</string>
+    <string name="confirm_source_title">Ягулык дәрәҗәсе чыганагын раслагыз</string>
+    <string name="confirm_source_body">Ачыкланган %1$s %2$.0f %% укыды, %3$s өчен. Аның панель ягулык күрсәткеченә туры килүен тикшерегез, аннан соң Раслау басыгыз. Раслау көйләү битендә һәм хәбәрдә (%4$s).</string>
+    <string name="confirm_source_body_nolevel">Ачыкланган %1$s, %2$s өчен. Аның панель ягулык күрсәткеченә туры килүен тикшерегез, аннан соң Раслау басыгыз. Раслау көйләү битендә һәм хәбәрдә (%3$s).</string>
+    <string name="recording_title">%1$s эченә язу</string>
+    <string name="recording_body">Бу транспорт %1$s (%2$s), әмма Torque профиле \'%3$s\'. Мәгълүматлар %1$s-ка бара; Torque-ны ачып профильне алыштыру өчен басыгыз.</string>
+    <string name="wrong_vehicle_title">Ялгыш транспорт профиле?</string>
+    <string name="wrong_suggest_profile">Torque профиле \'%1$s\'</string>
+    <string name="wrong_suggest_new">яңа транспорт профиле</string>
+    <string name="wrong_vehicle_body">Torque профиле \'%1$s\' бу транспортка туры килми (%2$s). Тәкъдим: %3$s. Мәгълүматлар тотыла һәм, сез сакламасагыз, йөреш ахырында ташлана.</string>
+    <string name="keeping_title">Йөреш мәгълүматлары саклана</string>
+    <string name="keeping_body">Бу йөреш %1$s эченә сакланачак. Torque-ның плагин API-сы Torque профилләрен булдыра яки алыштыра алмый: Torque-да \'%2$s\' исемле транспорт профилен булдырыгыз яки сайлагыз.</string>
+    <string name="action_new_profile">Яңа профиль булдыру</string>
+    <string name="action_use">%1$s куллану</string>
+</resources>

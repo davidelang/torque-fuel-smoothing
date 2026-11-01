@@ -151,16 +151,17 @@ android {
     androidResources {
         localeFilters += listOf(
             "en",
-            "be", "bg", "bs", "ca", "cs", "cy", "da", "de", "el",
+            "af", "am", "as", "az", "b+ceb", "b+en+001", "b+es+419", "b+sr+Latn",
+            "be", "bg", "bn", "bs", "ca", "cs", "cy", "da", "de", "el",
             "en-rAU", "en-rCA", "en-rGB", "en-rIN",
-            "es", "es-rUS", "et", "eu", "fi", "fr", "fr-rCA", "ga", "gl",
-            "hr", "hu", "is", "it", "lb", "lt", "lv", "mk", "mt", "nb", "nl",
-            "pl", "pt", "pt-rPT", "ro", "ru", "sk", "sl", "sq", "b+sr+Latn", "sr", "sv", "uk",
-            "hy", "ka", "az", "kk", "ky", "uz", "tr", "mn", "tg",
-            "as", "bn", "gu", "hi", "kn", "ml", "mr", "ne", "or", "pa", "si", "ta", "te",
-            "in", "km", "lo", "ms", "my", "th", "tl", "vi", "ja", "ko",
-            "zh-rCN", "zh-rHK", "zh-rTW",
-            "af", "am", "sw", "ha", "yo", "ig", "zu",
+            "es", "es-rUS", "et", "eu", "fi", "fo", "fr", "fr-rCA", "fy",
+            "ga", "gd", "gl", "gu", "ha", "hi", "hr", "hu", "hy", "ig", "in",
+            "is", "it", "ja", "jv", "ka", "kk", "km", "kn", "ko", "ku", "ky",
+            "lb", "lo", "lt", "lv", "mg", "mi", "mk", "ml", "mn", "mr", "ms",
+            "mt", "my", "nb", "ne", "nl", "nn", "or", "pa", "pl", "pt", "pt-rPT",
+            "qu", "ro", "rm", "ru", "rw", "si", "sk", "sl", "so", "sq", "sr",
+            "su", "sv", "sw", "ta", "te", "tg", "th", "tk", "tl", "tr", "tt",
+            "uk", "uz", "vi", "xh", "yo", "zh-rCN", "zh-rHK", "zh-rTW", "zu",
         )
         generateLocaleConfig = true
     }
