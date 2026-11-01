@@ -23,3 +23,6 @@ sandbox_special_paths=plans,historical-plans,implementation-failure-logs,PRs,res
 sandbox_dir=@@SANDBOX_PATH@@
 # Absolute orchestration root of this project; written by setup_agent.sh / update-rules.sh.
 orch_root=@@ORCH_ROOT@@
+# --standard only. 1 passes -Pfuelsmoothing.official=true. Absent or empty passes nothing.
+# Any other value is passed through. Not applied to --play.
+fuelsmoothing_official=1
