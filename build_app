@@ -4,20 +4,27 @@
 # Authoritative copy: orchestration-example/build-examples/android-gradle/build_app
 #
 # Usage:
-#   ./build_app [--standard] [--test] [--play|--bundle] ["Commit Message" | "@msg_file.txt"] [file1 file2 ...] [-- gradle-flag ...]
+#   ./build_app [-s|--standard] [-t|--test] [-p|--play|--bundle] [-T|--release-tag NAME] [-c|--signing-config FILE] [-K|--release-keystore V] [-A|--release-key-alias V] [-B|--release-bundle-task V] [-P|--release-bundle-path V] [-G|--release-gradle-args V] ["Commit Message" | "@msg_file.txt"] [file1 file2 ...] [-- gradle-flag ...]
 #
 #   Build selection (flags first, any order, combinable). No flag = standard, test (unless the
-#   app declares none) and, with a project.config, play:
-#     --standard        the app's standard build   ('- **Standard build:**' in project-facts.md)
-#     --test            the app's test build       ('- **Test build:**': a build type such as qa,
+#   app declares none) and, with a project.config, play. -T/--release-tag does not change that.
+#     -s, --standard    the app's standard build   ('- **Standard build:**' in project-facts.md)
+#     -t, --test        the app's test build       ('- **Test build:**': a build type such as qa,
 #                       a side-by-side app, and/or instrumentation:<variant> = that variant's app
 #                       plus its androidTest APK)
-#     --play, --bundle  signed Play AAB   (release_* keys); needs a terminal for the passwords
+#     -p, --play, --bundle
+#                       signed Play AAB   (release_* keys); needs a terminal for the passwords
+#     -T, --release-tag NAME
+#                       annotated tag on the commit these builds use, created before Gradle so
+#                       versionName is exactly NAME. No prompt. Absent: no release tag. With
+#                       --play the tag is on the versionCode bump; without it, on the commit
+#                       the builds use. A failed run deletes that tag. A bump commit stays.
 #   Single-user Play signing (no project.config; refused when one exists), passed explicitly:
-#     --signing-config FILE   key=value lines: release_keystore, release_key_alias,
+#     -c, --signing-config FILE   key=value lines: release_keystore, release_key_alias,
 #                             release_bundle_task, release_bundle_path, release_gradle_args
-#     --release-keystore V --release-key-alias V --release-bundle-task V --release-bundle-path V
-#     --release-gradle-args V   (each key once: file and flag together for one key is an error)
+#     -K, --release-keystore V  -A, --release-key-alias V  -B, --release-bundle-task V
+#     -P, --release-bundle-path V  -G, --release-gradle-args V
+#                       (each key once: file and flag together for one key is an error)
 #
 #   What to build is declared in the committed project-facts.md, section '## Build and commit',
 #   one line each (strict: missing, duplicate or malformed lines stop the build):
@@ -45,11 +52,17 @@
 #        password prompts, before any gradle work, so an unattended build never stalls part-way.
 #     5. Play only, before any gradle work: app/versionCode.txt goes N -> N+1, committed alone
 #        as "versionCode N+1 (play build)". Every selected build (standard, test, play) then
-#        comes from that bump commit, so all records share one commit. No git tag is created.
-#        If a build fails, the bump commit stays (history is never rewritten); the next --play
-#        bumps again (gaps are fine for Play). Without --play nothing is bumped.
-#     6. Builds in sequence: standard, test, play. The first failure stops everything.
-#     7. The builds tag moves only after every selected build succeeded.
+#        comes from that bump commit, so all records share one commit. Without --play nothing
+#        is bumped. If a build fails, the bump commit stays (history is never rewritten); the
+#        next --play bumps again (gaps are fine for Play).
+#     6. --release-tag only: an annotated tag of that name is created on the commit the builds
+#        will use (the bump commit when --play is selected). Refused when the name is missing,
+#        already exists, is 'builds' or '*/builds', ends in '-start', contains '+', or this
+#        branch has a <branch>-start tag (that describe would hide the release name), or, without
+#        --play, when HEAD already has another annotated tag (describe could pick it). A failed
+#        run deletes the tag this run created. There is no prompt.
+#     7. Builds in sequence: standard, test, play. The first failure stops everything.
+#     8. The builds tag moves only after every selected build succeeded.
 #
 # Multi-user mode (a smudged project.config): every build, in every mode (--standard, --test,
 # --play, the default), runs as coder_user, so app/build, .gradle and the deliverables always have
@@ -112,6 +125,44 @@ check_play_link() {  # check_play_link TARGET [built]
     fi
   fi
 }
+
+# Help before re-exec, JDK lookup, or any build. A failure here is left for the parser below.
+_ba_usage() {
+  cat <<'EOF'
+Usage: ./build_app [-s|--standard] [-t|--test] [-p|--play|--bundle] [-T|--release-tag NAME] [-c|--signing-config FILE] [-K|--release-keystore V] [-A|--release-key-alias V] [-B|--release-bundle-task V] [-P|--release-bundle-path V] [-G|--release-gradle-args V] ["Commit Message" | "@msg_file.txt"] [file1 file2 ...] [-- gradle-flag ...]
+
+  -s, --standard              the app's standard build
+  -t, --test                  the app's test build
+  -p, --play, --bundle        signed Play AAB (needs a terminal)
+  -T, --release-tag NAME      annotated tag on the commit these builds use (does not select a build)
+  -c, --signing-config FILE   single-user Play signing file
+  -K, --release-keystore V
+  -A, --release-key-alias V
+  -B, --release-bundle-task V
+  -P, --release-bundle-path V
+  -G, --release-gradle-args V
+  -h, --help                  print this usage and exit
+
+Flags come first. No build flag selects standard, test (unless none), and play when
+project.config exists. A non-option ends flag parsing, so
+./build_app msg file --standard treats --standard as a file name.
+EOF
+}
+_ba_help_if_asked() {
+  local parsed
+  if ! parsed="$(getopt -q -o +hstpT:c:K:A:B:P:G: -l help,standard,test,play,bundle,release-tag:,signing-config:,release-keystore:,release-key-alias:,release-bundle-task:,release-bundle-path:,release-gradle-args: -- "$@")"; then
+    return 0
+  fi
+  eval set -- "$parsed"
+  while true; do
+    case "$1" in
+      -h|--help) _ba_usage; exit 0 ;;
+      --) break ;;
+      *) shift ;;
+    esac
+  done
+}
+_ba_help_if_asked "$@"
 
 # Mode: multi-user when project.config exists and is smudged; single-user otherwise.
 SINGLE_USER=false
@@ -237,6 +288,8 @@ BUILD_STANDARD=false
 BUILD_TEST=false
 BUILD_PLAY=false
 FLAG_SEEN=false
+RELEASE_TAG=""
+RELEASE_TAG_CREATED=false
 # Single-user Play signing, given explicitly (no implicit lookup): --signing-config FILE and/or
 # --release-keystore/--release-key-alias/--release-bundle-task/--release-bundle-path/
 # --release-gradle-args VALUE. Stored as SIGN_<key>; a key given twice is an error.
@@ -278,31 +331,74 @@ read_signing_config() {  # strict key=value file: comments and blank lines allow
     sign_set "$k" "$v" "$f line $n"
   done < "$f"
 }
-while [ "$#" -ge 1 ]; do
+# Leading + stops at the first non-option. Split on the user's -- first so gradle
+# flags after it stay gradle flags (getopt would otherwise drop that --).
+_ba_opt=()
+_ba_gradle=()
+_ba_dd=0
+for _ba_a in "$@"; do
+  if [ "$_ba_dd" -eq 1 ]; then
+    _ba_gradle+=("$_ba_a")
+  elif [ "$_ba_a" = "--" ]; then
+    _ba_dd=1
+  else
+    _ba_opt+=("$_ba_a")
+  fi
+done
+# getopt errors go to a variable, not a temp file (stdout is discarded only here; the parse below keeps it).
+if ! _ba_err=$(getopt -o +hstpT:c:K:A:B:P:G: -l help,standard,test,play,bundle,release-tag:,signing-config:,release-keystore:,release-key-alias:,release-bundle-task:,release-bundle-path:,release-gradle-args: -- ${_ba_opt[@]+"${_ba_opt[@]}"} 2>&1 >/dev/null); then
+  if printf '%s\n' "$_ba_err" | grep -q 'requires an argument'; then
+    _ba_optname=$(printf '%s\n' "$_ba_err" | sed -n "s/.*'\\(--[^']*\\)'.*/\\1/p; s/.*option requires an argument -- '\\([^']*\\)'.*/-\\1/p" | head -1)
+    echo "ERROR: ${_ba_optname:-option} needs a value." >&2
+  else
+    _ba_bad=$(printf '%s\n' "$_ba_err" | sed -n "s/.*'\\([^']*\\)'.*/\\1/p" | head -1)
+    echo "ERROR: unknown flag '${_ba_bad:-?}'. Build flags: --standard --test --play (--bundle) --release-tag NAME; single-user Play signing: --signing-config FILE, --release-keystore, --release-key-alias, --release-bundle-task, --release-bundle-path, --release-gradle-args." >&2
+  fi
+  exit 1
+fi
+parsed=$(getopt -o +hstpT:c:K:A:B:P:G: -l help,standard,test,play,bundle,release-tag:,signing-config:,release-keystore:,release-key-alias:,release-bundle-task:,release-bundle-path:,release-gradle-args: -- ${_ba_opt[@]+"${_ba_opt[@]}"})
+eval set -- "$parsed"
+_ba_need() {
+  if [ -z "${2:-}" ]; then
+    echo "ERROR: $1 needs a value." >&2
+    exit 1
+  fi
+}
+while true; do
   case "$1" in
-    --signing-config|--release-keystore|--release-key-alias|--release-bundle-task|--release-bundle-path|--release-gradle-args)
-      if [ "$#" -lt 2 ] || [ -z "$2" ]; then
-        echo "ERROR: $1 needs a value." >&2
+    -h|--help) _ba_usage; exit 0 ;;
+    -c|--signing-config)
+      _ba_need "$1" "${2:-}"; SIGN_SOURCE="$SIGN_SOURCE $1"; read_signing_config "$2"; shift 2 ;;
+    -K|--release-keystore)
+      _ba_need "$1" "${2:-}"; SIGN_SOURCE="$SIGN_SOURCE $1"; sign_set release_keystore "$2" "$1"; shift 2 ;;
+    -A|--release-key-alias)
+      _ba_need "$1" "${2:-}"; SIGN_SOURCE="$SIGN_SOURCE $1"; sign_set release_key_alias "$2" "$1"; shift 2 ;;
+    -B|--release-bundle-task)
+      _ba_need "$1" "${2:-}"; SIGN_SOURCE="$SIGN_SOURCE $1"; sign_set release_bundle_task "$2" "$1"; shift 2 ;;
+    -P|--release-bundle-path)
+      _ba_need "$1" "${2:-}"; SIGN_SOURCE="$SIGN_SOURCE $1"; sign_set release_bundle_path "$2" "$1"; shift 2 ;;
+    -G|--release-gradle-args)
+      _ba_need "$1" "${2:-}"; SIGN_SOURCE="$SIGN_SOURCE $1"; sign_set release_gradle_args "$2" "$1"; shift 2 ;;
+    -s|--standard) BUILD_STANDARD=true; FLAG_SEEN=true; shift ;;
+    -t|--test) BUILD_TEST=true; FLAG_SEEN=true; shift ;;
+    -p|--play|--bundle) BUILD_PLAY=true; FLAG_SEEN=true; shift ;;
+    -T|--release-tag)
+      _ba_need "$1" "${2:-}"
+      if [ -n "$RELEASE_TAG" ]; then
+        echo "ERROR: --release-tag given twice." >&2
         exit 1
       fi
-      SIGN_SOURCE="$SIGN_SOURCE $1"
-      if [ "$1" = --signing-config ]; then
-        read_signing_config "$2"
-      else
-        _k="${1#--}"; sign_set "${_k//-/_}" "$2" "$1"
-      fi
+      RELEASE_TAG=$2
       shift 2 ;;
-    --standard) BUILD_STANDARD=true; FLAG_SEEN=true; shift ;;
-    --test) BUILD_TEST=true; FLAG_SEEN=true; shift ;;
-    --play|--bundle) BUILD_PLAY=true; FLAG_SEEN=true; shift ;;
-    --) break ;;
-    --*)
-      echo "ERROR: unknown flag '$1'. Build flags: --standard --test --play (--bundle); single-user Play signing: --signing-config FILE, --release-keystore, --release-key-alias, --release-bundle-task, --release-bundle-path, --release-gradle-args." >&2
-      exit 1
-      ;;
-    *) break ;;
+    --) shift; break ;;
+    *)
+      echo "ERROR: unknown flag '$1'. Build flags: --standard --test --play (--bundle) --release-tag NAME; single-user Play signing: --signing-config FILE, --release-keystore, --release-key-alias, --release-bundle-task, --release-bundle-path, --release-gradle-args." >&2
+      exit 1 ;;
   esac
 done
+if [ "$_ba_dd" -eq 1 ]; then
+  set -- "$@" -- ${_ba_gradle[@]+"${_ba_gradle[@]}"}
+fi
 if [ -n "$SIGN_SOURCE" ]; then
   if [ "$SINGLE_USER" = false ]; then
     echo "ERROR:$SIGN_SOURCE given, but this worktree has a project.config: the Play keys come from it." >&2
@@ -340,6 +436,68 @@ SELECTED=""
 [ "$BUILD_TEST" = true ] && SELECTED="$SELECTED test"
 [ "$BUILD_PLAY" = true ] && SELECTED="$SELECTED play"
 echo "Selected builds:$SELECTED"
+
+in_own_group() {  # in_own_group GROUP: is the current user a member of GROUP
+  local g
+  for g in $(id -nG); do [ "$g" = "$1" ] && return 0; done
+  return 1
+}
+
+# keystore_access_report KEYSTORE: show every step of the path with its real owner, group and
+# mode, mark the first one the current user can't pass (directories need x, the keystore needs
+# r), then list the ways to grant access, narrowest first. It reports facts and options only;
+# which one fits is the machine owner's choice, so it never names a group or changes anything.
+keystore_access_report() {
+  local ks="$1" me cur="" comp path need line i last g b add_note=false
+  local -a comps paths=(/) blocked=()
+  me=$(id -un)
+  IFS=/ read -r -a comps <<< "${ks#/}"
+  for comp in "${comps[@]}"; do [ -n "$comp" ] && { cur="$cur/$comp"; paths+=("$cur"); }; done
+  last=$(( ${#paths[@]} - 1 ))
+  echo "  Each step of the path, as $me (groups: $(id -nG)):" >&2
+  for i in "${!paths[@]}"; do
+    path=${paths[$i]}
+    if [ ! -e "$path" ]; then
+      echo "    $path  does not exist" >&2
+      return 0
+    fi
+    line=$(stat -L -c '%A %U:%G' -- "$path") || exit 1
+    if (( i < last )); then need=x; else need=r; fi
+    if { [ "$need" = x ] && [ -x "$path" ]; } || { [ "$need" = r ] && [ -r "$path" ]; }; then
+      echo "    $line  $path" >&2
+    else
+      echo "    $line  $path  <- $me lacks $need" >&2
+      blocked+=("$need:$path")
+      [ "$need" = x ] && break
+    fi
+  done
+  (( ${#blocked[@]} )) || return 0
+  echo "  Ways to give $me access, narrowest first (choose what fits this machine):" >&2
+  echo "    ACL for $me only:" >&2
+  for b in "${blocked[@]}"; do echo "      setfacl -m u:$me:${b%%:*} '${b#*:}'" >&2; done
+  echo "    Through the owner or group each path already has:" >&2
+  for b in "${blocked[@]}"; do
+    path=${b#*:}; need=${b%%:*}
+    g=$(stat -L -c %G -- "$path") || exit 1
+    if [ "$(stat -L -c %U -- "$path")" = "$me" ]; then
+      echo "      chmod u+$need '$path'   ($me owns it)" >&2
+    elif in_own_group "$g"; then
+      echo "      chmod g+$need '$path'   ($me is already in group $g)" >&2
+    else
+      echo "      add $me to group $g, then chmod g+$need '$path' if the group lacks it" >&2
+      add_note=true
+    fi
+  done
+  for b in "${blocked[@]}"; do
+    if [ "${b%%:*}" = x ]; then
+      echo "    For everyone (directory traversal only; the keystore itself must not be world-readable):" >&2
+      echo "      chmod o+x '${b#*:}'" >&2
+    fi
+  done
+  if [ "$add_note" = true ]; then
+    echo "  A new group membership takes effect for $me at its next login." >&2
+  fi
+}
 
 # Resolve every selected build's config before the commit, so a bad config commits nothing.
 if [ "$BUILD_STANDARD" = true ]; then
@@ -387,20 +545,18 @@ if [ "$BUILD_PLAY" = true ]; then
     echo "ERROR: release_keystore must be an absolute path: $RELEASE_KEYSTORE" >&2
     exit 1
   fi
-  if [ ! -f "$RELEASE_KEYSTORE" ]; then
-    echo "ERROR: release_keystore not found: $RELEASE_KEYSTORE" >&2
-    exit 1
-  fi
   if [ ! -r "$RELEASE_KEYSTORE" ]; then
-    echo "ERROR: $(id -un) cannot read $RELEASE_KEYSTORE." >&2
-    echo "  Give the release group read access (owner keeps write; not world-readable):" >&2
-    echo "    chgrp ai-release '$(dirname "$RELEASE_KEYSTORE")' '$RELEASE_KEYSTORE'" >&2
-    echo "    chmod 750 '$(dirname "$RELEASE_KEYSTORE")'; chmod 640 '$RELEASE_KEYSTORE'" >&2
+    echo "ERROR: $(id -un) cannot read release_keystore $RELEASE_KEYSTORE." >&2
+    keystore_access_report "$RELEASE_KEYSTORE"
     exit 1
   fi
-  KS_MODE=$(stat -c %a "$RELEASE_KEYSTORE") || exit 1
+  if [ ! -f "$RELEASE_KEYSTORE" ]; then
+    echo "ERROR: release_keystore is not a regular file: $RELEASE_KEYSTORE" >&2
+    exit 1
+  fi
+  KS_MODE=$(stat -L -c %a "$RELEASE_KEYSTORE") || exit 1
   if [ "${KS_MODE: -1}" != "0" ]; then
-    echo "WARNING: $RELEASE_KEYSTORE is mode $KS_MODE (world-accessible). Fix: chmod 640 '$RELEASE_KEYSTORE'" >&2
+    echo "WARNING: $RELEASE_KEYSTORE is mode $KS_MODE (world-accessible). Fix: chmod o= '$RELEASE_KEYSTORE'" >&2
   fi
   read -r -a RELEASE_GRADLE_ARGS <<< "$(play_key release_gradle_args)"
   check_play_link "$AAB"
@@ -648,22 +804,103 @@ if [ ${#GRADLE_ARGS[@]} -gt 0 ]; then
 fi
 
 # On a failed run after the --play bump: say that the bump commit stays.
+# A release tag this run created is deleted on any failed exit. The commit stays.
 PLAY_BUMPED=false
+drop_release_tag() {
+  local rc=$1
+  if [ "$RELEASE_TAG_CREATED" = true ] && [ "$rc" -ne 0 ]; then
+    if git tag -d "$RELEASE_TAG"; then
+      echo "NOTE: release tag $RELEASE_TAG removed because the build failed. The commit stays." >&2
+    else
+      echo "ERROR: the build failed and release tag $RELEASE_TAG could not be deleted." >&2
+    fi
+    RELEASE_TAG_CREATED=false
+  fi
+}
 play_bump_note() {
   local rc=${1:-$?}
+  drop_release_tag "$rc"
   if [ "$PLAY_BUMPED" = true ] && [ "$rc" -ne 0 ]; then
     echo "NOTE: the build failed after versionCode $NEW_VERSION_CODE was committed ($(git rev-parse --short "$BUILT_COMMIT")). That commit stays; the next --play bumps to $((NEW_VERSION_CODE + 1)) (gaps are fine for Play)." >&2
   fi
 }
+# Refuse a name that git describe would not use as versionName. Nothing is committed.
+validate_release_tag() {
+  [ -n "$RELEASE_TAG" ] || return 0
+  local branch
+  branch=$(git rev-parse --abbrev-ref HEAD) || exit 1
+  if [ "$branch" = HEAD ]; then
+    echo "ERROR: --release-tag needs a branch; this checkout is detached." >&2
+    exit 1
+  fi
+  if ! git check-ref-format "refs/tags/$RELEASE_TAG"; then
+    echo "ERROR: --release-tag '$RELEASE_TAG' is not a valid tag name." >&2
+    exit 1
+  fi
+  case "$RELEASE_TAG" in
+    *+*)
+      echo "ERROR: --release-tag '$RELEASE_TAG' contains '+'; git describe excludes those tags, so it would not be the versionName." >&2
+      exit 1
+      ;;
+    builds|*/builds)
+      echo "ERROR: --release-tag '$RELEASE_TAG' is a moving builds tag, not a release name." >&2
+      exit 1
+      ;;
+    *-start)
+      echo "ERROR: --release-tag '$RELEASE_TAG' is a branch-start tag, not a release name." >&2
+      exit 1
+      ;;
+  esac
+  if git rev-parse -q --verify "refs/tags/${RELEASE_TAG}" >/dev/null; then
+    echo "ERROR: tag '$RELEASE_TAG' already exists." >&2
+    exit 1
+  fi
+  if git rev-parse -q --verify "refs/tags/${branch}-start" >/dev/null; then
+    echo "ERROR: branch '$branch' has tag ${branch}-start, so versionName is that testing describe, not '$RELEASE_TAG'." >&2
+    echo "  Release tags are for a branch without a -start tag (e.g. master)." >&2
+    exit 1
+  fi
+  # Without --play the tag goes on HEAD itself; another annotated tag there would tie with it
+  # in git describe (same commit, often the same second), so versionName could be the old name.
+  if [ "$BUILD_PLAY" != true ]; then
+    local others
+    others=$(git for-each-ref --points-at HEAD --format='%(objecttype) %(refname:short)' refs/tags | awk '$1 == "tag" && $2 !~ /\+/ {print $2}') || exit 1
+    if [ -n "$others" ]; then
+      echo "ERROR: HEAD already has annotated tag(s): $(printf '%s ' $others)so git describe may not return '$RELEASE_TAG' as versionName." >&2
+      echo "  Commit something first, or use --play (the tag then goes on the new versionCode commit)." >&2
+      exit 1
+    fi
+  fi
+}
+create_release_tag() {
+  [ -n "$RELEASE_TAG" ] || return 0
+  git tag -a "$RELEASE_TAG" -m "$RELEASE_TAG" || {
+    echo "ERROR: could not create annotated tag '$RELEASE_TAG'." >&2
+    exit 1
+  }
+  RELEASE_TAG_CREATED=true
+  trap play_bump_note EXIT
+  local desc
+  desc=$(git describe --always --exclude '*+*') || exit 1
+  if [ "$desc" != "$RELEASE_TAG" ]; then
+    echo "ERROR: after tagging, git describe gives '$desc', not '$RELEASE_TAG'; versionName would be wrong." >&2
+    exit 1
+  fi
+  echo "Release tag $RELEASE_TAG on $(git rev-parse --short HEAD) (annotated)"
+}
+
+# Before the Play bump, so a refused name commits nothing and asks for no passwords.
+validate_release_tag
 
 # Play preflight on the committed HEAD: testing-version check and passwords, all before any
 # gradle work, so an unattended run never stops part-way waiting for input.
 if [ "$BUILD_PLAY" = true ]; then
-  # Runs as coder_user like every build. The upload keystore is group-readable by coder_user;
-  # what protects it is the password, which only the person at this terminal types.
+  # Runs as coder_user like every build. The upload keystore must be readable by coder_user
+  # (how is the machine owner's choice; see keystore_access_report); what protects it is the password, which only the person at this terminal types.
   # Same version string the gradle files compute for versionName: the BRANCH-start describe
   # when that tag exists, otherwise 'git describe --always --exclude '*+*''. A Play
-  # versionCode is not a git tag and is not versionName. Only the BRANCH-start case is a
+  # versionCode is not versionName. A --release-tag, when given, is an annotated tag on
+  # the bump commit and is what that describe returns. Only the BRANCH-start case is a
   # testing version.
   BRANCH=$(git rev-parse --abbrev-ref HEAD) || exit 1
   if [ ! -f app/versionCode.txt ]; then
@@ -728,6 +965,12 @@ if [ "$BUILD_PLAY" = true ]; then
   BUILT_COMMIT=$(git rev-parse HEAD) || exit 1
   PLAY_BUMPED=true
   trap play_bump_note EXIT
+fi
+
+# After the bump when there is one, so the tag is on the commit Gradle is about to build.
+create_release_tag
+
+if [ "$BUILD_PLAY" = true ]; then
   if git rev-parse -q --verify "refs/tags/${BRANCH}-start" >/dev/null; then
     VERSION_DESC=$(git describe --tags --match "${BRANCH}-start") || exit 1
   else
@@ -915,6 +1158,7 @@ build_apks() {
 build_play() {
   local ret cert aab_sha256 version_code
   echo "=== play build: $RELEASE_BUNDLE_TASK ${RELEASE_GRADLE_ARGS[*]} ==="
+  rm -f app/build/outputs/build_app/play.json || exit 1
   # Signing via AGP's injected-signing properties (android.injected.signing.*), which override
   # the build's own release signingConfig with no per-app gradle code. They are passed as
   # ORG_GRADLE_PROJECT_* environment variables rather than -P so the passwords never appear in
@@ -954,6 +1198,8 @@ os.execvp(sys.argv[1], sys.argv[1:])
   fi
   publish_deliverables "$AAB"
   check_play_link "$AAB" built
+  # Record the bundle for deploy --play (app/build/outputs/build_app/play.json).
+  (umask "$BUILD_UMASK"; "$_BA_INFO" stamp-play "$AAB" "$NEW_VERSION_CODE") || exit 1
   version_code="$NEW_VERSION_CODE"
   PLAY_SUMMARY="Play bundle ready for upload:
   Path:        $(pwd)/$AAB
