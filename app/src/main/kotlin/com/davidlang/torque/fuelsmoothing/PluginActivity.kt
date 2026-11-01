@@ -1195,8 +1195,6 @@ class PluginActivity : Activity() {
             return max(base, titlePaint.measureText(context.getString(R.string.axis_error)))
         }
 
-        private class Box(val left: Float, val top: Float, val right: Float, val bottom: Float)
-
         private fun margins(): Box {
             val gap = 4f * d
             var yW = 0f
@@ -1284,11 +1282,9 @@ class PluginActivity : Activity() {
         }
 
         private fun lineHeight(p: Paint): Float = p.fontMetrics.descent - p.fontMetrics.ascent
-
-        companion object {
-            private val X_TICKS = intArrayOf(0, 25, 50, 75, 100)
-        }
     }
+
+    private class Box(val left: Float, val top: Float, val right: Float, val bottom: Float)
 
     private data class ExtraCard(
         val id: Int,
@@ -1303,5 +1299,6 @@ class PluginActivity : Activity() {
         private const val PAD = 48
         private const val REQ_NOTIF = 3501
         private val TIP_IDS = listOf("tip_small", "tip_medium", "tip_large")
+        private val X_TICKS = intArrayOf(0, 25, 50, 75, 100)
     }
 }
