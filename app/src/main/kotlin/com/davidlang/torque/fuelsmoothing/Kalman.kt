@@ -12,21 +12,26 @@ import kotlin.math.sign
 import kotlin.math.sqrt
 
 /**
- * Level-from-fuel map (lvfit6). Twenty bins of 5 gauge points; G(L) is cumulative gallons from 0%.
- * Bins 0–10% continue the 10–25% line. No c0 prior. Capacity is G(98).
+ * Level-from-fuel map (lvfit6). 100 bins of 1 gauge point; G(L) is cumulative gallons from 0%.
+ * Bins 0–10% continue the straight line through the free bins 10–25%. No c0 prior. Capacity is G(98).
  *
  * Fuel below 0% is a separate buffer, not capacity, and is not used to update the gauge.
  * A 0% alert plus a countdown learned from below-0% burns is a future feature: no flag and no stub.
  * Raw L <= 0 maps to 0% (G(0) = 0) and never enters the map.
  */
 internal object Kalman {
-    const val VERSION = 3
+    const val VERSION = 4
     const val STATE = "kalman-state.txt"
     const val MODEL = "model-kalman.json"
     const val PUBLISH_SD = 1.5
 
-    private const val NB = 20
-    private const val NF = 18
+    /** Bin width in gauge points. */
+    private const val BW = 1.0
+    private const val NB = 100
+    /** Extrapolated low bins (0–10%) and the free bins their line is fitted through (10–25%). */
+    private const val NX = 10
+    private const val NT = 15
+    private const val NF = NB - NX
     private const val S_TH = 3.0
     private const val S_D2 = 0.05
     private const val N0 = 40.0
@@ -64,7 +69,7 @@ internal object Kalman {
     class SegPar(val key: String, val first: Boolean, val z: Double, val o: Double)
 
     class Model(val g: DoubleArray, val g98: Double, val sd98: Double, val complete: Boolean) {
-        /** Cumulative gallons on 20 bins of 5 points. L = 100 uses every bin: 5·Σ g. */
+        /** Cumulative gallons on NB bins of BW points. L = 100 uses every bin: BW·Σ g. */
         fun v(level: Double): Double = gallons(g, level)
     }
 
@@ -74,10 +79,10 @@ internal object Kalman {
 
     fun gallons(g: DoubleArray, level: Double): Double {
         val L = level.coerceIn(0.0, 100.0)
-        val k = floor(L / 5.0).toInt().coerceIn(0, NB - 1)
+        val k = floor(L / BW).toInt().coerceIn(0, NB - 1)
         var s = 0.0
-        for (i in 0 until k) s += 5.0 * g[i]
-        s += (L - 5.0 * k) * g[k]
+        for (i in 0 until k) s += BW * g[i]
+        s += (L - BW * k) * g[k]
         return s
     }
 
@@ -133,7 +138,7 @@ internal object Kalman {
     }
 
     /**
-     * Rename a state file that [load] cannot read. Version ≠ 3 → `.v2`; any other failure → `.corrupt`.
+     * Rename a state file that [load] cannot read. Version ≠ [VERSION] → `.v2`; any other failure → `.corrupt`.
      * Returns true when the file was present and rejected. A file [load] accepts is not stale.
      */
     fun quarantineState(dir: File): Boolean {
@@ -623,10 +628,10 @@ internal object Kalman {
         return Side(sl, medOf(adj) - sl * f0, mad(adj), idx.size)
     }
 
-    /** Gallons per point on the 5-point bins. Previous model, else one flat ratio for every level. */
+    /** Gallons per point on the BW-point bins. Previous model, else one flat ratio for every level. */
     private fun gpp(level: Double): Double {
         val g = slopeG
-        if (g != null && g.isNotEmpty()) return g[floor(level / 5.0).toInt().coerceIn(0, g.lastIndex)]
+        if (g != null && g.isNotEmpty()) return g[floor(level / BW).toInt().coerceIn(0, g.lastIndex)]
         return slopeFlat
     }
 
@@ -824,32 +829,41 @@ internal object Kalman {
         return p
     }
 
-    /** Bins 0–10% continue the straight line through the first three free densities (10–25%). */
+    /**
+     * Bins 0–10% (NX bins) continue the least-squares line, in bin index, through the first NT free
+     * densities (10–25%). Floored at TAIL_FLOOR.
+     */
     private fun full(q: DoubleArray): DoubleArray {
-        val g0 = exp(q[0]); val g1 = exp(q[1]); val g2 = exp(q[2])
-        val sy = g0 + g1 + g2
-        val sxy = 2.0 * g0 + 3.0 * g1 + 4.0 * g2
-        val a = (3.0 * sxy - 9.0 * sy) / 6.0
-        val b = (sy - a * 9.0) / 3.0
+        var xm = 0.0
+        var ym = 0.0
+        for (j in 0 until NT) { xm += (NX + j).toDouble(); ym += exp(q[j]) }
+        xm /= NT; ym /= NT
+        var sxy = 0.0
+        var sxx = 0.0
+        for (j in 0 until NT) {
+            val dx = (NX + j) - xm
+            sxy += dx * (exp(q[j]) - ym); sxx += dx * dx
+        }
+        val a = sxy / sxx
+        val b = ym - a * xm
         val th = DoubleArray(NB)
-        th[0] = ln(max(b, TAIL_FLOOR))
-        th[1] = ln(max(a + b, TAIL_FLOOR))
-        for (i in 0 until NF) th[i + 2] = q[i]
+        for (i in 0 until NX) th[i] = ln(max(a * i + b, TAIL_FLOOR))
+        for (i in 0 until NF) th[i + NX] = q[i]
         return th
     }
 
     private fun gk(th: DoubleArray): DoubleArray {
         val g = DoubleArray(NB + 1)
         var c = 0.0
-        for (i in 0 until NB) { c += exp(th[i]) * 5.0; g[i + 1] = c }
+        for (i in 0 until NB) { c += exp(th[i]) * BW; g[i + 1] = c }
         return g
     }
 
     private fun interpE(x: Double, fp: DoubleArray): Double {
         if (x <= 0.0) return fp[0]
         if (x >= 100.0) return fp[NB]
-        val i = floor(x / 5.0).toInt().coerceIn(0, NB - 1)
-        val frac = (x - 5.0 * i) / 5.0
+        val i = floor(x / BW).toInt().coerceIn(0, NB - 1)
+        val frac = (x - BW * i) / BW
         return fp[i] * (1.0 - frac) + fp[i + 1] * frac
     }
 
@@ -860,7 +874,7 @@ internal object Kalman {
         while (i < NB && gKnot[i + 1] < v) i++
         val span = gKnot[i + 1] - gKnot[i]
         val frac = if (span == 0.0) 0.0 else (v - gKnot[i]) / span
-        return 5.0 * i + frac * 5.0
+        return BW * i + frac * BW
     }
 
     private fun kvec(prob: Prob, z: DoubleArray): DoubleArray {
