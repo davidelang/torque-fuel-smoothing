@@ -122,9 +122,7 @@ def get_notes(base, notes_file):
             die("cannot read --notes-file %s: %s" % (notes_file, e))
     else:
         log = run(["git", "log", "--no-merges", "--format=- %s", base + "..HEAD"])
-        editor = os.environ.get("EDITOR", "")
-        if not editor:
-            die("EDITOR is unset; set it or pass --notes-file FILE")
+        editor = os.environ.get("EDITOR") or "vi"  # unset or empty EDITOR means vi
         fd, path = tempfile.mkstemp(prefix="play-notes-", suffix=".txt", dir=WORK_DIR)
         with os.fdopen(fd, "w") as f:
             f.write(log)
@@ -215,10 +213,13 @@ def main():
                       ctype="application/octet-stream", length=size, timeout=3600)
         if int(up.get("versionCode", -1)) != vc:
             die("upload returned versionCode %s, expected %d" % (up.get("versionCode"), vc))
+        # One edit, one commit for both tracks: Play logs it as one submission (two commits
+        # left an empty "Canceled" submission for the internal-only commit).
         track_release(pkg, edit, "internal", vc, "%d (%s)" % (vc, vname), notes)
-        http("POST", API + pkg + "/edits/" + edit + ":commit")
+        track_release(pkg, edit, "alpha", vc, "%d (%s)" % (vc, vname), notes)
+        http("POST", API + pkg + "/edits/" + edit + ":commit?changesNotSentForReview=false")
         edit = None
-        print("committed: internal <- versionCode %d" % vc)
+        print("committed: internal and alpha <- versionCode %d (one commit, sent for review)" % vc)
     finally:
         if edit:
             try:
@@ -226,10 +227,6 @@ def main():
             except SystemExit:
                 pass
     verify(pkg, "internal", vc)
-    edit = http("POST", API + pkg + "/edits", body=b"{}")["id"]
-    track_release(pkg, edit, "alpha", vc, "%d (%s)" % (vc, vname), notes)
-    http("POST", API + pkg + "/edits/" + edit + ":commit?changesNotSentForReview=false")
-    print("committed: alpha <- versionCode %d (sent for review)" % vc)
     verify(pkg, "alpha", vc)
     print("==================================================================")
     print("Play release done: %s versionCode %d (%s)" % (pkg, vc, vname))
