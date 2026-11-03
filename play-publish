@@ -120,23 +120,62 @@ def get_notes(base, notes_file):
             text = open(notes_file).read()
         except OSError as e:
             die("cannot read --notes-file %s: %s" % (notes_file, e))
+        text = text.strip()
+        if not text:
+            die("release notes in %s are empty; nothing uploaded" % notes_file)
+        if len(text) > NOTES_LIMIT:
+            die("release notes in %s are %d characters; Play's en-US limit is %d" % (notes_file, len(text), NOTES_LIMIT))
+        return text
+    rx = exclude_patterns()
+    subjects = run(["git", "log", "--no-merges", "--format=%s", base + "..HEAD"]).splitlines()
+    kept = [s for s in subjects if not any(r.search(s) for r in rx)]
+    print("Release notes: %d commits since %s, %d left out by the exclude patterns" % (len(subjects), base, len(subjects) - len(kept)))
+    env_editor = os.environ.get("EDITOR")
+    if env_editor:
+        editor = shlex.split(env_editor)
     else:
-        log = run(["git", "log", "--no-merges", "--format=- %s", base + "..HEAD"])
-        editor = os.environ.get("EDITOR") or "vi"  # unset or empty EDITOR means vi
-        fd, path = tempfile.mkstemp(prefix="play-notes-", suffix=".txt", dir=WORK_DIR)
-        with os.fdopen(fd, "w") as f:
-            f.write(log)
-        if subprocess.run(shlex.split(editor) + [path]).returncode:
-            os.unlink(path)
-            die("editor '%s' exited non-zero; nothing uploaded" % editor)
-        text = open(path).read()
+        # Unset or empty EDITOR means vi, with a status line showing the live character count.
+        editor = ["vi", "-c", r"set laststatus=2 statusline=%%f\ \ %%{wordcount().chars}/%d\ chars" % NOTES_LIMIT]
+    fd, path = tempfile.mkstemp(prefix="play-notes-", suffix=".txt", dir=WORK_DIR)
+    with os.fdopen(fd, "w") as f:
+        f.write("".join("- %s\n" % s for s in kept))
+    try:
+        while True:
+            if subprocess.run(editor + [path]).returncode:
+                die("editor '%s' exited non-zero; nothing uploaded" % " ".join(editor))
+            text = open(path).read().strip()
+            if not text:
+                die("release notes are empty; nothing uploaded")
+            if len(text) <= NOTES_LIMIT:
+                return text
+            print("Release notes are %d characters; Play's en-US limit is %d (%d over)." % (len(text), NOTES_LIMIT, len(text) - NOTES_LIMIT))
+            try:
+                input("Press Enter to edit them again (Ctrl-C to stop; nothing uploaded yet): ")
+            except EOFError:
+                die("release notes are over %d characters and there is no terminal to re-edit; nothing uploaded" % NOTES_LIMIT)
+    finally:
         os.unlink(path)
-    text = text.strip()
-    if not text:
-        die("release notes are empty; nothing uploaded")
-    if len(text) > NOTES_LIMIT:
-        die("release notes are %d characters; Play's en-US limit is %d. Shorten them (--notes-file)" % (len(text), NOTES_LIMIT))
-    return text
+
+def exclude_patterns():
+    """Regexes (one per line, # comments) for commit subjects left out of generated notes:
+    play-notes-exclude next to this script (shared, published with the build type), then
+    play-notes-exclude.local in the current directory (the project's own, optional)."""
+    out = []
+    for f in (os.path.join(os.path.dirname(os.path.abspath(__file__)), "play-notes-exclude"),
+              "play-notes-exclude.local"):
+        if not os.path.exists(f):
+            if f.endswith(".local"):
+                continue
+            die("%s missing (ships with the android-gradle build type)" % f)
+        for n, line in enumerate(open(f), 1):
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            try:
+                out.append(re.compile(line))
+            except re.error as e:
+                die("%s line %d: bad pattern %r: %s" % (f, n, line, e))
+    return out
 
 def track_release(pkg, edit, track, vc, name, notes):
     body = {"track": track, "releases": [{"name": name, "versionCodes": [str(vc)], "status": "completed",
@@ -155,14 +194,18 @@ def verify(pkg, track, vc):
 def main():
     global TOKEN
     sys.stdout.reconfigure(line_buffering=True)
-    ap = argparse.ArgumentParser(prog="play-publish")
-    ap.add_argument("--aab", required=True)
-    ap.add_argument("--version-code", required=True, type=int, help="versionCode the build recorded")
-    ap.add_argument("--aapt2", required=True)
-    ap.add_argument("--key", required=True)
-    ap.add_argument("--notes-file")
-    ap.add_argument("--dry-run", action="store_true")
-    ap.add_argument("--work-dir", required=True, help="scratch dir for the notes file and manifest copy (never /tmp)")
+    ap = argparse.ArgumentParser(
+        prog="play-publish",
+        description="Upload the recorded Play bundle to Internal testing, then promote it to alpha. "
+                    "Called by ./deploy --play.",
+        epilog="Details: the docstring at the top of play-publish.")
+    ap.add_argument("--aab", required=True, metavar="FILE", help="the bundle to upload")
+    ap.add_argument("--version-code", required=True, type=int, metavar="N", help="versionCode the build recorded")
+    ap.add_argument("--aapt2", required=True, metavar="PATH", help="aapt2 binary, to read the bundle manifest")
+    ap.add_argument("--key", required=True, metavar="SA.json", help="service-account key file")
+    ap.add_argument("--notes-file", metavar="FILE", help="release notes (default: computed from the commits)")
+    ap.add_argument("--dry-run", action="store_true", help="read and show everything, then delete the edit (no upload)")
+    ap.add_argument("--work-dir", required=True, metavar="DIR", help="scratch dir for the notes file and manifest copy (never /tmp)")
     a = ap.parse_args()
     global WORK_DIR
     if not (os.path.isdir(a.work_dir) and os.access(a.work_dir, os.W_OK)):

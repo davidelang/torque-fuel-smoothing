@@ -24,3 +24,4 @@ local run-as-primary.c
 local ve-resolve-orch
 local android-build-info
 local play-publish
+local play-notes-exclude
