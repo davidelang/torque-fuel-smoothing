@@ -1,4 +1,14 @@
+import javax.inject.Inject
+import org.gradle.api.DefaultTask
+import org.gradle.api.file.ConfigurableFileCollection
+import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.OutputDirectory
+import org.gradle.api.tasks.PathSensitive
+import org.gradle.api.tasks.PathSensitivity
+import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.testing.Test
+import org.gradle.process.ExecOperations
 
 plugins {
     id("com.android.application")
@@ -163,10 +173,6 @@ android {
         aidl = true
         resValues = true
     }
-    sourceSets.getByName("main") {
-        res.srcDir(layout.buildDirectory.dir("generated/i18n/res"))
-        kotlin.srcDir(layout.buildDirectory.dir("generated/i18n/kotlin"))
-    }
     androidResources {
         localeFilters += listOf(
             "en",
@@ -204,14 +210,54 @@ tasks.withType<Test>().configureEach {
 }
 
 // Catalog -> build-output strings and the S() resource map. Does not translate.
-val generateI18nStrings = tasks.register<Exec>("generateI18nStrings") {
-    workingDir = rootProject.projectDir
-    commandLine("python3", "scripts/i18n_generate_resources.py")
-    environment("PYTHONDONTWRITEBYTECODE", "1")
+// AGP 9 takes generated directories from the variant, not sourceSets.srcDir(Provider).
+abstract class GenerateI18nStrings : DefaultTask() {
+    @get:InputFiles
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    abstract val watched: ConfigurableFileCollection
+
+    @get:OutputDirectory
+    abstract val resDir: DirectoryProperty
+
+    @get:OutputDirectory
+    abstract val kotlinDir: DirectoryProperty
+
+    @get:Inject
+    abstract val execOperations: ExecOperations
+
+    @TaskAction
+    fun generate() {
+        val ktFile = kotlinDir.get().asFile.resolve(
+            "com/davidlang/torque/fuelsmoothing/I18nSentences.kt",
+        )
+        execOperations.exec {
+            workingDir(project.rootProject.projectDir)
+            commandLine("python3", "scripts/i18n_generate_resources.py")
+            environment("PYTHONDONTWRITEBYTECODE", "1")
+            environment("I18N_RES_DIR", resDir.get().asFile.absolutePath)
+            environment("I18N_KT_FILE", ktFile.absolutePath)
+        }
+    }
 }
-tasks.named("preBuild").configure { dependsOn(generateI18nStrings) }
-tasks.matching {
-    (it.name.startsWith("merge") && it.name.endsWith("Resources")) ||
-        (it.name.startsWith("compile") && it.name.contains("Kotlin")) ||
-        (it.name.startsWith("parse") && it.name.contains("LocalResources"))
-}.configureEach { dependsOn(generateI18nStrings) }
+
+val generateI18nStrings = tasks.register<GenerateI18nStrings>("generateI18nStrings") {
+    watched.from(layout.projectDirectory.dir("src/main/i18n"))
+    watched.from(layout.projectDirectory.dir("src/main/kotlin"))
+    watched.from(rootProject.layout.projectDirectory.file("scripts/i18n_generate_resources.py"))
+    watched.from(rootProject.layout.projectDirectory.file("scripts/i18n_catalog.py"))
+    resDir.set(layout.buildDirectory.dir("generated/i18n/res"))
+    kotlinDir.set(layout.buildDirectory.dir("generated/i18n/kotlin"))
+}
+
+androidComponents {
+    onVariants { variant ->
+        variant.sources.res?.addGeneratedSourceDirectory(
+            generateI18nStrings,
+            GenerateI18nStrings::resDir,
+        )
+        variant.sources.kotlin?.addGeneratedSourceDirectory(
+            generateI18nStrings,
+            GenerateI18nStrings::kotlinDir,
+        )
+    }
+}
