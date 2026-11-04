@@ -25,3 +25,5 @@ local ve-resolve-orch
 local android-build-info
 local play-publish
 local play-notes-exclude
+local capture-manual-screenshots
+local capture-manual-screenshots.md
