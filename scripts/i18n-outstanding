@@ -1,0 +1,132 @@
+#!/usr/bin/env python3
+"""List app sentences the catalog does not already match.
+
+No flags: added, changed, and removed sentences. Unchanged sentences are not
+printed. --all lists every machine sentence. --manuals adds the user manual
+(there is none). --check rejects a translation whose format tokens differ
+from source, restores the previous text, and marks that entry pending.
+Overrides are skipped. This script does not translate.
+"""
+import sys
+from pathlib import Path
+
+sys.dont_write_bytecode = True
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from i18n_catalog import (
+    catalog_files,
+    definition_sentences,
+    head_texts,
+    same_tokens,
+    load_catalog,
+    load_overrides,
+    read_keep_terms,
+    worth_sending,
+    write_entries,
+)
+
+
+def _fully_overridden(sentence: str, prefs: list[str]) -> bool:
+    if not prefs:
+        return False
+    for pref in prefs:
+        matched = False
+        for okey, otext in load_overrides(pref):
+            if okey == sentence and same_tokens(otext, sentence):
+                matched = True
+                break
+        if not matched:
+            return False
+    return True
+
+
+def _emit_blocks(header: str, sentences: list[str]) -> None:
+    if not sentences:
+        return
+    sys.stdout.write(header + "\n")
+    for sentence in sentences:
+        sys.stdout.write(sentence + "\n\n")
+
+
+def _check() -> int:
+    bad = 0
+    for path in catalog_files():
+        entries = []
+        changed = False
+        previous = head_texts(path)
+        raw = __import__("json").loads(path.read_text(encoding="utf-8"))
+        if not isinstance(raw, list):
+            raise SystemExit(f"{path} is not a list")
+        for item in raw:
+            entry = {
+                "key": item["key"],
+                "source": item["source"],
+                "text": item["text"],
+                "pending": bool(item.get("pending", False)),
+            }
+            if not same_tokens(entry["text"], entry["source"]):
+                bad += 1
+                restored = previous.get(entry["key"], entry["source"])
+                entry["text"] = restored
+                entry["pending"] = True
+                changed = True
+                sys.stdout.write(f"token mismatch: {path.name}: {entry['key']}\n")
+            elif entry["pending"]:
+                entry["pending"] = False
+                changed = True
+            entries.append(entry)
+        if changed:
+            write_entries(path, entries)
+    if bad:
+        return 1
+    sys.stdout.write("no token mismatch\n")
+    return 0
+
+
+def main(argv: list[str]) -> None:
+    known = {"--manuals", "--all", "--check"}
+    unknown = [arg for arg in argv if arg.startswith("-") and arg not in known]
+    if unknown:
+        raise SystemExit(f"unknown flag {unknown[0]}")
+    if "--check" in argv:
+        raise SystemExit(_check())
+    want_all = "--all" in argv
+    terms = read_keep_terms()
+    code = definition_sentences()
+    catalog = load_catalog()
+    prefs = [path.stem for path in catalog_files()]
+    keys: list[str] = []
+    seen_keys: set[str] = set()
+    sources_by_key: dict[str, str] = {}
+    for entries in catalog.values():
+        for entry in entries:
+            if entry["key"] not in seen_keys:
+                seen_keys.add(entry["key"])
+                keys.append(entry["key"])
+            sources_by_key.setdefault(entry["key"], entry["source"])
+    code_set = set(code)
+    added = [sentence for sentence in code if sentence not in seen_keys]
+    removed = [key for key in keys if key not in code_set]
+    changed = [
+        key
+        for key in keys
+        if key in code_set and sources_by_key.get(key) != key
+    ]
+    def keep(sentence: str) -> bool:
+        return worth_sending(sentence, terms) and not _fully_overridden(sentence, prefs)
+
+    added = [sentence for sentence in added if keep(sentence)]
+    changed = [sentence for sentence in changed if keep(sentence)]
+    removed = [sentence for sentence in removed if keep(sentence)]
+    if want_all:
+        rows = [sentence for sentence in code if keep(sentence)]
+        for sentence in rows:
+            sys.stdout.write(sentence + "\n\n")
+        return
+    _emit_blocks("added", added)
+    _emit_blocks("changed", changed)
+    _emit_blocks("removed", removed)
+
+
+if __name__ == "__main__":
+    main(sys.argv[1:])

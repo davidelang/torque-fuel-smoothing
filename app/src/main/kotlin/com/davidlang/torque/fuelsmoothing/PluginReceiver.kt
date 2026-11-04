@@ -86,12 +86,13 @@ internal object TapStartNotice {
     const val NOTIF_ID = 351
 
     fun post(context: Context) {
+        AppStrings.install(context)
         if (Build.VERSION.SDK_INT < 26) return
         val nm = notificationManager(context) ?: return
         nm.createNotificationChannel(
             NotificationChannel(
                 CHANNEL_ID,
-                context.getString(R.string.tap_start_channel),
+                S("Tap to start"),
                 NotificationManager.IMPORTANCE_HIGH,
             ),
         )
@@ -110,8 +111,8 @@ internal object TapStartNotice {
             @Suppress("DEPRECATION")
             Notification.Builder(context)
         }
-        val n = b.setContentTitle(context.getString(R.string.tap_to_start))
-            .setContentText(context.getString(R.string.tap_to_start_text))
+        val n = b.setContentTitle(S("Tap to start Fuel Smoothing"))
+            .setContentText(S("Battery/background start was denied. Open once so the plugin can run with Torque."))
             .setSmallIcon(R.drawable.ic_stat_notify)
             .setContentIntent(pi)
             .setAutoCancel(true)

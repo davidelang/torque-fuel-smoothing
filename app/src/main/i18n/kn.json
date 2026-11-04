@@ -1,0 +1,647 @@
+[
+  {
+    "key": "Fuel Smoothing for Torque",
+    "source": "Fuel Smoothing for Torque",
+    "text": "Fuel Smoothing for Torque"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/privacy/"
+  },
+  {
+    "key": "Tips are on the Play Store version",
+    "source": "Tips are on the Play Store version",
+    "text": "ಸಲಹೆಗಳು Play Store ಆವೃತ್ತಿಯಲ್ಲಿವೆ"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "ವೇಗದ ಆರಂಭ\n 1. Torque Pro ಅಳವಡಿಸಿ (ಪಾವತಿ ಆವೃತ್ತಿ; Torque Lite ಪ್ಲಗಿನ್ ಬೆಂಬಲಿಸುವುದಿಲ್ಲ) ಮತ್ತು OBD-II ಅಡಾಪ್ಟರ್ ಜೋಡಿಸಿ.\n 2. ಈ ಪ್ಲಗಿನ್ ಅನ್ನು Torque → ಸೆಟ್ಟಿಂಗ್‌ಗಳು → Plugins ನಲ್ಲಿ ಆನ್ ಮಾಡಿ.\n 3. ಅಧಿಸೂಚನೆಗಳಿಗೆ ಅನುಮತಿ ನೀಡಿ ಮತ್ತು ಬ್ಯಾಟರಿ ಬಳಕೆಯನ್ನು ಅನಿಯಂತ್ರಿತವಾಗಿಡಿ, Torque ಈ ಪ್ಲಗಿನ್ ಅನ್ನು ಹಿನ್ನೆಲೆಯಲ್ಲಿ ಆರಂಭಿಸಲು.\n 4. Torque ನಲ್ಲಿ ನೀವು ಓಡಿಸುತ್ತಿರುವ ವಾಹನ ಪ್ರೊಫೈಲ್ ಆಯ್ಕೆಮಾಡಿ. ಡೇಟಾ ಪ್ರತಿ Torque ಪ್ರೊಫೈಲ್‌ಗೆ ಇಡಲಾಗುತ್ತದೆ ಮತ್ತು ವಾಹನದ VIN/ECU ಗುರುತಿನೊಂದಿಗೆ ಪರಿಶೀಲಿಸಲಾಗುತ್ತದೆ.\n 5. ಹೊಸ ಪ್ರೊಫೈಲ್‌ನಲ್ಲಿ ಇಂಧನ ಮೂಲ ಸಂಪರ್ಕದಲ್ಲಿ ಕಂಡುಬರುತ್ತದೆ; ಕೇಳಿದರೆ ಡ್ಯಾಶ್ ಗೇಜ್ ಜೊತೆ ಹೋಲಿಸಿ ದೃಢೀಕರಿಸಿ ಒತ್ತಿ. ದೃಢೀಕರಿಸಿ ಸೆಟಪ್ ಪುಟ ಮತ್ತು ಅಧಿಸೂಚನೆಯಲ್ಲಿದೆ. ಕೆಳಗಿನಿಂದಲೂ ಆಯ್ಕೆಮಾಡಬಹುದು.\n 6. ಟ್ಯಾಂಕ್ ಗಾತ್ರ Chunk ಫಿಟ್‌ನ ಆರಂಭಿಕ ಗಾತ್ರ, ಅದು ತನ್ನದನ್ನು ಕಲಿಯುವವರೆಗೆ. ಪ್ಲಗಿನ್ ಅದನ್ನು ಎಂದಿಗೂ ಬದಲಾಯಿಸುವುದಿಲ್ಲ; ಪ್ರತಿ ಫಿಟ್ ಕಲಿತ ಗಾತ್ರ ಅದರ ಕೆಳಗೆ ತೋರುತ್ತದೆ.\n 7. Torque ನಲ್ಲಿ [FuelSmooth] Smoothed Fuel Level ಮತ್ತು ಪ್ರತಿ ಫಿಟ್‌ನ Corrected %, Remaining, DTE ಹಾಗೂ Tank size ಗೇಜ್‌ಗಳನ್ನು ಸೇರಿಸಿ. DTE ಎಂದರೆ Remaining ಗುಣ Torque ದೀರ್ಘಾವಧಿ mpg. ಮರುಫಿಟ್ ಸಮಯದ ಸೂಚನೆ ಆ ಫಿಟ್ 1:1 ಓದುತ್ತದೆ ಎನ್ನುತ್ತದೆ, ಮರುಫಿಟ್ ಮುಗಿಯುವವರೆಗೆ.\n 8. ಇಂಧನ ಮಟ್ಟವನ್ನು Torque ಗೆ ಹಿಂದಿರುಗಿಸಿ: ಆಫ್, ನಯ, ಅಥವಾ Chunk, Band ಅಥವಾ Kalman ಫಿಟ್‌ನಿಂದ ಸರಿಪಡಿಸಿದ್ದು, ನಿಮ್ಮ 012F ಗೇಜ್‌ಗೆ.\n 9. ಇಂಧನವನ್ನು ಎಂಜಿನ್ ಓಡುತ್ತಿರುವಾಗ ಮಾತ್ರ ಎಣಿಸಲಾಗುತ್ತದೆ. ಪ್ಲಗಿನ್ Torque ECU ಗೆ ಸಂಪರ್ಕವಾದಾಗ ಮಾತ್ರ ಓಡುತ್ತದೆ.\n 10. ಓಡಿಸುತ್ತಾ ತುಂಬುತ್ತಾ ಇರಿ; ನಿಖರತೆ ಹಲವು ಭಾಗಶಃ ಟ್ಯಾಂಕ್‌ಗಳಲ್ಲಿ ಬೆಳೆಯುತ್ತದೆ. ತಪ್ಪು ವಾಹನ ಪ್ರೊಫೈಲ್? ಅಧಿಸೂಚನೆ ಬಂದರೆ ಆ ಡ್ರೈವ್‌ಗೆ ಏನು ಮಾಡಬೇಕು ಆಯ್ಕೆಮಾಡಿ.\n 11. ಎಲ್ಲ ಡೇಟಾ ಈ ಫೋನ್‌ನಲ್ಲೇ ಇರುತ್ತದೆ. GPS ಅಥವಾ ಸ್ಥಳ ದಾಖಲಾಗುವುದಿಲ್ಲ."
+  },
+  {
+    "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "text": "%1$s\nಆವೃತ್ತಿ %2$s (%3$s)\nTorque Pro ಗಾಗಿ ಪ್ಲಗಿನ್. Torque ಅಥವಾ Ian Hawkins ಜೊತೆ ಸಂಬಂಧವಿಲ್ಲ.\nಎಲ್ಲ ಡೇಟಾ ಈ ಫೋನ್‌ನಲ್ಲೇ ಇರುತ್ತದೆ; GPS ಅಥವಾ ಸ್ಥಳ ದಾಖಲಾಗುವುದಿಲ್ಲ.\n\nಪರವಾನಗಿ\nCopyright David Lang. ಎಲ್ಲ ಹಕ್ಕುಗಳನ್ನು ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ."
+  },
+  {
+    "key": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "source": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "text": "ಮುಕ್ತ ಮೂಲ ಗ್ರಂಥಾಲಯಗಳು\nಈ ಆ್ಯಪ್ ಕೆಳಗಿನ ಗ್ರಂಥಾಲಯಗಳನ್ನು ಬಳಸುತ್ತದೆ. ಅವುಗಳ ಪರವಾನಗಿಗಳು ಮೇಲಿನ ಹಕ್ಕುಸ್ವಾಮ್ಯದಿಂದ ಬೇರೆ.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), Play Billing ಗೆ ಬೇಕು\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/manual/"
+  },
+  {
+    "key": "Full manual (online)",
+    "source": "Full manual (online)",
+    "text": "ಪೂರ್ಣ ಕೈಪಿಡಿ (ಆನ್‌ಲೈನ್)"
+  },
+  {
+    "key": "Show fuel level in notification",
+    "source": "Show fuel level in notification",
+    "text": "ಅಧಿಸೂಚನೆಯಲ್ಲಿ ಇಂಧನ ಮಟ್ಟ ತೋರಿಸಿ"
+  },
+  {
+    "key": "Feed fuel level back to Torque (overrides 012F)",
+    "source": "Feed fuel level back to Torque (overrides 012F)",
+    "text": "ಇಂಧನ ಮಟ್ಟವನ್ನು Torque ಗೆ ಹಿಂದಿರುಗಿಸಿ (012F ಅನ್ನು ಬದಲಾಯಿಸುತ್ತದೆ)"
+  },
+  {
+    "key": "Fuel Smoothing is running",
+    "source": "Fuel Smoothing is running",
+    "text": "Fuel Smoothing ಓಡುತ್ತಿದೆ"
+  },
+  {
+    "key": "Tap to start Fuel Smoothing",
+    "source": "Tap to start Fuel Smoothing",
+    "text": "Fuel Smoothing ಆರಂಭಿಸಲು ಟ್ಯಾಪ್ ಮಾಡಿ"
+  },
+  {
+    "key": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "source": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "text": "ಬ್ಯಾಟರಿ ಅಥವಾ ಹಿನ್ನೆಲೆ ಆರಂಭ ನಿರಾಕರಿಸಲಾಯಿತು. ಪ್ಲಗಿನ್ Torque ಜೊತೆ ಓಡಲು ಒಮ್ಮೆ ತೆರೆಯಿರಿ."
+  },
+  {
+    "key": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "source": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "text": "ಬೇಕಾದಷ್ಟು ಹೆಚ್ಚುವರಿ ಟ್ಯಾಂಕ್‌ಗಳನ್ನು ಸೇರಿಸಿ (ಕಾರ್ಖಾನೆ ಟ್ಯಾಂಕ್ 1 ಯಾವಾಗಲೂ ಇರುತ್ತದೆ). ಕಳುಹಿಸುವವನ್ನು PCM FLI ಪಿನ್‌ಗೆ ಬದಲಾಯಿಸಬೇಡಿ (ಸುಳ್ಳು ತುಂಬುವಿಕೆ). ಪ್ರತಿ ಹೆಚ್ಚುವರಿ ಟ್ಯಾಂಕ್‌ಗೆ ತನ್ನ Torque ಹೆಚ್ಚುವರಿ PID ಬೇಕು (MCU Mode 22, ವಿಶಿಷ್ಟ ಹೆಸರು — 012F ಅಥವಾ Ford 16C1 ಅಲ್ಲ). Select-PID ಮೌಲ್ಯ 1 ರಿಂದ ಟ್ಯಾಂಕ್ id. Gal/hr ಸಕ್ರಿಯ ಟ್ಯಾಂಕ್‌ಗೆ ಮಾತ್ರ ಬರೆಯಲಾಗುತ್ತದೆ."
+  },
+  {
+    "key": "Tap to start",
+    "source": "Tap to start",
+    "text": "ಆರಂಭಿಸಲು ಟ್ಯಾಪ್ ಮಾಡಿ"
+  },
+  {
+    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "text": "ಟ್ಯಾಂಕ್ ಗಾತ್ರ Chunk ಫಿಟ್‌ನ ಆರಂಭಿಕ ಗಾತ್ರ, ಅದು ತನ್ನದನ್ನು ಕಲಿಯುವವರೆಗೆ. ಪ್ಲಗಿನ್ ಅದನ್ನು ಎಂದಿಗೂ ಬದಲಾಯಿಸುವುದಿಲ್ಲ; ಪ್ರತಿ ಫಿಟ್ ಕಲಿತ ಗಾತ್ರ ಅದರ ಕೆಳಗೆ ತೋರುತ್ತದೆ."
+  },
+  {
+    "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "source": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "text": "ಇರುವ ಗೇಜ್‌ಗಳು ತೋರಿಸಲು Torque ಕಾರ್ಖಾನೆ Fuel Level (012F) ಮೇಲೆ ಮೌಲ್ಯ ಬರೆಯುತ್ತದೆ: ಆಫ್, ನಯ, ಅಥವಾ Chunk, Band ಅಥವಾ Kalman ಫಿಟ್‌ನಿಂದ ಸರಿಪಡಿಸಿದ್ದು. ಇನ್ನೂ ನಿರ್ಮಾಣವಾಗದ ಫಿಟ್ ನಯ ಮಟ್ಟವನ್ನು ಬರೆಯುತ್ತದೆ."
+  },
+  {
+    "key": "Chunk: %1$s",
+    "source": "Chunk: %1$s",
+    "text": "Chunk: %1$s"
+  },
+  {
+    "key": "Band: %1$s",
+    "source": "Band: %1$s",
+    "text": "Band: %1$s"
+  },
+  {
+    "key": "Kalman: %1$s",
+    "source": "Kalman: %1$s",
+    "text": "Kalman: %1$s"
+  },
+  {
+    "key": "no size yet",
+    "source": "no size yet",
+    "text": "ಇನ್ನೂ ಗಾತ್ರ ಇಲ್ಲ"
+  },
+  {
+    "key": "no size yet ± %1$.1f gal",
+    "source": "no size yet ± %1$.1f gal",
+    "text": "ಇನ್ನೂ ಗಾತ್ರ ಇಲ್ಲ ± %1$.1f gal"
+  },
+  {
+    "key": "%1$.1f gal",
+    "source": "%1$.1f gal",
+    "text": "%1$.1f gal"
+  },
+  {
+    "key": "%1$.1f ± %2$.1f gal",
+    "source": "%1$.1f ± %2$.1f gal",
+    "text": "%1$.1f ± %2$.1f gal"
+  },
+  {
+    "key": "Help",
+    "source": "Help",
+    "text": "ಸಹಾಯ"
+  },
+  {
+    "key": "About",
+    "source": "About",
+    "text": "ಬಗ್ಗೆ"
+  },
+  {
+    "key": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "source": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "text": "Torque Pro (ಪಾವತಿ) ಬೇಕು. Torque Lite ಪ್ಲಗಿನ್ ಬೆಂಬಲಿಸುವುದಿಲ್ಲ."
+  },
+  {
+    "key": "Get Torque Pro",
+    "source": "Get Torque Pro",
+    "text": "Torque Pro ಪಡೆಯಿರಿ"
+  },
+  {
+    "key": "Privacy",
+    "source": "Privacy",
+    "text": "ಗೌಪ್ಯತೆ"
+  },
+  {
+    "key": "Send feedback",
+    "source": "Send feedback",
+    "text": "ಪ್ರತಿಕ್ರಿಯೆ ಕಳುಹಿಸಿ"
+  },
+  {
+    "key": "Tip",
+    "source": "Tip",
+    "text": "ಟಿಪ್"
+  },
+  {
+    "key": "Thanks",
+    "source": "Thanks",
+    "text": "ಧನ್ಯವಾದ"
+  },
+  {
+    "key": "Close",
+    "source": "Close",
+    "text": "ಮುಚ್ಚಿ"
+  },
+  {
+    "key": "OK",
+    "source": "OK",
+    "text": "OK"
+  },
+  {
+    "key": "Detect",
+    "source": "Detect",
+    "text": "ಹುಡುಕಿ"
+  },
+  {
+    "key": "Confirm",
+    "source": "Confirm",
+    "text": "ದೃಢೀಕರಿಸಿ"
+  },
+  {
+    "key": "Save pin",
+    "source": "Save pin",
+    "text": "ಪಿನ್ ಉಳಿಸಿ"
+  },
+  {
+    "key": "Add additional tank",
+    "source": "Add additional tank",
+    "text": "ಹೆಚ್ಚುವರಿ ಟ್ಯಾಂಕ್ ಸೇರಿಸಿ"
+  },
+  {
+    "key": "Remove",
+    "source": "Remove",
+    "text": "ತೆಗೆದುಹಾಕಿ"
+  },
+  {
+    "key": "Details",
+    "source": "Details",
+    "text": "ವಿವರ"
+  },
+  {
+    "key": "Verbose logging (debug; per-second log lines)",
+    "source": "Verbose logging (debug; per-second log lines)",
+    "text": "ವಿಸ್ತೃತ ಲಾಗ್ (ಡೀಬಗ್; ಪ್ರತಿ ಸೆಕೆಂಡಿಗೆ ಸಾಲು)"
+  },
+  {
+    "key": "Profile name",
+    "source": "Profile name",
+    "text": "ಪ್ರೊಫೈಲ್ ಹೆಸರು"
+  },
+  {
+    "key": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "source": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "text": "ಈ ವಾಹನ ಪ್ರೊಫೈಲ್ ಹೆಸರು. ಪ್ರತಿ Torque ವಾಹನ ಪ್ರೊಫೈಲ್ ತನ್ನ ಪ್ಲಗಿನ್ ಪ್ರೊಫೈಲ್, ಡೇಟಾ ಮತ್ತು ಕಲಿತ ನಕ್ಷೆಗಳನ್ನು ಪಡೆಯುತ್ತದೆ."
+  },
+  {
+    "key": "Make",
+    "source": "Make",
+    "text": "ತಯಾರಕ"
+  },
+  {
+    "key": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "source": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "text": "ವಾಹನ ತಯಾರಕ (ಉದಾ. Ford). ಹುಡುಕಾಟ ಯಾವ ಬ್ರಾಂಡ್ ಇಂಧನ PID ಪ್ರಯತ್ನಿಸುತ್ತದೆ ಎಂದು ಆಯ್ಕೆಮಾಡಲು ಮಾತ್ರ."
+  },
+  {
+    "key": "Fuel source",
+    "source": "Fuel source",
+    "text": "ಇಂಧನ ಮೂಲ"
+  },
+  {
+    "key": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "source": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "text": "ಕಚ್ಚಾ ಇಂಧನ ಮಟ್ಟ ಎಲ್ಲಿಂದ ಬರುತ್ತದೆ. ಹುಡುಕಿ (ECU ಸಂಪರ್ಕಿತವಾಗಿರಬೇಕು) ಅಭ್ಯರ್ಥಿಗಳನ್ನು ಓದಲು ಮಾತ್ರ ಮಾಡಿ ಎರಡು ಮೂಲಗಳು ಹೊಂದದಿದ್ದರೆ ದೃಢೀಕರಣ ಕೇಳುತ್ತದೆ. ದೃಢೀಕರಿಸಿ ಸೆಟಪ್ ಪುಟ ಮತ್ತು ಅಧಿಸೂಚನೆಯಲ್ಲಿದೆ. ಯಾವುದೂ ಇಲ್ಲ = ಮುಂದಿನ ಸಂಪರ್ಕದಲ್ಲಿ ಹುಡುಕಿ."
+  },
+  {
+    "key": "Custom long name",
+    "source": "Custom long name",
+    "text": "ಕಸ್ಟಮ್ ಉದ್ದ ಹೆಸರು"
+  },
+  {
+    "key": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "source": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "text": "ಮೂಲ Torque extra PID by long name ಗೆ ಮಾತ್ರ: ಮಟ್ಟ ತಿಳಿಸುವ Torque PID ನ ನಿಖರ ಉದ್ದ ಹೆಸರು."
+  },
+  {
+    "key": "Tank size",
+    "source": "Tank size",
+    "text": "ಟ್ಯಾಂಕ್ ಗಾತ್ರ"
+  },
+  {
+    "key": "blank = no starting size; each fit learns its own.",
+    "source": "blank = no starting size; each fit learns its own.",
+    "text": "ಖಾಲಿ = ಆರಂಭಿಕ ಗಾತ್ರ ಇಲ್ಲ; ಪ್ರತಿ ಫಿಟ್ ತನ್ನದನ್ನು ಕಲಿಯುತ್ತದೆ."
+  },
+  {
+    "key": "Smoothing τ seconds",
+    "source": "Smoothing τ seconds",
+    "text": "ನಯಗೊಳಿಸುವ τ ಸೆಕೆಂಡು"
+  },
+  {
+    "key": "Time constant of the smoothing filter (0 = no smoothing).",
+    "source": "Time constant of the smoothing filter (0 = no smoothing).",
+    "text": "ನಯಗೊಳಿಸುವ ಫಿಲ್ಟರ್ ಕಾಲ ಸ್ಥಿರಾಂಕ (0 = ನಯಗೊಳಿಸುವಿಕೆ ಇಲ್ಲ)."
+  },
+  {
+    "key": "Max skew %/s",
+    "source": "Max skew %/s",
+    "text": "ಗರಿಷ್ಠ ಓರೆ %/s"
+  },
+  {
+    "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "text": "ನಯ ಮಟ್ಟ ಸೆಕೆಂಡಿಗೆ ಅನುಸರಿಸಬಹುದಾದ ದೊಡ್ಡ ಬದಲಾವಣೆ; ಇದಕ್ಕಿಂತ ಹೆಚ್ಚಿನ ಅಲುಗಾಟ ನಿರ್ಲಕ್ಷಿಸಲಾಗುತ್ತದೆ."
+  },
+  {
+    "key": "Fill jump %",
+    "source": "Fill jump %",
+    "text": "ತುಂಬುವ ಜಿಗಿತ %"
+  },
+  {
+    "key": "Rise in level while stopped that counts as a fill.",
+    "source": "Rise in level while stopped that counts as a fill.",
+    "text": "ನಿಂತಾಗ ಮಟ್ಟ ಏರಿಕೆ ತುಂಬುವಿಕೆ ಎಂದು ಎಣಿಸಲಾಗುತ್ತದೆ."
+  },
+  {
+    "key": "Odometer miles",
+    "source": "Odometer miles",
+    "text": "ಓಡೋಮೀಟರ್ ಮೈಲಿ"
+  },
+  {
+    "key": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "source": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "text": "ಐಚ್ಛಿಕ: ಓಡೋಮೀಟರ್ ಓದನ್ನು ನಮೂದಿಸಿ ಪಿನ್ ಉಳಿಸಿ, ಈ ಪ್ರೊಫೈಲ್ ದೂರ ನೆಲೆಗೊಳ್ಳಲು."
+  },
+  {
+    "key": "Additional tanks",
+    "source": "Additional tanks",
+    "text": "ಹೆಚ್ಚುವರಿ ಟ್ಯಾಂಕ್‌ಗಳು"
+  },
+  {
+    "key": "Active tank",
+    "source": "Active tank",
+    "text": "ಸಕ್ರಿಯ ಟ್ಯಾಂಕ್"
+  },
+  {
+    "key": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "source": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "text": "ಇಂಧನ ಸುಡುವಿಕೆ (gal/hr) ಯಾವ ಟ್ಯಾಂಕ್‌ಗೆ ಬರೆಯಲಾಗುತ್ತದೆ. PID ನಿಂದ: Torque PID ಅದನ್ನು ಆಯ್ಕೆಮಾಡುತ್ತದೆ (1 ರಿಂದ ಟ್ಯಾಂಕ್ id)."
+  },
+  {
+    "key": "Select-PID long name",
+    "source": "Select-PID long name",
+    "text": "Select-PID ಉದ್ದ ಹೆಸರು"
+  },
+  {
+    "key": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "source": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "text": "ಸಕ್ರಿಯ ಟ್ಯಾಂಕ್ = PID ನಿಂದ ಇದ್ದಾಗ ಮಾತ್ರ: ಮೌಲ್ಯ ಟ್ಯಾಂಕ್ id ಆಗಿರುವ Torque PID ಉದ್ದ ಹೆಸರು."
+  },
+  {
+    "key": "Tank %1$d",
+    "source": "Tank %1$d",
+    "text": "ಟ್ಯಾಂಕ್ %1$d"
+  },
+  {
+    "key": "Tank %1$d fuel source",
+    "source": "Tank %1$d fuel source",
+    "text": "ಟ್ಯಾಂಕ್ %1$d ಇಂಧನ ಮೂಲ"
+  },
+  {
+    "key": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "source": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "text": "ಟ್ಯಾಂಕ್ %1$d ಕಸ್ಟಮ್ ಉದ್ದ ಹೆಸರು (ಉದಾ. [FuelSmooth] Tank%1$d Level)"
+  },
+  {
+    "key": "Tank %1$d gallons",
+    "source": "Tank %1$d gallons",
+    "text": "ಟ್ಯಾಂಕ್ %1$d ಗ್ಯಾಲನ್"
+  },
+  {
+    "key": "From PID",
+    "source": "From PID",
+    "text": "PID ನಿಂದ"
+  },
+  {
+    "key": "(unconfirmed)",
+    "source": "(unconfirmed)",
+    "text": "(ದೃಢೀಕರಿಸದ)"
+  },
+  {
+    "key": "· ECU connected",
+    "source": "· ECU connected",
+    "text": "· ECU ಸಂಪರ್ಕಿತ"
+  },
+  {
+    "key": "tank ?",
+    "source": "tank ?",
+    "text": "ಟ್ಯಾಂಕ್ ?"
+  },
+  {
+    "key": "About %1$s",
+    "source": "About %1$s",
+    "text": "%1$s ಬಗ್ಗೆ"
+  },
+  {
+    "key": "0 to %1$s s",
+    "source": "0 to %1$s s",
+    "text": "0 ರಿಂದ %1$s s"
+  },
+  {
+    "key": "above 0, at most %1$s %%/s",
+    "source": "above 0, at most %1$s %%/s",
+    "text": "0 ಕ್ಕಿಂತ ಮೇಲೆ, ಗರಿಷ್ಠ %1$s %%/s"
+  },
+  {
+    "key": "%1$s to %2$s %%",
+    "source": "%1$s to %2$s %%",
+    "text": "%1$s ರಿಂದ %2$s %%"
+  },
+  {
+    "key": "blank or a number above 0",
+    "source": "blank or a number above 0",
+    "text": "ಖಾಲಿ ಅಥವಾ 0 ಕ್ಕಿಂತ ದೊಡ್ಡ ಸಂಖ್ಯೆ"
+  },
+  {
+    "key": "stored value out of range",
+    "source": "stored value out of range",
+    "text": "ಉಳಿಸಿದ ಮೌಲ್ಯ ವ್ಯಾಪ್ತಿಯ ಹೊರಗೆ"
+  },
+  {
+    "key": "Chunk",
+    "source": "Chunk",
+    "text": "Chunk"
+  },
+  {
+    "key": "Band",
+    "source": "Band",
+    "text": "Band"
+  },
+  {
+    "key": "Kalman",
+    "source": "Kalman",
+    "text": "Kalman"
+  },
+  {
+    "key": "Smoothed %",
+    "source": "Smoothed %",
+    "text": "ನಯ %"
+  },
+  {
+    "key": "Error (%)",
+    "source": "Error (%)",
+    "text": "ದೋಷ (%)"
+  },
+  {
+    "key": "Off",
+    "source": "Off",
+    "text": "ಆಫ್"
+  },
+  {
+    "key": "Corrected % (Chunk)",
+    "source": "Corrected % (Chunk)",
+    "text": "Corrected % (Chunk)"
+  },
+  {
+    "key": "Corrected % (Band)",
+    "source": "Corrected % (Band)",
+    "text": "Corrected % (Band)"
+  },
+  {
+    "key": "Corrected % (Kalman)",
+    "source": "Corrected % (Kalman)",
+    "text": "Corrected % (Kalman)"
+  },
+  {
+    "key": "gal",
+    "source": "gal",
+    "text": "gal"
+  },
+  {
+    "key": "L",
+    "source": "L",
+    "text": "L"
+  },
+  {
+    "key": "None yet (Detect runs on connect)",
+    "source": "None yet (Detect runs on connect)",
+    "text": "ಇನ್ನೂ ಯಾವುದೂ ಇಲ್ಲ (ಹುಡುಕಿ ಸಂಪರ್ಕದಲ್ಲಿ ಓಡುತ್ತದೆ)"
+  },
+  {
+    "key": "SAE 012F Fuel Tank Level",
+    "source": "SAE 012F Fuel Tank Level",
+    "text": "SAE 012F Fuel Tank Level"
+  },
+  {
+    "key": "Mode 22 16C1",
+    "source": "Mode 22 16C1",
+    "text": "Mode 22 16C1"
+  },
+  {
+    "key": "Ford Mode 22 F42F",
+    "source": "Ford Mode 22 F42F",
+    "text": "Ford Mode 22 F42F"
+  },
+  {
+    "key": "GM Mode 22 12C5 %",
+    "source": "GM Mode 22 12C5 %",
+    "text": "GM Mode 22 12C5 %"
+  },
+  {
+    "key": "Chrysler 21A2 %",
+    "source": "Chrysler 21A2 %",
+    "text": "Chrysler 21A2 %"
+  },
+  {
+    "key": "Chrysler Fuel Level Average",
+    "source": "Chrysler Fuel Level Average",
+    "text": "Chrysler Fuel Level Average"
+  },
+  {
+    "key": "Toyota cluster 2129 (half-litre counts)",
+    "source": "Toyota cluster 2129 (half-litre counts)",
+    "text": "Toyota cluster 2129 (half-litre counts)"
+  },
+  {
+    "key": "Torque extra PID by long name",
+    "source": "Torque extra PID by long name",
+    "text": "Torque extra PID by long name"
+  },
+  {
+    "key": "Vehicle 1",
+    "source": "Vehicle 1",
+    "text": "ವಾಹನ 1"
+  },
+  {
+    "key": "Vehicle %1$s",
+    "source": "Vehicle %1$s",
+    "text": "ವಾಹನ %1$s"
+  },
+  {
+    "key": "Binding to Torque…",
+    "source": "Binding to Torque…",
+    "text": "Torque ಗೆ ಬಂಧಿಸುತ್ತಿದೆ…"
+  },
+  {
+    "key": "Waiting for fuel source",
+    "source": "Waiting for fuel source",
+    "text": "ಇಂಧನ ಮೂಲಕ್ಕಾಗಿ ಕಾಯುತ್ತಿದೆ"
+  },
+  {
+    "key": "raw %1$.1f%%",
+    "source": "raw %1$.1f%%",
+    "text": "ಕಚ್ಚಾ %1$.1f%%"
+  },
+  {
+    "key": "sess %1$s",
+    "source": "sess %1$s",
+    "text": "ಸೆಷನ್ %1$s"
+  },
+  {
+    "key": "Fuel Smoothing",
+    "source": "Fuel Smoothing",
+    "text": "Fuel Smoothing"
+  },
+  {
+    "key": "Fuel Smoothing quiet",
+    "source": "Fuel Smoothing quiet",
+    "text": "Fuel Smoothing ಮೌನ"
+  },
+  {
+    "key": "Map refitting",
+    "source": "Map refitting",
+    "text": "ನಕ್ಷೆ ಮರುಫಿಟ್ ಆಗುತ್ತಿದೆ"
+  },
+  {
+    "key": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "source": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "text": "Fuel Smoothing %1$s ಗಾಗಿ ನಕ್ಷೆಯನ್ನು ಮರುಫಿಟ್ ಮಾಡುತ್ತಿದೆ. ಆ ಫಿಟ್ 1:1 ಓದುತ್ತದೆ, ಮರುಫಿಟ್ ಮುಗಿಯುವವರೆಗೆ."
+  },
+  {
+    "key": "No fuel level source set",
+    "source": "No fuel level source set",
+    "text": "ಇಂಧನ ಮಟ್ಟ ಮೂಲ ಹೊಂದಿಸಿಲ್ಲ"
+  },
+  {
+    "key": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "source": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "text": "Fuel Smoothing ಗೆ %1$s ಗಾಗಿ ಇಂಧನ ಮಟ್ಟ ಮೂಲ ಇಲ್ಲ. ಸೆಟಪ್ ಪುಟ ತೆರೆದು ಹುಡುಕಿ ಒತ್ತಿ, ಅಥವಾ ಮೂಲ ಆಯ್ಕೆಮಾಡಿ."
+  },
+  {
+    "key": "No fuel level this drive",
+    "source": "No fuel level this drive",
+    "text": "ಈ ಡ್ರೈವ್‌ನಲ್ಲಿ ಇಂಧನ ಮಟ್ಟ ಇಲ್ಲ"
+  },
+  {
+    "key": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "source": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "text": "%1$s %2$s ಗೆ ಬಳಸಬಹುದಾದ ಮಟ್ಟ ನೀಡಲಿಲ್ಲ. ಅಡಾಪ್ಟರ್ ಸಂಪರ್ಕ ಪರಿಶೀಲಿಸಿ, ಅಥವಾ ಸೆಟಪ್ ಪುಟದಲ್ಲಿ ಹುಡುಕಿ ಚಲಾಯಿಸಿ."
+  },
+  {
+    "key": "Fuel level source found",
+    "source": "Fuel level source found",
+    "text": "ಇಂಧನ ಮಟ್ಟ ಮೂಲ ಸಿಕ್ಕಿತು"
+  },
+  {
+    "key": "Using %1$s for %2$s (%3$s).",
+    "source": "Using %1$s for %2$s (%3$s).",
+    "text": "%1$s %2$s ಗೆ ಬಳಕೆಯಲ್ಲಿದೆ (%3$s)."
+  },
+  {
+    "key": "No fuel level source found",
+    "source": "No fuel level source found",
+    "text": "ಇಂಧನ ಮಟ್ಟ ಮೂಲ ಸಿಗಲಿಲ್ಲ"
+  },
+  {
+    "key": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "source": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "text": "Fuel Smoothing ಸೆಟಪ್ ತೆರೆದು ಮೂಲ ಆಯ್ಕೆಮಾಡಿ (ಅಥವಾ Torque ನಲ್ಲಿ PID ಸೇರಿಸಿ), ನಂತರ ಹುಡುಕಿ ಒತ್ತಿ."
+  },
+  {
+    "key": "Confirm fuel level source",
+    "source": "Confirm fuel level source",
+    "text": "ಇಂಧನ ಮಟ್ಟ ಮೂಲವನ್ನು ದೃಢೀಕರಿಸಿ"
+  },
+  {
+    "key": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "source": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "text": "%1$s ಕಂಡುಬಂದಿದೆ, ಓದು %2$.0f %% , %3$s ಗೆ. ಡ್ಯಾಶ್ ಇಂಧನ ಗೇಜ್ ಜೊತೆ ಹೊಂದುತ್ತದೆಯೇ ನೋಡಿ ದೃಢೀಕರಿಸಿ ಒತ್ತಿ. ದೃಢೀಕರಿಸಿ ಸೆಟಪ್ ಪುಟ ಮತ್ತು ಅಧಿಸೂಚನೆಯಲ್ಲಿದೆ (%4$s)."
+  },
+  {
+    "key": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "source": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "text": "%1$s ಕಂಡುಬಂದಿದೆ, %2$s ಗೆ. ಡ್ಯಾಶ್ ಇಂಧನ ಗೇಜ್ ಜೊತೆ ಹೊಂದುತ್ತದೆಯೇ ನೋಡಿ ದೃಢೀಕರಿಸಿ ಒತ್ತಿ. ದೃಢೀಕರಿಸಿ ಸೆಟಪ್ ಪುಟ ಮತ್ತು ಅಧಿಸೂಚನೆಯಲ್ಲಿದೆ (%3$s)."
+  },
+  {
+    "key": "Recording to %1$s",
+    "source": "Recording to %1$s",
+    "text": "%1$s ಗೆ ದಾಖಲೆ"
+  },
+  {
+    "key": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "source": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "text": "ಈ ವಾಹನ %1$s (%2$s), ಆದರೆ Torque ಪ್ರೊಫೈಲ್ '%3$s'. ಡೇಟಾ %1$s ಗೆ ಹೋಗುತ್ತದೆ; Torque ತೆರೆದು ಪ್ರೊಫೈಲ್ ಬದಲಾಯಿಸಲು ಟ್ಯಾಪ್ ಮಾಡಿ."
+  },
+  {
+    "key": "Wrong vehicle profile?",
+    "source": "Wrong vehicle profile?",
+    "text": "ತಪ್ಪು ವಾಹನ ಪ್ರೊಫೈಲ್?"
+  },
+  {
+    "key": "Torque profile '%1$s'",
+    "source": "Torque profile '%1$s'",
+    "text": "Torque ಪ್ರೊಫೈಲ್ '%1$s'"
+  },
+  {
+    "key": "a new vehicle profile",
+    "source": "a new vehicle profile",
+    "text": "ಹೊಸ ವಾಹನ ಪ್ರೊಫೈಲ್"
+  },
+  {
+    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "text": "Torque ಪ್ರೊಫೈಲ್ '%1$s' ಈ ವಾಹನಕ್ಕೆ ಹೊಂದುವುದಿಲ್ಲ (%2$s). ಸಲಹೆ: %3$s. ಡೇಟಾ ಇಡಲಾಗುತ್ತದೆ ಮತ್ತು ನೀವು ಇಡದಿದ್ದರೆ ಡ್ರೈವ್ ಕೊನೆಯಲ್ಲಿ ಬಿಡಲಾಗುತ್ತದೆ."
+  },
+  {
+    "key": "Keeping drive data",
+    "source": "Keeping drive data",
+    "text": "ಡ್ರೈವ್ ಡೇಟಾ ಇಡಲಾಗುತ್ತಿದೆ"
+  },
+  {
+    "key": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "source": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "text": "ಈ ಡ್ರೈವ್ %1$s ಗೆ ಉಳಿಸಲಾಗುತ್ತದೆ. Torque ಪ್ಲಗಿನ್ API Torque ಪ್ರೊಫೈಲ್ ರಚಿಸಲು ಅಥವಾ ಬದಲಾಯಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ: Torque ನಲ್ಲಿ '%2$s' ಹೆಸರಿನ ವಾಹನ ಪ್ರೊಫೈಲ್ ರಚಿಸಿ ಅಥವಾ ಆಯ್ಕೆಮಾಡಿ."
+  },
+  {
+    "key": "Create new profile",
+    "source": "Create new profile",
+    "text": "ಹೊಸ ಪ್ರೊಫೈಲ್ ರಚಿಸಿ"
+  },
+  {
+    "key": "Use %1$s",
+    "source": "Use %1$s",
+    "text": "%1$s ಬಳಸಿ"
+  }
+]

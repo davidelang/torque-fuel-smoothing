@@ -342,3 +342,7 @@ Fit the Kalman map in native code, full rebuild or from the latest parts.
 ## 2026-11-03 - Dropped trailing fill advances the chain epoch
 
 - A dropped trailing fill advances the chain epoch.
+
+## 2026-11-04 - Sentence-keyed translations
+
+- User-visible English is the string key. The build packages catalog translations and does not call a translator. Plan: sandbox/plans/translation-sentence-keys-20261104-1433-plan.md

@@ -398,6 +398,7 @@ class PluginService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        AppStrings.install(this)
         isRunning = true
         instance = this
         FsLog.init(filesDir)
@@ -413,7 +414,7 @@ class PluginService : Service() {
                 FixFuelPrefs.sinceFillUsedGal(this),
                 cfg.tankGal,
             ),
-            getString(R.string.vehicle_default),
+            S("Vehicle 1"),
         )
         profileId = ProfileStore.activeId(filesDir)
         migrateLegacySource()
@@ -421,7 +422,7 @@ class PluginService : Service() {
         ensureChannel()
         TapStartNotice.cancel(this)
         TipReconciler.run(this, "service start")
-        updatePresence(getString(R.string.binding_torque))
+        updatePresence(S("Binding to Torque…"))
         bindTorque()
     }
 
@@ -960,8 +961,8 @@ class PluginService : Service() {
                 target = d.target
                 Fingerprint.save(ProfileStore.profileDir(filesDir, target), Fingerprint.merge(fps[target] ?: Fingerprint.Fp(), obs))
                 notifyIdentity(
-                    getString(R.string.recording_title, profileName(target)),
-                    getString(R.string.recording_body, profileName(target), d.why, torqueName.orEmpty()),
+                    S("Recording to %1\$s", profileName(target)),
+                    S("This vehicle is %1\$s (%2\$s), but Torque's profile is '%3\$s'. Data goes to %1\$s; tap to open Torque and switch profiles.", profileName(target), d.why, torqueName.orEmpty()),
                     emptyList(),
                 )
             }
@@ -969,11 +970,11 @@ class PluginService : Service() {
                 quarantineDir = Quarantine.dir(filesDir, System.currentTimeMillis())
                 quarantineSuggest = d.suggest
                 quarantineObs = obs
-                val sug = d.suggest?.let { getString(R.string.wrong_suggest_profile, profileName(it)) }
-                    ?: getString(R.string.wrong_suggest_new)
+                val sug = d.suggest?.let { S("Torque profile '%1\$s'", profileName(it)) }
+                    ?: S("a new vehicle profile")
                 notifyIdentity(
-                    getString(R.string.wrong_vehicle_title),
-                    getString(R.string.wrong_vehicle_body, torqueName.orEmpty(), d.why, sug),
+                    S("Wrong vehicle profile?"),
+                    S("Torque profile '%1\$s' doesn't match this vehicle (%2\$s). Suggested: %3\$s. Data is held and discarded at drive end unless you keep it.", torqueName.orEmpty(), d.why, sug),
                     Fingerprint.actions(d.suggest),
                 )
             }
@@ -1040,7 +1041,7 @@ class PluginService : Service() {
                     if (!noticed[0]) {
                         noticed[0] = true
                         val who = profileName(target)
-                        notifySimple(getString(R.string.map_refit_title), getString(R.string.map_refit_body, who))
+                        notifySimple(S("Map refitting"), S("Fuel Smoothing is refitting a map for %1\$s. That fit reads 1:1 until its refit finishes.", who))
                         FsLog.i(TAG, "map refit notice for $target")
                     }
                     ProfileStore.DataLock.lock()
@@ -1072,12 +1073,12 @@ class PluginService : Service() {
         }
         val now = System.currentTimeMillis()
         val day = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.ROOT).format(java.util.Date(now))
-        val id = Quarantine.confirmTarget(filesDir, target, now, getString(R.string.vehicle_dated, day))
+        val id = Quarantine.confirmTarget(filesDir, target, now, S("Vehicle %1\$s", day))
         quarantineConfirm = id
         FsLog.i(TAG, "quarantine confirmed by user -> $id")
         notifyIdentity(
-            getString(R.string.keeping_title),
-            getString(R.string.keeping_body, profileName(id), profileName(id)),
+            S("Keeping drive data"),
+            S("This drive will be saved to %1\$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2\$s'.", profileName(id), profileName(id)),
             emptyList(),
         )
     }
@@ -1096,7 +1097,7 @@ class PluginService : Service() {
         if (torque != null) b.setContentIntent(PendingIntent.getActivity(this, 41, torque, flags))
         for ((k, target) in choices.withIndex()) {
             val i = Intent(this, PluginService::class.java).setAction(ACTION_Q_CONFIRM).putExtra(EXTRA_TARGET, target)
-            val label = if (target == NEW_PROFILE) getString(R.string.action_new_profile) else getString(R.string.action_use, profileName(target))
+            val label = if (target == NEW_PROFILE) S("Create new profile") else S("Use %1\$s", profileName(target))
             @Suppress("DEPRECATION")
             b.addAction(android.R.drawable.ic_menu_save, label, PendingIntent.getService(this, 42 + k, i, flags))
         }
@@ -1462,7 +1463,7 @@ class PluginService : Service() {
         val closed = rt.sessions.close()
         if (id == 1 && quarantineDir == null && FuelDetect.noSourceAlert(cfg.sourceId, closed.size, ProfileStore.profileField(filesDir, profileId, FuelDetect.KEY_NONE_ALERTED) == "true")) {
             ProfileStore.setProfileField(filesDir, profileId, FuelDetect.KEY_NONE_ALERTED, "true")
-            notifySimple(getString(R.string.no_source_title), getString(R.string.no_source_body, profileName(profileId)))
+            notifySimple(S("No fuel level source set"), S("Fuel Smoothing has no fuel level source for %1\$s. Open the setup page and tap Detect, or pick a source.", profileName(profileId)))
         }
         val noLevel = if (id == 1 && quarantineDir == null) {
             val was = ProfileStore.profileField(filesDir, profileId, FuelDetect.KEY_NO_LEVEL_ALERTED) == "true"
@@ -1477,8 +1478,8 @@ class PluginService : Service() {
             // Once, re-armed only after a drive with valid levels; the source is never changed, detection not triggered.
             FsLog.w(TAG, "fuel source ${cfg.sourceId} gave no usable level in ${closed.size} samples")
             notifySimple(
-                getString(R.string.no_level_title),
-                getString(R.string.no_level_body, getString(FuelSources.byId(cfg.sourceId).label), profileName(profileId)),
+                S("No fuel level this drive"),
+                S("%1\$s gave no usable level for %2\$s. Check the adapter connection, or run Detect on the setup page.", S(FuelSources.byId(cfg.sourceId).label), profileName(profileId)),
             )
         }
         closeLiveChunks(rt, closed)
@@ -1835,9 +1836,9 @@ class PluginService : Service() {
         val p = lastRawPct
         val sid = tanks[1]?.sessions?.sessionId
         return buildString {
-            if (p == null) append(getString(R.string.status_waiting))
-            else append(getString(R.string.status_raw, p))
-            if (sid != null) append(getString(R.string.status_sess, sid.takeLast(8)))
+            if (p == null) append(S("Waiting for fuel source"))
+            else append(S("raw %1\$.1f%%", p))
+            if (sid != null) append(S("sess %1\$s", sid.takeLast(8)))
         }
     }
 
@@ -1845,10 +1846,10 @@ class PluginService : Service() {
         if (Build.VERSION.SDK_INT < 26) return
         val nm = notificationManager() ?: return
         nm.createNotificationChannel(
-            NotificationChannel(CHANNEL_ID, getString(R.string.channel_fuel), NotificationManager.IMPORTANCE_LOW),
+            NotificationChannel(CHANNEL_ID, S("Fuel Smoothing"), NotificationManager.IMPORTANCE_LOW),
         )
         nm.createNotificationChannel(
-            NotificationChannel(CHANNEL_QUIET, getString(R.string.channel_quiet), NotificationManager.IMPORTANCE_MIN),
+            NotificationChannel(CHANNEL_QUIET, S("Fuel Smoothing quiet"), NotificationManager.IMPORTANCE_MIN),
         )
     }
 
@@ -1857,7 +1858,7 @@ class PluginService : Service() {
         val showPct = cfg.showFuelNotification
         if (Build.VERSION.SDK_INT >= 26) {
             val channel = if (showPct) CHANNEL_ID else CHANNEL_QUIET
-            val body = if (showPct) liveText else getString(R.string.running_quiet)
+            val body = if (showPct) liveText else S("Fuel Smoothing is running")
             if (body == lastNoticeText && channel == lastNoticeChannel) return
             lastNoticeText = body
             lastNoticeChannel = channel
@@ -1906,7 +1907,7 @@ class PluginService : Service() {
             @Suppress("DEPRECATION")
             Notification.Builder(this)
         }
-        return b.setContentTitle(getString(R.string.app_name))
+        return b.setContentTitle(S("Fuel Smoothing for Torque"))
             .setContentText(text)
             .setSmallIcon(R.drawable.ic_stat_notify)
             .setOngoing(true)
@@ -1970,12 +1971,12 @@ class PluginService : Service() {
             notifySourceChanged(this)
             if (!detectNotifyAllowed()) Unit
             else if (res.confirmed) notifySimple(
-                getString(R.string.source_found_title),
-                getString(R.string.source_found_body, getString(FuelSources.byId(res.id).label), profileName(profileId), res.why),
+                S("Fuel level source found"),
+                S("Using %1\$s for %2\$s (%3\$s).", S(FuelSources.byId(res.id).label), profileName(profileId), res.why),
             )
             else if (!skipConfirm) notifyConfirmSource(res.id, res.level, res.why)
         } else {
-            if (detectNotifyAllowed()) notifySimple(getString(R.string.source_missing_title), getString(R.string.source_missing_body))
+            if (detectNotifyAllowed()) notifySimple(S("No fuel level source found"), S("Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect."))
             announceSourceChanged()
         }
     }
@@ -1984,19 +1985,19 @@ class PluginService : Service() {
     private fun notifyConfirmSource(id: String, level: Double?, why: String) {
         val nm = notificationManager() ?: return
         val flags = PendingIntent.FLAG_UPDATE_CURRENT or (if (Build.VERSION.SDK_INT >= 23) PendingIntent.FLAG_IMMUTABLE else 0)
-        val label = getString(FuelSources.byId(id).label)
+        val label = S(FuelSources.byId(id).label)
         val who = profileName(profileId)
         val text = if (level != null) {
-            getString(R.string.confirm_source_body, label, level, who, why)
+            S("Detected %1\$s reading %2\$.0f %% for %3\$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4\$s).", label, level, who, why)
         } else {
-            getString(R.string.confirm_source_body_nolevel, label, who, why)
+            S("Detected %1\$s for %2\$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3\$s).", label, who, why)
         }
         val b = if (Build.VERSION.SDK_INT >= 26) Notification.Builder(this, CHANNEL_ID) else @Suppress("DEPRECATION") Notification.Builder(this)
-        b.setSmallIcon(R.drawable.ic_stat_notify).setContentTitle(getString(R.string.confirm_source_title)).setContentText(text)
+        b.setSmallIcon(R.drawable.ic_stat_notify).setContentTitle(S("Confirm fuel level source")).setContentText(text)
             .setStyle(Notification.BigTextStyle().bigText(text)).setAutoCancel(true)
         val i = Intent(this, PluginService::class.java).setAction(ACTION_CONFIRM_SOURCE).putExtra(EXTRA_TARGET, profileId).putExtra(EXTRA_SOURCE, id)
         @Suppress("DEPRECATION")
-        b.addAction(android.R.drawable.ic_menu_save, getString(R.string.confirm), PendingIntent.getService(this, 61, i, flags))
+        b.addAction(android.R.drawable.ic_menu_save, S("Confirm"), PendingIntent.getService(this, 61, i, flags))
         val setup = Intent(this, PluginActivity::class.java)
         b.setContentIntent(PendingIntent.getActivity(this, 62, setup, flags))
         runCatching { nm.notify(DETECT_NOTIF_ID, b.build()) }.onFailure { FsLog.warn(TAG, "notify", "notify ignored: ${it.message}") }

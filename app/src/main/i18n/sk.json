@@ -1,0 +1,647 @@
+[
+  {
+    "key": "Fuel Smoothing for Torque",
+    "source": "Fuel Smoothing for Torque",
+    "text": "Fuel Smoothing for Torque"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/privacy/"
+  },
+  {
+    "key": "Tips are on the Play Store version",
+    "source": "Tips are on the Play Store version",
+    "text": "Prepitné je vo verzii Play Store"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "Rýchly štart\n 1. Nainštalujte Torque Pro (platenú verziu; Torque Lite pluginy nepodporuje) a spárujte adaptér OBD-II.\n 2. Povoľte tento plugin v Torque → Nastavenia → Pluginy.\n 3. Povoľte upozornenia a nastavte využitie batérie na Neobmedzené, aby Torque mohol spúšťať tento plugin na pozadí.\n 4. V Torque vyberte profil vozidla, ktoré vediete. Údaje sa uchovávajú podľa profilu Torque a kontrolujú sa voči identite VIN/ECU vozidla.\n 5. Pri novom profile sa zdroj paliva zistí pri pripojení; ak ste vyzvaní, porovnajte ho s ukazovateľom na palubnej doske a klepnite na Potvrdiť. Potvrdiť je na stránke nastavenia aj v upozornení. Môžete ho vybrať aj nižšie.\n 6. Veľkosť nádrže je východisková veľkosť pre fit Chunk, kým sa nenaučí vlastnú. Plugin ju nikdy nemení; naučená veľkosť každého fitu je zobrazená pod ním.\n 7. V Torque pridajte ukazovatele pre [FuelSmooth] Smoothed Fuel Level a pre každý fit Corrected %, Remaining, DTE a Tank size. DTE je Remaining krát dlhodobá spotreba mpg v Torque. Upozornenie počas prepočtu hovorí, že fit číta 1:1, kým sa prepočet neskončí.\n 8. Posielajte hladinu paliva späť do Torque: Vypnuté, vyhladené alebo opravené z fitu Chunk, Band alebo Kalman na váš ukazovateľ 012F.\n 9. Palivo sa počíta len keď motor beží. Plugin beží len keď je Torque pripojený k ECU.\n 10. Jazdite ďalej a tankujte; presnosť rastie počas niekoľkých čiastočných nádrží. Ak sa objaví upozornenie Nesprávny profil vozidla?, zvoľte, čo s tou jazdou.\n 11. Všetky údaje zostávajú v tomto telefóne. GPS ani poloha sa nezaznamenáva."
+  },
+  {
+    "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "text": "%1$s\nVerzia %2$s (%3$s)\nPlugin pre Torque Pro. Nie je spojený s Torque ani Ianom Hawkinsom.\nVšetky údaje zostávajú v tomto telefóne; GPS ani poloha sa nezaznamenáva.\n\nLicencia\nCopyright David Lang. Všetky práva vyhradené."
+  },
+  {
+    "key": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "source": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "text": "Knižnice s otvoreným zdrojovým kódom\nTáto aplikácia používa knižnice nižšie. Ich licencie sú oddelené od copyrightu vyššie.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), vyžaduje Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/manual/"
+  },
+  {
+    "key": "Full manual (online)",
+    "source": "Full manual (online)",
+    "text": "Úplný návod (online)"
+  },
+  {
+    "key": "Show fuel level in notification",
+    "source": "Show fuel level in notification",
+    "text": "Zobraziť hladinu paliva v upozornení"
+  },
+  {
+    "key": "Feed fuel level back to Torque (overrides 012F)",
+    "source": "Feed fuel level back to Torque (overrides 012F)",
+    "text": "Posielať hladinu paliva späť do Torque (prepíše 012F)"
+  },
+  {
+    "key": "Fuel Smoothing is running",
+    "source": "Fuel Smoothing is running",
+    "text": "Fuel Smoothing beží"
+  },
+  {
+    "key": "Tap to start Fuel Smoothing",
+    "source": "Tap to start Fuel Smoothing",
+    "text": "Klepnutím spustite Fuel Smoothing"
+  },
+  {
+    "key": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "source": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "text": "Spustenie z batérie alebo na pozadí bolo zamietnuté. Otvorte aplikáciu raz, aby plugin mohol bežať s Torque."
+  },
+  {
+    "key": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "source": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "text": "Podľa potreby pridajte ďalšie nádrže (sériová nádrž 1 zostáva vždy). Neprepínajte snímače na pin PCM FLI (falošné tankovanie). Každá ďalšia nádrž potrebuje vlastný doplnkový PID Torque (MCU Mode 22, jedinečný názov — nie 012F ani Ford 16C1). Hodnota Select-PID je identifikátor nádrže od 1. Gal/hr sa účtujú len aktívnej nádrži."
+  },
+  {
+    "key": "Tap to start",
+    "source": "Tap to start",
+    "text": "Klepnutím spustiť"
+  },
+  {
+    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "text": "Veľkosť nádrže je východisková veľkosť pre fit Chunk, kým sa nenaučí vlastnú. Plugin ju nikdy nemení; naučená veľkosť každého fitu je zobrazená pod ním."
+  },
+  {
+    "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "source": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "text": "Zapíše hodnotu na sériový Fuel Level (012F) v Torque, aby ju ukazovali existujúce ukazovatele: Vypnuté, vyhladené alebo opravené z fitu Chunk, Band alebo Kalman. Fit, ktorý ešte nie je zostavený, zapíše vyhladenú hladinu."
+  },
+  {
+    "key": "Chunk: %1$s",
+    "source": "Chunk: %1$s",
+    "text": "Chunk: %1$s"
+  },
+  {
+    "key": "Band: %1$s",
+    "source": "Band: %1$s",
+    "text": "Band: %1$s"
+  },
+  {
+    "key": "Kalman: %1$s",
+    "source": "Kalman: %1$s",
+    "text": "Kalman: %1$s"
+  },
+  {
+    "key": "no size yet",
+    "source": "no size yet",
+    "text": "zatiaľ bez veľkosti"
+  },
+  {
+    "key": "no size yet ± %1$.1f gal",
+    "source": "no size yet ± %1$.1f gal",
+    "text": "zatiaľ bez veľkosti ± %1$.1f gal"
+  },
+  {
+    "key": "%1$.1f gal",
+    "source": "%1$.1f gal",
+    "text": "%1$.1f gal"
+  },
+  {
+    "key": "%1$.1f ± %2$.1f gal",
+    "source": "%1$.1f ± %2$.1f gal",
+    "text": "%1$.1f ± %2$.1f gal"
+  },
+  {
+    "key": "Help",
+    "source": "Help",
+    "text": "Pomocník"
+  },
+  {
+    "key": "About",
+    "source": "About",
+    "text": "O aplikácii"
+  },
+  {
+    "key": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "source": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "text": "Vyžaduje Torque Pro (platené). Torque Lite pluginy nepodporuje."
+  },
+  {
+    "key": "Get Torque Pro",
+    "source": "Get Torque Pro",
+    "text": "Získať Torque Pro"
+  },
+  {
+    "key": "Privacy",
+    "source": "Privacy",
+    "text": "Súkromie"
+  },
+  {
+    "key": "Send feedback",
+    "source": "Send feedback",
+    "text": "Odoslať spätnú väzbu"
+  },
+  {
+    "key": "Tip",
+    "source": "Tip",
+    "text": "Prepitné"
+  },
+  {
+    "key": "Thanks",
+    "source": "Thanks",
+    "text": "Ďakujeme"
+  },
+  {
+    "key": "Close",
+    "source": "Close",
+    "text": "Zavrieť"
+  },
+  {
+    "key": "OK",
+    "source": "OK",
+    "text": "OK"
+  },
+  {
+    "key": "Detect",
+    "source": "Detect",
+    "text": "Zistiť"
+  },
+  {
+    "key": "Confirm",
+    "source": "Confirm",
+    "text": "Potvrdiť"
+  },
+  {
+    "key": "Save pin",
+    "source": "Save pin",
+    "text": "Uložiť kotvu"
+  },
+  {
+    "key": "Add additional tank",
+    "source": "Add additional tank",
+    "text": "Pridať ďalšiu nádrž"
+  },
+  {
+    "key": "Remove",
+    "source": "Remove",
+    "text": "Odstrániť"
+  },
+  {
+    "key": "Details",
+    "source": "Details",
+    "text": "Podrobnosti"
+  },
+  {
+    "key": "Verbose logging (debug; per-second log lines)",
+    "source": "Verbose logging (debug; per-second log lines)",
+    "text": "Podrobný protokol (ladenie; riadky každú sekundu)"
+  },
+  {
+    "key": "Profile name",
+    "source": "Profile name",
+    "text": "Názov profilu"
+  },
+  {
+    "key": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "source": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "text": "Názov tohto profilu vozidla. Každý profil vozidla v Torque má vlastný profil pluginu, údaje a naučené mapy."
+  },
+  {
+    "key": "Make",
+    "source": "Make",
+    "text": "Značka"
+  },
+  {
+    "key": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "source": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "text": "Značka vozidla (napr. Ford). Slúži len na výber značkových PID paliva, ktoré môže zisťovanie skúsiť."
+  },
+  {
+    "key": "Fuel source",
+    "source": "Fuel source",
+    "text": "Zdroj paliva"
+  },
+  {
+    "key": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "source": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "text": "Odkiaľ pochádza surová hladina paliva. Zistiť (ECU musí byť pripojené) skúša kandidátov len na čítanie a žiada o potvrdenie, ak sa dva zdroje nezhodujú. Potvrdiť je na stránke nastavenia aj v upozornení. Žiadny = zistiť pri ďalšom pripojení."
+  },
+  {
+    "key": "Custom long name",
+    "source": "Custom long name",
+    "text": "Vlastný dlhý názov"
+  },
+  {
+    "key": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "source": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "text": "Len pre zdroj „Doplnkový PID Torque podľa dlhého názvu“: presný dlhý názov PID Torque, ktorý hlási hladinu."
+  },
+  {
+    "key": "Tank size",
+    "source": "Tank size",
+    "text": "Veľkosť nádrže"
+  },
+  {
+    "key": "blank = no starting size; each fit learns its own.",
+    "source": "blank = no starting size; each fit learns its own.",
+    "text": "prázdne = bez východiskovej veľkosti; každý fit sa naučí vlastnú."
+  },
+  {
+    "key": "Smoothing τ seconds",
+    "source": "Smoothing τ seconds",
+    "text": "Vyhladenie τ v sekundách"
+  },
+  {
+    "key": "Time constant of the smoothing filter (0 = no smoothing).",
+    "source": "Time constant of the smoothing filter (0 = no smoothing).",
+    "text": "Časová konštanta vyhladzovacieho filtra (0 = bez vyhladenia)."
+  },
+  {
+    "key": "Max skew %/s",
+    "source": "Max skew %/s",
+    "text": "Max. sklon %/s"
+  },
+  {
+    "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "text": "Najväčšia zmena za sekundu, ktorú smie vyhladená hladina sledovať; väčšie špliechanie sa ignoruje."
+  },
+  {
+    "key": "Fill jump %",
+    "source": "Fill jump %",
+    "text": "Skok tankovania %"
+  },
+  {
+    "key": "Rise in level while stopped that counts as a fill.",
+    "source": "Rise in level while stopped that counts as a fill.",
+    "text": "Vzostup hladiny pri státí, ktorý sa počíta ako tankovanie."
+  },
+  {
+    "key": "Odometer miles",
+    "source": "Odometer miles",
+    "text": "Počítadlo kilometrov v míľach"
+  },
+  {
+    "key": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "source": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "text": "Voliteľné: zadajte stav počítadla a Uložiť kotvu, aby ste ukotvili vzdialenosť tohto profilu."
+  },
+  {
+    "key": "Additional tanks",
+    "source": "Additional tanks",
+    "text": "Ďalšie nádrže"
+  },
+  {
+    "key": "Active tank",
+    "source": "Active tank",
+    "text": "Aktívna nádrž"
+  },
+  {
+    "key": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "source": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "text": "Nádrž, na ktorú sa účtuje spotreba (gal/hr). Z PID: PID Torque ju volí (identifikátor nádrže od 1)."
+  },
+  {
+    "key": "Select-PID long name",
+    "source": "Select-PID long name",
+    "text": "Dlhý názov Select-PID"
+  },
+  {
+    "key": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "source": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "text": "Len keď Aktívna nádrž = Z PID: dlhý názov PID Torque, ktorého hodnota je identifikátor nádrže."
+  },
+  {
+    "key": "Tank %1$d",
+    "source": "Tank %1$d",
+    "text": "Nádrž %1$d"
+  },
+  {
+    "key": "Tank %1$d fuel source",
+    "source": "Tank %1$d fuel source",
+    "text": "Zdroj paliva nádrže %1$d"
+  },
+  {
+    "key": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "source": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "text": "Vlastný dlhý názov nádrže %1$d (napr. [FuelSmooth] Tank%1$d Level)"
+  },
+  {
+    "key": "Tank %1$d gallons",
+    "source": "Tank %1$d gallons",
+    "text": "Galóny nádrže %1$d"
+  },
+  {
+    "key": "From PID",
+    "source": "From PID",
+    "text": "Z PID"
+  },
+  {
+    "key": "(unconfirmed)",
+    "source": "(unconfirmed)",
+    "text": "(nepotvrdené)"
+  },
+  {
+    "key": "· ECU connected",
+    "source": "· ECU connected",
+    "text": "· ECU pripojené"
+  },
+  {
+    "key": "tank ?",
+    "source": "tank ?",
+    "text": "nádrž ?"
+  },
+  {
+    "key": "About %1$s",
+    "source": "About %1$s",
+    "text": "Asi %1$s"
+  },
+  {
+    "key": "0 to %1$s s",
+    "source": "0 to %1$s s",
+    "text": "0 až %1$s s"
+  },
+  {
+    "key": "above 0, at most %1$s %%/s",
+    "source": "above 0, at most %1$s %%/s",
+    "text": "nad 0, najviac %1$s %%/s"
+  },
+  {
+    "key": "%1$s to %2$s %%",
+    "source": "%1$s to %2$s %%",
+    "text": "%1$s až %2$s %%"
+  },
+  {
+    "key": "blank or a number above 0",
+    "source": "blank or a number above 0",
+    "text": "prázdne alebo číslo väčšie ako 0"
+  },
+  {
+    "key": "stored value out of range",
+    "source": "stored value out of range",
+    "text": "uložená hodnota mimo rozsahu"
+  },
+  {
+    "key": "Chunk",
+    "source": "Chunk",
+    "text": "Chunk"
+  },
+  {
+    "key": "Band",
+    "source": "Band",
+    "text": "Band"
+  },
+  {
+    "key": "Kalman",
+    "source": "Kalman",
+    "text": "Kalman"
+  },
+  {
+    "key": "Smoothed %",
+    "source": "Smoothed %",
+    "text": "Vyhladené %"
+  },
+  {
+    "key": "Error (%)",
+    "source": "Error (%)",
+    "text": "Chyba (%)"
+  },
+  {
+    "key": "Off",
+    "source": "Off",
+    "text": "Vypnuté"
+  },
+  {
+    "key": "Corrected % (Chunk)",
+    "source": "Corrected % (Chunk)",
+    "text": "Opravené % (Chunk)"
+  },
+  {
+    "key": "Corrected % (Band)",
+    "source": "Corrected % (Band)",
+    "text": "Opravené % (Band)"
+  },
+  {
+    "key": "Corrected % (Kalman)",
+    "source": "Corrected % (Kalman)",
+    "text": "Opravené % (Kalman)"
+  },
+  {
+    "key": "gal",
+    "source": "gal",
+    "text": "gal"
+  },
+  {
+    "key": "L",
+    "source": "L",
+    "text": "L"
+  },
+  {
+    "key": "None yet (Detect runs on connect)",
+    "source": "None yet (Detect runs on connect)",
+    "text": "Zatiaľ žiadny (Zistiť pri pripojení)"
+  },
+  {
+    "key": "SAE 012F Fuel Tank Level",
+    "source": "SAE 012F Fuel Tank Level",
+    "text": "SAE 012F Fuel Tank Level"
+  },
+  {
+    "key": "Mode 22 16C1",
+    "source": "Mode 22 16C1",
+    "text": "Mode 22 16C1"
+  },
+  {
+    "key": "Ford Mode 22 F42F",
+    "source": "Ford Mode 22 F42F",
+    "text": "Ford Mode 22 F42F"
+  },
+  {
+    "key": "GM Mode 22 12C5 %",
+    "source": "GM Mode 22 12C5 %",
+    "text": "GM Mode 22 12C5 %"
+  },
+  {
+    "key": "Chrysler 21A2 %",
+    "source": "Chrysler 21A2 %",
+    "text": "Chrysler 21A2 %"
+  },
+  {
+    "key": "Chrysler Fuel Level Average",
+    "source": "Chrysler Fuel Level Average",
+    "text": "Chrysler Fuel Level Average"
+  },
+  {
+    "key": "Toyota cluster 2129 (half-litre counts)",
+    "source": "Toyota cluster 2129 (half-litre counts)",
+    "text": "Toyota cluster 2129 (počty po pol litri)"
+  },
+  {
+    "key": "Torque extra PID by long name",
+    "source": "Torque extra PID by long name",
+    "text": "Doplnkový PID Torque podľa dlhého názvu"
+  },
+  {
+    "key": "Vehicle 1",
+    "source": "Vehicle 1",
+    "text": "Vozidlo 1"
+  },
+  {
+    "key": "Vehicle %1$s",
+    "source": "Vehicle %1$s",
+    "text": "Vozidlo %1$s"
+  },
+  {
+    "key": "Binding to Torque…",
+    "source": "Binding to Torque…",
+    "text": "Pripájanie k Torque…"
+  },
+  {
+    "key": "Waiting for fuel source",
+    "source": "Waiting for fuel source",
+    "text": "Čaká sa na zdroj paliva"
+  },
+  {
+    "key": "raw %1$.1f%%",
+    "source": "raw %1$.1f%%",
+    "text": "surové %1$.1f%%"
+  },
+  {
+    "key": "sess %1$s",
+    "source": "sess %1$s",
+    "text": "jazda %1$s"
+  },
+  {
+    "key": "Fuel Smoothing",
+    "source": "Fuel Smoothing",
+    "text": "Fuel Smoothing"
+  },
+  {
+    "key": "Fuel Smoothing quiet",
+    "source": "Fuel Smoothing quiet",
+    "text": "Fuel Smoothing potichu"
+  },
+  {
+    "key": "Map refitting",
+    "source": "Map refitting",
+    "text": "Prepočet mapy"
+  },
+  {
+    "key": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "source": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "text": "Fuel Smoothing prepočítava mapu pre %1$s. Tento fit číta 1:1, kým sa prepočet neskončí."
+  },
+  {
+    "key": "No fuel level source set",
+    "source": "No fuel level source set",
+    "text": "Nie je nastavený zdroj hladiny paliva"
+  },
+  {
+    "key": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "source": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "text": "Fuel Smoothing nemá zdroj hladiny paliva pre %1$s. Otvorte stránku nastavenia a klepnite na Zistiť, alebo zdroj vyberte."
+  },
+  {
+    "key": "No fuel level this drive",
+    "source": "No fuel level this drive",
+    "text": "V tejto jazde nie je hladina paliva"
+  },
+  {
+    "key": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "source": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "text": "%1$s nedal použiteľnú hladinu pre %2$s. Skontrolujte pripojenie adaptéra alebo spustite Zistiť na stránke nastavenia."
+  },
+  {
+    "key": "Fuel level source found",
+    "source": "Fuel level source found",
+    "text": "Zdroj hladiny paliva nájdený"
+  },
+  {
+    "key": "Using %1$s for %2$s (%3$s).",
+    "source": "Using %1$s for %2$s (%3$s).",
+    "text": "Používa sa %1$s pre %2$s (%3$s)."
+  },
+  {
+    "key": "No fuel level source found",
+    "source": "No fuel level source found",
+    "text": "Zdroj hladiny paliva nenájdený"
+  },
+  {
+    "key": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "source": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "text": "Otvorte nastavenie Fuel Smoothing a vyberte zdroj (alebo pridajte PID v Torque), potom klepnite na Zistiť."
+  },
+  {
+    "key": "Confirm fuel level source",
+    "source": "Confirm fuel level source",
+    "text": "Potvrďte zdroj hladiny paliva"
+  },
+  {
+    "key": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "source": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "text": "Zistené %1$s, údaj %2$.0f %% pre %3$s. Overte, že zodpovedá ukazovateľu na palubnej doske, a klepnite na Potvrdiť. Potvrdiť je na stránke nastavenia aj v upozornení (%4$s)."
+  },
+  {
+    "key": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "source": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "text": "Zistené %1$s pre %2$s. Overte, že zodpovedá ukazovateľu na palubnej doske, a klepnite na Potvrdiť. Potvrdiť je na stránke nastavenia aj v upozornení (%3$s)."
+  },
+  {
+    "key": "Recording to %1$s",
+    "source": "Recording to %1$s",
+    "text": "Záznam do %1$s"
+  },
+  {
+    "key": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "source": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "text": "Toto vozidlo je %1$s (%2$s), ale profil Torque je „%3$s“. Údaje idú do %1$s; klepnutím otvorte Torque a prepnite profil."
+  },
+  {
+    "key": "Wrong vehicle profile?",
+    "source": "Wrong vehicle profile?",
+    "text": "Nesprávny profil vozidla?"
+  },
+  {
+    "key": "Torque profile '%1$s'",
+    "source": "Torque profile '%1$s'",
+    "text": "Profil Torque „%1$s“"
+  },
+  {
+    "key": "a new vehicle profile",
+    "source": "a new vehicle profile",
+    "text": "nový profil vozidla"
+  },
+  {
+    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "text": "Profil Torque „%1$s“ nezodpovedá tomuto vozidlu (%2$s). Návrh: %3$s. Údaje sú pozdržané a na konci jazdy zahodené, ak ich neponecháte."
+  },
+  {
+    "key": "Keeping drive data",
+    "source": "Keeping drive data",
+    "text": "Ponechanie údajov jazdy"
+  },
+  {
+    "key": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "source": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "text": "Táto jazda sa uloží do %1$s. API pluginu Torque nevie vytvárať ani prepínať profily Torque: v Torque vytvorte alebo vyberte profil vozidla s názvom „%2$s“."
+  },
+  {
+    "key": "Create new profile",
+    "source": "Create new profile",
+    "text": "Vytvoriť nový profil"
+  },
+  {
+    "key": "Use %1$s",
+    "source": "Use %1$s",
+    "text": "Použiť %1$s"
+  }
+]

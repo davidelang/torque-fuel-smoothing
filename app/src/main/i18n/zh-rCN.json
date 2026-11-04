@@ -1,0 +1,647 @@
+[
+  {
+    "key": "Fuel Smoothing for Torque",
+    "source": "Fuel Smoothing for Torque",
+    "text": "Fuel Smoothing for Torque"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/privacy/"
+  },
+  {
+    "key": "Tips are on the Play Store version",
+    "source": "Tips are on the Play Store version",
+    "text": "打赏只在 Play Store 版本中提供"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "快速开始\n\n安装 Torque Pro（付费版；Torque Lite 不支持插件）并配对 OBD-II 适配器。\n\n在 Torque → 设置 → 插件 中启用此插件。\n\n允许通知，并把电池用量设为不受限制，以便 Torque 能在后台启动此插件。\n\n在 Torque 中选择您正在驾驶的车辆配置。数据按 Torque 配置保存，并与车辆的 VIN/ECU 身份核对。\n\n新配置会在连接时检测燃油来源；若询问，请对照仪表燃油表并点按确认。确认位于设置页和通知中。也可以在下方选择。\n\n油箱容量是 Chunk 拟合的起始容量，直到它学会自己的容量。插件从不更改它；每个拟合学到的容量显示在下方。\n\n在 Torque 中为 [FuelSmooth] Smoothed Fuel Level 以及每个拟合的 Corrected %、Remaining、DTE 和 Tank size 添加仪表。DTE 是 Remaining 乘以 Torque 的长期 mpg。重新拟合时的通知会说明该拟合在完成前读数为 1:1。\n\n把燃油液位回写到 Torque：关、平滑，或来自 Chunk、Band 或 Kalman 拟合的已校正值，写到 012F 仪表。\n\n只在发动机运转时统计燃油。插件只在 Torque 连接到 ECU 时运行。\n\n继续驾驶和加油；精度会在几个不满的油箱后提高。若出现“车辆配置不对？”通知，请选择如何处理该次行程。\n\n所有数据都留在这部手机上。不记录 GPS 或位置。"
+  },
+  {
+    "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "text": "%1$s\n版本 %2$s (%3$s)\nTorque Pro 的插件。与 Torque 或 Ian Hawkins 无关。\n所有数据都留在这部手机上；不记录 GPS 或位置。\n\n许可\nCopyright David Lang. 保留所有权利。"
+  },
+  {
+    "key": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "source": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "text": "开放源代码库\n本应用使用下列库。它们的许可与上面的版权是分开的。\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), Play Billing 所需要\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/manual/"
+  },
+  {
+    "key": "Full manual (online)",
+    "source": "Full manual (online)",
+    "text": "完整手册（在线）"
+  },
+  {
+    "key": "Show fuel level in notification",
+    "source": "Show fuel level in notification",
+    "text": "在通知中显示燃油液位"
+  },
+  {
+    "key": "Feed fuel level back to Torque (overrides 012F)",
+    "source": "Feed fuel level back to Torque (overrides 012F)",
+    "text": "把燃油液位回写到 Torque（覆盖 012F）"
+  },
+  {
+    "key": "Fuel Smoothing is running",
+    "source": "Fuel Smoothing is running",
+    "text": "Fuel Smoothing 正在运行"
+  },
+  {
+    "key": "Tap to start Fuel Smoothing",
+    "source": "Tap to start Fuel Smoothing",
+    "text": "点按以启动 Fuel Smoothing"
+  },
+  {
+    "key": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "source": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "text": "电池/后台启动被拒绝。请打开一次，插件才能随 Torque 运行。"
+  },
+  {
+    "key": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "source": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "text": "按需要添加额外油箱（原厂油箱 1 始终保留）。不要把传感器接到 PCM FLI 针脚（会假加油）。每个额外油箱需要自己的 Torque 附加 PID（MCU Mode 22，名称唯一——不要用 012F 或 Ford 16C1）。Select-PID 的值是从 1 起的油箱编号。Gal/hr 只记到当前油箱。"
+  },
+  {
+    "key": "Tap to start",
+    "source": "Tap to start",
+    "text": "点按以启动"
+  },
+  {
+    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "text": "油箱容量是 Chunk 拟合的起始容量，直到它学会自己的容量。插件从不更改它；每个拟合学到的容量显示在下方。"
+  },
+  {
+    "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "source": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "text": "向 Torque 的原厂 Fuel Level (012F) 写入数值，让现有仪表显示它：关、平滑，或来自 Chunk、Band 或 Kalman 拟合的已校正值。尚未建立的拟合写入平滑液位。"
+  },
+  {
+    "key": "Chunk: %1$s",
+    "source": "Chunk: %1$s",
+    "text": "Chunk: %1$s"
+  },
+  {
+    "key": "Band: %1$s",
+    "source": "Band: %1$s",
+    "text": "Band: %1$s"
+  },
+  {
+    "key": "Kalman: %1$s",
+    "source": "Kalman: %1$s",
+    "text": "Kalman: %1$s"
+  },
+  {
+    "key": "no size yet",
+    "source": "no size yet",
+    "text": "还没有容量"
+  },
+  {
+    "key": "no size yet ± %1$.1f gal",
+    "source": "no size yet ± %1$.1f gal",
+    "text": "还没有容量 ± %1$.1f gal"
+  },
+  {
+    "key": "%1$.1f gal",
+    "source": "%1$.1f gal",
+    "text": "%1$.1f gal"
+  },
+  {
+    "key": "%1$.1f ± %2$.1f gal",
+    "source": "%1$.1f ± %2$.1f gal",
+    "text": "%1$.1f ± %2$.1f gal"
+  },
+  {
+    "key": "Help",
+    "source": "Help",
+    "text": "帮助"
+  },
+  {
+    "key": "About",
+    "source": "About",
+    "text": "关于"
+  },
+  {
+    "key": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "source": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "text": "需要 Torque Pro（付费）。Torque Lite 不支持插件。"
+  },
+  {
+    "key": "Get Torque Pro",
+    "source": "Get Torque Pro",
+    "text": "获取 Torque Pro"
+  },
+  {
+    "key": "Privacy",
+    "source": "Privacy",
+    "text": "隐私"
+  },
+  {
+    "key": "Send feedback",
+    "source": "Send feedback",
+    "text": "发送反馈"
+  },
+  {
+    "key": "Tip",
+    "source": "Tip",
+    "text": "打赏"
+  },
+  {
+    "key": "Thanks",
+    "source": "Thanks",
+    "text": "谢谢"
+  },
+  {
+    "key": "Close",
+    "source": "Close",
+    "text": "关闭"
+  },
+  {
+    "key": "OK",
+    "source": "OK",
+    "text": "OK"
+  },
+  {
+    "key": "Detect",
+    "source": "Detect",
+    "text": "检测"
+  },
+  {
+    "key": "Confirm",
+    "source": "Confirm",
+    "text": "确认"
+  },
+  {
+    "key": "Save pin",
+    "source": "Save pin",
+    "text": "保存标记"
+  },
+  {
+    "key": "Add additional tank",
+    "source": "Add additional tank",
+    "text": "添加额外油箱"
+  },
+  {
+    "key": "Remove",
+    "source": "Remove",
+    "text": "移除"
+  },
+  {
+    "key": "Details",
+    "source": "Details",
+    "text": "详情"
+  },
+  {
+    "key": "Verbose logging (debug; per-second log lines)",
+    "source": "Verbose logging (debug; per-second log lines)",
+    "text": "详细日志（调试；每秒一行日志）"
+  },
+  {
+    "key": "Profile name",
+    "source": "Profile name",
+    "text": "配置名称"
+  },
+  {
+    "key": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "source": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "text": "此车辆配置的名称。每个 Torque 车辆配置都有自己的插件配置、数据和学到的图谱。"
+  },
+  {
+    "key": "Make",
+    "source": "Make",
+    "text": "品牌"
+  },
+  {
+    "key": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "source": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "text": "车辆品牌（例如 Ford）。只用于选择检测可以尝试哪些品牌燃油 PID。"
+  },
+  {
+    "key": "Fuel source",
+    "source": "Fuel source",
+    "text": "燃油来源"
+  },
+  {
+    "key": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "source": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "text": "原始燃油液位从哪里来。检测（需要连上 ECU）只读地尝试各个候选，并请您确认，除非两个来源一致。确认位于设置页和通知中。无 = 下次连接时检测。"
+  },
+  {
+    "key": "Custom long name",
+    "source": "Custom long name",
+    "text": "自定义长名称"
+  },
+  {
+    "key": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "source": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "text": "仅用于来源“按长名称的 Torque 附加 PID”：报告液位的那条 Torque PID 的确切长名称。"
+  },
+  {
+    "key": "Tank size",
+    "source": "Tank size",
+    "text": "油箱容量"
+  },
+  {
+    "key": "blank = no starting size; each fit learns its own.",
+    "source": "blank = no starting size; each fit learns its own.",
+    "text": "留空 = 没有起始容量；每个拟合自己学习。"
+  },
+  {
+    "key": "Smoothing τ seconds",
+    "source": "Smoothing τ seconds",
+    "text": "平滑 τ 秒"
+  },
+  {
+    "key": "Time constant of the smoothing filter (0 = no smoothing).",
+    "source": "Time constant of the smoothing filter (0 = no smoothing).",
+    "text": "平滑滤波器的时间常数（0 = 不平滑）。"
+  },
+  {
+    "key": "Max skew %/s",
+    "source": "Max skew %/s",
+    "text": "最大斜率 %/s"
+  },
+  {
+    "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "text": "平滑液位每秒最多跟随的变化；超过此值的晃动会被忽略。"
+  },
+  {
+    "key": "Fill jump %",
+    "source": "Fill jump %",
+    "text": "加油跳变 %"
+  },
+  {
+    "key": "Rise in level while stopped that counts as a fill.",
+    "source": "Rise in level while stopped that counts as a fill.",
+    "text": "停车时液位上升多少算一次加油。"
+  },
+  {
+    "key": "Odometer miles",
+    "source": "Odometer miles",
+    "text": "里程表英里"
+  },
+  {
+    "key": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "source": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "text": "可选：输入里程表读数并保存标记，以此固定此配置的距离。"
+  },
+  {
+    "key": "Additional tanks",
+    "source": "Additional tanks",
+    "text": "额外油箱"
+  },
+  {
+    "key": "Active tank",
+    "source": "Active tank",
+    "text": "当前油箱"
+  },
+  {
+    "key": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "source": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "text": "燃油消耗 (gal/hr) 记到哪个油箱。来自 PID：由一条 Torque PID 选择（油箱编号从 1 起）。"
+  },
+  {
+    "key": "Select-PID long name",
+    "source": "Select-PID long name",
+    "text": "Select-PID 长名称"
+  },
+  {
+    "key": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "source": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "text": "仅当当前油箱 = 来自 PID：其数值为油箱编号的那条 Torque PID 的长名称。"
+  },
+  {
+    "key": "Tank %1$d",
+    "source": "Tank %1$d",
+    "text": "油箱 %1$d"
+  },
+  {
+    "key": "Tank %1$d fuel source",
+    "source": "Tank %1$d fuel source",
+    "text": "油箱 %1$d 燃油来源"
+  },
+  {
+    "key": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "source": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "text": "油箱 %1$d 自定义长名称（例如 [FuelSmooth] Tank%1$d Level）"
+  },
+  {
+    "key": "Tank %1$d gallons",
+    "source": "Tank %1$d gallons",
+    "text": "油箱 %1$d 加仑"
+  },
+  {
+    "key": "From PID",
+    "source": "From PID",
+    "text": "来自 PID"
+  },
+  {
+    "key": "(unconfirmed)",
+    "source": "(unconfirmed)",
+    "text": "（未确认）"
+  },
+  {
+    "key": "· ECU connected",
+    "source": "· ECU connected",
+    "text": "· ECU 已连接"
+  },
+  {
+    "key": "tank ?",
+    "source": "tank ?",
+    "text": "油箱 ?"
+  },
+  {
+    "key": "About %1$s",
+    "source": "About %1$s",
+    "text": "关于 %1$s"
+  },
+  {
+    "key": "0 to %1$s s",
+    "source": "0 to %1$s s",
+    "text": "0 到 %1$s s"
+  },
+  {
+    "key": "above 0, at most %1$s %%/s",
+    "source": "above 0, at most %1$s %%/s",
+    "text": "大于 0，至多 %1$s %%/s"
+  },
+  {
+    "key": "%1$s to %2$s %%",
+    "source": "%1$s to %2$s %%",
+    "text": "%1$s 到 %2$s %%"
+  },
+  {
+    "key": "blank or a number above 0",
+    "source": "blank or a number above 0",
+    "text": "留空或大于 0 的数字"
+  },
+  {
+    "key": "stored value out of range",
+    "source": "stored value out of range",
+    "text": "保存的值超出范围"
+  },
+  {
+    "key": "Chunk",
+    "source": "Chunk",
+    "text": "Chunk"
+  },
+  {
+    "key": "Band",
+    "source": "Band",
+    "text": "Band"
+  },
+  {
+    "key": "Kalman",
+    "source": "Kalman",
+    "text": "Kalman"
+  },
+  {
+    "key": "Smoothed %",
+    "source": "Smoothed %",
+    "text": "平滑 %"
+  },
+  {
+    "key": "Error (%)",
+    "source": "Error (%)",
+    "text": "误差 (%)"
+  },
+  {
+    "key": "Off",
+    "source": "Off",
+    "text": "关"
+  },
+  {
+    "key": "Corrected % (Chunk)",
+    "source": "Corrected % (Chunk)",
+    "text": "已校正 % (Chunk)"
+  },
+  {
+    "key": "Corrected % (Band)",
+    "source": "Corrected % (Band)",
+    "text": "已校正 % (Band)"
+  },
+  {
+    "key": "Corrected % (Kalman)",
+    "source": "Corrected % (Kalman)",
+    "text": "已校正 % (Kalman)"
+  },
+  {
+    "key": "gal",
+    "source": "gal",
+    "text": "gal"
+  },
+  {
+    "key": "L",
+    "source": "L",
+    "text": "L"
+  },
+  {
+    "key": "None yet (Detect runs on connect)",
+    "source": "None yet (Detect runs on connect)",
+    "text": "还没有（连接时检测）"
+  },
+  {
+    "key": "SAE 012F Fuel Tank Level",
+    "source": "SAE 012F Fuel Tank Level",
+    "text": "SAE 012F 油箱液位"
+  },
+  {
+    "key": "Mode 22 16C1",
+    "source": "Mode 22 16C1",
+    "text": "Mode 22 16C1"
+  },
+  {
+    "key": "Ford Mode 22 F42F",
+    "source": "Ford Mode 22 F42F",
+    "text": "Ford Mode 22 F42F"
+  },
+  {
+    "key": "GM Mode 22 12C5 %",
+    "source": "GM Mode 22 12C5 %",
+    "text": "GM Mode 22 12C5 %"
+  },
+  {
+    "key": "Chrysler 21A2 %",
+    "source": "Chrysler 21A2 %",
+    "text": "Chrysler 21A2 %"
+  },
+  {
+    "key": "Chrysler Fuel Level Average",
+    "source": "Chrysler Fuel Level Average",
+    "text": "Chrysler 燃油液位平均值"
+  },
+  {
+    "key": "Toyota cluster 2129 (half-litre counts)",
+    "source": "Toyota cluster 2129 (half-litre counts)",
+    "text": "Toyota 仪表 2129（half-litre counts）"
+  },
+  {
+    "key": "Torque extra PID by long name",
+    "source": "Torque extra PID by long name",
+    "text": "按长名称的 Torque 附加 PID"
+  },
+  {
+    "key": "Vehicle 1",
+    "source": "Vehicle 1",
+    "text": "车辆 1"
+  },
+  {
+    "key": "Vehicle %1$s",
+    "source": "Vehicle %1$s",
+    "text": "车辆 %1$s"
+  },
+  {
+    "key": "Binding to Torque…",
+    "source": "Binding to Torque…",
+    "text": "正在连接 Torque…"
+  },
+  {
+    "key": "Waiting for fuel source",
+    "source": "Waiting for fuel source",
+    "text": "正在等待燃油来源"
+  },
+  {
+    "key": "raw %1$.1f%%",
+    "source": "raw %1$.1f%%",
+    "text": "原始 %1$.1f%%"
+  },
+  {
+    "key": "sess %1$s",
+    "source": "sess %1$s",
+    "text": "行程 %1$s"
+  },
+  {
+    "key": "Fuel Smoothing",
+    "source": "Fuel Smoothing",
+    "text": "Fuel Smoothing"
+  },
+  {
+    "key": "Fuel Smoothing quiet",
+    "source": "Fuel Smoothing quiet",
+    "text": "Fuel Smoothing 安静"
+  },
+  {
+    "key": "Map refitting",
+    "source": "Map refitting",
+    "text": "正在重新拟合图谱"
+  },
+  {
+    "key": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "source": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "text": "Fuel Smoothing 正在为 %1$s 重新拟合图谱。该拟合在完成前读数为 1:1。"
+  },
+  {
+    "key": "No fuel level source set",
+    "source": "No fuel level source set",
+    "text": "未设置燃油液位来源"
+  },
+  {
+    "key": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "source": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "text": "Fuel Smoothing 没有 %1$s 的燃油液位来源。请打开设置页并点按检测，或选择一个来源。"
+  },
+  {
+    "key": "No fuel level this drive",
+    "source": "No fuel level this drive",
+    "text": "本次行程没有燃油液位"
+  },
+  {
+    "key": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "source": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "text": "%1$s 没有为 %2$s 提供可用液位。请检查适配器连接，或在设置页运行检测。"
+  },
+  {
+    "key": "Fuel level source found",
+    "source": "Fuel level source found",
+    "text": "已找到燃油液位来源"
+  },
+  {
+    "key": "Using %1$s for %2$s (%3$s).",
+    "source": "Using %1$s for %2$s (%3$s).",
+    "text": "正在为 %2$s 使用 %1$s（%3$s）。"
+  },
+  {
+    "key": "No fuel level source found",
+    "source": "No fuel level source found",
+    "text": "未找到燃油液位来源"
+  },
+  {
+    "key": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "source": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "text": "打开 Fuel Smoothing 设置并选择来源（或在 Torque 中添加 PID），然后点按检测。"
+  },
+  {
+    "key": "Confirm fuel level source",
+    "source": "Confirm fuel level source",
+    "text": "确认燃油液位来源"
+  },
+  {
+    "key": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "source": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "text": "检测到 %1$s，对 %3$s 的读数为 %2$.0f %%。请核对是否与仪表燃油表一致，然后点按确认。确认位于设置页和通知中（%4$s）。"
+  },
+  {
+    "key": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "source": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "text": "为 %2$s 检测到 %1$s。请核对是否与仪表燃油表一致，然后点按确认。确认位于设置页和通知中（%3$s）。"
+  },
+  {
+    "key": "Recording to %1$s",
+    "source": "Recording to %1$s",
+    "text": "正在记录到 %1$s"
+  },
+  {
+    "key": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "source": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "text": "此车辆是 %1$s（%2$s），但 Torque 的配置是“%3$s”。数据记入 %1$s；点按以打开 Torque 并切换配置。"
+  },
+  {
+    "key": "Wrong vehicle profile?",
+    "source": "Wrong vehicle profile?",
+    "text": "车辆配置不对？"
+  },
+  {
+    "key": "Torque profile '%1$s'",
+    "source": "Torque profile '%1$s'",
+    "text": "Torque 配置“%1$s”"
+  },
+  {
+    "key": "a new vehicle profile",
+    "source": "a new vehicle profile",
+    "text": "一个新的车辆配置"
+  },
+  {
+    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "text": "Torque 配置“%1$s”与此车辆不符（%2$s）。建议：%3$s。数据会暂存，并在行程结束时丢弃，除非您保留。"
+  },
+  {
+    "key": "Keeping drive data",
+    "source": "Keeping drive data",
+    "text": "正在保留行程数据"
+  },
+  {
+    "key": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "source": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "text": "此次行程将保存到 %1$s。Torque 的插件 API 不能创建或切换 Torque 配置：请在 Torque 中创建或选择名为“%2$s”的车辆配置。"
+  },
+  {
+    "key": "Create new profile",
+    "source": "Create new profile",
+    "text": "创建新配置"
+  },
+  {
+    "key": "Use %1$s",
+    "source": "Use %1$s",
+    "text": "使用 %1$s"
+  }
+]

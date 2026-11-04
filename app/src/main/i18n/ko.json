@@ -1,0 +1,647 @@
+[
+  {
+    "key": "Fuel Smoothing for Torque",
+    "source": "Fuel Smoothing for Torque",
+    "text": "Fuel Smoothing for Torque"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/privacy/"
+  },
+  {
+    "key": "Tips are on the Play Store version",
+    "source": "Tips are on the Play Store version",
+    "text": "팁은 Play Store 버전에 있습니다"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "빠른 시작\n\nTorque Pro(유료 버전. Torque Lite는 플러그인을 지원하지 않습니다)를 설치하고 OBD-II 어댑터를 페어링하세요.\n\nTorque → 설정 → 플러그인에서 이 플러그인을 켜세요.\n\n알림을 허용하고 배터리 사용량을 제한 없음으로 두어, Torque가 이 플러그인을 백그라운드에서 시작할 수 있게 하세요.\n\nTorque에서 지금 운전 중인 차량 프로필을 선택하세요. 데이터는 Torque 프로필마다 보관되며 차량의 VIN/ECU 신원과 대조됩니다.\n\n새 프로필에서는 연결할 때 연료 출처가 감지됩니다. 물어보면 계기판 연료 게이지와 비교한 뒤 확인을 누르세요. 확인은 설정 페이지와 알림에 있습니다. 아래에서도 고를 수 있습니다.\n\n탱크 크기는 Chunk 피팅이 자기 크기를 배울 때까지의 시작 크기입니다. 플러그인은 그 값을 바꾸지 않습니다. 각 피팅이 배운 크기는 그 아래에 나옵니다.\n\nTorque에 [FuelSmooth] Smoothed Fuel Level과 각 피팅의 Corrected %, Remaining, DTE, Tank size 게이지를 추가하세요. DTE는 Remaining에 Torque의 장기 mpg를 곱한 값입니다. 다시 맞추는 동안의 알림은 그 피팅이 끝날 때까지 1:1로 읽는다고 말합니다.\n\n연료 수준을 Torque로 되돌립니다. 끄기, 평활, 또는 Chunk, Band, Kalman 피팅의 보정을 012F 게이지에 씁니다.\n\n연료는 엔진이 돌 때만 셉니다. 플러그인은 Torque가 ECU에 연결된 동안만 동작합니다.\n\n계속 주행하고 주유하세요. 정확도는 여러 번의 부분 탱크에 걸쳐 좋아집니다. “차량 프로필이 잘못되었나요?” 알림이 나오면 그 주행을 어떻게 할지 고르세요.\n\n모든 데이터는 이 휴대전화에 남습니다. GPS나 위치는 기록하지 않습니다."
+  },
+  {
+    "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "text": "%1$s\n버전 %2$s (%3$s)\nTorque Pro용 플러그인입니다. Torque 또는 Ian Hawkins와 관련이 없습니다.\n모든 데이터는 이 휴대전화에 남습니다. GPS나 위치는 기록하지 않습니다.\n\n라이선스\nCopyright David Lang. 모든 권리를 보유합니다."
+  },
+  {
+    "key": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "source": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "text": "오픈 소스 라이브러리\n이 앱은 아래 라이브러리를 사용합니다. 그 라이선스는 위의 저작권과 별개입니다.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), Play Billing에 필요\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/manual/"
+  },
+  {
+    "key": "Full manual (online)",
+    "source": "Full manual (online)",
+    "text": "전체 설명서(온라인)"
+  },
+  {
+    "key": "Show fuel level in notification",
+    "source": "Show fuel level in notification",
+    "text": "알림에 연료 수준 표시"
+  },
+  {
+    "key": "Feed fuel level back to Torque (overrides 012F)",
+    "source": "Feed fuel level back to Torque (overrides 012F)",
+    "text": "연료 수준을 Torque로 되돌리기(012F를 덮어씀)"
+  },
+  {
+    "key": "Fuel Smoothing is running",
+    "source": "Fuel Smoothing is running",
+    "text": "Fuel Smoothing이 실행 중입니다"
+  },
+  {
+    "key": "Tap to start Fuel Smoothing",
+    "source": "Tap to start Fuel Smoothing",
+    "text": "눌러 Fuel Smoothing 시작"
+  },
+  {
+    "key": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "source": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "text": "배터리/백그라운드 시작이 거부되었습니다. 한 번 열어야 플러그인이 Torque와 함께 동작할 수 있습니다."
+  },
+  {
+    "key": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "source": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "text": "필요하면 탱크를 더 추가하세요(순정 탱크 1은 항상 남습니다). 센서를 PCM FLI 핀으로 바꾸지 마세요(잘못된 주유). 추가 탱크마다 자신만의 Torque 추가 PID(MCU Mode 22, 고유한 이름. 012F나 Ford 16C1이 아님)가 필요합니다. Select-PID 값은 1부터의 탱크 번호입니다. Gal/hr는 활성 탱크에만 부과됩니다."
+  },
+  {
+    "key": "Tap to start",
+    "source": "Tap to start",
+    "text": "눌러 시작"
+  },
+  {
+    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "text": "탱크 크기는 Chunk 피팅이 자기 크기를 배울 때까지의 시작 크기입니다. 플러그인은 그 값을 바꾸지 않습니다. 각 피팅이 배운 크기는 그 아래에 나옵니다."
+  },
+  {
+    "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "source": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "text": "Torque의 순정 Fuel Level(012F)에 값을 써서 기존 게이지가 보이게 합니다. 끄기, 평활, 또는 Chunk, Band, Kalman 피팅의 보정입니다. 아직 만들어지지 않은 피팅은 평활 수준을 씁니다."
+  },
+  {
+    "key": "Chunk: %1$s",
+    "source": "Chunk: %1$s",
+    "text": "Chunk: %1$s"
+  },
+  {
+    "key": "Band: %1$s",
+    "source": "Band: %1$s",
+    "text": "Band: %1$s"
+  },
+  {
+    "key": "Kalman: %1$s",
+    "source": "Kalman: %1$s",
+    "text": "Kalman: %1$s"
+  },
+  {
+    "key": "no size yet",
+    "source": "no size yet",
+    "text": "아직 크기 없음"
+  },
+  {
+    "key": "no size yet ± %1$.1f gal",
+    "source": "no size yet ± %1$.1f gal",
+    "text": "아직 크기 없음 ± %1$.1f gal"
+  },
+  {
+    "key": "%1$.1f gal",
+    "source": "%1$.1f gal",
+    "text": "%1$.1f gal"
+  },
+  {
+    "key": "%1$.1f ± %2$.1f gal",
+    "source": "%1$.1f ± %2$.1f gal",
+    "text": "%1$.1f ± %2$.1f gal"
+  },
+  {
+    "key": "Help",
+    "source": "Help",
+    "text": "도움말"
+  },
+  {
+    "key": "About",
+    "source": "About",
+    "text": "정보"
+  },
+  {
+    "key": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "source": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "text": "Torque Pro(유료)가 필요합니다. Torque Lite는 플러그인을 지원하지 않습니다."
+  },
+  {
+    "key": "Get Torque Pro",
+    "source": "Get Torque Pro",
+    "text": "Torque Pro 받기"
+  },
+  {
+    "key": "Privacy",
+    "source": "Privacy",
+    "text": "개인정보"
+  },
+  {
+    "key": "Send feedback",
+    "source": "Send feedback",
+    "text": "의견 보내기"
+  },
+  {
+    "key": "Tip",
+    "source": "Tip",
+    "text": "팁"
+  },
+  {
+    "key": "Thanks",
+    "source": "Thanks",
+    "text": "감사합니다"
+  },
+  {
+    "key": "Close",
+    "source": "Close",
+    "text": "닫기"
+  },
+  {
+    "key": "OK",
+    "source": "OK",
+    "text": "OK"
+  },
+  {
+    "key": "Detect",
+    "source": "Detect",
+    "text": "감지"
+  },
+  {
+    "key": "Confirm",
+    "source": "Confirm",
+    "text": "확인"
+  },
+  {
+    "key": "Save pin",
+    "source": "Save pin",
+    "text": "핀 저장"
+  },
+  {
+    "key": "Add additional tank",
+    "source": "Add additional tank",
+    "text": "탱크 추가"
+  },
+  {
+    "key": "Remove",
+    "source": "Remove",
+    "text": "제거"
+  },
+  {
+    "key": "Details",
+    "source": "Details",
+    "text": "세부 정보"
+  },
+  {
+    "key": "Verbose logging (debug; per-second log lines)",
+    "source": "Verbose logging (debug; per-second log lines)",
+    "text": "자세한 로그(디버그. 초당 로그 줄)"
+  },
+  {
+    "key": "Profile name",
+    "source": "Profile name",
+    "text": "프로필 이름"
+  },
+  {
+    "key": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "source": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "text": "이 차량 프로필의 이름입니다. Torque 차량 프로필마다 플러그인 프로필, 데이터, 학습한 맵이 따로 있습니다."
+  },
+  {
+    "key": "Make",
+    "source": "Make",
+    "text": "제조사"
+  },
+  {
+    "key": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "source": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "text": "차량 제조사(예: Ford)입니다. 감지가 시도할 제조사별 연료 PID를 고르는 데만 씁니다."
+  },
+  {
+    "key": "Fuel source",
+    "source": "Fuel source",
+    "text": "연료 출처"
+  },
+  {
+    "key": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "source": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "text": "원시 연료 수준이 어디에서 오는가입니다. 감지(ECU가 연결되어 있어야 함)는 후보를 읽기 전용으로 시도하고, 두 출처가 같지 않으면 확인을 요청합니다. 확인은 설정 페이지와 알림에 있습니다. 없음 = 다음 연결 때 감지."
+  },
+  {
+    "key": "Custom long name",
+    "source": "Custom long name",
+    "text": "사용자 긴 이름"
+  },
+  {
+    "key": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "source": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "text": "출처 “긴 이름으로 지정하는 Torque 추가 PID”에만 해당합니다. 수준을 보고하는 Torque PID의 긴 이름을 정확히 넣으세요."
+  },
+  {
+    "key": "Tank size",
+    "source": "Tank size",
+    "text": "탱크 크기"
+  },
+  {
+    "key": "blank = no starting size; each fit learns its own.",
+    "source": "blank = no starting size; each fit learns its own.",
+    "text": "비움 = 시작 크기 없음. 각 피팅이 스스로 배웁니다."
+  },
+  {
+    "key": "Smoothing τ seconds",
+    "source": "Smoothing τ seconds",
+    "text": "평활 τ 초"
+  },
+  {
+    "key": "Time constant of the smoothing filter (0 = no smoothing).",
+    "source": "Time constant of the smoothing filter (0 = no smoothing).",
+    "text": "평활 필터의 시간 상수입니다(0 = 평활 없음)."
+  },
+  {
+    "key": "Max skew %/s",
+    "source": "Max skew %/s",
+    "text": "최대 기울기 %/s"
+  },
+  {
+    "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "text": "평활 수준이 따라갈 수 있는 초당 최대 변화입니다. 이를 넘는 출렁임은 무시합니다."
+  },
+  {
+    "key": "Fill jump %",
+    "source": "Fill jump %",
+    "text": "주유 점프 %"
+  },
+  {
+    "key": "Rise in level while stopped that counts as a fill.",
+    "source": "Rise in level while stopped that counts as a fill.",
+    "text": "정차 중 수준 상승 가운데 주유로 치는 양입니다."
+  },
+  {
+    "key": "Odometer miles",
+    "source": "Odometer miles",
+    "text": "주행 거리계 마일"
+  },
+  {
+    "key": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "source": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "text": "선택 사항입니다. 주행 거리계 값을 넣고 핀을 저장하면 이 프로필의 거리 기준이 됩니다."
+  },
+  {
+    "key": "Additional tanks",
+    "source": "Additional tanks",
+    "text": "추가 탱크"
+  },
+  {
+    "key": "Active tank",
+    "source": "Active tank",
+    "text": "활성 탱크"
+  },
+  {
+    "key": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "source": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "text": "소모(gal/hr)를 어느 탱크에 부과할지입니다. PID에서: Torque PID가 고릅니다(탱크 번호는 1부터)."
+  },
+  {
+    "key": "Select-PID long name",
+    "source": "Select-PID long name",
+    "text": "Select-PID 긴 이름"
+  },
+  {
+    "key": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "source": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "text": "활성 탱크 = PID에서일 때만: 값이 탱크 번호인 Torque PID의 긴 이름입니다."
+  },
+  {
+    "key": "Tank %1$d",
+    "source": "Tank %1$d",
+    "text": "탱크 %1$d"
+  },
+  {
+    "key": "Tank %1$d fuel source",
+    "source": "Tank %1$d fuel source",
+    "text": "탱크 %1$d 연료 출처"
+  },
+  {
+    "key": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "source": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "text": "탱크 %1$d 사용자 긴 이름(예: [FuelSmooth] Tank%1$d Level)"
+  },
+  {
+    "key": "Tank %1$d gallons",
+    "source": "Tank %1$d gallons",
+    "text": "탱크 %1$d 갤런"
+  },
+  {
+    "key": "From PID",
+    "source": "From PID",
+    "text": "PID에서"
+  },
+  {
+    "key": "(unconfirmed)",
+    "source": "(unconfirmed)",
+    "text": "(확인 안 됨)"
+  },
+  {
+    "key": "· ECU connected",
+    "source": "· ECU connected",
+    "text": "· ECU 연결됨"
+  },
+  {
+    "key": "tank ?",
+    "source": "tank ?",
+    "text": "탱크 ?"
+  },
+  {
+    "key": "About %1$s",
+    "source": "About %1$s",
+    "text": "%1$s 정보"
+  },
+  {
+    "key": "0 to %1$s s",
+    "source": "0 to %1$s s",
+    "text": "0에서 %1$s s"
+  },
+  {
+    "key": "above 0, at most %1$s %%/s",
+    "source": "above 0, at most %1$s %%/s",
+    "text": "0보다 크고 최대 %1$s %%/s"
+  },
+  {
+    "key": "%1$s to %2$s %%",
+    "source": "%1$s to %2$s %%",
+    "text": "%1$s에서 %2$s %%"
+  },
+  {
+    "key": "blank or a number above 0",
+    "source": "blank or a number above 0",
+    "text": "비우거나 0보다 큰 수"
+  },
+  {
+    "key": "stored value out of range",
+    "source": "stored value out of range",
+    "text": "저장된 값이 범위를 벗어남"
+  },
+  {
+    "key": "Chunk",
+    "source": "Chunk",
+    "text": "Chunk"
+  },
+  {
+    "key": "Band",
+    "source": "Band",
+    "text": "Band"
+  },
+  {
+    "key": "Kalman",
+    "source": "Kalman",
+    "text": "Kalman"
+  },
+  {
+    "key": "Smoothed %",
+    "source": "Smoothed %",
+    "text": "평활 %"
+  },
+  {
+    "key": "Error (%)",
+    "source": "Error (%)",
+    "text": "오차 (%)"
+  },
+  {
+    "key": "Off",
+    "source": "Off",
+    "text": "끄기"
+  },
+  {
+    "key": "Corrected % (Chunk)",
+    "source": "Corrected % (Chunk)",
+    "text": "보정 % (Chunk)"
+  },
+  {
+    "key": "Corrected % (Band)",
+    "source": "Corrected % (Band)",
+    "text": "보정 % (Band)"
+  },
+  {
+    "key": "Corrected % (Kalman)",
+    "source": "Corrected % (Kalman)",
+    "text": "보정 % (Kalman)"
+  },
+  {
+    "key": "gal",
+    "source": "gal",
+    "text": "gal"
+  },
+  {
+    "key": "L",
+    "source": "L",
+    "text": "L"
+  },
+  {
+    "key": "None yet (Detect runs on connect)",
+    "source": "None yet (Detect runs on connect)",
+    "text": "아직 없음(연결 때 감지)"
+  },
+  {
+    "key": "SAE 012F Fuel Tank Level",
+    "source": "SAE 012F Fuel Tank Level",
+    "text": "SAE 012F 탱크 수준"
+  },
+  {
+    "key": "Mode 22 16C1",
+    "source": "Mode 22 16C1",
+    "text": "Mode 22 16C1"
+  },
+  {
+    "key": "Ford Mode 22 F42F",
+    "source": "Ford Mode 22 F42F",
+    "text": "Ford Mode 22 F42F"
+  },
+  {
+    "key": "GM Mode 22 12C5 %",
+    "source": "GM Mode 22 12C5 %",
+    "text": "GM Mode 22 12C5 %"
+  },
+  {
+    "key": "Chrysler 21A2 %",
+    "source": "Chrysler 21A2 %",
+    "text": "Chrysler 21A2 %"
+  },
+  {
+    "key": "Chrysler Fuel Level Average",
+    "source": "Chrysler Fuel Level Average",
+    "text": "Chrysler 연료 수준 평균"
+  },
+  {
+    "key": "Toyota cluster 2129 (half-litre counts)",
+    "source": "Toyota cluster 2129 (half-litre counts)",
+    "text": "Toyota 계기 2129(half-litre counts)"
+  },
+  {
+    "key": "Torque extra PID by long name",
+    "source": "Torque extra PID by long name",
+    "text": "긴 이름으로 지정하는 Torque 추가 PID"
+  },
+  {
+    "key": "Vehicle 1",
+    "source": "Vehicle 1",
+    "text": "차량 1"
+  },
+  {
+    "key": "Vehicle %1$s",
+    "source": "Vehicle %1$s",
+    "text": "차량 %1$s"
+  },
+  {
+    "key": "Binding to Torque…",
+    "source": "Binding to Torque…",
+    "text": "Torque에 연결하는 중…"
+  },
+  {
+    "key": "Waiting for fuel source",
+    "source": "Waiting for fuel source",
+    "text": "연료 출처를 기다리는 중"
+  },
+  {
+    "key": "raw %1$.1f%%",
+    "source": "raw %1$.1f%%",
+    "text": "원시 %1$.1f%%"
+  },
+  {
+    "key": "sess %1$s",
+    "source": "sess %1$s",
+    "text": "주행 %1$s"
+  },
+  {
+    "key": "Fuel Smoothing",
+    "source": "Fuel Smoothing",
+    "text": "Fuel Smoothing"
+  },
+  {
+    "key": "Fuel Smoothing quiet",
+    "source": "Fuel Smoothing quiet",
+    "text": "Fuel Smoothing 무음"
+  },
+  {
+    "key": "Map refitting",
+    "source": "Map refitting",
+    "text": "맵을 다시 맞추는 중"
+  },
+  {
+    "key": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "source": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "text": "Fuel Smoothing이 %1$s의 맵을 다시 맞추고 있습니다. 다시 맞추기가 끝날 때까지 그 피팅은 1:1로 읽습니다."
+  },
+  {
+    "key": "No fuel level source set",
+    "source": "No fuel level source set",
+    "text": "연료 수준 출처가 없습니다"
+  },
+  {
+    "key": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "source": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "text": "Fuel Smoothing에 %1$s의 연료 수준 출처가 없습니다. 설정 페이지를 열고 감지를 누르거나 출처를 고르세요."
+  },
+  {
+    "key": "No fuel level this drive",
+    "source": "No fuel level this drive",
+    "text": "이 주행에는 연료 수준이 없습니다"
+  },
+  {
+    "key": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "source": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "text": "%1$s이(가) %2$s에 쓸 수 있는 수준을 주지 않았습니다. 어댑터 연결을 확인하거나 설정 페이지에서 감지를 실행하세요."
+  },
+  {
+    "key": "Fuel level source found",
+    "source": "Fuel level source found",
+    "text": "연료 수준 출처를 찾았습니다"
+  },
+  {
+    "key": "Using %1$s for %2$s (%3$s).",
+    "source": "Using %1$s for %2$s (%3$s).",
+    "text": "%2$s에 %1$s을(를) 사용합니다(%3$s)."
+  },
+  {
+    "key": "No fuel level source found",
+    "source": "No fuel level source found",
+    "text": "연료 수준 출처를 찾지 못했습니다"
+  },
+  {
+    "key": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "source": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "text": "Fuel Smoothing 설정을 열고 출처를 고르거나 Torque에 PID를 추가한 다음 감지를 누르세요."
+  },
+  {
+    "key": "Confirm fuel level source",
+    "source": "Confirm fuel level source",
+    "text": "연료 수준 출처 확인"
+  },
+  {
+    "key": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "source": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "text": "%1$s을(를) 감지했습니다. %3$s의 읽기는 %2$.0f %%입니다. 계기판 연료 게이지와 맞는지 본 뒤 확인을 누르세요. 확인은 설정 페이지와 알림에 있습니다(%4$s)."
+  },
+  {
+    "key": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "source": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "text": "%2$s에 대해 %1$s을(를) 감지했습니다. 계기판 연료 게이지와 맞는지 본 뒤 확인을 누르세요. 확인은 설정 페이지와 알림에 있습니다(%3$s)."
+  },
+  {
+    "key": "Recording to %1$s",
+    "source": "Recording to %1$s",
+    "text": "%1$s에 기록 중"
+  },
+  {
+    "key": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "source": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "text": "이 차량은 %1$s(%2$s)이지만 Torque 프로필은 '%3$s'입니다. 데이터는 %1$s로 갑니다. 눌러 Torque를 열고 프로필을 바꾸세요."
+  },
+  {
+    "key": "Wrong vehicle profile?",
+    "source": "Wrong vehicle profile?",
+    "text": "차량 프로필이 잘못되었나요?"
+  },
+  {
+    "key": "Torque profile '%1$s'",
+    "source": "Torque profile '%1$s'",
+    "text": "Torque 프로필 '%1$s'"
+  },
+  {
+    "key": "a new vehicle profile",
+    "source": "a new vehicle profile",
+    "text": "새 차량 프로필"
+  },
+  {
+    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "text": "Torque 프로필 '%1$s'이(가) 이 차량(%2$s)과 맞지 않습니다. 제안: %3$s. 데이터는 보류되었다가, 남기지 않으면 주행이 끝날 때 버려집니다."
+  },
+  {
+    "key": "Keeping drive data",
+    "source": "Keeping drive data",
+    "text": "주행 데이터를 남깁니다"
+  },
+  {
+    "key": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "source": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "text": "이 주행은 %1$s에 저장됩니다. Torque의 플러그인 API는 Torque 프로필을 만들거나 바꿀 수 없습니다. Torque에서 '%2$s'라는 차량 프로필을 만들거나 선택하세요."
+  },
+  {
+    "key": "Create new profile",
+    "source": "Create new profile",
+    "text": "새 프로필 만들기"
+  },
+  {
+    "key": "Use %1$s",
+    "source": "Use %1$s",
+    "text": "%1$s 사용"
+  }
+]

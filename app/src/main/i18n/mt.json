@@ -1,0 +1,647 @@
+[
+  {
+    "key": "Fuel Smoothing for Torque",
+    "source": "Fuel Smoothing for Torque",
+    "text": "Fuel Smoothing for Torque"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/privacy/"
+  },
+  {
+    "key": "Tips are on the Play Store version",
+    "source": "Tips are on the Play Store version",
+    "text": "Il-pariri huma fil-verżjoni Play Store"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "Bidu malajr\n 1. Installa Torque Pro (il-verżjoni mħallsa; Torque Lite ma jappoġġjax plugins) u qabbad l-adapter OBD-II.\n 2. Ixgħel dan il-plugin f'Torque → Settings → Plugins.\n 3. Ħalli n-notifiki u waqqaf l-użu tal-batterija fuq Bla limitu biex Torque jkun jista' jibda dan il-plugin fl-isfond.\n 4. F'Torque agħżel il-profil tal-vettura li qed issuq. Id-data tinżamm skont il-profil ta' Torque u tiġi ċċekkjata mal-identità VIN/ECU tal-vettura.\n 5. Fuq profil ġdid is-sors tal-fjuwil jinstab meta tikkonnettja; jekk tintalab, qabblu mal-kejl tad-daxxbord u miss Ikkonferma. Ikkonferma huwa fil-paġna tas-setup u fin-notifika. Tista' tagħżlu wkoll hawn taħt.\n 6. Id-daqs tat-tank huwa d-daqs tal-bidu għall-aġġustament Chunk sakemm jitgħallem tiegħu. Il-plugin qatt ma jibdlu; id-daqs mitgħallem ta' kull aġġustament jidher taħtu.\n 7. F'Torque żid gauges għal [FuelSmooth] Smoothed Fuel Level u, għal kull aġġustament, Corrected %, Remaining, DTE u Tank size. DTE huwa Remaining darbiet il-mpg fit-tul ta' Torque. Avviż waqt aġġustament mill-ġdid jgħid li l-aġġustament jaqra 1:1 sakemm jispiċċa.\n 8. Erġa' ibgħat il-livell tal-fjuwil lil Torque: Mitfi, illixxat, jew ikkoreġut mill-aġġustament Chunk, Band jew Kalman, fuq il-gauge 012F.\n 9. Il-fjuwil jingħadd biss waqt li l-magna tkun mixgħula. Il-plugin jaħdem biss waqt li Torque jkun imqabbad mal-ECU.\n 10. Kompli ssuq u imla; l-eżattezza tikber fuq diversi tankijiet parzjali. Jekk tidher notifika Profil tal-vettura ħażin?, agħżel x'jagħmel b'dik il-vjaġġ.\n 11. Id-data kollha tibqa' fuq dan it-telefon. La GPS u lanqas lokazzjoni ma tiġi rreġistrata."
+  },
+  {
+    "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "text": "%1$s\nVerżjoni %2$s (%3$s)\nPlugin għal Torque Pro. Mhux marbut ma' Torque jew Ian Hawkins.\nId-data kollha tibqa' fuq dan it-telefon; la GPS u lanqas lokazzjoni ma tiġi rreġistrata.\n\nLiċenzja\nCopyright David Lang. Id-drittijiet kollha riżervati."
+  },
+  {
+    "key": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "source": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "text": "Libreriji open source\nDin l-app tuża l-libreriji t'hawn taħt. Il-liċenzji tagħhom huma separati mid-drittijiet tal-awtur t'hawn fuq.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), meħtieġ minn Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/manual/"
+  },
+  {
+    "key": "Full manual (online)",
+    "source": "Full manual (online)",
+    "text": "Manwal sħiħ (online)"
+  },
+  {
+    "key": "Show fuel level in notification",
+    "source": "Show fuel level in notification",
+    "text": "Uri l-livell tal-fjuwil fin-notifika"
+  },
+  {
+    "key": "Feed fuel level back to Torque (overrides 012F)",
+    "source": "Feed fuel level back to Torque (overrides 012F)",
+    "text": "Erġa' ibgħat il-livell tal-fjuwil lil Torque (jieħu post 012F)"
+  },
+  {
+    "key": "Fuel Smoothing is running",
+    "source": "Fuel Smoothing is running",
+    "text": "Fuel Smoothing qed jaħdem"
+  },
+  {
+    "key": "Tap to start Fuel Smoothing",
+    "source": "Tap to start Fuel Smoothing",
+    "text": "Miss biex tibda Fuel Smoothing"
+  },
+  {
+    "key": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "source": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "text": "Il-bidu mill-batterija jew fl-isfond ġie miċħud. Iftaħ darba biex il-plugin ikun jista' jaħdem ma' Torque."
+  },
+  {
+    "key": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "source": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "text": "Żid tankijiet żejda kif meħtieġ (it-tank tal-fabbrika 1 jibqa' dejjem). Tgħaqqadx is-sensers mal-pin PCM FLI (mili falz). Kull tank żejjed jeħtieġ il-PID żejjed tiegħu ta' Torque (MCU Mode 22, isem uniku — mhux 012F jew Ford 16C1). Il-valur Select-PID huwa l-identifikatur tat-tank minn 1. Gal/hr jitniżżel biss mat-tank attiv."
+  },
+  {
+    "key": "Tap to start",
+    "source": "Tap to start",
+    "text": "Miss biex tibda"
+  },
+  {
+    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "text": "Id-daqs tat-tank huwa d-daqs tal-bidu għall-aġġustament Chunk sakemm jitgħallem tiegħu. Il-plugin qatt ma jibdlu; id-daqs mitgħallem ta' kull aġġustament jidher taħtu."
+  },
+  {
+    "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "source": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "text": "Jikteb valur fuq il-Fuel Level (012F) tal-fabbrika ta' Torque biex il-gauges eżistenti juruh: Mitfi, illixxat, jew ikkoreġut mill-aġġustament Chunk, Band jew Kalman. Aġġustament li għadu mhux mibni jikteb il-livell illixxat."
+  },
+  {
+    "key": "Chunk: %1$s",
+    "source": "Chunk: %1$s",
+    "text": "Chunk: %1$s"
+  },
+  {
+    "key": "Band: %1$s",
+    "source": "Band: %1$s",
+    "text": "Band: %1$s"
+  },
+  {
+    "key": "Kalman: %1$s",
+    "source": "Kalman: %1$s",
+    "text": "Kalman: %1$s"
+  },
+  {
+    "key": "no size yet",
+    "source": "no size yet",
+    "text": "għad m'hemmx daqs"
+  },
+  {
+    "key": "no size yet ± %1$.1f gal",
+    "source": "no size yet ± %1$.1f gal",
+    "text": "għad m'hemmx daqs ± %1$.1f gal"
+  },
+  {
+    "key": "%1$.1f gal",
+    "source": "%1$.1f gal",
+    "text": "%1$.1f gal"
+  },
+  {
+    "key": "%1$.1f ± %2$.1f gal",
+    "source": "%1$.1f ± %2$.1f gal",
+    "text": "%1$.1f ± %2$.1f gal"
+  },
+  {
+    "key": "Help",
+    "source": "Help",
+    "text": "Għajnuna"
+  },
+  {
+    "key": "About",
+    "source": "About",
+    "text": "Dwar"
+  },
+  {
+    "key": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "source": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "text": "Jeħtieġ Torque Pro (imħallas). Torque Lite ma jappoġġjax plugins."
+  },
+  {
+    "key": "Get Torque Pro",
+    "source": "Get Torque Pro",
+    "text": "Ikseb Torque Pro"
+  },
+  {
+    "key": "Privacy",
+    "source": "Privacy",
+    "text": "Privatezza"
+  },
+  {
+    "key": "Send feedback",
+    "source": "Send feedback",
+    "text": "Ibgħat feedback"
+  },
+  {
+    "key": "Tip",
+    "source": "Tip",
+    "text": "Tip"
+  },
+  {
+    "key": "Thanks",
+    "source": "Thanks",
+    "text": "Grazzi"
+  },
+  {
+    "key": "Close",
+    "source": "Close",
+    "text": "Agħlaq"
+  },
+  {
+    "key": "OK",
+    "source": "OK",
+    "text": "OK"
+  },
+  {
+    "key": "Detect",
+    "source": "Detect",
+    "text": "Sib"
+  },
+  {
+    "key": "Confirm",
+    "source": "Confirm",
+    "text": "Ikkonferma"
+  },
+  {
+    "key": "Save pin",
+    "source": "Save pin",
+    "text": "Issejvja l-ankra"
+  },
+  {
+    "key": "Add additional tank",
+    "source": "Add additional tank",
+    "text": "Żid tank"
+  },
+  {
+    "key": "Remove",
+    "source": "Remove",
+    "text": "Neħħi"
+  },
+  {
+    "key": "Details",
+    "source": "Details",
+    "text": "Dettalji"
+  },
+  {
+    "key": "Verbose logging (debug; per-second log lines)",
+    "source": "Verbose logging (debug; per-second log lines)",
+    "text": "Log dettaljat (debug; linji kull sekonda)"
+  },
+  {
+    "key": "Profile name",
+    "source": "Profile name",
+    "text": "Isem il-profil"
+  },
+  {
+    "key": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "source": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "text": "L-isem ta' dan il-profil tal-vettura. Kull profil ta' vettura ta' Torque jieħu l-profil tal-plugin, id-data u l-mapep mitgħallma tiegħu."
+  },
+  {
+    "key": "Make",
+    "source": "Make",
+    "text": "Marka"
+  },
+  {
+    "key": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "source": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "text": "Il-marka tal-vettura (eż. Ford). Tintuża biss biex tagħżel liema PID tal-fjuwil tal-marka t-tfittxija tista' tipprova."
+  },
+  {
+    "key": "Fuel source",
+    "source": "Fuel source",
+    "text": "Sors tal-fjuwil"
+  },
+  {
+    "key": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "source": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "text": "Minn fejn jiġi l-livell mhux ipproċessat tal-fjuwil. Sib (l-ECU jrid ikun imqabbad) jipprova l-kandidati għall-qari biss u jitlob konferma jekk żewġ sorsi ma jaqblux. Ikkonferma huwa fil-paġna tas-setup u fin-notifika. Xejn = sib fil-konnessjoni li jmiss."
+  },
+  {
+    "key": "Custom long name",
+    "source": "Custom long name",
+    "text": "Isem twil personalizzat"
+  },
+  {
+    "key": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "source": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "text": "Biss għas-sors „PID żejjed ta' Torque skont l-isem twil”: l-isem twil eżatt tal-PID ta' Torque li jirrapporta l-livell."
+  },
+  {
+    "key": "Tank size",
+    "source": "Tank size",
+    "text": "Daqs tat-tank"
+  },
+  {
+    "key": "blank = no starting size; each fit learns its own.",
+    "source": "blank = no starting size; each fit learns its own.",
+    "text": "vojt = l-ebda daqs tal-bidu; kull aġġustament jitgħallem tiegħu."
+  },
+  {
+    "key": "Smoothing τ seconds",
+    "source": "Smoothing τ seconds",
+    "text": "Illixxar τ f'sekondi"
+  },
+  {
+    "key": "Time constant of the smoothing filter (0 = no smoothing).",
+    "source": "Time constant of the smoothing filter (0 = no smoothing).",
+    "text": "Il-kostanti tal-ħin tal-filtru tal-illixxar (0 = l-ebda illixxar)."
+  },
+  {
+    "key": "Max skew %/s",
+    "source": "Max skew %/s",
+    "text": "Inklinazzjoni maks. %/s"
+  },
+  {
+    "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "text": "L-akbar bidla kull sekonda li l-livell illixxat jista' jsegwi; it-tbandil lil hinn minn dan jiġi injorat."
+  },
+  {
+    "key": "Fill jump %",
+    "source": "Fill jump %",
+    "text": "Qabża ta' mili %"
+  },
+  {
+    "key": "Rise in level while stopped that counts as a fill.",
+    "source": "Rise in level while stopped that counts as a fill.",
+    "text": "Tlugħ fil-livell waqt li tkun wieqaf li jgħodd bħala mili."
+  },
+  {
+    "key": "Odometer miles",
+    "source": "Odometer miles",
+    "text": "Odometru f'mili"
+  },
+  {
+    "key": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "source": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "text": "Fakultattiv: daħħal il-qari tal-odometru u Issejvja l-ankra biex tannkra d-distanza ta' dan il-profil."
+  },
+  {
+    "key": "Additional tanks",
+    "source": "Additional tanks",
+    "text": "Tankijiet żejda"
+  },
+  {
+    "key": "Active tank",
+    "source": "Active tank",
+    "text": "Tank attiv"
+  },
+  {
+    "key": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "source": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "text": "It-tank li jħallas il-konsum (gal/hr). Mill-PID: PID ta' Torque jagħżlu (identifikatur minn 1)."
+  },
+  {
+    "key": "Select-PID long name",
+    "source": "Select-PID long name",
+    "text": "Isem twil ta' Select-PID"
+  },
+  {
+    "key": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "source": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "text": "Biss meta Tank attiv = Mill-PID: l-isem twil tal-PID ta' Torque li l-valur tiegħu huwa l-identifikatur tat-tank."
+  },
+  {
+    "key": "Tank %1$d",
+    "source": "Tank %1$d",
+    "text": "Tank %1$d"
+  },
+  {
+    "key": "Tank %1$d fuel source",
+    "source": "Tank %1$d fuel source",
+    "text": "Sors tal-fjuwil tat-tank %1$d"
+  },
+  {
+    "key": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "source": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "text": "Isem twil personalizzat tat-tank %1$d (eż. [FuelSmooth] Tank%1$d Level)"
+  },
+  {
+    "key": "Tank %1$d gallons",
+    "source": "Tank %1$d gallons",
+    "text": "Galluni tat-tank %1$d"
+  },
+  {
+    "key": "From PID",
+    "source": "From PID",
+    "text": "Mill-PID"
+  },
+  {
+    "key": "(unconfirmed)",
+    "source": "(unconfirmed)",
+    "text": "(mhux ikkonfermat)"
+  },
+  {
+    "key": "· ECU connected",
+    "source": "· ECU connected",
+    "text": "· ECU imqabbad"
+  },
+  {
+    "key": "tank ?",
+    "source": "tank ?",
+    "text": "tank ?"
+  },
+  {
+    "key": "About %1$s",
+    "source": "About %1$s",
+    "text": "Madwar %1$s"
+  },
+  {
+    "key": "0 to %1$s s",
+    "source": "0 to %1$s s",
+    "text": "0 sa %1$s s"
+  },
+  {
+    "key": "above 0, at most %1$s %%/s",
+    "source": "above 0, at most %1$s %%/s",
+    "text": "aktar minn 0, l-aktar %1$s %%/s"
+  },
+  {
+    "key": "%1$s to %2$s %%",
+    "source": "%1$s to %2$s %%",
+    "text": "%1$s sa %2$s %%"
+  },
+  {
+    "key": "blank or a number above 0",
+    "source": "blank or a number above 0",
+    "text": "vojt jew numru akbar minn 0"
+  },
+  {
+    "key": "stored value out of range",
+    "source": "stored value out of range",
+    "text": "valur maħżun barra mill-firxa"
+  },
+  {
+    "key": "Chunk",
+    "source": "Chunk",
+    "text": "Chunk"
+  },
+  {
+    "key": "Band",
+    "source": "Band",
+    "text": "Band"
+  },
+  {
+    "key": "Kalman",
+    "source": "Kalman",
+    "text": "Kalman"
+  },
+  {
+    "key": "Smoothed %",
+    "source": "Smoothed %",
+    "text": "Illixxat %"
+  },
+  {
+    "key": "Error (%)",
+    "source": "Error (%)",
+    "text": "Żball (%)"
+  },
+  {
+    "key": "Off",
+    "source": "Off",
+    "text": "Mitfi"
+  },
+  {
+    "key": "Corrected % (Chunk)",
+    "source": "Corrected % (Chunk)",
+    "text": "Ikkoreġut % (Chunk)"
+  },
+  {
+    "key": "Corrected % (Band)",
+    "source": "Corrected % (Band)",
+    "text": "Ikkoreġut % (Band)"
+  },
+  {
+    "key": "Corrected % (Kalman)",
+    "source": "Corrected % (Kalman)",
+    "text": "Ikkoreġut % (Kalman)"
+  },
+  {
+    "key": "gal",
+    "source": "gal",
+    "text": "gal"
+  },
+  {
+    "key": "L",
+    "source": "L",
+    "text": "L"
+  },
+  {
+    "key": "None yet (Detect runs on connect)",
+    "source": "None yet (Detect runs on connect)",
+    "text": "Xejn għad (Sib meta tikkonnettja)"
+  },
+  {
+    "key": "SAE 012F Fuel Tank Level",
+    "source": "SAE 012F Fuel Tank Level",
+    "text": "SAE 012F Fuel Tank Level"
+  },
+  {
+    "key": "Mode 22 16C1",
+    "source": "Mode 22 16C1",
+    "text": "Mode 22 16C1"
+  },
+  {
+    "key": "Ford Mode 22 F42F",
+    "source": "Ford Mode 22 F42F",
+    "text": "Ford Mode 22 F42F"
+  },
+  {
+    "key": "GM Mode 22 12C5 %",
+    "source": "GM Mode 22 12C5 %",
+    "text": "GM Mode 22 12C5 %"
+  },
+  {
+    "key": "Chrysler 21A2 %",
+    "source": "Chrysler 21A2 %",
+    "text": "Chrysler 21A2 %"
+  },
+  {
+    "key": "Chrysler Fuel Level Average",
+    "source": "Chrysler Fuel Level Average",
+    "text": "Chrysler Fuel Level Average"
+  },
+  {
+    "key": "Toyota cluster 2129 (half-litre counts)",
+    "source": "Toyota cluster 2129 (half-litre counts)",
+    "text": "Toyota cluster 2129 (għadd ta' nofs litru)"
+  },
+  {
+    "key": "Torque extra PID by long name",
+    "source": "Torque extra PID by long name",
+    "text": "PID żejjed ta' Torque skont l-isem twil"
+  },
+  {
+    "key": "Vehicle 1",
+    "source": "Vehicle 1",
+    "text": "Vettura 1"
+  },
+  {
+    "key": "Vehicle %1$s",
+    "source": "Vehicle %1$s",
+    "text": "Vettura %1$s"
+  },
+  {
+    "key": "Binding to Torque…",
+    "source": "Binding to Torque…",
+    "text": "Qed jingħaqad ma' Torque…"
+  },
+  {
+    "key": "Waiting for fuel source",
+    "source": "Waiting for fuel source",
+    "text": "Jistenna s-sors tal-fjuwil"
+  },
+  {
+    "key": "raw %1$.1f%%",
+    "source": "raw %1$.1f%%",
+    "text": "mhux ipproċessat %1$.1f%%"
+  },
+  {
+    "key": "sess %1$s",
+    "source": "sess %1$s",
+    "text": "vjaġġ %1$s"
+  },
+  {
+    "key": "Fuel Smoothing",
+    "source": "Fuel Smoothing",
+    "text": "Fuel Smoothing"
+  },
+  {
+    "key": "Fuel Smoothing quiet",
+    "source": "Fuel Smoothing quiet",
+    "text": "Fuel Smoothing kwiet"
+  },
+  {
+    "key": "Map refitting",
+    "source": "Map refitting",
+    "text": "L-mappa qed terġa' tiġi aġġustata"
+  },
+  {
+    "key": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "source": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "text": "Fuel Smoothing qed jerġa' jaġġusta mappa għal %1$s. Dan l-aġġustament jaqra 1:1 sakemm jispiċċa."
+  },
+  {
+    "key": "No fuel level source set",
+    "source": "No fuel level source set",
+    "text": "L-ebda sors tal-livell tal-fjuwil ma ġie ssettjat"
+  },
+  {
+    "key": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "source": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "text": "Fuel Smoothing m'għandux sors tal-livell tal-fjuwil għal %1$s. Iftaħ il-paġna tas-setup u miss Sib, jew agħżel sors."
+  },
+  {
+    "key": "No fuel level this drive",
+    "source": "No fuel level this drive",
+    "text": "L-ebda livell tal-fjuwil f'din il-vjaġġ"
+  },
+  {
+    "key": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "source": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "text": "%1$s ma tax livell utli għal %2$s. Iċċekkja l-konnessjoni tal-adapter, jew ixgħel Sib fil-paġna tas-setup."
+  },
+  {
+    "key": "Fuel level source found",
+    "source": "Fuel level source found",
+    "text": "Instab sors tal-livell tal-fjuwil"
+  },
+  {
+    "key": "Using %1$s for %2$s (%3$s).",
+    "source": "Using %1$s for %2$s (%3$s).",
+    "text": "Qed jintuża %1$s għal %2$s (%3$s)."
+  },
+  {
+    "key": "No fuel level source found",
+    "source": "No fuel level source found",
+    "text": "Ma nstab l-ebda sors tal-livell tal-fjuwil"
+  },
+  {
+    "key": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "source": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "text": "Iftaħ is-setup ta' Fuel Smoothing u agħżel sors (jew żid il-PID f'Torque), imbagħad miss Sib."
+  },
+  {
+    "key": "Confirm fuel level source",
+    "source": "Confirm fuel level source",
+    "text": "Ikkonferma s-sors tal-livell tal-fjuwil"
+  },
+  {
+    "key": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "source": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "text": "Instab %1$s, qari %2$.0f %% għal %3$s. Iċċekkja li jaqbel mal-kejl tad-daxxbord, imbagħad miss Ikkonferma. Ikkonferma huwa fil-paġna tas-setup u fin-notifika (%4$s)."
+  },
+  {
+    "key": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "source": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "text": "Instab %1$s għal %2$s. Iċċekkja li jaqbel mal-kejl tad-daxxbord, imbagħad miss Ikkonferma. Ikkonferma huwa fil-paġna tas-setup u fin-notifika (%3$s)."
+  },
+  {
+    "key": "Recording to %1$s",
+    "source": "Recording to %1$s",
+    "text": "Qed jirreġistra f'%1$s"
+  },
+  {
+    "key": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "source": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "text": "Din il-vettura hija %1$s (%2$s), iżda l-profil ta' Torque huwa „%3$s”. Id-data tmur f'%1$s; miss biex tiftaħ Torque u tbiddel il-profil."
+  },
+  {
+    "key": "Wrong vehicle profile?",
+    "source": "Wrong vehicle profile?",
+    "text": "Profil tal-vettura ħażin?"
+  },
+  {
+    "key": "Torque profile '%1$s'",
+    "source": "Torque profile '%1$s'",
+    "text": "Profil ta' Torque „%1$s”"
+  },
+  {
+    "key": "a new vehicle profile",
+    "source": "a new vehicle profile",
+    "text": "profil ġdid ta' vettura"
+  },
+  {
+    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "text": "Il-profil ta' Torque „%1$s” ma jaqbilx ma' din il-vettura (%2$s). Suġġeriment: %3$s. Id-data tinżamm u tintrema fl-aħħar tal-vjaġġ jekk ma żżommhiex."
+  },
+  {
+    "key": "Keeping drive data",
+    "source": "Keeping drive data",
+    "text": "Id-data tal-vjaġġ qed tinżamm"
+  },
+  {
+    "key": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "source": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "text": "Din il-vjaġġ se tiġi ssejvjata f'%1$s. L-API tal-plugin ta' Torque ma tistax toħloq jew tbiddel profili ta' Torque: f'Torque, oħloq jew agħżel profil ta' vettura bl-isem „%2$s”."
+  },
+  {
+    "key": "Create new profile",
+    "source": "Create new profile",
+    "text": "Oħloq profil ġdid"
+  },
+  {
+    "key": "Use %1$s",
+    "source": "Use %1$s",
+    "text": "Uża %1$s"
+  }
+]

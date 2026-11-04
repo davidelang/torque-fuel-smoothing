@@ -121,6 +121,7 @@ class PluginActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AppStrings.install(this)
         val pad = PAD
         val scroll = ScrollView(this)
         val col = LinearLayout(this)
@@ -132,13 +133,13 @@ class PluginActivity : Activity() {
         head.orientation = LinearLayout.HORIZONTAL
         head.gravity = android.view.Gravity.CENTER_VERTICAL
         val title = TextView(this)
-        title.text = getString(R.string.app_name)
+        title.text = S("Fuel Smoothing for Torque")
         title.textSize = 20f
         title.primary()
         title.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         head.addView(title)
-        head.addView(smallButton(getString(R.string.help)) { showPage(getString(R.string.help), helpPage) })
-        head.addView(smallButton(getString(R.string.about)) { showPage(getString(R.string.about), aboutPage) })
+        head.addView(smallButton(S("Help")) { showPage(S("Help"), helpPage) })
+        head.addView(smallButton(S("About")) { showPage(S("About"), aboutPage) })
         col.addView(head)
 
         statusLine = TextView(this)
@@ -150,11 +151,11 @@ class PluginActivity : Activity() {
 
         if (!torqueInstalled()) {
             val need = TextView(this)
-            need.text = getString(R.string.need_torque)
+            need.text = S("Requires Torque Pro (paid). Torque Lite does not support plugins.")
             need.textSize = 14f
             need.primary()
             col.addView(need)
-            col.addView(smallButton(getString(R.string.get_torque)) {
+            col.addView(smallButton(S("Get Torque Pro")) {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=org.prowl.torque")))
             })
         }
@@ -163,14 +164,14 @@ class PluginActivity : Activity() {
         helpPage = LinearLayout(this)
         helpPage.orientation = LinearLayout.VERTICAL
         val help = TextView(this)
-        help.text = getString(R.string.help_body)
+        help.text = S("Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.")
         help.textSize = 14f
         help.primary()
         helpPage.addView(help)
         val manual = Button(this)
-        manual.text = getString(R.string.manual_button)
+        manual.text = S("Full manual (online)")
         manual.setOnClickListener {
-            runCatching { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.manual_url)))) }
+            runCatching { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(S("https://play.landing.lang.hm/fuel-smoothing/manual/")))) }
         }
         helpPage.addView(manual)
 
@@ -178,22 +179,22 @@ class PluginActivity : Activity() {
         aboutPage = LinearLayout(this)
         aboutPage.orientation = LinearLayout.VERTICAL
         val about = TextView(this)
-        about.text = getString(R.string.about_body, getString(R.string.app_name), versionName(), versionCode()) + "\n\n" + getString(R.string.open_source_notices)
+        about.text = S("%1\$s\nVersion %2\$s (%3\$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.", S("Fuel Smoothing for Torque"), versionName(), versionCode()) + "\n\n" + S("Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html")
         about.textSize = 14f
         about.primary()
         aboutPage.addView(about)
         val privacy = Button(this)
-        privacy.text = getString(R.string.privacy)
+        privacy.text = S("Privacy")
         privacy.setOnClickListener {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.privacy_policy_url))))
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(S("https://play.landing.lang.hm/fuel-smoothing/privacy/"))))
         }
         aboutPage.addView(privacy)
         val feedback = Button(this)
-        feedback.text = getString(R.string.send_feedback)
+        feedback.text = S("Send feedback")
         feedback.setOnClickListener { sendFeedback() }
         aboutPage.addView(feedback)
         tipButton = Button(this)
-        tipButton.text = getString(R.string.tip)
+        tipButton.text = S("Tip")
         tipButton.setOnClickListener { onTipClicked() }
         aboutPage.addView(tipButton)
         tipChoices = LinearLayout(this)
@@ -208,21 +209,21 @@ class PluginActivity : Activity() {
 
         // ---- Settings ----
         profileNameView = TextView(this)   // kept for refreshProfile; the name is in the status line
-        col.addView(info(getString(R.string.profile_name), getString(R.string.profile_name_info)))
+        col.addView(info(S("Profile name"), S("The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.")))
         profileName = edit(InputType.TYPE_CLASS_TEXT)
         col.addView(profileName)
-        col.addView(info(getString(R.string.make), getString(R.string.make_info)))
+        col.addView(info(S("Make"), S("Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.")))
         vehicleMake = edit(InputType.TYPE_CLASS_TEXT)
         col.addView(vehicleMake)
 
-        col.addView(info(getString(R.string.fuel_source), getString(R.string.fuel_source_info)))
+        col.addView(info(S("Fuel source"), S("Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.")))
         val srcRow = LinearLayout(this)
         srcRow.orientation = LinearLayout.HORIZONTAL
         sourceSpinner = Spinner(this)
-        sourceSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, FuelSources.labels { getString(it) })
+        sourceSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, FuelSources.labels())
         sourceSpinner.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         srcRow.addView(sourceSpinner)
-        detectBtn = smallButton(getString(R.string.detect)) {
+        detectBtn = smallButton(S("Detect")) {
             val i = Intent(this, PluginService::class.java).setAction(PluginService.ACTION_DETECT)
             try {
                 if (Build.VERSION.SDK_INT >= 26) startForegroundService(i) else startService(i)
@@ -231,7 +232,7 @@ class PluginActivity : Activity() {
             }
         }
         srcRow.addView(detectBtn)
-        confirmBtn = smallButton(getString(R.string.confirm)) {
+        confirmBtn = smallButton(S("Confirm")) {
             val i = Intent(this, PluginService::class.java)
                 .setAction(PluginService.ACTION_CONFIRM_SOURCE)
                 .putExtra(PluginService.EXTRA_TARGET, ProfileStore.activeId(filesDir))
@@ -246,19 +247,19 @@ class PluginActivity : Activity() {
         srcRow.addView(confirmBtn)
         col.addView(srcRow)
 
-        col.addView(info(getString(R.string.custom_long_name), getString(R.string.custom_long_name_info)))
+        col.addView(info(S("Custom long name"), S("Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.")))
         customName = edit(InputType.TYPE_CLASS_TEXT)
         col.addView(customName)
 
-        col.addView(info(getString(R.string.tank_size), getString(R.string.tank_size_info)))
+        col.addView(info(S("Tank size"), S("Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.")))
         val tankRow = LinearLayout(this)
         tankRow.orientation = LinearLayout.HORIZONTAL
         tank = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
-        tank.hint = getString(R.string.tank_hint)
+        tank.hint = S("blank = no starting size; each fit learns its own.")
         tank.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         tankRow.addView(tank)
         tankUnit = Spinner(this)
-        tankUnit.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, VolUnit.entries.map { getString(it.label) })
+        tankUnit.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, VolUnit.entries.map { S(it.label) })
         tankRow.addView(tankUnit)
         col.addView(tankRow)
         tankUnit.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -280,56 +281,56 @@ class PluginActivity : Activity() {
         fitChart = FitChart(this)
         col.addView(fitChart)
 
-        col.addView(info(getString(R.string.write_012f), getString(R.string.feed_012f_info)))
+        col.addView(info(S("Feed fuel level back to Torque (overrides 012F)"), S("Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.")))
         feed012f = Spinner(this)
-        feed012f.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, FeedMode.entries.map { getString(it.label) })
+        feed012f.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, FeedMode.entries.map { S(it.label) })
         col.addView(feed012f)
 
         showNotice = CheckBox(this)
-        showNotice.text = getString(R.string.show_fuel_notification)
+        showNotice.text = S("Show fuel level in notification")
         showNotice.primary()
         col.addView(showNotice)
 
-        col.addView(info(getString(R.string.smoothing_tau), getString(R.string.smoothing_tau_info)))
+        col.addView(info(S("Smoothing τ seconds"), S("Time constant of the smoothing filter (0 = no smoothing).")))
         tau = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
         col.addView(tau)
-        col.addView(info(getString(R.string.max_skew), getString(R.string.max_skew_info)))
+        col.addView(info(S("Max skew %/s"), S("Largest change per second the smoothed level may follow; slosh beyond this is ignored.")))
         skew = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
         col.addView(skew)
-        col.addView(info(getString(R.string.fill_jump), getString(R.string.fill_jump_info)))
+        col.addView(info(S("Fill jump %"), S("Rise in level while stopped that counts as a fill.")))
         jump = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
         col.addView(jump)
 
-        col.addView(info(getString(R.string.odometer), getString(R.string.odometer_info)))
+        col.addView(info(S("Odometer miles"), S("Optional: enter the odometer reading and Save pin to anchor distance for this profile.")))
         val odoRow = LinearLayout(this)
         odoRow.orientation = LinearLayout.HORIZONTAL
         odoMiles = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
         odoMiles.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         odoRow.addView(odoMiles)
-        odoRow.addView(smallButton(getString(R.string.save_pin)) {
+        odoRow.addView(smallButton(S("Save pin")) {
             val miles = odoMiles.text.toString().toDoubleOrNull() ?: return@smallButton
             val id = ProfileStore.activeId(filesDir)
             ProfileStore.addPin(filesDir, id, miles, System.currentTimeMillis())
         })
         col.addView(odoRow)
 
-        col.addView(info(getString(R.string.additional_tanks), getString(R.string.tank2_help)))
+        col.addView(info(S("Additional tanks"), S("Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.")))
         extrasCol = LinearLayout(this)
         extrasCol.orientation = LinearLayout.VERTICAL
         col.addView(extrasCol)
         addBtn = Button(this)
-        addBtn.text = getString(R.string.add_tank)
+        addBtn.text = S("Add additional tank")
         addBtn.setOnClickListener { addExtra() }
         col.addView(addBtn)
-        col.addView(info(getString(R.string.active_tank), getString(R.string.active_tank_info)))
+        col.addView(info(S("Active tank"), S("Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).")))
         activeSpinner = Spinner(this)
         col.addView(activeSpinner)
-        col.addView(info(getString(R.string.select_pid), getString(R.string.select_pid_info)))
+        col.addView(info(S("Select-PID long name"), S("Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.")))
         selectPid = edit(InputType.TYPE_CLASS_TEXT)
         col.addView(selectPid)
 
         val verbose = android.widget.CheckBox(this)
-        verbose.text = getString(R.string.verbose_logging)
+        verbose.text = S("Verbose logging (debug; per-second log lines)")
         verbose.primary()
         verbose.isChecked = FixFuelPrefs.prefs(this).getBoolean(FsLog.KEY_VERBOSE, false)
         verbose.setOnCheckedChangeListener { _, on ->
@@ -339,7 +340,7 @@ class PluginActivity : Activity() {
         col.addView(verbose)
 
         // Details (below the settings).
-        col.addView(label(getString(R.string.details)))
+        col.addView(label(S("Details")))
         live = TextView(this)
         live.textSize = 13f
         live.primary()
@@ -462,7 +463,7 @@ class PluginActivity : Activity() {
 
     private fun refreshProfile() {
         val id = ProfileStore.activeId(filesDir)
-        val name = ProfileStore.profileField(filesDir, id, "name") ?: getString(R.string.vehicle_default)
+        val name = ProfileStore.profileField(filesDir, id, "name") ?: S("Vehicle 1")
         profileNameView.text = name
         if (!profileName.isFocused && profileName.text.toString() != name) profileName.setText(name)
         val make = ProfileStore.profileField(filesDir, id, "make") ?: ""
@@ -496,23 +497,23 @@ class PluginActivity : Activity() {
         val head = LinearLayout(this)
         head.orientation = LinearLayout.HORIZONTAL
         val title = TextView(this)
-        title.text = getString(R.string.tank_n, t.id)
+        title.text = S("Tank %1\$d", t.id)
         title.textSize = 16f
         title.primary()
         title.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         val remove = Button(this)
-        remove.text = getString(R.string.remove)
+        remove.text = S("Remove")
         head.addView(title)
         head.addView(remove)
         root.addView(head)
-        root.addView(label(getString(R.string.tank_n_source, t.id)))
+        root.addView(label(S("Tank %1\$d fuel source", t.id)))
         val source = Spinner(this)
-        source.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, FuelSources.labels { getString(it) })
+        source.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, FuelSources.labels())
         root.addView(source)
-        root.addView(label(getString(R.string.tank_n_custom, t.id)))
+        root.addView(label(S("Tank %1\$d custom long name (e.g. [FuelSmooth] Tank%1\$d Level)", t.id)))
         val name = edit(InputType.TYPE_CLASS_TEXT)
         root.addView(name)
-        root.addView(label(getString(R.string.tank_n_gallons, t.id)))
+        root.addView(label(S("Tank %1\$d gallons", t.id)))
         val gal = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
         root.addView(gal)
         val card = ExtraCard(t.id, root, source, name, gal)
@@ -600,9 +601,9 @@ class PluginActivity : Activity() {
     }
 
     private fun activeLabels(): Array<String> {
-        val names = mutableListOf(getString(R.string.tank_n, 1))
-        extraCards.sortedBy { it.id }.forEach { names.add(getString(R.string.tank_n, it.id)) }
-        names.add(getString(R.string.from_pid))
+        val names = mutableListOf(S("Tank %1\$d", 1))
+        extraCards.sortedBy { it.id }.forEach { names.add(S("Tank %1\$d", it.id)) }
+        names.add(S("From PID"))
         return names.toTypedArray()
     }
 
@@ -657,14 +658,14 @@ class PluginActivity : Activity() {
     private fun formValid(): Boolean {
         var ok = true
         ok = markField(tau, FixFuelPrefs.tauOk(tau.text.toString().trim().toDoubleOrNull()),
-            getString(R.string.err_tau, oneDecimal(FixFuelPrefs.MAX_TAU))) && ok
+            S("0 to %1\$s s", oneDecimal(FixFuelPrefs.MAX_TAU))) && ok
         ok = markField(skew, FixFuelPrefs.skewOk(skew.text.toString().trim().toDoubleOrNull()),
-            getString(R.string.err_skew, oneDecimal(FixFuelPrefs.MAX_SKEW))) && ok
+            S("above 0, at most %1\$s %%/s", oneDecimal(FixFuelPrefs.MAX_SKEW))) && ok
         ok = markField(jump, FixFuelPrefs.jumpOk(jump.text.toString().trim().toDoubleOrNull()),
-            getString(R.string.err_jump, oneDecimal(FixFuelPrefs.MIN_JUMP), oneDecimal(FixFuelPrefs.MAX_JUMP))) && ok
-        ok = markField(tank, FixFuelPrefs.tankOk(tank.text.toString()), getString(R.string.err_tank)) && ok
+            S("%1\$s to %2\$s %%", oneDecimal(FixFuelPrefs.MIN_JUMP), oneDecimal(FixFuelPrefs.MAX_JUMP))) && ok
+        ok = markField(tank, FixFuelPrefs.tankOk(tank.text.toString()), S("blank or a number above 0")) && ok
         for (card in extraCards) {
-            ok = markField(card.tank, FixFuelPrefs.tankOk(card.tank.text.toString()), getString(R.string.err_tank)) && ok
+            ok = markField(card.tank, FixFuelPrefs.tankOk(card.tank.text.toString()), S("blank or a number above 0")) && ok
         }
         return ok
     }
@@ -674,7 +675,7 @@ class PluginActivity : Activity() {
         fun show(key: String, e: EditText) {
             val raw = c.invalid[key] ?: return
             if (!e.isFocused && e.text.toString() != raw) e.setText(raw)
-            markField(e, false, getString(R.string.err_stored))
+            markField(e, false, S("stored value out of range"))
         }
         show(FixFuelPrefs.KEY_TAU, tau)
         show(FixFuelPrefs.KEY_SKEW, skew)
@@ -701,10 +702,10 @@ class PluginActivity : Activity() {
             feed012f = FeedMode.entries[feed012f.selectedItemPosition.coerceIn(0, FeedMode.entries.size - 1)],
         )
         val id = ProfileStore.activeId(filesDir)
-        ProfileStore.setProfileField(filesDir, id, "name", profileName.text.toString().trim().ifBlank { getString(R.string.vehicle_default) })
+        ProfileStore.setProfileField(filesDir, id, "name", profileName.text.toString().trim().ifBlank { S("Vehicle 1") })
         val make = vehicleMake.text.toString().trim()
         ProfileStore.setProfileField(filesDir, id, "make", if (make.isEmpty()) null else make)
-        profileNameView.text = ProfileStore.profileField(filesDir, id, "name") ?: getString(R.string.vehicle_default)
+        profileNameView.text = ProfileStore.profileField(filesDir, id, "name") ?: S("Vehicle 1")
     }
 
     private lateinit var statusLine: TextView
@@ -734,14 +735,14 @@ class PluginActivity : Activity() {
         i.textSize = 18f
         i.primary()
         i.setPadding(24, 16, 8, 0)
-        i.contentDescription = getString(R.string.about_field, text)
+        i.contentDescription = S("About %1\$s", text)
         i.setOnClickListener {
             val body = TextView(this)
             body.text = explanation
             body.textSize = 14f
             body.primary()
             body.setPadding(PAD, PAD / 2, PAD, 0)
-            android.app.AlertDialog.Builder(this).setTitle(text).setView(body).setPositiveButton(getString(R.string.ok), null).show()
+            android.app.AlertDialog.Builder(this).setTitle(text).setView(body).setPositiveButton(S("OK"), null).show()
         }
         row.addView(i)
         return row
@@ -753,7 +754,7 @@ class PluginActivity : Activity() {
         val sv = ScrollView(this)
         page.setPadding(PAD, PAD / 2, PAD, 0)
         sv.addView(page)
-        android.app.AlertDialog.Builder(this).setTitle(title).setView(sv).setPositiveButton(getString(R.string.close), null)
+        android.app.AlertDialog.Builder(this).setTitle(title).setView(sv).setPositiveButton(S("Close"), null)
             .setOnDismissListener { sv.removeView(page) }.show()
     }
 
@@ -761,10 +762,10 @@ class PluginActivity : Activity() {
     private fun refreshStatus(c: FixFuelConfig) {
         if (!::statusLine.isInitialized) return
         val id = ProfileStore.activeId(filesDir)
-        val name = ProfileStore.profileField(filesDir, id, "name") ?: getString(R.string.vehicle_default)
-        val src = getString(FuelSources.byId(c.sourceId).label) + if (c.sourceConfirmed) "" else getString(R.string.unconfirmed)
-        val tankTxt = c.tankGal?.let { "${VolUnit.show(it, shownUnit)} ${getString(shownUnit.label)}" } ?: getString(R.string.tank_unknown)
-        statusLine.text = "$name · $src · $tankTxt" + if (PluginService.ecuConnected) getString(R.string.ecu_connected) else ""
+        val name = ProfileStore.profileField(filesDir, id, "name") ?: S("Vehicle 1")
+        val src = S(FuelSources.byId(c.sourceId).label) + if (c.sourceConfirmed) "" else S("(unconfirmed)")
+        val tankTxt = c.tankGal?.let { "${VolUnit.show(it, shownUnit)} ${S(shownUnit.label)}" } ?: S("tank ?")
+        statusLine.text = "$name · $src · $tankTxt" + if (PluginService.ecuConnected) S("· ECU connected") else ""
     }
 
     private fun label(s: String): TextView {
@@ -840,7 +841,7 @@ class PluginActivity : Activity() {
         val body = "App version: ${versionName()}\nAndroid version: ${Build.VERSION.RELEASE}\nDevice model: ${Build.MANUFACTURER} ${Build.MODEL}\n"
         val uri = Uri.parse(
             "mailto:david+fuelsmoothing@lang.hm?subject=" +
-                Uri.encode(getString(R.string.app_name)) +
+                Uri.encode(S("Fuel Smoothing for Torque")) +
                 "&body=" +
                 Uri.encode(body),
         )
@@ -876,7 +877,7 @@ class PluginActivity : Activity() {
                         queryTips(client)
                         queryOwned(client)
                     } else {
-                        runOnUiThread { tipButton.text = getString(R.string.tips_play_only) }
+                        runOnUiThread { tipButton.text = S("Tips are on the Play Store version") }
                     }
                 }
 
@@ -884,7 +885,7 @@ class PluginActivity : Activity() {
             })
         } catch (t: Throwable) {
             FsLog.w(TAG, "billing start ignored: ${t.javaClass.simpleName} ${t.message}")
-            tipButton.text = getString(R.string.tips_play_only)
+            tipButton.text = S("Tips are on the Play Store version")
         }
     }
 
@@ -895,7 +896,7 @@ class PluginActivity : Activity() {
             return
         }
         if (!client.isReady) {
-            tipButton.text = getString(R.string.tips_play_only)
+            tipButton.text = S("Tips are on the Play Store version")
             return
         }
         queryTips(client)
@@ -913,7 +914,7 @@ class PluginActivity : Activity() {
             val details = queryResult.productDetailsList
             runOnUiThread {
                 if (result.responseCode != BillingClient.BillingResponseCode.OK || details.isEmpty()) {
-                    tipButton.text = getString(R.string.tips_play_only)
+                    tipButton.text = S("Tips are on the Play Store version")
                 } else {
                     showTipProducts(details)
                 }
@@ -966,7 +967,7 @@ class PluginActivity : Activity() {
             client.consumeAsync(params) { result, _ ->
                 if (result.responseCode == BillingClient.BillingResponseCode.OK) {
                     TipStore.clear(this)
-                    runOnUiThread { thanksView.text = getString(R.string.thanks) }
+                    runOnUiThread { thanksView.text = S("Thanks") }
                 }
             }
         }
@@ -1007,28 +1008,28 @@ class PluginActivity : Activity() {
         val dir = ProfileStore.tankDir(filesDir, ProfileStore.activeId(filesDir), 1)
         val chunk = ProfileStore.storedMap(dir)
         val chunkGal = chunk?.third?.takeIf { it > 0.0 } ?: c.tankGal?.takeIf { it > 0.0 }
-        sizeChunk.text = getString(R.string.size_chunk, sizeText(chunkGal))
+        sizeChunk.text = S("Chunk: %1\$s", sizeText(chunkGal))
         val band = BandFit.load(dir)
-        sizeBand.text = getString(R.string.size_band, sizeText(band?.second?.takeIf { it > 0.0 }))
+        sizeBand.text = S("Band: %1\$s", sizeText(band?.second?.takeIf { it > 0.0 }))
         val kal = Kalman.loadModel(dir)
-        sizeKalman.text = getString(R.string.size_kalman, kalmanSizeText(kal))
+        sizeKalman.text = S("Kalman: %1\$s", kalmanSizeText(kal))
         fitChart.setCurves(listOf(chunkCurve(chunk), bandCurve(band), kalmanCurve(kal)))
     }
 
     private fun sizeText(gal: Double?): String {
-        if (gal == null || !gal.isFinite() || gal <= 0.0) return getString(R.string.size_none)
-        return getString(R.string.size_gal, gal)
+        if (gal == null || !gal.isFinite() || gal <= 0.0) return S("no size yet")
+        return S("%1\$.1f gal", gal)
     }
 
     private fun kalmanSizeText(kal: Kalman.Model?): String {
-        if (kal == null) return getString(R.string.size_none)
+        if (kal == null) return S("no size yet")
         val sd = kal.sd98.takeIf { it.isFinite() }
         val gal = kal.g98.takeIf { it.isFinite() && it > 0.0 }
         return when {
-            gal != null && sd != null -> getString(R.string.size_kalman_sd, gal, sd)
-            gal != null -> getString(R.string.size_gal, gal)
-            sd != null -> getString(R.string.size_none_sd, sd)
-            else -> getString(R.string.size_none)
+            gal != null && sd != null -> S("%1\$.1f ± %2\$.1f gal", gal, sd)
+            gal != null -> S("%1\$.1f gal", gal)
+            sd != null -> S("no size yet ± %1\$.1f gal", sd)
+            else -> S("no size yet")
         }
     }
 
@@ -1162,9 +1163,9 @@ class PluginActivity : Activity() {
                 canvas.drawText(xLabel(x), px(x), plotB + half - labelPaint.ascent(), labelPaint)
             }
             titlePaint.textAlign = Paint.Align.CENTER
-            val xTitle = context.getString(R.string.axis_smoothed)
+            val xTitle = S("Smoothed %")
             canvas.drawText(xTitle, (plotL + plotR) / 2f, plotB + half + lineHeight(labelPaint) - titlePaint.ascent(), titlePaint)
-            val yTitle = context.getString(R.string.axis_error)
+            val yTitle = S("Error (%)")
             val tw = titlePaint.measureText(yTitle)
             val cx = lineHeight(titlePaint) / 2f
             val cy = (plotT + plotB) / 2f
@@ -1174,9 +1175,9 @@ class PluginActivity : Activity() {
             canvas.drawText(yTitle, cx - tw / 2f, cy - (titlePaint.ascent() + titlePaint.descent()) / 2f, titlePaint)
             canvas.restore()
             val names = arrayOf(
-                context.getString(R.string.legend_chunk),
-                context.getString(R.string.legend_band),
-                context.getString(R.string.legend_kalman),
+                S("Chunk"),
+                S("Band"),
+                S("Kalman"),
             )
             val sample = 14f * d
             var lx = plotL
@@ -1192,7 +1193,7 @@ class PluginActivity : Activity() {
 
         private fun plotHeight(): Float {
             val base = 150f * d
-            return max(base, titlePaint.measureText(context.getString(R.string.axis_error)))
+            return max(base, titlePaint.measureText(S("Error (%)")))
         }
 
         private fun margins(): Box {

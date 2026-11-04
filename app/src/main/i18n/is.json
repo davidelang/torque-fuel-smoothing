@@ -1,0 +1,647 @@
+[
+  {
+    "key": "Fuel Smoothing for Torque",
+    "source": "Fuel Smoothing for Torque",
+    "text": "Fuel Smoothing for Torque"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/privacy/"
+  },
+  {
+    "key": "Tips are on the Play Store version",
+    "source": "Tips are on the Play Store version",
+    "text": "Þjórfé er í Play Store útgáfunni"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "Fljótleg byrjun\n 1. Settu upp Torque Pro (greidda útgáfan; Torque Lite styður ekki viðbætur) og paraðu OBD-II millistykkið.\n 2. Virkjaðu þessa viðbót í Torque → Stillingar → Viðbætur.\n 3. Leyfðu tilkynningar og stilltu rafhlöðunotkun á Ótakmarkað svo Torque geti ræst þessa viðbót í bakgrunni.\n 4. Í Torque skaltu velja snið ökutækisins sem þú ekur. Gögn eru geymd eftir Torque sniði og borin saman við VIN/ECU auðkenni ökutækisins.\n 5. Á nýju sniði greinist eldsneytisuppspretta við tengingu; ef beðið er, berðu hana saman við mæli mælaborðsins og ýttu á Staðfesta. Staðfesta er á uppsetningarsíðunni og í tilkynningunni. Þú getur líka valið hana hér fyrir neðan.\n 6. Tankstærð er upphafsstærð Chunk aðlögunar þar til hún lærir sína eigin. Viðbótin breytir henni aldrei; lærð stærð hverrar aðlögunar birtist undir henni.\n 7. Í Torque skaltu bæta við mælum fyrir [FuelSmooth] Smoothed Fuel Level og fyrir hverja aðlögun Corrected %, Remaining, DTE og Tank size. DTE er Remaining margfaldað með langtíma mpg í Torque. Tilkynning meðan enduraðlögun stendur segir að aðlögunin lesi 1:1 þar til enduraðlögun lýkur.\n 8. Sendu eldsneytisstig til baka í Torque: Slökkt, sléttað eða leiðrétt úr Chunk, Band eða Kalman aðlögun á 012F mælinn.\n 9. Eldsneyti er aðeins talið meðan vélin gengur. Viðbótin keyrir aðeins meðan Torque er tengt við ECU.\n 10. Haltu áfram að aka og fylla á; nákvæmni eykst yfir nokkra hlutatanka. Ef tilkynningin Rangt ökutækjasnið? birtist skaltu velja hvað verður um þá ferð.\n 11. Öll gögn eru áfram í þessum síma. Hvorki GPS né staðsetning er skráð."
+  },
+  {
+    "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "text": "%1$s\nÚtgáfa %2$s (%3$s)\nViðbót fyrir Torque Pro. Ekki tengd Torque eða Ian Hawkins.\nÖll gögn eru áfram í þessum síma; hvorki GPS né staðsetning er skráð.\n\nLeyfi\nCopyright David Lang. Allur réttur áskilinn."
+  },
+  {
+    "key": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "source": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "text": "Opinn hugbúnaður\nÞetta forrit notar safnið hér að neðan. Leyfi þeirra eru aðskilin frá höfundarrétti hér að ofan.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), krafist af Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/manual/"
+  },
+  {
+    "key": "Full manual (online)",
+    "source": "Full manual (online)",
+    "text": "Allur handbók (á netinu)"
+  },
+  {
+    "key": "Show fuel level in notification",
+    "source": "Show fuel level in notification",
+    "text": "Sýna eldsneytisstig í tilkynningu"
+  },
+  {
+    "key": "Feed fuel level back to Torque (overrides 012F)",
+    "source": "Feed fuel level back to Torque (overrides 012F)",
+    "text": "Senda eldsneytisstig til baka í Torque (yfirskrifar 012F)"
+  },
+  {
+    "key": "Fuel Smoothing is running",
+    "source": "Fuel Smoothing is running",
+    "text": "Fuel Smoothing er í gangi"
+  },
+  {
+    "key": "Tap to start Fuel Smoothing",
+    "source": "Tap to start Fuel Smoothing",
+    "text": "Ýttu til að ræsa Fuel Smoothing"
+  },
+  {
+    "key": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "source": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "text": "Ræsing af rafhlöðu eða í bakgrunni var hafnað. Opnaðu einu sinni svo viðbótin geti keyrt með Torque."
+  },
+  {
+    "key": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "source": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "text": "Bættu við aukatönkum eftir þörfum (verksmiðjutankur 1 er alltaf eftir). Ekki tengja skynjara á PCM FLI pinnann (fölsk áfylling). Hver aukatankur þarf sinn eigin auka PID í Torque (MCU Mode 22, einkvæmt nafn — ekki 012F eða Ford 16C1). Gildi Select-PID er auðkenni tanksins frá 1. Gal/hr er aðeins fært á virka tankinn."
+  },
+  {
+    "key": "Tap to start",
+    "source": "Tap to start",
+    "text": "Ýttu til að ræsa"
+  },
+  {
+    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "text": "Tankstærð er upphafsstærð Chunk aðlögunar þar til hún lærir sína eigin. Viðbótin breytir henni aldrei; lærð stærð hverrar aðlögunar birtist undir henni."
+  },
+  {
+    "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "source": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "text": "Skrifar gildi á verksmiðju Fuel Level (012F) í Torque svo núverandi mælar sýni það: Slökkt, sléttað eða leiðrétt úr Chunk, Band eða Kalman aðlögun. Aðlögun sem er ekki enn byggð skrifar sléttaða stigið."
+  },
+  {
+    "key": "Chunk: %1$s",
+    "source": "Chunk: %1$s",
+    "text": "Chunk: %1$s"
+  },
+  {
+    "key": "Band: %1$s",
+    "source": "Band: %1$s",
+    "text": "Band: %1$s"
+  },
+  {
+    "key": "Kalman: %1$s",
+    "source": "Kalman: %1$s",
+    "text": "Kalman: %1$s"
+  },
+  {
+    "key": "no size yet",
+    "source": "no size yet",
+    "text": "engin stærð enn"
+  },
+  {
+    "key": "no size yet ± %1$.1f gal",
+    "source": "no size yet ± %1$.1f gal",
+    "text": "engin stærð enn ± %1$.1f gal"
+  },
+  {
+    "key": "%1$.1f gal",
+    "source": "%1$.1f gal",
+    "text": "%1$.1f gal"
+  },
+  {
+    "key": "%1$.1f ± %2$.1f gal",
+    "source": "%1$.1f ± %2$.1f gal",
+    "text": "%1$.1f ± %2$.1f gal"
+  },
+  {
+    "key": "Help",
+    "source": "Help",
+    "text": "Hjálp"
+  },
+  {
+    "key": "About",
+    "source": "About",
+    "text": "Um"
+  },
+  {
+    "key": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "source": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "text": "Krefst Torque Pro (greitt). Torque Lite styður ekki viðbætur."
+  },
+  {
+    "key": "Get Torque Pro",
+    "source": "Get Torque Pro",
+    "text": "Sækja Torque Pro"
+  },
+  {
+    "key": "Privacy",
+    "source": "Privacy",
+    "text": "Persónuvernd"
+  },
+  {
+    "key": "Send feedback",
+    "source": "Send feedback",
+    "text": "Senda athugasemd"
+  },
+  {
+    "key": "Tip",
+    "source": "Tip",
+    "text": "Þjórfé"
+  },
+  {
+    "key": "Thanks",
+    "source": "Thanks",
+    "text": "Takk"
+  },
+  {
+    "key": "Close",
+    "source": "Close",
+    "text": "Loka"
+  },
+  {
+    "key": "OK",
+    "source": "OK",
+    "text": "Í lagi"
+  },
+  {
+    "key": "Detect",
+    "source": "Detect",
+    "text": "Greina"
+  },
+  {
+    "key": "Confirm",
+    "source": "Confirm",
+    "text": "Staðfesta"
+  },
+  {
+    "key": "Save pin",
+    "source": "Save pin",
+    "text": "Vista akkeri"
+  },
+  {
+    "key": "Add additional tank",
+    "source": "Add additional tank",
+    "text": "Bæta við tanki"
+  },
+  {
+    "key": "Remove",
+    "source": "Remove",
+    "text": "Fjarlægja"
+  },
+  {
+    "key": "Details",
+    "source": "Details",
+    "text": "Nánar"
+  },
+  {
+    "key": "Verbose logging (debug; per-second log lines)",
+    "source": "Verbose logging (debug; per-second log lines)",
+    "text": "Ítarleg skráning (kembing; línur á hverri sekúndu)"
+  },
+  {
+    "key": "Profile name",
+    "source": "Profile name",
+    "text": "Heiti sniðs"
+  },
+  {
+    "key": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "source": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "text": "Heiti þessa ökutækjasniðs. Hvert Torque ökutækjasnið fær sitt viðbótarsnið, gögn og lærð kort."
+  },
+  {
+    "key": "Make",
+    "source": "Make",
+    "text": "Tegund"
+  },
+  {
+    "key": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "source": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "text": "Tegund ökutækis (t.d. Ford). Notað aðeins til að velja hvaða tegundarbundna eldsneytis PID greining má reyna."
+  },
+  {
+    "key": "Fuel source",
+    "source": "Fuel source",
+    "text": "Eldsneytisuppspretta"
+  },
+  {
+    "key": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "source": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "text": "Hvaðan hrátt eldsneytisstig kemur. Greina (ECU verður að vera tengt) reynir frambjóðendur aðeins til lesturs og biður um staðfestingu ef tvær uppsprettur stemma ekki. Staðfesta er á uppsetningarsíðunni og í tilkynningunni. Ekkert = greina við næstu tengingu."
+  },
+  {
+    "key": "Custom long name",
+    "source": "Custom long name",
+    "text": "Sérsniðið langt nafn"
+  },
+  {
+    "key": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "source": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "text": "Aðeins fyrir uppsprettuna „Auka PID Torque eftir löngu nafni“: nákvæmt langt nafn þess Torque PID sem tilkynnir stigið."
+  },
+  {
+    "key": "Tank size",
+    "source": "Tank size",
+    "text": "Tankstærð"
+  },
+  {
+    "key": "blank = no starting size; each fit learns its own.",
+    "source": "blank = no starting size; each fit learns its own.",
+    "text": "tómt = engin upphafsstærð; hver aðlögun lærir sína eigin."
+  },
+  {
+    "key": "Smoothing τ seconds",
+    "source": "Smoothing τ seconds",
+    "text": "Sléttun τ í sekúndum"
+  },
+  {
+    "key": "Time constant of the smoothing filter (0 = no smoothing).",
+    "source": "Time constant of the smoothing filter (0 = no smoothing).",
+    "text": "Tímastuðull sléttunarsíunnar (0 = engin sléttun)."
+  },
+  {
+    "key": "Max skew %/s",
+    "source": "Max skew %/s",
+    "text": "Hámarkshalli %/s"
+  },
+  {
+    "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "text": "Mesta breyting á sekúndu sem sléttaða stigið má fylgja; skvett yfir það er hunsað."
+  },
+  {
+    "key": "Fill jump %",
+    "source": "Fill jump %",
+    "text": "Áfyllingarstökk %"
+  },
+  {
+    "key": "Rise in level while stopped that counts as a fill.",
+    "source": "Rise in level while stopped that counts as a fill.",
+    "text": "Hækkun stigs í kyrrstöðu sem telst áfylling."
+  },
+  {
+    "key": "Odometer miles",
+    "source": "Odometer miles",
+    "text": "Kílómetramælir í mílum"
+  },
+  {
+    "key": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "source": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "text": "Valfrjálst: sláðu inn álestur mælisins og Vista akkeri til að festa vegalengd þessa sniðs."
+  },
+  {
+    "key": "Additional tanks",
+    "source": "Additional tanks",
+    "text": "Aukatankar"
+  },
+  {
+    "key": "Active tank",
+    "source": "Active tank",
+    "text": "Virkur tankur"
+  },
+  {
+    "key": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "source": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "text": "Tankurinn sem eyðslan (gal/hr) er færð á. Úr PID: Torque PID velur hann (auðkenni frá 1)."
+  },
+  {
+    "key": "Select-PID long name",
+    "source": "Select-PID long name",
+    "text": "Langt nafn Select-PID"
+  },
+  {
+    "key": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "source": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "text": "Aðeins þegar Virkur tankur = Úr PID: langt nafn þess Torque PID sem gildið er tankauðkenni."
+  },
+  {
+    "key": "Tank %1$d",
+    "source": "Tank %1$d",
+    "text": "Tankur %1$d"
+  },
+  {
+    "key": "Tank %1$d fuel source",
+    "source": "Tank %1$d fuel source",
+    "text": "Eldsneytisuppspretta tanks %1$d"
+  },
+  {
+    "key": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "source": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "text": "Sérsniðið langt nafn tanks %1$d (t.d. [FuelSmooth] Tank%1$d Level)"
+  },
+  {
+    "key": "Tank %1$d gallons",
+    "source": "Tank %1$d gallons",
+    "text": "Gallon tanks %1$d"
+  },
+  {
+    "key": "From PID",
+    "source": "From PID",
+    "text": "Úr PID"
+  },
+  {
+    "key": "(unconfirmed)",
+    "source": "(unconfirmed)",
+    "text": "(óstaðfest)"
+  },
+  {
+    "key": "· ECU connected",
+    "source": "· ECU connected",
+    "text": "· ECU tengt"
+  },
+  {
+    "key": "tank ?",
+    "source": "tank ?",
+    "text": "tankur ?"
+  },
+  {
+    "key": "About %1$s",
+    "source": "About %1$s",
+    "text": "Um %1$s"
+  },
+  {
+    "key": "0 to %1$s s",
+    "source": "0 to %1$s s",
+    "text": "0 til %1$s s"
+  },
+  {
+    "key": "above 0, at most %1$s %%/s",
+    "source": "above 0, at most %1$s %%/s",
+    "text": "yfir 0, mest %1$s %%/s"
+  },
+  {
+    "key": "%1$s to %2$s %%",
+    "source": "%1$s to %2$s %%",
+    "text": "%1$s til %2$s %%"
+  },
+  {
+    "key": "blank or a number above 0",
+    "source": "blank or a number above 0",
+    "text": "tómt eða tala stærri en 0"
+  },
+  {
+    "key": "stored value out of range",
+    "source": "stored value out of range",
+    "text": "vistað gildi utan bils"
+  },
+  {
+    "key": "Chunk",
+    "source": "Chunk",
+    "text": "Chunk"
+  },
+  {
+    "key": "Band",
+    "source": "Band",
+    "text": "Band"
+  },
+  {
+    "key": "Kalman",
+    "source": "Kalman",
+    "text": "Kalman"
+  },
+  {
+    "key": "Smoothed %",
+    "source": "Smoothed %",
+    "text": "Sléttað %"
+  },
+  {
+    "key": "Error (%)",
+    "source": "Error (%)",
+    "text": "Villa (%)"
+  },
+  {
+    "key": "Off",
+    "source": "Off",
+    "text": "Slökkt"
+  },
+  {
+    "key": "Corrected % (Chunk)",
+    "source": "Corrected % (Chunk)",
+    "text": "Leiðrétt % (Chunk)"
+  },
+  {
+    "key": "Corrected % (Band)",
+    "source": "Corrected % (Band)",
+    "text": "Leiðrétt % (Band)"
+  },
+  {
+    "key": "Corrected % (Kalman)",
+    "source": "Corrected % (Kalman)",
+    "text": "Leiðrétt % (Kalman)"
+  },
+  {
+    "key": "gal",
+    "source": "gal",
+    "text": "gal"
+  },
+  {
+    "key": "L",
+    "source": "L",
+    "text": "L"
+  },
+  {
+    "key": "None yet (Detect runs on connect)",
+    "source": "None yet (Detect runs on connect)",
+    "text": "Ekkert enn (Greina við tengingu)"
+  },
+  {
+    "key": "SAE 012F Fuel Tank Level",
+    "source": "SAE 012F Fuel Tank Level",
+    "text": "SAE 012F Fuel Tank Level"
+  },
+  {
+    "key": "Mode 22 16C1",
+    "source": "Mode 22 16C1",
+    "text": "Mode 22 16C1"
+  },
+  {
+    "key": "Ford Mode 22 F42F",
+    "source": "Ford Mode 22 F42F",
+    "text": "Ford Mode 22 F42F"
+  },
+  {
+    "key": "GM Mode 22 12C5 %",
+    "source": "GM Mode 22 12C5 %",
+    "text": "GM Mode 22 12C5 %"
+  },
+  {
+    "key": "Chrysler 21A2 %",
+    "source": "Chrysler 21A2 %",
+    "text": "Chrysler 21A2 %"
+  },
+  {
+    "key": "Chrysler Fuel Level Average",
+    "source": "Chrysler Fuel Level Average",
+    "text": "Chrysler Fuel Level Average"
+  },
+  {
+    "key": "Toyota cluster 2129 (half-litre counts)",
+    "source": "Toyota cluster 2129 (half-litre counts)",
+    "text": "Toyota cluster 2129 (hálfs lítra talningar)"
+  },
+  {
+    "key": "Torque extra PID by long name",
+    "source": "Torque extra PID by long name",
+    "text": "Auka PID Torque eftir löngu nafni"
+  },
+  {
+    "key": "Vehicle 1",
+    "source": "Vehicle 1",
+    "text": "Ökutæki 1"
+  },
+  {
+    "key": "Vehicle %1$s",
+    "source": "Vehicle %1$s",
+    "text": "Ökutæki %1$s"
+  },
+  {
+    "key": "Binding to Torque…",
+    "source": "Binding to Torque…",
+    "text": "Tengist við Torque…"
+  },
+  {
+    "key": "Waiting for fuel source",
+    "source": "Waiting for fuel source",
+    "text": "Bíð eftir eldsneytisuppsprettu"
+  },
+  {
+    "key": "raw %1$.1f%%",
+    "source": "raw %1$.1f%%",
+    "text": "hrátt %1$.1f%%"
+  },
+  {
+    "key": "sess %1$s",
+    "source": "sess %1$s",
+    "text": "ferð %1$s"
+  },
+  {
+    "key": "Fuel Smoothing",
+    "source": "Fuel Smoothing",
+    "text": "Fuel Smoothing"
+  },
+  {
+    "key": "Fuel Smoothing quiet",
+    "source": "Fuel Smoothing quiet",
+    "text": "Fuel Smoothing hljótt"
+  },
+  {
+    "key": "Map refitting",
+    "source": "Map refitting",
+    "text": "Enduraðlögun korts"
+  },
+  {
+    "key": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "source": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "text": "Fuel Smoothing enduraðlagar kort fyrir %1$s. Þessi aðlögun les 1:1 þar til enduraðlögun lýkur."
+  },
+  {
+    "key": "No fuel level source set",
+    "source": "No fuel level source set",
+    "text": "Engin uppspretta eldsneytisstigs sett"
+  },
+  {
+    "key": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "source": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "text": "Fuel Smoothing hefur enga uppsprettu eldsneytisstigs fyrir %1$s. Opnaðu uppsetningarsíðuna og ýttu á Greina, eða veldu uppsprettu."
+  },
+  {
+    "key": "No fuel level this drive",
+    "source": "No fuel level this drive",
+    "text": "Ekkert eldsneytisstig á þessari ferð"
+  },
+  {
+    "key": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "source": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "text": "%1$s gaf ekkert nothæft stig fyrir %2$s. Athugaðu tengingu millistykkisins eða keyrðu Greina á uppsetningarsíðunni."
+  },
+  {
+    "key": "Fuel level source found",
+    "source": "Fuel level source found",
+    "text": "Uppspretta eldsneytisstigs fannst"
+  },
+  {
+    "key": "Using %1$s for %2$s (%3$s).",
+    "source": "Using %1$s for %2$s (%3$s).",
+    "text": "Notar %1$s fyrir %2$s (%3$s)."
+  },
+  {
+    "key": "No fuel level source found",
+    "source": "No fuel level source found",
+    "text": "Engin uppspretta eldsneytisstigs fannst"
+  },
+  {
+    "key": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "source": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "text": "Opnaðu uppsetningu Fuel Smoothing og veldu uppsprettu (eða bættu PID við í Torque) og ýttu svo á Greina."
+  },
+  {
+    "key": "Confirm fuel level source",
+    "source": "Confirm fuel level source",
+    "text": "Staðfestu uppsprettu eldsneytisstigs"
+  },
+  {
+    "key": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "source": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "text": "Greindist %1$s, álestur %2$.0f %% fyrir %3$s. Athugaðu að það stemmi við mæli mælaborðsins og ýttu á Staðfesta. Staðfesta er á uppsetningarsíðunni og í tilkynningunni (%4$s)."
+  },
+  {
+    "key": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "source": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "text": "Greindist %1$s fyrir %2$s. Athugaðu að það stemmi við mæli mælaborðsins og ýttu á Staðfesta. Staðfesta er á uppsetningarsíðunni og í tilkynningunni (%3$s)."
+  },
+  {
+    "key": "Recording to %1$s",
+    "source": "Recording to %1$s",
+    "text": "Skráir í %1$s"
+  },
+  {
+    "key": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "source": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "text": "Þetta ökutæki er %1$s (%2$s), en snið Torque er „%3$s“. Gögn fara í %1$s; ýttu til að opna Torque og skipta um snið."
+  },
+  {
+    "key": "Wrong vehicle profile?",
+    "source": "Wrong vehicle profile?",
+    "text": "Rangt ökutækjasnið?"
+  },
+  {
+    "key": "Torque profile '%1$s'",
+    "source": "Torque profile '%1$s'",
+    "text": "Torque snið „%1$s“"
+  },
+  {
+    "key": "a new vehicle profile",
+    "source": "a new vehicle profile",
+    "text": "nýtt ökutækjasnið"
+  },
+  {
+    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "text": "Torque snið „%1$s“ stemmir ekki við þetta ökutæki (%2$s). Tillaga: %3$s. Gögn eru geymd og hent í lok ferðar nema þú geymir þau."
+  },
+  {
+    "key": "Keeping drive data",
+    "source": "Keeping drive data",
+    "text": "Gögn ferðarinnar geymd"
+  },
+  {
+    "key": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "source": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "text": "Þessi ferð verður vistuð í %1$s. API viðbótar Torque getur ekki búið til eða skipt um Torque snið: í Torque skaltu búa til eða velja ökutækjasnið sem heitir „%2$s“."
+  },
+  {
+    "key": "Create new profile",
+    "source": "Create new profile",
+    "text": "Búa til nýtt snið"
+  },
+  {
+    "key": "Use %1$s",
+    "source": "Use %1$s",
+    "text": "Nota %1$s"
+  }
+]

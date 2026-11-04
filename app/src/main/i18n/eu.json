@@ -1,0 +1,647 @@
+[
+  {
+    "key": "Fuel Smoothing for Torque",
+    "source": "Fuel Smoothing for Torque",
+    "text": "Fuel Smoothing for Torque"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/privacy/"
+  },
+  {
+    "key": "Tips are on the Play Store version",
+    "source": "Tips are on the Play Store version",
+    "text": "Propina Play Store bertsioan daude"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "Hasiera azkarra\n 1. Instalatu Torque Pro (ordainpeko bertsioa; Torque Lite-k ez ditu pluginak onartzen) eta parekatu OBD-II egokigailua.\n 2. Gaitu plugin hau Torque → Ezarpenak → Pluginak atalean.\n 3. Baimendu jakinarazpenak eta ezarri bateriaren erabilera Mugarik gabe, Torque-k plugin hau atzeko planoan abiaraz dezan.\n 4. Torque-n aukeratu gidatzen ari zaren ibilgailuaren profila. Datuak Torque profilaka gordetzen dira eta ibilgailuaren VIN/ECU identitatearekin egiaztatzen dira.\n 5. Profil berri batean erregai-iturria konektatzean hautematen da; eskatzen bazaizu, alderatu aginte-paneleko neurgailuarekin eta sakatu Berretsi. Berretsi konfigurazio-orrian eta jakinarazpenean dago. Behean ere aukera dezakezu.\n 6. Deposituaren tamaina Chunk doikuntzaren hasierako tamaina da, berea ikasi arte. Pluginak ez du inoiz aldatzen; doikuntza bakoitzaren ikasitako tamaina azpian agertzen da.\n 7. Torque-n gehitu neurgailuak [FuelSmooth] Smoothed Fuel Levelerako eta doikuntza bakoitzerako Corrected %, Remaining, DTE eta Tank size. DTE Remaining bider Torque-ren epe luzeko mpg da. Berdoikuntza batean abisu batek esaten du doikuntzak 1:1 irakurtzen duela berdoikuntza amaitu arte.\n 8. Itzuli erregai-maila Torque-ra: Itzalita, leundua edo Chunk, Band edo Kalman doikuntzatik zuzendua, 012F neurgailura.\n 9. Erregaia motorra martxan dagoen bitartean soilik zenbatzen da. Plugina Torque ECU-ra konektatuta dagoen bitartean soilik exekutatzen da.\n 10. Jarraitu gidatzen eta betetzen; zehaztasuna hainbat depositu partzialetan hobetzen da. Ibilgailu-profil okerra? jakinarazpena agertzen bada, aukeratu zer egin bidaia horrekin.\n 11. Datu guztiak telefono honetan geratzen dira. Ez da GPS edo kokapenik erregistratzen."
+  },
+  {
+    "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "text": "%1$s\nBertsioa %2$s (%3$s)\nTorque Pro-rako plugina. Ez dago Torque edo Ian Hawkins-ekin lotuta.\nDatu guztiak telefono honetan geratzen dira; ez da GPS edo kokapenik erregistratzen.\n\nLizentzia\nCopyright David Lang. Eskubide guztiak erreserbatuta."
+  },
+  {
+    "key": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "source": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "text": "Kode irekiko liburutegiak\nAplikazio honek beheko liburutegiak erabiltzen ditu. Haien lizentziak goiko copyrightetik bereizita daude.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), Play Billing-ek eskatua\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/manual/"
+  },
+  {
+    "key": "Full manual (online)",
+    "source": "Full manual (online)",
+    "text": "Eskuliburu osoa (linean)"
+  },
+  {
+    "key": "Show fuel level in notification",
+    "source": "Show fuel level in notification",
+    "text": "Erakutsi erregai-maila jakinarazpenean"
+  },
+  {
+    "key": "Feed fuel level back to Torque (overrides 012F)",
+    "source": "Feed fuel level back to Torque (overrides 012F)",
+    "text": "Itzuli erregai-maila Torque-ra (012F ordezten du)"
+  },
+  {
+    "key": "Fuel Smoothing is running",
+    "source": "Fuel Smoothing is running",
+    "text": "Fuel Smoothing martxan dago"
+  },
+  {
+    "key": "Tap to start Fuel Smoothing",
+    "source": "Tap to start Fuel Smoothing",
+    "text": "Sakatu Fuel Smoothing abiarazteko"
+  },
+  {
+    "key": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "source": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "text": "Bateriatik edo atzeko planotik abiaraztea ukatu da. Ireki behin plugina Torque-rekin exekutatu ahal izateko."
+  },
+  {
+    "key": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "source": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "text": "Gehitu depositu gehigarriak behar izanez gero (1. fabrikako depositua beti geratzen da). Ez konektatu sentsoreak PCM FLI pinera (betetze faltsua). Depositu gehigarri bakoitzak bere Torque PID gehigarria behar du (MCU Mode 22, izen bakarra — ez 012F edo Ford 16C1). Select-PID balioa 1etik aurrerako depositu-identifikatzailea da. Gal/hr depositu aktiboari soilik egozten zaio."
+  },
+  {
+    "key": "Tap to start",
+    "source": "Tap to start",
+    "text": "Sakatu abiarazteko"
+  },
+  {
+    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "text": "Deposituaren tamaina Chunk doikuntzaren hasierako tamaina da, berea ikasi arte. Pluginak ez du inoiz aldatzen; doikuntza bakoitzaren ikasitako tamaina azpian agertzen da."
+  },
+  {
+    "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "source": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "text": "Balio bat idazten du Torque-ren fabrikako Fuel Level (012F) gainean, dauden neurgailuek erakuts dezaten: Itzalita, leundua edo Chunk, Band edo Kalman doikuntzatik zuzendua. Oraindik eraiki gabeko doikuntza batek maila leundua idazten du."
+  },
+  {
+    "key": "Chunk: %1$s",
+    "source": "Chunk: %1$s",
+    "text": "Chunk: %1$s"
+  },
+  {
+    "key": "Band: %1$s",
+    "source": "Band: %1$s",
+    "text": "Band: %1$s"
+  },
+  {
+    "key": "Kalman: %1$s",
+    "source": "Kalman: %1$s",
+    "text": "Kalman: %1$s"
+  },
+  {
+    "key": "no size yet",
+    "source": "no size yet",
+    "text": "oraindik tamainarik ez"
+  },
+  {
+    "key": "no size yet ± %1$.1f gal",
+    "source": "no size yet ± %1$.1f gal",
+    "text": "oraindik tamainarik ez ± %1$.1f gal"
+  },
+  {
+    "key": "%1$.1f gal",
+    "source": "%1$.1f gal",
+    "text": "%1$.1f gal"
+  },
+  {
+    "key": "%1$.1f ± %2$.1f gal",
+    "source": "%1$.1f ± %2$.1f gal",
+    "text": "%1$.1f ± %2$.1f gal"
+  },
+  {
+    "key": "Help",
+    "source": "Help",
+    "text": "Laguntza"
+  },
+  {
+    "key": "About",
+    "source": "About",
+    "text": "Honi buruz"
+  },
+  {
+    "key": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "source": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "text": "Torque Pro behar da (ordainpekoa). Torque Lite-k ez ditu pluginak onartzen."
+  },
+  {
+    "key": "Get Torque Pro",
+    "source": "Get Torque Pro",
+    "text": "Eskuratu Torque Pro"
+  },
+  {
+    "key": "Privacy",
+    "source": "Privacy",
+    "text": "Pribatutasuna"
+  },
+  {
+    "key": "Send feedback",
+    "source": "Send feedback",
+    "text": "Bidali iritzia"
+  },
+  {
+    "key": "Tip",
+    "source": "Tip",
+    "text": "Propina"
+  },
+  {
+    "key": "Thanks",
+    "source": "Thanks",
+    "text": "Eskerrik asko"
+  },
+  {
+    "key": "Close",
+    "source": "Close",
+    "text": "Itxi"
+  },
+  {
+    "key": "OK",
+    "source": "OK",
+    "text": "Ados"
+  },
+  {
+    "key": "Detect",
+    "source": "Detect",
+    "text": "Detektatu"
+  },
+  {
+    "key": "Confirm",
+    "source": "Confirm",
+    "text": "Berretsi"
+  },
+  {
+    "key": "Save pin",
+    "source": "Save pin",
+    "text": "Gorde aingura"
+  },
+  {
+    "key": "Add additional tank",
+    "source": "Add additional tank",
+    "text": "Gehitu depositua"
+  },
+  {
+    "key": "Remove",
+    "source": "Remove",
+    "text": "Kendu"
+  },
+  {
+    "key": "Details",
+    "source": "Details",
+    "text": "Xehetasunak"
+  },
+  {
+    "key": "Verbose logging (debug; per-second log lines)",
+    "source": "Verbose logging (debug; per-second log lines)",
+    "text": "Erregistro xehea (arazketa; lerroak segundoero)"
+  },
+  {
+    "key": "Profile name",
+    "source": "Profile name",
+    "text": "Profilaren izena"
+  },
+  {
+    "key": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "source": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "text": "Ibilgailu-profil honen izena. Torque-ren ibilgailu-profil bakoitzak bere plugin-profila, datuak eta ikasitako mapak ditu."
+  },
+  {
+    "key": "Make",
+    "source": "Make",
+    "text": "Marka"
+  },
+  {
+    "key": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "source": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "text": "Ibilgailuaren marka (adib. Ford). Detekzioak zein marka-erregai PID proba ditzakeen aukeratzeko soilik erabiltzen da."
+  },
+  {
+    "key": "Fuel source",
+    "source": "Fuel source",
+    "text": "Erregai-iturria"
+  },
+  {
+    "key": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "source": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "text": "Erregai-maila gordinaren jatorria. Detektatu (ECU konektatuta egon behar da) hautagaiak irakurtzeko soilik probatzen ditu eta berrespena eskatzen du bi iturri bat ez badatoz. Berretsi konfigurazio-orrian eta jakinarazpenean dago. Bat ere ez = detektatu hurrengo konexioan."
+  },
+  {
+    "key": "Custom long name",
+    "source": "Custom long name",
+    "text": "Izen luze pertsonalizatua"
+  },
+  {
+    "key": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "source": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "text": "«Torque PID gehigarria izen luzeaz» iturrirako soilik: maila ematen duen Torque PID-aren izen luze zehatza."
+  },
+  {
+    "key": "Tank size",
+    "source": "Tank size",
+    "text": "Deposituaren tamaina"
+  },
+  {
+    "key": "blank = no starting size; each fit learns its own.",
+    "source": "blank = no starting size; each fit learns its own.",
+    "text": "hutsik = hasierako tamainarik ez; doikuntza bakoitzak berea ikasten du."
+  },
+  {
+    "key": "Smoothing τ seconds",
+    "source": "Smoothing τ seconds",
+    "text": "Leuntzea τ segundotan"
+  },
+  {
+    "key": "Time constant of the smoothing filter (0 = no smoothing).",
+    "source": "Time constant of the smoothing filter (0 = no smoothing).",
+    "text": "Leuntze-iragazkiaren denbora-konstantea (0 = leuntzerik ez)."
+  },
+  {
+    "key": "Max skew %/s",
+    "source": "Max skew %/s",
+    "text": "Geh. malda %/s"
+  },
+  {
+    "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "text": "Maila leunduak segundoko jarrai dezakeen aldaketarik handiena; hortik gorako kulunka baztertu egiten da."
+  },
+  {
+    "key": "Fill jump %",
+    "source": "Fill jump %",
+    "text": "Betetze-jauzia %"
+  },
+  {
+    "key": "Rise in level while stopped that counts as a fill.",
+    "source": "Rise in level while stopped that counts as a fill.",
+    "text": "Geldi dagoela betetze gisa hartzen den maila-igoera."
+  },
+  {
+    "key": "Odometer miles",
+    "source": "Odometer miles",
+    "text": "Kilometro-kontagailua milietan"
+  },
+  {
+    "key": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "source": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "text": "Aukerakoa: sartu kontagailuaren irakurketa eta Gorde aingura profil honen distantzia ainguratzeko."
+  },
+  {
+    "key": "Additional tanks",
+    "source": "Additional tanks",
+    "text": "Depositu gehigarriak"
+  },
+  {
+    "key": "Active tank",
+    "source": "Active tank",
+    "text": "Depositu aktiboa"
+  },
+  {
+    "key": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "source": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "text": "Kontsumoa (gal/hr) egozten zaion depositua. PID-etik: Torque PID batek aukeratzen du (1etik aurrerako identifikatzailea)."
+  },
+  {
+    "key": "Select-PID long name",
+    "source": "Select-PID long name",
+    "text": "Select-PID izen luzea"
+  },
+  {
+    "key": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "source": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "text": "Depositu aktiboa = PID-etik denean soilik: balioa depositu-identifikatzailea den Torque PID-aren izen luzea."
+  },
+  {
+    "key": "Tank %1$d",
+    "source": "Tank %1$d",
+    "text": "%1$d. depositua"
+  },
+  {
+    "key": "Tank %1$d fuel source",
+    "source": "Tank %1$d fuel source",
+    "text": "%1$d. deposituaren erregai-iturria"
+  },
+  {
+    "key": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "source": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "text": "%1$d. deposituaren izen luze pertsonalizatua (adib. [FuelSmooth] Tank%1$d Level)"
+  },
+  {
+    "key": "Tank %1$d gallons",
+    "source": "Tank %1$d gallons",
+    "text": "%1$d. deposituaren galoiak"
+  },
+  {
+    "key": "From PID",
+    "source": "From PID",
+    "text": "PID-etik"
+  },
+  {
+    "key": "(unconfirmed)",
+    "source": "(unconfirmed)",
+    "text": "(berretsi gabe)"
+  },
+  {
+    "key": "· ECU connected",
+    "source": "· ECU connected",
+    "text": "· ECU konektatuta"
+  },
+  {
+    "key": "tank ?",
+    "source": "tank ?",
+    "text": "depositu ?"
+  },
+  {
+    "key": "About %1$s",
+    "source": "About %1$s",
+    "text": "%1$s inguru"
+  },
+  {
+    "key": "0 to %1$s s",
+    "source": "0 to %1$s s",
+    "text": "0tik %1$s s arte"
+  },
+  {
+    "key": "above 0, at most %1$s %%/s",
+    "source": "above 0, at most %1$s %%/s",
+    "text": "0tik gora, gehienez %1$s %%/s"
+  },
+  {
+    "key": "%1$s to %2$s %%",
+    "source": "%1$s to %2$s %%",
+    "text": "%1$s–%2$s %%"
+  },
+  {
+    "key": "blank or a number above 0",
+    "source": "blank or a number above 0",
+    "text": "hutsik edo 0 baino handiagoa den zenbaki bat"
+  },
+  {
+    "key": "stored value out of range",
+    "source": "stored value out of range",
+    "text": "gordetako balioa tartetik kanpo"
+  },
+  {
+    "key": "Chunk",
+    "source": "Chunk",
+    "text": "Chunk"
+  },
+  {
+    "key": "Band",
+    "source": "Band",
+    "text": "Band"
+  },
+  {
+    "key": "Kalman",
+    "source": "Kalman",
+    "text": "Kalman"
+  },
+  {
+    "key": "Smoothed %",
+    "source": "Smoothed %",
+    "text": "Leundua %"
+  },
+  {
+    "key": "Error (%)",
+    "source": "Error (%)",
+    "text": "Errorea (%)"
+  },
+  {
+    "key": "Off",
+    "source": "Off",
+    "text": "Itzalita"
+  },
+  {
+    "key": "Corrected % (Chunk)",
+    "source": "Corrected % (Chunk)",
+    "text": "Zuzendua % (Chunk)"
+  },
+  {
+    "key": "Corrected % (Band)",
+    "source": "Corrected % (Band)",
+    "text": "Zuzendua % (Band)"
+  },
+  {
+    "key": "Corrected % (Kalman)",
+    "source": "Corrected % (Kalman)",
+    "text": "Zuzendua % (Kalman)"
+  },
+  {
+    "key": "gal",
+    "source": "gal",
+    "text": "gal"
+  },
+  {
+    "key": "L",
+    "source": "L",
+    "text": "L"
+  },
+  {
+    "key": "None yet (Detect runs on connect)",
+    "source": "None yet (Detect runs on connect)",
+    "text": "Oraindik bat ere ez (Detektatu konektatzean)"
+  },
+  {
+    "key": "SAE 012F Fuel Tank Level",
+    "source": "SAE 012F Fuel Tank Level",
+    "text": "SAE 012F Fuel Tank Level"
+  },
+  {
+    "key": "Mode 22 16C1",
+    "source": "Mode 22 16C1",
+    "text": "Mode 22 16C1"
+  },
+  {
+    "key": "Ford Mode 22 F42F",
+    "source": "Ford Mode 22 F42F",
+    "text": "Ford Mode 22 F42F"
+  },
+  {
+    "key": "GM Mode 22 12C5 %",
+    "source": "GM Mode 22 12C5 %",
+    "text": "GM Mode 22 12C5 %"
+  },
+  {
+    "key": "Chrysler 21A2 %",
+    "source": "Chrysler 21A2 %",
+    "text": "Chrysler 21A2 %"
+  },
+  {
+    "key": "Chrysler Fuel Level Average",
+    "source": "Chrysler Fuel Level Average",
+    "text": "Chrysler Fuel Level Average"
+  },
+  {
+    "key": "Toyota cluster 2129 (half-litre counts)",
+    "source": "Toyota cluster 2129 (half-litre counts)",
+    "text": "Toyota cluster 2129 (litro erdiko kontaketa)"
+  },
+  {
+    "key": "Torque extra PID by long name",
+    "source": "Torque extra PID by long name",
+    "text": "Torque PID gehigarria izen luzeaz"
+  },
+  {
+    "key": "Vehicle 1",
+    "source": "Vehicle 1",
+    "text": "1. ibilgailua"
+  },
+  {
+    "key": "Vehicle %1$s",
+    "source": "Vehicle %1$s",
+    "text": "Ibilgailua %1$s"
+  },
+  {
+    "key": "Binding to Torque…",
+    "source": "Binding to Torque…",
+    "text": "Torque-rekin lotzen…"
+  },
+  {
+    "key": "Waiting for fuel source",
+    "source": "Waiting for fuel source",
+    "text": "Erregai-iturriaren zain"
+  },
+  {
+    "key": "raw %1$.1f%%",
+    "source": "raw %1$.1f%%",
+    "text": "gordina %1$.1f%%"
+  },
+  {
+    "key": "sess %1$s",
+    "source": "sess %1$s",
+    "text": "bidaia %1$s"
+  },
+  {
+    "key": "Fuel Smoothing",
+    "source": "Fuel Smoothing",
+    "text": "Fuel Smoothing"
+  },
+  {
+    "key": "Fuel Smoothing quiet",
+    "source": "Fuel Smoothing quiet",
+    "text": "Fuel Smoothing isila"
+  },
+  {
+    "key": "Map refitting",
+    "source": "Map refitting",
+    "text": "Mapa berdoitzen"
+  },
+  {
+    "key": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "source": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "text": "Fuel Smoothing mapa bat berdoitzen ari da %1$s-(e)rako. Doikuntza honek 1:1 irakurtzen du berdoikuntza amaitu arte."
+  },
+  {
+    "key": "No fuel level source set",
+    "source": "No fuel level source set",
+    "text": "Ez da erregai-mailaren iturririk ezarri"
+  },
+  {
+    "key": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "source": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "text": "Fuel Smoothing-ek ez du erregai-mailaren iturririk %1$s-(e)rako. Ireki konfigurazio-orria eta sakatu Detektatu, edo aukeratu iturri bat."
+  },
+  {
+    "key": "No fuel level this drive",
+    "source": "No fuel level this drive",
+    "text": "Ez dago erregai-mailarik bidaia honetan"
+  },
+  {
+    "key": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "source": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "text": "%1$s-(e)k ez du maila erabilgarririk eman %2$s-(e)rako. Egiaztatu egokigailuaren konexioa edo exekutatu Detektatu konfigurazio-orrian."
+  },
+  {
+    "key": "Fuel level source found",
+    "source": "Fuel level source found",
+    "text": "Erregai-mailaren iturria aurkitu da"
+  },
+  {
+    "key": "Using %1$s for %2$s (%3$s).",
+    "source": "Using %1$s for %2$s (%3$s).",
+    "text": "%1$s erabiltzen da %2$s-(e)rako (%3$s)."
+  },
+  {
+    "key": "No fuel level source found",
+    "source": "No fuel level source found",
+    "text": "Ez da erregai-mailaren iturririk aurkitu"
+  },
+  {
+    "key": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "source": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "text": "Ireki Fuel Smoothing-en konfigurazioa eta aukeratu iturri bat (edo gehitu PID Torque-n), eta sakatu Detektatu."
+  },
+  {
+    "key": "Confirm fuel level source",
+    "source": "Confirm fuel level source",
+    "text": "Berretsi erregai-mailaren iturria"
+  },
+  {
+    "key": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "source": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "text": "%1$s hauteman da, irakurketa %2$.0f %% %3$s-(e)rako. Egiaztatu aginte-paneleko neurgailuarekin bat datorrela eta sakatu Berretsi. Berretsi konfigurazio-orrian eta jakinarazpenean dago (%4$s)."
+  },
+  {
+    "key": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "source": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "text": "%1$s hauteman da %2$s-(e)rako. Egiaztatu aginte-paneleko neurgailuarekin bat datorrela eta sakatu Berretsi. Berretsi konfigurazio-orrian eta jakinarazpenean dago (%3$s)."
+  },
+  {
+    "key": "Recording to %1$s",
+    "source": "Recording to %1$s",
+    "text": "%1$s-(e)n grabatzen"
+  },
+  {
+    "key": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "source": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "text": "Ibilgailu hau %1$s da (%2$s), baina Torque-ren profila «%3$s» da. Datuak %1$s-(e)ra doaz; sakatu Torque ireki eta profila aldatzeko."
+  },
+  {
+    "key": "Wrong vehicle profile?",
+    "source": "Wrong vehicle profile?",
+    "text": "Ibilgailu-profil okerra?"
+  },
+  {
+    "key": "Torque profile '%1$s'",
+    "source": "Torque profile '%1$s'",
+    "text": "Torque profila «%1$s»"
+  },
+  {
+    "key": "a new vehicle profile",
+    "source": "a new vehicle profile",
+    "text": "ibilgailu-profil berri bat"
+  },
+  {
+    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "text": "«%1$s» Torque profila ez dator bat ibilgailu honekin (%2$s). Iradokizuna: %3$s. Datuak gorde egiten dira eta bidaiaren amaieran baztertzen, gordetzen ez badituzu."
+  },
+  {
+    "key": "Keeping drive data",
+    "source": "Keeping drive data",
+    "text": "Bidaiaren datuak gordetzen"
+  },
+  {
+    "key": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "source": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "text": "Bidaia hau %1$s-(e)n gordeko da. Torque-ren plugin APIak ezin ditu Torque profilik sortu edo aldatu: Torque-n sortu edo aukeratu «%2$s» izeneko ibilgailu-profil bat."
+  },
+  {
+    "key": "Create new profile",
+    "source": "Create new profile",
+    "text": "Sortu profil berria"
+  },
+  {
+    "key": "Use %1$s",
+    "source": "Use %1$s",
+    "text": "Erabili %1$s"
+  }
+]

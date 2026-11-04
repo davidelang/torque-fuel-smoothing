@@ -2,7 +2,6 @@ package com.davidlang.torque.fuelsmoothing
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.annotation.StringRes
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -348,18 +347,18 @@ internal object FixFuelPrefs {
 
 /** Feed-back of fuel level into Torque's 012F slot. */
 /** Names are persisted (R8 keeps them): CORRECTED stays the Chunk feed; Band/Kalman added. */
-enum class FeedMode(@StringRes val label: Int) {
-    OFF(R.string.feed_off),
-    SMOOTHED(R.string.feed_smoothed),
-    CORRECTED(R.string.feed_corrected_chunk),
-    CORRECTED_BAND(R.string.feed_corrected_band),
-    CORRECTED_KALMAN(R.string.feed_corrected_kalman),
+enum class FeedMode(val label: String) {
+    OFF(label = "Off"),
+    SMOOTHED(label = "Smoothed %"),
+    CORRECTED(label = "Corrected % (Chunk)"),
+    CORRECTED_BAND(label = "Corrected % (Band)"),
+    CORRECTED_KALMAN(label = "Corrected % (Kalman)"),
 }
 
 /** Tank size entry/display unit (per profile, profile.json "tankUnit"). Stored values are always gallons. */
-enum class VolUnit(@StringRes val label: Int, val litersPer: Double) {
-    GAL(R.string.unit_gal, 3.785411784),
-    L(R.string.unit_l, 1.0);
+enum class VolUnit(val label: String, val litersPer: Double) {
+    GAL(label = "gal", litersPer = 3.785411784),
+    L(label = "L", litersPer = 1.0);
 
     fun toGal(v: Double): Double = v * litersPer / GAL.litersPer
     fun fromGal(g: Double): Double = g * GAL.litersPer / litersPer

@@ -1,0 +1,647 @@
+[
+  {
+    "key": "Fuel Smoothing for Torque",
+    "source": "Fuel Smoothing for Torque",
+    "text": "Fuel Smoothing for Torque"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/privacy/"
+  },
+  {
+    "key": "Tips are on the Play Store version",
+    "source": "Tips are on the Play Store version",
+    "text": "Τα φιλοδωρήματα είναι στην έκδοση Play Store"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "Γρήγορη έναρξη\n 1. Εγκαταστήστε το Torque Pro (την επί πληρωμή έκδοση· το Torque Lite δεν υποστηρίζει πρόσθετα) και συζεύξτε τον προσαρμογέα OBD-II.\n 2. Ενεργοποιήστε αυτό το πρόσθετο στο Torque → Ρυθμίσεις → Πρόσθετα.\n 3. Επιτρέψτε τις ειδοποιήσεις και ορίστε τη χρήση μπαταρίας σε Χωρίς περιορισμό, ώστε το Torque να μπορεί να ξεκινά αυτό το πρόσθετο στο παρασκήνιο.\n 4. Στο Torque επιλέξτε το προφίλ του οχήματος που οδηγείτε. Τα δεδομένα κρατούνται ανά προφίλ Torque και ελέγχονται ως προς την ταυτότητα VIN/ECU του οχήματος.\n 5. Σε νέο προφίλ η πηγή καυσίμου ανιχνεύεται κατά τη σύνδεση· αν ερωτηθείτε, συγκρίνετέ την με το όργανο του ταμπλό και πατήστε Επιβεβαίωση. Η Επιβεβαίωση είναι στη σελίδα ρύθμισης και στην ειδοποίηση. Μπορείτε επίσης να την επιλέξετε παρακάτω.\n 6. Το μέγεθος δεξαμενής είναι το αρχικό μέγεθος για την προσαρμογή Chunk ώσπου να μάθει το δικό της. Το πρόσθετο δεν το αλλάζει ποτέ· το μαθημένο μέγεθος κάθε προσαρμογής φαίνεται από κάτω.\n 7. Στο Torque προσθέστε όργανα για [FuelSmooth] Smoothed Fuel Level και για κάθε προσαρμογή Corrected %, Remaining, DTE και Tank size. Το DTE είναι το Remaining επί το μακροπρόθεσμο mpg του Torque. Μια ειδοποίηση κατά την εκ νέου προσαρμογή λέει ότι η προσαρμογή διαβάζει 1:1 ώσπου να τελειώσει.\n 8. Επιστρέψτε τη στάθμη καυσίμου στο Torque: Ανενεργό, εξομαλυμένο ή διορθωμένο από την προσαρμογή Chunk, Band ή Kalman, στο όργανο 012F.\n 9. Το καύσιμο μετράται μόνο όσο λειτουργεί ο κινητήρας. Το πρόσθετο εκτελείται μόνο όσο το Torque είναι συνδεδεμένο στο ECU.\n 10. Συνεχίστε να οδηγείτε και να γεμίζετε· η ακρίβεια βελτιώνεται σε αρκετές μερικές δεξαμενές. Αν εμφανιστεί η ειδοποίηση Λάθος προφίλ οχήματος;, επιλέξτε τι θα γίνει με αυτή τη διαδρομή.\n 11. Όλα τα δεδομένα μένουν σε αυτό το τηλέφωνο. Δεν καταγράφεται GPS ούτε τοποθεσία."
+  },
+  {
+    "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "text": "%1$s\nΈκδοση %2$s (%3$s)\nΠρόσθετο για το Torque Pro. Δεν συνδέεται με το Torque ή τον Ian Hawkins.\nΌλα τα δεδομένα μένουν σε αυτό το τηλέφωνο· δεν καταγράφεται GPS ούτε τοποθεσία.\n\nΆδεια\nCopyright David Lang. Με επιφύλαξη παντός δικαιώματος."
+  },
+  {
+    "key": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "source": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "text": "Βιβλιοθήκες ανοιχτού κώδικα\nΑυτή η εφαρμογή χρησιμοποιεί τις παρακάτω βιβλιοθήκες. Οι άδειές τους είναι χωριστές από τα πνευματικά δικαιώματα παραπάνω.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), απαιτείται από το Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/manual/"
+  },
+  {
+    "key": "Full manual (online)",
+    "source": "Full manual (online)",
+    "text": "Πλήρες εγχειρίδιο (στο διαδίκτυο)"
+  },
+  {
+    "key": "Show fuel level in notification",
+    "source": "Show fuel level in notification",
+    "text": "Εμφάνιση στάθμης καυσίμου στην ειδοποίηση"
+  },
+  {
+    "key": "Feed fuel level back to Torque (overrides 012F)",
+    "source": "Feed fuel level back to Torque (overrides 012F)",
+    "text": "Επιστροφή στάθμης καυσίμου στο Torque (αντικαθιστά το 012F)"
+  },
+  {
+    "key": "Fuel Smoothing is running",
+    "source": "Fuel Smoothing is running",
+    "text": "Το Fuel Smoothing εκτελείται"
+  },
+  {
+    "key": "Tap to start Fuel Smoothing",
+    "source": "Tap to start Fuel Smoothing",
+    "text": "Πατήστε για έναρξη του Fuel Smoothing"
+  },
+  {
+    "key": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "source": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "text": "Η έναρξη από την μπαταρία ή στο παρασκήνιο απορρίφθηκε. Ανοίξτε μία φορά ώστε το πρόσθετο να λειτουργεί με το Torque."
+  },
+  {
+    "key": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "source": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "text": "Προσθέστε επιπλέον δεξαμενές αν χρειάζεται (η εργοστασιακή δεξαμενή 1 μένει πάντα). Μην συνδέετε τους αισθητήρες στον ακροδέκτη PCM FLI (ψευδές γέμισμα). Κάθε επιπλέον δεξαμενή χρειάζεται το δικό της πρόσθετο PID του Torque (MCU Mode 22, μοναδικό όνομα — όχι 012F ή Ford 16C1). Η τιμή Select-PID είναι το αναγνωριστικό δεξαμενής από το 1. Τα gal/hr χρεώνονται μόνο στην ενεργή δεξαμενή."
+  },
+  {
+    "key": "Tap to start",
+    "source": "Tap to start",
+    "text": "Πατήστε για έναρξη"
+  },
+  {
+    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "text": "Το μέγεθος δεξαμενής είναι το αρχικό μέγεθος για την προσαρμογή Chunk ώσπου να μάθει το δικό της. Το πρόσθετο δεν το αλλάζει ποτέ· το μαθημένο μέγεθος κάθε προσαρμογής φαίνεται από κάτω."
+  },
+  {
+    "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "source": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "text": "Γράφει τιμή στο εργοστασιακό Fuel Level (012F) του Torque ώστε τα υπάρχοντα όργανα να την δείχνουν: Ανενεργό, εξομαλυμένο ή διορθωμένο από την προσαρμογή Chunk, Band ή Kalman. Προσαρμογή που δεν έχει χτιστεί ακόμη γράφει την εξομαλυμένη στάθμη."
+  },
+  {
+    "key": "Chunk: %1$s",
+    "source": "Chunk: %1$s",
+    "text": "Chunk: %1$s"
+  },
+  {
+    "key": "Band: %1$s",
+    "source": "Band: %1$s",
+    "text": "Band: %1$s"
+  },
+  {
+    "key": "Kalman: %1$s",
+    "source": "Kalman: %1$s",
+    "text": "Kalman: %1$s"
+  },
+  {
+    "key": "no size yet",
+    "source": "no size yet",
+    "text": "δεν υπάρχει μέγεθος ακόμη"
+  },
+  {
+    "key": "no size yet ± %1$.1f gal",
+    "source": "no size yet ± %1$.1f gal",
+    "text": "δεν υπάρχει μέγεθος ακόμη ± %1$.1f gal"
+  },
+  {
+    "key": "%1$.1f gal",
+    "source": "%1$.1f gal",
+    "text": "%1$.1f gal"
+  },
+  {
+    "key": "%1$.1f ± %2$.1f gal",
+    "source": "%1$.1f ± %2$.1f gal",
+    "text": "%1$.1f ± %2$.1f gal"
+  },
+  {
+    "key": "Help",
+    "source": "Help",
+    "text": "Βοήθεια"
+  },
+  {
+    "key": "About",
+    "source": "About",
+    "text": "Πληροφορίες"
+  },
+  {
+    "key": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "source": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "text": "Απαιτείται Torque Pro (επί πληρωμή). Το Torque Lite δεν υποστηρίζει πρόσθετα."
+  },
+  {
+    "key": "Get Torque Pro",
+    "source": "Get Torque Pro",
+    "text": "Αποκτήστε το Torque Pro"
+  },
+  {
+    "key": "Privacy",
+    "source": "Privacy",
+    "text": "Απόρρητο"
+  },
+  {
+    "key": "Send feedback",
+    "source": "Send feedback",
+    "text": "Αποστολή σχολίων"
+  },
+  {
+    "key": "Tip",
+    "source": "Tip",
+    "text": "Φιλοδώρημα"
+  },
+  {
+    "key": "Thanks",
+    "source": "Thanks",
+    "text": "Ευχαριστούμε"
+  },
+  {
+    "key": "Close",
+    "source": "Close",
+    "text": "Κλείσιμο"
+  },
+  {
+    "key": "OK",
+    "source": "OK",
+    "text": "OK"
+  },
+  {
+    "key": "Detect",
+    "source": "Detect",
+    "text": "Ανίχνευση"
+  },
+  {
+    "key": "Confirm",
+    "source": "Confirm",
+    "text": "Επιβεβαίωση"
+  },
+  {
+    "key": "Save pin",
+    "source": "Save pin",
+    "text": "Αποθήκευση αγκύρωσης"
+  },
+  {
+    "key": "Add additional tank",
+    "source": "Add additional tank",
+    "text": "Προσθήκη δεξαμενής"
+  },
+  {
+    "key": "Remove",
+    "source": "Remove",
+    "text": "Αφαίρεση"
+  },
+  {
+    "key": "Details",
+    "source": "Details",
+    "text": "Λεπτομέρειες"
+  },
+  {
+    "key": "Verbose logging (debug; per-second log lines)",
+    "source": "Verbose logging (debug; per-second log lines)",
+    "text": "Αναλυτική καταγραφή (αποσφαλμάτωση· γραμμές ανά δευτερόλεπτο)"
+  },
+  {
+    "key": "Profile name",
+    "source": "Profile name",
+    "text": "Όνομα προφίλ"
+  },
+  {
+    "key": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "source": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "text": "Το όνομα αυτού του προφίλ οχήματος. Κάθε προφίλ οχήματος του Torque έχει δικό του προφίλ προσθέτου, δεδομένα και μαθημένους χάρτες."
+  },
+  {
+    "key": "Make",
+    "source": "Make",
+    "text": "Μάρκα"
+  },
+  {
+    "key": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "source": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "text": "Μάρκα οχήματος (π.χ. Ford). Χρησιμοποιείται μόνο για να επιλεγούν ποια PID καυσίμου της μάρκας μπορεί να δοκιμάσει η ανίχνευση."
+  },
+  {
+    "key": "Fuel source",
+    "source": "Fuel source",
+    "text": "Πηγή καυσίμου"
+  },
+  {
+    "key": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "source": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "text": "Από πού έρχεται η ακατέργαστη στάθμη καυσίμου. Η Ανίχνευση (το ECU πρέπει να είναι συνδεδεμένο) δοκιμάζει τους υποψηφίους μόνο για ανάγνωση και ζητά επιβεβαίωση αν δύο πηγές δεν συμφωνούν. Η Επιβεβαίωση είναι στη σελίδα ρύθμισης και στην ειδοποίηση. Καμία = ανίχνευση στην επόμενη σύνδεση."
+  },
+  {
+    "key": "Custom long name",
+    "source": "Custom long name",
+    "text": "Προσαρμοσμένο μεγάλο όνομα"
+  },
+  {
+    "key": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "source": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "text": "Μόνο για την πηγή «Πρόσθετο PID Torque κατά μεγάλο όνομα»: το ακριβές μεγάλο όνομα του PID Torque που αναφέρει τη στάθμη."
+  },
+  {
+    "key": "Tank size",
+    "source": "Tank size",
+    "text": "Μέγεθος δεξαμενής"
+  },
+  {
+    "key": "blank = no starting size; each fit learns its own.",
+    "source": "blank = no starting size; each fit learns its own.",
+    "text": "κενό = χωρίς αρχικό μέγεθος· κάθε προσαρμογή μαθαίνει το δικό της."
+  },
+  {
+    "key": "Smoothing τ seconds",
+    "source": "Smoothing τ seconds",
+    "text": "Εξομάλυνση τ σε δευτερόλεπτα"
+  },
+  {
+    "key": "Time constant of the smoothing filter (0 = no smoothing).",
+    "source": "Time constant of the smoothing filter (0 = no smoothing).",
+    "text": "Χρονική σταθερά του φίλτρου εξομάλυνσης (0 = χωρίς εξομάλυνση)."
+  },
+  {
+    "key": "Max skew %/s",
+    "source": "Max skew %/s",
+    "text": "Μέγ. κλίση %/s"
+  },
+  {
+    "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "text": "Η μεγαλύτερη αλλαγή ανά δευτερόλεπτο που μπορεί να ακολουθήσει η εξομαλυμένη στάθμη· το πλατσούρισμα πέρα από αυτή αγνοείται."
+  },
+  {
+    "key": "Fill jump %",
+    "source": "Fill jump %",
+    "text": "Άλμα γεμίσματος %"
+  },
+  {
+    "key": "Rise in level while stopped that counts as a fill.",
+    "source": "Rise in level while stopped that counts as a fill.",
+    "text": "Άνοδος της στάθμης εν στάσει που μετρά ως γέμισμα."
+  },
+  {
+    "key": "Odometer miles",
+    "source": "Odometer miles",
+    "text": "Οδόμετρο σε μίλια"
+  },
+  {
+    "key": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "source": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "text": "Προαιρετικά: εισάγετε την ένδειξη του οδομέτρου και Αποθήκευση αγκύρωσης για να αγκυρώσετε την απόσταση αυτού του προφίλ."
+  },
+  {
+    "key": "Additional tanks",
+    "source": "Additional tanks",
+    "text": "Επιπλέον δεξαμενές"
+  },
+  {
+    "key": "Active tank",
+    "source": "Active tank",
+    "text": "Ενεργή δεξαμενή"
+  },
+  {
+    "key": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "source": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "text": "Η δεξαμενή στην οποία χρεώνεται η κατανάλωση (gal/hr). Από PID: ένα PID Torque την επιλέγει (αναγνωριστικό από το 1)."
+  },
+  {
+    "key": "Select-PID long name",
+    "source": "Select-PID long name",
+    "text": "Μεγάλο όνομα Select-PID"
+  },
+  {
+    "key": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "source": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "text": "Μόνο όταν Ενεργή δεξαμενή = Από PID: το μεγάλο όνομα του PID Torque του οποίου η τιμή είναι το αναγνωριστικό δεξαμενής."
+  },
+  {
+    "key": "Tank %1$d",
+    "source": "Tank %1$d",
+    "text": "Δεξαμενή %1$d"
+  },
+  {
+    "key": "Tank %1$d fuel source",
+    "source": "Tank %1$d fuel source",
+    "text": "Πηγή καυσίμου δεξαμενής %1$d"
+  },
+  {
+    "key": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "source": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "text": "Προσαρμοσμένο μεγάλο όνομα δεξαμενής %1$d (π.χ. [FuelSmooth] Tank%1$d Level)"
+  },
+  {
+    "key": "Tank %1$d gallons",
+    "source": "Tank %1$d gallons",
+    "text": "Γαλόνια δεξαμενής %1$d"
+  },
+  {
+    "key": "From PID",
+    "source": "From PID",
+    "text": "Από PID"
+  },
+  {
+    "key": "(unconfirmed)",
+    "source": "(unconfirmed)",
+    "text": "(χωρίς επιβεβαίωση)"
+  },
+  {
+    "key": "· ECU connected",
+    "source": "· ECU connected",
+    "text": "· ECU συνδεδεμένο"
+  },
+  {
+    "key": "tank ?",
+    "source": "tank ?",
+    "text": "δεξαμενή ?"
+  },
+  {
+    "key": "About %1$s",
+    "source": "About %1$s",
+    "text": "Περίπου %1$s"
+  },
+  {
+    "key": "0 to %1$s s",
+    "source": "0 to %1$s s",
+    "text": "0 έως %1$s s"
+  },
+  {
+    "key": "above 0, at most %1$s %%/s",
+    "source": "above 0, at most %1$s %%/s",
+    "text": "πάνω από 0, το πολύ %1$s %%/s"
+  },
+  {
+    "key": "%1$s to %2$s %%",
+    "source": "%1$s to %2$s %%",
+    "text": "%1$s έως %2$s %%"
+  },
+  {
+    "key": "blank or a number above 0",
+    "source": "blank or a number above 0",
+    "text": "κενό ή αριθμός μεγαλύτερος από 0"
+  },
+  {
+    "key": "stored value out of range",
+    "source": "stored value out of range",
+    "text": "η αποθηκευμένη τιμή είναι εκτός εύρους"
+  },
+  {
+    "key": "Chunk",
+    "source": "Chunk",
+    "text": "Chunk"
+  },
+  {
+    "key": "Band",
+    "source": "Band",
+    "text": "Band"
+  },
+  {
+    "key": "Kalman",
+    "source": "Kalman",
+    "text": "Kalman"
+  },
+  {
+    "key": "Smoothed %",
+    "source": "Smoothed %",
+    "text": "Εξομαλυμένο %"
+  },
+  {
+    "key": "Error (%)",
+    "source": "Error (%)",
+    "text": "Σφάλμα (%)"
+  },
+  {
+    "key": "Off",
+    "source": "Off",
+    "text": "Ανενεργό"
+  },
+  {
+    "key": "Corrected % (Chunk)",
+    "source": "Corrected % (Chunk)",
+    "text": "Διορθωμένο % (Chunk)"
+  },
+  {
+    "key": "Corrected % (Band)",
+    "source": "Corrected % (Band)",
+    "text": "Διορθωμένο % (Band)"
+  },
+  {
+    "key": "Corrected % (Kalman)",
+    "source": "Corrected % (Kalman)",
+    "text": "Διορθωμένο % (Kalman)"
+  },
+  {
+    "key": "gal",
+    "source": "gal",
+    "text": "gal"
+  },
+  {
+    "key": "L",
+    "source": "L",
+    "text": "L"
+  },
+  {
+    "key": "None yet (Detect runs on connect)",
+    "source": "None yet (Detect runs on connect)",
+    "text": "Καμία ακόμη (Ανίχνευση στη σύνδεση)"
+  },
+  {
+    "key": "SAE 012F Fuel Tank Level",
+    "source": "SAE 012F Fuel Tank Level",
+    "text": "SAE 012F Fuel Tank Level"
+  },
+  {
+    "key": "Mode 22 16C1",
+    "source": "Mode 22 16C1",
+    "text": "Mode 22 16C1"
+  },
+  {
+    "key": "Ford Mode 22 F42F",
+    "source": "Ford Mode 22 F42F",
+    "text": "Ford Mode 22 F42F"
+  },
+  {
+    "key": "GM Mode 22 12C5 %",
+    "source": "GM Mode 22 12C5 %",
+    "text": "GM Mode 22 12C5 %"
+  },
+  {
+    "key": "Chrysler 21A2 %",
+    "source": "Chrysler 21A2 %",
+    "text": "Chrysler 21A2 %"
+  },
+  {
+    "key": "Chrysler Fuel Level Average",
+    "source": "Chrysler Fuel Level Average",
+    "text": "Chrysler Fuel Level Average"
+  },
+  {
+    "key": "Toyota cluster 2129 (half-litre counts)",
+    "source": "Toyota cluster 2129 (half-litre counts)",
+    "text": "Toyota cluster 2129 (μετρήσεις μισού λίτρου)"
+  },
+  {
+    "key": "Torque extra PID by long name",
+    "source": "Torque extra PID by long name",
+    "text": "Πρόσθετο PID Torque κατά μεγάλο όνομα"
+  },
+  {
+    "key": "Vehicle 1",
+    "source": "Vehicle 1",
+    "text": "Όχημα 1"
+  },
+  {
+    "key": "Vehicle %1$s",
+    "source": "Vehicle %1$s",
+    "text": "Όχημα %1$s"
+  },
+  {
+    "key": "Binding to Torque…",
+    "source": "Binding to Torque…",
+    "text": "Σύνδεση με το Torque…"
+  },
+  {
+    "key": "Waiting for fuel source",
+    "source": "Waiting for fuel source",
+    "text": "Αναμονή για πηγή καυσίμου"
+  },
+  {
+    "key": "raw %1$.1f%%",
+    "source": "raw %1$.1f%%",
+    "text": "ακατέργαστο %1$.1f%%"
+  },
+  {
+    "key": "sess %1$s",
+    "source": "sess %1$s",
+    "text": "διαδρομή %1$s"
+  },
+  {
+    "key": "Fuel Smoothing",
+    "source": "Fuel Smoothing",
+    "text": "Fuel Smoothing"
+  },
+  {
+    "key": "Fuel Smoothing quiet",
+    "source": "Fuel Smoothing quiet",
+    "text": "Fuel Smoothing αθόρυβο"
+  },
+  {
+    "key": "Map refitting",
+    "source": "Map refitting",
+    "text": "Εκ νέου προσαρμογή χάρτη"
+  },
+  {
+    "key": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "source": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "text": "Το Fuel Smoothing προσαρμόζει ξανά έναν χάρτη για %1$s. Αυτή η προσαρμογή διαβάζει 1:1 ώσπου να τελειώσει η εκ νέου προσαρμογή."
+  },
+  {
+    "key": "No fuel level source set",
+    "source": "No fuel level source set",
+    "text": "Δεν έχει οριστεί πηγή στάθμης καυσίμου"
+  },
+  {
+    "key": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "source": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "text": "Το Fuel Smoothing δεν έχει πηγή στάθμης καυσίμου για %1$s. Ανοίξτε τη σελίδα ρύθμισης και πατήστε Ανίχνευση ή επιλέξτε πηγή."
+  },
+  {
+    "key": "No fuel level this drive",
+    "source": "No fuel level this drive",
+    "text": "Δεν υπάρχει στάθμη καυσίμου σε αυτή τη διαδρομή"
+  },
+  {
+    "key": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "source": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "text": "Το %1$s δεν έδωσε χρησιμοποιήσιμη στάθμη για %2$s. Ελέγξτε τη σύνδεση του προσαρμογέα ή εκτελέστε Ανίχνευση στη σελίδα ρύθμισης."
+  },
+  {
+    "key": "Fuel level source found",
+    "source": "Fuel level source found",
+    "text": "Βρέθηκε πηγή στάθμης καυσίμου"
+  },
+  {
+    "key": "Using %1$s for %2$s (%3$s).",
+    "source": "Using %1$s for %2$s (%3$s).",
+    "text": "Χρήση %1$s για %2$s (%3$s)."
+  },
+  {
+    "key": "No fuel level source found",
+    "source": "No fuel level source found",
+    "text": "Δεν βρέθηκε πηγή στάθμης καυσίμου"
+  },
+  {
+    "key": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "source": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "text": "Ανοίξτε τη ρύθμιση του Fuel Smoothing και επιλέξτε πηγή (ή προσθέστε το PID στο Torque) και έπειτα πατήστε Ανίχνευση."
+  },
+  {
+    "key": "Confirm fuel level source",
+    "source": "Confirm fuel level source",
+    "text": "Επιβεβαιώστε την πηγή στάθμης καυσίμου"
+  },
+  {
+    "key": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "source": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "text": "Ανιχνεύτηκε %1$s, ένδειξη %2$.0f %% για %3$s. Ελέγξτε ότι ταιριάζει με το όργανο του ταμπλό και πατήστε Επιβεβαίωση. Η Επιβεβαίωση είναι στη σελίδα ρύθμισης και στην ειδοποίηση (%4$s)."
+  },
+  {
+    "key": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "source": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "text": "Ανιχνεύτηκε %1$s για %2$s. Ελέγξτε ότι ταιριάζει με το όργανο του ταμπλό και πατήστε Επιβεβαίωση. Η Επιβεβαίωση είναι στη σελίδα ρύθμισης και στην ειδοποίηση (%3$s)."
+  },
+  {
+    "key": "Recording to %1$s",
+    "source": "Recording to %1$s",
+    "text": "Εγγραφή στο %1$s"
+  },
+  {
+    "key": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "source": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "text": "Αυτό το όχημα είναι %1$s (%2$s), αλλά το προφίλ του Torque είναι «%3$s». Τα δεδομένα πηγαίνουν στο %1$s· πατήστε για να ανοίξετε το Torque και να αλλάξετε προφίλ."
+  },
+  {
+    "key": "Wrong vehicle profile?",
+    "source": "Wrong vehicle profile?",
+    "text": "Λάθος προφίλ οχήματος;"
+  },
+  {
+    "key": "Torque profile '%1$s'",
+    "source": "Torque profile '%1$s'",
+    "text": "Προφίλ Torque «%1$s»"
+  },
+  {
+    "key": "a new vehicle profile",
+    "source": "a new vehicle profile",
+    "text": "ένα νέο προφίλ οχήματος"
+  },
+  {
+    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "text": "Το προφίλ Torque «%1$s» δεν ταιριάζει με αυτό το όχημα (%2$s). Πρόταση: %3$s. Τα δεδομένα κρατούνται και απορρίπτονται στο τέλος της διαδρομής, εκτός αν τα κρατήσετε."
+  },
+  {
+    "key": "Keeping drive data",
+    "source": "Keeping drive data",
+    "text": "Διατήρηση δεδομένων διαδρομής"
+  },
+  {
+    "key": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "source": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "text": "Αυτή η διαδρομή θα αποθηκευτεί στο %1$s. Το API προσθέτου του Torque δεν μπορεί να δημιουργήσει ή να αλλάξει προφίλ Torque: στο Torque δημιουργήστε ή επιλέξτε προφίλ οχήματος με όνομα «%2$s»."
+  },
+  {
+    "key": "Create new profile",
+    "source": "Create new profile",
+    "text": "Δημιουργία νέου προφίλ"
+  },
+  {
+    "key": "Use %1$s",
+    "source": "Use %1$s",
+    "text": "Χρήση %1$s"
+  }
+]

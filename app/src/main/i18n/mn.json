@@ -1,0 +1,647 @@
+[
+  {
+    "key": "Fuel Smoothing for Torque",
+    "source": "Fuel Smoothing for Torque",
+    "text": "Fuel Smoothing for Torque"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/privacy/"
+  },
+  {
+    "key": "Tips are on the Play Store version",
+    "source": "Tips are on the Play Store version",
+    "text": "Зөвлөмж Play Store хувилбарт байна"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "Шуурхай эхлэл\n 1. Torque Pro суулгана уу (төлбөртэй хувилбар; Torque Lite нэмэлтийг дэмжихгүй) ба OBD-II адаптераа хослуулна уу.\n 2. Энэ нэмэлтийг Torque → Тохиргоо → Plugins дотор идэвхжүүлнэ үү.\n 3. Мэдэгдэлд зөвшөөрөл өгч, батарей ашиглалтыг Хязгааргүй болгоно уу. Ингэснээр Torque энэ нэмэлтийг арын горимд эхлүүлнэ.\n 4. Torque дотор жолоодож буй тээврийн хэрэгслийн профайлыг сонгоно уу. Өгөгдөл Torque профайл бүрд хадгалагдаж, тээврийн хэрэгслийн VIN/ECU таних тэмдэгтэй тулгагдана.\n 5. Шинэ профайл дээр түлшний эх үүсвэр холбогдоход илэрнэ; асуувал самбарын заалттай харьцуулаад Баталгаажуулах дээр дарна уу. Баталгаажуулах нь тохиргооны хуудас болон мэдэгдэлд байна. Доороос ч сонгож болно.\n 6. Савны хэмжээ нь Chunk тохируулгын эхлэх хэмжээ, өөрийнхөө хэмжээг суртал хүртэл. Нэмэлт үүнийг хэзээ ч өөрчлөхгүй; тохируулга бүрийн сурсан хэмжээ түүний доор харагдана.\n 7. Torque дотор [FuelSmooth] Smoothed Fuel Level болон тохируулга бүрийн Corrected %, Remaining, DTE, Tank size заалтуудыг нэмнэ үү. DTE нь Remaining-ийг Torque-ийн урт хугацааны mpg-ээр үржүүлсэн юм. Дахин тохируулгын мэдэгдэл тухайн тохируулга дуустал 1:1 уншина гэж хэлнэ.\n 8. Түлшний түвшинг Torque руу буцаана уу: Унтраалттай, тэгшитгэсэн, эсвэл Chunk, Band, Kalman тохируулгаас зассан утгыг 012F заалт дээр.\n 9. Түлш зөвхөн хөдөлгүүр ажиллаж байхад тооцогдоно. Нэмэлт зөвхөн Torque ECU-д холбогдсон үед ажиллана.\n 10. Үргэлжлүүлэн жолоодож, цэнэглэнэ үү; нарийвчлал хэд хэдэн хэсэгчилсэн саван дээр өснө. Буруу тээврийн хэрэгслийн профайл? мэдэгдэл гарвал тэр аялалд юу хийхээ сонгоно уу.\n 11. Бүх өгөгдөл энэ утсан дээр үлдэнэ. GPS эсвэл байршил бичигдэхгүй."
+  },
+  {
+    "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "text": "%1$s\nХувилбар %2$s (%3$s)\nTorque Pro-д зориулсан нэмэлт. Torque эсвэл Ian Hawkins-тай холбоогүй.\nБүх өгөгдөл энэ утсан дээр үлдэнэ; GPS эсвэл байршил бичигдэхгүй.\n\nЛиценз\nCopyright David Lang. Бүх эрх хуулиар хамгаалагдсан."
+  },
+  {
+    "key": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "source": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "text": "Нээлттэй эхийн сангууд\nЭнэ апп доорх сангуудыг ашиглана. Тэдний лиценз дээрх зохиогчийн эрхээс тусдаа.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), Play Billing шаарддаг\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/manual/"
+  },
+  {
+    "key": "Full manual (online)",
+    "source": "Full manual (online)",
+    "text": "Бүрэн гарын авлага (онлайн)"
+  },
+  {
+    "key": "Show fuel level in notification",
+    "source": "Show fuel level in notification",
+    "text": "Түлшний түвшинг мэдэгдэлд харуулах"
+  },
+  {
+    "key": "Feed fuel level back to Torque (overrides 012F)",
+    "source": "Feed fuel level back to Torque (overrides 012F)",
+    "text": "Түлшний түвшинг Torque руу буцаах (012F-г дарж бичнэ)"
+  },
+  {
+    "key": "Fuel Smoothing is running",
+    "source": "Fuel Smoothing is running",
+    "text": "Fuel Smoothing ажиллаж байна"
+  },
+  {
+    "key": "Tap to start Fuel Smoothing",
+    "source": "Tap to start Fuel Smoothing",
+    "text": "Fuel Smoothing эхлүүлэхээр дарна уу"
+  },
+  {
+    "key": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "source": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "text": "Батарей эсвэл ард эхлүүлэхийг хориглосон. Нэмэлт Torque-той ажиллахын тулд нэг удаа нээнэ үү."
+  },
+  {
+    "key": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "source": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "text": "Шаардлагатай нэмэлт савнуудыг нэмнэ үү (үйлдвэрийн сав 1 үргэлж үлдэнэ). Мэдрэгчийг PCM FLI зүү рүү бүү шилжүүл (хуурамч цэнэглэлт). Нэмэлт сав бүрд өөрийн Torque нэмэлт PID хэрэгтэй (MCU Mode 22, давтагдашгүй нэр — 012F эсвэл Ford 16C1 биш). Select-PID утга нь 1-ээс эхэлсэн савны id. Gal/hr зөвхөн идэвхтэй саванд тооцогдоно."
+  },
+  {
+    "key": "Tap to start",
+    "source": "Tap to start",
+    "text": "Эхлүүлэхээр дарна уу"
+  },
+  {
+    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "text": "Савны хэмжээ нь Chunk тохируулгын эхлэх хэмжээ, өөрийнхөө хэмжээг суртал хүртэл. Нэмэлт үүнийг хэзээ ч өөрчлөхгүй; тохируулга бүрийн сурсан хэмжээ түүний доор харагдана."
+  },
+  {
+    "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "source": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "text": "Одоогийн заалтууд харуулахын тулд Torque-ийн үйлдвэрийн Fuel Level (012F) дээр утга бичнэ: Унтраалттай, тэгшитгэсэн, эсвэл Chunk, Band, Kalman тохируулгаас зассан. Хараахан бүтээгдээгүй тохируулга тэгшитгэсэн түвшинг бичнэ."
+  },
+  {
+    "key": "Chunk: %1$s",
+    "source": "Chunk: %1$s",
+    "text": "Chunk: %1$s"
+  },
+  {
+    "key": "Band: %1$s",
+    "source": "Band: %1$s",
+    "text": "Band: %1$s"
+  },
+  {
+    "key": "Kalman: %1$s",
+    "source": "Kalman: %1$s",
+    "text": "Kalman: %1$s"
+  },
+  {
+    "key": "no size yet",
+    "source": "no size yet",
+    "text": "хэмжээ хараахан алга"
+  },
+  {
+    "key": "no size yet ± %1$.1f gal",
+    "source": "no size yet ± %1$.1f gal",
+    "text": "хэмжээ хараахан алга ± %1$.1f gal"
+  },
+  {
+    "key": "%1$.1f gal",
+    "source": "%1$.1f gal",
+    "text": "%1$.1f gal"
+  },
+  {
+    "key": "%1$.1f ± %2$.1f gal",
+    "source": "%1$.1f ± %2$.1f gal",
+    "text": "%1$.1f ± %2$.1f gal"
+  },
+  {
+    "key": "Help",
+    "source": "Help",
+    "text": "Тусламж"
+  },
+  {
+    "key": "About",
+    "source": "About",
+    "text": "Тухай"
+  },
+  {
+    "key": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "source": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "text": "Torque Pro (төлбөртэй) шаардлагатай. Torque Lite нэмэлтийг дэмжихгүй."
+  },
+  {
+    "key": "Get Torque Pro",
+    "source": "Get Torque Pro",
+    "text": "Torque Pro авах"
+  },
+  {
+    "key": "Privacy",
+    "source": "Privacy",
+    "text": "Нууцлал"
+  },
+  {
+    "key": "Send feedback",
+    "source": "Send feedback",
+    "text": "Санал илгээх"
+  },
+  {
+    "key": "Tip",
+    "source": "Tip",
+    "text": "Гарын мөнгө"
+  },
+  {
+    "key": "Thanks",
+    "source": "Thanks",
+    "text": "Баярлалаа"
+  },
+  {
+    "key": "Close",
+    "source": "Close",
+    "text": "Хаах"
+  },
+  {
+    "key": "OK",
+    "source": "OK",
+    "text": "OK"
+  },
+  {
+    "key": "Detect",
+    "source": "Detect",
+    "text": "Илрүүлэх"
+  },
+  {
+    "key": "Confirm",
+    "source": "Confirm",
+    "text": "Баталгаажуулах"
+  },
+  {
+    "key": "Save pin",
+    "source": "Save pin",
+    "text": "Тэмдэг хадгалах"
+  },
+  {
+    "key": "Add additional tank",
+    "source": "Add additional tank",
+    "text": "Нэмэлт сав нэмэх"
+  },
+  {
+    "key": "Remove",
+    "source": "Remove",
+    "text": "Хасах"
+  },
+  {
+    "key": "Details",
+    "source": "Details",
+    "text": "Дэлгэрэнгүй"
+  },
+  {
+    "key": "Verbose logging (debug; per-second log lines)",
+    "source": "Verbose logging (debug; per-second log lines)",
+    "text": "Дэлгэрэнгүй бүртгэл (дибаг; секунд тутам мөр)"
+  },
+  {
+    "key": "Profile name",
+    "source": "Profile name",
+    "text": "Профайлын нэр"
+  },
+  {
+    "key": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "source": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "text": "Энэ тээврийн хэрэгслийн профайлын нэр. Torque тээврийн хэрэгслийн профайл бүр өөрийн нэмэлтийн профайл, өгөгдөл, сурсан газрын зураг авна."
+  },
+  {
+    "key": "Make",
+    "source": "Make",
+    "text": "Үйлдвэрлэгч"
+  },
+  {
+    "key": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "source": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "text": "Тээврийн хэрэгслийн үйлдвэрлэгч (ж.нь Ford). Зөвхөн илрүүлэлт аль үйлдвэрлэгчийн түлшний PID-үүдийг туршихыг сонгоход хэрэглэнэ."
+  },
+  {
+    "key": "Fuel source",
+    "source": "Fuel source",
+    "text": "Түлшний эх үүсвэр"
+  },
+  {
+    "key": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "source": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "text": "Түүхий түлшний түвшин хаанаас ирдэг. Илрүүлэх (ECU холбогдсон байх ёстой) нэр дэвшигчдийг зөвхөн уншина, хоёр эх үүсвэр таарахгүй бол баталгаажуулахыг хүснэ. Баталгаажуулах нь тохиргооны хуудас болон мэдэгдэлд байна. Аль нь ч биш = дараагийн холболтод илрүүлнэ."
+  },
+  {
+    "key": "Custom long name",
+    "source": "Custom long name",
+    "text": "Тусгай урт нэр"
+  },
+  {
+    "key": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "source": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "text": "Зөвхөн Torque extra PID by long name эх үүсвэрт: түвшинг мэдээлдэг Torque PID-ийн яг урт нэр."
+  },
+  {
+    "key": "Tank size",
+    "source": "Tank size",
+    "text": "Савны хэмжээ"
+  },
+  {
+    "key": "blank = no starting size; each fit learns its own.",
+    "source": "blank = no starting size; each fit learns its own.",
+    "text": "хоосон = эхлэх хэмжээ алга; тохируулга бүр өөрийнхөө хэмжээг сурна."
+  },
+  {
+    "key": "Smoothing τ seconds",
+    "source": "Smoothing τ seconds",
+    "text": "Тэгшитгэх τ секунд"
+  },
+  {
+    "key": "Time constant of the smoothing filter (0 = no smoothing).",
+    "source": "Time constant of the smoothing filter (0 = no smoothing).",
+    "text": "Тэгшитгэх шүүлтүүрийн хугацааны тогтмол (0 = тэгшитгэлгүй)."
+  },
+  {
+    "key": "Max skew %/s",
+    "source": "Max skew %/s",
+    "text": "Хамгийн их хазайлт %/s"
+  },
+  {
+    "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "text": "Тэгшитгэсэн түвшин секундэд дагаж чадах хамгийн их өөрчлөлт; үүнээс илүү долгион тооцогдохгүй."
+  },
+  {
+    "key": "Fill jump %",
+    "source": "Fill jump %",
+    "text": "Цэнэглэлтийн үсрэлт %"
+  },
+  {
+    "key": "Rise in level while stopped that counts as a fill.",
+    "source": "Rise in level while stopped that counts as a fill.",
+    "text": "Зогссон үеийн түвшний өсөлт цэнэглэлт гэж тооцогдоно."
+  },
+  {
+    "key": "Odometer miles",
+    "source": "Odometer miles",
+    "text": "Одометрийн миль"
+  },
+  {
+    "key": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "source": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "text": "Заавал биш: одометрийн заалтыг оруулаад энэ профайлын зайг бэхлэхийн тулд Тэмдэг хадгалах дээр дарна уу."
+  },
+  {
+    "key": "Additional tanks",
+    "source": "Additional tanks",
+    "text": "Нэмэлт савнууд"
+  },
+  {
+    "key": "Active tank",
+    "source": "Active tank",
+    "text": "Идэвхтэй сав"
+  },
+  {
+    "key": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "source": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "text": "Түлшний зарцуулалт (gal/hr) аль саванд тооцогдох. PID-ээс: Torque PID үүнийг сонгоно (1-ээс эхэлсэн савны id)."
+  },
+  {
+    "key": "Select-PID long name",
+    "source": "Select-PID long name",
+    "text": "Select-PID урт нэр"
+  },
+  {
+    "key": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "source": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "text": "Зөвхөн Идэвхтэй сав = PID-ээс үед: утга нь савны id болох Torque PID-ийн урт нэр."
+  },
+  {
+    "key": "Tank %1$d",
+    "source": "Tank %1$d",
+    "text": "Сав %1$d"
+  },
+  {
+    "key": "Tank %1$d fuel source",
+    "source": "Tank %1$d fuel source",
+    "text": "Сав %1$d түлшний эх үүсвэр"
+  },
+  {
+    "key": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "source": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "text": "Сав %1$d тусгай урт нэр (ж.нь [FuelSmooth] Tank%1$d Level)"
+  },
+  {
+    "key": "Tank %1$d gallons",
+    "source": "Tank %1$d gallons",
+    "text": "Сав %1$d галлон"
+  },
+  {
+    "key": "From PID",
+    "source": "From PID",
+    "text": "PID-ээс"
+  },
+  {
+    "key": "(unconfirmed)",
+    "source": "(unconfirmed)",
+    "text": "(баталгаажаагүй)"
+  },
+  {
+    "key": "· ECU connected",
+    "source": "· ECU connected",
+    "text": "· ECU холбогдсон"
+  },
+  {
+    "key": "tank ?",
+    "source": "tank ?",
+    "text": "сав ?"
+  },
+  {
+    "key": "About %1$s",
+    "source": "About %1$s",
+    "text": "%1$s тухай"
+  },
+  {
+    "key": "0 to %1$s s",
+    "source": "0 to %1$s s",
+    "text": "0-оос %1$s s хүртэл"
+  },
+  {
+    "key": "above 0, at most %1$s %%/s",
+    "source": "above 0, at most %1$s %%/s",
+    "text": "0-оос дээш, хамгийн ихдээ %1$s %%/s"
+  },
+  {
+    "key": "%1$s to %2$s %%",
+    "source": "%1$s to %2$s %%",
+    "text": "%1$s-ээс %2$s %% хүртэл"
+  },
+  {
+    "key": "blank or a number above 0",
+    "source": "blank or a number above 0",
+    "text": "хоосон эсвэл 0-оос их тоо"
+  },
+  {
+    "key": "stored value out of range",
+    "source": "stored value out of range",
+    "text": "хадгалсан утга хязгаараас гадна"
+  },
+  {
+    "key": "Chunk",
+    "source": "Chunk",
+    "text": "Chunk"
+  },
+  {
+    "key": "Band",
+    "source": "Band",
+    "text": "Band"
+  },
+  {
+    "key": "Kalman",
+    "source": "Kalman",
+    "text": "Kalman"
+  },
+  {
+    "key": "Smoothed %",
+    "source": "Smoothed %",
+    "text": "Тэгшитгэсэн %"
+  },
+  {
+    "key": "Error (%)",
+    "source": "Error (%)",
+    "text": "Алдаа (%)"
+  },
+  {
+    "key": "Off",
+    "source": "Off",
+    "text": "Унтраалттай"
+  },
+  {
+    "key": "Corrected % (Chunk)",
+    "source": "Corrected % (Chunk)",
+    "text": "Corrected % (Chunk)"
+  },
+  {
+    "key": "Corrected % (Band)",
+    "source": "Corrected % (Band)",
+    "text": "Corrected % (Band)"
+  },
+  {
+    "key": "Corrected % (Kalman)",
+    "source": "Corrected % (Kalman)",
+    "text": "Corrected % (Kalman)"
+  },
+  {
+    "key": "gal",
+    "source": "gal",
+    "text": "gal"
+  },
+  {
+    "key": "L",
+    "source": "L",
+    "text": "L"
+  },
+  {
+    "key": "None yet (Detect runs on connect)",
+    "source": "None yet (Detect runs on connect)",
+    "text": "Одоогоор алга (Илрүүлэх холбогдоход ажиллана)"
+  },
+  {
+    "key": "SAE 012F Fuel Tank Level",
+    "source": "SAE 012F Fuel Tank Level",
+    "text": "SAE 012F Fuel Tank Level"
+  },
+  {
+    "key": "Mode 22 16C1",
+    "source": "Mode 22 16C1",
+    "text": "Mode 22 16C1"
+  },
+  {
+    "key": "Ford Mode 22 F42F",
+    "source": "Ford Mode 22 F42F",
+    "text": "Ford Mode 22 F42F"
+  },
+  {
+    "key": "GM Mode 22 12C5 %",
+    "source": "GM Mode 22 12C5 %",
+    "text": "GM Mode 22 12C5 %"
+  },
+  {
+    "key": "Chrysler 21A2 %",
+    "source": "Chrysler 21A2 %",
+    "text": "Chrysler 21A2 %"
+  },
+  {
+    "key": "Chrysler Fuel Level Average",
+    "source": "Chrysler Fuel Level Average",
+    "text": "Chrysler Fuel Level Average"
+  },
+  {
+    "key": "Toyota cluster 2129 (half-litre counts)",
+    "source": "Toyota cluster 2129 (half-litre counts)",
+    "text": "Toyota cluster 2129 (half-litre counts)"
+  },
+  {
+    "key": "Torque extra PID by long name",
+    "source": "Torque extra PID by long name",
+    "text": "Torque extra PID by long name"
+  },
+  {
+    "key": "Vehicle 1",
+    "source": "Vehicle 1",
+    "text": "Тээврийн хэрэгсэл 1"
+  },
+  {
+    "key": "Vehicle %1$s",
+    "source": "Vehicle %1$s",
+    "text": "Тээврийн хэрэгсэл %1$s"
+  },
+  {
+    "key": "Binding to Torque…",
+    "source": "Binding to Torque…",
+    "text": "Torque-д холбогдож байна…"
+  },
+  {
+    "key": "Waiting for fuel source",
+    "source": "Waiting for fuel source",
+    "text": "Түлшний эх үүсвэр хүлээж байна"
+  },
+  {
+    "key": "raw %1$.1f%%",
+    "source": "raw %1$.1f%%",
+    "text": "түүхий %1$.1f%%"
+  },
+  {
+    "key": "sess %1$s",
+    "source": "sess %1$s",
+    "text": "сесс %1$s"
+  },
+  {
+    "key": "Fuel Smoothing",
+    "source": "Fuel Smoothing",
+    "text": "Fuel Smoothing"
+  },
+  {
+    "key": "Fuel Smoothing quiet",
+    "source": "Fuel Smoothing quiet",
+    "text": "Fuel Smoothing чимээгүй"
+  },
+  {
+    "key": "Map refitting",
+    "source": "Map refitting",
+    "text": "Газрын зураг дахин тохирч байна"
+  },
+  {
+    "key": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "source": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "text": "Fuel Smoothing %1$s-д зориулж газрын зургийг дахин тохируулж байна. Тэр тохируулга дахин тохируулга дуустал 1:1 уншина."
+  },
+  {
+    "key": "No fuel level source set",
+    "source": "No fuel level source set",
+    "text": "Түлшний түвшний эх үүсвэр тохируулаагүй"
+  },
+  {
+    "key": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "source": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "text": "Fuel Smoothing-д %1$s-ийн түлшний түвшний эх үүсвэр алга. Тохиргооны хуудсыг нээж Илрүүлэх дээр дарна уу, эсвэл эх үүсвэр сонгоно уу."
+  },
+  {
+    "key": "No fuel level this drive",
+    "source": "No fuel level this drive",
+    "text": "Энэ аялалд түлшний түвшин алга"
+  },
+  {
+    "key": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "source": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "text": "%1$s нь %2$s-д ашиглах түвшин өгсөнгүй. Адаптерийн холболтыг шалгана уу, эсвэл тохиргооны хуудсан дээр Илрүүлэх ажиллуулна уу."
+  },
+  {
+    "key": "Fuel level source found",
+    "source": "Fuel level source found",
+    "text": "Түлшний түвшний эх үүсвэр олдлоо"
+  },
+  {
+    "key": "Using %1$s for %2$s (%3$s).",
+    "source": "Using %1$s for %2$s (%3$s).",
+    "text": "%1$s-ийг %2$s-д ашиглаж байна (%3$s)."
+  },
+  {
+    "key": "No fuel level source found",
+    "source": "No fuel level source found",
+    "text": "Түлшний түвшний эх үүсвэр олдсонгүй"
+  },
+  {
+    "key": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "source": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "text": "Fuel Smoothing тохиргоог нээж эх үүсвэр сонгоно уу (эсвэл PID-г Torque-д нэмнэ үү), дараа нь Илрүүлэх дээр дарна уу."
+  },
+  {
+    "key": "Confirm fuel level source",
+    "source": "Confirm fuel level source",
+    "text": "Түлшний түвшний эх үүсвэрийг баталгаажуулна уу"
+  },
+  {
+    "key": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "source": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "text": "%1$s илэрсэн, заалт %2$.0f %% , %3$s-д. Самбарын түлшний заалттай таарч байгаа эсэхийг шалгаад Баталгаажуулах дээр дарна уу. Баталгаажуулах нь тохиргооны хуудас болон мэдэгдэлд байна (%4$s)."
+  },
+  {
+    "key": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "source": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "text": "%1$s илэрсэн, %2$s-д. Самбарын түлшний заалттай таарч байгаа эсэхийг шалгаад Баталгаажуулах дээр дарна уу. Баталгаажуулах нь тохиргооны хуудас болон мэдэгдэлд байна (%3$s)."
+  },
+  {
+    "key": "Recording to %1$s",
+    "source": "Recording to %1$s",
+    "text": "%1$s руу бичиж байна"
+  },
+  {
+    "key": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "source": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "text": "Энэ тээврийн хэрэгсэл %1$s (%2$s), гэвч Torque-ийн профайл '%3$s'. Өгөгдөл %1$s руу орно; Torque нээж профайл солихын тулд дарна уу."
+  },
+  {
+    "key": "Wrong vehicle profile?",
+    "source": "Wrong vehicle profile?",
+    "text": "Буруу тээврийн хэрэгслийн профайл уу?"
+  },
+  {
+    "key": "Torque profile '%1$s'",
+    "source": "Torque profile '%1$s'",
+    "text": "Torque профайл '%1$s'"
+  },
+  {
+    "key": "a new vehicle profile",
+    "source": "a new vehicle profile",
+    "text": "шинэ тээврийн хэрэгслийн профайл"
+  },
+  {
+    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "text": "Torque профайл '%1$s' энэ тээврийн хэрэгсэлтэй таарахгүй байна (%2$s). Санал: %3$s. Өгөгдөл хадгалагдаж, та хадгалахгүй бол аяллын төгсгөлд устгагдана."
+  },
+  {
+    "key": "Keeping drive data",
+    "source": "Keeping drive data",
+    "text": "Аяллын өгөгдөл хадгалагдана"
+  },
+  {
+    "key": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "source": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "text": "Энэ аялал %1$s-д хадгалагдана. Torque-ийн нэмэлтийн API Torque профайл үүсгэж, солих боломжгүй: Torque дотор '%2$s' нэртэй тээврийн хэрэгслийн профайл үүсгэнэ үү эсвэл сонгоно уу."
+  },
+  {
+    "key": "Create new profile",
+    "source": "Create new profile",
+    "text": "Шинэ профайл үүсгэх"
+  },
+  {
+    "key": "Use %1$s",
+    "source": "Use %1$s",
+    "text": "%1$s ашиглах"
+  }
+]

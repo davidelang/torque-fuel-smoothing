@@ -1,0 +1,647 @@
+[
+  {
+    "key": "Fuel Smoothing for Torque",
+    "source": "Fuel Smoothing for Torque",
+    "text": "Fuel Smoothing for Torque"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/privacy/"
+  },
+  {
+    "key": "Tips are on the Play Store version",
+    "source": "Tips are on the Play Store version",
+    "text": "ຄຳແນະນຳຢູ່ໃນເວີຊັນ Play Store"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "ເລີ່ມຕົ້ນໄວ\n 1. ຕິດຕັ້ງ Torque Pro (ເວີຊັນທີ່ຈ່າຍ Torque Lite ບໍ່ຮອງຮັບປລັກອິນ) ແລະຈັບຄູ່ອະແດັບເຕີ OBD-II.\n 2. ເປີດປລັກອິນນີ້ໃນ Torque → ການຕັ້ງຄ່າ → Plugins.\n 3. ອະນຸຍາດການແຈ້ງເຕືອນ ແລະຕັ້ງການໃຊ້ແບັດເຕີຣີເປັນບໍ່ຈຳກັດ ເພື່ອໃຫ້ Torque ເລີ່ມປລັກອິນນີ້ໃນພື້ນຫຼັງ.\n 4. ໃນ Torque ເລືອກໂປຣໄຟລ໌ລົດທີ່ທ່ານຂັບ. ຂໍ້ມູນຖືກເກັບຕາມໂປຣໄຟລ໌ Torque ແຕ່ລະອັນ ແລະກວດກັບຕົວຕົນ VIN/ECU ຂອງລົດ.\n 5. ໃນໂປຣໄຟລ໌ໃໝ່ ແຫຼ່ງນ້ຳມັນຖືກກວດເຫັນເມື່ອເຊື່ອມຕໍ່ ຖ້າຖາມ ໃຫ້ທຽບກັບເກດແຜງໜ້າ ແລ້ວແຕະ ຢືນຢັນ. ຢືນຢັນ ຢູ່ໜ້າຕັ້ງຄ່າ ແລະໃນການແຈ້ງເຕືອນ. ທ່ານເລືອກຂ້າງລຸ່ມໄດ້ນຳ.\n 6. ຂະໜາດຖັງແມ່ນຂະໜາດເລີ່ມຕົ້ນຂອງ Chunk fit ຈົນກວ່າມັນຈະຮຽນຮູ້ຂອງຕົນ. ປລັກອິນບໍ່ປ່ຽນມັນ ຂະໜາດທີ່ແຕ່ລະ fit ຮຽນແລ້ວສະແດງຢູ່ຂ້າງລຸ່ມ.\n 7. ໃນ Torque ເພີ່ມເກດສຳລັບ [FuelSmooth] Smoothed Fuel Level ແລະ Corrected %, Remaining, DTE ແລະ Tank size ຂອງແຕ່ລະ fit. DTE ແມ່ນ Remaining ຄູນ mpg ໄລຍະຍາວຂອງ Torque. ການແຈ້ງເຕືອນລະຫວ່າງ refit ບອກວ່າ fit ນັ້ນອ່ານ 1:1 ຈົນກວ່າ refit ຈະສຳເລັດ.\n 8. ສົ່ງລະດັບນ້ຳມັນກັບໄປ Torque: ປິດ, ລຽບ, ຫຼືແກ້ຈາກ Chunk, Band ຫຼື Kalman fit ໄປເກດ 012F.\n 9. ນ້ຳມັນຖືກນັບສະເພາະເມື່ອເຄື່ອງຍັງເຮັດວຽກ. ປລັກອິນເຮັດວຽກສະເພາະເມື່ອ Torque ເຊື່ອມກັບ ECU.\n 10. ຂັບ ແລະເຕີມຕໍ່ໄປ ຄວາມຖືກຕ້ອງເພີ່ມຂຶ້ນໃນຫຼາຍຖັງບາງສ່ວນ. ຖ້າມີການແຈ້ງເຕືອນ ໂປຣໄຟລ໌ລົດຜິດ? ໃຫ້ເລືອກວ່າຈະເຮັດແນວໃດກັບການຂັບນັ້ນ.\n 11. ຂໍ້ມູນທັງໝົດຢູ່ໃນໂທລະສັບນີ້. ບໍ່ບັນທຶກ GPS ຫຼືຕຳແໜ່ງ."
+  },
+  {
+    "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "text": "%1$s\nເວີຊັນ %2$s (%3$s)\nປລັກອິນສຳລັບ Torque Pro. ບໍ່ກ່ຽວຂ້ອງກັບ Torque ຫຼື Ian Hawkins.\nຂໍ້ມູນທັງໝົດຢູ່ໃນໂທລະສັບນີ້ ບໍ່ບັນທຶກ GPS ຫຼືຕຳແໜ່ງ.\n\nໃບອະນຸຍາດ\nCopyright David Lang. ສະຫງວນລິຂະສິດ."
+  },
+  {
+    "key": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "source": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "text": "ຫ້ອງສະໝຸດໂອເພນຊອດ\nແອັບນີ້ໃຊ້ຫ້ອງສະໝຸດຂ້າງລຸ່ມ. ໃບອະນຸຍາດຂອງພວກມັນແຍກຈາກລິຂະສິດຂ້າງເທິງ.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), Play Billing ຕ້ອງການ\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/manual/"
+  },
+  {
+    "key": "Full manual (online)",
+    "source": "Full manual (online)",
+    "text": "ຄູ່ມືເຕັມ (ອອນລາຍ)"
+  },
+  {
+    "key": "Show fuel level in notification",
+    "source": "Show fuel level in notification",
+    "text": "ສະແດງລະດັບນ້ຳມັນໃນການແຈ້ງເຕືອນ"
+  },
+  {
+    "key": "Feed fuel level back to Torque (overrides 012F)",
+    "source": "Feed fuel level back to Torque (overrides 012F)",
+    "text": "ສົ່ງລະດັບນ້ຳມັນກັບໄປ Torque (ແທນ 012F)"
+  },
+  {
+    "key": "Fuel Smoothing is running",
+    "source": "Fuel Smoothing is running",
+    "text": "Fuel Smoothing ກຳລັງເຮັດວຽກ"
+  },
+  {
+    "key": "Tap to start Fuel Smoothing",
+    "source": "Tap to start Fuel Smoothing",
+    "text": "ແຕະເພື່ອເລີ່ມ Fuel Smoothing"
+  },
+  {
+    "key": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "source": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "text": "ການເລີ່ມຈາກແບັດເຕີຣີ ຫຼືພື້ນຫຼັງຖືກປະຕິເສດ. ເປີດຄັ້ງໜຶ່ງເພື່ອໃຫ້ປລັກອິນເຮັດວຽກກັບ Torque."
+  },
+  {
+    "key": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "source": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "text": "ເພີ່ມຖັງເພີ່ມຕາມຕ້ອງການ (ຖັງໂຮງງານ 1 ຢູ່ສະເໝີ). ຢ່າສະຫຼັບຕົວສົ່ງໄປຂາ PCM FLI (ການເຕີມປອມ). ແຕ່ລະຖັງເພີ່ມຕ້ອງການ PID ເພີ່ມຂອງ Torque ຂອງຕົນ (MCU Mode 22, ຊື່ບໍ່ຊ້ຳ — ບໍ່ແມ່ນ 012F ຫຼື Ford 16C1). ຄ່າ Select-PID ແມ່ນ id ຖັງເລີ່ມທີ່ 1. Gal/hr ຄິດສະເພາະຖັງທີ່ໃຊ້ງານ."
+  },
+  {
+    "key": "Tap to start",
+    "source": "Tap to start",
+    "text": "ແຕະເພື່ອເລີ່ມ"
+  },
+  {
+    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "text": "ຂະໜາດຖັງແມ່ນຂະໜາດເລີ່ມຕົ້ນຂອງ Chunk fit ຈົນກວ່າມັນຈະຮຽນຮູ້ຂອງຕົນ. ປລັກອິນບໍ່ປ່ຽນມັນ ຂະໜາດທີ່ແຕ່ລະ fit ຮຽນແລ້ວສະແດງຢູ່ຂ້າງລຸ່ມ."
+  },
+  {
+    "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "source": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "text": "ຂຽນຄ່າໃສ່ Fuel Level ໂຮງງານຂອງ Torque (012F) ເພື່ອໃຫ້ເກດທີ່ມີສະແດງ: ປິດ, ລຽບ, ຫຼືແກ້ຈາກ Chunk, Band ຫຼື Kalman fit. fit ທີ່ຍັງບໍ່ໄດ້ສ້າງຈະຂຽນລະດັບທີ່ລຽບ."
+  },
+  {
+    "key": "Chunk: %1$s",
+    "source": "Chunk: %1$s",
+    "text": "Chunk: %1$s"
+  },
+  {
+    "key": "Band: %1$s",
+    "source": "Band: %1$s",
+    "text": "Band: %1$s"
+  },
+  {
+    "key": "Kalman: %1$s",
+    "source": "Kalman: %1$s",
+    "text": "Kalman: %1$s"
+  },
+  {
+    "key": "no size yet",
+    "source": "no size yet",
+    "text": "ຍັງບໍ່ມີຂະໜາດ"
+  },
+  {
+    "key": "no size yet ± %1$.1f gal",
+    "source": "no size yet ± %1$.1f gal",
+    "text": "ຍັງບໍ່ມີຂະໜາດ ± %1$.1f gal"
+  },
+  {
+    "key": "%1$.1f gal",
+    "source": "%1$.1f gal",
+    "text": "%1$.1f gal"
+  },
+  {
+    "key": "%1$.1f ± %2$.1f gal",
+    "source": "%1$.1f ± %2$.1f gal",
+    "text": "%1$.1f ± %2$.1f gal"
+  },
+  {
+    "key": "Help",
+    "source": "Help",
+    "text": "ຊ່ວຍເຫຼືອ"
+  },
+  {
+    "key": "About",
+    "source": "About",
+    "text": "ກ່ຽວກັບ"
+  },
+  {
+    "key": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "source": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "text": "ຕ້ອງການ Torque Pro (ຈ່າຍ). Torque Lite ບໍ່ຮອງຮັບປລັກອິນ."
+  },
+  {
+    "key": "Get Torque Pro",
+    "source": "Get Torque Pro",
+    "text": "ຮັບ Torque Pro"
+  },
+  {
+    "key": "Privacy",
+    "source": "Privacy",
+    "text": "ຄວາມເປັນສ່ວນຕົວ"
+  },
+  {
+    "key": "Send feedback",
+    "source": "Send feedback",
+    "text": "ສົ່ງຄຳຄິດເຫັນ"
+  },
+  {
+    "key": "Tip",
+    "source": "Tip",
+    "text": "ທິບ"
+  },
+  {
+    "key": "Thanks",
+    "source": "Thanks",
+    "text": "ຂອບໃຈ"
+  },
+  {
+    "key": "Close",
+    "source": "Close",
+    "text": "ປິດ"
+  },
+  {
+    "key": "OK",
+    "source": "OK",
+    "text": "OK"
+  },
+  {
+    "key": "Detect",
+    "source": "Detect",
+    "text": "ກວດຫາ"
+  },
+  {
+    "key": "Confirm",
+    "source": "Confirm",
+    "text": "ຢືນຢັນ"
+  },
+  {
+    "key": "Save pin",
+    "source": "Save pin",
+    "text": "ບັນທຶກໝຸດ"
+  },
+  {
+    "key": "Add additional tank",
+    "source": "Add additional tank",
+    "text": "ເພີ່ມຖັງ"
+  },
+  {
+    "key": "Remove",
+    "source": "Remove",
+    "text": "ເອົາອອກ"
+  },
+  {
+    "key": "Details",
+    "source": "Details",
+    "text": "ລາຍລະອຽດ"
+  },
+  {
+    "key": "Verbose logging (debug; per-second log lines)",
+    "source": "Verbose logging (debug; per-second log lines)",
+    "text": "ບັນທຶກລະອຽດ (ດີບັກ ແຖວທຸກວິນາທີ)"
+  },
+  {
+    "key": "Profile name",
+    "source": "Profile name",
+    "text": "ຊື່ໂປຣໄຟລ໌"
+  },
+  {
+    "key": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "source": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "text": "ຊື່ໂປຣໄຟລ໌ລົດນີ້. ໂປຣໄຟລ໌ລົດ Torque ແຕ່ລະອັນໄດ້ໂປຣໄຟລ໌ປລັກອິນ ຂໍ້ມູນ ແລະແຜນທີ່ທີ່ຮຽນແລ້ວຂອງຕົນ."
+  },
+  {
+    "key": "Make",
+    "source": "Make",
+    "text": "ຍີ່ຫໍ້"
+  },
+  {
+    "key": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "source": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "text": "ຍີ່ຫໍ້ລົດ (ເຊັ່ນ Ford). ໃຊ້ເພື່ອເລືອກວ່າການກວດຫາຈະລອງ PID ນ້ຳມັນຂອງຍີ່ຫໍ້ໃດ."
+  },
+  {
+    "key": "Fuel source",
+    "source": "Fuel source",
+    "text": "ແຫຼ່ງນ້ຳມັນ"
+  },
+  {
+    "key": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "source": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "text": "ລະດັບນ້ຳມັນດິບມາຈາກໃສ. ກວດຫາ (ECU ຕ້ອງເຊື່ອມ) ອ່ານຜູ້ສະໝັກແບບອ່ານຢ່າງດຽວ ແລະຂໍໃຫ້ຢືນຢັນເວັ້ນແຕ່ສອງແຫຼ່ງເຫັນດີ. ຢືນຢັນ ຢູ່ໜ້າຕັ້ງຄ່າ ແລະໃນການແຈ້ງເຕືອນ. ບໍ່ມີ = ກວດຫາໃນການເຊື່ອມຄັ້ງຕໍ່ໄປ."
+  },
+  {
+    "key": "Custom long name",
+    "source": "Custom long name",
+    "text": "ຊື່ຍາວກຳນົດເອງ"
+  },
+  {
+    "key": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "source": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "text": "ສະເພາະແຫຼ່ງ Torque extra PID by long name: ຊື່ຍາວທີ່ຖືກຕ້ອງຂອງ PID Torque ທີ່ລາຍງານລະດັບ."
+  },
+  {
+    "key": "Tank size",
+    "source": "Tank size",
+    "text": "ຂະໜາດຖັງ"
+  },
+  {
+    "key": "blank = no starting size; each fit learns its own.",
+    "source": "blank = no starting size; each fit learns its own.",
+    "text": "ຫວ່າງ = ບໍ່ມີຂະໜາດເລີ່ມຕົ້ນ ແຕ່ລະ fit ຮຽນຮູ້ຂອງຕົນ."
+  },
+  {
+    "key": "Smoothing τ seconds",
+    "source": "Smoothing τ seconds",
+    "text": "ການເຮັດໃຫ້ລຽບ τ ວິນາທີ"
+  },
+  {
+    "key": "Time constant of the smoothing filter (0 = no smoothing).",
+    "source": "Time constant of the smoothing filter (0 = no smoothing).",
+    "text": "ຄ່າຄົງທີ່ເວລາຂອງຕົວກອງເຮັດໃຫ້ລຽບ (0 = ບໍ່ເຮັດໃຫ້ລຽບ)."
+  },
+  {
+    "key": "Max skew %/s",
+    "source": "Max skew %/s",
+    "text": "ຄວາມເອນເຢຍງສູງສຸດ %/s"
+  },
+  {
+    "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "text": "ການປ່ຽນແປງຕໍ່ວິນາທີທີ່ໃຫຍ່ສຸດທີ່ລະດັບທີ່ລຽບຕາມໄດ້ ການສັ່ນທີ່ເກີນນີ້ຖືກຂ້າມ."
+  },
+  {
+    "key": "Fill jump %",
+    "source": "Fill jump %",
+    "text": "ການກະໂດດເຕີມ %"
+  },
+  {
+    "key": "Rise in level while stopped that counts as a fill.",
+    "source": "Rise in level while stopped that counts as a fill.",
+    "text": "ລະດັບທີ່ສູງຂຶ້ນເມື່ອຢຸດ ເຊິ່ງນັບເປັນການເຕີມ."
+  },
+  {
+    "key": "Odometer miles",
+    "source": "Odometer miles",
+    "text": "ໄມລ໌ໂອໂດມິເຕີ"
+  },
+  {
+    "key": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "source": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "text": "ບໍ່ບັງຄັບ: ໃສ່ຄ່າໂອໂດມິເຕີ ແລ້ວບັນທຶກໝຸດ ເພື່ອຍຶດໄລຍະຂອງໂປຣໄຟລ໌ນີ້."
+  },
+  {
+    "key": "Additional tanks",
+    "source": "Additional tanks",
+    "text": "ຖັງເພີ່ມ"
+  },
+  {
+    "key": "Active tank",
+    "source": "Active tank",
+    "text": "ຖັງທີ່ໃຊ້ງານ"
+  },
+  {
+    "key": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "source": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "text": "ຖັງໃດທີ່ການໃຊ້ນ້ຳມັນ (gal/hr) ຖືກຄິດ. ຈາກ PID: PID Torque ເລືອກມັນ (id ຖັງເລີ່ມທີ່ 1)."
+  },
+  {
+    "key": "Select-PID long name",
+    "source": "Select-PID long name",
+    "text": "ຊື່ຍາວ Select-PID"
+  },
+  {
+    "key": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "source": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "text": "ສະເພາະເມື່ອຖັງທີ່ໃຊ້ງານ = ຈາກ PID: ຊື່ຍາວຂອງ PID Torque ທີ່ຄ່າແມ່ນ id ຖັງ."
+  },
+  {
+    "key": "Tank %1$d",
+    "source": "Tank %1$d",
+    "text": "ຖັງ %1$d"
+  },
+  {
+    "key": "Tank %1$d fuel source",
+    "source": "Tank %1$d fuel source",
+    "text": "ແຫຼ່ງນ້ຳມັນຖັງ %1$d"
+  },
+  {
+    "key": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "source": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "text": "ຊື່ຍາວກຳນົດເອງຂອງຖັງ %1$d (ເຊັ່ນ [FuelSmooth] Tank%1$d Level)"
+  },
+  {
+    "key": "Tank %1$d gallons",
+    "source": "Tank %1$d gallons",
+    "text": "ແກລລອນຖັງ %1$d"
+  },
+  {
+    "key": "From PID",
+    "source": "From PID",
+    "text": "ຈາກ PID"
+  },
+  {
+    "key": "(unconfirmed)",
+    "source": "(unconfirmed)",
+    "text": "(ຍັງບໍ່ຢືນຢັນ)"
+  },
+  {
+    "key": "· ECU connected",
+    "source": "· ECU connected",
+    "text": "· ECU ເຊື່ອມແລ້ວ"
+  },
+  {
+    "key": "tank ?",
+    "source": "tank ?",
+    "text": "ຖັງ ?"
+  },
+  {
+    "key": "About %1$s",
+    "source": "About %1$s",
+    "text": "ກ່ຽວກັບ %1$s"
+  },
+  {
+    "key": "0 to %1$s s",
+    "source": "0 to %1$s s",
+    "text": "0 ຫາ %1$s s"
+  },
+  {
+    "key": "above 0, at most %1$s %%/s",
+    "source": "above 0, at most %1$s %%/s",
+    "text": "ສູງກວ່າ 0 ບໍ່ເກີນ %1$s %%/s"
+  },
+  {
+    "key": "%1$s to %2$s %%",
+    "source": "%1$s to %2$s %%",
+    "text": "%1$s ຫາ %2$s %%"
+  },
+  {
+    "key": "blank or a number above 0",
+    "source": "blank or a number above 0",
+    "text": "ຫວ່າງ ຫຼືຕົວເລກສູງກວ່າ 0"
+  },
+  {
+    "key": "stored value out of range",
+    "source": "stored value out of range",
+    "text": "ຄ່າທີ່ເກັບໄວ້ນອກໄລຍະ"
+  },
+  {
+    "key": "Chunk",
+    "source": "Chunk",
+    "text": "Chunk"
+  },
+  {
+    "key": "Band",
+    "source": "Band",
+    "text": "Band"
+  },
+  {
+    "key": "Kalman",
+    "source": "Kalman",
+    "text": "Kalman"
+  },
+  {
+    "key": "Smoothed %",
+    "source": "Smoothed %",
+    "text": "ລຽບ %"
+  },
+  {
+    "key": "Error (%)",
+    "source": "Error (%)",
+    "text": "ຄ່າຜິດພາດ (%)"
+  },
+  {
+    "key": "Off",
+    "source": "Off",
+    "text": "ປິດ"
+  },
+  {
+    "key": "Corrected % (Chunk)",
+    "source": "Corrected % (Chunk)",
+    "text": "Corrected % (Chunk)"
+  },
+  {
+    "key": "Corrected % (Band)",
+    "source": "Corrected % (Band)",
+    "text": "Corrected % (Band)"
+  },
+  {
+    "key": "Corrected % (Kalman)",
+    "source": "Corrected % (Kalman)",
+    "text": "Corrected % (Kalman)"
+  },
+  {
+    "key": "gal",
+    "source": "gal",
+    "text": "gal"
+  },
+  {
+    "key": "L",
+    "source": "L",
+    "text": "L"
+  },
+  {
+    "key": "None yet (Detect runs on connect)",
+    "source": "None yet (Detect runs on connect)",
+    "text": "ຍັງບໍ່ມີ (ກວດຫາເຮັດວຽກເມື່ອເຊື່ອມ)"
+  },
+  {
+    "key": "SAE 012F Fuel Tank Level",
+    "source": "SAE 012F Fuel Tank Level",
+    "text": "SAE 012F Fuel Tank Level"
+  },
+  {
+    "key": "Mode 22 16C1",
+    "source": "Mode 22 16C1",
+    "text": "Mode 22 16C1"
+  },
+  {
+    "key": "Ford Mode 22 F42F",
+    "source": "Ford Mode 22 F42F",
+    "text": "Ford Mode 22 F42F"
+  },
+  {
+    "key": "GM Mode 22 12C5 %",
+    "source": "GM Mode 22 12C5 %",
+    "text": "GM Mode 22 12C5 %"
+  },
+  {
+    "key": "Chrysler 21A2 %",
+    "source": "Chrysler 21A2 %",
+    "text": "Chrysler 21A2 %"
+  },
+  {
+    "key": "Chrysler Fuel Level Average",
+    "source": "Chrysler Fuel Level Average",
+    "text": "Chrysler Fuel Level Average"
+  },
+  {
+    "key": "Toyota cluster 2129 (half-litre counts)",
+    "source": "Toyota cluster 2129 (half-litre counts)",
+    "text": "Toyota cluster 2129 (half-litre counts)"
+  },
+  {
+    "key": "Torque extra PID by long name",
+    "source": "Torque extra PID by long name",
+    "text": "Torque extra PID by long name"
+  },
+  {
+    "key": "Vehicle 1",
+    "source": "Vehicle 1",
+    "text": "ລົດ 1"
+  },
+  {
+    "key": "Vehicle %1$s",
+    "source": "Vehicle %1$s",
+    "text": "ລົດ %1$s"
+  },
+  {
+    "key": "Binding to Torque…",
+    "source": "Binding to Torque…",
+    "text": "ກຳລັງເຊື່ອມກັບ Torque…"
+  },
+  {
+    "key": "Waiting for fuel source",
+    "source": "Waiting for fuel source",
+    "text": "ກຳລັງລໍຖ້າແຫຼ່ງນ້ຳມັນ"
+  },
+  {
+    "key": "raw %1$.1f%%",
+    "source": "raw %1$.1f%%",
+    "text": "ດິບ %1$.1f%%"
+  },
+  {
+    "key": "sess %1$s",
+    "source": "sess %1$s",
+    "text": "ເຊດຊັນ %1$s"
+  },
+  {
+    "key": "Fuel Smoothing",
+    "source": "Fuel Smoothing",
+    "text": "Fuel Smoothing"
+  },
+  {
+    "key": "Fuel Smoothing quiet",
+    "source": "Fuel Smoothing quiet",
+    "text": "Fuel Smoothing ງຽບ"
+  },
+  {
+    "key": "Map refitting",
+    "source": "Map refitting",
+    "text": "ແຜນທີ່ກຳລັງ refit"
+  },
+  {
+    "key": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "source": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "text": "Fuel Smoothing ກຳລັງ refit ແຜນທີ່ສຳລັບ %1$s. fit ນັ້ນອ່ານ 1:1 ຈົນກວ່າ refit ຈະສຳເລັດ."
+  },
+  {
+    "key": "No fuel level source set",
+    "source": "No fuel level source set",
+    "text": "ຍັງບໍ່ໄດ້ຕັ້ງແຫຼ່ງລະດັບນ້ຳມັນ"
+  },
+  {
+    "key": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "source": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "text": "Fuel Smoothing ບໍ່ມີແຫຼ່ງລະດັບນ້ຳມັນສຳລັບ %1$s. ເປີດໜ້າຕັ້ງຄ່າແລ້ວແຕະ ກວດຫາ ຫຼືເລືອກແຫຼ່ງ."
+  },
+  {
+    "key": "No fuel level this drive",
+    "source": "No fuel level this drive",
+    "text": "ບໍ່ມີລະດັບນ້ຳມັນໃນການຂັບນີ້"
+  },
+  {
+    "key": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "source": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "text": "%1$s ບໍ່ໄດ້ໃຫ້ລະດັບທີ່ໃຊ້ໄດ້ສຳລັບ %2$s. ກວດການເຊື່ອມອະແດັບເຕີ ຫຼືແລ່ນ ກວດຫາ ທີ່ໜ້າຕັ້ງຄ່າ."
+  },
+  {
+    "key": "Fuel level source found",
+    "source": "Fuel level source found",
+    "text": "ພົບແຫຼ່ງລະດັບນ້ຳມັນ"
+  },
+  {
+    "key": "Using %1$s for %2$s (%3$s).",
+    "source": "Using %1$s for %2$s (%3$s).",
+    "text": "ກຳລັງໃຊ້ %1$s ສຳລັບ %2$s (%3$s)."
+  },
+  {
+    "key": "No fuel level source found",
+    "source": "No fuel level source found",
+    "text": "ບໍ່ພົບແຫຼ່ງລະດັບນ້ຳມັນ"
+  },
+  {
+    "key": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "source": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "text": "ເປີດການຕັ້ງຄ່າ Fuel Smoothing ແລ້ວເລືອກແຫຼ່ງ (ຫຼືເພີ່ມ PID ໃນ Torque) ຈາກນັ້ນແຕະ ກວດຫາ."
+  },
+  {
+    "key": "Confirm fuel level source",
+    "source": "Confirm fuel level source",
+    "text": "ຢືນຢັນແຫຼ່ງລະດັບນ້ຳມັນ"
+  },
+  {
+    "key": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "source": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "text": "ກວດເຫັນ %1$s ຄ່າອ່ານ %2$.0f %% ສຳລັບ %3$s. ກວດວ່າກົງກັບເກດນ້ຳມັນແຜງໜ້າ ແລ້ວແຕະ ຢືນຢັນ. ຢືນຢັນ ຢູ່ໜ້າຕັ້ງຄ່າ ແລະໃນການແຈ້ງເຕືອນ (%4$s)."
+  },
+  {
+    "key": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "source": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "text": "ກວດເຫັນ %1$s ສຳລັບ %2$s. ກວດວ່າກົງກັບເກດນ້ຳມັນແຜງໜ້າ ແລ້ວແຕະ ຢືນຢັນ. ຢືນຢັນ ຢູ່ໜ້າຕັ້ງຄ່າ ແລະໃນການແຈ້ງເຕືອນ (%3$s)."
+  },
+  {
+    "key": "Recording to %1$s",
+    "source": "Recording to %1$s",
+    "text": "ກຳລັງບັນທຶກໄປ %1$s"
+  },
+  {
+    "key": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "source": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "text": "ລົດນີ້ແມ່ນ %1$s (%2$s) ແຕ່ໂປຣໄຟລ໌ Torque ແມ່ນ '%3$s'. ຂໍ້ມູນໄປ %1$s ແຕະເພື່ອເປີດ Torque ແລະປ່ຽນໂປຣໄຟລ໌."
+  },
+  {
+    "key": "Wrong vehicle profile?",
+    "source": "Wrong vehicle profile?",
+    "text": "ໂປຣໄຟລ໌ລົດຜິດບໍ?"
+  },
+  {
+    "key": "Torque profile '%1$s'",
+    "source": "Torque profile '%1$s'",
+    "text": "ໂປຣໄຟລ໌ Torque '%1$s'"
+  },
+  {
+    "key": "a new vehicle profile",
+    "source": "a new vehicle profile",
+    "text": "ໂປຣໄຟລ໌ລົດໃໝ່"
+  },
+  {
+    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "text": "ໂປຣໄຟລ໌ Torque '%1$s' ບໍ່ກົງກັບລົດນີ້ (%2$s). ຄຳແນະນຳ: %3$s. ຂໍ້ມູນຖືກພັກໄວ້ ແລະຖືກຖິ້ມເມື່ອຈົບການຂັບ ເວັ້ນແຕ່ທ່ານຈະເກັບມັນ."
+  },
+  {
+    "key": "Keeping drive data",
+    "source": "Keeping drive data",
+    "text": "ກຳລັງເກັບຂໍ້ມູນການຂັບ"
+  },
+  {
+    "key": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "source": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "text": "ການຂັບນີ້ຈະຖືກບັນທຶກໄປ %1$s. API ປລັກອິນຂອງ Torque ສ້າງ ຫຼືປ່ຽນໂປຣໄຟລ໌ Torque ບໍ່ໄດ້: ໃນ Torque ສ້າງ ຫຼືເລືອກໂປຣໄຟລ໌ລົດຊື່ '%2$s'."
+  },
+  {
+    "key": "Create new profile",
+    "source": "Create new profile",
+    "text": "ສ້າງໂປຣໄຟລ໌ໃໝ່"
+  },
+  {
+    "key": "Use %1$s",
+    "source": "Use %1$s",
+    "text": "ໃຊ້ %1$s"
+  }
+]

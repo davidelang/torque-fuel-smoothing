@@ -1,0 +1,647 @@
+[
+  {
+    "key": "Fuel Smoothing for Torque",
+    "source": "Fuel Smoothing for Torque",
+    "text": "Fuel Smoothing for Torque"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/privacy/"
+  },
+  {
+    "key": "Tips are on the Play Store version",
+    "source": "Tips are on the Play Store version",
+    "text": "Drenkgeld ass an der Play Store Versioun"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "Schnelle Start\n 1. Installéiert Torque Pro (déi bezuelte Versioun; Torque Lite ënnerstëtzt keng Plugins) a kopppelt den OBD-II Adapter.\n 2. Aktivéiert dëse Plugin an Torque → Astellungen → Plugins.\n 3. Erlaabt Benoriichtegungen a setzt d'Batteriebenotzung op Onageschränkt, fir datt Torque dëse Plugin am Hannergrond starte kann.\n 4. An Torque wielt de Profil vum Gefier, dat Dir fuert. D'Donnéeë ginn pro Torque Profil gehalen a géint d'VIN/ECU Identitéit vum Gefier gepréift.\n 5. Bei engem neie Profil gëtt d'Brennstoffquell beim Verbannen erkannt; wann nogefrot gëtt, vergläicht se mam Instrument um Tableau a tippt Bestätegen. Bestätegen ass op der Astellungssäit an an der Benoriichtegung. Dir kënnt se och ënnen wielen.\n 6. D'Tankgréisst ass d'Startgréisst fir d'Chunk Upassung, bis se hir eegen léiert. De Plugin ännert se ni; déi geléiert Gréisst vun all Upassung steet drënner.\n 7. An Torque setzt Instrumenter fir [FuelSmooth] Smoothed Fuel Level an, fir all Upassung, Corrected %, Remaining, DTE an Tank size. DTE ass Remaining mol de laangfristege mpg vun Torque. Eng Meldung beim Neipassen seet, datt d'Upassung 1:1 liest, bis d'Neipassen fäerdeg ass.\n 8. Schéckt den Brennstoffstand zréck un Torque: Aus, geglätt oder korrigéiert aus der Chunk, Band oder Kalman Upassung, op Äert 012F Instrument.\n 9. Brennstoff gëtt nëmme gezielt, wa de Motor leeft. De Plugin leeft nëmmen, wa Torque mam ECU verbonnen ass.\n 10. Fuert weider a tankt; d'Genauegkeet wiisst iwwer e puer deelweis Tanken. Wann d'Benoriichtegung Falsche Gefierprofil? kënnt, wielt wat mat där Fuer geschitt.\n 11. All Donnéeë bleiwen op dësem Telefon. Kee GPS a keng Plaz gëtt opgezeechent."
+  },
+  {
+    "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "text": "%1$s\nVersioun %2$s (%3$s)\nE Plugin fir Torque Pro. Net verbonne mat Torque oder Ian Hawkins.\nAll Donnéeë bleiwen op dësem Telefon; kee GPS a keng Plaz gëtt opgezeechent.\n\nLizenz\nCopyright David Lang. All Rechter virbehale."
+  },
+  {
+    "key": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "source": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "text": "Open-Source Bibliothéiken\nDës App benotzt d'Bibliothéiken hei drënner. Hir Lizenze sinn getrennt vum Copyright uewen.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), gebraucht vu Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/manual/"
+  },
+  {
+    "key": "Full manual (online)",
+    "source": "Full manual (online)",
+    "text": "Vollstännegen Handbuch (online)"
+  },
+  {
+    "key": "Show fuel level in notification",
+    "source": "Show fuel level in notification",
+    "text": "Brennstoffstand an der Benoriichtegung weisen"
+  },
+  {
+    "key": "Feed fuel level back to Torque (overrides 012F)",
+    "source": "Feed fuel level back to Torque (overrides 012F)",
+    "text": "Brennstoffstand zréck un Torque schécken (ersetzt 012F)"
+  },
+  {
+    "key": "Fuel Smoothing is running",
+    "source": "Fuel Smoothing is running",
+    "text": "Fuel Smoothing leeft"
+  },
+  {
+    "key": "Tap to start Fuel Smoothing",
+    "source": "Tap to start Fuel Smoothing",
+    "text": "Tippt fir Fuel Smoothing ze starten"
+  },
+  {
+    "key": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "source": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "text": "De Start vun der Batterie oder am Hannergrond gouf ofgeleent. Öffnet eemol, fir datt de Plugin mat Torque lafe kann."
+  },
+  {
+    "key": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "source": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "text": "Setzt bei Bedarf zousätzlech Tanken derbäi (de Fabréckstank 1 bleift ëmmer). Schalt d'Sender net op de PCM FLI Pin (falscht Tanken). All Extra-Tank brauch säin eegene Torque Extra-PID (MCU Mode 22, eenzegaartegen Numm — net 012F oder Ford 16C1). De Select-PID Wäert ass d'Tank-ID ab 1. Gal/hr gëtt nëmmen dem aktive Tank berechent."
+  },
+  {
+    "key": "Tap to start",
+    "source": "Tap to start",
+    "text": "Tippt fir ze starten"
+  },
+  {
+    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "text": "D'Tankgréisst ass d'Startgréisst fir d'Chunk Upassung, bis se hir eegen léiert. De Plugin ännert se ni; déi geléiert Gréisst vun all Upassung steet drënner."
+  },
+  {
+    "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "source": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "text": "Schreift e Wäert op de Fabrécks-Fuel Level (012F) vun Torque, fir datt bestehend Instrumenter en weisen: Aus, geglätt oder korrigéiert aus der Chunk, Band oder Kalman Upassung. Eng Upassung, déi nach net gebaut ass, schreift de geglättte Stand."
+  },
+  {
+    "key": "Chunk: %1$s",
+    "source": "Chunk: %1$s",
+    "text": "Chunk: %1$s"
+  },
+  {
+    "key": "Band: %1$s",
+    "source": "Band: %1$s",
+    "text": "Band: %1$s"
+  },
+  {
+    "key": "Kalman: %1$s",
+    "source": "Kalman: %1$s",
+    "text": "Kalman: %1$s"
+  },
+  {
+    "key": "no size yet",
+    "source": "no size yet",
+    "text": "nach keng Gréisst"
+  },
+  {
+    "key": "no size yet ± %1$.1f gal",
+    "source": "no size yet ± %1$.1f gal",
+    "text": "nach keng Gréisst ± %1$.1f gal"
+  },
+  {
+    "key": "%1$.1f gal",
+    "source": "%1$.1f gal",
+    "text": "%1$.1f gal"
+  },
+  {
+    "key": "%1$.1f ± %2$.1f gal",
+    "source": "%1$.1f ± %2$.1f gal",
+    "text": "%1$.1f ± %2$.1f gal"
+  },
+  {
+    "key": "Help",
+    "source": "Help",
+    "text": "Hëllef"
+  },
+  {
+    "key": "About",
+    "source": "About",
+    "text": "Iwwer"
+  },
+  {
+    "key": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "source": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "text": "Braucht Torque Pro (bezueltt). Torque Lite ënnerstëtzt keng Plugins."
+  },
+  {
+    "key": "Get Torque Pro",
+    "source": "Get Torque Pro",
+    "text": "Torque Pro kréien"
+  },
+  {
+    "key": "Privacy",
+    "source": "Privacy",
+    "text": "Dateschutz"
+  },
+  {
+    "key": "Send feedback",
+    "source": "Send feedback",
+    "text": "Feedback schécken"
+  },
+  {
+    "key": "Tip",
+    "source": "Tip",
+    "text": "Drenkgeld"
+  },
+  {
+    "key": "Thanks",
+    "source": "Thanks",
+    "text": "Merci"
+  },
+  {
+    "key": "Close",
+    "source": "Close",
+    "text": "Zoumaachen"
+  },
+  {
+    "key": "OK",
+    "source": "OK",
+    "text": "OK"
+  },
+  {
+    "key": "Detect",
+    "source": "Detect",
+    "text": "Erkennen"
+  },
+  {
+    "key": "Confirm",
+    "source": "Confirm",
+    "text": "Bestätegen"
+  },
+  {
+    "key": "Save pin",
+    "source": "Save pin",
+    "text": "Anker späicheren"
+  },
+  {
+    "key": "Add additional tank",
+    "source": "Add additional tank",
+    "text": "Tank derbäisetzen"
+  },
+  {
+    "key": "Remove",
+    "source": "Remove",
+    "text": "Ewechhuelen"
+  },
+  {
+    "key": "Details",
+    "source": "Details",
+    "text": "Detailer"
+  },
+  {
+    "key": "Verbose logging (debug; per-second log lines)",
+    "source": "Verbose logging (debug; per-second log lines)",
+    "text": "Ausféierlecht Protokoll (Debug; Zeilen all Sekonn)"
+  },
+  {
+    "key": "Profile name",
+    "source": "Profile name",
+    "text": "Profilnumm"
+  },
+  {
+    "key": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "source": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "text": "Den Numm vun dësem Gefierprofil. All Torque Gefierprofil kritt säin eegene Plugin-Profil, Donnéeën a geléiert Kaarten."
+  },
+  {
+    "key": "Make",
+    "source": "Make",
+    "text": "Mark"
+  },
+  {
+    "key": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "source": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "text": "Mark vum Gefier (z. B. Ford). Gëtt nëmme benotzt fir ze wielen, wéi eng markespezifesch Brennstoff-PID d'Erkennung versiche kann."
+  },
+  {
+    "key": "Fuel source",
+    "source": "Fuel source",
+    "text": "Brennstoffquell"
+  },
+  {
+    "key": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "source": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "text": "Wou de roe Brennstoffstand hierkënnt. Erkennen (den ECU muss verbonne sinn) probéiert d'Kandidaten nëmme liesend a freet Bestätegung, wann zwou Quellen net iwwereneestëmmen. Bestätegen ass op der Astellungssäit an an der Benoriichtegung. Keng = bei der nächster Verbindung erkennen."
+  },
+  {
+    "key": "Custom long name",
+    "source": "Custom long name",
+    "text": "Eegene laangen Numm"
+  },
+  {
+    "key": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "source": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "text": "Nëmme fir d'Quell „Torque Extra-PID nom laangen Numm“: de genee laangen Numm vum Torque PID, deen de Stand mellt."
+  },
+  {
+    "key": "Tank size",
+    "source": "Tank size",
+    "text": "Tankgréisst"
+  },
+  {
+    "key": "blank = no starting size; each fit learns its own.",
+    "source": "blank = no starting size; each fit learns its own.",
+    "text": "eidel = keng Startgréisst; all Upassung léiert hir eegen."
+  },
+  {
+    "key": "Smoothing τ seconds",
+    "source": "Smoothing τ seconds",
+    "text": "Glätten τ a Sekonnen"
+  },
+  {
+    "key": "Time constant of the smoothing filter (0 = no smoothing).",
+    "source": "Time constant of the smoothing filter (0 = no smoothing).",
+    "text": "Zäitkonstant vum Glättfilter (0 = kee Glätten)."
+  },
+  {
+    "key": "Max skew %/s",
+    "source": "Max skew %/s",
+    "text": "Max. Schréiegt %/s"
+  },
+  {
+    "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "text": "Déi gréisst Ännerung pro Sekonn, déi de geglättte Stand follege kann; Schwappen driwwer gëtt ignoréiert."
+  },
+  {
+    "key": "Fill jump %",
+    "source": "Fill jump %",
+    "text": "Tank-Sprong %"
+  },
+  {
+    "key": "Rise in level while stopped that counts as a fill.",
+    "source": "Rise in level while stopped that counts as a fill.",
+    "text": "Steigung vum Stand am Stand, déi als Tanken zielt."
+  },
+  {
+    "key": "Odometer miles",
+    "source": "Odometer miles",
+    "text": "Kilometerzähler a Meilen"
+  },
+  {
+    "key": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "source": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "text": "Optional: gitt de Stand vum Zähler an a späichert den Anker, fir d'Distanz vun dësem Profil ze verankeren."
+  },
+  {
+    "key": "Additional tanks",
+    "source": "Additional tanks",
+    "text": "Zousätzlech Tanken"
+  },
+  {
+    "key": "Active tank",
+    "source": "Active tank",
+    "text": "Aktiven Tank"
+  },
+  {
+    "key": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "source": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "text": "Den Tank, deem de Verbrauch (gal/hr) berechent gëtt. Vum PID: e Torque PID wielt en (ID ab 1)."
+  },
+  {
+    "key": "Select-PID long name",
+    "source": "Select-PID long name",
+    "text": "Laangen Numm vum Select-PID"
+  },
+  {
+    "key": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "source": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "text": "Nëmme wann Aktiven Tank = Vum PID: de laangen Numm vum Torque PID, deem säi Wäert d'Tank-ID ass."
+  },
+  {
+    "key": "Tank %1$d",
+    "source": "Tank %1$d",
+    "text": "Tank %1$d"
+  },
+  {
+    "key": "Tank %1$d fuel source",
+    "source": "Tank %1$d fuel source",
+    "text": "Brennstoffquell vum Tank %1$d"
+  },
+  {
+    "key": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "source": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "text": "Eegene laangen Numm vum Tank %1$d (z. B. [FuelSmooth] Tank%1$d Level)"
+  },
+  {
+    "key": "Tank %1$d gallons",
+    "source": "Tank %1$d gallons",
+    "text": "Gallonen vum Tank %1$d"
+  },
+  {
+    "key": "From PID",
+    "source": "From PID",
+    "text": "Vum PID"
+  },
+  {
+    "key": "(unconfirmed)",
+    "source": "(unconfirmed)",
+    "text": "(net bestätegt)"
+  },
+  {
+    "key": "· ECU connected",
+    "source": "· ECU connected",
+    "text": "· ECU verbonnen"
+  },
+  {
+    "key": "tank ?",
+    "source": "tank ?",
+    "text": "Tank ?"
+  },
+  {
+    "key": "About %1$s",
+    "source": "About %1$s",
+    "text": "Ongeféier %1$s"
+  },
+  {
+    "key": "0 to %1$s s",
+    "source": "0 to %1$s s",
+    "text": "0 bis %1$s s"
+  },
+  {
+    "key": "above 0, at most %1$s %%/s",
+    "source": "above 0, at most %1$s %%/s",
+    "text": "iwwer 0, héchstens %1$s %%/s"
+  },
+  {
+    "key": "%1$s to %2$s %%",
+    "source": "%1$s to %2$s %%",
+    "text": "%1$s bis %2$s %%"
+  },
+  {
+    "key": "blank or a number above 0",
+    "source": "blank or a number above 0",
+    "text": "eidel oder eng Zuel iwwer 0"
+  },
+  {
+    "key": "stored value out of range",
+    "source": "stored value out of range",
+    "text": "gespäicherte Wäert ausserhalb vum Beräich"
+  },
+  {
+    "key": "Chunk",
+    "source": "Chunk",
+    "text": "Chunk"
+  },
+  {
+    "key": "Band",
+    "source": "Band",
+    "text": "Band"
+  },
+  {
+    "key": "Kalman",
+    "source": "Kalman",
+    "text": "Kalman"
+  },
+  {
+    "key": "Smoothed %",
+    "source": "Smoothed %",
+    "text": "Geglätt %"
+  },
+  {
+    "key": "Error (%)",
+    "source": "Error (%)",
+    "text": "Feeler (%)"
+  },
+  {
+    "key": "Off",
+    "source": "Off",
+    "text": "Aus"
+  },
+  {
+    "key": "Corrected % (Chunk)",
+    "source": "Corrected % (Chunk)",
+    "text": "Korrigéiert % (Chunk)"
+  },
+  {
+    "key": "Corrected % (Band)",
+    "source": "Corrected % (Band)",
+    "text": "Korrigéiert % (Band)"
+  },
+  {
+    "key": "Corrected % (Kalman)",
+    "source": "Corrected % (Kalman)",
+    "text": "Korrigéiert % (Kalman)"
+  },
+  {
+    "key": "gal",
+    "source": "gal",
+    "text": "gal"
+  },
+  {
+    "key": "L",
+    "source": "L",
+    "text": "L"
+  },
+  {
+    "key": "None yet (Detect runs on connect)",
+    "source": "None yet (Detect runs on connect)",
+    "text": "Nach keng (Erkennen beim Verbannen)"
+  },
+  {
+    "key": "SAE 012F Fuel Tank Level",
+    "source": "SAE 012F Fuel Tank Level",
+    "text": "SAE 012F Fuel Tank Level"
+  },
+  {
+    "key": "Mode 22 16C1",
+    "source": "Mode 22 16C1",
+    "text": "Mode 22 16C1"
+  },
+  {
+    "key": "Ford Mode 22 F42F",
+    "source": "Ford Mode 22 F42F",
+    "text": "Ford Mode 22 F42F"
+  },
+  {
+    "key": "GM Mode 22 12C5 %",
+    "source": "GM Mode 22 12C5 %",
+    "text": "GM Mode 22 12C5 %"
+  },
+  {
+    "key": "Chrysler 21A2 %",
+    "source": "Chrysler 21A2 %",
+    "text": "Chrysler 21A2 %"
+  },
+  {
+    "key": "Chrysler Fuel Level Average",
+    "source": "Chrysler Fuel Level Average",
+    "text": "Chrysler Fuel Level Average"
+  },
+  {
+    "key": "Toyota cluster 2129 (half-litre counts)",
+    "source": "Toyota cluster 2129 (half-litre counts)",
+    "text": "Toyota cluster 2129 (Hallef-Liter Zuelen)"
+  },
+  {
+    "key": "Torque extra PID by long name",
+    "source": "Torque extra PID by long name",
+    "text": "Torque Extra-PID nom laangen Numm"
+  },
+  {
+    "key": "Vehicle 1",
+    "source": "Vehicle 1",
+    "text": "Gefier 1"
+  },
+  {
+    "key": "Vehicle %1$s",
+    "source": "Vehicle %1$s",
+    "text": "Gefier %1$s"
+  },
+  {
+    "key": "Binding to Torque…",
+    "source": "Binding to Torque…",
+    "text": "Verbënnt mat Torque…"
+  },
+  {
+    "key": "Waiting for fuel source",
+    "source": "Waiting for fuel source",
+    "text": "Waart op d'Brennstoffquell"
+  },
+  {
+    "key": "raw %1$.1f%%",
+    "source": "raw %1$.1f%%",
+    "text": "réi %1$.1f%%"
+  },
+  {
+    "key": "sess %1$s",
+    "source": "sess %1$s",
+    "text": "Fuer %1$s"
+  },
+  {
+    "key": "Fuel Smoothing",
+    "source": "Fuel Smoothing",
+    "text": "Fuel Smoothing"
+  },
+  {
+    "key": "Fuel Smoothing quiet",
+    "source": "Fuel Smoothing quiet",
+    "text": "Fuel Smoothing roueg"
+  },
+  {
+    "key": "Map refitting",
+    "source": "Map refitting",
+    "text": "Kaart gëtt nei ugepasst"
+  },
+  {
+    "key": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "source": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "text": "Fuel Smoothing passt eng Kaart fir %1$s nei un. Dës Upassung liest 1:1, bis d'Neipassen fäerdeg ass."
+  },
+  {
+    "key": "No fuel level source set",
+    "source": "No fuel level source set",
+    "text": "Keng Brennstoffstand-Quell gesat"
+  },
+  {
+    "key": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "source": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "text": "Fuel Smoothing huet keng Brennstoffstand-Quell fir %1$s. Öffnet d'Astellungssäit an tippt Erkennen, oder wielt eng Quell."
+  },
+  {
+    "key": "No fuel level this drive",
+    "source": "No fuel level this drive",
+    "text": "Kee Brennstoffstand op dëser Fuer"
+  },
+  {
+    "key": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "source": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "text": "%1$s huet kee brauchbare Stand fir %2$s ginn. Préift d'Verbindung vum Adapter oder start Erkennen op der Astellungssäit."
+  },
+  {
+    "key": "Fuel level source found",
+    "source": "Fuel level source found",
+    "text": "Brennstoffstand-Quell fonnt"
+  },
+  {
+    "key": "Using %1$s for %2$s (%3$s).",
+    "source": "Using %1$s for %2$s (%3$s).",
+    "text": "Benotzt %1$s fir %2$s (%3$s)."
+  },
+  {
+    "key": "No fuel level source found",
+    "source": "No fuel level source found",
+    "text": "Keng Brennstoffstand-Quell fonnt"
+  },
+  {
+    "key": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "source": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "text": "Öffnet d'Astellung vu Fuel Smoothing a wielt eng Quell (oder setzt de PID an Torque derbäi), da tippt Erkennen."
+  },
+  {
+    "key": "Confirm fuel level source",
+    "source": "Confirm fuel level source",
+    "text": "Bestätegt d'Brennstoffstand-Quell"
+  },
+  {
+    "key": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "source": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "text": "%1$s erkannt, Ofwielung %2$.0f %% fir %3$s. Préift, datt et mam Instrument um Tableau stëmmt, an tippt Bestätegen. Bestätegen ass op der Astellungssäit an an der Benoriichtegung (%4$s)."
+  },
+  {
+    "key": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "source": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "text": "%1$s erkannt fir %2$s. Préift, datt et mam Instrument um Tableau stëmmt, an tippt Bestätegen. Bestätegen ass op der Astellungssäit an an der Benoriichtegung (%3$s)."
+  },
+  {
+    "key": "Recording to %1$s",
+    "source": "Recording to %1$s",
+    "text": "Ophuelen op %1$s"
+  },
+  {
+    "key": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "source": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "text": "Dëst Gefier ass %1$s (%2$s), mee de Torque Profil ass „%3$s“. D'Donnéeë ginn op %1$s; tippt fir Torque opzemaachen an de Profil ze wiesselen."
+  },
+  {
+    "key": "Wrong vehicle profile?",
+    "source": "Wrong vehicle profile?",
+    "text": "Falsche Gefierprofil?"
+  },
+  {
+    "key": "Torque profile '%1$s'",
+    "source": "Torque profile '%1$s'",
+    "text": "Torque Profil „%1$s“"
+  },
+  {
+    "key": "a new vehicle profile",
+    "source": "a new vehicle profile",
+    "text": "en neie Gefierprofil"
+  },
+  {
+    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "text": "De Torque Profil „%1$s“ passt net zu dësem Gefier (%2$s). Virschlag: %3$s. D'Donnéeë gi gehalen an um Enn vun der Fuer verworf, ausser Dir behält se."
+  },
+  {
+    "key": "Keeping drive data",
+    "source": "Keeping drive data",
+    "text": "Donnéeë vun der Fuer ginn gehalen"
+  },
+  {
+    "key": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "source": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "text": "Dës Fuer gëtt op %1$s gespäichert. D'Plugin-API vun Torque kann keng Torque Profiler uleeën oder wiesselen: an Torque leet oder wielt e Gefierprofil mam Numm „%2$s“ un."
+  },
+  {
+    "key": "Create new profile",
+    "source": "Create new profile",
+    "text": "Neie Profil uleeën"
+  },
+  {
+    "key": "Use %1$s",
+    "source": "Use %1$s",
+    "text": "%1$s benotzen"
+  }
+]

@@ -1,0 +1,647 @@
+[
+  {
+    "key": "Fuel Smoothing for Torque",
+    "source": "Fuel Smoothing for Torque",
+    "text": "Fuel Smoothing for Torque"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/privacy/"
+  },
+  {
+    "key": "Tips are on the Play Store version",
+    "source": "Tips are on the Play Store version",
+    "text": "Tá na baicseísí sa leagan Play Store"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "Tús tapa\n 1. Suiteáil Torque Pro (an leagan íoctha; ní thacaíonn Torque Lite le breiseáin) agus péireáil an t-adapter OBD-II.\n 2. Cumasaigh an breiseán seo in Torque → Socruithe → Breiseáin.\n 3. Ceadaigh fógraí agus socraigh úsáid na ceallraí ar Gan srian ionas gur féidir le Torque an breiseán seo a thosú sa chúlra.\n 4. In Torque, roghnaigh próifíl na feithicle atá á tiomáint agat. Coinnítear sonraí de réir phróifíl Torque agus seiceáiltear iad in aghaidh aitheantais VIN/ECU na feithicle.\n 5. Ar phróifíl nua braitear foinse an bhreosla nuair a cheanglaíonn tú; má iarrtar ort, déan comparáid leis an tomhas ar an deais agus tapáil Deimhnigh. Tá Deimhnigh ar an leathanach socruithe agus san fhógra. Is féidir é a roghnú thíos freisin.\n 6. Is é méid an umair an méid tosaigh don oiriúint Chunk go dtí go bhfoghlaimíonn sí a ceann féin. Ní athraíonn an breiseán é riamh; taispeántar méid foghlamtha gach oiriúna faoi.\n 7. In Torque, cuir tomhais leis le haghaidh [FuelSmooth] Smoothed Fuel Level agus, do gach oiriúint, Corrected %, Remaining, DTE agus Tank size. Is é DTE Remaining méadaithe faoi mpg fadtéarmach Torque. Deir fógra le linn athoiriúna go léann an oiriúint 1:1 go dtí go gcríochnaíonn an athoiriúnú.\n 8. Cuir leibhéal an bhreosla ar ais chuig Torque: As, smúdáilte, nó ceartaithe ón oiriúint Chunk, Band nó Kalman, ar do thomhas 012F.\n 9. Ní áirítear breosla ach amháin agus an t-inneall ag rith. Ní ritheann an breiseán ach amháin agus Torque ceangailte leis an ECU.\n 10. Lean ort ag tiomáint agus ag líonadh; feabhsaíonn an cruinneas thar roinnt umar páirteach. Má thagann fógra Próifíl feithicle mícheart? aníos, roghnaigh cad a dhéanfaidh tú leis an turas sin.\n 11. Fanann na sonraí go léir ar an bhfón seo. Ní thaifeadtar GPS ná suíomh."
+  },
+  {
+    "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "text": "%1$s\nLeagan %2$s (%3$s)\nBreiseán do Torque Pro. Níl baint aige le Torque ná le Ian Hawkins.\nFanann na sonraí go léir ar an bhfón seo; ní thaifeadtar GPS ná suíomh.\n\nCeadúnas\nCopyright David Lang. Gach ceart ar cosaint."
+  },
+  {
+    "key": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "source": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "text": "Leabharlanna foinse oscailte\nÚsáideann an aip seo na leabharlanna thíos. Tá a gceadúnais scartha ón gcóipcheart thuas.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), de dhíth ar Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/manual/"
+  },
+  {
+    "key": "Full manual (online)",
+    "source": "Full manual (online)",
+    "text": "Lámhleabhar iomlán (ar líne)"
+  },
+  {
+    "key": "Show fuel level in notification",
+    "source": "Show fuel level in notification",
+    "text": "Taispeáin leibhéal an bhreosla san fhógra"
+  },
+  {
+    "key": "Feed fuel level back to Torque (overrides 012F)",
+    "source": "Feed fuel level back to Torque (overrides 012F)",
+    "text": "Cuir leibhéal an bhreosla ar ais chuig Torque (sáraíonn 012F)"
+  },
+  {
+    "key": "Fuel Smoothing is running",
+    "source": "Fuel Smoothing is running",
+    "text": "Tá Fuel Smoothing ag rith"
+  },
+  {
+    "key": "Tap to start Fuel Smoothing",
+    "source": "Tap to start Fuel Smoothing",
+    "text": "Tapáil chun Fuel Smoothing a thosú"
+  },
+  {
+    "key": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "source": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "text": "Diúltaíodh tosú ón gceallra nó sa chúlra. Oscail uair amháin ionas gur féidir leis an mbreiseán rith le Torque."
+  },
+  {
+    "key": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "source": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "text": "Cuir umair bhreise leis de réir mar is gá (fanann umar monarchan 1 i gcónaí). Ná lasc braiteoirí ar an biorán PCM FLI (líonadh bréagach). Teastaíonn a PID breise Torque féin ó gach umar breise (MCU Mode 22, ainm uathúil — ní 012F ná Ford 16C1). Is é luach Select-PID aitheantóir an umair ag tosú ó 1. Gearrtar gal/hr ar an umar gníomhach amháin."
+  },
+  {
+    "key": "Tap to start",
+    "source": "Tap to start",
+    "text": "Tapáil chun tosú"
+  },
+  {
+    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "text": "Is é méid an umair an méid tosaigh don oiriúint Chunk go dtí go bhfoghlaimíonn sí a ceann féin. Ní athraíonn an breiseán é riamh; taispeántar méid foghlamtha gach oiriúna faoi."
+  },
+  {
+    "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "source": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "text": "Scríobhann luach ar Fuel Level (012F) monarchan Torque ionas go dtaispeánfaidh na tomhais atá ann é: As, smúdáilte, nó ceartaithe ón oiriúint Chunk, Band nó Kalman. Scríobhann oiriúint nach bhfuil tógtha fós an leibhéal smúdáilte."
+  },
+  {
+    "key": "Chunk: %1$s",
+    "source": "Chunk: %1$s",
+    "text": "Chunk: %1$s"
+  },
+  {
+    "key": "Band: %1$s",
+    "source": "Band: %1$s",
+    "text": "Band: %1$s"
+  },
+  {
+    "key": "Kalman: %1$s",
+    "source": "Kalman: %1$s",
+    "text": "Kalman: %1$s"
+  },
+  {
+    "key": "no size yet",
+    "source": "no size yet",
+    "text": "gan mhéid fós"
+  },
+  {
+    "key": "no size yet ± %1$.1f gal",
+    "source": "no size yet ± %1$.1f gal",
+    "text": "gan mhéid fós ± %1$.1f gal"
+  },
+  {
+    "key": "%1$.1f gal",
+    "source": "%1$.1f gal",
+    "text": "%1$.1f gal"
+  },
+  {
+    "key": "%1$.1f ± %2$.1f gal",
+    "source": "%1$.1f ± %2$.1f gal",
+    "text": "%1$.1f ± %2$.1f gal"
+  },
+  {
+    "key": "Help",
+    "source": "Help",
+    "text": "Cabhair"
+  },
+  {
+    "key": "About",
+    "source": "About",
+    "text": "Maidir leis"
+  },
+  {
+    "key": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "source": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "text": "Teastaíonn Torque Pro (íoctha). Ní thacaíonn Torque Lite le breiseáin."
+  },
+  {
+    "key": "Get Torque Pro",
+    "source": "Get Torque Pro",
+    "text": "Faigh Torque Pro"
+  },
+  {
+    "key": "Privacy",
+    "source": "Privacy",
+    "text": "Príobháideachas"
+  },
+  {
+    "key": "Send feedback",
+    "source": "Send feedback",
+    "text": "Seol aiseolas"
+  },
+  {
+    "key": "Tip",
+    "source": "Tip",
+    "text": "Baicseís"
+  },
+  {
+    "key": "Thanks",
+    "source": "Thanks",
+    "text": "Go raibh maith agat"
+  },
+  {
+    "key": "Close",
+    "source": "Close",
+    "text": "Dún"
+  },
+  {
+    "key": "OK",
+    "source": "OK",
+    "text": "OK"
+  },
+  {
+    "key": "Detect",
+    "source": "Detect",
+    "text": "Braith"
+  },
+  {
+    "key": "Confirm",
+    "source": "Confirm",
+    "text": "Deimhnigh"
+  },
+  {
+    "key": "Save pin",
+    "source": "Save pin",
+    "text": "Sábháil an t-ancaire"
+  },
+  {
+    "key": "Add additional tank",
+    "source": "Add additional tank",
+    "text": "Cuir umar leis"
+  },
+  {
+    "key": "Remove",
+    "source": "Remove",
+    "text": "Bain"
+  },
+  {
+    "key": "Details",
+    "source": "Details",
+    "text": "Sonraí"
+  },
+  {
+    "key": "Verbose logging (debug; per-second log lines)",
+    "source": "Verbose logging (debug; per-second log lines)",
+    "text": "Logáil mhionsonraithe (dífhabhtú; línte gach soicind)"
+  },
+  {
+    "key": "Profile name",
+    "source": "Profile name",
+    "text": "Ainm na próifíle"
+  },
+  {
+    "key": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "source": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "text": "Ainm phróifíl na feithicle seo. Faigheann gach próifíl feithicle Torque a próifíl breiseáin, a sonraí agus a léarscáileanna foghlamtha féin."
+  },
+  {
+    "key": "Make",
+    "source": "Make",
+    "text": "Déantús"
+  },
+  {
+    "key": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "source": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "text": "Déantús na feithicle (m.sh. Ford). Ní úsáidtear é ach chun a roghnú cé na PID breosla de réir déantúis a fhéadfaidh an braiteadh a thriail."
+  },
+  {
+    "key": "Fuel source",
+    "source": "Fuel source",
+    "text": "Foinse breosla"
+  },
+  {
+    "key": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "source": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "text": "Cá as a dtagann leibhéal amh an bhreosla. Triailann Braith (ní mór an ECU a bheith ceangailte) na hiarrthóirí le haghaidh léitheoireachta amháin agus iarrann deimhniú mura n-aontaíonn dhá fhoinse. Tá Deimhnigh ar an leathanach socruithe agus san fhógra. Dada = braith ar an gcéad cheangal eile."
+  },
+  {
+    "key": "Custom long name",
+    "source": "Custom long name",
+    "text": "Ainm fada saincheaptha"
+  },
+  {
+    "key": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "source": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "text": "Don fhoinse „PID breise Torque de réir ainm fhada“ amháin: ainm fada cruinn an PID Torque a thuairiscíonn an leibhéal."
+  },
+  {
+    "key": "Tank size",
+    "source": "Tank size",
+    "text": "Méid an umair"
+  },
+  {
+    "key": "blank = no starting size; each fit learns its own.",
+    "source": "blank = no starting size; each fit learns its own.",
+    "text": "folamh = gan mhéid tosaigh; foghlaimíonn gach oiriúint a ceann féin."
+  },
+  {
+    "key": "Smoothing τ seconds",
+    "source": "Smoothing τ seconds",
+    "text": "Smúdáil τ i soicindí"
+  },
+  {
+    "key": "Time constant of the smoothing filter (0 = no smoothing).",
+    "source": "Time constant of the smoothing filter (0 = no smoothing).",
+    "text": "Tairiseach ama an scagaire smúdála (0 = gan smúdáil)."
+  },
+  {
+    "key": "Max skew %/s",
+    "source": "Max skew %/s",
+    "text": "Uasmhclaonadh %/s"
+  },
+  {
+    "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "text": "An t-athrú is mó in aghaidh an tsoicind a fhéadfaidh an leibhéal smúdáilte a leanúint; déantar neamhaird de shleamhnú os a chionn sin."
+  },
+  {
+    "key": "Fill jump %",
+    "source": "Fill jump %",
+    "text": "Léim líonta %"
+  },
+  {
+    "key": "Rise in level while stopped that counts as a fill.",
+    "source": "Rise in level while stopped that counts as a fill.",
+    "text": "Ardú leibhéil agus an fheithicil ina stad a áirítear mar líonadh."
+  },
+  {
+    "key": "Odometer miles",
+    "source": "Odometer miles",
+    "text": "Odaiméadar i mílte"
+  },
+  {
+    "key": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "source": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "text": "Roghnach: cuir isteach léamh an odaiméadair agus Sábháil an t-ancaire chun fad na próifíle seo a ancaireacht."
+  },
+  {
+    "key": "Additional tanks",
+    "source": "Additional tanks",
+    "text": "Umair bhreise"
+  },
+  {
+    "key": "Active tank",
+    "source": "Active tank",
+    "text": "Umar gníomhach"
+  },
+  {
+    "key": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "source": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "text": "An t-umar a ngearrtar an dó (gal/hr) air. Ó PID: roghnaíonn PID Torque é (aitheantóir ón 1)."
+  },
+  {
+    "key": "Select-PID long name",
+    "source": "Select-PID long name",
+    "text": "Ainm fada Select-PID"
+  },
+  {
+    "key": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "source": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "text": "Nuair is Ó PID é Umar gníomhach amháin: ainm fada an PID Torque arb é a luach aitheantóir an umair."
+  },
+  {
+    "key": "Tank %1$d",
+    "source": "Tank %1$d",
+    "text": "Umar %1$d"
+  },
+  {
+    "key": "Tank %1$d fuel source",
+    "source": "Tank %1$d fuel source",
+    "text": "Foinse breosla umair %1$d"
+  },
+  {
+    "key": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "source": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "text": "Ainm fada saincheaptha umair %1$d (m.sh. [FuelSmooth] Tank%1$d Level)"
+  },
+  {
+    "key": "Tank %1$d gallons",
+    "source": "Tank %1$d gallons",
+    "text": "Galúin umair %1$d"
+  },
+  {
+    "key": "From PID",
+    "source": "From PID",
+    "text": "Ó PID"
+  },
+  {
+    "key": "(unconfirmed)",
+    "source": "(unconfirmed)",
+    "text": "(gan deimhniú)"
+  },
+  {
+    "key": "· ECU connected",
+    "source": "· ECU connected",
+    "text": "· ECU ceangailte"
+  },
+  {
+    "key": "tank ?",
+    "source": "tank ?",
+    "text": "umar ?"
+  },
+  {
+    "key": "About %1$s",
+    "source": "About %1$s",
+    "text": "Timpeall ar %1$s"
+  },
+  {
+    "key": "0 to %1$s s",
+    "source": "0 to %1$s s",
+    "text": "0 go %1$s s"
+  },
+  {
+    "key": "above 0, at most %1$s %%/s",
+    "source": "above 0, at most %1$s %%/s",
+    "text": "os cionn 0, %1$s %%/s ar a mhéad"
+  },
+  {
+    "key": "%1$s to %2$s %%",
+    "source": "%1$s to %2$s %%",
+    "text": "%1$s go %2$s %%"
+  },
+  {
+    "key": "blank or a number above 0",
+    "source": "blank or a number above 0",
+    "text": "folamh nó uimhir os cionn 0"
+  },
+  {
+    "key": "stored value out of range",
+    "source": "stored value out of range",
+    "text": "luach stóráilte lasmuigh den raon"
+  },
+  {
+    "key": "Chunk",
+    "source": "Chunk",
+    "text": "Chunk"
+  },
+  {
+    "key": "Band",
+    "source": "Band",
+    "text": "Band"
+  },
+  {
+    "key": "Kalman",
+    "source": "Kalman",
+    "text": "Kalman"
+  },
+  {
+    "key": "Smoothed %",
+    "source": "Smoothed %",
+    "text": "Smúdáilte %"
+  },
+  {
+    "key": "Error (%)",
+    "source": "Error (%)",
+    "text": "Earráid (%)"
+  },
+  {
+    "key": "Off",
+    "source": "Off",
+    "text": "As"
+  },
+  {
+    "key": "Corrected % (Chunk)",
+    "source": "Corrected % (Chunk)",
+    "text": "Ceartaithe % (Chunk)"
+  },
+  {
+    "key": "Corrected % (Band)",
+    "source": "Corrected % (Band)",
+    "text": "Ceartaithe % (Band)"
+  },
+  {
+    "key": "Corrected % (Kalman)",
+    "source": "Corrected % (Kalman)",
+    "text": "Ceartaithe % (Kalman)"
+  },
+  {
+    "key": "gal",
+    "source": "gal",
+    "text": "gal"
+  },
+  {
+    "key": "L",
+    "source": "L",
+    "text": "L"
+  },
+  {
+    "key": "None yet (Detect runs on connect)",
+    "source": "None yet (Detect runs on connect)",
+    "text": "Dada fós (Braith nuair a cheanglaítear)"
+  },
+  {
+    "key": "SAE 012F Fuel Tank Level",
+    "source": "SAE 012F Fuel Tank Level",
+    "text": "SAE 012F Fuel Tank Level"
+  },
+  {
+    "key": "Mode 22 16C1",
+    "source": "Mode 22 16C1",
+    "text": "Mode 22 16C1"
+  },
+  {
+    "key": "Ford Mode 22 F42F",
+    "source": "Ford Mode 22 F42F",
+    "text": "Ford Mode 22 F42F"
+  },
+  {
+    "key": "GM Mode 22 12C5 %",
+    "source": "GM Mode 22 12C5 %",
+    "text": "GM Mode 22 12C5 %"
+  },
+  {
+    "key": "Chrysler 21A2 %",
+    "source": "Chrysler 21A2 %",
+    "text": "Chrysler 21A2 %"
+  },
+  {
+    "key": "Chrysler Fuel Level Average",
+    "source": "Chrysler Fuel Level Average",
+    "text": "Chrysler Fuel Level Average"
+  },
+  {
+    "key": "Toyota cluster 2129 (half-litre counts)",
+    "source": "Toyota cluster 2129 (half-litre counts)",
+    "text": "Toyota cluster 2129 (comhaireamh leathlítre)"
+  },
+  {
+    "key": "Torque extra PID by long name",
+    "source": "Torque extra PID by long name",
+    "text": "PID breise Torque de réir ainm fhada"
+  },
+  {
+    "key": "Vehicle 1",
+    "source": "Vehicle 1",
+    "text": "Feithicil 1"
+  },
+  {
+    "key": "Vehicle %1$s",
+    "source": "Vehicle %1$s",
+    "text": "Feithicil %1$s"
+  },
+  {
+    "key": "Binding to Torque…",
+    "source": "Binding to Torque…",
+    "text": "Ag ceangal le Torque…"
+  },
+  {
+    "key": "Waiting for fuel source",
+    "source": "Waiting for fuel source",
+    "text": "Ag fanacht le foinse breosla"
+  },
+  {
+    "key": "raw %1$.1f%%",
+    "source": "raw %1$.1f%%",
+    "text": "amh %1$.1f%%"
+  },
+  {
+    "key": "sess %1$s",
+    "source": "sess %1$s",
+    "text": "turas %1$s"
+  },
+  {
+    "key": "Fuel Smoothing",
+    "source": "Fuel Smoothing",
+    "text": "Fuel Smoothing"
+  },
+  {
+    "key": "Fuel Smoothing quiet",
+    "source": "Fuel Smoothing quiet",
+    "text": "Fuel Smoothing ciúin"
+  },
+  {
+    "key": "Map refitting",
+    "source": "Map refitting",
+    "text": "Ag athoiriúnú an léarscáil"
+  },
+  {
+    "key": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "source": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "text": "Tá Fuel Smoothing ag athoiriúnú léarscáile do %1$s. Léann an oiriúint seo 1:1 go dtí go gcríochnaíonn an athoiriúnú."
+  },
+  {
+    "key": "No fuel level source set",
+    "source": "No fuel level source set",
+    "text": "Níl foinse leibhéil breosla socraithe"
+  },
+  {
+    "key": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "source": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "text": "Níl foinse leibhéil breosla ag Fuel Smoothing do %1$s. Oscail an leathanach socruithe agus tapáil Braith, nó roghnaigh foinse."
+  },
+  {
+    "key": "No fuel level this drive",
+    "source": "No fuel level this drive",
+    "text": "Níl leibhéal breosla ar an turas seo"
+  },
+  {
+    "key": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "source": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "text": "Níor thug %1$s leibhéal inúsáidte do %2$s. Seiceáil ceangal an adapter nó rith Braith ar an leathanach socruithe."
+  },
+  {
+    "key": "Fuel level source found",
+    "source": "Fuel level source found",
+    "text": "Fuarthas foinse leibhéil breosla"
+  },
+  {
+    "key": "Using %1$s for %2$s (%3$s).",
+    "source": "Using %1$s for %2$s (%3$s).",
+    "text": "Á úsáid %1$s do %2$s (%3$s)."
+  },
+  {
+    "key": "No fuel level source found",
+    "source": "No fuel level source found",
+    "text": "Níor aimsíodh foinse leibhéil breosla"
+  },
+  {
+    "key": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "source": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "text": "Oscail socrú Fuel Smoothing agus roghnaigh foinse (nó cuir an PID le Torque), ansin tapáil Braith."
+  },
+  {
+    "key": "Confirm fuel level source",
+    "source": "Confirm fuel level source",
+    "text": "Deimhnigh foinse leibhéil an bhreosla"
+  },
+  {
+    "key": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "source": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "text": "Braithíodh %1$s, léamh %2$.0f %% do %3$s. Seiceáil go meaitseálann sé tomhas an deais, ansin tapáil Deimhnigh. Tá Deimhnigh ar an leathanach socruithe agus san fhógra (%4$s)."
+  },
+  {
+    "key": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "source": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "text": "Braithíodh %1$s do %2$s. Seiceáil go meaitseálann sé tomhas an deais, ansin tapáil Deimhnigh. Tá Deimhnigh ar an leathanach socruithe agus san fhógra (%3$s)."
+  },
+  {
+    "key": "Recording to %1$s",
+    "source": "Recording to %1$s",
+    "text": "Ag taifeadadh chuig %1$s"
+  },
+  {
+    "key": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "source": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "text": "Is é an fheithicil seo %1$s (%2$s), ach is é próifíl Torque „%3$s“. Téann sonraí chuig %1$s; tapáil chun Torque a oscailt agus an phróifíl a athrú."
+  },
+  {
+    "key": "Wrong vehicle profile?",
+    "source": "Wrong vehicle profile?",
+    "text": "Próifíl feithicle mícheart?"
+  },
+  {
+    "key": "Torque profile '%1$s'",
+    "source": "Torque profile '%1$s'",
+    "text": "Próifíl Torque „%1$s“"
+  },
+  {
+    "key": "a new vehicle profile",
+    "source": "a new vehicle profile",
+    "text": "próifíl feithicle nua"
+  },
+  {
+    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "text": "Ní mheaitseálann próifíl Torque „%1$s“ an fheithicil seo (%2$s). Moladh: %3$s. Coinnítear sonraí agus caitear iad ag deireadh an turais mura gcoinníonn tú iad."
+  },
+  {
+    "key": "Keeping drive data",
+    "source": "Keeping drive data",
+    "text": "Sonraí an turais á gcoinneáil"
+  },
+  {
+    "key": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "source": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "text": "Sábhálfar an turas seo chuig %1$s. Ní féidir le API breiseáin Torque próifílí Torque a chruthú ná a athrú: in Torque, cruthaigh nó roghnaigh próifíl feithicle darb ainm „%2$s“."
+  },
+  {
+    "key": "Create new profile",
+    "source": "Create new profile",
+    "text": "Cruthaigh próifíl nua"
+  },
+  {
+    "key": "Use %1$s",
+    "source": "Use %1$s",
+    "text": "Úsáid %1$s"
+  }
+]

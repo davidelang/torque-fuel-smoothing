@@ -1,0 +1,647 @@
+[
+  {
+    "key": "Fuel Smoothing for Torque",
+    "source": "Fuel Smoothing for Torque",
+    "text": "Fuel Smoothing for Torque"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/privacy/"
+  },
+  {
+    "key": "Tips are on the Play Store version",
+    "source": "Tips are on the Play Store version",
+    "text": "Ao amin'ny kinova Play Store ny vola fanomezana"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "Fanombohana haingana\n1. Apetraho ny Torque Pro (ny kinova karamaina; tsy mahazaka plugins ny Torque Lite) ary ampiarahina ny adapter OBD-II-nao.\n2. Alefaso ity plugin ity ao amin'ny Torque → Fikirana → Plugins.\n3. Avelao ny fampahafantarana, ary apetraho ho Tsy voafetra ny fampiasana bateria mba hahafahan'ny Torque manomboka ity plugin ity any aoriana.\n4. Ao amin'ny Torque, fidio ny mombamomba ny fiara ho an'ny fiara entinao. Tehirizina isaky ny mombamomba Torque ny angona ary ampitahaina amin'ny mombamomba VIN/ECU ny fiara.\n5. Amin'ny mombamomba vaovao dia fantatra ny loharanon-tsolika rehefa mifandray ianao; raha anontaniana, ampitahao amin'ny famantarana eo amin'ny solaitrabe dia tsindrio Hamafiso. Ao amin'ny pejy fametrahana sy ao amin'ny fampahafantarana ny Hamafiso. Azonao fidina eto ambany koa.\n6. Ny haben'ny tanky no haben'ny fanombohana ho an'ny fanitsiana Chunk mandra-pianarany ny azy. Tsy ovain'ilay plugin mihitsy izany; aseho eo ambaniny ny haben'ny nianaran'ny fanitsiana tsirairay.\n7. Ao amin'ny Torque, ampio fandrefesana ho an'ny [FuelSmooth] Smoothed Fuel Level ary, ho an'ny fanitsiana tsirairay, Corrected %, Remaining, DTE ary Tank size. Ny DTE dia Remaining ampitomboina amin'ny mpg maharitra an'ny Torque. Fampahafantarana mandritra ny fanitsiana indray no milaza fa mamaky 1:1 izany fanitsiana izany mandra-pahavitan'ny fanitsiana indray.\n8. Avereno any amin'ny Torque ny haavon'ny solika: Vonoy, Malama, na Ahitsy avy amin'ny fanitsiana Chunk, Band na Kalman ho eo amin'ny fandrefesana 012F-nao.\n9. Ny solika ihany no isaina rehefa mandeha ny motera. Ny plugin ihany no mandeha rehefa mifandray amin'ny ECU ny Torque.\n10. Tohizo ny fitondrana sy ny famenoana; mihatsara ny fahamarinana amin'ny tanky tsy feno maromaro. Raha miseho ny fampahafantarana Mombamomba fiara diso?, fidio izay hatao amin'izany dia izany.\n11. Mijanona amin'ity finday ity ny angona rehetra. Tsy misy GPS na toerana voarakitra."
+  },
+  {
+    "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "text": "%1$s\nKinova %2$s (%3$s)\nPlugin ho an'ny Torque Pro. Tsy mifandray amin'ny Torque na Ian Hawkins.\nMijanona amin'ity finday ity ny angona rehetra; tsy misy GPS na toerana voarakitra.\n\nFahazoan-dàlana\nCopyright David Lang. Zo rehetra voatokana."
+  },
+  {
+    "key": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "source": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "text": "Tranomboky loharano misokatra\nMampiasa ny tranomboky eto ambany ity fampiharana ity. Misaraka amin'ny zon'ny mpamorona etsy ambony ny fahazoan-dàlan'izy ireo.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), ilain'ny Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/manual/"
+  },
+  {
+    "key": "Full manual (online)",
+    "source": "Full manual (online)",
+    "text": "Boky torolalana feno (an-tserasera)"
+  },
+  {
+    "key": "Show fuel level in notification",
+    "source": "Show fuel level in notification",
+    "text": "Asehoy ao amin'ny fampahafantarana ny haavon'ny solika"
+  },
+  {
+    "key": "Feed fuel level back to Torque (overrides 012F)",
+    "source": "Feed fuel level back to Torque (overrides 012F)",
+    "text": "Avereno any amin'ny Torque ny haavon'ny solika (manitsaka ny 012F)"
+  },
+  {
+    "key": "Fuel Smoothing is running",
+    "source": "Fuel Smoothing is running",
+    "text": "Mandeha ny Fuel Smoothing"
+  },
+  {
+    "key": "Tap to start Fuel Smoothing",
+    "source": "Tap to start Fuel Smoothing",
+    "text": "Tsindrio hanombohana ny Fuel Smoothing"
+  },
+  {
+    "key": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "source": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "text": "Nolavina ny fanombohana amin'ny bateria na any aoriana. Sokafy indray mandeha mba hahafahan'ny plugin miara-mandeha amin'ny Torque."
+  },
+  {
+    "key": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "source": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "text": "Ampio tanky fanampiny raha ilaina (mijanona foana ny tanky orinasa 1). Aza mampifandray ny fandefa amin'ny pin PCM FLI (famenoana diso). Ny tanky fanampiny tsirairay dia mila ny PID fanampiny Torque azy (MCU Mode 22, anarana tokana — tsy 012F na Ford 16C1). Ny sandan'ny Select-PID dia ny id tanky manomboka amin'ny 1. Ny Gal/hr dia alefa amin'ny tanky miasa ihany."
+  },
+  {
+    "key": "Tap to start",
+    "source": "Tap to start",
+    "text": "Tsindrio hanombohana"
+  },
+  {
+    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "text": "Ny haben'ny tanky no haben'ny fanombohana ho an'ny fanitsiana Chunk mandra-pianarany ny azy. Tsy ovain'ilay plugin mihitsy izany; aseho eo ambaniny ny haben'ny nianaran'ny fanitsiana tsirairay."
+  },
+  {
+    "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "source": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "text": "Manoratra sanda amin'ny Fuel Level mahazatra an'ny Torque (012F) mba hasehon'ny fandrefesana efa misy azy: Vonoy, Malama, na Ahitsy avy amin'ny fanitsiana Chunk, Band na Kalman. Ny fanitsiana mbola tsy namboarina dia manoratra ny haavo malama."
+  },
+  {
+    "key": "Chunk: %1$s",
+    "source": "Chunk: %1$s",
+    "text": "Chunk: %1$s"
+  },
+  {
+    "key": "Band: %1$s",
+    "source": "Band: %1$s",
+    "text": "Band: %1$s"
+  },
+  {
+    "key": "Kalman: %1$s",
+    "source": "Kalman: %1$s",
+    "text": "Kalman: %1$s"
+  },
+  {
+    "key": "no size yet",
+    "source": "no size yet",
+    "text": "mbola tsy misy habe"
+  },
+  {
+    "key": "no size yet ± %1$.1f gal",
+    "source": "no size yet ± %1$.1f gal",
+    "text": "mbola tsy misy habe ± %1$.1f gal"
+  },
+  {
+    "key": "%1$.1f gal",
+    "source": "%1$.1f gal",
+    "text": "%1$.1f gal"
+  },
+  {
+    "key": "%1$.1f ± %2$.1f gal",
+    "source": "%1$.1f ± %2$.1f gal",
+    "text": "%1$.1f ± %2$.1f gal"
+  },
+  {
+    "key": "Help",
+    "source": "Help",
+    "text": "Fanampiana"
+  },
+  {
+    "key": "About",
+    "source": "About",
+    "text": "Mombamomba"
+  },
+  {
+    "key": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "source": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "text": "Mila Torque Pro (karamaina). Tsy mahazaka plugins ny Torque Lite."
+  },
+  {
+    "key": "Get Torque Pro",
+    "source": "Get Torque Pro",
+    "text": "Alao ny Torque Pro"
+  },
+  {
+    "key": "Privacy",
+    "source": "Privacy",
+    "text": "Tsiambaratelo"
+  },
+  {
+    "key": "Send feedback",
+    "source": "Send feedback",
+    "text": "Alefaso hevitra"
+  },
+  {
+    "key": "Tip",
+    "source": "Tip",
+    "text": "Vola fanomezana"
+  },
+  {
+    "key": "Thanks",
+    "source": "Thanks",
+    "text": "Misaotra"
+  },
+  {
+    "key": "Close",
+    "source": "Close",
+    "text": "Akatona"
+  },
+  {
+    "key": "OK",
+    "source": "OK",
+    "text": "OK"
+  },
+  {
+    "key": "Detect",
+    "source": "Detect",
+    "text": "Fantaro"
+  },
+  {
+    "key": "Confirm",
+    "source": "Confirm",
+    "text": "Hamafiso"
+  },
+  {
+    "key": "Save pin",
+    "source": "Save pin",
+    "text": "Tehirizo ny pin"
+  },
+  {
+    "key": "Add additional tank",
+    "source": "Add additional tank",
+    "text": "Ampio tanky fanampiny"
+  },
+  {
+    "key": "Remove",
+    "source": "Remove",
+    "text": "Esory"
+  },
+  {
+    "key": "Details",
+    "source": "Details",
+    "text": "Antsipiriany"
+  },
+  {
+    "key": "Verbose logging (debug; per-second log lines)",
+    "source": "Verbose logging (debug; per-second log lines)",
+    "text": "Fandraketana antsipiriany (debug; andalana fandraketana isan-tsegondra)"
+  },
+  {
+    "key": "Profile name",
+    "source": "Profile name",
+    "text": "Anaran'ny mombamomba"
+  },
+  {
+    "key": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "source": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "text": "Ny anaran'ity mombamomba fiara ity. Ny mombamomba fiara Torque tsirairay dia mahazo ny mombamomba plugin azy, ny angony ary ny sarintany nianarana."
+  },
+  {
+    "key": "Make",
+    "source": "Make",
+    "text": "Marika"
+  },
+  {
+    "key": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "source": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "text": "Marika fiara (oh. Ford). Ampiasaina ihany hisafidianana ny PID solika manokana ho an'ny marika azon'ny fahafantarana andramana."
+  },
+  {
+    "key": "Fuel source",
+    "source": "Fuel source",
+    "text": "Loharanon-tsolika"
+  },
+  {
+    "key": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "source": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "text": "Avy aiza ny haavon-tsolika manta. Fantaro (tsy maintsy mifandray ny ECU) manandrana ireo kandida amin'ny famakiana ihany ary mangataka anao hanamafy raha tsy mifanaraka loharano roa. Ao amin'ny pejy fametrahana sy ao amin'ny fampahafantarana ny Hamafiso. Tsy misy = fantaro amin'ny fifandraisana manaraka."
+  },
+  {
+    "key": "Custom long name",
+    "source": "Custom long name",
+    "text": "Anarana lava manokana"
+  },
+  {
+    "key": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "source": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "text": "Ho an'ny loharano «PID fanampiny Torque araka ny anarana lava» ihany: ny anarana lava marina an'ny PID Torque izay mitatitra ny haavo."
+  },
+  {
+    "key": "Tank size",
+    "source": "Tank size",
+    "text": "Haben'ny tanky"
+  },
+  {
+    "key": "blank = no starting size; each fit learns its own.",
+    "source": "blank = no starting size; each fit learns its own.",
+    "text": "foana = tsy misy habe fanombohana; mianatra ny azy ny fanitsiana tsirairay."
+  },
+  {
+    "key": "Smoothing τ seconds",
+    "source": "Smoothing τ seconds",
+    "text": "Fanalefahana τ segondra"
+  },
+  {
+    "key": "Time constant of the smoothing filter (0 = no smoothing).",
+    "source": "Time constant of the smoothing filter (0 = no smoothing).",
+    "text": "Ny fotoana tsy miova an'ny sivana fanalefahana (0 = tsy misy fanalefahana)."
+  },
+  {
+    "key": "Max skew %/s",
+    "source": "Max skew %/s",
+    "text": "Fitongilana ambony indrindra %/s"
+  },
+  {
+    "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "text": "Ny fiovana lehibe indrindra isan-tsegondra azon'ny haavo malama arahina; tsy raharahaina ny fihovitrovitra mihoatra izany."
+  },
+  {
+    "key": "Fill jump %",
+    "source": "Fill jump %",
+    "text": "Fitsambikinana famenoana %"
+  },
+  {
+    "key": "Rise in level while stopped that counts as a fill.",
+    "source": "Rise in level while stopped that counts as a fill.",
+    "text": "Ny fiakaran'ny haavo rehefa mijanona izay isaina ho famenoana."
+  },
+  {
+    "key": "Odometer miles",
+    "source": "Odometer miles",
+    "text": "Odometer amin'ny miles"
+  },
+  {
+    "key": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "source": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "text": "Tsy voatery: ampidiro ny famakiana odometer ary Tehirizo ny pin mba hametahana ny halavirana ho an'ity mombamomba ity."
+  },
+  {
+    "key": "Additional tanks",
+    "source": "Additional tanks",
+    "text": "Tanky fanampiny"
+  },
+  {
+    "key": "Active tank",
+    "source": "Active tank",
+    "text": "Tanky miasa"
+  },
+  {
+    "key": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "source": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "text": "Ny tanky andoavana ny fandoroana solika (gal/hr). Avy amin'ny PID: PID Torque no mifidy azy (id tanky manomboka amin'ny 1)."
+  },
+  {
+    "key": "Select-PID long name",
+    "source": "Select-PID long name",
+    "text": "Anarana lava an'ny Select-PID"
+  },
+  {
+    "key": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "source": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "text": "Rehefa Tanky miasa = Avy amin'ny PID ihany: ny anarana lava an'ny PID Torque izay id tanky ny sandany."
+  },
+  {
+    "key": "Tank %1$d",
+    "source": "Tank %1$d",
+    "text": "Tanky %1$d"
+  },
+  {
+    "key": "Tank %1$d fuel source",
+    "source": "Tank %1$d fuel source",
+    "text": "Loharanon-tsolika an'ny tanky %1$d"
+  },
+  {
+    "key": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "source": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "text": "Anarana lava manokana an'ny tanky %1$d (oh. [FuelSmooth] Tank%1$d Level)"
+  },
+  {
+    "key": "Tank %1$d gallons",
+    "source": "Tank %1$d gallons",
+    "text": "Tanky %1$d gallons"
+  },
+  {
+    "key": "From PID",
+    "source": "From PID",
+    "text": "Avy amin'ny PID"
+  },
+  {
+    "key": "(unconfirmed)",
+    "source": "(unconfirmed)",
+    "text": "(tsy voamarina)"
+  },
+  {
+    "key": "· ECU connected",
+    "source": "· ECU connected",
+    "text": "· ECU mifandray"
+  },
+  {
+    "key": "tank ?",
+    "source": "tank ?",
+    "text": "tanky ?"
+  },
+  {
+    "key": "About %1$s",
+    "source": "About %1$s",
+    "text": "Mombamomba ny %1$s"
+  },
+  {
+    "key": "0 to %1$s s",
+    "source": "0 to %1$s s",
+    "text": "0 ka hatramin'ny %1$s s"
+  },
+  {
+    "key": "above 0, at most %1$s %%/s",
+    "source": "above 0, at most %1$s %%/s",
+    "text": "mihoatra ny 0, ambony indrindra %1$s %%/s"
+  },
+  {
+    "key": "%1$s to %2$s %%",
+    "source": "%1$s to %2$s %%",
+    "text": "%1$s ka hatramin'ny %2$s %%"
+  },
+  {
+    "key": "blank or a number above 0",
+    "source": "blank or a number above 0",
+    "text": "foana na isa mihoatra ny 0"
+  },
+  {
+    "key": "stored value out of range",
+    "source": "stored value out of range",
+    "text": "sanda voatahiry ivelan'ny fetra"
+  },
+  {
+    "key": "Chunk",
+    "source": "Chunk",
+    "text": "Chunk"
+  },
+  {
+    "key": "Band",
+    "source": "Band",
+    "text": "Band"
+  },
+  {
+    "key": "Kalman",
+    "source": "Kalman",
+    "text": "Kalman"
+  },
+  {
+    "key": "Smoothed %",
+    "source": "Smoothed %",
+    "text": "Malama %"
+  },
+  {
+    "key": "Error (%)",
+    "source": "Error (%)",
+    "text": "Hadisoana (%)"
+  },
+  {
+    "key": "Off",
+    "source": "Off",
+    "text": "Vonoy"
+  },
+  {
+    "key": "Corrected % (Chunk)",
+    "source": "Corrected % (Chunk)",
+    "text": "Ahitsy % (Chunk)"
+  },
+  {
+    "key": "Corrected % (Band)",
+    "source": "Corrected % (Band)",
+    "text": "Ahitsy % (Band)"
+  },
+  {
+    "key": "Corrected % (Kalman)",
+    "source": "Corrected % (Kalman)",
+    "text": "Ahitsy % (Kalman)"
+  },
+  {
+    "key": "gal",
+    "source": "gal",
+    "text": "gal"
+  },
+  {
+    "key": "L",
+    "source": "L",
+    "text": "L"
+  },
+  {
+    "key": "None yet (Detect runs on connect)",
+    "source": "None yet (Detect runs on connect)",
+    "text": "Mbola tsy misy (miasa ny Fantaro rehefa mifandray)"
+  },
+  {
+    "key": "SAE 012F Fuel Tank Level",
+    "source": "SAE 012F Fuel Tank Level",
+    "text": "SAE 012F haavon'ny tanky solika"
+  },
+  {
+    "key": "Mode 22 16C1",
+    "source": "Mode 22 16C1",
+    "text": "Mode 22 16C1"
+  },
+  {
+    "key": "Ford Mode 22 F42F",
+    "source": "Ford Mode 22 F42F",
+    "text": "Ford Mode 22 F42F"
+  },
+  {
+    "key": "GM Mode 22 12C5 %",
+    "source": "GM Mode 22 12C5 %",
+    "text": "GM Mode 22 12C5 %"
+  },
+  {
+    "key": "Chrysler 21A2 %",
+    "source": "Chrysler 21A2 %",
+    "text": "Chrysler 21A2 %"
+  },
+  {
+    "key": "Chrysler Fuel Level Average",
+    "source": "Chrysler Fuel Level Average",
+    "text": "Salan'isa haavon-tsolika Chrysler"
+  },
+  {
+    "key": "Toyota cluster 2129 (half-litre counts)",
+    "source": "Toyota cluster 2129 (half-litre counts)",
+    "text": "Vondrona Toyota 2129 (fanisana antsasaka litatra)"
+  },
+  {
+    "key": "Torque extra PID by long name",
+    "source": "Torque extra PID by long name",
+    "text": "PID fanampiny Torque araka ny anarana lava"
+  },
+  {
+    "key": "Vehicle 1",
+    "source": "Vehicle 1",
+    "text": "Fiara 1"
+  },
+  {
+    "key": "Vehicle %1$s",
+    "source": "Vehicle %1$s",
+    "text": "Fiara %1$s"
+  },
+  {
+    "key": "Binding to Torque…",
+    "source": "Binding to Torque…",
+    "text": "Mifandray amin'ny Torque…"
+  },
+  {
+    "key": "Waiting for fuel source",
+    "source": "Waiting for fuel source",
+    "text": "Miandry loharanon-tsolika"
+  },
+  {
+    "key": "raw %1$.1f%%",
+    "source": "raw %1$.1f%%",
+    "text": "manta %1$.1f%%"
+  },
+  {
+    "key": "sess %1$s",
+    "source": "sess %1$s",
+    "text": "dia %1$s"
+  },
+  {
+    "key": "Fuel Smoothing",
+    "source": "Fuel Smoothing",
+    "text": "Fuel Smoothing"
+  },
+  {
+    "key": "Fuel Smoothing quiet",
+    "source": "Fuel Smoothing quiet",
+    "text": "Fuel Smoothing mangina"
+  },
+  {
+    "key": "Map refitting",
+    "source": "Map refitting",
+    "text": "Averina amboarina ny sarintany"
+  },
+  {
+    "key": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "source": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "text": "Manitsy indray sarintany ho an'ny %1$s ny Fuel Smoothing. Mamaky 1:1 izany fanitsiana izany mandra-pahavitan'ny fanitsiana indray."
+  },
+  {
+    "key": "No fuel level source set",
+    "source": "No fuel level source set",
+    "text": "Tsy misy loharanon'ny haavon-tsolika napetraka"
+  },
+  {
+    "key": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "source": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "text": "Tsy manana loharanon'ny haavon-tsolika ho an'ny %1$s ny Fuel Smoothing. Sokafy ny pejy fametrahana dia tsindrio Fantaro, na fidio loharano."
+  },
+  {
+    "key": "No fuel level this drive",
+    "source": "No fuel level this drive",
+    "text": "Tsy misy haavon-tsolika amin'ity dia ity"
+  },
+  {
+    "key": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "source": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "text": "%1$s tsy nanome haavo azo ampiasaina ho an'ny %2$s. Jereo ny fifandraisan'ny adapter, na alefaso ny Fantaro eo amin'ny pejy fametrahana."
+  },
+  {
+    "key": "Fuel level source found",
+    "source": "Fuel level source found",
+    "text": "Hita ny loharanon'ny haavon-tsolika"
+  },
+  {
+    "key": "Using %1$s for %2$s (%3$s).",
+    "source": "Using %1$s for %2$s (%3$s).",
+    "text": "Mampiasa %1$s ho an'ny %2$s (%3$s)."
+  },
+  {
+    "key": "No fuel level source found",
+    "source": "No fuel level source found",
+    "text": "Tsy hita ny loharanon'ny haavon-tsolika"
+  },
+  {
+    "key": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "source": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "text": "Sokafy ny fametrahana ny Fuel Smoothing dia fidio loharano (na ampio ny PID ao amin'ny Torque), avy eo tsindrio Fantaro."
+  },
+  {
+    "key": "Confirm fuel level source",
+    "source": "Confirm fuel level source",
+    "text": "Hamafiso ny loharanon'ny haavon-tsolika"
+  },
+  {
+    "key": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "source": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "text": "Hita ny %1$s mamaky %2$.0f %% ho an'ny %3$s. Jereo raha mifanaraka amin'ny famantarana solika eo amin'ny solaitrabe, dia tsindrio Hamafiso. Ao amin'ny pejy fametrahana sy ao amin'ny fampahafantarana ny Hamafiso (%4$s)."
+  },
+  {
+    "key": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "source": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "text": "Hita ny %1$s ho an'ny %2$s. Jereo raha mifanaraka amin'ny famantarana solika eo amin'ny solaitrabe, dia tsindrio Hamafiso. Ao amin'ny pejy fametrahana sy ao amin'ny fampahafantarana ny Hamafiso (%3$s)."
+  },
+  {
+    "key": "Recording to %1$s",
+    "source": "Recording to %1$s",
+    "text": "Firaketana mankany amin'ny %1$s"
+  },
+  {
+    "key": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "source": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "text": "Ity fiara ity dia %1$s (%2$s), fa ny mombamomba Torque dia '%3$s'. Mankany amin'ny %1$s ny angona; tsindrio hanokafana ny Torque sy hanovana mombamomba."
+  },
+  {
+    "key": "Wrong vehicle profile?",
+    "source": "Wrong vehicle profile?",
+    "text": "Mombamomba fiara diso?"
+  },
+  {
+    "key": "Torque profile '%1$s'",
+    "source": "Torque profile '%1$s'",
+    "text": "Mombamomba Torque '%1$s'"
+  },
+  {
+    "key": "a new vehicle profile",
+    "source": "a new vehicle profile",
+    "text": "mombamomba fiara vaovao"
+  },
+  {
+    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "text": "Ny mombamomba Torque '%1$s' tsy mifanaraka amin'ity fiara ity (%2$s). Soso-kevitra: %3$s. Tazomina ny angona ary ariana amin'ny faran'ny dia raha tsy tazoninao."
+  },
+  {
+    "key": "Keeping drive data",
+    "source": "Keeping drive data",
+    "text": "Tazomina ny angon'ny dia"
+  },
+  {
+    "key": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "source": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "text": "Hotehirizina ao amin'ny %1$s ity dia ity. Tsy afaka mamorona na manova mombamomba Torque ny API plugin an'ny Torque: ao amin'ny Torque, mamorona na mifidiana mombamomba fiara antsoina hoe '%2$s'."
+  },
+  {
+    "key": "Create new profile",
+    "source": "Create new profile",
+    "text": "Mamorona mombamomba vaovao"
+  },
+  {
+    "key": "Use %1$s",
+    "source": "Use %1$s",
+    "text": "Ampiasao ny %1$s"
+  }
+]

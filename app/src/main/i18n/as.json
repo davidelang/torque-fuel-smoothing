@@ -1,0 +1,647 @@
+[
+  {
+    "key": "Fuel Smoothing for Torque",
+    "source": "Fuel Smoothing for Torque",
+    "text": "Fuel Smoothing for Torque"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/privacy/"
+  },
+  {
+    "key": "Tips are on the Play Store version",
+    "source": "Tips are on the Play Store version",
+    "text": "টিপছ Play Store সংস্কৰণত আছে"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "দ্ৰুত আৰম্ভ\n 1. Torque Pro ইনষ্টল কৰক (পৰিশোধিত সংস্কৰণ; Torque Lite-এ প্লাগইন সমৰ্থন নকৰে) আৰু OBD-II এডাপ্টাৰ যোৰা লাওক.\n 2. এই প্লাগইনটো Torque → ছেটিংছ → Plugins-ত সক্ৰিয় কৰক.\n 3. জাননীৰ অনুমতি দিয়ক আৰু বেটাৰী ব্যৱহাৰ অসীমিত ৰাখক যাতে Torque-এ এই প্লাগইন পটভূমিত আৰম্ভ কৰিব পাৰে.\n 4. Torque-ত আপুনি চলাই থকা বাহনৰ প্ৰফাইল বাছক. তথ্য প্ৰতিটো Torque প্ৰফাইলত ৰখা হয় আৰু বাহনৰ VIN/ECU পৰিচয়ৰ সৈতে পৰীক্ষা কৰা হয়.\n 5. নতুন প্ৰফাইলত ইন্ধনৰ উৎস সংযোগত ধৰা পৰে; সুধিলে ডেছ গেজৰ সৈতে মিলাওক আৰু নিশ্চিত কৰক টিপক. নিশ্চিত কৰক ছেটআপ পৃষ্ঠা আৰু জাননীত আছে. তলৰ পৰাও বাছিব পাৰে.\n 6. টেংকৰ আকাৰ Chunk ফিটৰ আৰম্ভণিৰ আকাৰ, নিজে নশিকা পৰ্যন্ত. প্লাগইনে ইয়াক কেতিয়াও সলনি নকৰে; প্ৰতিটো ফিটৰ শিকা আকাৰ তাৰ তলত দেখুওৱা হয়.\n 7. Torque-ত [FuelSmooth] Smoothed Fuel Level আৰু প্ৰতিটো ফিটৰ Corrected %, Remaining, DTE আৰু Tank size-ৰ গেজ যোগ কৰক. DTE হৈছে Remaining গুণ Torque-ৰ দীৰ্ঘম্যাদী mpg. ৰিফিটৰ সময়ত জাননীয়ে কয় যে সেই ফিট 1:1 পঢ়ে যেতিয়ালৈকে ৰিফিট শেষ নহয়.\n 8. ইন্ধনৰ স্তৰ Torque-লৈ ঘূৰাই পঠাওক: বন্ধ, মসৃণ, বা Chunk, Band বা Kalman ফিটৰ পৰা শুধৰোৱা, আপোনাৰ 012F গেজলৈ.\n 9. ইন্ধন কেৱল ইঞ্জিন চলি থকা সময়ত গণনা হয়. প্লাগইন কেৱল Torque ECU-ৰ সৈতে সংযোজিত হ’লেহে চলে.\n 10. চলাই থাকক আৰু ভৰাই থাকক; সঠিকতা কেইবাটাও আংশিক টেংকত বাঢ়ে. ভুল বাহন প্ৰফাইল? জাননী আহিলে সেই ড্ৰাইভৰ কি কৰিব বাছক.\n 11. সকলো তথ্য এই ফোনত থাকে. কোনো GPS বা অৱস্থান ৰেকৰ্ড নহয়."
+  },
+  {
+    "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "text": "%1$s\nসংস্কৰণ %2$s (%3$s)\nTorque Pro-ৰ বাবে প্লাগইন. Torque বা Ian Hawkins-ৰ সৈতে জড়িত নহয়.\nসকলো তথ্য এই ফোনত থাকে; কোনো GPS বা অৱস্থান ৰেকৰ্ড নহয়.\n\nঅনুজ্ঞা\nCopyright David Lang. সকলো স্বত্ব সংৰক্ষিত."
+  },
+  {
+    "key": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "source": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "text": "মুক্ত উৎস লাইব্ৰেৰী\nএই এপে তলৰ লাইব্ৰেৰী ব্যৱহাৰ কৰে. সিহঁতৰ অনুজ্ঞা ওপৰৰ কপিৰাইটৰ পৰা পৃথক.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), Play Billing-এ লাগে\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/manual/"
+  },
+  {
+    "key": "Full manual (online)",
+    "source": "Full manual (online)",
+    "text": "সম্পূৰ্ণ হাতপুথি (অনলাইন)"
+  },
+  {
+    "key": "Show fuel level in notification",
+    "source": "Show fuel level in notification",
+    "text": "জাননীত ইন্ধনৰ স্তৰ দেখুৱাওক"
+  },
+  {
+    "key": "Feed fuel level back to Torque (overrides 012F)",
+    "source": "Feed fuel level back to Torque (overrides 012F)",
+    "text": "ইন্ধনৰ স্তৰ Torque-লৈ ঘূৰাই পঠাওক (012F সলনি কৰে)"
+  },
+  {
+    "key": "Fuel Smoothing is running",
+    "source": "Fuel Smoothing is running",
+    "text": "Fuel Smoothing চলি আছে"
+  },
+  {
+    "key": "Tap to start Fuel Smoothing",
+    "source": "Tap to start Fuel Smoothing",
+    "text": "Fuel Smoothing আৰম্ভ কৰিবলৈ টিপক"
+  },
+  {
+    "key": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "source": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "text": "বেটাৰী বা পটভূমিৰ পৰা আৰম্ভ নাকচ হ’ল. এবাৰ খোলক যাতে প্লাগইন Torque-ৰ সৈতে চলিব পাৰে."
+  },
+  {
+    "key": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "source": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "text": "প্ৰয়োজন অনুসৰি অতিৰিক্ত টেংক যোগ কৰক (কাৰখানাৰ টেংক 1 সদায় থাকে). চেণ্ডাৰ PCM FLI পিনলৈ নিসলনি কৰিব (মিছা ভৰোৱা). প্ৰতিটো অতিৰিক্ত টেংকৰ নিজৰ Torque অতিৰিক্ত PID লাগে (MCU Mode 22, অদ্বিতীয় নাম — 012F বা Ford 16C1 নহয়). Select-PID মান 1-ৰ পৰা টেংক id. Gal/hr কেৱল সক্ৰিয় টেংকত ধৰা হয়."
+  },
+  {
+    "key": "Tap to start",
+    "source": "Tap to start",
+    "text": "আৰম্ভ কৰিবলৈ টিপক"
+  },
+  {
+    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "text": "টেংকৰ আকাৰ Chunk ফিটৰ আৰম্ভণিৰ আকাৰ, নিজে নশিকা পৰ্যন্ত. প্লাগইনে ইয়াক কেতিয়াও সলনি নকৰে; প্ৰতিটো ফিটৰ শিকা আকাৰ তাৰ তলত দেখুওৱা হয়."
+  },
+  {
+    "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "source": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "text": "থকা গেজে দেখুৱাবলৈ Torque-ৰ কাৰখানা Fuel Level (012F)-ত মান লিখে: বন্ধ, মসৃণ, বা Chunk, Band বা Kalman ফিটৰ পৰা শুধৰোৱা. এতিয়াও নিৰ্মিত নোহোৱা ফিটে মসৃণ স্তৰ লিখে."
+  },
+  {
+    "key": "Chunk: %1$s",
+    "source": "Chunk: %1$s",
+    "text": "Chunk: %1$s"
+  },
+  {
+    "key": "Band: %1$s",
+    "source": "Band: %1$s",
+    "text": "Band: %1$s"
+  },
+  {
+    "key": "Kalman: %1$s",
+    "source": "Kalman: %1$s",
+    "text": "Kalman: %1$s"
+  },
+  {
+    "key": "no size yet",
+    "source": "no size yet",
+    "text": "এতিয়াও আকাৰ নাই"
+  },
+  {
+    "key": "no size yet ± %1$.1f gal",
+    "source": "no size yet ± %1$.1f gal",
+    "text": "এতিয়াও আকাৰ নাই ± %1$.1f gal"
+  },
+  {
+    "key": "%1$.1f gal",
+    "source": "%1$.1f gal",
+    "text": "%1$.1f gal"
+  },
+  {
+    "key": "%1$.1f ± %2$.1f gal",
+    "source": "%1$.1f ± %2$.1f gal",
+    "text": "%1$.1f ± %2$.1f gal"
+  },
+  {
+    "key": "Help",
+    "source": "Help",
+    "text": "সহায়"
+  },
+  {
+    "key": "About",
+    "source": "About",
+    "text": "বিষয়ে"
+  },
+  {
+    "key": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "source": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "text": "Torque Pro (পৰিশোধিত) লাগে. Torque Lite-এ প্লাগইন সমৰ্থন নকৰে."
+  },
+  {
+    "key": "Get Torque Pro",
+    "source": "Get Torque Pro",
+    "text": "Torque Pro লওক"
+  },
+  {
+    "key": "Privacy",
+    "source": "Privacy",
+    "text": "গোপনীয়তা"
+  },
+  {
+    "key": "Send feedback",
+    "source": "Send feedback",
+    "text": "মতামত পঠাওক"
+  },
+  {
+    "key": "Tip",
+    "source": "Tip",
+    "text": "টিপ"
+  },
+  {
+    "key": "Thanks",
+    "source": "Thanks",
+    "text": "ধন্যবাদ"
+  },
+  {
+    "key": "Close",
+    "source": "Close",
+    "text": "বন্ধ"
+  },
+  {
+    "key": "OK",
+    "source": "OK",
+    "text": "OK"
+  },
+  {
+    "key": "Detect",
+    "source": "Detect",
+    "text": "চিনাক্ত"
+  },
+  {
+    "key": "Confirm",
+    "source": "Confirm",
+    "text": "নিশ্চিত কৰক"
+  },
+  {
+    "key": "Save pin",
+    "source": "Save pin",
+    "text": "পিন সাঁচক"
+  },
+  {
+    "key": "Add additional tank",
+    "source": "Add additional tank",
+    "text": "অতিৰিক্ত টেংক যোগ"
+  },
+  {
+    "key": "Remove",
+    "source": "Remove",
+    "text": "আঁতৰাওক"
+  },
+  {
+    "key": "Details",
+    "source": "Details",
+    "text": "বিৱৰণ"
+  },
+  {
+    "key": "Verbose logging (debug; per-second log lines)",
+    "source": "Verbose logging (debug; per-second log lines)",
+    "text": "বিস্তৃত লগ (ডিবাগ; প্ৰতি ছেকেণ্ডত শাৰী)"
+  },
+  {
+    "key": "Profile name",
+    "source": "Profile name",
+    "text": "প্ৰফাইলৰ নাম"
+  },
+  {
+    "key": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "source": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "text": "এই বাহন প্ৰফাইলৰ নাম. প্ৰতিটো Torque বাহন প্ৰফাইলে নিজৰ প্লাগইন প্ৰফাইল, তথ্য আৰু শিকা মানচিত্ৰ পায়."
+  },
+  {
+    "key": "Make",
+    "source": "Make",
+    "text": "নিৰ্মাতা"
+  },
+  {
+    "key": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "source": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "text": "বাহন নিৰ্মাতা (যেনে Ford). চিনাক্তকৰণে কোন ব্ৰেণ্ডৰ ইন্ধন PID চেষ্টা কৰিব সেয়া বাছিবলৈহে."
+  },
+  {
+    "key": "Fuel source",
+    "source": "Fuel source",
+    "text": "ইন্ধনৰ উৎস"
+  },
+  {
+    "key": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "source": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "text": "কেঁচা ইন্ধনৰ স্তৰ ক’ৰ পৰা আহে. চিনাক্ত (ECU সংযোজিত হ’ব লাগিব) প্ৰাৰ্থীক কেৱল পঢ়ে আৰু দুটা উৎস নিমিলে নিশ্চিত কৰিবলৈ কয়. নিশ্চিত কৰক ছেটআপ পৃষ্ঠা আৰু জাননীত আছে. একো নাই = পৰৱৰ্তী সংযোগত চিনাক্ত."
+  },
+  {
+    "key": "Custom long name",
+    "source": "Custom long name",
+    "text": "কাষ্টম দীঘল নাম"
+  },
+  {
+    "key": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "source": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "text": "কেৱল উৎস Torque extra PID by long name-ৰ বাবে: স্তৰ জনাই দিয়া Torque PID-ৰ সঠিক দীঘল নাম."
+  },
+  {
+    "key": "Tank size",
+    "source": "Tank size",
+    "text": "টেংকৰ আকাৰ"
+  },
+  {
+    "key": "blank = no starting size; each fit learns its own.",
+    "source": "blank = no starting size; each fit learns its own.",
+    "text": "খালী = আৰম্ভণিৰ আকাৰ নাই; প্ৰতিটো ফিটে নিজৰ শিকে."
+  },
+  {
+    "key": "Smoothing τ seconds",
+    "source": "Smoothing τ seconds",
+    "text": "মসৃণকৰণ τ ছেকেণ্ড"
+  },
+  {
+    "key": "Time constant of the smoothing filter (0 = no smoothing).",
+    "source": "Time constant of the smoothing filter (0 = no smoothing).",
+    "text": "মসৃণকৰণ ফিল্টাৰৰ সময় ধ্ৰুৱক (0 = মসৃণকৰণ নাই)."
+  },
+  {
+    "key": "Max skew %/s",
+    "source": "Max skew %/s",
+    "text": "সৰ্বাধিক হেলনী %/s"
+  },
+  {
+    "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "text": "প্ৰতি ছেকেণ্ডত সৰ্ববৃহৎ সলনি যাক মসৃণ স্তৰে অনুসৰণ কৰিব পাৰে; তাৰ বাহিৰৰ দোলন উপেক্ষিত."
+  },
+  {
+    "key": "Fill jump %",
+    "source": "Fill jump %",
+    "text": "ভৰোৱাৰ জাঁপ %"
+  },
+  {
+    "key": "Rise in level while stopped that counts as a fill.",
+    "source": "Rise in level while stopped that counts as a fill.",
+    "text": "ৰৈ থকা অৱস্থাত স্তৰৰ বৃদ্ধি যাক ভৰোৱা বুলি গণনা কৰা হয়."
+  },
+  {
+    "key": "Odometer miles",
+    "source": "Odometer miles",
+    "text": "অডোমিটাৰ মাইল"
+  },
+  {
+    "key": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "source": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "text": "ঐচ্ছিক: অডোমিটাৰ পঢ়া সুমুৱাওক আৰু পিন সাঁচক যাতে এই প্ৰফাইলৰ দূৰত্ব আবদ্ধ হয়."
+  },
+  {
+    "key": "Additional tanks",
+    "source": "Additional tanks",
+    "text": "অতিৰিক্ত টেংক"
+  },
+  {
+    "key": "Active tank",
+    "source": "Active tank",
+    "text": "সক্ৰিয় টেংক"
+  },
+  {
+    "key": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "source": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "text": "ইন্ধন খৰচ (gal/hr) কোন টেংকত ধৰা হয়. PID-ৰ পৰা: Torque PID-এ সেয়া বাছে (1-ৰ পৰা টেংক id)."
+  },
+  {
+    "key": "Select-PID long name",
+    "source": "Select-PID long name",
+    "text": "Select-PID দীঘল নাম"
+  },
+  {
+    "key": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "source": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "text": "কেৱল সক্ৰিয় টেংক = PID-ৰ পৰা হ’লে: যাৰ মান টেংক id, সেই Torque PID-ৰ দীঘল নাম."
+  },
+  {
+    "key": "Tank %1$d",
+    "source": "Tank %1$d",
+    "text": "টেংক %1$d"
+  },
+  {
+    "key": "Tank %1$d fuel source",
+    "source": "Tank %1$d fuel source",
+    "text": "টেংক %1$d ইন্ধনৰ উৎস"
+  },
+  {
+    "key": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "source": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "text": "টেংক %1$d কাষ্টম দীঘল নাম (যেনে [FuelSmooth] Tank%1$d Level)"
+  },
+  {
+    "key": "Tank %1$d gallons",
+    "source": "Tank %1$d gallons",
+    "text": "টেংক %1$d গেলন"
+  },
+  {
+    "key": "From PID",
+    "source": "From PID",
+    "text": "PID-ৰ পৰা"
+  },
+  {
+    "key": "(unconfirmed)",
+    "source": "(unconfirmed)",
+    "text": "(অনিশ্চিত)"
+  },
+  {
+    "key": "· ECU connected",
+    "source": "· ECU connected",
+    "text": "· ECU সংযোজিত"
+  },
+  {
+    "key": "tank ?",
+    "source": "tank ?",
+    "text": "টেংক ?"
+  },
+  {
+    "key": "About %1$s",
+    "source": "About %1$s",
+    "text": "%1$s বিষয়ে"
+  },
+  {
+    "key": "0 to %1$s s",
+    "source": "0 to %1$s s",
+    "text": "0 ৰ পৰা %1$s s"
+  },
+  {
+    "key": "above 0, at most %1$s %%/s",
+    "source": "above 0, at most %1$s %%/s",
+    "text": "0 ৰ ওপৰত, সৰ্বাধিক %1$s %%/s"
+  },
+  {
+    "key": "%1$s to %2$s %%",
+    "source": "%1$s to %2$s %%",
+    "text": "%1$s ৰ পৰা %2$s %%"
+  },
+  {
+    "key": "blank or a number above 0",
+    "source": "blank or a number above 0",
+    "text": "খালী বা 0 তকৈ ডাঙৰ সংখ্যা"
+  },
+  {
+    "key": "stored value out of range",
+    "source": "stored value out of range",
+    "text": "সঞ্চিত মান পৰিসৰৰ বাহিৰত"
+  },
+  {
+    "key": "Chunk",
+    "source": "Chunk",
+    "text": "Chunk"
+  },
+  {
+    "key": "Band",
+    "source": "Band",
+    "text": "Band"
+  },
+  {
+    "key": "Kalman",
+    "source": "Kalman",
+    "text": "Kalman"
+  },
+  {
+    "key": "Smoothed %",
+    "source": "Smoothed %",
+    "text": "মসৃণ %"
+  },
+  {
+    "key": "Error (%)",
+    "source": "Error (%)",
+    "text": "ত্ৰুটি (%)"
+  },
+  {
+    "key": "Off",
+    "source": "Off",
+    "text": "বন্ধ"
+  },
+  {
+    "key": "Corrected % (Chunk)",
+    "source": "Corrected % (Chunk)",
+    "text": "Corrected % (Chunk)"
+  },
+  {
+    "key": "Corrected % (Band)",
+    "source": "Corrected % (Band)",
+    "text": "Corrected % (Band)"
+  },
+  {
+    "key": "Corrected % (Kalman)",
+    "source": "Corrected % (Kalman)",
+    "text": "Corrected % (Kalman)"
+  },
+  {
+    "key": "gal",
+    "source": "gal",
+    "text": "gal"
+  },
+  {
+    "key": "L",
+    "source": "L",
+    "text": "L"
+  },
+  {
+    "key": "None yet (Detect runs on connect)",
+    "source": "None yet (Detect runs on connect)",
+    "text": "এতিয়াও একো নাই (চিনাক্ত সংযোগত চলে)"
+  },
+  {
+    "key": "SAE 012F Fuel Tank Level",
+    "source": "SAE 012F Fuel Tank Level",
+    "text": "SAE 012F Fuel Tank Level"
+  },
+  {
+    "key": "Mode 22 16C1",
+    "source": "Mode 22 16C1",
+    "text": "Mode 22 16C1"
+  },
+  {
+    "key": "Ford Mode 22 F42F",
+    "source": "Ford Mode 22 F42F",
+    "text": "Ford Mode 22 F42F"
+  },
+  {
+    "key": "GM Mode 22 12C5 %",
+    "source": "GM Mode 22 12C5 %",
+    "text": "GM Mode 22 12C5 %"
+  },
+  {
+    "key": "Chrysler 21A2 %",
+    "source": "Chrysler 21A2 %",
+    "text": "Chrysler 21A2 %"
+  },
+  {
+    "key": "Chrysler Fuel Level Average",
+    "source": "Chrysler Fuel Level Average",
+    "text": "Chrysler Fuel Level Average"
+  },
+  {
+    "key": "Toyota cluster 2129 (half-litre counts)",
+    "source": "Toyota cluster 2129 (half-litre counts)",
+    "text": "Toyota cluster 2129 (half-litre counts)"
+  },
+  {
+    "key": "Torque extra PID by long name",
+    "source": "Torque extra PID by long name",
+    "text": "Torque extra PID by long name"
+  },
+  {
+    "key": "Vehicle 1",
+    "source": "Vehicle 1",
+    "text": "বাহন 1"
+  },
+  {
+    "key": "Vehicle %1$s",
+    "source": "Vehicle %1$s",
+    "text": "বাহন %1$s"
+  },
+  {
+    "key": "Binding to Torque…",
+    "source": "Binding to Torque…",
+    "text": "Torque-ৰ সৈতে বান্ধিছে…"
+  },
+  {
+    "key": "Waiting for fuel source",
+    "source": "Waiting for fuel source",
+    "text": "ইন্ধনৰ উৎসৰ বাবে অপেক্ষা"
+  },
+  {
+    "key": "raw %1$.1f%%",
+    "source": "raw %1$.1f%%",
+    "text": "কেঁচা %1$.1f%%"
+  },
+  {
+    "key": "sess %1$s",
+    "source": "sess %1$s",
+    "text": "ছেশন %1$s"
+  },
+  {
+    "key": "Fuel Smoothing",
+    "source": "Fuel Smoothing",
+    "text": "Fuel Smoothing"
+  },
+  {
+    "key": "Fuel Smoothing quiet",
+    "source": "Fuel Smoothing quiet",
+    "text": "Fuel Smoothing নিৰৱ"
+  },
+  {
+    "key": "Map refitting",
+    "source": "Map refitting",
+    "text": "মানচিত্ৰ পুনৰ ফিট হৈছে"
+  },
+  {
+    "key": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "source": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "text": "Fuel Smoothing-এ %1$s-ৰ বাবে মানচিত্ৰ পুনৰ ফিট কৰিছে. সেই ফিট 1:1 পঢ়ে যেতিয়ালৈকে ৰিফিট শেষ নহয়."
+  },
+  {
+    "key": "No fuel level source set",
+    "source": "No fuel level source set",
+    "text": "ইন্ধনৰ স্তৰৰ উৎস নিৰ্ধাৰিত নহয়"
+  },
+  {
+    "key": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "source": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "text": "Fuel Smoothing-ৰ %1$s-ৰ বাবে ইন্ধনৰ স্তৰৰ উৎস নাই. ছেটআপ পৃষ্ঠা খুলি চিনাক্ত টিপক, বা উৎস বাছক."
+  },
+  {
+    "key": "No fuel level this drive",
+    "source": "No fuel level this drive",
+    "text": "এই ড্ৰাইভত ইন্ধনৰ স্তৰ নাই"
+  },
+  {
+    "key": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "source": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "text": "%1$s-এ %2$s-ৰ বাবে ব্যৱহাৰযোগ্য স্তৰ নিদিলে. এডাপ্টাৰ সংযোগ পৰীক্ষা কৰক, বা ছেটআপ পৃষ্ঠাত চিনাক্ত চলাওক."
+  },
+  {
+    "key": "Fuel level source found",
+    "source": "Fuel level source found",
+    "text": "ইন্ধনৰ স্তৰৰ উৎস পোৱা গ’ল"
+  },
+  {
+    "key": "Using %1$s for %2$s (%3$s).",
+    "source": "Using %1$s for %2$s (%3$s).",
+    "text": "%1$s %2$s-ৰ বাবে ব্যৱহৃত (%3$s)."
+  },
+  {
+    "key": "No fuel level source found",
+    "source": "No fuel level source found",
+    "text": "ইন্ধনৰ স্তৰৰ উৎস পোৱা নগ’ল"
+  },
+  {
+    "key": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "source": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "text": "Fuel Smoothing ছেটআপ খুলি উৎস বাছক (বা Torque-ত PID যোগ কৰক), তাৰ পিছত চিনাক্ত টিপক."
+  },
+  {
+    "key": "Confirm fuel level source",
+    "source": "Confirm fuel level source",
+    "text": "ইন্ধনৰ স্তৰৰ উৎস নিশ্চিত কৰক"
+  },
+  {
+    "key": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "source": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "text": "%1$s ধৰা পৰিল, পঢ়া %2$.0f %% , %3$s-ৰ বাবে. ডেছৰ ইন্ধন গেজৰ সৈতে মিলেনে চাই নিশ্চিত কৰক টিপক. নিশ্চিত কৰক ছেটআপ পৃষ্ঠা আৰু জাননীত আছে (%4$s)."
+  },
+  {
+    "key": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "source": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "text": "%1$s ধৰা পৰিল, %2$s-ৰ বাবে. ডেছৰ ইন্ধন গেজৰ সৈতে মিলেনে চাই নিশ্চিত কৰক টিপক. নিশ্চিত কৰক ছেটআপ পৃষ্ঠা আৰু জাননীত আছে (%3$s)."
+  },
+  {
+    "key": "Recording to %1$s",
+    "source": "Recording to %1$s",
+    "text": "%1$s-লৈ ৰেকৰ্ড"
+  },
+  {
+    "key": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "source": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "text": "এই বাহন %1$s (%2$s), কিন্তু Torque-ৰ প্ৰফাইল '%3$s'. তথ্য %1$s-লৈ যায়; Torque খুলি প্ৰফাইল সলনি কৰিবলৈ টিপক."
+  },
+  {
+    "key": "Wrong vehicle profile?",
+    "source": "Wrong vehicle profile?",
+    "text": "ভুল বাহন প্ৰফাইল?"
+  },
+  {
+    "key": "Torque profile '%1$s'",
+    "source": "Torque profile '%1$s'",
+    "text": "Torque প্ৰফাইল '%1$s'"
+  },
+  {
+    "key": "a new vehicle profile",
+    "source": "a new vehicle profile",
+    "text": "নতুন বাহন প্ৰফাইল"
+  },
+  {
+    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "text": "Torque প্ৰফাইল '%1$s' এই বাহনৰ সৈতে নিমিলে (%2$s). পৰামৰ্শ: %3$s. তথ্য ৰখা হয় আৰু আপুনি নাৰাখিলে ড্ৰাইভ শেষত পেলোৱা হয়."
+  },
+  {
+    "key": "Keeping drive data",
+    "source": "Keeping drive data",
+    "text": "ড্ৰাইভৰ তথ্য ৰখা হৈছে"
+  },
+  {
+    "key": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "source": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "text": "এই ড্ৰাইভ %1$s-ত সাঁচিব. Torque-ৰ প্লাগইন API-এ Torque প্ৰফাইল সৃষ্টি বা সলনি কৰিব নোৱাৰে: Torque-ত '%2$s' নামৰ বাহন প্ৰফাইল সৃষ্টি বা বাছক."
+  },
+  {
+    "key": "Create new profile",
+    "source": "Create new profile",
+    "text": "নতুন প্ৰফাইল সৃষ্টি"
+  },
+  {
+    "key": "Use %1$s",
+    "source": "Use %1$s",
+    "text": "%1$s ব্যৱহাৰ কৰক"
+  }
+]

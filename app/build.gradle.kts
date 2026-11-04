@@ -163,6 +163,10 @@ android {
         aidl = true
         resValues = true
     }
+    sourceSets.getByName("main") {
+        res.srcDir(layout.buildDirectory.dir("generated/i18n/res"))
+        kotlin.srcDir(layout.buildDirectory.dir("generated/i18n/kotlin"))
+    }
     androidResources {
         localeFilters += listOf(
             "en",
@@ -187,7 +191,7 @@ kotlin {
 }
 
 dependencies {
-    // Changing billing-ktx requires the same version in R.string.open_source_notices.
+    // Changing billing-ktx requires the same version in the open-source notices sentence.
     implementation("com.android.billingclient:billing-ktx:8.0.0")
     testImplementation("junit:junit:4.13.2")
     // Real org.json for unit tests (android.jar ships stubs only); profile.json is edited with JSONObject.
@@ -198,3 +202,16 @@ tasks.withType<Test>().configureEach {
     val evalDir = System.getProperty("fuelsmoothing.evalDir")
     if (evalDir != null) systemProperty("fuelsmoothing.evalDir", evalDir)
 }
+
+// Catalog -> build-output strings and the S() resource map. Does not translate.
+val generateI18nStrings = tasks.register<Exec>("generateI18nStrings") {
+    workingDir = rootProject.projectDir
+    commandLine("python3", "scripts/i18n_generate_resources.py")
+    environment("PYTHONDONTWRITEBYTECODE", "1")
+}
+tasks.named("preBuild").configure { dependsOn(generateI18nStrings) }
+tasks.matching {
+    (it.name.startsWith("merge") && it.name.endsWith("Resources")) ||
+        (it.name.startsWith("compile") && it.name.contains("Kotlin")) ||
+        (it.name.startsWith("parse") && it.name.contains("LocalResources"))
+}.configureEach { dependsOn(generateI18nStrings) }

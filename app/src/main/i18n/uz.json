@@ -1,0 +1,647 @@
+[
+  {
+    "key": "Fuel Smoothing for Torque",
+    "source": "Fuel Smoothing for Torque",
+    "text": "Fuel Smoothing for Torque"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/privacy/"
+  },
+  {
+    "key": "Tips are on the Play Store version",
+    "source": "Tips are on the Play Store version",
+    "text": "Maslahatlar Play Store versiyasida"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "Tez boshlash\n 1. Torque Pro o‘rnating (pullik versiya; Torque Lite plaginlarni qo‘llab-quvvatlamaydi) va OBD-II adapterini juftlang.\n 2. Bu plaginni Torque → Sozlamalar → Plugins ichida yoqing.\n 3. Bildirishnomalarga ruxsat bering va batareya sarfini Cheklovsiz qiling, shunda Torque bu plaginni fonda ishga tushira oladi.\n 4. Torque ichida haydayotgan avtomobil profilini tanlang. Ma’lumot har bir Torque profili bo‘yicha saqlanadi va avtomobilning VIN/ECU identifikatori bilan tekshiriladi.\n 5. Yangi profilda yoqilg‘i manbai ulanganida aniqlanadi; so‘ralsa, uni panel ko‘rsatkichi bilan solishtiring va Tasdiqlash tugmasini bosing. Tasdiqlash sozlash sahifasida va bildirishnomada. Uni pastdan ham tanlashingiz mumkin.\n 6. Bak o‘lchami Chunk moslashuvining boshlang‘ich o‘lchami, u o‘zinikini o‘rganmaguncha. Plagin uni hech qachon o‘zgartirmaydi; har bir moslashuvning o‘rgangan o‘lchami uning ostida ko‘rsatiladi.\n 7. Torque ichida [FuelSmooth] Smoothed Fuel Level va har bir moslashuvning Corrected %, Remaining, DTE hamda Tank size ko‘rsatkichlarini qo‘shing. DTE — Remaining ning Torque uzoq muddatli mpg ga ko‘paytmasi. Qayta moslashuv bildirishnomasi o‘sha moslashuv qayta moslashuv tugaguncha 1:1 o‘qiydi deb aytadi.\n 8. Yoqilg‘i darajasini Torque ga qaytaring: O‘chiq, tekislangan yoki Chunk, Band yoxud Kalman moslashuvidan tuzatilgan, 012F ko‘rsatkichingizga.\n 9. Yoqilg‘i faqat dvigatel ishlaganda hisoblanadi. Plagin faqat Torque ECU ga ulanganida ishlaydi.\n 10. Haydashda va to‘ldirishda davom eting; aniqlik bir necha qisman bak davomida oshadi. Noto‘g‘ri avtomobil profili? bildirishnomasi chiqsa, o‘sha safar bilan nima qilishni tanlang.\n 11. Barcha ma’lumot shu telefonda qoladi. GPS yoki joylashuv yozilmaydi."
+  },
+  {
+    "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "text": "%1$s\nVersiya %2$s (%3$s)\nTorque Pro uchun plagin. Torque yoki Ian Hawkins bilan bog‘liq emas.\nBarcha ma’lumot shu telefonda qoladi; GPS yoki joylashuv yozilmaydi.\n\nLitsenziya\nCopyright David Lang. Barcha huquqlar himoyalangan."
+  },
+  {
+    "key": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "source": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "text": "Ochiq manba kutubxonalari\nBu ilova quyidagi kutubxonalardan foydalanadi. Ularning litsenziyalari yuqoridagi mualliflik huquqidan alohida.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), Play Billing talab qiladi\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/manual/"
+  },
+  {
+    "key": "Full manual (online)",
+    "source": "Full manual (online)",
+    "text": "To‘liq qo‘llanma (onlayn)"
+  },
+  {
+    "key": "Show fuel level in notification",
+    "source": "Show fuel level in notification",
+    "text": "Yoqilg‘i darajasini bildirishnomada ko‘rsatish"
+  },
+  {
+    "key": "Feed fuel level back to Torque (overrides 012F)",
+    "source": "Feed fuel level back to Torque (overrides 012F)",
+    "text": "Yoqilg‘i darajasini Torque ga qaytarish (012F ni almashtiradi)"
+  },
+  {
+    "key": "Fuel Smoothing is running",
+    "source": "Fuel Smoothing is running",
+    "text": "Fuel Smoothing ishlayapti"
+  },
+  {
+    "key": "Tap to start Fuel Smoothing",
+    "source": "Tap to start Fuel Smoothing",
+    "text": "Fuel Smoothing ni boshlash uchun bosing"
+  },
+  {
+    "key": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "source": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "text": "Batareya yoki fondan ishga tushirish rad etildi. Plagin Torque bilan ishlashi uchun bir marta oching."
+  },
+  {
+    "key": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "source": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "text": "Kerak bo‘lsa qo‘shimcha baklar qo‘shing (zavod baki 1 doim qoladi). Uzatkichlarni PCM FLI piniga almashtirmang (soxta to‘ldirish). Har bir qo‘shimcha bakka o‘z Torque qo‘shimcha PID i kerak (MCU Mode 22, noyob nom — 012F yoki Ford 16C1 emas). Select-PID qiymati 1 dan boshlanadigan bak id. Gal/hr faqat faol bakka yoziladi."
+  },
+  {
+    "key": "Tap to start",
+    "source": "Tap to start",
+    "text": "Boshlash uchun bosing"
+  },
+  {
+    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "text": "Bak o‘lchami Chunk moslashuvining boshlang‘ich o‘lchami, u o‘zinikini o‘rganmaguncha. Plagin uni hech qachon o‘zgartirmaydi; har bir moslashuvning o‘rgangan o‘lchami uning ostida ko‘rsatiladi."
+  },
+  {
+    "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "source": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "text": "Mavjud ko‘rsatkichlar ko‘rsin deb Torque zavod Fuel Level (012F) ustiga qiymat yozadi: O‘chiq, tekislangan yoki Chunk, Band yoxud Kalman moslashuvidan tuzatilgan. Hali qurilmagan moslashuv tekislangan darajani yozadi."
+  },
+  {
+    "key": "Chunk: %1$s",
+    "source": "Chunk: %1$s",
+    "text": "Chunk: %1$s"
+  },
+  {
+    "key": "Band: %1$s",
+    "source": "Band: %1$s",
+    "text": "Band: %1$s"
+  },
+  {
+    "key": "Kalman: %1$s",
+    "source": "Kalman: %1$s",
+    "text": "Kalman: %1$s"
+  },
+  {
+    "key": "no size yet",
+    "source": "no size yet",
+    "text": "hali o‘lcham yo‘q"
+  },
+  {
+    "key": "no size yet ± %1$.1f gal",
+    "source": "no size yet ± %1$.1f gal",
+    "text": "hali o‘lcham yo‘q ± %1$.1f gal"
+  },
+  {
+    "key": "%1$.1f gal",
+    "source": "%1$.1f gal",
+    "text": "%1$.1f gal"
+  },
+  {
+    "key": "%1$.1f ± %2$.1f gal",
+    "source": "%1$.1f ± %2$.1f gal",
+    "text": "%1$.1f ± %2$.1f gal"
+  },
+  {
+    "key": "Help",
+    "source": "Help",
+    "text": "Yordam"
+  },
+  {
+    "key": "About",
+    "source": "About",
+    "text": "Haqida"
+  },
+  {
+    "key": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "source": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "text": "Torque Pro (pullik) kerak. Torque Lite plaginlarni qo‘llab-quvvatlamaydi."
+  },
+  {
+    "key": "Get Torque Pro",
+    "source": "Get Torque Pro",
+    "text": "Torque Pro olish"
+  },
+  {
+    "key": "Privacy",
+    "source": "Privacy",
+    "text": "Maxfiylik"
+  },
+  {
+    "key": "Send feedback",
+    "source": "Send feedback",
+    "text": "Fikr yuborish"
+  },
+  {
+    "key": "Tip",
+    "source": "Tip",
+    "text": "Choychaqa"
+  },
+  {
+    "key": "Thanks",
+    "source": "Thanks",
+    "text": "Rahmat"
+  },
+  {
+    "key": "Close",
+    "source": "Close",
+    "text": "Yopish"
+  },
+  {
+    "key": "OK",
+    "source": "OK",
+    "text": "OK"
+  },
+  {
+    "key": "Detect",
+    "source": "Detect",
+    "text": "Aniqlash"
+  },
+  {
+    "key": "Confirm",
+    "source": "Confirm",
+    "text": "Tasdiqlash"
+  },
+  {
+    "key": "Save pin",
+    "source": "Save pin",
+    "text": "Belgini saqlash"
+  },
+  {
+    "key": "Add additional tank",
+    "source": "Add additional tank",
+    "text": "Qo‘shimcha bak qo‘shish"
+  },
+  {
+    "key": "Remove",
+    "source": "Remove",
+    "text": "Olib tashlash"
+  },
+  {
+    "key": "Details",
+    "source": "Details",
+    "text": "Tafsilotlar"
+  },
+  {
+    "key": "Verbose logging (debug; per-second log lines)",
+    "source": "Verbose logging (debug; per-second log lines)",
+    "text": "Batafsil jurnal (tuzatish; har soniyada qator)"
+  },
+  {
+    "key": "Profile name",
+    "source": "Profile name",
+    "text": "Profil nomi"
+  },
+  {
+    "key": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "source": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "text": "Bu avtomobil profilining nomi. Har bir Torque avtomobil profili o‘z plagin profilini, ma’lumotini va o‘rgangan xaritalarini oladi."
+  },
+  {
+    "key": "Make",
+    "source": "Make",
+    "text": "Marka"
+  },
+  {
+    "key": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "source": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "text": "Avtomobil markasi (mas. Ford). Faqat aniqlash qaysi markaga xos yoqilg‘i PID larini sinashini tanlash uchun ishlatiladi."
+  },
+  {
+    "key": "Fuel source",
+    "source": "Fuel source",
+    "text": "Yoqilg‘i manbai"
+  },
+  {
+    "key": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "source": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "text": "Xom yoqilg‘i darajasi qayerdan keladi. Aniqlash (ECU ulangan bo‘lishi kerak) nomzodlarni faqat o‘qish uchun o‘qiydi va ikki manba mos kelmasa tasdiq so‘raydi. Tasdiqlash sozlash sahifasida va bildirishnomada. Hech biri = keyingi ulanishda aniqlash."
+  },
+  {
+    "key": "Custom long name",
+    "source": "Custom long name",
+    "text": "Maxsus uzun nom"
+  },
+  {
+    "key": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "source": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "text": "Faqat Torque extra PID by long name manbai uchun: darajani bildiruvchi Torque PID ning aniq uzun nomi."
+  },
+  {
+    "key": "Tank size",
+    "source": "Tank size",
+    "text": "Bak o‘lchami"
+  },
+  {
+    "key": "blank = no starting size; each fit learns its own.",
+    "source": "blank = no starting size; each fit learns its own.",
+    "text": "bo‘sh = boshlang‘ich o‘lcham yo‘q; har bir moslashuv o‘zinikini o‘rganadi."
+  },
+  {
+    "key": "Smoothing τ seconds",
+    "source": "Smoothing τ seconds",
+    "text": "Tekislash τ soniya"
+  },
+  {
+    "key": "Time constant of the smoothing filter (0 = no smoothing).",
+    "source": "Time constant of the smoothing filter (0 = no smoothing).",
+    "text": "Tekislash filtrining vaqt doimiysi (0 = tekislash yo‘q)."
+  },
+  {
+    "key": "Max skew %/s",
+    "source": "Max skew %/s",
+    "text": "Eng katta og‘ish %/s"
+  },
+  {
+    "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "text": "Tekislangan daraja soniyasiga ergasha oladigan eng katta o‘zgarish; bundan ortiq chayqalish e’tiborga olinmaydi."
+  },
+  {
+    "key": "Fill jump %",
+    "source": "Fill jump %",
+    "text": "To‘ldirish sakrashi %"
+  },
+  {
+    "key": "Rise in level while stopped that counts as a fill.",
+    "source": "Rise in level while stopped that counts as a fill.",
+    "text": "To‘xtab turganda darajaning ko‘tarilishi to‘ldirish hisoblanadi."
+  },
+  {
+    "key": "Odometer miles",
+    "source": "Odometer miles",
+    "text": "Odometr millari"
+  },
+  {
+    "key": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "source": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "text": "Ixtiyoriy: odometr ko‘rsatkichini kiriting va bu profil uchun masofani bog‘lashga Belgini saqlash tugmasini bosing."
+  },
+  {
+    "key": "Additional tanks",
+    "source": "Additional tanks",
+    "text": "Qo‘shimcha baklar"
+  },
+  {
+    "key": "Active tank",
+    "source": "Active tank",
+    "text": "Faol bak"
+  },
+  {
+    "key": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "source": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "text": "Yoqilg‘i sarfi (gal/hr) qaysi bakka yoziladi. PID dan: Torque PID uni tanlaydi (1 dan boshlanadigan bak id)."
+  },
+  {
+    "key": "Select-PID long name",
+    "source": "Select-PID long name",
+    "text": "Select-PID uzun nomi"
+  },
+  {
+    "key": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "source": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "text": "Faqat Faol bak = PID dan bo‘lganda: qiymati bak id bo‘lgan Torque PID ning uzun nomi."
+  },
+  {
+    "key": "Tank %1$d",
+    "source": "Tank %1$d",
+    "text": "Bak %1$d"
+  },
+  {
+    "key": "Tank %1$d fuel source",
+    "source": "Tank %1$d fuel source",
+    "text": "Bak %1$d yoqilg‘i manbai"
+  },
+  {
+    "key": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "source": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "text": "Bak %1$d maxsus uzun nom (mas. [FuelSmooth] Tank%1$d Level)"
+  },
+  {
+    "key": "Tank %1$d gallons",
+    "source": "Tank %1$d gallons",
+    "text": "Bak %1$d gallon"
+  },
+  {
+    "key": "From PID",
+    "source": "From PID",
+    "text": "PID dan"
+  },
+  {
+    "key": "(unconfirmed)",
+    "source": "(unconfirmed)",
+    "text": "(tasdiqlanmagan)"
+  },
+  {
+    "key": "· ECU connected",
+    "source": "· ECU connected",
+    "text": "· ECU ulangan"
+  },
+  {
+    "key": "tank ?",
+    "source": "tank ?",
+    "text": "bak ?"
+  },
+  {
+    "key": "About %1$s",
+    "source": "About %1$s",
+    "text": "%1$s haqida"
+  },
+  {
+    "key": "0 to %1$s s",
+    "source": "0 to %1$s s",
+    "text": "0 dan %1$s s gacha"
+  },
+  {
+    "key": "above 0, at most %1$s %%/s",
+    "source": "above 0, at most %1$s %%/s",
+    "text": "0 dan yuqori, eng ko‘pi %1$s %%/s"
+  },
+  {
+    "key": "%1$s to %2$s %%",
+    "source": "%1$s to %2$s %%",
+    "text": "%1$s dan %2$s %% gacha"
+  },
+  {
+    "key": "blank or a number above 0",
+    "source": "blank or a number above 0",
+    "text": "bo‘sh yoki 0 dan katta son"
+  },
+  {
+    "key": "stored value out of range",
+    "source": "stored value out of range",
+    "text": "saqlangan qiymat oralig‘dan tashqarida"
+  },
+  {
+    "key": "Chunk",
+    "source": "Chunk",
+    "text": "Chunk"
+  },
+  {
+    "key": "Band",
+    "source": "Band",
+    "text": "Band"
+  },
+  {
+    "key": "Kalman",
+    "source": "Kalman",
+    "text": "Kalman"
+  },
+  {
+    "key": "Smoothed %",
+    "source": "Smoothed %",
+    "text": "Tekislangan %"
+  },
+  {
+    "key": "Error (%)",
+    "source": "Error (%)",
+    "text": "Xato (%)"
+  },
+  {
+    "key": "Off",
+    "source": "Off",
+    "text": "O‘chiq"
+  },
+  {
+    "key": "Corrected % (Chunk)",
+    "source": "Corrected % (Chunk)",
+    "text": "Corrected % (Chunk)"
+  },
+  {
+    "key": "Corrected % (Band)",
+    "source": "Corrected % (Band)",
+    "text": "Corrected % (Band)"
+  },
+  {
+    "key": "Corrected % (Kalman)",
+    "source": "Corrected % (Kalman)",
+    "text": "Corrected % (Kalman)"
+  },
+  {
+    "key": "gal",
+    "source": "gal",
+    "text": "gal"
+  },
+  {
+    "key": "L",
+    "source": "L",
+    "text": "L"
+  },
+  {
+    "key": "None yet (Detect runs on connect)",
+    "source": "None yet (Detect runs on connect)",
+    "text": "Hali hech biri (Aniqlash ulanganda ishlaydi)"
+  },
+  {
+    "key": "SAE 012F Fuel Tank Level",
+    "source": "SAE 012F Fuel Tank Level",
+    "text": "SAE 012F Fuel Tank Level"
+  },
+  {
+    "key": "Mode 22 16C1",
+    "source": "Mode 22 16C1",
+    "text": "Mode 22 16C1"
+  },
+  {
+    "key": "Ford Mode 22 F42F",
+    "source": "Ford Mode 22 F42F",
+    "text": "Ford Mode 22 F42F"
+  },
+  {
+    "key": "GM Mode 22 12C5 %",
+    "source": "GM Mode 22 12C5 %",
+    "text": "GM Mode 22 12C5 %"
+  },
+  {
+    "key": "Chrysler 21A2 %",
+    "source": "Chrysler 21A2 %",
+    "text": "Chrysler 21A2 %"
+  },
+  {
+    "key": "Chrysler Fuel Level Average",
+    "source": "Chrysler Fuel Level Average",
+    "text": "Chrysler Fuel Level Average"
+  },
+  {
+    "key": "Toyota cluster 2129 (half-litre counts)",
+    "source": "Toyota cluster 2129 (half-litre counts)",
+    "text": "Toyota cluster 2129 (half-litre counts)"
+  },
+  {
+    "key": "Torque extra PID by long name",
+    "source": "Torque extra PID by long name",
+    "text": "Torque extra PID by long name"
+  },
+  {
+    "key": "Vehicle 1",
+    "source": "Vehicle 1",
+    "text": "Avtomobil 1"
+  },
+  {
+    "key": "Vehicle %1$s",
+    "source": "Vehicle %1$s",
+    "text": "Avtomobil %1$s"
+  },
+  {
+    "key": "Binding to Torque…",
+    "source": "Binding to Torque…",
+    "text": "Torque ga bog‘lanmoqda…"
+  },
+  {
+    "key": "Waiting for fuel source",
+    "source": "Waiting for fuel source",
+    "text": "Yoqilg‘i manbai kutilmoqda"
+  },
+  {
+    "key": "raw %1$.1f%%",
+    "source": "raw %1$.1f%%",
+    "text": "xom %1$.1f%%"
+  },
+  {
+    "key": "sess %1$s",
+    "source": "sess %1$s",
+    "text": "ses %1$s"
+  },
+  {
+    "key": "Fuel Smoothing",
+    "source": "Fuel Smoothing",
+    "text": "Fuel Smoothing"
+  },
+  {
+    "key": "Fuel Smoothing quiet",
+    "source": "Fuel Smoothing quiet",
+    "text": "Fuel Smoothing jim"
+  },
+  {
+    "key": "Map refitting",
+    "source": "Map refitting",
+    "text": "Xarita qayta moslanmoqda"
+  },
+  {
+    "key": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "source": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "text": "Fuel Smoothing %1$s uchun xaritani qayta moslamoqda. O‘sha moslashuv qayta moslashuv tugaguncha 1:1 o‘qiydi."
+  },
+  {
+    "key": "No fuel level source set",
+    "source": "No fuel level source set",
+    "text": "Yoqilg‘i darajasi manbai o‘rnatilmagan"
+  },
+  {
+    "key": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "source": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "text": "Fuel Smoothing da %1$s uchun yoqilg‘i darajasi manbai yo‘q. Sozlash sahifasini oching va Aniqlash tugmasini bosing yoki manba tanlang."
+  },
+  {
+    "key": "No fuel level this drive",
+    "source": "No fuel level this drive",
+    "text": "Bu safarda yoqilg‘i darajasi yo‘q"
+  },
+  {
+    "key": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "source": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "text": "%1$s %2$s uchun yaroqli daraja bermadi. Adapter ulanishini tekshiring yoki sozlash sahifasida Aniqlash ishga tushiring."
+  },
+  {
+    "key": "Fuel level source found",
+    "source": "Fuel level source found",
+    "text": "Yoqilg‘i darajasi manbai topildi"
+  },
+  {
+    "key": "Using %1$s for %2$s (%3$s).",
+    "source": "Using %1$s for %2$s (%3$s).",
+    "text": "%1$s %2$s uchun ishlatiladi (%3$s)."
+  },
+  {
+    "key": "No fuel level source found",
+    "source": "No fuel level source found",
+    "text": "Yoqilg‘i darajasi manbai topilmadi"
+  },
+  {
+    "key": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "source": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "text": "Fuel Smoothing sozlamasini oching va manba tanlang (yoki PID ni Torque ga qo‘shing), so‘ng Aniqlash tugmasini bosing."
+  },
+  {
+    "key": "Confirm fuel level source",
+    "source": "Confirm fuel level source",
+    "text": "Yoqilg‘i darajasi manbaini tasdiqlang"
+  },
+  {
+    "key": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "source": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "text": "%1$s aniqlandi, ko‘rsatkich %2$.0f %% , %3$s uchun. Panel yoqilg‘i ko‘rsatkichiga mos kelishini tekshiring, so‘ng Tasdiqlash tugmasini bosing. Tasdiqlash sozlash sahifasida va bildirishnomada (%4$s)."
+  },
+  {
+    "key": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "source": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "text": "%1$s aniqlandi, %2$s uchun. Panel yoqilg‘i ko‘rsatkichiga mos kelishini tekshiring, so‘ng Tasdiqlash tugmasini bosing. Tasdiqlash sozlash sahifasida va bildirishnomada (%3$s)."
+  },
+  {
+    "key": "Recording to %1$s",
+    "source": "Recording to %1$s",
+    "text": "%1$s ga yozilmoqda"
+  },
+  {
+    "key": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "source": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "text": "Bu avtomobil %1$s (%2$s), lekin Torque profili '%3$s'. Ma’lumot %1$s ga boradi; Torque ni ochib, profilni almashtirish uchun bosing."
+  },
+  {
+    "key": "Wrong vehicle profile?",
+    "source": "Wrong vehicle profile?",
+    "text": "Noto‘g‘ri avtomobil profili?"
+  },
+  {
+    "key": "Torque profile '%1$s'",
+    "source": "Torque profile '%1$s'",
+    "text": "Torque profili '%1$s'"
+  },
+  {
+    "key": "a new vehicle profile",
+    "source": "a new vehicle profile",
+    "text": "yangi avtomobil profili"
+  },
+  {
+    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "text": "Torque profili '%1$s' bu avtomobilga mos kelmaydi (%2$s). Taklif: %3$s. Ma’lumot saqlanadi va saqlamasangiz safar oxirida o‘chiriladi."
+  },
+  {
+    "key": "Keeping drive data",
+    "source": "Keeping drive data",
+    "text": "Safar ma’lumoti saqlanadi"
+  },
+  {
+    "key": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "source": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "text": "Bu safar %1$s ga saqlanadi. Torque plagin API si Torque profillarini yarata yoki almashtira olmaydi: Torque ichida '%2$s' nomli avtomobil profilini yarating yoki tanlang."
+  },
+  {
+    "key": "Create new profile",
+    "source": "Create new profile",
+    "text": "Yangi profil yaratish"
+  },
+  {
+    "key": "Use %1$s",
+    "source": "Use %1$s",
+    "text": "%1$s dan foydalanish"
+  }
+]

@@ -1,0 +1,647 @@
+[
+  {
+    "key": "Fuel Smoothing for Torque",
+    "source": "Fuel Smoothing for Torque",
+    "text": "Fuel Smoothing for Torque"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/privacy/"
+  },
+  {
+    "key": "Tips are on the Play Store version",
+    "source": "Tips are on the Play Store version",
+    "text": "Bakshishet janë në versionin Play Store"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "Nisje e shpejtë\n 1. Instaloni Torque Pro (versionin me pagesë; Torque Lite nuk mbështet shtojca) dhe çiftoni përshtatësin OBD-II.\n 2. Aktivizoni këtë shtojcë te Torque → Cilësimet → Shtojcat.\n 3. Lejoni njoftimet dhe vendosni përdorimin e baterisë te Pa kufizim, që Torque të mund ta nisë këtë shtojcë në sfond.\n 4. Në Torque zgjidhni profilin e automjetit që drejtoni. Të dhënat ruhen sipas profilit Torque dhe kontrollohen me identitetin VIN/ECU të automjetit.\n 5. Në një profil të ri burimi i karburantit zbulohet kur lidheni; nëse pyeteni, krahasoni me treguesin e pultit dhe prekni Konfirmo. Konfirmo është në faqen e konfigurimit dhe në njoftim. Mund ta zgjidhni edhe më poshtë.\n 6. Madhësia e rezervuarit është madhësia fillestare për përshtatjen Chunk derisa ajo të mësojë të vetën. Shtojca nuk e ndryshon kurrë; madhësia e mësuar e çdo përshtatjeje shfaqet poshtë saj.\n 7. Në Torque shtoni tregues për [FuelSmooth] Smoothed Fuel Level dhe për çdo përshtatje Corrected %, Remaining, DTE dhe Tank size. DTE është Remaining herë mpg afatgjatë i Torque. Një njoftim gjatë ripërshtatjes thotë se përshtatja lexon 1:1 derisa ripërshtatja të mbarojë.\n 8. Kthejeni nivelin e karburantit te Torque: Fikur, i lëmuar ose i korrigjuar nga përshtatja Chunk, Band ose Kalman, te treguesi 012F.\n 9. Karburanti numërohet vetëm kur motori punon. Shtojca punon vetëm kur Torque është i lidhur me ECU.\n 10. Vazhdoni të vozitni dhe të mbushni; saktësia rritet përgjatë disa rezervuarëve të pjesshëm. Nëse shfaqet njoftimi Profil i gabuar i automjetit?, zgjidhni çfarë të bëhet me atë udhëtim.\n 11. Të gjitha të dhënat qëndrojnë në këtë telefon. Nuk regjistrohet GPS as vendndodhje."
+  },
+  {
+    "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "text": "%1$s\nVersioni %2$s (%3$s)\nShtojcë për Torque Pro. Nuk është e lidhur me Torque apo Ian Hawkins.\nTë gjitha të dhënat qëndrojnë në këtë telefon; nuk regjistrohet GPS as vendndodhje.\n\nLicenca\nCopyright David Lang. Të gjitha të drejtat e rezervuara."
+  },
+  {
+    "key": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "source": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "text": "Biblioteka me kod të hapur\nKy aplikacion përdor bibliotekat më poshtë. Licencat e tyre janë të ndara nga e drejta e autorit më sipër.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), e kërkuar nga Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/manual/"
+  },
+  {
+    "key": "Full manual (online)",
+    "source": "Full manual (online)",
+    "text": "Manuali i plotë (në internet)"
+  },
+  {
+    "key": "Show fuel level in notification",
+    "source": "Show fuel level in notification",
+    "text": "Shfaq nivelin e karburantit në njoftim"
+  },
+  {
+    "key": "Feed fuel level back to Torque (overrides 012F)",
+    "source": "Feed fuel level back to Torque (overrides 012F)",
+    "text": "Kthe nivelin e karburantit te Torque (zëvendëson 012F)"
+  },
+  {
+    "key": "Fuel Smoothing is running",
+    "source": "Fuel Smoothing is running",
+    "text": "Fuel Smoothing po punon"
+  },
+  {
+    "key": "Tap to start Fuel Smoothing",
+    "source": "Tap to start Fuel Smoothing",
+    "text": "Prekni për të nisur Fuel Smoothing"
+  },
+  {
+    "key": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "source": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "text": "Nisja nga bateria ose në sfond u refuzua. Hapeni një herë që shtojca të mund të punojë me Torque."
+  },
+  {
+    "key": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "source": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "text": "Shtoni rezervuarë shtesë sipas nevojës (rezervuari i fabrikës 1 mbetet gjithmonë). Mos i kaloni dhënësit te kunji PCM FLI (mbushje e rreme). Çdo rezervuar shtesë lyp PID-in e vet shtesë të Torque (MCU Mode 22, emër unik — jo 012F apo Ford 16C1). Vlera Select-PID është identifikuesi i rezervuarit duke filluar nga 1. Gal/hr i ngarkohet vetëm rezervuarit aktiv."
+  },
+  {
+    "key": "Tap to start",
+    "source": "Tap to start",
+    "text": "Prekni për të nisur"
+  },
+  {
+    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "text": "Madhësia e rezervuarit është madhësia fillestare për përshtatjen Chunk derisa ajo të mësojë të vetën. Shtojca nuk e ndryshon kurrë; madhësia e mësuar e çdo përshtatjeje shfaqet poshtë saj."
+  },
+  {
+    "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "source": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "text": "Shkruan një vlerë mbi Fuel Level (012F) të fabrikës të Torque që treguesit ekzistues ta shfaqin: Fikur, i lëmuar ose i korrigjuar nga përshtatja Chunk, Band ose Kalman. Një përshtatje që s’është ndërtuar ende shkruan nivelin e lëmuar."
+  },
+  {
+    "key": "Chunk: %1$s",
+    "source": "Chunk: %1$s",
+    "text": "Chunk: %1$s"
+  },
+  {
+    "key": "Band: %1$s",
+    "source": "Band: %1$s",
+    "text": "Band: %1$s"
+  },
+  {
+    "key": "Kalman: %1$s",
+    "source": "Kalman: %1$s",
+    "text": "Kalman: %1$s"
+  },
+  {
+    "key": "no size yet",
+    "source": "no size yet",
+    "text": "ende pa madhësi"
+  },
+  {
+    "key": "no size yet ± %1$.1f gal",
+    "source": "no size yet ± %1$.1f gal",
+    "text": "ende pa madhësi ± %1$.1f gal"
+  },
+  {
+    "key": "%1$.1f gal",
+    "source": "%1$.1f gal",
+    "text": "%1$.1f gal"
+  },
+  {
+    "key": "%1$.1f ± %2$.1f gal",
+    "source": "%1$.1f ± %2$.1f gal",
+    "text": "%1$.1f ± %2$.1f gal"
+  },
+  {
+    "key": "Help",
+    "source": "Help",
+    "text": "Ndihmë"
+  },
+  {
+    "key": "About",
+    "source": "About",
+    "text": "Rreth"
+  },
+  {
+    "key": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "source": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "text": "Lyp Torque Pro (me pagesë). Torque Lite nuk mbështet shtojca."
+  },
+  {
+    "key": "Get Torque Pro",
+    "source": "Get Torque Pro",
+    "text": "Merrni Torque Pro"
+  },
+  {
+    "key": "Privacy",
+    "source": "Privacy",
+    "text": "Privatësia"
+  },
+  {
+    "key": "Send feedback",
+    "source": "Send feedback",
+    "text": "Dërgoni komente"
+  },
+  {
+    "key": "Tip",
+    "source": "Tip",
+    "text": "Bakshish"
+  },
+  {
+    "key": "Thanks",
+    "source": "Thanks",
+    "text": "Faleminderit"
+  },
+  {
+    "key": "Close",
+    "source": "Close",
+    "text": "Mbyll"
+  },
+  {
+    "key": "OK",
+    "source": "OK",
+    "text": "OK"
+  },
+  {
+    "key": "Detect",
+    "source": "Detect",
+    "text": "Zbulo"
+  },
+  {
+    "key": "Confirm",
+    "source": "Confirm",
+    "text": "Konfirmo"
+  },
+  {
+    "key": "Save pin",
+    "source": "Save pin",
+    "text": "Ruaj spirancën"
+  },
+  {
+    "key": "Add additional tank",
+    "source": "Add additional tank",
+    "text": "Shto rezervuar"
+  },
+  {
+    "key": "Remove",
+    "source": "Remove",
+    "text": "Hiq"
+  },
+  {
+    "key": "Details",
+    "source": "Details",
+    "text": "Hollësi"
+  },
+  {
+    "key": "Verbose logging (debug; per-second log lines)",
+    "source": "Verbose logging (debug; per-second log lines)",
+    "text": "Regjistër i hollësishëm (diagnostikim; rreshta çdo sekondë)"
+  },
+  {
+    "key": "Profile name",
+    "source": "Profile name",
+    "text": "Emri i profilit"
+  },
+  {
+    "key": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "source": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "text": "Emri i këtij profili automjeti. Çdo profil automjeti i Torque merr profilin e vet të shtojcës, të dhënat dhe hartat e mësuara."
+  },
+  {
+    "key": "Make",
+    "source": "Make",
+    "text": "Marka"
+  },
+  {
+    "key": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "source": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "text": "Marka e automjetit (p.sh. Ford). Përdoret vetëm për të zgjedhur cilat PID karburanti të markës mund të provojë zbulimi."
+  },
+  {
+    "key": "Fuel source",
+    "source": "Fuel source",
+    "text": "Burimi i karburantit"
+  },
+  {
+    "key": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "source": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "text": "Nga vjen niveli i papërpunuar i karburantit. Zbulo (ECU duhet të jetë i lidhur) provon kandidatët vetëm për lexim dhe kërkon konfirmim nëse dy burime nuk përputhen. Konfirmo është në faqen e konfigurimit dhe në njoftim. Asnjë = zbulo në lidhjen tjetër."
+  },
+  {
+    "key": "Custom long name",
+    "source": "Custom long name",
+    "text": "Emër i gjatë i personalizuar"
+  },
+  {
+    "key": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "source": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "text": "Vetëm për burimin „PID shtesë i Torque sipas emrit të gjatë”: emri i gjatë i saktë i PID-it Torque që raporton nivelin."
+  },
+  {
+    "key": "Tank size",
+    "source": "Tank size",
+    "text": "Madhësia e rezervuarit"
+  },
+  {
+    "key": "blank = no starting size; each fit learns its own.",
+    "source": "blank = no starting size; each fit learns its own.",
+    "text": "bosh = pa madhësi fillestare; çdo përshtatje mëson të vetën."
+  },
+  {
+    "key": "Smoothing τ seconds",
+    "source": "Smoothing τ seconds",
+    "text": "Lëmim τ në sekonda"
+  },
+  {
+    "key": "Time constant of the smoothing filter (0 = no smoothing).",
+    "source": "Time constant of the smoothing filter (0 = no smoothing).",
+    "text": "Konstantja kohore e filtrit të lëmimit (0 = pa lëmim)."
+  },
+  {
+    "key": "Max skew %/s",
+    "source": "Max skew %/s",
+    "text": "Pjerrësi maks. %/s"
+  },
+  {
+    "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "text": "Ndryshimi më i madh për sekondë që niveli i lëmuar mund të ndjekë; lëkundja mbi këtë shpërfillet."
+  },
+  {
+    "key": "Fill jump %",
+    "source": "Fill jump %",
+    "text": "Kërcim mbushjeje %"
+  },
+  {
+    "key": "Rise in level while stopped that counts as a fill.",
+    "source": "Rise in level while stopped that counts as a fill.",
+    "text": "Rritje e nivelit në vendnumërim që numërohet si mbushje."
+  },
+  {
+    "key": "Odometer miles",
+    "source": "Odometer miles",
+    "text": "Kilometrazh në milje"
+  },
+  {
+    "key": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "source": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "text": "Opsionale: futni leximin e kilometrazhit dhe Ruaj spirancën për të spirancuar distancën e këtij profili."
+  },
+  {
+    "key": "Additional tanks",
+    "source": "Additional tanks",
+    "text": "Rezervuarë shtesë"
+  },
+  {
+    "key": "Active tank",
+    "source": "Active tank",
+    "text": "Rezervuari aktiv"
+  },
+  {
+    "key": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "source": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "text": "Rezervuari të cilit i ngarkohet harxhimi (gal/hr). Nga PID: një PID Torque e zgjedh (identifikues nga 1)."
+  },
+  {
+    "key": "Select-PID long name",
+    "source": "Select-PID long name",
+    "text": "Emri i gjatë i Select-PID"
+  },
+  {
+    "key": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "source": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "text": "Vetëm kur Rezervuari aktiv = Nga PID: emri i gjatë i PID-it Torque vlera e të cilit është identifikuesi i rezervuarit."
+  },
+  {
+    "key": "Tank %1$d",
+    "source": "Tank %1$d",
+    "text": "Rezervuari %1$d"
+  },
+  {
+    "key": "Tank %1$d fuel source",
+    "source": "Tank %1$d fuel source",
+    "text": "Burimi i karburantit i rezervuarit %1$d"
+  },
+  {
+    "key": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "source": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "text": "Emri i gjatë i personalizuar i rezervuarit %1$d (p.sh. [FuelSmooth] Tank%1$d Level)"
+  },
+  {
+    "key": "Tank %1$d gallons",
+    "source": "Tank %1$d gallons",
+    "text": "Galonë të rezervuarit %1$d"
+  },
+  {
+    "key": "From PID",
+    "source": "From PID",
+    "text": "Nga PID"
+  },
+  {
+    "key": "(unconfirmed)",
+    "source": "(unconfirmed)",
+    "text": "(i pakonfirmuar)"
+  },
+  {
+    "key": "· ECU connected",
+    "source": "· ECU connected",
+    "text": "· ECU i lidhur"
+  },
+  {
+    "key": "tank ?",
+    "source": "tank ?",
+    "text": "rezervuar ?"
+  },
+  {
+    "key": "About %1$s",
+    "source": "About %1$s",
+    "text": "Rreth %1$s"
+  },
+  {
+    "key": "0 to %1$s s",
+    "source": "0 to %1$s s",
+    "text": "0 deri në %1$s s"
+  },
+  {
+    "key": "above 0, at most %1$s %%/s",
+    "source": "above 0, at most %1$s %%/s",
+    "text": "mbi 0, më së shumti %1$s %%/s"
+  },
+  {
+    "key": "%1$s to %2$s %%",
+    "source": "%1$s to %2$s %%",
+    "text": "%1$s deri në %2$s %%"
+  },
+  {
+    "key": "blank or a number above 0",
+    "source": "blank or a number above 0",
+    "text": "bosh ose një numër më i madh se 0"
+  },
+  {
+    "key": "stored value out of range",
+    "source": "stored value out of range",
+    "text": "vlera e ruajtur jashtë intervalit"
+  },
+  {
+    "key": "Chunk",
+    "source": "Chunk",
+    "text": "Chunk"
+  },
+  {
+    "key": "Band",
+    "source": "Band",
+    "text": "Band"
+  },
+  {
+    "key": "Kalman",
+    "source": "Kalman",
+    "text": "Kalman"
+  },
+  {
+    "key": "Smoothed %",
+    "source": "Smoothed %",
+    "text": "I lëmuar %"
+  },
+  {
+    "key": "Error (%)",
+    "source": "Error (%)",
+    "text": "Gabim (%)"
+  },
+  {
+    "key": "Off",
+    "source": "Off",
+    "text": "Fikur"
+  },
+  {
+    "key": "Corrected % (Chunk)",
+    "source": "Corrected % (Chunk)",
+    "text": "I korrigjuar % (Chunk)"
+  },
+  {
+    "key": "Corrected % (Band)",
+    "source": "Corrected % (Band)",
+    "text": "I korrigjuar % (Band)"
+  },
+  {
+    "key": "Corrected % (Kalman)",
+    "source": "Corrected % (Kalman)",
+    "text": "I korrigjuar % (Kalman)"
+  },
+  {
+    "key": "gal",
+    "source": "gal",
+    "text": "gal"
+  },
+  {
+    "key": "L",
+    "source": "L",
+    "text": "L"
+  },
+  {
+    "key": "None yet (Detect runs on connect)",
+    "source": "None yet (Detect runs on connect)",
+    "text": "Ende asnjë (Zbulo kur lidhet)"
+  },
+  {
+    "key": "SAE 012F Fuel Tank Level",
+    "source": "SAE 012F Fuel Tank Level",
+    "text": "SAE 012F Fuel Tank Level"
+  },
+  {
+    "key": "Mode 22 16C1",
+    "source": "Mode 22 16C1",
+    "text": "Mode 22 16C1"
+  },
+  {
+    "key": "Ford Mode 22 F42F",
+    "source": "Ford Mode 22 F42F",
+    "text": "Ford Mode 22 F42F"
+  },
+  {
+    "key": "GM Mode 22 12C5 %",
+    "source": "GM Mode 22 12C5 %",
+    "text": "GM Mode 22 12C5 %"
+  },
+  {
+    "key": "Chrysler 21A2 %",
+    "source": "Chrysler 21A2 %",
+    "text": "Chrysler 21A2 %"
+  },
+  {
+    "key": "Chrysler Fuel Level Average",
+    "source": "Chrysler Fuel Level Average",
+    "text": "Chrysler Fuel Level Average"
+  },
+  {
+    "key": "Toyota cluster 2129 (half-litre counts)",
+    "source": "Toyota cluster 2129 (half-litre counts)",
+    "text": "Toyota cluster 2129 (numërime gjysmë litri)"
+  },
+  {
+    "key": "Torque extra PID by long name",
+    "source": "Torque extra PID by long name",
+    "text": "PID shtesë i Torque sipas emrit të gjatë"
+  },
+  {
+    "key": "Vehicle 1",
+    "source": "Vehicle 1",
+    "text": "Automjeti 1"
+  },
+  {
+    "key": "Vehicle %1$s",
+    "source": "Vehicle %1$s",
+    "text": "Automjeti %1$s"
+  },
+  {
+    "key": "Binding to Torque…",
+    "source": "Binding to Torque…",
+    "text": "Po lidhet me Torque…"
+  },
+  {
+    "key": "Waiting for fuel source",
+    "source": "Waiting for fuel source",
+    "text": "Po pret burimin e karburantit"
+  },
+  {
+    "key": "raw %1$.1f%%",
+    "source": "raw %1$.1f%%",
+    "text": "i papërpunuar %1$.1f%%"
+  },
+  {
+    "key": "sess %1$s",
+    "source": "sess %1$s",
+    "text": "udhëtim %1$s"
+  },
+  {
+    "key": "Fuel Smoothing",
+    "source": "Fuel Smoothing",
+    "text": "Fuel Smoothing"
+  },
+  {
+    "key": "Fuel Smoothing quiet",
+    "source": "Fuel Smoothing quiet",
+    "text": "Fuel Smoothing i heshtur"
+  },
+  {
+    "key": "Map refitting",
+    "source": "Map refitting",
+    "text": "Ripërshtatje e hartës"
+  },
+  {
+    "key": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "source": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "text": "Fuel Smoothing po ripërshtat një hartë për %1$s. Kjo përshtatje lexon 1:1 derisa ripërshtatja të mbarojë."
+  },
+  {
+    "key": "No fuel level source set",
+    "source": "No fuel level source set",
+    "text": "Nuk është caktuar burim i nivelit të karburantit"
+  },
+  {
+    "key": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "source": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "text": "Fuel Smoothing nuk ka burim të nivelit të karburantit për %1$s. Hapni faqen e konfigurimit dhe prekni Zbulo, ose zgjidhni një burim."
+  },
+  {
+    "key": "No fuel level this drive",
+    "source": "No fuel level this drive",
+    "text": "Nuk ka nivel karburanti në këtë udhëtim"
+  },
+  {
+    "key": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "source": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "text": "%1$s nuk dha një nivel të përdorshëm për %2$s. Kontrolloni lidhjen e përshtatësit ose nisni Zbulo në faqen e konfigurimit."
+  },
+  {
+    "key": "Fuel level source found",
+    "source": "Fuel level source found",
+    "text": "U gjet burimi i nivelit të karburantit"
+  },
+  {
+    "key": "Using %1$s for %2$s (%3$s).",
+    "source": "Using %1$s for %2$s (%3$s).",
+    "text": "Po përdoret %1$s për %2$s (%3$s)."
+  },
+  {
+    "key": "No fuel level source found",
+    "source": "No fuel level source found",
+    "text": "Nuk u gjet burim i nivelit të karburantit"
+  },
+  {
+    "key": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "source": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "text": "Hapni konfigurimin e Fuel Smoothing dhe zgjidhni një burim (ose shtoni PID në Torque), pastaj prekni Zbulo."
+  },
+  {
+    "key": "Confirm fuel level source",
+    "source": "Confirm fuel level source",
+    "text": "Konfirmoni burimin e nivelit të karburantit"
+  },
+  {
+    "key": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "source": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "text": "U zbulua %1$s, lexim %2$.0f %% për %3$s. Kontrolloni që përputhet me treguesin e pultit, pastaj prekni Konfirmo. Konfirmo është në faqen e konfigurimit dhe në njoftim (%4$s)."
+  },
+  {
+    "key": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "source": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "text": "U zbulua %1$s për %2$s. Kontrolloni që përputhet me treguesin e pultit, pastaj prekni Konfirmo. Konfirmo është në faqen e konfigurimit dhe në njoftim (%3$s)."
+  },
+  {
+    "key": "Recording to %1$s",
+    "source": "Recording to %1$s",
+    "text": "Po regjistrohet te %1$s"
+  },
+  {
+    "key": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "source": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "text": "Ky automjet është %1$s (%2$s), por profili i Torque është „%3$s”. Të dhënat shkojnë te %1$s; prekni për të hapur Torque dhe për të ndërruar profilin."
+  },
+  {
+    "key": "Wrong vehicle profile?",
+    "source": "Wrong vehicle profile?",
+    "text": "Profil i gabuar i automjetit?"
+  },
+  {
+    "key": "Torque profile '%1$s'",
+    "source": "Torque profile '%1$s'",
+    "text": "Profili i Torque „%1$s”"
+  },
+  {
+    "key": "a new vehicle profile",
+    "source": "a new vehicle profile",
+    "text": "një profil i ri automjeti"
+  },
+  {
+    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "text": "Profili i Torque „%1$s” nuk përputhet me këtë automjet (%2$s). Sugjerim: %3$s. Të dhënat mbahen dhe hidhen në fund të udhëtimit nëse nuk i mbani."
+  },
+  {
+    "key": "Keeping drive data",
+    "source": "Keeping drive data",
+    "text": "Po ruhen të dhënat e udhëtimit"
+  },
+  {
+    "key": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "source": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "text": "Ky udhëtim do të ruhet te %1$s. API i shtojcës së Torque nuk mund të krijojë apo të ndërrojë profile Torque: në Torque krijoni ose zgjidhni një profil automjeti me emrin „%2$s”."
+  },
+  {
+    "key": "Create new profile",
+    "source": "Create new profile",
+    "text": "Krijo profil të ri"
+  },
+  {
+    "key": "Use %1$s",
+    "source": "Use %1$s",
+    "text": "Përdor %1$s"
+  }
+]

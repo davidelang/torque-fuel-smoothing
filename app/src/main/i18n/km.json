@@ -1,0 +1,647 @@
+[
+  {
+    "key": "Fuel Smoothing for Torque",
+    "source": "Fuel Smoothing for Torque",
+    "text": "Fuel Smoothing for Torque"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/privacy/"
+  },
+  {
+    "key": "Tips are on the Play Store version",
+    "source": "Tips are on the Play Store version",
+    "text": "គន្លឹះមាននៅលើកំណែ Play Store"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "ចាប់ផ្តើមរហ័ស\n 1. ដំឡើង Torque Pro (កំណែបង់ប្រាក់ Torque Lite មិនគាំទ្រកម្មវិធីជំនួយ) ហើយផ្គូផ្គងអាដាប់ទ័រ OBD-II។\n 2. បើកកម្មវិធីជំនួយនេះនៅ Torque → ការកំណត់ → Plugins។\n 3. អនុញ្ញាតការជូនដំណឹង ហើយកំណត់ការប្រើថ្មជា គ្មានដែនកំណត់ ដើម្បីឱ្យ Torque ចាប់ផ្តើមកម្មវិធីជំនួយនេះនៅផ្ទៃខាងក្រោយ។\n 4. ក្នុង Torque ជ្រើសទម្រង់យានដែលអ្នកកំពុងបើក។ ទិន្នន័យត្រូវបានរក្សាតាមទម្រង់ Torque នីមួយៗ ហើយត្រូវបានពិនិត្យជាមួយអត្តសញ្ញាណ VIN/ECU របស់យាន។\n 5. លើទម្រង់ថ្មី ប្រភពប្រេងត្រូវបានរកឃើញពេលភ្ជាប់ បើសួរ សូមប្រៀបធៀបជាមួយរង្វាស់ផ្ទាំង រួចប៉ះ បញ្ជាក់។ បញ្ជាក់ មាននៅទំព័រកំណត់ និងក្នុងការជូនដំណឹង។ អ្នកអាចជ្រើសខាងក្រោមផងដែរ។\n 6. ទំហំធុងគឺទំហំចាប់ផ្តើមនៃ Chunk fit រហូតដល់វារៀនរបស់ខ្លួន។ កម្មវិធីជំនួយមិនប្តូរវាទេ ទំហំដែល fit នីមួយៗបានរៀនបង្ហាញនៅក្រោមវា។\n 7. ក្នុង Torque បន្ថែមរង្វាស់សម្រាប់ [FuelSmooth] Smoothed Fuel Level និង Corrected %, Remaining, DTE និង Tank size របស់ fit នីមួយៗ។ DTE គឺ Remaining គុណ mpg រយៈពេលវែងរបស់ Torque។ ការជូនដំណឹងពេល refit និយាយថា fit នោះអាន 1:1 រហូតដល់ refit ចប់។\n 8. បញ្ជូនកម្រិតប្រេងត្រឡប់ទៅ Torque៖ បិទ រលោង ឬកែពី Chunk, Band ឬ Kalman fit ទៅរង្វាស់ 012F របស់អ្នក។\n 9. ប្រេងត្រូវបានរាប់តែពេលម៉ាស៊ីនដំណើរការ។ កម្មវិធីជំនួយដំណើរការតែពេល Torque បានភ្ជាប់ទៅ ECU។\n 10. បន្តបើក និងបំពេញ ភាពត្រឹមត្រូវកើនលើធុងមួយផ្នែកជាច្រើន។ បើមានការជូនដំណឹង ទម្រង់យានខុស? សូមជ្រើសអ្វីដែលត្រូវធ្វើចំពោះការបើកនោះ។\n 11. ទិន្នន័យទាំងអស់នៅលើទូរសព្ទនេះ។ គ្មាន GPS ឬទីតាំងត្រូវបានកត់ទុកទេ។"
+  },
+  {
+    "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "text": "%1$s\nកំណែ %2$s (%3$s)\nកម្មវិធីជំនួយសម្រាប់ Torque Pro។ មិនពាក់ព័ន្ធនឹង Torque ឬ Ian Hawkins ទេ។\nទិន្នន័យទាំងអស់នៅលើទូរសព្ទនេះ គ្មាន GPS ឬទីតាំងត្រូវបានកត់ទុកទេ។\n\nអាជ្ញាប័ណ្ណ\nCopyright David Lang. រក្សាសិទ្ធិគ្រប់យ៉ាង។"
+  },
+  {
+    "key": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "source": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "text": "បណ្ណាល័យកូដបើក\nកម្មវិធីនេះប្រើបណ្ណាល័យខាងក្រោម។ អាជ្ញាប័ណ្ណរបស់ពួកវាខុសពីកម្មសិទ្ធិខាងលើ។\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), Play Billing ត្រូវការ\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/manual/"
+  },
+  {
+    "key": "Full manual (online)",
+    "source": "Full manual (online)",
+    "text": "សៀវភៅណែនាំពេញ (អនឡាញ)"
+  },
+  {
+    "key": "Show fuel level in notification",
+    "source": "Show fuel level in notification",
+    "text": "បង្ហាញកម្រិតប្រេងក្នុងការជូនដំណឹង"
+  },
+  {
+    "key": "Feed fuel level back to Torque (overrides 012F)",
+    "source": "Feed fuel level back to Torque (overrides 012F)",
+    "text": "បញ្ជូនកម្រិតប្រេងត្រឡប់ទៅ Torque (ជំនួស 012F)"
+  },
+  {
+    "key": "Fuel Smoothing is running",
+    "source": "Fuel Smoothing is running",
+    "text": "Fuel Smoothing កំពុងដំណើរការ"
+  },
+  {
+    "key": "Tap to start Fuel Smoothing",
+    "source": "Tap to start Fuel Smoothing",
+    "text": "ប៉ះដើម្បីចាប់ផ្តើម Fuel Smoothing"
+  },
+  {
+    "key": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "source": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "text": "ការចាប់ផ្តើមពីថ្ម ឬផ្ទៃខាងក្រោយត្រូវបានបដិសេធ។ បើកម្ដងដើម្បីឱ្យកម្មវិធីជំនួយដំណើរការជាមួយ Torque។"
+  },
+  {
+    "key": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "source": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "text": "បន្ថែមធុងបន្ថែមតាមត្រូវការ (ធុងរោងចក្រ 1 នៅជានិច្ច)។ កុំប្ដូរឧបករណ៍បញ្ជូនទៅម្ជុល PCM FLI (ការបំពេញក្លែងក្លាយ)។ ធុងបន្ថែមនីមួយៗត្រូវការ PID បន្ថែម Torque របស់ខ្លួន (MCU Mode 22 ឈ្មោះតែមួយគត់ — មិនមែន 012F ឬ Ford 16C1)។ តម្លៃ Select-PID គឺ id ធុងចាប់ពី 1។ Gal/hr ត្រូវគិតតែធុងសកម្ម។"
+  },
+  {
+    "key": "Tap to start",
+    "source": "Tap to start",
+    "text": "ប៉ះដើម្បីចាប់ផ្តើម"
+  },
+  {
+    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "text": "ទំហំធុងគឺទំហំចាប់ផ្តើមនៃ Chunk fit រហូតដល់វារៀនរបស់ខ្លួន។ កម្មវិធីជំនួយមិនប្តូរវាទេ ទំហំដែល fit នីមួយៗបានរៀនបង្ហាញនៅក្រោមវា។"
+  },
+  {
+    "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "source": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "text": "សរសេរតម្លៃលើ Fuel Level រោងចក្ររបស់ Torque (012F) ដើម្បីឱ្យរង្វាស់ដែលមានបង្ហាញ៖ បិទ រលោង ឬកែពី Chunk, Band ឬ Kalman fit។ fit ដែលមិនទាន់សង់សរសេរកម្រិតរលោង។"
+  },
+  {
+    "key": "Chunk: %1$s",
+    "source": "Chunk: %1$s",
+    "text": "Chunk: %1$s"
+  },
+  {
+    "key": "Band: %1$s",
+    "source": "Band: %1$s",
+    "text": "Band: %1$s"
+  },
+  {
+    "key": "Kalman: %1$s",
+    "source": "Kalman: %1$s",
+    "text": "Kalman: %1$s"
+  },
+  {
+    "key": "no size yet",
+    "source": "no size yet",
+    "text": "មិនទាន់មានទំហំ"
+  },
+  {
+    "key": "no size yet ± %1$.1f gal",
+    "source": "no size yet ± %1$.1f gal",
+    "text": "មិនទាន់មានទំហំ ± %1$.1f gal"
+  },
+  {
+    "key": "%1$.1f gal",
+    "source": "%1$.1f gal",
+    "text": "%1$.1f gal"
+  },
+  {
+    "key": "%1$.1f ± %2$.1f gal",
+    "source": "%1$.1f ± %2$.1f gal",
+    "text": "%1$.1f ± %2$.1f gal"
+  },
+  {
+    "key": "Help",
+    "source": "Help",
+    "text": "ជំនួយ"
+  },
+  {
+    "key": "About",
+    "source": "About",
+    "text": "អំពី"
+  },
+  {
+    "key": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "source": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "text": "ត្រូវការ Torque Pro (បង់ប្រាក់)។ Torque Lite មិនគាំទ្រកម្មវិធីជំនួយទេ។"
+  },
+  {
+    "key": "Get Torque Pro",
+    "source": "Get Torque Pro",
+    "text": "យក Torque Pro"
+  },
+  {
+    "key": "Privacy",
+    "source": "Privacy",
+    "text": "ភាពឯកជន"
+  },
+  {
+    "key": "Send feedback",
+    "source": "Send feedback",
+    "text": "ផ្ញើមតិ"
+  },
+  {
+    "key": "Tip",
+    "source": "Tip",
+    "text": "ប្រាក់រង្វាន់"
+  },
+  {
+    "key": "Thanks",
+    "source": "Thanks",
+    "text": "អរគុណ"
+  },
+  {
+    "key": "Close",
+    "source": "Close",
+    "text": "បិទ"
+  },
+  {
+    "key": "OK",
+    "source": "OK",
+    "text": "OK"
+  },
+  {
+    "key": "Detect",
+    "source": "Detect",
+    "text": "រក"
+  },
+  {
+    "key": "Confirm",
+    "source": "Confirm",
+    "text": "បញ្ជាក់"
+  },
+  {
+    "key": "Save pin",
+    "source": "Save pin",
+    "text": "រក្សាទុកម្ជុល"
+  },
+  {
+    "key": "Add additional tank",
+    "source": "Add additional tank",
+    "text": "បន្ថែមធុង"
+  },
+  {
+    "key": "Remove",
+    "source": "Remove",
+    "text": "ដកចេញ"
+  },
+  {
+    "key": "Details",
+    "source": "Details",
+    "text": "លម្អិត"
+  },
+  {
+    "key": "Verbose logging (debug; per-second log lines)",
+    "source": "Verbose logging (debug; per-second log lines)",
+    "text": "កំណត់ហេតុលម្អិត (បំបាត់កំហុស បន្ទាត់រៀងរាល់វិនាទី)"
+  },
+  {
+    "key": "Profile name",
+    "source": "Profile name",
+    "text": "ឈ្មោះទម្រង់"
+  },
+  {
+    "key": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "source": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "text": "ឈ្មោះទម្រង់យាននេះ។ ទម្រង់យាន Torque នីមួយៗទទួលបានទម្រង់កម្មវិធីជំនួយ ទិន្នន័យ និងផែនទីដែលបានរៀនរបស់ខ្លួន។"
+  },
+  {
+    "key": "Make",
+    "source": "Make",
+    "text": "ម៉ាក"
+  },
+  {
+    "key": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "source": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "text": "ម៉ាកយាន (ឧ. Ford)។ ប្រើតែដើម្បីជ្រើស PID ប្រេងតាមម៉ាកណាដែលការរកអាចសាកល្បង។"
+  },
+  {
+    "key": "Fuel source",
+    "source": "Fuel source",
+    "text": "ប្រភពប្រេង"
+  },
+  {
+    "key": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "source": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "text": "កម្រិតប្រេងឆៅមកពីណា។ រក (ECU ត្រូវភ្ជាប់) អានបេក្ខជនសម្រាប់អានប៉ុណ្ណោះ ហើយសុំបញ្ជាក់លុះត្រាតែប្រភពពីរយល់ស្រប។ បញ្ជាក់ មាននៅទំព័រកំណត់ និងក្នុងការជូនដំណឹង។ គ្មាន = រកនៅការភ្ជាប់បន្ទាប់។"
+  },
+  {
+    "key": "Custom long name",
+    "source": "Custom long name",
+    "text": "ឈ្មោះវែងផ្ទាល់ខ្លួន"
+  },
+  {
+    "key": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "source": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "text": "សម្រាប់តែប្រភព Torque extra PID by long name៖ ឈ្មោះវែងពិតប្រាកដនៃ PID Torque ដែលរាយការណ៍កម្រិត។"
+  },
+  {
+    "key": "Tank size",
+    "source": "Tank size",
+    "text": "ទំហំធុង"
+  },
+  {
+    "key": "blank = no starting size; each fit learns its own.",
+    "source": "blank = no starting size; each fit learns its own.",
+    "text": "ទទេ = គ្មានទំហំចាប់ផ្តើម fit នីមួយៗរៀនរបស់ខ្លួន។"
+  },
+  {
+    "key": "Smoothing τ seconds",
+    "source": "Smoothing τ seconds",
+    "text": "ការធ្វើឱ្យរលោង τ វិនាទី"
+  },
+  {
+    "key": "Time constant of the smoothing filter (0 = no smoothing).",
+    "source": "Time constant of the smoothing filter (0 = no smoothing).",
+    "text": "ថេរពេលនៃតម្រងធ្វើឱ្យរលោង (0 = គ្មានការធ្វើឱ្យរលោង)។"
+  },
+  {
+    "key": "Max skew %/s",
+    "source": "Max skew %/s",
+    "text": "ទំនោរអតិបរមា %/s"
+  },
+  {
+    "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "text": "ការប្រែប្រួលធំបំផុតក្នុងមួយវិនាទីដែលកម្រិតរលោងអាចតាម ការរលកលើសនេះត្រូវមិនអើពើ។"
+  },
+  {
+    "key": "Fill jump %",
+    "source": "Fill jump %",
+    "text": "ការលោតពេលបំពេញ %"
+  },
+  {
+    "key": "Rise in level while stopped that counts as a fill.",
+    "source": "Rise in level while stopped that counts as a fill.",
+    "text": "ការកើនកម្រិតពេលឈប់ដែលរាប់ជាការបំពេញ។"
+  },
+  {
+    "key": "Odometer miles",
+    "source": "Odometer miles",
+    "text": "ម៉ាយអូដូម៉ែត្រ"
+  },
+  {
+    "key": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "source": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "text": "ស្រេចចិត្ត៖ បញ្ចូលការអានអូដូម៉ែត្រ រួចរក្សាទុកម្ជុល ដើម្បីចងចម្ងាយសម្រាប់ទម្រង់នេះ។"
+  },
+  {
+    "key": "Additional tanks",
+    "source": "Additional tanks",
+    "text": "ធុងបន្ថែម"
+  },
+  {
+    "key": "Active tank",
+    "source": "Active tank",
+    "text": "ធុងសកម្ម"
+  },
+  {
+    "key": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "source": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "text": "ធុងណាដែលការដុតប្រេង (gal/hr) ត្រូវគិត។ ពី PID៖ PID Torque ជ្រើសវា (id ធុងចាប់ពី 1)។"
+  },
+  {
+    "key": "Select-PID long name",
+    "source": "Select-PID long name",
+    "text": "ឈ្មោះវែង Select-PID"
+  },
+  {
+    "key": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "source": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "text": "តែពេលធុងសកម្ម = ពី PID៖ ឈ្មោះវែងនៃ PID Torque ដែលតម្លៃជា id ធុង។"
+  },
+  {
+    "key": "Tank %1$d",
+    "source": "Tank %1$d",
+    "text": "ធុង %1$d"
+  },
+  {
+    "key": "Tank %1$d fuel source",
+    "source": "Tank %1$d fuel source",
+    "text": "ប្រភពប្រេងធុង %1$d"
+  },
+  {
+    "key": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "source": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "text": "ឈ្មោះវែងផ្ទាល់ខ្លួនធុង %1$d (ឧ. [FuelSmooth] Tank%1$d Level)"
+  },
+  {
+    "key": "Tank %1$d gallons",
+    "source": "Tank %1$d gallons",
+    "text": "ហ្គាឡុងធុង %1$d"
+  },
+  {
+    "key": "From PID",
+    "source": "From PID",
+    "text": "ពី PID"
+  },
+  {
+    "key": "(unconfirmed)",
+    "source": "(unconfirmed)",
+    "text": "(មិនទាន់បញ្ជាក់)"
+  },
+  {
+    "key": "· ECU connected",
+    "source": "· ECU connected",
+    "text": "· ECU បានភ្ជាប់"
+  },
+  {
+    "key": "tank ?",
+    "source": "tank ?",
+    "text": "ធុង ?"
+  },
+  {
+    "key": "About %1$s",
+    "source": "About %1$s",
+    "text": "អំពី %1$s"
+  },
+  {
+    "key": "0 to %1$s s",
+    "source": "0 to %1$s s",
+    "text": "0 ដល់ %1$s s"
+  },
+  {
+    "key": "above 0, at most %1$s %%/s",
+    "source": "above 0, at most %1$s %%/s",
+    "text": "លើស 0 មិនលើស %1$s %%/s"
+  },
+  {
+    "key": "%1$s to %2$s %%",
+    "source": "%1$s to %2$s %%",
+    "text": "%1$s ដល់ %2$s %%"
+  },
+  {
+    "key": "blank or a number above 0",
+    "source": "blank or a number above 0",
+    "text": "ទទេ ឬលេខលើស 0"
+  },
+  {
+    "key": "stored value out of range",
+    "source": "stored value out of range",
+    "text": "តម្លៃដែលរក្សាទុកនៅក្រៅជួរ"
+  },
+  {
+    "key": "Chunk",
+    "source": "Chunk",
+    "text": "Chunk"
+  },
+  {
+    "key": "Band",
+    "source": "Band",
+    "text": "Band"
+  },
+  {
+    "key": "Kalman",
+    "source": "Kalman",
+    "text": "Kalman"
+  },
+  {
+    "key": "Smoothed %",
+    "source": "Smoothed %",
+    "text": "រលោង %"
+  },
+  {
+    "key": "Error (%)",
+    "source": "Error (%)",
+    "text": "កំហុស (%)"
+  },
+  {
+    "key": "Off",
+    "source": "Off",
+    "text": "បិទ"
+  },
+  {
+    "key": "Corrected % (Chunk)",
+    "source": "Corrected % (Chunk)",
+    "text": "Corrected % (Chunk)"
+  },
+  {
+    "key": "Corrected % (Band)",
+    "source": "Corrected % (Band)",
+    "text": "Corrected % (Band)"
+  },
+  {
+    "key": "Corrected % (Kalman)",
+    "source": "Corrected % (Kalman)",
+    "text": "Corrected % (Kalman)"
+  },
+  {
+    "key": "gal",
+    "source": "gal",
+    "text": "gal"
+  },
+  {
+    "key": "L",
+    "source": "L",
+    "text": "L"
+  },
+  {
+    "key": "None yet (Detect runs on connect)",
+    "source": "None yet (Detect runs on connect)",
+    "text": "មិនទាន់មាន (រកដំណើរការពេលភ្ជាប់)"
+  },
+  {
+    "key": "SAE 012F Fuel Tank Level",
+    "source": "SAE 012F Fuel Tank Level",
+    "text": "SAE 012F Fuel Tank Level"
+  },
+  {
+    "key": "Mode 22 16C1",
+    "source": "Mode 22 16C1",
+    "text": "Mode 22 16C1"
+  },
+  {
+    "key": "Ford Mode 22 F42F",
+    "source": "Ford Mode 22 F42F",
+    "text": "Ford Mode 22 F42F"
+  },
+  {
+    "key": "GM Mode 22 12C5 %",
+    "source": "GM Mode 22 12C5 %",
+    "text": "GM Mode 22 12C5 %"
+  },
+  {
+    "key": "Chrysler 21A2 %",
+    "source": "Chrysler 21A2 %",
+    "text": "Chrysler 21A2 %"
+  },
+  {
+    "key": "Chrysler Fuel Level Average",
+    "source": "Chrysler Fuel Level Average",
+    "text": "Chrysler Fuel Level Average"
+  },
+  {
+    "key": "Toyota cluster 2129 (half-litre counts)",
+    "source": "Toyota cluster 2129 (half-litre counts)",
+    "text": "Toyota cluster 2129 (half-litre counts)"
+  },
+  {
+    "key": "Torque extra PID by long name",
+    "source": "Torque extra PID by long name",
+    "text": "Torque extra PID by long name"
+  },
+  {
+    "key": "Vehicle 1",
+    "source": "Vehicle 1",
+    "text": "យាន 1"
+  },
+  {
+    "key": "Vehicle %1$s",
+    "source": "Vehicle %1$s",
+    "text": "យាន %1$s"
+  },
+  {
+    "key": "Binding to Torque…",
+    "source": "Binding to Torque…",
+    "text": "កំពុងភ្ជាប់ទៅ Torque…"
+  },
+  {
+    "key": "Waiting for fuel source",
+    "source": "Waiting for fuel source",
+    "text": "កំពុងរង់ចាំប្រភពប្រេង"
+  },
+  {
+    "key": "raw %1$.1f%%",
+    "source": "raw %1$.1f%%",
+    "text": "ឆៅ %1$.1f%%"
+  },
+  {
+    "key": "sess %1$s",
+    "source": "sess %1$s",
+    "text": "វគ្គ %1$s"
+  },
+  {
+    "key": "Fuel Smoothing",
+    "source": "Fuel Smoothing",
+    "text": "Fuel Smoothing"
+  },
+  {
+    "key": "Fuel Smoothing quiet",
+    "source": "Fuel Smoothing quiet",
+    "text": "Fuel Smoothing ស្ងាត់"
+  },
+  {
+    "key": "Map refitting",
+    "source": "Map refitting",
+    "text": "ផែនទីកំពុង refit"
+  },
+  {
+    "key": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "source": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "text": "Fuel Smoothing កំពុង refit ផែនទីសម្រាប់ %1$s។ fit នោះអាន 1:1 រហូតដល់ refit ចប់។"
+  },
+  {
+    "key": "No fuel level source set",
+    "source": "No fuel level source set",
+    "text": "មិនទាន់កំណត់ប្រភពកម្រិតប្រេង"
+  },
+  {
+    "key": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "source": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "text": "Fuel Smoothing គ្មានប្រភពកម្រិតប្រេងសម្រាប់ %1$s។ បើកទំព័រកំណត់ រួចប៉ះ រក ឬជ្រើសប្រភព។"
+  },
+  {
+    "key": "No fuel level this drive",
+    "source": "No fuel level this drive",
+    "text": "គ្មានកម្រិតប្រេងក្នុងការបើកនេះ"
+  },
+  {
+    "key": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "source": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "text": "%1$s មិនបានផ្តល់កម្រិតដែលប្រើបានសម្រាប់ %2$s។ ពិនិត្យការភ្ជាប់អាដាប់ទ័រ ឬដំណើរការ រក នៅទំព័រកំណត់។"
+  },
+  {
+    "key": "Fuel level source found",
+    "source": "Fuel level source found",
+    "text": "រកឃើញប្រភពកម្រិតប្រេង"
+  },
+  {
+    "key": "Using %1$s for %2$s (%3$s).",
+    "source": "Using %1$s for %2$s (%3$s).",
+    "text": "កំពុងប្រើ %1$s សម្រាប់ %2$s (%3$s)។"
+  },
+  {
+    "key": "No fuel level source found",
+    "source": "No fuel level source found",
+    "text": "រកមិនឃើញប្រភពកម្រិតប្រេង"
+  },
+  {
+    "key": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "source": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "text": "បើកការកំណត់ Fuel Smoothing រួចជ្រើសប្រភព (ឬបន្ថែម PID ក្នុង Torque) បន្ទាប់មកប៉ះ រក។"
+  },
+  {
+    "key": "Confirm fuel level source",
+    "source": "Confirm fuel level source",
+    "text": "បញ្ជាក់ប្រភពកម្រិតប្រេង"
+  },
+  {
+    "key": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "source": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "text": "បានរកឃើញ %1$s ការអាន %2$.0f %% សម្រាប់ %3$s។ ពិនិត្យថាវាត្រូវនឹងរង្វាស់ប្រេងផ្ទាំង រួចប៉ះ បញ្ជាក់។ បញ្ជាក់ មាននៅទំព័រកំណត់ និងក្នុងការជូនដំណឹង (%4$s)។"
+  },
+  {
+    "key": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "source": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "text": "បានរកឃើញ %1$s សម្រាប់ %2$s។ ពិនិត្យថាវាត្រូវនឹងរង្វាស់ប្រេងផ្ទាំង រួចប៉ះ បញ្ជាក់។ បញ្ជាក់ មាននៅទំព័រកំណត់ និងក្នុងការជូនដំណឹង (%3$s)។"
+  },
+  {
+    "key": "Recording to %1$s",
+    "source": "Recording to %1$s",
+    "text": "កំពុងកត់ទុកទៅ %1$s"
+  },
+  {
+    "key": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "source": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "text": "យាននេះគឺ %1$s (%2$s) ប៉ុន្តែទម្រង់ Torque គឺ '%3$s'។ ទិន្នន័យទៅ %1$s ប៉ះដើម្បីបើក Torque ហើយប្តូរទម្រង់។"
+  },
+  {
+    "key": "Wrong vehicle profile?",
+    "source": "Wrong vehicle profile?",
+    "text": "ទម្រង់យានខុស?"
+  },
+  {
+    "key": "Torque profile '%1$s'",
+    "source": "Torque profile '%1$s'",
+    "text": "ទម្រង់ Torque '%1$s'"
+  },
+  {
+    "key": "a new vehicle profile",
+    "source": "a new vehicle profile",
+    "text": "ទម្រង់យានថ្មី"
+  },
+  {
+    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "text": "ទម្រង់ Torque '%1$s' មិនត្រូវនឹងយាននេះ (%2$s)។ សំណើ៖ %3$s។ ទិន្នន័យត្រូវរក្សា ហើយត្រូវបោះបង់នៅចុងការបើក លុះត្រាតែអ្នករក្សាវា។"
+  },
+  {
+    "key": "Keeping drive data",
+    "source": "Keeping drive data",
+    "text": "កំពុងរក្សាទិន្នន័យការបើក"
+  },
+  {
+    "key": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "source": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "text": "ការបើកនេះនឹងត្រូវរក្សាទុកទៅ %1$s។ API កម្មវិធីជំនួយរបស់ Torque មិនអាចបង្កើត ឬប្តូរទម្រង់ Torque បានទេ៖ ក្នុង Torque បង្កើត ឬជ្រើសទម្រង់យានឈ្មោះ '%2$s'។"
+  },
+  {
+    "key": "Create new profile",
+    "source": "Create new profile",
+    "text": "បង្កើតទម្រង់ថ្មី"
+  },
+  {
+    "key": "Use %1$s",
+    "source": "Use %1$s",
+    "text": "ប្រើ %1$s"
+  }
+]

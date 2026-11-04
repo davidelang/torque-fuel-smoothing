@@ -1,0 +1,647 @@
+[
+  {
+    "key": "Fuel Smoothing for Torque",
+    "source": "Fuel Smoothing for Torque",
+    "text": "Fuel Smoothing for Torque"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/privacy/"
+  },
+  {
+    "key": "Tips are on the Play Store version",
+    "source": "Tips are on the Play Store version",
+    "text": "Tipit ovat Play Store -versiossa"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "Pika-aloitus\n 1. Asenna Torque Pro (maksullinen versio; Torque Lite ei tue liitännäisiä) ja parita OBD-II-sovitin.\n 2. Ota tämä liitännäinen käyttöön polussa Torque → Asetukset → Liitännäiset.\n 3. Salli ilmoitukset ja aseta akun käyttö rajoittamattomaksi, jotta Torque voi käynnistää tämän liitännäisen taustalla.\n 4. Valitse Torquessa ajamasi auton ajoneuvoprofiili. Tiedot säilyvät Torque-profiileittain ja tarkistetaan auton VIN/ECU-tunnistetta vasten.\n 5. Uudella profiililla polttoaineen lähde tunnistetaan yhdistettäessä; jos sitä kysytään, vertaa sitä mittariston mittariin ja napauta Vahvista. Vahvista on asetussivulla ja ilmoituksessa. Voit valita sen myös alta.\n 6. Säiliön koko on Chunk-sovituksen aloituskoko, kunnes se oppii omansa. Liitännäinen ei koskaan muuta sitä; kunkin sovituksen opittu koko näkyy sen alla.\n 7. Lisää Torqueen mittarit kohteelle [FuelSmooth] Smoothed Fuel Level sekä kullekin sovitukselle Corrected %, Remaining, DTE ja Tank size. DTE on Remaining kertaa Torquen pitkän ajan mpg. Uudelleensovituksen aikana ilmoitus kertoo, että sovitus lukee 1:1, kunnes uudelleensovitus päättyy.\n 8. Syötä polttoainetaso takaisin Torqueen: Pois, tasoitettu tai korjattu Chunk-, Band- tai Kalman-sovituksesta 012F-mittariin.\n 9. Polttoaine lasketaan vain moottorin käydessä. Liitännäinen toimii vain, kun Torque on yhdistetty ECU:hun.\n 10. Jatka ajamista ja tankkaamista; tarkkuus paranee usean osittaisen säiliön aikana. Jos ilmoitus Väärä ajoneuvoprofiili? tulee näkyviin, valitse mitä kyseiselle ajolle tehdään.\n 11. Kaikki tiedot pysyvät tässä puhelimessa. GPS:ää tai sijaintia ei tallenneta."
+  },
+  {
+    "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "text": "%1$s\nVersio %2$s (%3$s)\nLiitännäinen Torque Prolle. Ei sidoksissa Torqueen tai Ian Hawkinsiin.\nKaikki tiedot pysyvät tässä puhelimessa; GPS:ää tai sijaintia ei tallenneta.\n\nLisenssi\nCopyright David Lang. Kaikki oikeudet pidätetään."
+  },
+  {
+    "key": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "source": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "text": "Avoimen lähdekoodin kirjastot\nTämä sovellus käyttää alla olevia kirjastoja. Niiden lisenssit ovat erillään yllä olevasta tekijänoikeudesta.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), Play Billing edellyttää\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/manual/"
+  },
+  {
+    "key": "Full manual (online)",
+    "source": "Full manual (online)",
+    "text": "Täysi opas (verkossa)"
+  },
+  {
+    "key": "Show fuel level in notification",
+    "source": "Show fuel level in notification",
+    "text": "Näytä polttoainetaso ilmoituksessa"
+  },
+  {
+    "key": "Feed fuel level back to Torque (overrides 012F)",
+    "source": "Feed fuel level back to Torque (overrides 012F)",
+    "text": "Syötä polttoainetaso takaisin Torqueen (korvaa 012F)"
+  },
+  {
+    "key": "Fuel Smoothing is running",
+    "source": "Fuel Smoothing is running",
+    "text": "Fuel Smoothing on käynnissä"
+  },
+  {
+    "key": "Tap to start Fuel Smoothing",
+    "source": "Tap to start Fuel Smoothing",
+    "text": "Napauta käynnistääksesi Fuel Smoothingin"
+  },
+  {
+    "key": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "source": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "text": "Käynnistys akusta tai taustalta estettiin. Avaa kerran, jotta liitännäinen voi toimia Torquen kanssa."
+  },
+  {
+    "key": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "source": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "text": "Lisää säiliöitä tarvittaessa (vakiotankki 1 säilyy aina). Älä kytke antureita PCM FLI -nastaan (väärä tankkaus). Jokainen lisäsäiliö tarvitsee oman Torquen lisä-PID:n (MCU Mode 22, yksilöllinen nimi — ei 012F eikä Ford 16C1). Select-PID-arvo on säiliön tunnus alkaen yhdestä. Gal/hr veloitetaan vain aktiiviselta säiliöltä."
+  },
+  {
+    "key": "Tap to start",
+    "source": "Tap to start",
+    "text": "Napauta käynnistääksesi"
+  },
+  {
+    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "text": "Säiliön koko on Chunk-sovituksen aloituskoko, kunnes se oppii omansa. Liitännäinen ei koskaan muuta sitä; kunkin sovituksen opittu koko näkyy sen alla."
+  },
+  {
+    "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "source": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "text": "Kirjoittaa arvon Torquen vakiolle Fuel Level (012F), jotta nykyiset mittarit näyttävät sen: Pois, tasoitettu tai korjattu Chunk-, Band- tai Kalman-sovituksesta. Sovitus, jota ei ole vielä rakennettu, kirjoittaa tasoitetun tason."
+  },
+  {
+    "key": "Chunk: %1$s",
+    "source": "Chunk: %1$s",
+    "text": "Chunk: %1$s"
+  },
+  {
+    "key": "Band: %1$s",
+    "source": "Band: %1$s",
+    "text": "Band: %1$s"
+  },
+  {
+    "key": "Kalman: %1$s",
+    "source": "Kalman: %1$s",
+    "text": "Kalman: %1$s"
+  },
+  {
+    "key": "no size yet",
+    "source": "no size yet",
+    "text": "ei kokoa vielä"
+  },
+  {
+    "key": "no size yet ± %1$.1f gal",
+    "source": "no size yet ± %1$.1f gal",
+    "text": "ei kokoa vielä ± %1$.1f gal"
+  },
+  {
+    "key": "%1$.1f gal",
+    "source": "%1$.1f gal",
+    "text": "%1$.1f gal"
+  },
+  {
+    "key": "%1$.1f ± %2$.1f gal",
+    "source": "%1$.1f ± %2$.1f gal",
+    "text": "%1$.1f ± %2$.1f gal"
+  },
+  {
+    "key": "Help",
+    "source": "Help",
+    "text": "Ohje"
+  },
+  {
+    "key": "About",
+    "source": "About",
+    "text": "Tietoja"
+  },
+  {
+    "key": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "source": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "text": "Vaatii Torque Pron (maksullinen). Torque Lite ei tue liitännäisiä."
+  },
+  {
+    "key": "Get Torque Pro",
+    "source": "Get Torque Pro",
+    "text": "Hanki Torque Pro"
+  },
+  {
+    "key": "Privacy",
+    "source": "Privacy",
+    "text": "Tietosuoja"
+  },
+  {
+    "key": "Send feedback",
+    "source": "Send feedback",
+    "text": "Lähetä palautetta"
+  },
+  {
+    "key": "Tip",
+    "source": "Tip",
+    "text": "Tippi"
+  },
+  {
+    "key": "Thanks",
+    "source": "Thanks",
+    "text": "Kiitos"
+  },
+  {
+    "key": "Close",
+    "source": "Close",
+    "text": "Sulje"
+  },
+  {
+    "key": "OK",
+    "source": "OK",
+    "text": "OK"
+  },
+  {
+    "key": "Detect",
+    "source": "Detect",
+    "text": "Tunnista"
+  },
+  {
+    "key": "Confirm",
+    "source": "Confirm",
+    "text": "Vahvista"
+  },
+  {
+    "key": "Save pin",
+    "source": "Save pin",
+    "text": "Tallenna kiinnitys"
+  },
+  {
+    "key": "Add additional tank",
+    "source": "Add additional tank",
+    "text": "Lisää säiliö"
+  },
+  {
+    "key": "Remove",
+    "source": "Remove",
+    "text": "Poista"
+  },
+  {
+    "key": "Details",
+    "source": "Details",
+    "text": "Tiedot"
+  },
+  {
+    "key": "Verbose logging (debug; per-second log lines)",
+    "source": "Verbose logging (debug; per-second log lines)",
+    "text": "Yksityiskohtainen loki (vianetsintä; rivit sekunnissa)"
+  },
+  {
+    "key": "Profile name",
+    "source": "Profile name",
+    "text": "Profiilin nimi"
+  },
+  {
+    "key": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "source": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "text": "Tämän ajoneuvoprofiilin nimi. Jokainen Torquen ajoneuvoprofiili saa oman liitännäisprofiilin, datan ja opitut kartat."
+  },
+  {
+    "key": "Make",
+    "source": "Make",
+    "text": "Merkki"
+  },
+  {
+    "key": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "source": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "text": "Ajoneuvon merkki (esim. Ford). Käytetään vain valitsemaan, mitä merkkikohtaisia polttoaine-PID:itä tunnistus voi kokeilla."
+  },
+  {
+    "key": "Fuel source",
+    "source": "Fuel source",
+    "text": "Polttoaineen lähde"
+  },
+  {
+    "key": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "source": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "text": "Mistä raaka polttoainetaso tulee. Tunnista (ECU:n on oltava yhdistetty) kokeilee ehdokkaita vain lukien ja pyytää vahvistusta, ellei kaksi lähdettä täsmää. Vahvista on asetussivulla ja ilmoituksessa. Ei mitään = tunnista seuraavalla yhdistämisellä."
+  },
+  {
+    "key": "Custom long name",
+    "source": "Custom long name",
+    "text": "Mukautettu pitkä nimi"
+  },
+  {
+    "key": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "source": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "text": "Vain lähteelle ”Torquen lisä-PID pitkällä nimellä”: sen Torque-PID:n tarkka pitkä nimi, joka ilmoittaa tason."
+  },
+  {
+    "key": "Tank size",
+    "source": "Tank size",
+    "text": "Säiliön koko"
+  },
+  {
+    "key": "blank = no starting size; each fit learns its own.",
+    "source": "blank = no starting size; each fit learns its own.",
+    "text": "tyhjä = ei aloituskokoa; jokainen sovitus oppii omansa."
+  },
+  {
+    "key": "Smoothing τ seconds",
+    "source": "Smoothing τ seconds",
+    "text": "Tasoitus τ sekunteina"
+  },
+  {
+    "key": "Time constant of the smoothing filter (0 = no smoothing).",
+    "source": "Time constant of the smoothing filter (0 = no smoothing).",
+    "text": "Tasoitussuodattimen aikavakio (0 = ei tasausta)."
+  },
+  {
+    "key": "Max skew %/s",
+    "source": "Max skew %/s",
+    "text": "Suurin vinous %/s"
+  },
+  {
+    "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "text": "Suurin muutos sekunnissa, jota tasoitettu taso saa seurata; tätä suurempi loiskunta ohitetaan."
+  },
+  {
+    "key": "Fill jump %",
+    "source": "Fill jump %",
+    "text": "Tankkaushyppy %"
+  },
+  {
+    "key": "Rise in level while stopped that counts as a fill.",
+    "source": "Rise in level while stopped that counts as a fill.",
+    "text": "Tason nousu paikallaan, joka lasketaan tankkaukseksi."
+  },
+  {
+    "key": "Odometer miles",
+    "source": "Odometer miles",
+    "text": "Matkamittari maileina"
+  },
+  {
+    "key": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "source": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "text": "Valinnainen: anna matkamittarin lukema ja Tallenna kiinnitys ankkuroidaksesi tämän profiilin matkan."
+  },
+  {
+    "key": "Additional tanks",
+    "source": "Additional tanks",
+    "text": "Lisäsäiliöt"
+  },
+  {
+    "key": "Active tank",
+    "source": "Active tank",
+    "text": "Aktiivinen säiliö"
+  },
+  {
+    "key": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "source": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "text": "Säiliö, jolle kulutus (gal/hr) veloitetaan. PID:stä: Torque-PID valitsee sen (säiliön tunnus alkaen yhdestä)."
+  },
+  {
+    "key": "Select-PID long name",
+    "source": "Select-PID long name",
+    "text": "Select-PID:n pitkä nimi"
+  },
+  {
+    "key": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "source": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "text": "Vain kun Aktiivinen säiliö = PID:stä: sen Torque-PID:n pitkä nimi, jonka arvo on säiliön tunnus."
+  },
+  {
+    "key": "Tank %1$d",
+    "source": "Tank %1$d",
+    "text": "Säiliö %1$d"
+  },
+  {
+    "key": "Tank %1$d fuel source",
+    "source": "Tank %1$d fuel source",
+    "text": "Säiliön %1$d polttoaineen lähde"
+  },
+  {
+    "key": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "source": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "text": "Säiliön %1$d mukautettu pitkä nimi (esim. [FuelSmooth] Tank%1$d Level)"
+  },
+  {
+    "key": "Tank %1$d gallons",
+    "source": "Tank %1$d gallons",
+    "text": "Säiliön %1$d gallonat"
+  },
+  {
+    "key": "From PID",
+    "source": "From PID",
+    "text": "PID:stä"
+  },
+  {
+    "key": "(unconfirmed)",
+    "source": "(unconfirmed)",
+    "text": "(vahvistamatta)"
+  },
+  {
+    "key": "· ECU connected",
+    "source": "· ECU connected",
+    "text": "· ECU yhdistetty"
+  },
+  {
+    "key": "tank ?",
+    "source": "tank ?",
+    "text": "säiliö ?"
+  },
+  {
+    "key": "About %1$s",
+    "source": "About %1$s",
+    "text": "Noin %1$s"
+  },
+  {
+    "key": "0 to %1$s s",
+    "source": "0 to %1$s s",
+    "text": "0–%1$s s"
+  },
+  {
+    "key": "above 0, at most %1$s %%/s",
+    "source": "above 0, at most %1$s %%/s",
+    "text": "yli 0, enintään %1$s %%/s"
+  },
+  {
+    "key": "%1$s to %2$s %%",
+    "source": "%1$s to %2$s %%",
+    "text": "%1$s–%2$s %%"
+  },
+  {
+    "key": "blank or a number above 0",
+    "source": "blank or a number above 0",
+    "text": "tyhjä tai nollaa suurempi luku"
+  },
+  {
+    "key": "stored value out of range",
+    "source": "stored value out of range",
+    "text": "tallennettu arvo alueen ulkopuolella"
+  },
+  {
+    "key": "Chunk",
+    "source": "Chunk",
+    "text": "Chunk"
+  },
+  {
+    "key": "Band",
+    "source": "Band",
+    "text": "Band"
+  },
+  {
+    "key": "Kalman",
+    "source": "Kalman",
+    "text": "Kalman"
+  },
+  {
+    "key": "Smoothed %",
+    "source": "Smoothed %",
+    "text": "Tasoitettu %"
+  },
+  {
+    "key": "Error (%)",
+    "source": "Error (%)",
+    "text": "Virhe (%)"
+  },
+  {
+    "key": "Off",
+    "source": "Off",
+    "text": "Pois"
+  },
+  {
+    "key": "Corrected % (Chunk)",
+    "source": "Corrected % (Chunk)",
+    "text": "Korjattu % (Chunk)"
+  },
+  {
+    "key": "Corrected % (Band)",
+    "source": "Corrected % (Band)",
+    "text": "Korjattu % (Band)"
+  },
+  {
+    "key": "Corrected % (Kalman)",
+    "source": "Corrected % (Kalman)",
+    "text": "Korjattu % (Kalman)"
+  },
+  {
+    "key": "gal",
+    "source": "gal",
+    "text": "gal"
+  },
+  {
+    "key": "L",
+    "source": "L",
+    "text": "L"
+  },
+  {
+    "key": "None yet (Detect runs on connect)",
+    "source": "None yet (Detect runs on connect)",
+    "text": "Ei vielä (Tunnista yhdistettäessä)"
+  },
+  {
+    "key": "SAE 012F Fuel Tank Level",
+    "source": "SAE 012F Fuel Tank Level",
+    "text": "SAE 012F Fuel Tank Level"
+  },
+  {
+    "key": "Mode 22 16C1",
+    "source": "Mode 22 16C1",
+    "text": "Mode 22 16C1"
+  },
+  {
+    "key": "Ford Mode 22 F42F",
+    "source": "Ford Mode 22 F42F",
+    "text": "Ford Mode 22 F42F"
+  },
+  {
+    "key": "GM Mode 22 12C5 %",
+    "source": "GM Mode 22 12C5 %",
+    "text": "GM Mode 22 12C5 %"
+  },
+  {
+    "key": "Chrysler 21A2 %",
+    "source": "Chrysler 21A2 %",
+    "text": "Chrysler 21A2 %"
+  },
+  {
+    "key": "Chrysler Fuel Level Average",
+    "source": "Chrysler Fuel Level Average",
+    "text": "Chrysler Fuel Level Average"
+  },
+  {
+    "key": "Toyota cluster 2129 (half-litre counts)",
+    "source": "Toyota cluster 2129 (half-litre counts)",
+    "text": "Toyota cluster 2129 (puolen litran laskurit)"
+  },
+  {
+    "key": "Torque extra PID by long name",
+    "source": "Torque extra PID by long name",
+    "text": "Torquen lisä-PID pitkällä nimellä"
+  },
+  {
+    "key": "Vehicle 1",
+    "source": "Vehicle 1",
+    "text": "Ajoneuvo 1"
+  },
+  {
+    "key": "Vehicle %1$s",
+    "source": "Vehicle %1$s",
+    "text": "Ajoneuvo %1$s"
+  },
+  {
+    "key": "Binding to Torque…",
+    "source": "Binding to Torque…",
+    "text": "Yhdistetään Torqueen…"
+  },
+  {
+    "key": "Waiting for fuel source",
+    "source": "Waiting for fuel source",
+    "text": "Odotetaan polttoaineen lähdettä"
+  },
+  {
+    "key": "raw %1$.1f%%",
+    "source": "raw %1$.1f%%",
+    "text": "raaka %1$.1f%%"
+  },
+  {
+    "key": "sess %1$s",
+    "source": "sess %1$s",
+    "text": "ajo %1$s"
+  },
+  {
+    "key": "Fuel Smoothing",
+    "source": "Fuel Smoothing",
+    "text": "Fuel Smoothing"
+  },
+  {
+    "key": "Fuel Smoothing quiet",
+    "source": "Fuel Smoothing quiet",
+    "text": "Fuel Smoothing hiljainen"
+  },
+  {
+    "key": "Map refitting",
+    "source": "Map refitting",
+    "text": "Kartan uudelleensovitus"
+  },
+  {
+    "key": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "source": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "text": "Fuel Smoothing sovittaa kartan uudelleen kohteelle %1$s. Sovitus lukee 1:1, kunnes uudelleensovitus päättyy."
+  },
+  {
+    "key": "No fuel level source set",
+    "source": "No fuel level source set",
+    "text": "Polttoainetason lähdettä ei ole asetettu"
+  },
+  {
+    "key": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "source": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "text": "Fuel Smoothingilla ei ole polttoainetason lähdettä kohteelle %1$s. Avaa asetussivu ja napauta Tunnista tai valitse lähde."
+  },
+  {
+    "key": "No fuel level this drive",
+    "source": "No fuel level this drive",
+    "text": "Ei polttoainetasoa tällä ajolla"
+  },
+  {
+    "key": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "source": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "text": "%1$s ei antanut käyttökelpoista tasoa kohteelle %2$s. Tarkista sovittimen yhteys tai suorita Tunnista asetussivulla."
+  },
+  {
+    "key": "Fuel level source found",
+    "source": "Fuel level source found",
+    "text": "Polttoainetason lähde löytyi"
+  },
+  {
+    "key": "Using %1$s for %2$s (%3$s).",
+    "source": "Using %1$s for %2$s (%3$s).",
+    "text": "Käytetään %1$s kohteelle %2$s (%3$s)."
+  },
+  {
+    "key": "No fuel level source found",
+    "source": "No fuel level source found",
+    "text": "Polttoainetason lähdettä ei löytynyt"
+  },
+  {
+    "key": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "source": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "text": "Avaa Fuel Smoothingin asetukset ja valitse lähde (tai lisää PID Torqueen) ja napauta sitten Tunnista."
+  },
+  {
+    "key": "Confirm fuel level source",
+    "source": "Confirm fuel level source",
+    "text": "Vahvista polttoainetason lähde"
+  },
+  {
+    "key": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "source": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "text": "Tunnistettiin %1$s, lukema %2$.0f %% kohteelle %3$s. Tarkista, että se vastaa mittariston mittaria, ja napauta Vahvista. Vahvista on asetussivulla ja ilmoituksessa (%4$s)."
+  },
+  {
+    "key": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "source": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "text": "Tunnistettiin %1$s kohteelle %2$s. Tarkista, että se vastaa mittariston mittaria, ja napauta Vahvista. Vahvista on asetussivulla ja ilmoituksessa (%3$s)."
+  },
+  {
+    "key": "Recording to %1$s",
+    "source": "Recording to %1$s",
+    "text": "Tallennetaan kohteeseen %1$s"
+  },
+  {
+    "key": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "source": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "text": "Tämä ajoneuvo on %1$s (%2$s), mutta Torquen profiili on ”%3$s”. Tiedot menevät kohteeseen %1$s; napauta avataksesi Torquen ja vaihtaaksesi profiilia."
+  },
+  {
+    "key": "Wrong vehicle profile?",
+    "source": "Wrong vehicle profile?",
+    "text": "Väärä ajoneuvoprofiili?"
+  },
+  {
+    "key": "Torque profile '%1$s'",
+    "source": "Torque profile '%1$s'",
+    "text": "Torque-profiili ”%1$s”"
+  },
+  {
+    "key": "a new vehicle profile",
+    "source": "a new vehicle profile",
+    "text": "uusi ajoneuvoprofiili"
+  },
+  {
+    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "text": "Torque-profiili ”%1$s” ei vastaa tätä ajoneuvoa (%2$s). Ehdotus: %3$s. Tiedot pidetään ja hylätään ajon lopussa, ellet säilytä niitä."
+  },
+  {
+    "key": "Keeping drive data",
+    "source": "Keeping drive data",
+    "text": "Ajon tietojen säilytys"
+  },
+  {
+    "key": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "source": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "text": "Tämä ajo tallennetaan kohteeseen %1$s. Torquen liitännäis-API ei voi luoda tai vaihtaa Torque-profiileja: luo tai valitse Torquessa ajoneuvoprofiili nimeltä ”%2$s”."
+  },
+  {
+    "key": "Create new profile",
+    "source": "Create new profile",
+    "text": "Luo uusi profiili"
+  },
+  {
+    "key": "Use %1$s",
+    "source": "Use %1$s",
+    "text": "Käytä %1$s"
+  }
+]

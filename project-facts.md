@@ -7,6 +7,7 @@
 - Launch: `./run-grok-*` via `.grok/lib/grok-launch-common.sh` + `agent-landlock` (Grok and cursor). Planner writes `work-history/` (root `TODO.md` and `ENGINEERING_LOG.md` are symlinks).
 - Groups: source `./env` (refresh-shell setuid)
 - Android app: `app/` module `:app`. Namespace and Kotlin package `com.davidlang.torque.fuelsmoothing`. applicationId is `com.davidlang.torque.fuelsmoothing` when `-Pfuelsmoothing.official=true` or `FUELSMOOTHING_OFFICIAL=1`, or the given id when `-Pfuelsmoothing.dev.package` is set. Gradle fails when neither or both are set. (Torque plugin; Kotlin + AGP, no Compose/Hilt/KSP)
+- Before adding or changing user-visible wording, translations, or the user manual, read `docs/facts/translations.md`.
 - Compile: `./build_app --standard` only (`assembleDebug` → `app/build/outputs/apk/debug/app-debug.apk`)
 - Human install: `./deploy` (package name read from the APK `package: name=` line; alias `phone` reads gitignored `deploy_serial=`)
 - SDK: gitignored `local.properties` `sdk.dir=` (no machine-path default in scripts)

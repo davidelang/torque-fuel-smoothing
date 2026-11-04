@@ -1,0 +1,647 @@
+[
+  {
+    "key": "Fuel Smoothing for Torque",
+    "source": "Fuel Smoothing for Torque",
+    "text": "Fuel Smoothing for Torque"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/privacy/"
+  },
+  {
+    "key": "Tips are on the Play Store version",
+    "source": "Tips are on the Play Store version",
+    "text": "რჩევები Play Store-ის ვერსიაშია"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "სწრაფი დასაწყისი\n 1. დააყენეთ Torque Pro (ფასიანი ვერსია. Torque Lite არ უჭერს მხარს მოდულებს) და დააწყვილეთ OBD-II ადაპტერი.\n 2. ჩართეთ ეს მოდული Torque → პარამეტრები → Plugins.\n 3. დაუშვით შეტყობინებები და ბატარეის გამოყენება დააყენეთ შეუზღუდავზე, რომ Torque-მ ეს მოდული ფონში გაუშვას.\n 4. Torque-ში აირჩიეთ იმ მანქანის პროფილი, რომლითაც მართავთ. მონაცემები ინახება Torque-ის პროფილის მიხედვით და მოწმდება მანქანის VIN/ECU იდენტობასთან.\n 5. ახალ პროფილზე საწვავის წყარო ერთვება შეერთებისას. თუ გკითხავენ, შეადარეთ ის დაფის საზომს და შეეხეთ დადასტურებას. დადასტურება არის გამართვის გვერდზე და შეტყობინებაში. შეგიძლიათ აირჩიოთ ის ქვემოთაც.\n 6. ავზის ზომა Chunk მორგების საწყისი ზომაა, სანამ ის საკუთარს ისწავლის. მოდული მას არასოდეს ცვლის. ყოველი მორგების ნასწავლი ზომა ნაჩვენებია მის ქვემოთ.\n 7. Torque-ში დაამატეთ საზომები [FuelSmooth] Smoothed Fuel Level-ისთვის და ყოველი მორგების Corrected %, Remaining, DTE და Tank size-ისთვის. DTE არის Remaining გამრავლებული Torque-ის გრძელვადიან mpg-ზე. ხელახალი მორგების შეტყობინება ამბობს, რომ ეს მორგება კითხულობს 1:1, სანამ ხელახალი მორგება არ დასრულდება.\n 8. საწვავის დონე დააბრუნეთ Torque-ში. გამორთული, გლუვი, ან გასწორებული Chunk, Band ან Kalman მორგებიდან თქვენს 012F საზომზე.\n 9. საწვავი ითვლება მხოლოდ ძრავის მუშაობისას. მოდული მუშაობს მხოლოდ მაშინ, როცა Torque დაკავშირებულია ECU-სთან.\n 10. განაგრძეთ ტარება და შევსება. სიზუსტე იზრდება რამდენიმე ნაწილობრივ ავზზე. თუ გამოჩნდება არასწორი მანქანის პროფილი? შეტყობინება, აირჩიეთ რა მოუვიდეს ამ მგზავრობას.\n 11. ყველა მონაცემი რჩება ამ ტელეფონზე. GPS ან მდებარეობა არ იწერება."
+  },
+  {
+    "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "text": "%1$s\nვერსია %2$s (%3$s)\nმოდული Torque Pro-სთვის. არ არის დაკავშირებული Torque-თან ან Ian Hawkins-თან.\nყველა მონაცემი რჩება ამ ტელეფონზე. GPS ან მდებარეობა არ იწერება.\n\nლიცენზია\nCopyright David Lang. ყველა უფლება დაცულია."
+  },
+  {
+    "key": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "source": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "text": "ღია კოდის ბიბლიოთეკები\nეს აპი იყენებს ქვემოთ მოცემულ ბიბლიოთეკებს. მათი ლიცენზიები ცალკეა ზემოთ მოცემული საავტორო უფლებისგან.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), საჭიროა Play Billing-ისთვის\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/manual/"
+  },
+  {
+    "key": "Full manual (online)",
+    "source": "Full manual (online)",
+    "text": "სრული სახელმძღვანელო (ონლაინ)"
+  },
+  {
+    "key": "Show fuel level in notification",
+    "source": "Show fuel level in notification",
+    "text": "საწვავის დონის ჩვენება შეტყობინებაში"
+  },
+  {
+    "key": "Feed fuel level back to Torque (overrides 012F)",
+    "source": "Feed fuel level back to Torque (overrides 012F)",
+    "text": "საწვავის დონის დაბრუნება Torque-ში (ანაცვლებს 012F)"
+  },
+  {
+    "key": "Fuel Smoothing is running",
+    "source": "Fuel Smoothing is running",
+    "text": "Fuel Smoothing მუშაობს"
+  },
+  {
+    "key": "Tap to start Fuel Smoothing",
+    "source": "Tap to start Fuel Smoothing",
+    "text": "შეეხეთ Fuel Smoothing-ის დასაწყებად"
+  },
+  {
+    "key": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "source": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "text": "ბატარეიდან ან ფონიდან გაშვება უარყოფილია. გახსენით ერთხელ, რომ მოდული იმუშაოს Torque-თან."
+  },
+  {
+    "key": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "source": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "text": "დაამატეთ დამატებითი ავზები საჭიროებისამებრ (ქარხნული ავზი 1 ყოველთვის რჩება). არ გადართოთ გადამცემები PCM FLI კონტაქტზე (ცრუ შევსება). ყოველ დამატებით ავზს სჭირდება საკუთარი Torque-ის დამატებითი PID (MCU Mode 22, უნიკალური სახელი — არა 012F ან Ford 16C1). Select-PID მნიშვნელობა არის ავზის id 1-იდან. Gal/hr ირიცხება მხოლოდ აქტიურ ავზზე."
+  },
+  {
+    "key": "Tap to start",
+    "source": "Tap to start",
+    "text": "შეეხეთ დასაწყებად"
+  },
+  {
+    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "text": "ავზის ზომა Chunk მორგების საწყისი ზომაა, სანამ ის საკუთარს ისწავლის. მოდული მას არასოდეს ცვლის. ყოველი მორგების ნასწავლი ზომა ნაჩვენებია მის ქვემოთ."
+  },
+  {
+    "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "source": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "text": "წერს მნიშვნელობას Torque-ის ქარხნულ Fuel Level (012F) ზე, რომ არსებულმა საზომებმა აჩვენონ ის. გამორთული, გლუვი, ან გასწორებული Chunk, Band ან Kalman მორგებიდან. ჯერ აუწყობელი მორგება წერს გლუვ დონეს."
+  },
+  {
+    "key": "Chunk: %1$s",
+    "source": "Chunk: %1$s",
+    "text": "Chunk: %1$s"
+  },
+  {
+    "key": "Band: %1$s",
+    "source": "Band: %1$s",
+    "text": "Band: %1$s"
+  },
+  {
+    "key": "Kalman: %1$s",
+    "source": "Kalman: %1$s",
+    "text": "Kalman: %1$s"
+  },
+  {
+    "key": "no size yet",
+    "source": "no size yet",
+    "text": "ზომა ჯერ არ არის"
+  },
+  {
+    "key": "no size yet ± %1$.1f gal",
+    "source": "no size yet ± %1$.1f gal",
+    "text": "ზომა ჯერ არ არის ± %1$.1f gal"
+  },
+  {
+    "key": "%1$.1f gal",
+    "source": "%1$.1f gal",
+    "text": "%1$.1f gal"
+  },
+  {
+    "key": "%1$.1f ± %2$.1f gal",
+    "source": "%1$.1f ± %2$.1f gal",
+    "text": "%1$.1f ± %2$.1f gal"
+  },
+  {
+    "key": "Help",
+    "source": "Help",
+    "text": "დახმარება"
+  },
+  {
+    "key": "About",
+    "source": "About",
+    "text": "შესახებ"
+  },
+  {
+    "key": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "source": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "text": "საჭიროა Torque Pro (ფასიანი). Torque Lite არ უჭერს მხარს მოდულებს."
+  },
+  {
+    "key": "Get Torque Pro",
+    "source": "Get Torque Pro",
+    "text": "Torque Pro-ს მიღება"
+  },
+  {
+    "key": "Privacy",
+    "source": "Privacy",
+    "text": "კონფიდენციალობა"
+  },
+  {
+    "key": "Send feedback",
+    "source": "Send feedback",
+    "text": "გამოხმაურების გაგზავნა"
+  },
+  {
+    "key": "Tip",
+    "source": "Tip",
+    "text": "დამატებითი"
+  },
+  {
+    "key": "Thanks",
+    "source": "Thanks",
+    "text": "მადლობა"
+  },
+  {
+    "key": "Close",
+    "source": "Close",
+    "text": "დახურვა"
+  },
+  {
+    "key": "OK",
+    "source": "OK",
+    "text": "OK"
+  },
+  {
+    "key": "Detect",
+    "source": "Detect",
+    "text": "აღმოჩენა"
+  },
+  {
+    "key": "Confirm",
+    "source": "Confirm",
+    "text": "დადასტურება"
+  },
+  {
+    "key": "Save pin",
+    "source": "Save pin",
+    "text": "ნიშნულის შენახვა"
+  },
+  {
+    "key": "Add additional tank",
+    "source": "Add additional tank",
+    "text": "დამატებითი ავზის დამატება"
+  },
+  {
+    "key": "Remove",
+    "source": "Remove",
+    "text": "წაშლა"
+  },
+  {
+    "key": "Details",
+    "source": "Details",
+    "text": "დეტალები"
+  },
+  {
+    "key": "Verbose logging (debug; per-second log lines)",
+    "source": "Verbose logging (debug; per-second log lines)",
+    "text": "დაწვრილებითი ჟურნალი (გამართვა. სტრიქონი ყოველ წამში)"
+  },
+  {
+    "key": "Profile name",
+    "source": "Profile name",
+    "text": "პროფილის სახელი"
+  },
+  {
+    "key": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "source": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "text": "ამ მანქანის პროფილის სახელი. Torque-ის ყოველი მანქანის პროფილი იღებს საკუთარ მოდულის პროფილს, მონაცემებს და ნასწავლ რუკებს."
+  },
+  {
+    "key": "Make",
+    "source": "Make",
+    "text": "მარკა"
+  },
+  {
+    "key": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "source": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "text": "მანქანის მარკა (მაგ. Ford). გამოიყენება მხოლოდ იმის ასარჩევად, მარკის რომელი საწვავის PID-ები სცადოს აღმოჩენამ."
+  },
+  {
+    "key": "Fuel source",
+    "source": "Fuel source",
+    "text": "საწვავის წყარო"
+  },
+  {
+    "key": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "source": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "text": "საიდან მოდის ნედლი საწვავის დონე. აღმოჩენა (საჭიროა ECU-ს კავშირი) კითხულობს კანდიდატებს მხოლოდ წასაკითხად და ითხოვს დადასტურებას, თუ ორი წყარო არ ემთხვევა. დადასტურება არის გამართვის გვერდზე და შეტყობინებაში. არცერთი = აღმოჩენა შემდეგ შეერთებაზე."
+  },
+  {
+    "key": "Custom long name",
+    "source": "Custom long name",
+    "text": "საკუთარი გრძელი სახელი"
+  },
+  {
+    "key": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "source": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "text": "მხოლოდ წყაროსთვის Torque extra PID by long name. Torque PID-ის ზუსტი გრძელი სახელი, რომელიც აცხადებს დონეს."
+  },
+  {
+    "key": "Tank size",
+    "source": "Tank size",
+    "text": "ავზის ზომა"
+  },
+  {
+    "key": "blank = no starting size; each fit learns its own.",
+    "source": "blank = no starting size; each fit learns its own.",
+    "text": "ცარიელი = საწყისი ზომა არ არის. ყოველი მორგება სწავლობს საკუთარს."
+  },
+  {
+    "key": "Smoothing τ seconds",
+    "source": "Smoothing τ seconds",
+    "text": "გლუვვის τ წამი"
+  },
+  {
+    "key": "Time constant of the smoothing filter (0 = no smoothing).",
+    "source": "Time constant of the smoothing filter (0 = no smoothing).",
+    "text": "გლუვვის ფილტრის დროის მუდმივა (0 = გლუვვის გარეშე)."
+  },
+  {
+    "key": "Max skew %/s",
+    "source": "Max skew %/s",
+    "text": "მაქს. გადახრა %/s"
+  },
+  {
+    "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "text": "უდიდესი ცვლილება წამში, რომელსაც გლუვი დონე შეიძლება მიჰყვეს. ამაზე მეტი რხევა იგნორირდება."
+  },
+  {
+    "key": "Fill jump %",
+    "source": "Fill jump %",
+    "text": "შევსების ნახტომი %"
+  },
+  {
+    "key": "Rise in level while stopped that counts as a fill.",
+    "source": "Rise in level while stopped that counts as a fill.",
+    "text": "დონის აწევა გაჩერებისას, რომელიც ითვლება შევსებად."
+  },
+  {
+    "key": "Odometer miles",
+    "source": "Odometer miles",
+    "text": "ოდომეტრის მილები"
+  },
+  {
+    "key": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "source": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "text": "არასავალდებულო. შეიყვანეთ ოდომეტრის ჩვენება და ნიშნულის შენახვა, რომ ამ პროფილის მანძილი დამაგრდეს."
+  },
+  {
+    "key": "Additional tanks",
+    "source": "Additional tanks",
+    "text": "დამატებითი ავზები"
+  },
+  {
+    "key": "Active tank",
+    "source": "Active tank",
+    "text": "აქტიური ავზი"
+  },
+  {
+    "key": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "source": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "text": "რომელ ავზზე ირიცხება საწვავის ხარჯი (gal/hr). PID-იდან. Torque PID ირჩევს მას (ავზის id 1-იდან)."
+  },
+  {
+    "key": "Select-PID long name",
+    "source": "Select-PID long name",
+    "text": "Select-PID გრძელი სახელი"
+  },
+  {
+    "key": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "source": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "text": "მხოლოდ როცა აქტიური ავზი = PID-იდან. Torque PID-ის გრძელი სახელი, რომლის მნიშვნელობა ავზის id-ია."
+  },
+  {
+    "key": "Tank %1$d",
+    "source": "Tank %1$d",
+    "text": "ავზი %1$d"
+  },
+  {
+    "key": "Tank %1$d fuel source",
+    "source": "Tank %1$d fuel source",
+    "text": "ავზი %1$d საწვავის წყარო"
+  },
+  {
+    "key": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "source": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "text": "ავზი %1$d საკუთარი გრძელი სახელი (მაგ. [FuelSmooth] Tank%1$d Level)"
+  },
+  {
+    "key": "Tank %1$d gallons",
+    "source": "Tank %1$d gallons",
+    "text": "ავზი %1$d გალონი"
+  },
+  {
+    "key": "From PID",
+    "source": "From PID",
+    "text": "PID-იდან"
+  },
+  {
+    "key": "(unconfirmed)",
+    "source": "(unconfirmed)",
+    "text": "(დაუდასტურებელი)"
+  },
+  {
+    "key": "· ECU connected",
+    "source": "· ECU connected",
+    "text": "· ECU დაკავშირებულია"
+  },
+  {
+    "key": "tank ?",
+    "source": "tank ?",
+    "text": "ავზი ?"
+  },
+  {
+    "key": "About %1$s",
+    "source": "About %1$s",
+    "text": "შესახებ %1$s"
+  },
+  {
+    "key": "0 to %1$s s",
+    "source": "0 to %1$s s",
+    "text": "0-დან %1$s s-მდე"
+  },
+  {
+    "key": "above 0, at most %1$s %%/s",
+    "source": "above 0, at most %1$s %%/s",
+    "text": "0-ზე მეტი, მაქსიმუმ %1$s %%/s"
+  },
+  {
+    "key": "%1$s to %2$s %%",
+    "source": "%1$s to %2$s %%",
+    "text": "%1$s-დან %2$s %%-მდე"
+  },
+  {
+    "key": "blank or a number above 0",
+    "source": "blank or a number above 0",
+    "text": "ცარიელი ან 0-ზე მეტი რიცხვი"
+  },
+  {
+    "key": "stored value out of range",
+    "source": "stored value out of range",
+    "text": "შენახული მნიშვნელობა დიაპაზონს გარეთაა"
+  },
+  {
+    "key": "Chunk",
+    "source": "Chunk",
+    "text": "Chunk"
+  },
+  {
+    "key": "Band",
+    "source": "Band",
+    "text": "Band"
+  },
+  {
+    "key": "Kalman",
+    "source": "Kalman",
+    "text": "Kalman"
+  },
+  {
+    "key": "Smoothed %",
+    "source": "Smoothed %",
+    "text": "გლუვი %"
+  },
+  {
+    "key": "Error (%)",
+    "source": "Error (%)",
+    "text": "ცდომილება (%)"
+  },
+  {
+    "key": "Off",
+    "source": "Off",
+    "text": "გამორთული"
+  },
+  {
+    "key": "Corrected % (Chunk)",
+    "source": "Corrected % (Chunk)",
+    "text": "Corrected % (Chunk)"
+  },
+  {
+    "key": "Corrected % (Band)",
+    "source": "Corrected % (Band)",
+    "text": "Corrected % (Band)"
+  },
+  {
+    "key": "Corrected % (Kalman)",
+    "source": "Corrected % (Kalman)",
+    "text": "Corrected % (Kalman)"
+  },
+  {
+    "key": "gal",
+    "source": "gal",
+    "text": "gal"
+  },
+  {
+    "key": "L",
+    "source": "L",
+    "text": "L"
+  },
+  {
+    "key": "None yet (Detect runs on connect)",
+    "source": "None yet (Detect runs on connect)",
+    "text": "ჯერ არცერთი (აღმოჩენა ეშვება შეერთებაზე)"
+  },
+  {
+    "key": "SAE 012F Fuel Tank Level",
+    "source": "SAE 012F Fuel Tank Level",
+    "text": "SAE 012F Fuel Tank Level"
+  },
+  {
+    "key": "Mode 22 16C1",
+    "source": "Mode 22 16C1",
+    "text": "Mode 22 16C1"
+  },
+  {
+    "key": "Ford Mode 22 F42F",
+    "source": "Ford Mode 22 F42F",
+    "text": "Ford Mode 22 F42F"
+  },
+  {
+    "key": "GM Mode 22 12C5 %",
+    "source": "GM Mode 22 12C5 %",
+    "text": "GM Mode 22 12C5 %"
+  },
+  {
+    "key": "Chrysler 21A2 %",
+    "source": "Chrysler 21A2 %",
+    "text": "Chrysler 21A2 %"
+  },
+  {
+    "key": "Chrysler Fuel Level Average",
+    "source": "Chrysler Fuel Level Average",
+    "text": "Chrysler Fuel Level Average"
+  },
+  {
+    "key": "Toyota cluster 2129 (half-litre counts)",
+    "source": "Toyota cluster 2129 (half-litre counts)",
+    "text": "Toyota cluster 2129 (half-litre counts)"
+  },
+  {
+    "key": "Torque extra PID by long name",
+    "source": "Torque extra PID by long name",
+    "text": "Torque extra PID by long name"
+  },
+  {
+    "key": "Vehicle 1",
+    "source": "Vehicle 1",
+    "text": "მანქანა 1"
+  },
+  {
+    "key": "Vehicle %1$s",
+    "source": "Vehicle %1$s",
+    "text": "მანქანა %1$s"
+  },
+  {
+    "key": "Binding to Torque…",
+    "source": "Binding to Torque…",
+    "text": "უკავშირდება Torque-ს…"
+  },
+  {
+    "key": "Waiting for fuel source",
+    "source": "Waiting for fuel source",
+    "text": "ელოდება საწვავის წყაროს"
+  },
+  {
+    "key": "raw %1$.1f%%",
+    "source": "raw %1$.1f%%",
+    "text": "ნედლი %1$.1f%%"
+  },
+  {
+    "key": "sess %1$s",
+    "source": "sess %1$s",
+    "text": "სეს %1$s"
+  },
+  {
+    "key": "Fuel Smoothing",
+    "source": "Fuel Smoothing",
+    "text": "Fuel Smoothing"
+  },
+  {
+    "key": "Fuel Smoothing quiet",
+    "source": "Fuel Smoothing quiet",
+    "text": "Fuel Smoothing ჩუმი"
+  },
+  {
+    "key": "Map refitting",
+    "source": "Map refitting",
+    "text": "რუკის ხელახალი მორგება"
+  },
+  {
+    "key": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "source": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "text": "Fuel Smoothing ხელახლა არგებს რუკას %1$s-ისთვის. ეს მორგება კითხულობს 1:1, სანამ ხელახალი მორგება არ დასრულდება."
+  },
+  {
+    "key": "No fuel level source set",
+    "source": "No fuel level source set",
+    "text": "საწვავის დონის წყარო არ არის დაყენებული"
+  },
+  {
+    "key": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "source": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "text": "Fuel Smoothing-ს არ აქვს საწვავის დონის წყარო %1$s-ისთვის. გახსენით გამართვის გვერდი და შეეხეთ აღმოჩენას, ან აირჩიეთ წყარო."
+  },
+  {
+    "key": "No fuel level this drive",
+    "source": "No fuel level this drive",
+    "text": "ამ მგზავრობაზე საწვავის დონე არ არის"
+  },
+  {
+    "key": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "source": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "text": "%1$s-მ გამოსაყენებელი დონე არ მისცა %2$s-ს. შეამოწმეთ ადაპტერის კავშირი, ან გაუშვით აღმოჩენა გამართვის გვერდზე."
+  },
+  {
+    "key": "Fuel level source found",
+    "source": "Fuel level source found",
+    "text": "საწვავის დონის წყარო ნაპოვნია"
+  },
+  {
+    "key": "Using %1$s for %2$s (%3$s).",
+    "source": "Using %1$s for %2$s (%3$s).",
+    "text": "გამოიყენება %1$s %2$s-ისთვის (%3$s)."
+  },
+  {
+    "key": "No fuel level source found",
+    "source": "No fuel level source found",
+    "text": "საწვავის დონის წყარო ვერ მოიძებნა"
+  },
+  {
+    "key": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "source": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "text": "გახსენით Fuel Smoothing-ის გამართვა და აირჩიეთ წყარო (ან დაამატეთ PID Torque-ში), შემდეგ შეეხეთ აღმოჩენას."
+  },
+  {
+    "key": "Confirm fuel level source",
+    "source": "Confirm fuel level source",
+    "text": "დაადასტურეთ საწვავის დონის წყარო"
+  },
+  {
+    "key": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "source": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "text": "აღმოჩენილია %1$s, ჩვენება %2$.0f %% %3$s-ისთვის. შეამოწმეთ, რომ ემთხვევა დაფის საწვავის საზომს, შემდეგ შეეხეთ დადასტურებას. დადასტურება არის გამართვის გვერდზე და შეტყობინებაში (%4$s)."
+  },
+  {
+    "key": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "source": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "text": "აღმოჩენილია %1$s %2$s-ისთვის. შეამოწმეთ, რომ ემთხვევა დაფის საწვავის საზომს, შემდეგ შეეხეთ დადასტურებას. დადასტურება არის გამართვის გვერდზე და შეტყობინებაში (%3$s)."
+  },
+  {
+    "key": "Recording to %1$s",
+    "source": "Recording to %1$s",
+    "text": "ჩაწერა %1$s-ში"
+  },
+  {
+    "key": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "source": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "text": "ეს მანქანა არის %1$s (%2$s), მაგრამ Torque-ის პროფილი არის '%3$s'. მონაცემები მიდის %1$s-ში. შეეხეთ Torque-ის გასახსნელად და პროფილის შესაცვლელად."
+  },
+  {
+    "key": "Wrong vehicle profile?",
+    "source": "Wrong vehicle profile?",
+    "text": "არასწორი მანქანის პროფილი?"
+  },
+  {
+    "key": "Torque profile '%1$s'",
+    "source": "Torque profile '%1$s'",
+    "text": "Torque-ის პროფილი '%1$s'"
+  },
+  {
+    "key": "a new vehicle profile",
+    "source": "a new vehicle profile",
+    "text": "ახალი მანქანის პროფილი"
+  },
+  {
+    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "text": "Torque-ის პროფილი '%1$s' არ ემთხვევა ამ მანქანას (%2$s). შემოთავაზებული: %3$s. მონაცემები ინახება და მგზავრობის ბოლოს იშლება, თუ არ შეინახავთ."
+  },
+  {
+    "key": "Keeping drive data",
+    "source": "Keeping drive data",
+    "text": "მგზავრობის მონაცემები ინახება"
+  },
+  {
+    "key": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "source": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "text": "ეს მგზავრობა შეინახება %1$s-ში. Torque-ის მოდულის API ვერ ქმნის ან ცვლის Torque-ის პროფილებს. Torque-ში შექმენით ან აირჩიეთ მანქანის პროფილი სახელით '%2$s'."
+  },
+  {
+    "key": "Create new profile",
+    "source": "Create new profile",
+    "text": "ახალი პროფილის შექმნა"
+  },
+  {
+    "key": "Use %1$s",
+    "source": "Use %1$s",
+    "text": "გამოყენება %1$s"
+  }
+]

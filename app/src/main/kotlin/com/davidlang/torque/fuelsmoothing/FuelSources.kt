@@ -1,10 +1,8 @@
 package com.davidlang.torque.fuelsmoothing
 
-import androidx.annotation.StringRes
-
 internal data class FuelSource(
     val id: String,
-    @StringRes val label: Int,
+    val label: String,
     val longName: String? = null,
     val modePid: String? = null,
     val header: String? = null,
@@ -14,20 +12,20 @@ internal data class FuelSource(
 
 internal object FuelSources {
     val catalog: List<FuelSource> = listOf(
-        FuelSource("none", R.string.src_none),
-        FuelSource("sae_012f", R.string.src_sae_012f, modePid = "012F"),
-        FuelSource("ford_16c1", R.string.src_ford_16c1, longName = "[FORD]Fuel Level"),
-        FuelSource("ford_f42f", R.string.src_ford_f42f, longName = null, modePid = "22F42F"),
-        FuelSource("gm_12c5", R.string.src_gm_12c5, modePid = "2212C5", twoByteOk = true),
-        FuelSource("chrysler_21a2", R.string.src_chrysler_21a2, modePid = "21A2"),
-        FuelSource("chrysler_avg", R.string.src_chrysler_avg, modePid = "228126"),
-        FuelSource("toyota_7c0_2129", R.string.src_toyota_2129, modePid = "2129", header = "7C0", litersToPct = true),
-        FuelSource("custom_name", R.string.src_custom_name),
+        FuelSource("none", label = "None yet (Detect runs on connect)"),
+        FuelSource("sae_012f", label = "SAE 012F Fuel Tank Level", modePid = "012F"),
+        FuelSource("ford_16c1", label = "Mode 22 16C1", longName = "[FORD]Fuel Level"),
+        FuelSource("ford_f42f", label = "Ford Mode 22 F42F", longName = null, modePid = "22F42F"),
+        FuelSource("gm_12c5", label = "GM Mode 22 12C5 %", modePid = "2212C5", twoByteOk = true),
+        FuelSource("chrysler_21a2", label = "Chrysler 21A2 %", modePid = "21A2"),
+        FuelSource("chrysler_avg", label = "Chrysler Fuel Level Average", modePid = "228126"),
+        FuelSource("toyota_7c0_2129", label = "Toyota cluster 2129 (half-litre counts)", modePid = "2129", header = "7C0", litersToPct = true),
+        FuelSource("custom_name", label = "Torque extra PID by long name"),
     )
 
     fun byId(id: String): FuelSource = catalog.firstOrNull { it.id == id } ?: catalog.first { it.id == "none" }
 
-    fun labels(resolve: (Int) -> String): Array<String> = catalog.map { resolve(it.label) }.toTypedArray()
+    fun labels(): Array<String> = catalog.map { S(it.label) }.toTypedArray()
 
     fun indexOf(id: String): Int {
         val i = catalog.indexOfFirst { it.id == id }

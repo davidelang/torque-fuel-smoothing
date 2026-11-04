@@ -1,0 +1,647 @@
+[
+  {
+    "key": "Fuel Smoothing for Torque",
+    "source": "Fuel Smoothing for Torque",
+    "text": "Fuel Smoothing for Torque"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/privacy/"
+  },
+  {
+    "key": "Tips are on the Play Store version",
+    "source": "Tips are on the Play Store version",
+    "text": "Iithiphu zikuguqulo ye-Play Store"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "Ukuqala ngokukhawuleza\n1. Fakela i-Torque Pro (inguqulo ehlawulwayo; i-Torque Lite ayixhasi iiplugin) kwaye udibanise i-adaptha yakho ye-OBD-II.\n2. Vula le plugin ku-Torque → Iisetingi → Iiplugin.\n3. Vumela izaziso, kwaye usete ukusetyenziswa kwebhetri ku-Akukho sithintelo ukuze i-Torque iqalise le plugin ngasemva.\n4. Ku-Torque, khetha iprofayile yesithuthi semoto oyiqhubayo. Idatha igcinwa ngokweprofayile ye-Torque kwaye ijongwa ngokuchasene nesazisi se-VIN/ECU sesithuthi.\n5. Kwiprofayile entsha umthombo wamafutha ufunyanwa xa udibanisa; ukuba ucelwa, uthelekise negeyiji yedashibhodi uze ucofe Qinisekisa. U-Qinisekisa ukwiphepha lokuseta nakwisaziso. Ungakhetha nangaphantsi.\n6. Ubungakanani betanki bubungakanani bokuqala bokulungelelanisa kwe-Chunk de ifunde obayo. Iplugin ayikhe ibuguqule; ubungakanani obufundiweyo bokulungelelanisa ngakunye buboniswa ngaphantsi kwabo.\n7. Ku-Torque, yongeza iigeyiji ze-[FuelSmooth] Smoothed Fuel Level kunye, kokulungelelanisa ngakunye, Corrected %, Remaining, DTE kunye Tank size. I-DTE yi-Remaining iphindaphindwe nge-mpg yexesha elide ye-Torque. Isaziso ngexesha lokulungelelanisa kwakhona sithetha ukuba oko kulungelelanisa kufunda i-1:1 de kugqitywe ukulungelelanisa kwakhona.\n8. Buyisela inqanaba lamafutha ku-Torque: Cima, Guda, okanye Lungisiwe ukusuka ekulungelelaniseni kwe-Chunk, Band okanye Kalman kwiigeyiji yakho ye-012F.\n9. Amafutha abalwa kuphela ngelixa injini isebenza. Iplugin isebenza kuphela ngelixa i-Torque idityaniswe ne-ECU.\n10. Qhubeka uqhuba uze ugcwalise; ukuchaneka kukhula kwiitanki ezingaphelelanga ezininzi. Ukuba isaziso seProfayile yesithuthi engalunganga? sibonakala, khetha ukuba wenze ntoni ngolo hambo.\n11. Yonke idatha ihlala kule fowuni. Akukho GPS okanye indawo irekhodwayo."
+  },
+  {
+    "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "text": "%1$s\nInguqulo %2$s (%3$s)\nIplugin ye-Torque Pro. Ayidityaniswanga ne-Torque okanye no-Ian Hawkins.\nYonke idatha ihlala kule fowuni; akukho GPS okanye indawo irekhodwayo.\n\nIlayisensi\nCopyright David Lang. Onke amalungelo agciniwe."
+  },
+  {
+    "key": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "source": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "text": "Iilayibrari zomthombo ovulekileyo\nLe app isebenzisa iilayibrari ezingezantsi. Iilayisensi zazo zahlukile kwilungelo lombhali elingentla.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), ezifunwa yi-Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/manual/"
+  },
+  {
+    "key": "Full manual (online)",
+    "source": "Full manual (online)",
+    "text": "Incwadana epheleleyo (kwi-intanethi)"
+  },
+  {
+    "key": "Show fuel level in notification",
+    "source": "Show fuel level in notification",
+    "text": "Bonisa inqanaba lamafutha kwisaziso"
+  },
+  {
+    "key": "Feed fuel level back to Torque (overrides 012F)",
+    "source": "Feed fuel level back to Torque (overrides 012F)",
+    "text": "Buyisela inqanaba lamafutha ku-Torque (ibhala phezu kwe-012F)"
+  },
+  {
+    "key": "Fuel Smoothing is running",
+    "source": "Fuel Smoothing is running",
+    "text": "I-Fuel Smoothing iyasebenza"
+  },
+  {
+    "key": "Tap to start Fuel Smoothing",
+    "source": "Tap to start Fuel Smoothing",
+    "text": "Cofa ukuqalisa i-Fuel Smoothing"
+  },
+  {
+    "key": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "source": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "text": "Ukuqalisa ngebhetri okanye ngasemva kwaliwe. Vula kanye ukuze iplugin isebenze ne-Torque."
+  },
+  {
+    "key": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "source": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "text": "Yongeza iitanki ezongezelelweyo xa kufuneka (itanki yefektri 1 ihlala). Ungazifaki izivamvo kwipini ye-PCM FLI (ukuzalisa okungeyonyani). Itanki nganye eyongezelelweyo ifuna eyayo i-PID eyongezelelweyo ye-Torque (MCU Mode 22, igama elahlukileyo — hayi 012F okanye Ford 16C1). Ixabiso le-Select-PID yi-id yetanki eqala ku-1. I-Gal/hr ibhalwa kwitanki esebenzayo kuphela."
+  },
+  {
+    "key": "Tap to start",
+    "source": "Tap to start",
+    "text": "Cofa ukuqalisa"
+  },
+  {
+    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "text": "Ubungakanani betanki bubungakanani bokuqala bokulungelelanisa kwe-Chunk de ifunde obayo. Iplugin ayikhe ibuguqule; ubungakanani obufundiweyo bokulungelelanisa ngakunye buboniswa ngaphantsi kwabo."
+  },
+  {
+    "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "source": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "text": "Ibhala ixabiso kwi-Fuel Level eqhelekileyo ye-Torque (012F) ukuze iigeyiji ezikhoyo zilibonise: Cima, Guda, okanye Lungisiwe ukusuka ekulungelelaniseni kwe-Chunk, Band okanye Kalman. Ukulungelelanisa okungakhiwa kubhala inqanaba eligudisiweyo."
+  },
+  {
+    "key": "Chunk: %1$s",
+    "source": "Chunk: %1$s",
+    "text": "Chunk: %1$s"
+  },
+  {
+    "key": "Band: %1$s",
+    "source": "Band: %1$s",
+    "text": "Band: %1$s"
+  },
+  {
+    "key": "Kalman: %1$s",
+    "source": "Kalman: %1$s",
+    "text": "Kalman: %1$s"
+  },
+  {
+    "key": "no size yet",
+    "source": "no size yet",
+    "text": "akukabikho bungakanani"
+  },
+  {
+    "key": "no size yet ± %1$.1f gal",
+    "source": "no size yet ± %1$.1f gal",
+    "text": "akukabikho bungakanani ± %1$.1f gal"
+  },
+  {
+    "key": "%1$.1f gal",
+    "source": "%1$.1f gal",
+    "text": "%1$.1f gal"
+  },
+  {
+    "key": "%1$.1f ± %2$.1f gal",
+    "source": "%1$.1f ± %2$.1f gal",
+    "text": "%1$.1f ± %2$.1f gal"
+  },
+  {
+    "key": "Help",
+    "source": "Help",
+    "text": "Uncedo"
+  },
+  {
+    "key": "About",
+    "source": "About",
+    "text": "Malunga"
+  },
+  {
+    "key": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "source": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "text": "Ifuna i-Torque Pro (ehlawulwayo). I-Torque Lite ayixhasi iiplugin."
+  },
+  {
+    "key": "Get Torque Pro",
+    "source": "Get Torque Pro",
+    "text": "Fumana i-Torque Pro"
+  },
+  {
+    "key": "Privacy",
+    "source": "Privacy",
+    "text": "Ubugqobhoka"
+  },
+  {
+    "key": "Send feedback",
+    "source": "Send feedback",
+    "text": "Thumela ingxelo"
+  },
+  {
+    "key": "Tip",
+    "source": "Tip",
+    "text": "Ithiphu"
+  },
+  {
+    "key": "Thanks",
+    "source": "Thanks",
+    "text": "Enkosi"
+  },
+  {
+    "key": "Close",
+    "source": "Close",
+    "text": "Vala"
+  },
+  {
+    "key": "OK",
+    "source": "OK",
+    "text": "OK"
+  },
+  {
+    "key": "Detect",
+    "source": "Detect",
+    "text": "Fumanisa"
+  },
+  {
+    "key": "Confirm",
+    "source": "Confirm",
+    "text": "Qinisekisa"
+  },
+  {
+    "key": "Save pin",
+    "source": "Save pin",
+    "text": "Gcina ipini"
+  },
+  {
+    "key": "Add additional tank",
+    "source": "Add additional tank",
+    "text": "Yongeza itanki eyongezelelweyo"
+  },
+  {
+    "key": "Remove",
+    "source": "Remove",
+    "text": "Susa"
+  },
+  {
+    "key": "Details",
+    "source": "Details",
+    "text": "Iinkcukacha"
+  },
+  {
+    "key": "Verbose logging (debug; per-second log lines)",
+    "source": "Verbose logging (debug; per-second log lines)",
+    "text": "Ukungena okuneenkcukacha (debug; imigca yokungena ngomzuzwana ngamnye)"
+  },
+  {
+    "key": "Profile name",
+    "source": "Profile name",
+    "text": "Igama leprofayile"
+  },
+  {
+    "key": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "source": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "text": "Igama lale profayile yesithuthi. Iprofayile nganye yesithuthi ye-Torque ifumana iprofayile yayo yeplugin, idatha yayo kunye neemephu ezifundiweyo."
+  },
+  {
+    "key": "Make",
+    "source": "Make",
+    "text": "Uphawu"
+  },
+  {
+    "key": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "source": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "text": "Uphawu lwesithuthi (umz. Ford). Lisetyenziswa kuphela ukukhetha ukuba zeziphi i-PID zamafutha zoluphawu ukufumanisa okunokuzizama."
+  },
+  {
+    "key": "Fuel source",
+    "source": "Fuel source",
+    "text": "Umthombo wamafutha"
+  },
+  {
+    "key": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "source": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "text": "Apho inqanaba lamafutha elingaqinisekanga livela khona. Fumanisa (i-ECU kufuneka idityanisiwe) izama abaviwa ngokufunda kuphela kwaye ikucela ukuba uqinisekise ngaphandle kokuba imithombo emibini ivumelana. U-Qinisekisa ukwiphepha lokuseta nakwisaziso. Akukho = fumanisa kuxhumano olulandelayo."
+  },
+  {
+    "key": "Custom long name",
+    "source": "Custom long name",
+    "text": "Igama elide elizenzekelayo"
+  },
+  {
+    "key": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "source": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "text": "Kuphela kumthombo «i-PID eyongezelelweyo ye-Torque ngokwegama elide»: igama elide elichanekileyo le-PID ye-Torque exela inqanaba."
+  },
+  {
+    "key": "Tank size",
+    "source": "Tank size",
+    "text": "Ubungakanani betanki"
+  },
+  {
+    "key": "blank = no starting size; each fit learns its own.",
+    "source": "blank = no starting size; each fit learns its own.",
+    "text": "ngenanto = akukho bungakanani bokuqala; ukulungelelanisa ngakunye kufunda okwabo."
+  },
+  {
+    "key": "Smoothing τ seconds",
+    "source": "Smoothing τ seconds",
+    "text": "Ukugudisa τ imizuzwana"
+  },
+  {
+    "key": "Time constant of the smoothing filter (0 = no smoothing).",
+    "source": "Time constant of the smoothing filter (0 = no smoothing).",
+    "text": "Ixesha eliqinisekileyo lesihluzi sokugudisa (0 = akukho kugudisa)."
+  },
+  {
+    "key": "Max skew %/s",
+    "source": "Max skew %/s",
+    "text": "Ukutsola okukhulu %/s"
+  },
+  {
+    "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "text": "Utshintsho olukhulu ngomzuzwana olunokulandelwa linqanaba eligudisiweyo; ukugubha ngaphaya kwaloo nto akuhoywa."
+  },
+  {
+    "key": "Fill jump %",
+    "source": "Fill jump %",
+    "text": "Ukutsiba kokuzalisa %"
+  },
+  {
+    "key": "Rise in level while stopped that counts as a fill.",
+    "source": "Rise in level while stopped that counts as a fill.",
+    "text": "Ukunyuka kwenqanaba ngelixa umile okubalwa njengokuzalisa."
+  },
+  {
+    "key": "Odometer miles",
+    "source": "Odometer miles",
+    "text": "I-odometer ngee-miles"
+  },
+  {
+    "key": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "source": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "text": "Ngokuzikhethela: faka ukufundwa kwe-odometer uze u-Gcina ipini ukuze ubophe umgama wale profayile."
+  },
+  {
+    "key": "Additional tanks",
+    "source": "Additional tanks",
+    "text": "Iitanki ezongezelelweyo"
+  },
+  {
+    "key": "Active tank",
+    "source": "Active tank",
+    "text": "Itanki esebenzayo"
+  },
+  {
+    "key": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "source": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "text": "Ukuba yeyiphi itanki ekufakwa kuyo ukutshisa amafutha (gal/hr). Ivela kwi-PID: i-PID ye-Torque iyikhetha (i-id yetanki eqala ku-1)."
+  },
+  {
+    "key": "Select-PID long name",
+    "source": "Select-PID long name",
+    "text": "Igama elide le-Select-PID"
+  },
+  {
+    "key": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "source": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "text": "Kuphela xa Itanki esebenzayo = Ivela kwi-PID: igama elide le-PID ye-Torque enexabiso le-id yetanki."
+  },
+  {
+    "key": "Tank %1$d",
+    "source": "Tank %1$d",
+    "text": "Itanki %1$d"
+  },
+  {
+    "key": "Tank %1$d fuel source",
+    "source": "Tank %1$d fuel source",
+    "text": "Umthombo wamafutha wetanki %1$d"
+  },
+  {
+    "key": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "source": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "text": "Igama elide elizenzekelayo letanki %1$d (umz. [FuelSmooth] Tank%1$d Level)"
+  },
+  {
+    "key": "Tank %1$d gallons",
+    "source": "Tank %1$d gallons",
+    "text": "Itanki %1$d gallons"
+  },
+  {
+    "key": "From PID",
+    "source": "From PID",
+    "text": "Ivela kwi-PID"
+  },
+  {
+    "key": "(unconfirmed)",
+    "source": "(unconfirmed)",
+    "text": "(engaqinisekiswanga)"
+  },
+  {
+    "key": "· ECU connected",
+    "source": "· ECU connected",
+    "text": "· i-ECU idityanisiwe"
+  },
+  {
+    "key": "tank ?",
+    "source": "tank ?",
+    "text": "itanki ?"
+  },
+  {
+    "key": "About %1$s",
+    "source": "About %1$s",
+    "text": "Malunga ne-%1$s"
+  },
+  {
+    "key": "0 to %1$s s",
+    "source": "0 to %1$s s",
+    "text": "0 ukuya ku-%1$s s"
+  },
+  {
+    "key": "above 0, at most %1$s %%/s",
+    "source": "above 0, at most %1$s %%/s",
+    "text": "ngaphezu kuka-0, kungabi ngaphezu kuka-%1$s %%/s"
+  },
+  {
+    "key": "%1$s to %2$s %%",
+    "source": "%1$s to %2$s %%",
+    "text": "%1$s ukuya ku-%2$s %%"
+  },
+  {
+    "key": "blank or a number above 0",
+    "source": "blank or a number above 0",
+    "text": "ngenanto okanye inani elingaphezu kuka-0"
+  },
+  {
+    "key": "stored value out of range",
+    "source": "stored value out of range",
+    "text": "ixabiso eligciniweyo lingaphandle koluhlu"
+  },
+  {
+    "key": "Chunk",
+    "source": "Chunk",
+    "text": "Chunk"
+  },
+  {
+    "key": "Band",
+    "source": "Band",
+    "text": "Band"
+  },
+  {
+    "key": "Kalman",
+    "source": "Kalman",
+    "text": "Kalman"
+  },
+  {
+    "key": "Smoothed %",
+    "source": "Smoothed %",
+    "text": "Igudisiwe %"
+  },
+  {
+    "key": "Error (%)",
+    "source": "Error (%)",
+    "text": "Impazamo (%)"
+  },
+  {
+    "key": "Off",
+    "source": "Off",
+    "text": "Cima"
+  },
+  {
+    "key": "Corrected % (Chunk)",
+    "source": "Corrected % (Chunk)",
+    "text": "Ilungisiwe % (Chunk)"
+  },
+  {
+    "key": "Corrected % (Band)",
+    "source": "Corrected % (Band)",
+    "text": "Ilungisiwe % (Band)"
+  },
+  {
+    "key": "Corrected % (Kalman)",
+    "source": "Corrected % (Kalman)",
+    "text": "Ilungisiwe % (Kalman)"
+  },
+  {
+    "key": "gal",
+    "source": "gal",
+    "text": "gal"
+  },
+  {
+    "key": "L",
+    "source": "L",
+    "text": "L"
+  },
+  {
+    "key": "None yet (Detect runs on connect)",
+    "source": "None yet (Detect runs on connect)",
+    "text": "Akukabikho (u-Fumanisa usebenza xa udibanisa)"
+  },
+  {
+    "key": "SAE 012F Fuel Tank Level",
+    "source": "SAE 012F Fuel Tank Level",
+    "text": "SAE 012F inqanaba letanki yamafutha"
+  },
+  {
+    "key": "Mode 22 16C1",
+    "source": "Mode 22 16C1",
+    "text": "Mode 22 16C1"
+  },
+  {
+    "key": "Ford Mode 22 F42F",
+    "source": "Ford Mode 22 F42F",
+    "text": "Ford Mode 22 F42F"
+  },
+  {
+    "key": "GM Mode 22 12C5 %",
+    "source": "GM Mode 22 12C5 %",
+    "text": "GM Mode 22 12C5 %"
+  },
+  {
+    "key": "Chrysler 21A2 %",
+    "source": "Chrysler 21A2 %",
+    "text": "Chrysler 21A2 %"
+  },
+  {
+    "key": "Chrysler Fuel Level Average",
+    "source": "Chrysler Fuel Level Average",
+    "text": "Umndilili wenqanaba lamafutha we-Chrysler"
+  },
+  {
+    "key": "Toyota cluster 2129 (half-litre counts)",
+    "source": "Toyota cluster 2129 (half-litre counts)",
+    "text": "Iqela le-Toyota 2129 (ukubala kwesiqingatha selitha)"
+  },
+  {
+    "key": "Torque extra PID by long name",
+    "source": "Torque extra PID by long name",
+    "text": "I-PID eyongezelelweyo ye-Torque ngokwegama elide"
+  },
+  {
+    "key": "Vehicle 1",
+    "source": "Vehicle 1",
+    "text": "Isithuthi 1"
+  },
+  {
+    "key": "Vehicle %1$s",
+    "source": "Vehicle %1$s",
+    "text": "Isithuthi %1$s"
+  },
+  {
+    "key": "Binding to Torque…",
+    "source": "Binding to Torque…",
+    "text": "Iyahlanganiswa ne-Torque…"
+  },
+  {
+    "key": "Waiting for fuel source",
+    "source": "Waiting for fuel source",
+    "text": "Kulindelwe umthombo wamafutha"
+  },
+  {
+    "key": "raw %1$.1f%%",
+    "source": "raw %1$.1f%%",
+    "text": "engaqinisekanga %1$.1f%%"
+  },
+  {
+    "key": "sess %1$s",
+    "source": "sess %1$s",
+    "text": "uhambo %1$s"
+  },
+  {
+    "key": "Fuel Smoothing",
+    "source": "Fuel Smoothing",
+    "text": "Fuel Smoothing"
+  },
+  {
+    "key": "Fuel Smoothing quiet",
+    "source": "Fuel Smoothing quiet",
+    "text": "I-Fuel Smoothing ithule"
+  },
+  {
+    "key": "Map refitting",
+    "source": "Map refitting",
+    "text": "Imephu iyalungelelaniswa kwakhona"
+  },
+  {
+    "key": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "source": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "text": "I-Fuel Smoothing ilungelelanisa kwakhona imephu ye-%1$s. Oko kulungelelanisa kufunda i-1:1 de kugqitywe ukulungelelanisa kwakhona."
+  },
+  {
+    "key": "No fuel level source set",
+    "source": "No fuel level source set",
+    "text": "Akukho mthombo wenqanaba lamafutha usetiwe"
+  },
+  {
+    "key": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "source": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "text": "I-Fuel Smoothing ayinamthombo wenqanaba lamafutha we-%1$s. Vula iphepha lokuseta uze ucofe u-Fumanisa, okanye ukhethe umthombo."
+  },
+  {
+    "key": "No fuel level this drive",
+    "source": "No fuel level this drive",
+    "text": "Akukho nqanaba lamafutha kolu hambo"
+  },
+  {
+    "key": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "source": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "text": "I-%1$s ayikhange inike inqanaba elisebenzisekayo le-%2$s. Jonga uqhagamshelo lwe-adaptha, okanye usebenzise u-Fumanisa kwiphepha lokuseta."
+  },
+  {
+    "key": "Fuel level source found",
+    "source": "Fuel level source found",
+    "text": "Umthombo wenqanaba lamafutha ufunyenwe"
+  },
+  {
+    "key": "Using %1$s for %2$s (%3$s).",
+    "source": "Using %1$s for %2$s (%3$s).",
+    "text": "Isebenzisa i-%1$s ye-%2$s (%3$s)."
+  },
+  {
+    "key": "No fuel level source found",
+    "source": "No fuel level source found",
+    "text": "Akukho mthombo wenqanaba lamafutha ufunyenweyo"
+  },
+  {
+    "key": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "source": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "text": "Vula useto lwe-Fuel Smoothing uze ukhethe umthombo (okanye wongeze i-PID ku-Torque), emva koko ucofe u-Fumanisa."
+  },
+  {
+    "key": "Confirm fuel level source",
+    "source": "Confirm fuel level source",
+    "text": "Qinisekisa umthombo wenqanaba lamafutha"
+  },
+  {
+    "key": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "source": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "text": "Kufunyenwe i-%1$s efunda i-%2$.0f %% ye-%3$s. Jonga ukuba ihambelana negeyiji yamafutha yedashibhodi, emva koko ucofe u-Qinisekisa. U-Qinisekisa ukwiphepha lokuseta nakwisaziso (%4$s)."
+  },
+  {
+    "key": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "source": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "text": "Kufunyenwe i-%1$s ye-%2$s. Jonga ukuba ihambelana negeyiji yamafutha yedashibhodi, emva koko ucofe u-Qinisekisa. U-Qinisekisa ukwiphepha lokuseta nakwisaziso (%3$s)."
+  },
+  {
+    "key": "Recording to %1$s",
+    "source": "Recording to %1$s",
+    "text": "Irekhoda ku-%1$s"
+  },
+  {
+    "key": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "source": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "text": "Esi sithuthi yi-%1$s (%2$s), kodwa iprofayile ye-Torque yi-'%3$s'. Idatha iya ku-%1$s; cofa ukuvula i-Torque utshintshe iprofayile."
+  },
+  {
+    "key": "Wrong vehicle profile?",
+    "source": "Wrong vehicle profile?",
+    "text": "Profayile yesithuthi engalunganga?"
+  },
+  {
+    "key": "Torque profile '%1$s'",
+    "source": "Torque profile '%1$s'",
+    "text": "Iprofayile ye-Torque '%1$s'"
+  },
+  {
+    "key": "a new vehicle profile",
+    "source": "a new vehicle profile",
+    "text": "iprofayile entsha yesithuthi"
+  },
+  {
+    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "text": "Iprofayile ye-Torque '%1$s' ayihambelani nesi sithuthi (%2$s). Isiphakamiso: %3$s. Idatha ibanjwa kwaye ilahlwa ekupheleni kohambo ngaphandle kokuba uyigcina."
+  },
+  {
+    "key": "Keeping drive data",
+    "source": "Keeping drive data",
+    "text": "Idatha yohambo iyagcinwa"
+  },
+  {
+    "key": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "source": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "text": "Olu hambo luya kugcinwa ku-%1$s. I-API yeplugin ye-Torque ayikwazi ukudala okanye ukutshintsha iiprofayile ze-Torque: ku-Torque, yenza okanye ukhethe iprofayile yesithuthi ebizwa ngokuba yi-'%2$s'."
+  },
+  {
+    "key": "Create new profile",
+    "source": "Create new profile",
+    "text": "Yenza iprofayile entsha"
+  },
+  {
+    "key": "Use %1$s",
+    "source": "Use %1$s",
+    "text": "Sebenzisa i-%1$s"
+  }
+]

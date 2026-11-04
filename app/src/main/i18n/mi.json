@@ -1,0 +1,647 @@
+[
+  {
+    "key": "Fuel Smoothing for Torque",
+    "source": "Fuel Smoothing for Torque",
+    "text": "Fuel Smoothing for Torque"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/privacy/"
+  },
+  {
+    "key": "Tips are on the Play Store version",
+    "source": "Tips are on the Play Store version",
+    "text": "Kei te putanga Play Store ngā takoha"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "Tīmatanga tere\n1. Tāutahia a Torque Pro (te putanga utu; kāore a Torque Lite e tautoko monohanga) ka takiruatia tō urutau OBD-II.\n2. Whakahohea tēnei monohanga i Torque → Tautuhinga → Monohanga.\n3. Tukua ngā whakamōhiotanga, ā, whakatakotoria te whakamahi pūhiko ki Kāore he rāhuitanga kia taea ai e Torque te tīmata i tēnei monohanga i te papamuri.\n4. I Torque, tīpakohia te kōtaha waka mō te motokā e taraiwa ana koe. Ka puritia ngā raraunga mō ia kōtaha Torque, ā, ka tirohia ki te tuakiri VIN/ECU o te waka.\n5. I te kōtaha hōu ka kitea te pūtake hinu ina tūhono koe; ki te pātaitia, whakatauritea ki te ine i te papatohu ka pāwhiritia Whakaū. Kei te whārangi tatūnga, kei te whakamōhiotanga hoki a Whakaū. Ka taea hoki te tīpako i raro nei.\n6. Ko te rahi o te taika te rahi tīmatanga mō te urutau Chunk kia ako ra anō i tōna ake. Kāore te monohanga e huri i tērā; ka whakaaturia te rahi kua akohia o ia urutau i raro iho.\n7. I Torque, tāpirihia ngā ine mō [FuelSmooth] Smoothed Fuel Level me, mō ia urutau, Corrected %, Remaining, DTE me Tank size. Ko DTE ko Remaining whakareatia ki te mpg wā-roa o Torque. E kī ana tētahi pānui i te wā whakahou ka pānui taua urutau i te 1:1 kia mutu rā anō te whakahou.\n8. Whakahokia te taumata hinu ki a Torque: Weto, Rēmana, Whakatika rānei mai i te urutau Chunk, Band, Kalman rānei ki tō ine 012F.\n9. Ka tatauria te hinu anake i te wā e rere ana te mīhini. Ka rere te monohanga anake i te wā e tūhono ana a Torque ki te ECU.\n10. Haere tonu ki te taraiwa, ki te whakakī; ka tipu te tika i roto i ētahi taika wāhanga. Ki te puta te whakamōhiotanga Kōtaha waka hē?, kōwhiria he aha mō taua haerenga.\n11. Ka noho ngā raraunga katoa ki tēnei waea. Kāore he GPS, he tauwāhi rānei e tāruatia ana."
+  },
+  {
+    "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "text": "%1$s\nPutanga %2$s (%3$s)\nHe monohanga mō Torque Pro. Kāore e pā ana ki a Torque, ki a Ian Hawkins rānei.\nKa noho ngā raraunga katoa ki tēnei waea; kāore he GPS, he tauwāhi rānei e tāruatia ana.\n\nRaihana\nCopyright David Lang. Kei te rāhuitia ngā motika katoa."
+  },
+  {
+    "key": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "source": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "text": "Ngā puna tuwhera\nKa whakamahi tēnei taupānga i ngā puna i raro nei. He wehe ō rātou raihana i te manatārua i runga ake.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), e hiahiatia ana e Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/manual/"
+  },
+  {
+    "key": "Full manual (online)",
+    "source": "Full manual (online)",
+    "text": "Pukapuka aratohu katoa (ipurangi)"
+  },
+  {
+    "key": "Show fuel level in notification",
+    "source": "Show fuel level in notification",
+    "text": "Whakaaturia te taumata hinu i te whakamōhiotanga"
+  },
+  {
+    "key": "Feed fuel level back to Torque (overrides 012F)",
+    "source": "Feed fuel level back to Torque (overrides 012F)",
+    "text": "Whakahokia te taumata hinu ki a Torque (ka tuhirua i a 012F)"
+  },
+  {
+    "key": "Fuel Smoothing is running",
+    "source": "Fuel Smoothing is running",
+    "text": "Kei te rere a Fuel Smoothing"
+  },
+  {
+    "key": "Tap to start Fuel Smoothing",
+    "source": "Tap to start Fuel Smoothing",
+    "text": "Pāwhiria kia tīmata a Fuel Smoothing"
+  },
+  {
+    "key": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "source": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "text": "I whakapeka te tīmatanga pūhiko, papamuri rānei. Huakina kia kotahi kia taea ai e te monohanga te rere me Torque."
+  },
+  {
+    "key": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "source": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "text": "Tāpirihia ētahi taika anō ina hiahiatia (ka noho tonu te taika wheketere 1). Kaua e tūhono i ngā pūoko ki te pine PCM FLI (whakakī teka). Ia taika anō me whai tana ake PID tāpiri Torque (MCU Mode 22, ingoa ahurei — ehara i te 012F, i a Ford 16C1 rānei). Ko te uara Select-PID te id taika timata i te 1. Ka namaa a Gal/hr ki te taika hohe anake."
+  },
+  {
+    "key": "Tap to start",
+    "source": "Tap to start",
+    "text": "Pāwhiria kia tīmata"
+  },
+  {
+    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "text": "Ko te rahi o te taika te rahi tīmatanga mō te urutau Chunk kia ako ra anō i tōna ake. Kāore te monohanga e huri i tērā; ka whakaaturia te rahi kua akohia o ia urutau i raro iho."
+  },
+  {
+    "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "source": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "text": "Ka tuhi i tētahi uara ki te Fuel Level tūturu a Torque (012F) kia whakaatu ngā ine o nāianei: Weto, Rēmana, Whakatika rānei mai i te urutau Chunk, Band, Kalman rānei. Ko te urutau kāore anō kia hangaia ka tuhi i te taumata rēmana."
+  },
+  {
+    "key": "Chunk: %1$s",
+    "source": "Chunk: %1$s",
+    "text": "Chunk: %1$s"
+  },
+  {
+    "key": "Band: %1$s",
+    "source": "Band: %1$s",
+    "text": "Band: %1$s"
+  },
+  {
+    "key": "Kalman: %1$s",
+    "source": "Kalman: %1$s",
+    "text": "Kalman: %1$s"
+  },
+  {
+    "key": "no size yet",
+    "source": "no size yet",
+    "text": "kāore anō he rahi"
+  },
+  {
+    "key": "no size yet ± %1$.1f gal",
+    "source": "no size yet ± %1$.1f gal",
+    "text": "kāore anō he rahi ± %1$.1f gal"
+  },
+  {
+    "key": "%1$.1f gal",
+    "source": "%1$.1f gal",
+    "text": "%1$.1f gal"
+  },
+  {
+    "key": "%1$.1f ± %2$.1f gal",
+    "source": "%1$.1f ± %2$.1f gal",
+    "text": "%1$.1f ± %2$.1f gal"
+  },
+  {
+    "key": "Help",
+    "source": "Help",
+    "text": "Āwhina"
+  },
+  {
+    "key": "About",
+    "source": "About",
+    "text": "Mō"
+  },
+  {
+    "key": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "source": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "text": "Me Torque Pro (utu). Kāore a Torque Lite e tautoko monohanga."
+  },
+  {
+    "key": "Get Torque Pro",
+    "source": "Get Torque Pro",
+    "text": "Tikina a Torque Pro"
+  },
+  {
+    "key": "Privacy",
+    "source": "Privacy",
+    "text": "Tūmataitinga"
+  },
+  {
+    "key": "Send feedback",
+    "source": "Send feedback",
+    "text": "Tukua he urupare"
+  },
+  {
+    "key": "Tip",
+    "source": "Tip",
+    "text": "Takoha"
+  },
+  {
+    "key": "Thanks",
+    "source": "Thanks",
+    "text": "Ngā mihi"
+  },
+  {
+    "key": "Close",
+    "source": "Close",
+    "text": "Kati"
+  },
+  {
+    "key": "OK",
+    "source": "OK",
+    "text": "OK"
+  },
+  {
+    "key": "Detect",
+    "source": "Detect",
+    "text": "Tautuhi"
+  },
+  {
+    "key": "Confirm",
+    "source": "Confirm",
+    "text": "Whakaū"
+  },
+  {
+    "key": "Save pin",
+    "source": "Save pin",
+    "text": "Tiaki i te pine"
+  },
+  {
+    "key": "Add additional tank",
+    "source": "Add additional tank",
+    "text": "Tāpiri taika anō"
+  },
+  {
+    "key": "Remove",
+    "source": "Remove",
+    "text": "Tango"
+  },
+  {
+    "key": "Details",
+    "source": "Details",
+    "text": "Ngā taipitopito"
+  },
+  {
+    "key": "Verbose logging (debug; per-second log lines)",
+    "source": "Verbose logging (debug; per-second log lines)",
+    "text": "Takiuru kōrero (patuiro; rārangi takiuru ia hēkona)"
+  },
+  {
+    "key": "Profile name",
+    "source": "Profile name",
+    "text": "Ingoa kōtaha"
+  },
+  {
+    "key": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "source": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "text": "Te ingoa o tēnei kōtaha waka. Ia kōtaha waka Torque ka whiwhi i tana ake kōtaha monohanga, ōna ake raraunga me ngā mahere kua akohia."
+  },
+  {
+    "key": "Make",
+    "source": "Make",
+    "text": "Waitohu"
+  },
+  {
+    "key": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "source": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "text": "Waitohu waka (hei tauira Ford). Ka whakamahia anake hei kōwhiri ko ēhea PID hinu motuhake o te waitohu ka whakamātauhia e te tautuhi."
+  },
+  {
+    "key": "Fuel source",
+    "source": "Fuel source",
+    "text": "Pūtake hinu"
+  },
+  {
+    "key": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "source": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "text": "Nō hea te taumata hinu mata. Tautuhi (me tūhono te ECU) ka whakamātau i ngā kaitono pānui anake, ā, ka tono kia whakaū engari kia rite ngā pūtake e rua. Kei te whārangi tatūnga, kei te whakamōhiotanga hoki a Whakaū. Kāore = tautuhi i te tūhononga o muri."
+  },
+  {
+    "key": "Custom long name",
+    "source": "Custom long name",
+    "text": "Ingoa roa ritenga"
+  },
+  {
+    "key": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "source": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "text": "Mō te pūtake «PID tāpiri Torque mā te ingoa roa» anake: te ingoa roa tika o te PID Torque e pūrongo ana i te taumata."
+  },
+  {
+    "key": "Tank size",
+    "source": "Tank size",
+    "text": "Rahi o te taika"
+  },
+  {
+    "key": "blank = no starting size; each fit learns its own.",
+    "source": "blank = no starting size; each fit learns its own.",
+    "text": "putu = kāore he rahi tīmatanga; ka ako ia urutau i tōna ake."
+  },
+  {
+    "key": "Smoothing τ seconds",
+    "source": "Smoothing τ seconds",
+    "text": "Whakaene τ hēkona"
+  },
+  {
+    "key": "Time constant of the smoothing filter (0 = no smoothing).",
+    "source": "Time constant of the smoothing filter (0 = no smoothing).",
+    "text": "Te tau pūmau o te tātari whakaene (0 = kāore he whakaene)."
+  },
+  {
+    "key": "Max skew %/s",
+    "source": "Max skew %/s",
+    "text": "Hāngai mōrahi %/s"
+  },
+  {
+    "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "text": "Te huringa nui rawa ia hēkona ka whāia e te taumata rēmana; ka warewarehia te rutu i tua atu."
+  },
+  {
+    "key": "Fill jump %",
+    "source": "Fill jump %",
+    "text": "Peke whakakī %"
+  },
+  {
+    "key": "Rise in level while stopped that counts as a fill.",
+    "source": "Rise in level while stopped that counts as a fill.",
+    "text": "Te pikinga o te taumata i a koe e tū ana e tatauria ana hei whakakī."
+  },
+  {
+    "key": "Odometer miles",
+    "source": "Odometer miles",
+    "text": "Ine huarahi i ngā miles"
+  },
+  {
+    "key": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "source": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "text": "Kōwhiringa: whakaurua te pānui ine huarahi ka Tiaki i te pine hei here i te tawhiti mō tēnei kōtaha."
+  },
+  {
+    "key": "Additional tanks",
+    "source": "Additional tanks",
+    "text": "Ētahi taika anō"
+  },
+  {
+    "key": "Active tank",
+    "source": "Active tank",
+    "text": "Taika hohe"
+  },
+  {
+    "key": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "source": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "text": "Ko tēhea taika ka namaa te tahunga hinu (gal/hr). Mai i te PID: mā tētahi PID Torque e kōwhiri (id taika timata i te 1)."
+  },
+  {
+    "key": "Select-PID long name",
+    "source": "Select-PID long name",
+    "text": "Ingoa roa o Select-PID"
+  },
+  {
+    "key": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "source": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "text": "Ina anake ko Taika hohe = Mai i te PID: te ingoa roa o te PID Torque ko tana uara te id taika."
+  },
+  {
+    "key": "Tank %1$d",
+    "source": "Tank %1$d",
+    "text": "Taika %1$d"
+  },
+  {
+    "key": "Tank %1$d fuel source",
+    "source": "Tank %1$d fuel source",
+    "text": "Pūtake hinu o te taika %1$d"
+  },
+  {
+    "key": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "source": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "text": "Ingoa roa ritenga o te taika %1$d (hei tauira [FuelSmooth] Tank%1$d Level)"
+  },
+  {
+    "key": "Tank %1$d gallons",
+    "source": "Tank %1$d gallons",
+    "text": "Ngā gallons o te taika %1$d"
+  },
+  {
+    "key": "From PID",
+    "source": "From PID",
+    "text": "Mai i te PID"
+  },
+  {
+    "key": "(unconfirmed)",
+    "source": "(unconfirmed)",
+    "text": "(kāore i whakaūngia)"
+  },
+  {
+    "key": "· ECU connected",
+    "source": "· ECU connected",
+    "text": "· Kua tūhono te ECU"
+  },
+  {
+    "key": "tank ?",
+    "source": "tank ?",
+    "text": "taika ?"
+  },
+  {
+    "key": "About %1$s",
+    "source": "About %1$s",
+    "text": "Mō %1$s"
+  },
+  {
+    "key": "0 to %1$s s",
+    "source": "0 to %1$s s",
+    "text": "0 ki te %1$s s"
+  },
+  {
+    "key": "above 0, at most %1$s %%/s",
+    "source": "above 0, at most %1$s %%/s",
+    "text": "i runga ake i te 0, kaua e nui ake i te %1$s %%/s"
+  },
+  {
+    "key": "%1$s to %2$s %%",
+    "source": "%1$s to %2$s %%",
+    "text": "%1$s ki te %2$s %%"
+  },
+  {
+    "key": "blank or a number above 0",
+    "source": "blank or a number above 0",
+    "text": "putu, he tau rānei i runga ake i te 0"
+  },
+  {
+    "key": "stored value out of range",
+    "source": "stored value out of range",
+    "text": "he uara kua tiakina kei waho o te awhe"
+  },
+  {
+    "key": "Chunk",
+    "source": "Chunk",
+    "text": "Chunk"
+  },
+  {
+    "key": "Band",
+    "source": "Band",
+    "text": "Band"
+  },
+  {
+    "key": "Kalman",
+    "source": "Kalman",
+    "text": "Kalman"
+  },
+  {
+    "key": "Smoothed %",
+    "source": "Smoothed %",
+    "text": "Rēmana %"
+  },
+  {
+    "key": "Error (%)",
+    "source": "Error (%)",
+    "text": "Hapa (%)"
+  },
+  {
+    "key": "Off",
+    "source": "Off",
+    "text": "Weto"
+  },
+  {
+    "key": "Corrected % (Chunk)",
+    "source": "Corrected % (Chunk)",
+    "text": "Whakatika % (Chunk)"
+  },
+  {
+    "key": "Corrected % (Band)",
+    "source": "Corrected % (Band)",
+    "text": "Whakatika % (Band)"
+  },
+  {
+    "key": "Corrected % (Kalman)",
+    "source": "Corrected % (Kalman)",
+    "text": "Whakatika % (Kalman)"
+  },
+  {
+    "key": "gal",
+    "source": "gal",
+    "text": "gal"
+  },
+  {
+    "key": "L",
+    "source": "L",
+    "text": "L"
+  },
+  {
+    "key": "None yet (Detect runs on connect)",
+    "source": "None yet (Detect runs on connect)",
+    "text": "Kāore anō (ka rere a Tautuhi ina tūhono)"
+  },
+  {
+    "key": "SAE 012F Fuel Tank Level",
+    "source": "SAE 012F Fuel Tank Level",
+    "text": "SAE 012F taumata taika hinu"
+  },
+  {
+    "key": "Mode 22 16C1",
+    "source": "Mode 22 16C1",
+    "text": "Mode 22 16C1"
+  },
+  {
+    "key": "Ford Mode 22 F42F",
+    "source": "Ford Mode 22 F42F",
+    "text": "Ford Mode 22 F42F"
+  },
+  {
+    "key": "GM Mode 22 12C5 %",
+    "source": "GM Mode 22 12C5 %",
+    "text": "GM Mode 22 12C5 %"
+  },
+  {
+    "key": "Chrysler 21A2 %",
+    "source": "Chrysler 21A2 %",
+    "text": "Chrysler 21A2 %"
+  },
+  {
+    "key": "Chrysler Fuel Level Average",
+    "source": "Chrysler Fuel Level Average",
+    "text": "Tauwaenga taumata hinu Chrysler"
+  },
+  {
+    "key": "Toyota cluster 2129 (half-litre counts)",
+    "source": "Toyota cluster 2129 (half-litre counts)",
+    "text": "Rōpū ine Toyota 2129 (ngā tatau haurua-rita)"
+  },
+  {
+    "key": "Torque extra PID by long name",
+    "source": "Torque extra PID by long name",
+    "text": "PID tāpiri Torque mā te ingoa roa"
+  },
+  {
+    "key": "Vehicle 1",
+    "source": "Vehicle 1",
+    "text": "Waka 1"
+  },
+  {
+    "key": "Vehicle %1$s",
+    "source": "Vehicle %1$s",
+    "text": "Waka %1$s"
+  },
+  {
+    "key": "Binding to Torque…",
+    "source": "Binding to Torque…",
+    "text": "E tūhono ana ki a Torque…"
+  },
+  {
+    "key": "Waiting for fuel source",
+    "source": "Waiting for fuel source",
+    "text": "E tatari ana ki te pūtake hinu"
+  },
+  {
+    "key": "raw %1$.1f%%",
+    "source": "raw %1$.1f%%",
+    "text": "mata %1$.1f%%"
+  },
+  {
+    "key": "sess %1$s",
+    "source": "sess %1$s",
+    "text": "haerenga %1$s"
+  },
+  {
+    "key": "Fuel Smoothing",
+    "source": "Fuel Smoothing",
+    "text": "Fuel Smoothing"
+  },
+  {
+    "key": "Fuel Smoothing quiet",
+    "source": "Fuel Smoothing quiet",
+    "text": "Fuel Smoothing mārie"
+  },
+  {
+    "key": "Map refitting",
+    "source": "Map refitting",
+    "text": "E whakahou ana i te mahere"
+  },
+  {
+    "key": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "source": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "text": "Kei te whakahou a Fuel Smoothing i tētahi mahere mō %1$s. Ka pānui taua urutau i te 1:1 kia mutu rā anō te whakahou."
+  },
+  {
+    "key": "No fuel level source set",
+    "source": "No fuel level source set",
+    "text": "Kāore he pūtake taumata hinu i whakatakotoria"
+  },
+  {
+    "key": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "source": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "text": "Kāore he pūtake taumata hinu a Fuel Smoothing mō %1$s. Huakina te whārangi tatūnga ka pāwhiritia Tautuhi, tīpakohia rānei he pūtake."
+  },
+  {
+    "key": "No fuel level this drive",
+    "source": "No fuel level this drive",
+    "text": "Kāore he taumata hinu i tēnei haerenga"
+  },
+  {
+    "key": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "source": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "text": "Kāore i homai e %1$s tētahi taumata whaihua mō %2$s. Tirohia te tūhononga urutau, whakahaerea rānei a Tautuhi i te whārangi tatūnga."
+  },
+  {
+    "key": "Fuel level source found",
+    "source": "Fuel level source found",
+    "text": "Kua kitea te pūtake taumata hinu"
+  },
+  {
+    "key": "Using %1$s for %2$s (%3$s).",
+    "source": "Using %1$s for %2$s (%3$s).",
+    "text": "E whakamahi ana i a %1$s mō %2$s (%3$s)."
+  },
+  {
+    "key": "No fuel level source found",
+    "source": "No fuel level source found",
+    "text": "Kāore i kitea he pūtake taumata hinu"
+  },
+  {
+    "key": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "source": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "text": "Huakina te tatūnga o Fuel Smoothing ka tīpakohia he pūtake (tāpirihia rānei te PID ki Torque), kātahi ka pāwhiritia Tautuhi."
+  },
+  {
+    "key": "Confirm fuel level source",
+    "source": "Confirm fuel level source",
+    "text": "Whakaūngia te pūtake taumata hinu"
+  },
+  {
+    "key": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "source": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "text": "Kua tautuhia a %1$s e pānui ana i te %2$.0f %% mō %3$s. Tirohia mehemea e rite ana ki te ine hinu o te papatohu, kātahi ka pāwhiritia Whakaū. Kei te whārangi tatūnga, kei te whakamōhiotanga hoki a Whakaū (%4$s)."
+  },
+  {
+    "key": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "source": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "text": "Kua tautuhia a %1$s mō %2$s. Tirohia mehemea e rite ana ki te ine hinu o te papatohu, kātahi ka pāwhiritia Whakaū. Kei te whārangi tatūnga, kei te whakamōhiotanga hoki a Whakaū (%3$s)."
+  },
+  {
+    "key": "Recording to %1$s",
+    "source": "Recording to %1$s",
+    "text": "E tāhopu ana ki %1$s"
+  },
+  {
+    "key": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "source": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "text": "Ko tēnei waka ko %1$s (%2$s), engari ko te kōtaha Torque ko '%3$s'. Ka haere ngā raraunga ki %1$s; pāwhiria kia huaki a Torque ka whakawhiti i te kōtaha."
+  },
+  {
+    "key": "Wrong vehicle profile?",
+    "source": "Wrong vehicle profile?",
+    "text": "Kōtaha waka hē?"
+  },
+  {
+    "key": "Torque profile '%1$s'",
+    "source": "Torque profile '%1$s'",
+    "text": "Kōtaha Torque '%1$s'"
+  },
+  {
+    "key": "a new vehicle profile",
+    "source": "a new vehicle profile",
+    "text": "tētahi kōtaha waka hōu"
+  },
+  {
+    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "text": "Kāore te kōtaha Torque '%1$s' e rite ana ki tēnei waka (%2$s). Huatau: %3$s. Ka puritia ngā raraunga, ā, ka ākiritia i te mutunga o te haerenga ki te kore koe e pupuri."
+  },
+  {
+    "key": "Keeping drive data",
+    "source": "Keeping drive data",
+    "text": "E puritia ana ngā raraunga haerenga"
+  },
+  {
+    "key": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "source": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "text": "Ka tiakina tēnei haerenga ki %1$s. Kāore e taea e te API monohanga o Torque te hanga, te whakawhiti rānei i ngā kōtaha Torque: i Torque, hangaia, tīpakohia rānei tētahi kōtaha waka ko '%2$s' te ingoa."
+  },
+  {
+    "key": "Create new profile",
+    "source": "Create new profile",
+    "text": "Waihanga kōtaha hōu"
+  },
+  {
+    "key": "Use %1$s",
+    "source": "Use %1$s",
+    "text": "Whakamahia %1$s"
+  }
+]

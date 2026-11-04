@@ -1,0 +1,647 @@
+[
+  {
+    "key": "Fuel Smoothing for Torque",
+    "source": "Fuel Smoothing for Torque",
+    "text": "Fuel Smoothing for Torque"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/privacy/"
+  },
+  {
+    "key": "Tips are on the Play Store version",
+    "source": "Tips are on the Play Store version",
+    "text": "Խորհուրդները Play Store տարբերակում են"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "Արագ սկիզբ\n 1. Տեղադրեք Torque Pro (վճարովի տարբերակը. Torque Lite-ը չի աջակցում հավելվածներ) և զուգակցեք OBD-II ադապտերը.\n 2. Միացրեք այս հավելվածը Torque → Կարգավորումներ → Plugins.\n 3. Թույլատրեք ծանուցումները և մարտկոցի օգտագործումը դրեք Անսահմանափակ, որպեսզի Torque-ը ֆոնում գործարկի այս հավելվածը.\n 4. Torque-ում ընտրեք այն մեքենայի պրոֆիլը, որով վարում եք։ Տվյալները պահվում են ըստ Torque պրոֆիլի և ստուգվում են մեքենայի VIN/ECU ինքնության հետ.\n 5. Նոր պրոֆիլում վառելիքի աղբյուրը հայտնաբերվում է միանալիս. եթե հարցնեն, համեմատեք այն վահանակի ցուցիչի հետ և հպեք Հաստատել։ Հաստատել կա կարգավորման էջում և ծանուցման մեջ։ Կարող եք ընտրել այն նաև ստորև.\n 6. Բաքի չափը Chunk համապատասխանեցման մեկնարկային չափն է, մինչև այն սովորի իրենը։ Հավելվածը երբեք չի փոխում այն. յուրաքանչյուր համապատասխանեցման սովորած չափը ցուցադրվում է դրա տակ.\n 7. Torque-ում ավելացրեք ցուցիչներ [FuelSmooth] Smoothed Fuel Level-ի և յուրաքանչյուր համապատասխանեցման Corrected %, Remaining, DTE և Tank size-ի համար։ DTE-ն Remaining-ն է՝ բազմապատկած Torque-ի երկարաժամկետ mpg-ով։ Վերահամապատասխանեցման ծանուցումն ասում է, որ այդ համապատասխանեցումը կարդում է 1:1, մինչև այն ավարտվի.\n 8. Վառելիքի մակարդակը հետ ուղարկեք Torque. Անջատված, հարթեցված, կամ ուղղված Chunk, Band կամ Kalman համապատասխանեցումից՝ ձեր 012F ցուցիչի վրա.\n 9. Վառելիքը հաշվվում է միայն շարժիչի աշխատանքի ժամանակ։ Հավելվածն աշխատում է միայն երբ Torque-ը միացած է ECU-ին.\n 10. Շարունակեք վարել և լիցքավորել. ճշգրտությունը աճում է մի քանի մասնակի բաքի ընթացքում։ Եթե հայտնվի Սխա՞լ մեքենայի պրոֆիլ ծանուցում, ընտրեք՝ ինչ անել այդ երթի հետ.\n 11. Բոլոր տվյալները մնում են այս հեռախոսում։ GPS կամ տեղադրություն չի գրանցվում։"
+  },
+  {
+    "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "text": "%1$s\nՏարբերակ %2$s (%3$s)\nՀավելված Torque Pro-ի համար։ Կապված չէ Torque-ի կամ Ian Hawkins-ի հետ.\nԲոլոր տվյալները մնում են այս հեռախոսում. GPS կամ տեղադրություն չի գրանցվում.\n\nԼիցենզիա\nCopyright David Lang. Բոլոր իրավունքները պաշտպանված են։"
+  },
+  {
+    "key": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "source": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "text": "Բաց կոդով գրադարաններ\nԱյս հավելվածն օգտագործում է ստորևի գրադարանները։ Դրանց լիցենզիաները առանձին են վերևի հեղինակային իրավունքից.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), պահանջվում է Play Billing-ի համար\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/manual/"
+  },
+  {
+    "key": "Full manual (online)",
+    "source": "Full manual (online)",
+    "text": "Ամբողջ ձեռնարկ (առցանց)"
+  },
+  {
+    "key": "Show fuel level in notification",
+    "source": "Show fuel level in notification",
+    "text": "Ցույց տալ վառելիքի մակարդակը ծանուցման մեջ"
+  },
+  {
+    "key": "Feed fuel level back to Torque (overrides 012F)",
+    "source": "Feed fuel level back to Torque (overrides 012F)",
+    "text": "Վառելիքի մակարդակը հետ ուղարկել Torque (փոխարինում է 012F)"
+  },
+  {
+    "key": "Fuel Smoothing is running",
+    "source": "Fuel Smoothing is running",
+    "text": "Fuel Smoothing-ը աշխատում է"
+  },
+  {
+    "key": "Tap to start Fuel Smoothing",
+    "source": "Tap to start Fuel Smoothing",
+    "text": "Հպեք՝ Fuel Smoothing-ը սկսելու համար"
+  },
+  {
+    "key": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "source": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "text": "Մարտկոցից կամ ֆոնից մեկնարկը մերժվել է։ Բացեք մեկ անգամ, որպեսզի հավելվածն աշխատի Torque-ի հետ։"
+  },
+  {
+    "key": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "source": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "text": "Ավելացրեք լրացուցիչ բաքեր ըստ անհրաժեշտության (գործարանային բաք 1-ը միշտ մնում է)։ Մի փոխեք տվիչները PCM FLI կոնտակտի վրա (կեղծ լիցքավորում)։ Յուրաքանչյուր լրացուցիչ բաքին պետք է իր Torque լրացուցիչ PID-ը (MCU Mode 22, եզակի անուն — ոչ 012F կամ Ford 16C1)։ Select-PID արժեքը բաքի id-ն է՝ սկսած 1-ից։ Gal/hr-ը գանձվում է միայն ակտիվ բաքին։"
+  },
+  {
+    "key": "Tap to start",
+    "source": "Tap to start",
+    "text": "Հպեք՝ սկսելու համար"
+  },
+  {
+    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "text": "Բաքի չափը Chunk համապատասխանեցման մեկնարկային չափն է, մինչև այն սովորի իրենը։ Հավելվածը երբեք չի փոխում այն. յուրաքանչյուր համապատասխանեցման սովորած չափը ցուցադրվում է դրա տակ։"
+  },
+  {
+    "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "source": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "text": "Գրում է արժեք Torque-ի գործարանային Fuel Level (012F) վրա, որպեսզի առկա ցուցիչները ցույց տան այն. Անջատված, հարթեցված, կամ ուղղված Chunk, Band կամ Kalman համապատասխանեցումից։ Դեռ չկառուցված համապատասխանեցումը գրում է հարթեցված մակարդակը։"
+  },
+  {
+    "key": "Chunk: %1$s",
+    "source": "Chunk: %1$s",
+    "text": "Chunk: %1$s"
+  },
+  {
+    "key": "Band: %1$s",
+    "source": "Band: %1$s",
+    "text": "Band: %1$s"
+  },
+  {
+    "key": "Kalman: %1$s",
+    "source": "Kalman: %1$s",
+    "text": "Kalman: %1$s"
+  },
+  {
+    "key": "no size yet",
+    "source": "no size yet",
+    "text": "դեռ չափ չկա"
+  },
+  {
+    "key": "no size yet ± %1$.1f gal",
+    "source": "no size yet ± %1$.1f gal",
+    "text": "դեռ չափ չկա ± %1$.1f gal"
+  },
+  {
+    "key": "%1$.1f gal",
+    "source": "%1$.1f gal",
+    "text": "%1$.1f gal"
+  },
+  {
+    "key": "%1$.1f ± %2$.1f gal",
+    "source": "%1$.1f ± %2$.1f gal",
+    "text": "%1$.1f ± %2$.1f gal"
+  },
+  {
+    "key": "Help",
+    "source": "Help",
+    "text": "Օգնություն"
+  },
+  {
+    "key": "About",
+    "source": "About",
+    "text": "Մասին"
+  },
+  {
+    "key": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "source": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "text": "Պահանջվում է Torque Pro (վճարովի)։ Torque Lite-ը չի աջակցում հավելվածներ։"
+  },
+  {
+    "key": "Get Torque Pro",
+    "source": "Get Torque Pro",
+    "text": "Ձեռք բերել Torque Pro"
+  },
+  {
+    "key": "Privacy",
+    "source": "Privacy",
+    "text": "Գաղտնիություն"
+  },
+  {
+    "key": "Send feedback",
+    "source": "Send feedback",
+    "text": "Ուղարկել կարծիք"
+  },
+  {
+    "key": "Tip",
+    "source": "Tip",
+    "text": "Թեյավճար"
+  },
+  {
+    "key": "Thanks",
+    "source": "Thanks",
+    "text": "Շնորհակալություն"
+  },
+  {
+    "key": "Close",
+    "source": "Close",
+    "text": "Փակել"
+  },
+  {
+    "key": "OK",
+    "source": "OK",
+    "text": "OK"
+  },
+  {
+    "key": "Detect",
+    "source": "Detect",
+    "text": "Հայտնաբերել"
+  },
+  {
+    "key": "Confirm",
+    "source": "Confirm",
+    "text": "Հաստատել"
+  },
+  {
+    "key": "Save pin",
+    "source": "Save pin",
+    "text": "Պահել նշաձողը"
+  },
+  {
+    "key": "Add additional tank",
+    "source": "Add additional tank",
+    "text": "Ավելացնել լրացուցիչ բաք"
+  },
+  {
+    "key": "Remove",
+    "source": "Remove",
+    "text": "Հեռացնել"
+  },
+  {
+    "key": "Details",
+    "source": "Details",
+    "text": "Մանրամասներ"
+  },
+  {
+    "key": "Verbose logging (debug; per-second log lines)",
+    "source": "Verbose logging (debug; per-second log lines)",
+    "text": "Մանրամասն գրանցում (վրիպազերծում. տող յուրաքանչյուր վայրկյան)"
+  },
+  {
+    "key": "Profile name",
+    "source": "Profile name",
+    "text": "Պրոֆիլի անուն"
+  },
+  {
+    "key": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "source": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "text": "Այս մեքենայի պրոֆիլի անունը։ Torque-ի յուրաքանչյուր մեքենայի պրոֆիլ ստանում է իր հավելվածի պրոֆիլը, տվյալները և սովորած քարտեզները։"
+  },
+  {
+    "key": "Make",
+    "source": "Make",
+    "text": "Մակնիշ"
+  },
+  {
+    "key": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "source": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "text": "Մեքենայի մակնիշ (օր. Ford)։ Օգտագործվում է միայն ընտրելու, թե որ մակնիշին հատուկ վառելիքի PID-երը կարող է փորձել հայտնաբերումը։"
+  },
+  {
+    "key": "Fuel source",
+    "source": "Fuel source",
+    "text": "Վառելիքի աղբյուր"
+  },
+  {
+    "key": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "source": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "text": "Որտեղից է գալիս հում վառելիքի մակարդակը։ Հայտնաբերելը (ECU-ն պետք է միացած լինի) թեկնածուները կարդում է միայն կարդալու համար և խնդրում է հաստատել, եթե երկու աղբյուր չեն համընկնում։ Հաստատել կա կարգավորման էջում և ծանուցման մեջ։ Ոչ մեկը = հայտնաբերել հաջորդ միացման ժամանակ։"
+  },
+  {
+    "key": "Custom long name",
+    "source": "Custom long name",
+    "text": "Հատուկ երկար անուն"
+  },
+  {
+    "key": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "source": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "text": "Միայն Torque extra PID by long name աղբյուրի համար. այն Torque PID-ի ճշգրիտ երկար անունը, որը հաղորդում է մակարդակը։"
+  },
+  {
+    "key": "Tank size",
+    "source": "Tank size",
+    "text": "Բաքի չափ"
+  },
+  {
+    "key": "blank = no starting size; each fit learns its own.",
+    "source": "blank = no starting size; each fit learns its own.",
+    "text": "դատարկ = մեկնարկային չափ չկա. յուրաքանչյուր համապատասխանեցում սովորում է իրենը։"
+  },
+  {
+    "key": "Smoothing τ seconds",
+    "source": "Smoothing τ seconds",
+    "text": "Հարթեցման τ վայրկյան"
+  },
+  {
+    "key": "Time constant of the smoothing filter (0 = no smoothing).",
+    "source": "Time constant of the smoothing filter (0 = no smoothing).",
+    "text": "Հարթեցման զտիչի ժամանակային հաստատունը (0 = առանց հարթեցման)։"
+  },
+  {
+    "key": "Max skew %/s",
+    "source": "Max skew %/s",
+    "text": "Առավելագույն թեքում %/s"
+  },
+  {
+    "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "text": "Ամենամեծ փոփոխությունը վայրկյանում, որին կարող է հետևել հարթեցված մակարդակը. դրանից այն կողմ ճոճումն անտեսվում է։"
+  },
+  {
+    "key": "Fill jump %",
+    "source": "Fill jump %",
+    "text": "Լիցքավորման թռիչք %"
+  },
+  {
+    "key": "Rise in level while stopped that counts as a fill.",
+    "source": "Rise in level while stopped that counts as a fill.",
+    "text": "Կանգնած ժամանակ մակարդակի բարձրացում, որը համարվում է լիցքավորում։"
+  },
+  {
+    "key": "Odometer miles",
+    "source": "Odometer miles",
+    "text": "Օդոմետրի մղոններ"
+  },
+  {
+    "key": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "source": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "text": "Ըստ ցանկության. մուտքագրեք օդոմետրի ցուցմունքը և Պահել նշաձողը՝ այս պրոֆիլի հեռավորությունը խարսխելու համար։"
+  },
+  {
+    "key": "Additional tanks",
+    "source": "Additional tanks",
+    "text": "Լրացուցիչ բաքեր"
+  },
+  {
+    "key": "Active tank",
+    "source": "Active tank",
+    "text": "Ակտիվ բաք"
+  },
+  {
+    "key": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "source": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "text": "Որ բաքին է գանձվում վառելիքի ծախսը (gal/hr)։ PID-ից. Torque PID-ն է ընտրում այն (բաքի id՝ սկսած 1-ից)։"
+  },
+  {
+    "key": "Select-PID long name",
+    "source": "Select-PID long name",
+    "text": "Select-PID երկար անուն"
+  },
+  {
+    "key": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "source": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "text": "Միայն երբ Ակտիվ բաք = PID-ից. Torque PID-ի երկար անունը, որի արժեքը բաքի id-ն է։"
+  },
+  {
+    "key": "Tank %1$d",
+    "source": "Tank %1$d",
+    "text": "Բաք %1$d"
+  },
+  {
+    "key": "Tank %1$d fuel source",
+    "source": "Tank %1$d fuel source",
+    "text": "Բաք %1$d վառելիքի աղբյուր"
+  },
+  {
+    "key": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "source": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "text": "Բաք %1$d հատուկ երկար անուն (օր. [FuelSmooth] Tank%1$d Level)"
+  },
+  {
+    "key": "Tank %1$d gallons",
+    "source": "Tank %1$d gallons",
+    "text": "Բաք %1$d գալոն"
+  },
+  {
+    "key": "From PID",
+    "source": "From PID",
+    "text": "PID-ից"
+  },
+  {
+    "key": "(unconfirmed)",
+    "source": "(unconfirmed)",
+    "text": "(չհաստատված)"
+  },
+  {
+    "key": "· ECU connected",
+    "source": "· ECU connected",
+    "text": "· ECU միացված է"
+  },
+  {
+    "key": "tank ?",
+    "source": "tank ?",
+    "text": "բաք ?"
+  },
+  {
+    "key": "About %1$s",
+    "source": "About %1$s",
+    "text": "Մասին %1$s"
+  },
+  {
+    "key": "0 to %1$s s",
+    "source": "0 to %1$s s",
+    "text": "0-ից մինչև %1$s s"
+  },
+  {
+    "key": "above 0, at most %1$s %%/s",
+    "source": "above 0, at most %1$s %%/s",
+    "text": "0-ից բարձր, առավելագույնը %1$s %%/s"
+  },
+  {
+    "key": "%1$s to %2$s %%",
+    "source": "%1$s to %2$s %%",
+    "text": "%1$s-ից մինչև %2$s %%"
+  },
+  {
+    "key": "blank or a number above 0",
+    "source": "blank or a number above 0",
+    "text": "դատարկ կամ 0-ից մեծ թիվ"
+  },
+  {
+    "key": "stored value out of range",
+    "source": "stored value out of range",
+    "text": "պահված արժեքը միջակայքից դուրս է"
+  },
+  {
+    "key": "Chunk",
+    "source": "Chunk",
+    "text": "Chunk"
+  },
+  {
+    "key": "Band",
+    "source": "Band",
+    "text": "Band"
+  },
+  {
+    "key": "Kalman",
+    "source": "Kalman",
+    "text": "Kalman"
+  },
+  {
+    "key": "Smoothed %",
+    "source": "Smoothed %",
+    "text": "Հարթեցված %"
+  },
+  {
+    "key": "Error (%)",
+    "source": "Error (%)",
+    "text": "Սխալ (%)"
+  },
+  {
+    "key": "Off",
+    "source": "Off",
+    "text": "Անջատված"
+  },
+  {
+    "key": "Corrected % (Chunk)",
+    "source": "Corrected % (Chunk)",
+    "text": "Corrected % (Chunk)"
+  },
+  {
+    "key": "Corrected % (Band)",
+    "source": "Corrected % (Band)",
+    "text": "Corrected % (Band)"
+  },
+  {
+    "key": "Corrected % (Kalman)",
+    "source": "Corrected % (Kalman)",
+    "text": "Corrected % (Kalman)"
+  },
+  {
+    "key": "gal",
+    "source": "gal",
+    "text": "gal"
+  },
+  {
+    "key": "L",
+    "source": "L",
+    "text": "L"
+  },
+  {
+    "key": "None yet (Detect runs on connect)",
+    "source": "None yet (Detect runs on connect)",
+    "text": "Դեռ ոչ մեկը (Հայտնաբերելն աշխատում է միանալիս)"
+  },
+  {
+    "key": "SAE 012F Fuel Tank Level",
+    "source": "SAE 012F Fuel Tank Level",
+    "text": "SAE 012F Fuel Tank Level"
+  },
+  {
+    "key": "Mode 22 16C1",
+    "source": "Mode 22 16C1",
+    "text": "Mode 22 16C1"
+  },
+  {
+    "key": "Ford Mode 22 F42F",
+    "source": "Ford Mode 22 F42F",
+    "text": "Ford Mode 22 F42F"
+  },
+  {
+    "key": "GM Mode 22 12C5 %",
+    "source": "GM Mode 22 12C5 %",
+    "text": "GM Mode 22 12C5 %"
+  },
+  {
+    "key": "Chrysler 21A2 %",
+    "source": "Chrysler 21A2 %",
+    "text": "Chrysler 21A2 %"
+  },
+  {
+    "key": "Chrysler Fuel Level Average",
+    "source": "Chrysler Fuel Level Average",
+    "text": "Chrysler Fuel Level Average"
+  },
+  {
+    "key": "Toyota cluster 2129 (half-litre counts)",
+    "source": "Toyota cluster 2129 (half-litre counts)",
+    "text": "Toyota cluster 2129 (half-litre counts)"
+  },
+  {
+    "key": "Torque extra PID by long name",
+    "source": "Torque extra PID by long name",
+    "text": "Torque extra PID by long name"
+  },
+  {
+    "key": "Vehicle 1",
+    "source": "Vehicle 1",
+    "text": "Մեքենա 1"
+  },
+  {
+    "key": "Vehicle %1$s",
+    "source": "Vehicle %1$s",
+    "text": "Մեքենա %1$s"
+  },
+  {
+    "key": "Binding to Torque…",
+    "source": "Binding to Torque…",
+    "text": "Կապվում է Torque-ին…"
+  },
+  {
+    "key": "Waiting for fuel source",
+    "source": "Waiting for fuel source",
+    "text": "Սպասում է վառելիքի աղբյուրին"
+  },
+  {
+    "key": "raw %1$.1f%%",
+    "source": "raw %1$.1f%%",
+    "text": "հում %1$.1f%%"
+  },
+  {
+    "key": "sess %1$s",
+    "source": "sess %1$s",
+    "text": "սես %1$s"
+  },
+  {
+    "key": "Fuel Smoothing",
+    "source": "Fuel Smoothing",
+    "text": "Fuel Smoothing"
+  },
+  {
+    "key": "Fuel Smoothing quiet",
+    "source": "Fuel Smoothing quiet",
+    "text": "Fuel Smoothing հանգիստ"
+  },
+  {
+    "key": "Map refitting",
+    "source": "Map refitting",
+    "text": "Քարտեզի վերահամապատասխանեցում"
+  },
+  {
+    "key": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "source": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "text": "Fuel Smoothing-ը վերահամապատասխանեցնում է քարտեզ %1$s-ի համար։ Այդ համապատասխանեցումը կարդում է 1:1, մինչև վերահամապատասխանեցումն ավարտվի։"
+  },
+  {
+    "key": "No fuel level source set",
+    "source": "No fuel level source set",
+    "text": "Վառելիքի մակարդակի աղբյուր սահմանված չէ"
+  },
+  {
+    "key": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "source": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "text": "Fuel Smoothing-ը վառելիքի մակարդակի աղբյուր չունի %1$s-ի համար։ Բացեք կարգավորման էջը և հպեք Հայտնաբերել, կամ ընտրեք աղբյուր։"
+  },
+  {
+    "key": "No fuel level this drive",
+    "source": "No fuel level this drive",
+    "text": "Այս երթում վառելիքի մակարդակ չկա"
+  },
+  {
+    "key": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "source": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "text": "%1$s-ը օգտագործելի մակարդակ չտվեց %2$s-ի համար։ Ստուգեք ադապտերի կապը կամ գործարկեք Հայտնաբերել կարգավորման էջում։"
+  },
+  {
+    "key": "Fuel level source found",
+    "source": "Fuel level source found",
+    "text": "Վառելիքի մակարդակի աղբյուրը գտնվել է"
+  },
+  {
+    "key": "Using %1$s for %2$s (%3$s).",
+    "source": "Using %1$s for %2$s (%3$s).",
+    "text": "Օգտագործվում է %1$s %2$s-ի համար (%3$s)։"
+  },
+  {
+    "key": "No fuel level source found",
+    "source": "No fuel level source found",
+    "text": "Վառելիքի մակարդակի աղբյուր չի գտնվել"
+  },
+  {
+    "key": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "source": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "text": "Բացեք Fuel Smoothing-ի կարգավորումը և ընտրեք աղբյուր (կամ ավելացրեք PID-ը Torque-ում), ապա հպեք Հայտնաբերել։"
+  },
+  {
+    "key": "Confirm fuel level source",
+    "source": "Confirm fuel level source",
+    "text": "Հաստատեք վառելիքի մակարդակի աղբյուրը"
+  },
+  {
+    "key": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "source": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "text": "Հայտնաբերվել է %1$s, ցուցմունք %2$.0f %% %3$s-ի համար։ Ստուգեք, որ համընկնում է վահանակի վառելիքի ցուցիչի հետ, ապա հպեք Հաստատել։ Հաստատել կա կարգավորման էջում և ծանուցման մեջ (%4$s)։"
+  },
+  {
+    "key": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "source": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "text": "Հայտնաբերվել է %1$s %2$s-ի համար։ Ստուգեք, որ համընկնում է վահանակի վառելիքի ցուցիչի հետ, ապա հպեք Հաստատել։ Հաստատել կա կարգավորման էջում և ծանուցման մեջ (%3$s)։"
+  },
+  {
+    "key": "Recording to %1$s",
+    "source": "Recording to %1$s",
+    "text": "Գրանցում դեպի %1$s"
+  },
+  {
+    "key": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "source": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "text": "Այս մեքենան %1$s է (%2$s), բայց Torque-ի պրոֆիլը '%3$s' է։ Տվյալները գնում են %1$s. հպեք՝ Torque-ը բացելու և պրոֆիլը փոխելու համար։"
+  },
+  {
+    "key": "Wrong vehicle profile?",
+    "source": "Wrong vehicle profile?",
+    "text": "Սխա՞լ մեքենայի պրոֆիլ"
+  },
+  {
+    "key": "Torque profile '%1$s'",
+    "source": "Torque profile '%1$s'",
+    "text": "Torque պրոֆիլ '%1$s'"
+  },
+  {
+    "key": "a new vehicle profile",
+    "source": "a new vehicle profile",
+    "text": "նոր մեքենայի պրոֆիլ"
+  },
+  {
+    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "text": "Torque պրոֆիլ '%1$s' չի համընկնում այս մեքենայի հետ (%2$s)։ Առաջարկ. %3$s։ Տվյալները պահվում են և երթի վերջում ջնջվում են, եթե չպահեք դրանք։"
+  },
+  {
+    "key": "Keeping drive data",
+    "source": "Keeping drive data",
+    "text": "Երթի տվյալները պահվում են"
+  },
+  {
+    "key": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "source": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "text": "Այս երթը կպահվի %1$s-ում։ Torque-ի հավելվածի API-ն չի կարող ստեղծել կամ փոխել Torque պրոֆիլներ. Torque-ում ստեղծեք կամ ընտրեք '%2$s' անունով մեքենայի պրոֆիլ։"
+  },
+  {
+    "key": "Create new profile",
+    "source": "Create new profile",
+    "text": "Ստեղծել նոր պրոֆիլ"
+  },
+  {
+    "key": "Use %1$s",
+    "source": "Use %1$s",
+    "text": "Օգտագործել %1$s"
+  }
+]

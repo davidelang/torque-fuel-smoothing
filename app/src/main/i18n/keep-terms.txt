@@ -1,0 +1,47 @@
+Fuel Smoothing for Torque
+https://play.landing.lang.hm/fuel-smoothing/privacy/
+https://play.landing.lang.hm/fuel-smoothing/manual/
+Fuel Smoothing
+Chunk
+Band
+Kalman
+gal
+L
+Mode 22 16C1
+Ford Mode 22 F42F
+GM Mode 22 12C5 %
+Chrysler 21A2 %
+%1$.1f gal
+%1$.1f ± %2$.1f gal
+Torque Pro
+Torque Lite
+Play Store
+David Lang
+Torque
+FuelSmooth
+012F
+16C1
+F42F
+12C5
+21A2
+2129
+SAE
+Ford
+GM
+Chrysler
+Toyota
+Mode
+22
+ECU
+OBD-II
+PCM
+FLI
+GPS
+DTE
+VIN
+Select-PID
+MCU
+API
+Pro
+Lite
+Play

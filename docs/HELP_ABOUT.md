@@ -2,11 +2,11 @@
 
 The app has one screen (PluginActivity). Its layout is:
 
-title → help text (`R.string.help_body`) → **Full manual (online)** button (`R.string.manual_url`, placeholder) → "Requires Torque Pro" (only when Torque isn't installed) → about line → Privacy / Send feedback / Tip buttons → settings.
+title → help text → **Full manual (online)** button (manual URL, placeholder) → "Requires Torque Pro" (only when Torque isn't installed) → about line → Privacy / Send feedback / Tip buttons → settings.
 
 patch3 puts the quick start below into `help_body` and adds the manual button.
 
-## Help (`help_body`)
+## Help
 Quick start
 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.
 2. Enable this plugin in Torque → Settings → Plugins.

@@ -1,0 +1,647 @@
+[
+  {
+    "key": "Fuel Smoothing for Torque",
+    "source": "Fuel Smoothing for Torque",
+    "text": "Fuel Smoothing for Torque"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/privacy/"
+  },
+  {
+    "key": "Tips are on the Play Store version",
+    "source": "Tips are on the Play Store version",
+    "text": "Маслиҳатҳо дар версияи Play Store ҳастанд"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "Оғози зуд\n 1. Torque Pro насб кунед (версияи пулакӣ; Torque Lite плагинҳоро дастгирӣ намекунад) ва адаптери OBD-II-ро ҷуфт кунед.\n 2. Ин плагинро дар Torque → Танзимот → Plugins фаъол кунед.\n 3. Ба огоҳиҳо иҷозат диҳед ва истифодаи батареяро Бемаҳдуд гузоред, то Torque ин плагинро дар замина оғоз кунад.\n 4. Дар Torque профили мошинеро, ки меронед, интихоб кунед. Маълумот барои ҳар профили Torque нигоҳ дошта мешавад ва бо ҳувияти VIN/ECU-и мошин санҷида мешавад.\n 5. Дар профили нав манбаи сӯзишворӣ ҳангоми пайваст шудан ёфт мешавад; агар пурсанд, онро бо нишондиҳандаи панел муқоиса кунед ва Тасдиқро пахш кунед. Тасдиқ дар саҳифаи танзим ва дар огоҳӣ аст. Шумо метавонед онро дар поён низ интихоб кунед.\n 6. Андозаи бак андозаи оғозини мувофиқати Chunk аст, то он андозаи худро ёд гирад. Плагин онро ҳеҷ гоҳ тағйир намедиҳад; андозаи омӯхтаи ҳар мувофиқат зери он нишон дода мешавад.\n 7. Дар Torque нишондиҳандаҳо барои [FuelSmooth] Smoothed Fuel Level ва барои ҳар мувофиқат Corrected %, Remaining, DTE ва Tank size илова кунед. DTE ин Remaining зарб ба mpg-и дарозмуддати Torque аст. Огоҳӣ ҳангоми мувофиқати дубора мегӯяд, ки он мувофиқат то анҷом 1:1 мехонад.\n 8. Сатҳи сӯзишвориро ба Torque баргардонед: Хомӯш, ҳамвор, ё ислоҳшуда аз мувофиқати Chunk, Band ё Kalman ба нишондиҳандаи 012F.\n 9. Сӯзишворӣ танҳо ҳангоми кори муҳаррик ҳисоб мешавад. Плагин танҳо вақте кор мекунад, ки Torque ба ECU пайваст бошад.\n 10. Рондан ва пур карданро давом диҳед; дақиқӣ дар чанд баки қисман меафзояд. Агар огоҳии Профили нодурусти мошин? пайдо шавад, интихоб кунед, ки бо он сафар чӣ кунед.\n 11. Ҳамаи маълумот дар ин телефон мемонад. GPS ё макон сабт намешавад."
+  },
+  {
+    "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
+    "text": "%1$s\nВерсия %2$s (%3$s)\nПлагин барои Torque Pro. Бо Torque ё Ian Hawkins вобаста нест.\nҲамаи маълумот дар ин телефон мемонад; GPS ё макон сабт намешавад.\n\nИҷозатнома\nCopyright David Lang. Ҳамаи ҳуқуқҳо ҳифз шудаанд."
+  },
+  {
+    "key": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "source": "Open source libraries\nThis app uses the libraries below. Their licenses are separate from the copyright above.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), required by Play Billing\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html",
+    "text": "Китобхонаҳои манбаи кушод\nИн барнома китобхонаҳои зерро истифода мебарад. Иҷозатномаҳои онҳо аз ҳуқуқи муаллифи боло ҷудоанд.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), аз ҷониби Play Billing талаб мешавад\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html"
+  },
+  {
+    "key": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "source": "https://play.landing.lang.hm/fuel-smoothing/manual/",
+    "text": "https://play.landing.lang.hm/fuel-smoothing/manual/"
+  },
+  {
+    "key": "Full manual (online)",
+    "source": "Full manual (online)",
+    "text": "Дастури пурра (онлайн)"
+  },
+  {
+    "key": "Show fuel level in notification",
+    "source": "Show fuel level in notification",
+    "text": "Сатҳи сӯзишвориро дар огоҳӣ нишон диҳед"
+  },
+  {
+    "key": "Feed fuel level back to Torque (overrides 012F)",
+    "source": "Feed fuel level back to Torque (overrides 012F)",
+    "text": "Сатҳи сӯзишвориро ба Torque баргардон (012F-ро иваз мекунад)"
+  },
+  {
+    "key": "Fuel Smoothing is running",
+    "source": "Fuel Smoothing is running",
+    "text": "Fuel Smoothing кор мекунад"
+  },
+  {
+    "key": "Tap to start Fuel Smoothing",
+    "source": "Tap to start Fuel Smoothing",
+    "text": "Барои оғози Fuel Smoothing пахш кунед"
+  },
+  {
+    "key": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "source": "Battery/background start was denied. Open once so the plugin can run with Torque.",
+    "text": "Оғоз аз батарея ё замина рад шуд. Як бор кушоед, то плагин бо Torque кор кунад."
+  },
+  {
+    "key": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "source": "Add additional tanks as needed (stock tank 1 always stays). Do not switch senders onto the PCM FLI pin (false fill). Each extra tank needs its own Torque extra PID (MCU Mode 22, unique name — not 012F or Ford 16C1). Select-PID value is the 1-based tank id. Gal/hr is charged only to the active tank.",
+    "text": "Бакҳои иловагиро ҳангоми лозим илова кунед (баки заводӣ 1 ҳамеша мемонад). Фиристандаҳоро ба пинҳои PCM FLI нагузаронед (пуркунии дурӯғ). Ҳар баки иловагӣ PID-и иловагии худро дар Torque лозим дорад (MCU Mode 22, номи беназир — на 012F ва на Ford 16C1). Қимати Select-PID ин id-и бак аз 1 аст. Gal/hr танҳо ба баки фаъол навишта мешавад."
+  },
+  {
+    "key": "Tap to start",
+    "source": "Tap to start",
+    "text": "Барои оғоз пахш кунед"
+  },
+  {
+    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
+    "text": "Андозаи бак андозаи оғозини мувофиқати Chunk аст, то он андозаи худро ёд гирад. Плагин онро ҳеҷ гоҳ тағйир намедиҳад; андозаи омӯхтаи ҳар мувофиқат зери он нишон дода мешавад."
+  },
+  {
+    "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "source": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
+    "text": "Қиматро ба Fuel Level-и заводии Torque (012F) менависад, то нишондиҳандаҳои мавҷуда онро нишон диҳанд: Хомӯш, ҳамвор, ё ислоҳшуда аз мувофиқати Chunk, Band ё Kalman. Мувофиқате, ки ҳанӯз сохта нашудааст, сатҳи ҳамворро менависад."
+  },
+  {
+    "key": "Chunk: %1$s",
+    "source": "Chunk: %1$s",
+    "text": "Chunk: %1$s"
+  },
+  {
+    "key": "Band: %1$s",
+    "source": "Band: %1$s",
+    "text": "Band: %1$s"
+  },
+  {
+    "key": "Kalman: %1$s",
+    "source": "Kalman: %1$s",
+    "text": "Kalman: %1$s"
+  },
+  {
+    "key": "no size yet",
+    "source": "no size yet",
+    "text": "ҳанӯз андоза нест"
+  },
+  {
+    "key": "no size yet ± %1$.1f gal",
+    "source": "no size yet ± %1$.1f gal",
+    "text": "ҳанӯз андоза нест ± %1$.1f gal"
+  },
+  {
+    "key": "%1$.1f gal",
+    "source": "%1$.1f gal",
+    "text": "%1$.1f gal"
+  },
+  {
+    "key": "%1$.1f ± %2$.1f gal",
+    "source": "%1$.1f ± %2$.1f gal",
+    "text": "%1$.1f ± %2$.1f gal"
+  },
+  {
+    "key": "Help",
+    "source": "Help",
+    "text": "Кумак"
+  },
+  {
+    "key": "About",
+    "source": "About",
+    "text": "Дар бора"
+  },
+  {
+    "key": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "source": "Requires Torque Pro (paid). Torque Lite does not support plugins.",
+    "text": "Torque Pro (пулакӣ) лозим аст. Torque Lite плагинҳоро дастгирӣ намекунад."
+  },
+  {
+    "key": "Get Torque Pro",
+    "source": "Get Torque Pro",
+    "text": "Гирифтани Torque Pro"
+  },
+  {
+    "key": "Privacy",
+    "source": "Privacy",
+    "text": "Махфият"
+  },
+  {
+    "key": "Send feedback",
+    "source": "Send feedback",
+    "text": "Фиристодани назар"
+  },
+  {
+    "key": "Tip",
+    "source": "Tip",
+    "text": "Инъом"
+  },
+  {
+    "key": "Thanks",
+    "source": "Thanks",
+    "text": "Ташаккур"
+  },
+  {
+    "key": "Close",
+    "source": "Close",
+    "text": "Пӯшидан"
+  },
+  {
+    "key": "OK",
+    "source": "OK",
+    "text": "OK"
+  },
+  {
+    "key": "Detect",
+    "source": "Detect",
+    "text": "Ёфтан"
+  },
+  {
+    "key": "Confirm",
+    "source": "Confirm",
+    "text": "Тасдиқ"
+  },
+  {
+    "key": "Save pin",
+    "source": "Save pin",
+    "text": "Нишонаро захира кардан"
+  },
+  {
+    "key": "Add additional tank",
+    "source": "Add additional tank",
+    "text": "Баки иловагӣ илова кардан"
+  },
+  {
+    "key": "Remove",
+    "source": "Remove",
+    "text": "Хориҷ кардан"
+  },
+  {
+    "key": "Details",
+    "source": "Details",
+    "text": "Тафсилот"
+  },
+  {
+    "key": "Verbose logging (debug; per-second log lines)",
+    "source": "Verbose logging (debug; per-second log lines)",
+    "text": "Сабти муфассал (ислоҳ; сатр дар ҳар сония)"
+  },
+  {
+    "key": "Profile name",
+    "source": "Profile name",
+    "text": "Номи профил"
+  },
+  {
+    "key": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "source": "The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.",
+    "text": "Номи ин профили мошин. Ҳар профили мошини Torque профили плагин, маълумот ва харитаҳои омӯхтаи худро мегирад."
+  },
+  {
+    "key": "Make",
+    "source": "Make",
+    "text": "Тамға"
+  },
+  {
+    "key": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "source": "Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.",
+    "text": "Тамғаи мошин (мас. Ford). Танҳо барои интихоби он, ки ёфтан кадом PID-ҳои сӯзишвории хоси тамғаро санҷад."
+  },
+  {
+    "key": "Fuel source",
+    "source": "Fuel source",
+    "text": "Манбаи сӯзишворӣ"
+  },
+  {
+    "key": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "source": "Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.",
+    "text": "Сатҳи хоми сӯзишворӣ аз куҷо меояд. Ёфтан (ECU бояд пайваст бошад) номзадҳоро танҳо барои хондан мехонад ва агар ду манба мувофиқ набошанд, тасдиқ мепурсад. Тасдиқ дар саҳифаи танзим ва дар огоҳӣ аст. Ҳеҷ кадом = ёфтан дар пайвасти навбатӣ."
+  },
+  {
+    "key": "Custom long name",
+    "source": "Custom long name",
+    "text": "Номи дарози махсус"
+  },
+  {
+    "key": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "source": "Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.",
+    "text": "Танҳо барои манбаи Torque extra PID by long name: номи дарози дақиқи PID-и Torque, ки сатҳро хабар медиҳад."
+  },
+  {
+    "key": "Tank size",
+    "source": "Tank size",
+    "text": "Андозаи бак"
+  },
+  {
+    "key": "blank = no starting size; each fit learns its own.",
+    "source": "blank = no starting size; each fit learns its own.",
+    "text": "холӣ = андозаи оғоз нест; ҳар мувофиқат андозаи худро меомӯзад."
+  },
+  {
+    "key": "Smoothing τ seconds",
+    "source": "Smoothing τ seconds",
+    "text": "Ҳамворкунии τ сония"
+  },
+  {
+    "key": "Time constant of the smoothing filter (0 = no smoothing).",
+    "source": "Time constant of the smoothing filter (0 = no smoothing).",
+    "text": "Собити вақти филтри ҳамворкунӣ (0 = бе ҳамворкунӣ)."
+  },
+  {
+    "key": "Max skew %/s",
+    "source": "Max skew %/s",
+    "text": "Ҳадди каҷӣ %/s"
+  },
+  {
+    "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
+    "text": "Бузургтарин тағйир дар як сония, ки сатҳи ҳамвор метавонад пайравӣ кунад; лапиш аз ин беш нодида гирифта мешавад."
+  },
+  {
+    "key": "Fill jump %",
+    "source": "Fill jump %",
+    "text": "Ҷаҳиши пуркунӣ %"
+  },
+  {
+    "key": "Rise in level while stopped that counts as a fill.",
+    "source": "Rise in level while stopped that counts as a fill.",
+    "text": "Болоравии сатҳ ҳангоми ист, ки пуркунӣ ҳисоб мешавад."
+  },
+  {
+    "key": "Odometer miles",
+    "source": "Odometer miles",
+    "text": "Милҳои одометр"
+  },
+  {
+    "key": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "source": "Optional: enter the odometer reading and Save pin to anchor distance for this profile.",
+    "text": "Ихтиёрӣ: нишондиҳандаи одометрро ворид кунед ва Нишонаро захира кунед, то масофа барои ин профил лангар шавад."
+  },
+  {
+    "key": "Additional tanks",
+    "source": "Additional tanks",
+    "text": "Бакҳои иловагӣ"
+  },
+  {
+    "key": "Active tank",
+    "source": "Active tank",
+    "text": "Баки фаъол"
+  },
+  {
+    "key": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "source": "Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).",
+    "text": "Хароҷоти сӯзишворӣ (gal/hr) ба кадом бак навишта мешавад. Аз PID: PID-и Torque онро интихоб мекунад (id-и бак аз 1)."
+  },
+  {
+    "key": "Select-PID long name",
+    "source": "Select-PID long name",
+    "text": "Номи дарози Select-PID"
+  },
+  {
+    "key": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "source": "Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.",
+    "text": "Танҳо вақте Баки фаъол = Аз PID: номи дарози PID-и Torque, ки қиматаш id-и бак аст."
+  },
+  {
+    "key": "Tank %1$d",
+    "source": "Tank %1$d",
+    "text": "Бак %1$d"
+  },
+  {
+    "key": "Tank %1$d fuel source",
+    "source": "Tank %1$d fuel source",
+    "text": "Манбаи сӯзишвории баки %1$d"
+  },
+  {
+    "key": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "source": "Tank %1$d custom long name (e.g. [FuelSmooth] Tank%1$d Level)",
+    "text": "Номи дарози махсуси баки %1$d (мас. [FuelSmooth] Tank%1$d Level)"
+  },
+  {
+    "key": "Tank %1$d gallons",
+    "source": "Tank %1$d gallons",
+    "text": "Галлонҳои баки %1$d"
+  },
+  {
+    "key": "From PID",
+    "source": "From PID",
+    "text": "Аз PID"
+  },
+  {
+    "key": "(unconfirmed)",
+    "source": "(unconfirmed)",
+    "text": "(тасдиқнашуда)"
+  },
+  {
+    "key": "· ECU connected",
+    "source": "· ECU connected",
+    "text": "· ECU пайваст аст"
+  },
+  {
+    "key": "tank ?",
+    "source": "tank ?",
+    "text": "бак ?"
+  },
+  {
+    "key": "About %1$s",
+    "source": "About %1$s",
+    "text": "Дар бораи %1$s"
+  },
+  {
+    "key": "0 to %1$s s",
+    "source": "0 to %1$s s",
+    "text": "аз 0 то %1$s s"
+  },
+  {
+    "key": "above 0, at most %1$s %%/s",
+    "source": "above 0, at most %1$s %%/s",
+    "text": "болотар аз 0, ҳадди аксар %1$s %%/s"
+  },
+  {
+    "key": "%1$s to %2$s %%",
+    "source": "%1$s to %2$s %%",
+    "text": "аз %1$s то %2$s %%"
+  },
+  {
+    "key": "blank or a number above 0",
+    "source": "blank or a number above 0",
+    "text": "холӣ ё рақами болотар аз 0"
+  },
+  {
+    "key": "stored value out of range",
+    "source": "stored value out of range",
+    "text": "қимати захирашуда берун аз ҳудуд аст"
+  },
+  {
+    "key": "Chunk",
+    "source": "Chunk",
+    "text": "Chunk"
+  },
+  {
+    "key": "Band",
+    "source": "Band",
+    "text": "Band"
+  },
+  {
+    "key": "Kalman",
+    "source": "Kalman",
+    "text": "Kalman"
+  },
+  {
+    "key": "Smoothed %",
+    "source": "Smoothed %",
+    "text": "Ҳамвор %"
+  },
+  {
+    "key": "Error (%)",
+    "source": "Error (%)",
+    "text": "Хато (%)"
+  },
+  {
+    "key": "Off",
+    "source": "Off",
+    "text": "Хомӯш"
+  },
+  {
+    "key": "Corrected % (Chunk)",
+    "source": "Corrected % (Chunk)",
+    "text": "Corrected % (Chunk)"
+  },
+  {
+    "key": "Corrected % (Band)",
+    "source": "Corrected % (Band)",
+    "text": "Corrected % (Band)"
+  },
+  {
+    "key": "Corrected % (Kalman)",
+    "source": "Corrected % (Kalman)",
+    "text": "Corrected % (Kalman)"
+  },
+  {
+    "key": "gal",
+    "source": "gal",
+    "text": "gal"
+  },
+  {
+    "key": "L",
+    "source": "L",
+    "text": "L"
+  },
+  {
+    "key": "None yet (Detect runs on connect)",
+    "source": "None yet (Detect runs on connect)",
+    "text": "Ҳанӯз ҳеҷ кадом (Ёфтан ҳангоми пайваст кор мекунад)"
+  },
+  {
+    "key": "SAE 012F Fuel Tank Level",
+    "source": "SAE 012F Fuel Tank Level",
+    "text": "SAE 012F Fuel Tank Level"
+  },
+  {
+    "key": "Mode 22 16C1",
+    "source": "Mode 22 16C1",
+    "text": "Mode 22 16C1"
+  },
+  {
+    "key": "Ford Mode 22 F42F",
+    "source": "Ford Mode 22 F42F",
+    "text": "Ford Mode 22 F42F"
+  },
+  {
+    "key": "GM Mode 22 12C5 %",
+    "source": "GM Mode 22 12C5 %",
+    "text": "GM Mode 22 12C5 %"
+  },
+  {
+    "key": "Chrysler 21A2 %",
+    "source": "Chrysler 21A2 %",
+    "text": "Chrysler 21A2 %"
+  },
+  {
+    "key": "Chrysler Fuel Level Average",
+    "source": "Chrysler Fuel Level Average",
+    "text": "Chrysler Fuel Level Average"
+  },
+  {
+    "key": "Toyota cluster 2129 (half-litre counts)",
+    "source": "Toyota cluster 2129 (half-litre counts)",
+    "text": "Toyota cluster 2129 (half-litre counts)"
+  },
+  {
+    "key": "Torque extra PID by long name",
+    "source": "Torque extra PID by long name",
+    "text": "Torque extra PID by long name"
+  },
+  {
+    "key": "Vehicle 1",
+    "source": "Vehicle 1",
+    "text": "Мошин 1"
+  },
+  {
+    "key": "Vehicle %1$s",
+    "source": "Vehicle %1$s",
+    "text": "Мошин %1$s"
+  },
+  {
+    "key": "Binding to Torque…",
+    "source": "Binding to Torque…",
+    "text": "Ба Torque пайваст мешавад…"
+  },
+  {
+    "key": "Waiting for fuel source",
+    "source": "Waiting for fuel source",
+    "text": "Интизори манбаи сӯзишворӣ"
+  },
+  {
+    "key": "raw %1$.1f%%",
+    "source": "raw %1$.1f%%",
+    "text": "хом %1$.1f%%"
+  },
+  {
+    "key": "sess %1$s",
+    "source": "sess %1$s",
+    "text": "сессия %1$s"
+  },
+  {
+    "key": "Fuel Smoothing",
+    "source": "Fuel Smoothing",
+    "text": "Fuel Smoothing"
+  },
+  {
+    "key": "Fuel Smoothing quiet",
+    "source": "Fuel Smoothing quiet",
+    "text": "Fuel Smoothing ором"
+  },
+  {
+    "key": "Map refitting",
+    "source": "Map refitting",
+    "text": "Харита аз нав мувофиқ мешавад"
+  },
+  {
+    "key": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "source": "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes.",
+    "text": "Fuel Smoothing харитаро барои %1$s аз нав мувофиқ мекунад. Он мувофиқат то анҷоми мувофиқати дубора 1:1 мехонад."
+  },
+  {
+    "key": "No fuel level source set",
+    "source": "No fuel level source set",
+    "text": "Манбаи сатҳи сӯзишворӣ танзим нашудааст"
+  },
+  {
+    "key": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "source": "Fuel Smoothing has no fuel level source for %1$s. Open the setup page and tap Detect, or pick a source.",
+    "text": "Fuel Smoothing барои %1$s манбаи сатҳи сӯзишворӣ надорад. Саҳифаи танзимро кушоед ва Ёфтанро пахш кунед, ё манба интихоб кунед."
+  },
+  {
+    "key": "No fuel level this drive",
+    "source": "No fuel level this drive",
+    "text": "Дар ин сафар сатҳи сӯзишворӣ нест"
+  },
+  {
+    "key": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "source": "%1$s gave no usable level for %2$s. Check the adapter connection, or run Detect on the setup page.",
+    "text": "%1$s барои %2$s сатҳи қобили истифода надод. Пайвасти адаптерро санҷед, ё Ёфтанро дар саҳифаи танзим иҷро кунед."
+  },
+  {
+    "key": "Fuel level source found",
+    "source": "Fuel level source found",
+    "text": "Манбаи сатҳи сӯзишворӣ ёфт шуд"
+  },
+  {
+    "key": "Using %1$s for %2$s (%3$s).",
+    "source": "Using %1$s for %2$s (%3$s).",
+    "text": "%1$s барои %2$s истифода мешавад (%3$s)."
+  },
+  {
+    "key": "No fuel level source found",
+    "source": "No fuel level source found",
+    "text": "Манбаи сатҳи сӯзишворӣ ёфт нашуд"
+  },
+  {
+    "key": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "source": "Open Fuel Smoothing setup and pick a source (or add the PID in Torque), then tap Detect.",
+    "text": "Танзими Fuel Smoothing-ро кушоед ва манба интихоб кунед (ё PID-ро дар Torque илова кунед), сипас Ёфтанро пахш кунед."
+  },
+  {
+    "key": "Confirm fuel level source",
+    "source": "Confirm fuel level source",
+    "text": "Манбаи сатҳи сӯзишвориро тасдиқ кунед"
+  },
+  {
+    "key": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "source": "Detected %1$s reading %2$.0f %% for %3$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%4$s).",
+    "text": "%1$s ёфт шуд, хониш %2$.0f %% барои %3$s. Санҷед, ки бо нишондиҳандаи сӯзишвории панел мувофиқ аст, сипас Тасдиқро пахш кунед. Тасдиқ дар саҳифаи танзим ва дар огоҳӣ аст (%4$s)."
+  },
+  {
+    "key": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "source": "Detected %1$s for %2$s. Check it matches the dash fuel gauge, then tap Confirm. Confirm is on the setup page and in the notification (%3$s).",
+    "text": "%1$s барои %2$s ёфт шуд. Санҷед, ки бо нишондиҳандаи сӯзишвории панел мувофиқ аст, сипас Тасдиқро пахш кунед. Тасдиқ дар саҳифаи танзим ва дар огоҳӣ аст (%3$s)."
+  },
+  {
+    "key": "Recording to %1$s",
+    "source": "Recording to %1$s",
+    "text": "Сабт ба %1$s"
+  },
+  {
+    "key": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "source": "This vehicle is %1$s (%2$s), but Torque's profile is '%3$s'. Data goes to %1$s; tap to open Torque and switch profiles.",
+    "text": "Ин мошин %1$s аст (%2$s), аммо профили Torque '%3$s' аст. Маълумот ба %1$s меравад; барои кушодани Torque ва иваз кардани профил пахш кунед."
+  },
+  {
+    "key": "Wrong vehicle profile?",
+    "source": "Wrong vehicle profile?",
+    "text": "Профили нодурусти мошин?"
+  },
+  {
+    "key": "Torque profile '%1$s'",
+    "source": "Torque profile '%1$s'",
+    "text": "Профили Torque '%1$s'"
+  },
+  {
+    "key": "a new vehicle profile",
+    "source": "a new vehicle profile",
+    "text": "профили нави мошин"
+  },
+  {
+    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
+    "text": "Профили Torque '%1$s' бо ин мошин мувофиқ нест (%2$s). Пешниҳод: %3$s. Маълумот нигоҳ дошта мешавад ва агар нигоҳ надоред, дар охири сафар партофта мешавад."
+  },
+  {
+    "key": "Keeping drive data",
+    "source": "Keeping drive data",
+    "text": "Маълумоти сафар нигоҳ дошта мешавад"
+  },
+  {
+    "key": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "source": "This drive will be saved to %1$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2$s'.",
+    "text": "Ин сафар ба %1$s захира мешавад. API-и плагини Torque наметавонад профилҳои Torque-ро эҷод ё иваз кунад: дар Torque профили мошин бо номи '%2$s' эҷод ё интихоб кунед."
+  },
+  {
+    "key": "Create new profile",
+    "source": "Create new profile",
+    "text": "Эҷоди профили нав"
+  },
+  {
+    "key": "Use %1$s",
+    "source": "Use %1$s",
+    "text": "Истифодаи %1$s"
+  }
+]
