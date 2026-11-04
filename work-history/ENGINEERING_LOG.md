@@ -338,3 +338,7 @@
 
 ## 2026-11-03 - Native Kalman fit
 Fit the Kalman map in native code, full rebuild or from the latest parts.
+
+## 2026-11-03 - Dropped trailing fill advances the chain epoch
+
+- A dropped trailing fill advances the chain epoch.

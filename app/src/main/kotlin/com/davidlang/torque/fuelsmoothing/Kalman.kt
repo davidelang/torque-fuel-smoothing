@@ -205,7 +205,13 @@ internal object Kalman {
         return KalmanNative.infoPd(st.info)
     }
 
-    private fun seedOf(st: State) = Seed(st.anchorC, st.anchorEp, st.tailMed)
+    // anchorEp >= 0 continues that epoch. Negative is -(running+1): a dropped fill closed it.
+    private fun seedOf(st: State): Seed {
+        val raw = st.anchorEp
+        val open = raw >= 0
+        val ep = if (open) raw else -raw - 1
+        return Seed(st.anchorC, ep, st.tailMed, open)
+    }
 
     private fun mergeGot(old: List<String>, extra: List<String>): List<String> {
         val out = ArrayList<String>(old.size + extra.size)
@@ -445,7 +451,7 @@ internal object Kalman {
     private class Seg(val key: String, val L: DoubleArray, val F: DoubleArray, val se: DoubleArray, val C0: Double, val ep: Int)
     private class Built(val segs: List<Seg>, val first: BooleanArray, val breaks: Int, val cTail: Double, val epTail: Int)
     private class Assembled(val built: Built, val skippedAll: Boolean, val tailMed: Double)
-    private class Seed(val cTail: Double, val epTail: Int, val tailMed: Double)
+    private class Seed(val cTail: Double, val epTail: Int, val tailMed: Double, val open: Boolean)
 
     private fun assemble(parts: List<Pieces.Part>, jumpPct: Double, only: Set<String>?, seed: Seed?): Assembled {
         val byDrive = ArrayList<ArrayList<Pieces.Part>>()
@@ -637,7 +643,7 @@ internal object Kalman {
         var breaks = 0
         var c = seed?.cTail ?: 0.0
         var ep = seed?.epTail ?: -1
-        var started = seed != null
+        var started = seed != null && seed.open
         for (d in drives) {
             var curL = ArrayList<Double>()
             var curF = ArrayList<Double>()
@@ -667,10 +673,14 @@ internal object Kalman {
             c += off
         }
         val kept = all.filter { it.L.size >= 2 }
+        val seedOpen = seed?.open ?: false
+        val seedEp = seed?.epTail
         val first = BooleanArray(kept.size) { i ->
-            if (i == 0) seed == null || kept[0].ep != seed.epTail else kept[i].ep != kept[i - 1].ep
+            if (i == 0) seed == null || !seedOpen || kept[0].ep != seedEp else kept[i].ep != kept[i - 1].ep
         }
-        val epTail = if (kept.isEmpty()) ep else kept.last().ep
+        // A trailing fill with fewer than two blocks is not kept, but it still advances ep.
+        // Saving that running epoch as -(ep+1) makes the next incremental walk start a new chain.
+        val epTail = if (kept.isEmpty() || kept.last().ep == ep) ep else -(ep + 1)
         return Built(kept, first, breaks, c, epTail)
     }
 
