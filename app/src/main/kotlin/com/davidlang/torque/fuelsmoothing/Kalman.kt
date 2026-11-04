@@ -2,6 +2,7 @@ package com.davidlang.torque.fuelsmoothing
 
 import java.io.File
 import kotlin.math.abs
+import kotlin.math.exp
 import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
