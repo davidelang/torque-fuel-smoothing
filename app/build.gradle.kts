@@ -61,6 +61,7 @@ val releaseSigningReady = !releaseStoreFile.isNullOrBlank() &&
 android {
     namespace = "com.davidlang.torque.fuelsmoothing"
     compileSdk = 36
+    ndkVersion = "28.2.13676358"
     defaultConfig {
         applicationId = fuelsmoothingApplicationId
         minSdk = 21
@@ -102,6 +103,20 @@ android {
         versionName = rawVersion
         if (!officialChosen) {
             resValue("string", "app_name", "Fuel Smoothing for Torque (local)")
+        }
+        ndk {
+            abiFilters += listOf("arm64-v8a", "armeabi-v7a")
+        }
+        externalNativeBuild {
+            cmake {
+                cppFlags += "-std=c++17"
+            }
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path = file("src/main/cpp/CMakeLists.txt")
+            version = "3.22.1"
         }
     }
     val androidUserHome = System.getenv("ANDROID_USER_HOME")

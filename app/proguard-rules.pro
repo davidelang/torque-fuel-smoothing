@@ -18,6 +18,11 @@
     <fields>;
 }
 
+# JNI: the class name and the native method names are the load strings. Release minify stays on.
+-keep class com.davidlang.torque.fuelsmoothing.KalmanNative {
+    native <methods>;
+}
+
 # JSON is hand-written with org.json/regex (no reflection, no Gson/Moshi): nothing else to keep.
 # Google Play Billing ships its own consumer ProGuard rules inside the AAR.
 

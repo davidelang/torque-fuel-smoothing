@@ -2,13 +2,9 @@ package com.davidlang.torque.fuelsmoothing
 
 import java.io.File
 import kotlin.math.abs
-import kotlin.math.exp
 import kotlin.math.floor
-import kotlin.math.ln
-import kotlin.math.ln1p
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.math.sign
 import kotlin.math.sqrt
 
 /**
@@ -20,7 +16,7 @@ import kotlin.math.sqrt
  * Raw L <= 0 maps to 0% (G(0) = 0) and never enters the map.
  */
 internal object Kalman {
-    const val VERSION = 4
+    const val VERSION = 5
     const val STATE = "kalman-state.txt"
     const val MODEL = "model-kalman.json"
     const val PUBLISH_SD = 1.5
@@ -53,9 +49,7 @@ internal object Kalman {
     private const val MINOFF = 0.5
     private const val K2 = 2.5
     private const val HOLD = 60.0
-    private const val LM_ITERS = 200
-    private const val COST_STOP = 1e-10
-    private val LN_033 = ln(0.33)
+    private const val INFO_N = NF * (NF + 1) / 2
     private val BAND_EDGES = doubleArrayOf(0.0, 5.0, 10.0, 20.0, 40.0, 60.0, 80.0, 90.0, 95.0, 101.0)
     private val BAND_SIG = doubleArrayOf(2.21, 2.17, 1.75, 1.89, 1.85, 2.00, 2.17, 2.19, 0.75)
     private const val SIG_MID = 1.85
@@ -63,8 +57,18 @@ internal object Kalman {
     private var slopeG: DoubleArray? = null
     private var slopeFlat: Double = Double.NaN
 
-    /** Last good free θ and per-segment hole/offset. Warm start only. */
-    class State(val q: DoubleArray, val segs: List<SegPar>)
+    /** Free θ, per-segment hole/offset, and the version-5 posterior (information, anchor, folded keys). */
+    class State(
+        val q: DoubleArray,
+        val segs: List<SegPar>,
+        val info: DoubleArray,
+        val anchorK: Double,
+        val anchorC0: Double,
+        val anchorC: Double,
+        val anchorEp: Int,
+        val tailMed: Double,
+        val got: List<String>,
+    )
 
     class SegPar(val key: String, val first: Boolean, val z: Double, val o: Double)
 
@@ -88,10 +92,21 @@ internal object Kalman {
 
     @Volatile var lastLoadError: String? = null
     private var fitName = ""
+    private var nativeLoaded = false
 
     private fun warn(msg: String) { runCatching { FsLog.w("FuelSmooth", msg) } }
 
     private fun ds(x: Double) = x.toString()
+
+    private fun loadNative() {
+        if (nativeLoaded) return
+        try {
+            System.loadLibrary("kalmanfit")
+        } catch (e: UnsatisfiedLinkError) {
+            throw IllegalStateException("kalmanfit load failed: ${e.message}")
+        }
+        nativeLoaded = true
+    }
 
     /**
      * Refit from stored captures. [jumpPct] is the fill-break threshold (10..100); a value outside that throws
@@ -99,7 +114,8 @@ internal object Kalman {
      */
     fun update(dir: File, sessions: List<FuelSession>, jumpPct: Double, openName: String? = null): State? {
         return try {
-            slopeG = loadModel(dir)?.g
+            val prevModel = loadModel(dir)
+            slopeG = prevModel?.g
             slopeFlat = if (slopeG == null) flatGpp(sessions) else Double.NaN
             quarantineState(dir)
             if (sessions.isEmpty()) return load(dir)
@@ -107,26 +123,71 @@ internal object Kalman {
                 throw IllegalArgumentException("jumpPct $jumpPct outside 10..100")
             }
             fitName = sessions.last().name
-            val assembled = assemble(sessions, openName, jumpPct)
-            if (assembled.skippedAll) return load(dir)
-            val built = assembled.built
+            loadNative()
+            val saved = load(dir)
+            val (parts, _) = Pieces.cut(sessions, openName)
+            if (parts.isEmpty()) return saved
+            var full = !incReady(saved)
+            if (!full) {
+                var seenNew = false
+                val got = saved!!.got.toHashSet()
+                for (p in parts) {
+                    if (p.key !in got) seenNew = true
+                    else if (seenNew) {
+                        full = true
+                        break
+                    }
+                }
+                if (!seenNew) return saved
+            }
+            val newKeys = if (full) parts.map { it.key } else parts.filter { it.key !in saved!!.got }.map { it.key }
+            // Block rows are only the parts not yet folded in. cut still names every part so a hole forces a full rebuild.
+            var assembled = assemble(parts, jumpPct, if (full) null else newKeys.toHashSet(), if (full) null else seedOf(saved!!))
+            var mode = if (full) 0 else 1
+            if (assembled.skippedAll) {
+                if (!full && saved != null) {
+                    save(dir, copyGot(saved, mergeGot(saved.got, newKeys)))
+                }
+                return load(dir)
+            }
+            var built = assembled.built
             if (built.segs.isEmpty()) throw IllegalStateException("no fit segments on $fitName")
-            val out = solve(dir, built)
+            var out = nativeSolve(mode, built, saved)
+            if (out.status == 1 && mode == 1) {
+                full = true
+                mode = 0
+                assembled = assemble(parts, jumpPct, null, null)
+                if (assembled.skippedAll) return load(dir)
+                built = assembled.built
+                if (built.segs.isEmpty()) throw IllegalStateException("no fit segments on $fitName")
+                out = nativeSolve(0, built, saved)
+            }
+            if (out.status == 1) throw IllegalStateException("singular covariance on $fitName")
+            if (out.status != 0) throw IllegalStateException("non-finite residual on $fitName")
+            val got = if (full) mergeGot(emptyList(), parts.map { it.key }) else mergeGot(saved!!.got, newKeys)
             val state = State(
                 out.q,
                 List(built.segs.size) { j -> SegPar(built.segs[j].key, built.first[j], out.z[j], out.o[j]) },
+                out.info,
+                out.kTail,
+                built.segs.last().C0,
+                built.cTail,
+                built.epTail,
+                assembled.tailMed,
+                got,
             )
             save(dir, state)
+            val complete = if (full) built.breaks >= 2 else prevModel?.complete == true || built.breaks >= 2
             val modelFile = File(dir, MODEL)
             if (!modelFile.isFile) {
                 val gal = out.g98.takeIf { it.isFinite() }?.let { java.lang.String.format(java.util.Locale.US, "%.1f", it) } ?: "none"
                 FsLog.i("FuelSmooth", "fit_own_size fit=kalman tank=${ProfileStore.tankNumber(dir)} gal=$gal")
             }
-            AtomicFile.write(modelFile, modelJson(out.g, out.g98, out.sd98, built.breaks >= 2, System.currentTimeMillis()))
+            AtomicFile.write(modelFile, modelJson(out.g, out.g98, out.sd98, complete, System.currentTimeMillis()))
             runCatching {
                 FsLog.i(
                     "FuelSmooth",
-                    "fit kalman g98=${"%.2f".format(out.g98)} sd98=${"%.2f".format(out.sd98)} complete=${built.breaks >= 2} " +
+                    "fit kalman g98=${"%.2f".format(out.g98)} sd98=${"%.2f".format(out.sd98)} complete=$complete " +
                         "breaks=${built.breaks} iter=${out.iters} ms=${out.ms} stop=${out.stop}",
                 )
             }
@@ -136,6 +197,25 @@ internal object Kalman {
             load(dir)
         }
     }
+
+    private fun incReady(st: State?): Boolean {
+        if (st == null || st.info.size != INFO_N || st.got.isEmpty()) return false
+        if (!st.anchorK.isFinite() || !st.anchorC0.isFinite() || !st.anchorC.isFinite() || !st.tailMed.isFinite()) return false
+        return KalmanNative.infoPd(st.info)
+    }
+
+    private fun seedOf(st: State) = Seed(st.anchorC, st.anchorEp, st.tailMed)
+
+    private fun mergeGot(old: List<String>, extra: List<String>): List<String> {
+        val out = ArrayList<String>(old.size + extra.size)
+        val seen = HashSet<String>()
+        for (k in old) if (seen.add(k)) out.add(k)
+        for (k in extra) if (seen.add(k)) out.add(k)
+        return out
+    }
+
+    private fun copyGot(st: State, got: List<String>) =
+        State(st.q, st.segs, st.info, st.anchorK, st.anchorC0, st.anchorC, st.anchorEp, st.tailMed, got)
 
     /**
      * Rename a state file that [load] cannot read. Version ≠ [VERSION] → `.v2`; any other failure → `.corrupt`.
@@ -202,17 +282,51 @@ internal object Kalman {
         }
     }
 
+    private fun wordDoubles(body: String): DoubleArray {
+        val t = body.trim()
+        if (t.isEmpty()) return DoubleArray(0)
+        return t.split(Regex("\\s+")).map { it.toDouble() }.toDoubleArray()
+    }
+
     private fun parse(f: File): State {
         val lines = f.readLines().filter { it.isNotBlank() }
         check(lines.isNotEmpty()) { "empty state" }
         val ver = lines[0].removePrefix("version ").trim().toIntOrNull()
         check(lines[0].startsWith("version ") && ver == VERSION) { "state version $ver, expected $VERSION" }
         val qLine = lines.firstOrNull { it.startsWith("q ") } ?: throw IllegalStateException("missing q")
-        val q = qLine.substring(2).trim().split(Regex("\\s+")).map { it.toDouble() }.toDoubleArray()
+        val q = wordDoubles(qLine.substring(2))
         check(q.size == NF) { "q has ${q.size}" }
         check(q.all { it.isFinite() }) { "non-finite q" }
+        val infoLine = lines.firstOrNull { it.startsWith("info ") }
+        val info = if (infoLine == null) DoubleArray(0) else wordDoubles(infoLine.substring(5))
+        if (info.isNotEmpty()) {
+            check(info.size == INFO_N) { "info has ${info.size}" }
+            check(info.all { it.isFinite() }) { "non-finite info" }
+        }
+        var anchorK = Double.NaN
+        var anchorC0 = Double.NaN
+        var anchorC = Double.NaN
+        var anchorEp = 0
+        var tailMed = Double.NaN
+        val anchorLine = lines.firstOrNull { it.startsWith("anchor ") }
+        if (anchorLine != null) {
+            val p = anchorLine.removePrefix("anchor ").trim().split(Regex("\\s+"))
+            check(p.size == 5) { "bad anchor line" }
+            anchorK = p[0].toDouble()
+            anchorC0 = p[1].toDouble()
+            anchorC = p[2].toDouble()
+            anchorEp = p[3].toInt()
+            tailMed = p[4].toDouble()
+        }
+        val got = ArrayList<String>()
         val segs = ArrayList<SegPar>()
         for (l in lines) {
+            if (l.startsWith("got ")) {
+                val key = l.removePrefix("got ").trim()
+                check(key.isNotEmpty()) { "empty got" }
+                got.add(key)
+                continue
+            }
             if (!l.startsWith("seg ")) continue
             val p = l.trim().split(Regex("\\s+"))
             check(p.size == 5) { "bad seg line" }
@@ -221,13 +335,16 @@ internal object Kalman {
             check(z.isFinite() && o.isFinite()) { "non-finite seg" }
             segs.add(SegPar(p[1], p[2] == "1", z, o))
         }
-        return State(q, segs)
+        return State(q, segs, info, anchorK, anchorC0, anchorC, anchorEp, tailMed, got)
     }
 
     private fun save(dir: File, s: State) {
         val sb = StringBuilder()
         sb.append("version $VERSION\n")
         sb.append("q ").append(s.q.joinToString(" ") { ds(it) }).append('\n')
+        sb.append("info ").append(s.info.joinToString(" ") { ds(it) }).append('\n')
+        sb.append("anchor ${ds(s.anchorK)} ${ds(s.anchorC0)} ${ds(s.anchorC)} ${s.anchorEp} ${ds(s.tailMed)}\n")
+        for (key in s.got) sb.append("got ").append(key).append('\n')
         for (seg in s.segs) sb.append("seg ${seg.key} ${if (seg.first) 1 else 0} ${ds(seg.z)} ${ds(seg.o)}\n")
         val tmp = File(dir, "$STATE.tmp")
         tmp.writeText(sb.toString())
@@ -325,13 +442,14 @@ internal object Kalman {
         val fuel: Double, var fill: Boolean, val blocks: MutableList<Blk>,
     )
     private class Seg(val key: String, val L: DoubleArray, val F: DoubleArray, val se: DoubleArray, val C0: Double, val ep: Int)
-    private class Built(val segs: List<Seg>, val first: BooleanArray, val breaks: Int)
-    private class Assembled(val built: Built, val skippedAll: Boolean)
+    private class Built(val segs: List<Seg>, val first: BooleanArray, val breaks: Int, val cTail: Double, val epTail: Int)
+    private class Assembled(val built: Built, val skippedAll: Boolean, val tailMed: Double)
+    private class Seed(val cTail: Double, val epTail: Int, val tailMed: Double)
 
-    private fun assemble(sessions: List<FuelSession>, openName: String?, jumpPct: Double): Assembled {
-        val (parts, _) = Pieces.cut(sessions, openName)
+    private fun assemble(parts: List<Pieces.Part>, jumpPct: Double, only: Set<String>?, seed: Seed?): Assembled {
         val byDrive = ArrayList<ArrayList<Pieces.Part>>()
         for (p in parts) {
+            if (only != null && p.key !in only) continue
             val name = p.session?.name ?: p.key.substringBefore('#')
             val prev = byDrive.lastOrNull()?.firstOrNull()?.let { it.session?.name ?: it.key.substringBefore('#') }
             if (prev != name) byDrive.add(ArrayList())
@@ -340,6 +458,8 @@ internal object Kalman {
         val drives = ArrayList<ArrayList<Prt>>()
         var prevRise: DoubleArray? = null
         var skipped = 0
+        var firstDrive = true
+        var lastLevels: DoubleArray? = null
         for (group in byDrive) {
             val s = group.first().session ?: throw IllegalStateException("raw file missing for drive ${group.first().key.substringBefore('#')}")
             val name = s.name
@@ -369,8 +489,14 @@ internal object Kalman {
             val flags = if (t.size >= 20) detectFlags(t, f, l, v) else BooleanArray(t.size)
             val prts = ArrayList<Prt>()
             for (part in group) prts.add(Prt(part.key, name, part.t0, part.t1, part.fStart, part.fuel, false, blocksOf(part, t, f, l, v, flags)))
-            placeBreaks(prts, rows, rL.toDoubleArray(), rV.toDoubleArray(), rT.toDoubleArray(), prevRise, jumpPct)
-            if (rL.isNotEmpty()) prevRise = rL.toDoubleArray()
+            val prevMed = if (firstDrive) seed?.tailMed else null
+            val levels = rL.toDoubleArray()
+            placeBreaks(prts, rows, levels, rV.toDoubleArray(), rT.toDoubleArray(), if (prevMed != null) null else prevRise, jumpPct, prevMed)
+            if (rL.isNotEmpty()) {
+                prevRise = levels
+                lastLevels = levels
+            }
+            firstDrive = false
             drives.add(prts)
         }
         val flat = ArrayList<Prt>()
@@ -378,7 +504,13 @@ internal object Kalman {
         refill(flat, jumpPct)
         collapse(flat)
         val skippedAll = byDrive.isNotEmpty() && skipped == byDrive.size
-        return Assembled(segments(drives), skippedAll)
+        return Assembled(segments(drives, seed), skippedAll, tailMedian(lastLevels))
+    }
+
+    private fun tailMedian(levels: DoubleArray?): Double {
+        if (levels == null || levels.isEmpty()) return Double.NaN
+        val n = min(60, levels.size)
+        return medOf(levels.copyOfRange(levels.size - n, levels.size))
     }
 
     /** Rows already on the session. [FuelSession.t] is seconds; the raw file is not opened. */
@@ -444,6 +576,7 @@ internal object Kalman {
 
     private fun placeBreaks(
         parts: List<Prt>, rows: List<Row>, l: DoubleArray, v: DoubleArray, t: DoubleArray, prev: DoubleArray?, jump: Double,
+        prevMed: Double? = null,
     ) {
         for (r in rows) if (r.fill) place(parts, r.t)
         val n = l.size
@@ -461,6 +594,10 @@ internal object Kalman {
             val b = min(60, prev.size)
             val btw = medOf(l.copyOfRange(0, a)) - medOf(prev.copyOfRange(prev.size - b, prev.size))
             if (btw >= jump && parts.isNotEmpty()) parts[0].fill = true
+        } else if (prevMed != null && prevMed.isFinite() && n > 0 && parts.isNotEmpty()) {
+            val a = min(60, n)
+            val btw = medOf(l.copyOfRange(0, a)) - prevMed
+            if (btw >= jump) parts[0].fill = true
         }
     }
 
@@ -494,12 +631,12 @@ internal object Kalman {
         }
     }
 
-    private fun segments(drives: List<List<Prt>>): Built {
+    private fun segments(drives: List<List<Prt>>, seed: Seed?): Built {
         val all = ArrayList<Seg>()
         var breaks = 0
-        var c = 0.0
-        var ep = -1
-        var started = false
+        var c = seed?.cTail ?: 0.0
+        var ep = seed?.epTail ?: -1
+        var started = seed != null
         for (d in drives) {
             var curL = ArrayList<Double>()
             var curF = ArrayList<Double>()
@@ -529,8 +666,11 @@ internal object Kalman {
             c += off
         }
         val kept = all.filter { it.L.size >= 2 }
-        val first = BooleanArray(kept.size) { i -> i == 0 || kept[i].ep != kept[i - 1].ep }
-        return Built(kept, first, breaks)
+        val first = BooleanArray(kept.size) { i ->
+            if (i == 0) seed == null || kept[0].ep != seed.epTail else kept[i].ep != kept[i - 1].ep
+        }
+        val epTail = if (kept.isEmpty()) ep else kept.last().ep
+        return Built(kept, first, breaks, c, epTail)
     }
 
     private fun bandSig(level: Double): Double {
@@ -708,375 +848,88 @@ internal object Kalman {
         return (n * sxy - sx * sy) / den
     }
 
-    // ---------------- map fit ----------------
 
-    private class Prob(
-        val L: DoubleArray, val F: DoubleArray, val sd: DoubleArray, val seg: IntArray,
-        val C0: DoubleArray, val first: BooleanArray, val ns: Int,
-    ) {
-        val n = L.size
-    }
-
-    private class Solved(
-        val q: DoubleArray, val z: DoubleArray, val o: DoubleArray,
-        val g: DoubleArray, val g98: Double, val sd98: Double, val iters: Int, val ms: Long, val stop: String,
+    private class NativeOut(
+        val status: Int,
+        val q: DoubleArray,
+        val z: DoubleArray,
+        val o: DoubleArray,
+        val g: DoubleArray,
+        val info: DoubleArray,
+        val g98: Double,
+        val sd98: Double,
+        val kTail: Double,
+        val iters: Int,
+        val stop: String,
+        val ms: Long,
     )
 
-    private fun solve(dir: File, built: Built): Solved {
+    /** mode 0 full, 1 incremental. status 0 ok, 1 singular Schur, 2 non-finite. */
+    private fun nativeSolve(mode: Int, built: Built, saved: State?): NativeOut {
         val segs = built.segs
         val ns = segs.size
         var n = 0
         for (s in segs) n += s.L.size
-        val L = DoubleArray(n); val F = DoubleArray(n); val sd = DoubleArray(n); val segI = IntArray(n)
+        val L = DoubleArray(n)
+        val F = DoubleArray(n)
+        val sd = DoubleArray(n)
+        val segI = IntArray(n)
         var i = 0
         for (j in segs.indices) {
             val w = sqrt(max(1.0, segs[j].L.size / N0))
             for (k in segs[j].L.indices) {
                 val se = segs[j].se[k]
                 if (!se.isFinite() || se < 0.0) throw IllegalStateException("non-finite block se on $fitName")
-                L[i] = segs[j].L[k]; F[i] = segs[j].F[k]; sd[i] = se * sqrt(2.5) * w; segI[i] = j
+                L[i] = segs[j].L[k]
+                F[i] = segs[j].F[k]
+                sd[i] = se * sqrt(2.5) * w
+                segI[i] = j
                 if (!(sd[i] > 0.0) || !L[i].isFinite() || !F[i].isFinite()) throw IllegalStateException("zero block sd on $fitName")
                 i++
             }
         }
-        val prob = Prob(L, F, sd, segI, DoubleArray(ns) { segs[it].C0 }, built.first, ns)
+        val first = IntArray(ns) { if (built.first[it]) 1 else 0 }
+        val c0 = DoubleArray(ns) { segs[it].C0 }
+        val matched = IntArray(ns)
+        val zS = DoubleArray(ns)
+        val oS = DoubleArray(ns)
+        if (mode == 0 && saved != null) {
+            val old = HashMap<String, SegPar>()
+            for (s in saved.segs) old[s.key] = s
+            for (j in segs.indices) {
+                val m = old[segs[j].key]
+                if (m != null && m.first == built.first[j]) {
+                    matched[j] = 1
+                    zS[j] = m.z
+                    oS[j] = m.o
+                }
+            }
+        }
+        val qOut = DoubleArray(NF)
+        val zOut = DoubleArray(ns)
+        val oOut = DoubleArray(ns)
+        val gOut = DoubleArray(NB)
+        val infoOut = DoubleArray(INFO_N)
+        val stats = DoubleArray(5)
         val t0 = System.currentTimeMillis()
-        val warm = warmStart(dir, prob, segs)
-        var iters = 0
-        var stop = "grad"
-        val p = try {
-            if (warm != null) {
-                val (x, it, st) = lm(prob, warm, false, "lvfit6-warm", true)
-                iters = it; stop = st; x
-            } else {
-                val (x, it, st) = lm(prob, coldStart(prob), false, "lvfit6", false)
-                iters = it; stop = st; x
-            }
-        } catch (e: Exception) {
-            if (warm == null || !coldRetry(e)) throw e
-            warn("kalman warm start failed; retrying cold: ${e.message}")
-            val (x, it, st) = lm(prob, coldStart(prob), false, "lvfit6-cold", false)
-            iters = it; stop = st; x
-        }
-        val q = p.copyOfRange(0, NF)
-        val z = p.copyOfRange(NF, NF + ns)
-        val o = p.copyOfRange(NF + ns, p.size)
-        if (!p.all { it.isFinite() }) throw IllegalStateException("non-finite fit on $fitName")
-        val g = DoubleArray(NB) { exp(full(q)[it]) }
-        val g98 = gallons(g, 98.0)
-        val sd98 = sd98(prob, p)
-        if (!g98.isFinite() || !sd98.isFinite()) throw IllegalStateException("non-finite G(98) on $fitName")
-        return Solved(q, z, o, g, g98, sd98, iters, System.currentTimeMillis() - t0, stop)
-    }
-
-    /**
-     * Starts from the saved map even when segments were added or removed. Segments whose key and fill
-     * flag match keep their saved z and o; any other segment gets the z the cold start would give it,
-     * computed from the saved map, and o = 0.
-     */
-    private fun warmStart(dir: File, prob: Prob, segs: List<Seg>): DoubleArray? {
-        val st = load(dir) ?: return null
-        if (st.q.size != NF) return null
-        val old = HashMap<String, Int>()
-        for (j in st.segs.indices) old[st.segs[j].key] = j
-        val gKnot = gk(full(st.q))
-        val k = DoubleArray(prob.ns)
-        val cnt = IntArray(prob.ns)
-        for (i in 0 until prob.n) {
-            val j = prob.seg[i]
-            k[j] += interpE(prob.L[i], gKnot) + prob.F[i]
-            cnt[j]++
-        }
-        for (j in 0 until prob.ns) k[j] /= cnt[j]
-        val p = DoubleArray(NF + 2 * prob.ns)
-        for (i in 0 until NF) p[i] = st.q[i]
-        for (j in segs.indices) {
-            val m = old[segs[j].key]?.let { st.segs[it] }
-            if (m != null && m.first == prob.first[j]) {
-                p[NF + j] = m.z; p[NF + prob.ns + j] = m.o
-            } else {
-                p[NF + j] = if (prob.first[j]) k[j] else k[j - 1] - (prob.C0[j] - prob.C0[j - 1]) - k[j]
+        val status = KalmanNative.fit(
+            mode, L, F, sd, segI, c0, first,
+            if (saved != null) 1 else 0,
+            if (saved != null) saved.q else DoubleArray(0),
+            if (mode == 1 && saved != null) saved.info else DoubleArray(0),
+            if (mode == 1 && saved != null) saved.anchorK else 0.0,
+            if (mode == 1 && saved != null) saved.anchorC0 else 0.0,
+            matched, zS, oS, qOut, zOut, oOut, gOut, infoOut, stats,
+        )
+        val ms = System.currentTimeMillis() - t0
+        val stops = arrayOf("grad", "step", "g98", "iters", "stall")
+        val stop = if (status == 0) stops[stats[4].toInt().coerceIn(0, stops.lastIndex)] else ""
+        if (status == 0) {
+            val kind = if (mode == 0) "full" else "inc"
+            runCatching {
+                FsLog.i("FuelSmooth", "fit kalman $kind iter=${stats[3].toInt()} ms=$ms stop=$stop")
             }
         }
-        return p
-    }
-
-    private fun coldStart(prob: Prob): DoubleArray {
-        val p4 = lm(prob, lv4Start(prob), true, "lvfit4", false).first
-        val k4 = p4.copyOfRange(NF, NF + prob.ns)
-        val p = DoubleArray(NF + 2 * prob.ns)
-        for (i in 0 until NF) p[i] = p4[i]
-        for (j in 0 until prob.ns) {
-            p[NF + j] = if (prob.first[j]) k4[j] else k4[j - 1] - (prob.C0[j] - prob.C0[j - 1]) - k4[j]
-        }
-        return p
-    }
-
-    private fun lv4Start(prob: Prob): DoubleArray {
-        val th = DoubleArray(NB) { LN_033 }
-        val gKnot = gk(th)
-        val k = DoubleArray(prob.ns)
-        val cnt = IntArray(prob.ns)
-        for (i in 0 until prob.n) {
-            val j = prob.seg[i]
-            k[j] += interpE(prob.L[i], gKnot) + prob.F[i]
-            cnt[j]++
-        }
-        for (j in 0 until prob.ns) k[j] /= cnt[j]
-        val p = DoubleArray(NF + prob.ns)
-        for (i in 0 until NF) p[i] = LN_033
-        for (j in 0 until prob.ns) p[NF + j] = k[j]
-        return p
-    }
-
-    /**
-     * Bins 0–10% (NX bins) continue the least-squares line, in bin index, through the first NT free
-     * densities (10–25%). Floored at TAIL_FLOOR.
-     */
-    private fun full(q: DoubleArray): DoubleArray {
-        var xm = 0.0
-        var ym = 0.0
-        for (j in 0 until NT) { xm += (NX + j).toDouble(); ym += exp(q[j]) }
-        xm /= NT; ym /= NT
-        var sxy = 0.0
-        var sxx = 0.0
-        for (j in 0 until NT) {
-            val dx = (NX + j) - xm
-            sxy += dx * (exp(q[j]) - ym); sxx += dx * dx
-        }
-        val a = sxy / sxx
-        val b = ym - a * xm
-        val th = DoubleArray(NB)
-        for (i in 0 until NX) th[i] = ln(max(a * i + b, TAIL_FLOOR))
-        for (i in 0 until NF) th[i + NX] = q[i]
-        return th
-    }
-
-    private fun gk(th: DoubleArray): DoubleArray {
-        val g = DoubleArray(NB + 1)
-        var c = 0.0
-        for (i in 0 until NB) { c += exp(th[i]) * BW; g[i + 1] = c }
-        return g
-    }
-
-    private fun interpE(x: Double, fp: DoubleArray): Double {
-        if (x <= 0.0) return fp[0]
-        if (x >= 100.0) return fp[NB]
-        val i = floor(x / BW).toInt().coerceIn(0, NB - 1)
-        val frac = (x - BW * i) / BW
-        return fp[i] * (1.0 - frac) + fp[i + 1] * frac
-    }
-
-    private fun linv(v: Double, gKnot: DoubleArray, dens: DoubleArray): Double {
-        if (v < 0.0) return v / dens[0]
-        if (v > gKnot[NB]) return 100.0 + (v - gKnot[NB]) / dens[NB - 1]
-        var i = 0
-        while (i < NB && gKnot[i + 1] < v) i++
-        val span = gKnot[i + 1] - gKnot[i]
-        val frac = if (span == 0.0) 0.0 else (v - gKnot[i]) / span
-        return BW * i + frac * BW
-    }
-
-    private fun kvec(prob: Prob, z: DoubleArray): DoubleArray {
-        val k = DoubleArray(prob.ns)
-        for (j in 0 until prob.ns) {
-            k[j] = if (prob.first[j]) z[j] else k[j - 1] - (prob.C0[j] - prob.C0[j - 1]) - z[j]
-        }
-        return k
-    }
-
-    private fun tres(h: Double): Double {
-        val scale = if (h >= H_MU) H_SP else H_SN
-        val z = (h - H_MU) / scale
-        return sign(z) * sqrt((H_NU + 1.0) * ln1p(z * z / H_NU))
-    }
-
-    private fun residual(prob: Prob, p: DoubleArray, lv4: Boolean): DoubleArray {
-        val q = p.copyOfRange(0, NF)
-        val th = full(q)
-        val dens = DoubleArray(NB) { exp(th[it]) }
-        val gKnot = gk(th)
-        val k = if (lv4) p.copyOfRange(NF, NF + prob.ns) else kvec(prob, p.copyOfRange(NF, NF + prob.ns))
-        val o = if (lv4) null else p.copyOfRange(NF + prob.ns, p.size)
-        val r = ArrayList<Double>(prob.n + NF + (NB - 2) + prob.ns + prob.ns)
-        for (i in 0 until prob.n) {
-            val j = prob.seg[i]
-            var pr = max(linv(k[j] - prob.F[i], gKnot, dens), 0.0)
-            if (o != null) pr += o[j]
-            val lv = prob.L[i]
-            val ri = when {
-                lv <= ALLCLIP -> (if (lv4) pr else max(pr, 0.0)) / prob.sd[i]
-                lv >= HI -> if (pr < HI) (HI - pr) / prob.sd[i] else 0.0
-                else -> (lv - pr) / prob.sd[i]
-            }
-            r.add(ri)
-        }
-        for (j in 0 until NF) r.add((q[j] - LN_033) / S_TH)
-        for (j in 0 until NB - 2) r.add((th[j + 2] - 2.0 * th[j + 1] + th[j]) / S_D2)
-        if (o != null) {
-            for (j in 0 until prob.ns) r.add(o[j] / S_O)
-            for (j in 0 until prob.ns) if (!prob.first[j]) r.add(tres(p[NF + j]))
-        }
-        return r.toDoubleArray()
-    }
-
-    /** A warm stall may return. Every other stall still throws. */
-    private fun coldRetry(e: Exception): Boolean {
-        val m = e.message ?: return false
-        return m.startsWith("non-finite residual") || m.startsWith("non-finite cost")
-    }
-
-    private fun lm(prob: Prob, p0: DoubleArray, lv4: Boolean, label: String, acceptStall: Boolean): Triple<DoubleArray, Int, String> {
-        val t0 = System.currentTimeMillis()
-        var iters = 0
-        try {
-            var p = p0.copyOf()
-            var r = residual(prob, p, lv4)
-            if (r.any { !it.isFinite() }) throw IllegalStateException("non-finite residual on $fitName")
-            var cost = sumsq(r)
-            if (!cost.isFinite()) throw IllegalStateException("non-finite cost on $fitName")
-            var lambda = 1e-3
-            var done = false
-            var stop = "grad"
-            while (iters < LM_ITERS && !done) {
-                iters++
-                val J = jacobian(prob, p, r, lv4)
-                val scale = DoubleArray(p.size) { j ->
-                    var s = 0.0
-                    for (i in r.indices) s += J[i][j] * J[i][j]
-                    sqrt(s).coerceAtLeast(1e-8)
-                }
-                val n = p.size
-                val jtj = Array(n) { DoubleArray(n) }
-                val jtr = DoubleArray(n)
-                for (i in r.indices) {
-                    for (a in 0 until n) {
-                        jtr[a] += J[i][a] * r[i]
-                        for (b in a until n) jtj[a][b] += J[i][a] * J[i][b]
-                    }
-                }
-                for (a in 0 until n) for (b in 0 until a) jtj[a][b] = jtj[b][a]
-                var gnorm = 0.0
-                for (c in 0 until n) gnorm = max(gnorm, abs(jtr[c]) / scale[c])
-                if (gnorm < 1e-6) { done = true; stop = "grad"; break }
-                val oldCost = cost
-                var step = Double.POSITIVE_INFINITY
-                var improved = false
-                for (inner in 0 until 12) {
-                    val a = Array(n) { jtj[it].copyOf() }
-                    for (c in 0 until n) a[c][c] += lambda * scale[c] * scale[c]
-                    val delta = solveLin(a, DoubleArray(n) { -jtr[it] })
-                    val p2 = DoubleArray(n) { p[it] + delta[it] }
-                    val r2 = residual(prob, p2, lv4)
-                    if (r2.any { !it.isFinite() }) throw IllegalStateException("non-finite residual on $fitName")
-                    val cost2 = sumsq(r2)
-                    if (!cost2.isFinite()) throw IllegalStateException("non-finite cost on $fitName")
-                    step = 0.0
-                    for (c in 0 until n) step = max(step, abs(delta[c]) / max(1.0, abs(p[c])))
-                    if (cost2 < cost) {
-                        p = p2; r = r2; cost = cost2
-                        lambda = max(lambda / 3.0, 1e-12)
-                        improved = true
-                        break
-                    } else lambda = min(lambda * 8.0, 1e12)
-                }
-                if (improved && step < 1e-8) { done = true; stop = "step"; break }
-                if (improved && (oldCost - cost) / oldCost < COST_STOP) { done = true; stop = "cost"; break }
-                if (!improved && lambda >= 1e12) {
-                    if (acceptStall) { done = true; stop = "stall"; break }
-                    throw IllegalStateException("fit did not converge on $fitName")
-                }
-            }
-            if (!done) throw IllegalStateException("LM_ITERS on $fitName")
-            runCatching { FsLog.i("FuelSmooth", "fit kalman $label iter=$iters ms=${System.currentTimeMillis() - t0}") }
-            return Triple(p, iters, stop)
-        } catch (e: Exception) {
-            runCatching { FsLog.w("FuelSmooth", "fit kalman $label failed iter=$iters ms=${System.currentTimeMillis() - t0}: ${e.message}") }
-            throw e
-        }
-    }
-
-    private fun jacobian(prob: Prob, p: DoubleArray, r0: DoubleArray, lv4: Boolean): Array<DoubleArray> {
-        val m = r0.size
-        val J = Array(m) { DoubleArray(p.size) }
-        val pc = p.copyOf()
-        for (j in p.indices) {
-            val h = 1e-6 * max(1.0, abs(p[j]))
-            pc[j] = p[j] + h
-            val rp = residual(prob, pc, lv4)
-            pc[j] = p[j] - h
-            val rm = residual(prob, pc, lv4)
-            pc[j] = p[j]
-            for (i in 0 until m) J[i][j] = (rp[i] - rm[i]) / (2.0 * h)
-        }
-        return J
-    }
-
-    private fun sd98(prob: Prob, p: DoubleArray): Double {
-        val J = jacobian(prob, p, residual(prob, p, false), false)
-        val n = p.size
-        val jtj = Array(n) { DoubleArray(n) }
-        for (i in J.indices) for (a in 0 until n) for (b in a until n) jtj[a][b] += J[i][a] * J[i][b]
-        for (a in 0 until n) for (b in 0 until a) jtj[a][b] = jtj[b][a]
-        val cov = invert(jtj)
-        val base = g98Of(p)
-        val gr = DoubleArray(n)
-        val eps = 1e-4
-        for (j in 0 until NF) {
-            val q = p.copyOf()
-            q[j] += eps
-            gr[j] = (g98Of(q) - base) / eps
-        }
-        var v = 0.0
-        for (a in 0 until n) for (b in 0 until n) v += gr[a] * cov[a][b] * gr[b]
-        if (v < 0.0 && v > -1e-8) v = 0.0
-        if (v < 0.0) throw IllegalStateException("singular covariance on $fitName")
-        return sqrt(v)
-    }
-
-    private fun g98Of(p: DoubleArray) = gallons(DoubleArray(NB) { exp(full(p.copyOfRange(0, NF))[it]) }, 98.0)
-
-    private fun sumsq(r: DoubleArray): Double {
-        var s = 0.0
-        for (v in r) s += v * v
-        return s
-    }
-
-    private fun solveLin(a0: Array<DoubleArray>, b0: DoubleArray): DoubleArray {
-        val n = b0.size
-        val m = Array(n) { a0[it].copyOf() }
-        val b = b0.copyOf()
-        var scale = 0.0
-        for (r in 0 until n) for (c in 0 until n) scale = max(scale, abs(m[r][c]))
-        for (c in 0 until n) {
-            var piv = c
-            for (r in c + 1 until n) if (abs(m[r][c]) > abs(m[piv][c])) piv = r
-            if (abs(m[piv][c]) <= 1e-14 * max(1.0, scale)) throw IllegalStateException("singular covariance on $fitName")
-            val row = m[c]; m[c] = m[piv]; m[piv] = row
-            val tb = b[c]; b[c] = b[piv]; b[piv] = tb
-            val d = m[c][c]
-            for (k in c until n) m[c][k] /= d
-            b[c] /= d
-            for (r in 0 until n) {
-                if (r == c) continue
-                val f = m[r][c]
-                if (f == 0.0) continue
-                for (k in c until n) m[r][k] -= f * m[c][k]
-                b[r] -= f * b[c]
-            }
-        }
-        return b
-    }
-
-    private fun invert(a0: Array<DoubleArray>): Array<DoubleArray> {
-        val n = a0.size
-        val inv = Array(n) { DoubleArray(n) }
-        for (c in 0 until n) {
-            val e = DoubleArray(n)
-            e[c] = 1.0
-            val col = solveLin(a0, e)
-            for (r in 0 until n) inv[r][c] = col[r]
-        }
-        return inv
+        return NativeOut(status, qOut, zOut, oOut, gOut, infoOut, stats[0], stats[1], stats[2], stats[3].toInt(), stop, ms)
     }
 }

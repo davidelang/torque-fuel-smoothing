@@ -335,3 +335,6 @@
 ## 2026-10-31 - Accept a warm Kalman stall, translate the setup screen, and drop the dead fuel fields.
 
 ## 2026-10-31 - Add the 19 locales missing from the language list.
+
+## 2026-11-03 - Native Kalman fit
+Fit the Kalman map in native code, full rebuild or from the latest parts.
