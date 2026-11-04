@@ -2,6 +2,8 @@ import javax.inject.Inject
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.PathSensitive
@@ -216,6 +218,9 @@ abstract class GenerateI18nStrings : DefaultTask() {
     @get:PathSensitive(PathSensitivity.RELATIVE)
     abstract val watched: ConfigurableFileCollection
 
+    @get:Input
+    abstract val emitAppName: Property<Boolean>
+
     @get:OutputDirectory
     abstract val resDir: DirectoryProperty
 
@@ -236,6 +241,7 @@ abstract class GenerateI18nStrings : DefaultTask() {
             environment("PYTHONDONTWRITEBYTECODE", "1")
             environment("I18N_RES_DIR", resDir.get().asFile.absolutePath)
             environment("I18N_KT_FILE", ktFile.absolutePath)
+            environment("I18N_EMIT_APP_NAME", if (emitAppName.get()) "1" else "0")
         }
     }
 }
@@ -245,6 +251,7 @@ val generateI18nStrings = tasks.register<GenerateI18nStrings>("generateI18nStrin
     watched.from(layout.projectDirectory.dir("src/main/kotlin"))
     watched.from(rootProject.layout.projectDirectory.file("scripts/i18n_generate_resources.py"))
     watched.from(rootProject.layout.projectDirectory.file("scripts/i18n_catalog.py"))
+    emitAppName.set(officialChosen)
     resDir.set(layout.buildDirectory.dir("generated/i18n/res"))
     kotlinDir.set(layout.buildDirectory.dir("generated/i18n/kotlin"))
 }

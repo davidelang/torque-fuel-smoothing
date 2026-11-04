@@ -51,6 +51,11 @@ def _choose(sentence: str, entry: dict | None, overrides: list[tuple[str, str]])
     return entry["text"], False
 
 
+def _emit_app_name() -> bool:
+    # Non-official builds supply app_name with resValue. A second copy in this file is merged later and hides that name.
+    return os.environ.get("I18N_EMIT_APP_NAME", "1") != "0"
+
+
 def _res_root() -> Path:
     raw = os.environ.get("I18N_RES_DIR")
     return Path(raw) if raw else GEN_RES
@@ -109,6 +114,8 @@ def main() -> None:
     fallback: set[str] = set()
     default_rows = []
     for sentence in order:
+        if sentence == APP_NAME and not _emit_app_name():
+            continue
         default_rows.append((names[sentence], sentence, formats_cleanly(sentence)))
     _write_xml(_res_dir("values") / "strings.xml", default_rows)
     for pref in sorted(by_pref):
