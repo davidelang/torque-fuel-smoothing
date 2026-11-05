@@ -1004,9 +1004,16 @@ class PluginService : Service() {
         return out
     }
 
-    /** Rename a stale model, then a stale state file. A move that throws still counts as found. */
+    /** Native library, then a stale state file, then a stale model. A load failure moves neither. */
     private fun asideStaleKalman(profile: String, tank: Int, dir: File): Boolean {
         var stale = false
+        try {
+            if (Kalman.quarantineState(dir)) stale = true
+        } catch (e: Exception) {
+            stale = true
+            FsLog.w(TAG, "kalman state move failed profile=$profile tank=$tank: ${e.javaClass.simpleName}: ${e.message}")
+            return stale
+        }
         val model = Kalman.staleModel(dir)
         if (model != null) {
             stale = true
@@ -1016,12 +1023,6 @@ class PluginService : Service() {
             } catch (e: Exception) {
                 FsLog.w(TAG, "kalman model move failed profile=$profile tank=$tank: ${e.javaClass.simpleName}: ${e.message}")
             }
-        }
-        try {
-            if (Kalman.quarantineState(dir)) stale = true
-        } catch (e: Exception) {
-            stale = true
-            FsLog.w(TAG, "kalman state move failed profile=$profile tank=$tank: ${e.javaClass.simpleName}: ${e.message}")
         }
         return stale
     }

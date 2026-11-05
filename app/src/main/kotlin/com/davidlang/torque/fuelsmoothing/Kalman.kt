@@ -118,54 +118,25 @@ internal object Kalman {
             val prevModel = loadModel(dir)
             slopeG = prevModel?.g
             slopeFlat = if (slopeG == null) flatGpp(sessions) else Double.NaN
+            loadNative()
             quarantineState(dir)
             if (sessions.isEmpty()) return load(dir)
             if (!jumpPct.isFinite() || jumpPct < 10.0 || jumpPct > 100.0) {
                 throw IllegalArgumentException("jumpPct $jumpPct outside 10..100")
             }
             fitName = sessions.last().name
-            loadNative()
             val saved = load(dir)
             val (parts, _) = Pieces.cut(sessions, openName)
             if (parts.isEmpty()) return saved
-            var full = !incReady(saved)
-            if (!full) {
-                var seenNew = false
-                val got = saved!!.got.toHashSet()
-                for (p in parts) {
-                    if (p.key !in got) seenNew = true
-                    else if (seenNew) {
-                        full = true
-                        break
-                    }
-                }
-                if (!seenNew) return saved
-            }
-            val newKeys = if (full) parts.map { it.key } else parts.filter { it.key !in saved!!.got }.map { it.key }
-            // Block rows are only the parts not yet folded in. cut still names every part so a hole forces a full rebuild.
-            var assembled = assemble(parts, jumpPct, if (full) null else newKeys.toHashSet(), if (full) null else seedOf(saved!!))
-            var mode = if (full) 0 else 1
-            if (assembled.skippedAll) {
-                if (!full && saved != null) {
-                    save(dir, copyGot(saved, mergeGot(saved.got, newKeys)))
-                }
-                return load(dir)
-            }
-            var built = assembled.built
+            val assembled = assemble(parts, jumpPct, null, null)
+            if (assembled.skippedAll) return saved
+            val built = assembled.built
             if (built.segs.isEmpty()) throw IllegalStateException("no fit segments on $fitName")
-            var out = nativeSolve(mode, built, saved)
-            if (out.status == 1 && mode == 1) {
-                full = true
-                mode = 0
-                assembled = assemble(parts, jumpPct, null, null)
-                if (assembled.skippedAll) return load(dir)
-                built = assembled.built
-                if (built.segs.isEmpty()) throw IllegalStateException("no fit segments on $fitName")
-                out = nativeSolve(0, built, saved)
-            }
+            val out = nativeSolve(0, built, saved)
             if (out.status == 1) throw IllegalStateException("singular covariance on $fitName")
             if (out.status != 0) throw IllegalStateException("non-finite residual on $fitName")
-            val got = if (full) mergeGot(emptyList(), parts.map { it.key }) else mergeGot(saved!!.got, newKeys)
+            val keep = (out.stop == "iters" || out.stop == "stall") && saved != null
+            val got = mergeGot(emptyList(), parts.map { it.key })
             val state = State(
                 out.q,
                 List(built.segs.size) { j -> SegPar(built.segs[j].key, built.first[j], out.z[j], out.o[j]) },
@@ -177,22 +148,25 @@ internal object Kalman {
                 assembled.tailMed,
                 got,
             )
-            save(dir, state)
-            val complete = if (full) built.breaks >= 2 else prevModel?.complete == true || built.breaks >= 2
-            val modelFile = File(dir, MODEL)
-            if (!modelFile.isFile) {
-                val gal = out.g98.takeIf { it.isFinite() }?.let { java.lang.String.format(java.util.Locale.US, "%.1f", it) } ?: "none"
-                FsLog.i("FuelSmooth", "fit_own_size fit=kalman tank=${ProfileStore.tankNumber(dir)} gal=$gal")
+            val complete = built.breaks >= 2
+            if (!keep) {
+                save(dir, state)
+                val modelFile = File(dir, MODEL)
+                if (!modelFile.isFile) {
+                    val gal = out.g98.takeIf { it.isFinite() }?.let { java.lang.String.format(java.util.Locale.US, "%.1f", it) } ?: "none"
+                    FsLog.i("FuelSmooth", "fit_own_size fit=kalman tank=${ProfileStore.tankNumber(dir)} gal=$gal")
+                }
+                AtomicFile.write(modelFile, modelJson(out.g, out.g98, out.sd98, complete, System.currentTimeMillis()))
             }
-            AtomicFile.write(modelFile, modelJson(out.g, out.g98, out.sd98, complete, System.currentTimeMillis()))
             runCatching {
+                val held = if (keep) " this result was not saved" else ""
                 FsLog.i(
                     "FuelSmooth",
                     "fit kalman g98=${"%.2f".format(out.g98)} sd98=${"%.2f".format(out.sd98)} complete=$complete " +
-                        "breaks=${built.breaks} iter=${out.iters} ms=${out.ms} stop=${out.stop}",
+                        "breaks=${built.breaks} iter=${out.iters} ms=${out.ms} stop=${out.stop}$held",
                 )
             }
-            state
+            if (keep) saved else state
         } catch (e: Exception) {
             warn("kalman update failed; keeping $STATE: ${e.message}")
             load(dir)
@@ -229,6 +203,7 @@ internal object Kalman {
      * Returns true when the file was present and rejected. A file [load] accepts is not stale.
      */
     fun quarantineState(dir: File): Boolean {
+        loadNative()
         val f = File(dir, STATE)
         if (!f.isFile) return false
         if (load(dir) != null) return false

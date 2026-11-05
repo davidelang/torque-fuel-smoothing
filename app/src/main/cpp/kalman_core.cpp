@@ -19,7 +19,7 @@ constexpr double H_NU = 1.0;
 constexpr double S_O = 1.5;
 constexpr double ALLCLIP = -5.0;
 constexpr double HI = 99.85;
-constexpr int LM_CAP = 40;
+constexpr int LM_CAP = 200;
 
 double ln033() {
     static const double v = std::log(0.33);
@@ -644,7 +644,6 @@ FitResult fit(const Problem& prob) {
             stop = 0;
             break;
         }
-        const double g_old = capacity(p.data());
         bool improved = false;
         double step_rel = 1e300;
         for (int inner = 0; inner < 12; inner++) {
@@ -687,11 +686,6 @@ FitResult fit(const Problem& prob) {
         if (improved && step_rel < 1e-5) {
             done = true;
             stop = 1;
-            break;
-        }
-        if (improved && std::abs(capacity(p.data()) - g_old) < 0.01) {
-            done = true;
-            stop = 2;
             break;
         }
         if (!improved && lambda >= 1e12) {

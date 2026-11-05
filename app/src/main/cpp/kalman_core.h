@@ -38,7 +38,7 @@ struct FitResult {
     double kTail = 0;
     double info[INFO_N]{};
     int iters = 0;
-    int stop = 0; // 0 grad, 1 step, 2 g98, 3 iters, 4 stall
+    int stop = 0; // 0 grad, 1 step, 2 unused, 3 iters, 4 stall
 };
 
 int nparam(const Problem& prob);

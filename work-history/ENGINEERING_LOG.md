@@ -350,3 +350,7 @@ Fit the Kalman map in native code, full rebuild or from the latest parts.
 ## 2026-11-04 - User manual and screenshot walk
 
 - Add manual-capture.yaml (Android app locales, no hooks) and docs/user-manual/manual.md. docs/MANUAL.md points at it. Plan: sandbox/plans/user-manual-20261104-1931-plan.md
+
+## 2026-11-05 - Phone Kalman fits run until settled
+
+Every closed-part update is one full rebuild. Stops are gradient, step, cap 200, or stall. A cap or stall keeps a saved map. The native library loads before quarantine, and a C++ exception at the JNI boundary returns status 2.

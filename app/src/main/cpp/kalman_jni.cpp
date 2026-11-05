@@ -72,28 +72,33 @@ Java_com_davidlang_torque_fuelsmoothing_KalmanNative_fit(
     DPin oQ(env, qOut, 0), oZ(env, zOut, 0), oO(env, oOut, 0), oG(env, gOut, 0), oInfo(env, infoOut, 0), oSt(env, stats, 0);
     if (!pL.p || !pF.p || !pSd.p || !pSeg.p || !pC0.p || !pFirst.p || !oQ.p || !oZ.p || !oO.p || !oG.p || !oInfo.p || !oSt.p) return 2;
 
-    kalman::Problem prob;
-    prob.mode = mode;
-    prob.L.assign(pL.p, pL.p + nobs);
-    prob.F.assign(pF.p, pF.p + nobs);
-    prob.sd.assign(pSd.p, pSd.p + nobs);
-    prob.seg.assign(pSeg.p, pSeg.p + nobs);
-    prob.C0.assign(pC0.p, pC0.p + ns);
-    prob.first.assign(pFirst.p, pFirst.p + ns);
-    prob.haveSaved = haveSaved;
-    prob.anchorK = anchorK;
-    prob.anchorC0 = anchorC0;
-    if (haveSaved && pQ.p && env->GetArrayLength(qSaved) == kalman::NF) {
-        for (int i = 0; i < kalman::NF; i++) prob.qSaved[i] = pQ.p[i];
+    // Status 2 before any output write. A throw must not commit a partial result.
+    kalman::FitResult fit;
+    try {
+        kalman::Problem prob;
+        prob.mode = mode;
+        prob.L.assign(pL.p, pL.p + nobs);
+        prob.F.assign(pF.p, pF.p + nobs);
+        prob.sd.assign(pSd.p, pSd.p + nobs);
+        prob.seg.assign(pSeg.p, pSeg.p + nobs);
+        prob.C0.assign(pC0.p, pC0.p + ns);
+        prob.first.assign(pFirst.p, pFirst.p + ns);
+        prob.haveSaved = haveSaved;
+        prob.anchorK = anchorK;
+        prob.anchorC0 = anchorC0;
+        if (haveSaved && pQ.p && env->GetArrayLength(qSaved) == kalman::NF) {
+            for (int i = 0; i < kalman::NF; i++) prob.qSaved[i] = pQ.p[i];
+        }
+        if (pInfo.p && env->GetArrayLength(info) == kalman::INFO_N) {
+            for (int i = 0; i < kalman::INFO_N; i++) prob.info[i] = pInfo.p[i];
+        }
+        if (pMatch.p && matched && env->GetArrayLength(matched) == ns) prob.matched.assign(pMatch.p, pMatch.p + ns);
+        if (pZ.p && zSaved && env->GetArrayLength(zSaved) == ns) prob.zSaved.assign(pZ.p, pZ.p + ns);
+        if (pO.p && oSaved && env->GetArrayLength(oSaved) == ns) prob.oSaved.assign(pO.p, pO.p + ns);
+        fit = kalman::fit(prob);
+    } catch (...) {
+        return 2;
     }
-    if (pInfo.p && env->GetArrayLength(info) == kalman::INFO_N) {
-        for (int i = 0; i < kalman::INFO_N; i++) prob.info[i] = pInfo.p[i];
-    }
-    if (pMatch.p && matched && env->GetArrayLength(matched) == ns) prob.matched.assign(pMatch.p, pMatch.p + ns);
-    if (pZ.p && zSaved && env->GetArrayLength(zSaved) == ns) prob.zSaved.assign(pZ.p, pZ.p + ns);
-    if (pO.p && oSaved && env->GetArrayLength(oSaved) == ns) prob.oSaved.assign(pO.p, pO.p + ns);
-
-    const kalman::FitResult fit = kalman::fit(prob);
     if (fit.status != 0) return fit.status;
     for (int i = 0; i < kalman::NF; i++) oQ.p[i] = fit.q[i];
     for (int j = 0; j < ns; j++) {
