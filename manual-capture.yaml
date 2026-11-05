@@ -1,0 +1,151 @@
+package: com.davidlang.torque.fuelsmoothing
+activity: com.davidlang.torque.fuelsmoothing/.PluginActivity
+strings_res: app/build/generated/i18n/res
+language:
+  via: android
+output:
+  en: docs/user-manual/images/{form}
+  other: docs/i18n/{segment}/images/{form}
+never_tap:
+  - s_7f083fe98c9b # Detect
+  - s_eebdd24a77d9 # Confirm
+  - s_3f8edb8239a6 # Save pin
+  - s_09e69891878d # Add additional tank
+  - s_c3812fc4acb8 # Remove
+  - s_a4245a3c4f56 # Tip
+  - s_54a57c3147c4 # Privacy
+  - s_8235980b80ad # Send feedback
+  - s_706ee1cc1c19 # Get Torque Pro
+  - s_809aaf918d8c # Show fuel level in notification
+  - s_35659de99b79 # Verbose logging (debug; per-second log lines)
+locales:
+  - {pref: en, values: values, segment: ""}
+  - {pref: af, values: values-af, segment: af}
+  - {pref: am, values: values-am, segment: am}
+  - {pref: as, values: values-as, segment: as}
+  - {pref: az, values: values-az, segment: az}
+  - {pref: ceb, values: values-b+ceb, segment: ceb}
+  - {pref: en-001, values: values-b+en+001, segment: en-001}
+  - {pref: es-419, values: values-b+es+419, segment: es-419}
+  - {pref: sr-Latn, values: values-b+sr+Latn, segment: sr-Latn}
+  - {pref: be, values: values-be, segment: be}
+  - {pref: bg, values: values-bg, segment: bg}
+  - {pref: bn, values: values-bn, segment: bn}
+  - {pref: bs, values: values-bs, segment: bs}
+  - {pref: ca, values: values-ca, segment: ca}
+  - {pref: cs, values: values-cs, segment: cs}
+  - {pref: cy, values: values-cy, segment: cy}
+  - {pref: da, values: values-da, segment: da}
+  - {pref: de, values: values-de, segment: de}
+  - {pref: el, values: values-el, segment: el}
+  - {pref: en-AU, values: values-en-rAU, segment: en-AU}
+  - {pref: en-CA, values: values-en-rCA, segment: en-CA}
+  - {pref: en-GB, values: values-en-rGB, segment: en-GB}
+  - {pref: en-IN, values: values-en-rIN, segment: en-IN}
+  - {pref: es, values: values-es, segment: es}
+  - {pref: es-US, values: values-es-rUS, segment: es-US}
+  - {pref: et, values: values-et, segment: et}
+  - {pref: eu, values: values-eu, segment: eu}
+  - {pref: fi, values: values-fi, segment: fi}
+  - {pref: fo, values: values-fo, segment: fo}
+  - {pref: fr, values: values-fr, segment: fr}
+  - {pref: fr-CA, values: values-fr-rCA, segment: fr-CA}
+  - {pref: fy, values: values-fy, segment: fy}
+  - {pref: ga, values: values-ga, segment: ga}
+  - {pref: gd, values: values-gd, segment: gd}
+  - {pref: gl, values: values-gl, segment: gl}
+  - {pref: gu, values: values-gu, segment: gu}
+  - {pref: ha, values: values-ha, segment: ha}
+  - {pref: hi, values: values-hi, segment: hi}
+  - {pref: hr, values: values-hr, segment: hr}
+  - {pref: hu, values: values-hu, segment: hu}
+  - {pref: hy, values: values-hy, segment: hy}
+  - {pref: ig, values: values-ig, segment: ig}
+  - {pref: id, values: values-in, segment: id}
+  - {pref: is, values: values-is, segment: is}
+  - {pref: it, values: values-it, segment: it}
+  - {pref: ja, values: values-ja, segment: ja}
+  - {pref: jv, values: values-jv, segment: jv}
+  - {pref: ka, values: values-ka, segment: ka}
+  - {pref: kk, values: values-kk, segment: kk}
+  - {pref: km, values: values-km, segment: km}
+  - {pref: kn, values: values-kn, segment: kn}
+  - {pref: ko, values: values-ko, segment: ko}
+  - {pref: ku, values: values-ku, segment: ku}
+  - {pref: ky, values: values-ky, segment: ky}
+  - {pref: lb, values: values-lb, segment: lb}
+  - {pref: lo, values: values-lo, segment: lo}
+  - {pref: lt, values: values-lt, segment: lt}
+  - {pref: lv, values: values-lv, segment: lv}
+  - {pref: mg, values: values-mg, segment: mg}
+  - {pref: mi, values: values-mi, segment: mi}
+  - {pref: mk, values: values-mk, segment: mk}
+  - {pref: ml, values: values-ml, segment: ml}
+  - {pref: mn, values: values-mn, segment: mn}
+  - {pref: mr, values: values-mr, segment: mr}
+  - {pref: ms, values: values-ms, segment: ms}
+  - {pref: mt, values: values-mt, segment: mt}
+  - {pref: my, values: values-my, segment: my}
+  - {pref: nb, values: values-nb, segment: nb}
+  - {pref: ne, values: values-ne, segment: ne}
+  - {pref: nl, values: values-nl, segment: nl}
+  - {pref: nn, values: values-nn, segment: nn}
+  - {pref: or, values: values-or, segment: or}
+  - {pref: pa, values: values-pa, segment: pa}
+  - {pref: pl, values: values-pl, segment: pl}
+  - {pref: pt, values: values-pt, segment: pt}
+  - {pref: pt-PT, values: values-pt-rPT, segment: pt-PT}
+  - {pref: qu, values: values-qu, segment: qu}
+  - {pref: rm, values: values-rm, segment: rm}
+  - {pref: ro, values: values-ro, segment: ro}
+  - {pref: ru, values: values-ru, segment: ru}
+  - {pref: rw, values: values-rw, segment: rw}
+  - {pref: si, values: values-si, segment: si}
+  - {pref: sk, values: values-sk, segment: sk}
+  - {pref: sl, values: values-sl, segment: sl}
+  - {pref: so, values: values-so, segment: so}
+  - {pref: sq, values: values-sq, segment: sq}
+  - {pref: sr, values: values-sr, segment: sr}
+  - {pref: su, values: values-su, segment: su}
+  - {pref: sv, values: values-sv, segment: sv}
+  - {pref: sw, values: values-sw, segment: sw}
+  - {pref: ta, values: values-ta, segment: ta}
+  - {pref: te, values: values-te, segment: te}
+  - {pref: tg, values: values-tg, segment: tg}
+  - {pref: th, values: values-th, segment: th}
+  - {pref: tk, values: values-tk, segment: tk}
+  - {pref: tl, values: values-tl, segment: tl}
+  - {pref: tr, values: values-tr, segment: tr}
+  - {pref: tt, values: values-tt, segment: tt}
+  - {pref: uk, values: values-uk, segment: uk}
+  - {pref: uz, values: values-uz, segment: uz}
+  - {pref: vi, values: values-vi, segment: vi}
+  - {pref: xh, values: values-xh, segment: xh}
+  - {pref: yo, values: values-yo, segment: yo}
+  - {pref: zh-CN, values: values-zh-rCN, segment: zh-CN}
+  - {pref: zh-HK, values: values-zh-rHK, segment: zh-HK}
+  - {pref: zh-TW, values: values-zh-rTW, segment: zh-TW}
+  - {pref: zu, values: values-zu, segment: zu}
+sections:
+  - group: Help
+    shots: [help.jpg]
+    steps:
+      - tap_text: s_b79cac926e0b
+      - shot: help.jpg
+      - back: 1
+  - group: About
+    shots: [about.jpg]
+    steps:
+      - tap_text: s_4efca0d10c5f
+      - shot: about.jpg
+      - back: 1
+  - group: Setup
+    shots: [setup-top.jpg, fits.jpg, settings.jpg]
+    steps:
+      - shot: setup-top.jpg
+      - swipe: page
+      - swipe: page
+      - shot: fits.jpg
+      - swipe: page
+      - swipe: page
+      - shot: settings.jpg

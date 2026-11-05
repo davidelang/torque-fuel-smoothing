@@ -346,3 +346,7 @@ Fit the Kalman map in native code, full rebuild or from the latest parts.
 ## 2026-11-04 - Sentence-keyed translations
 
 - User-visible English is the string key. The build packages catalog translations and does not call a translator. Plan: sandbox/plans/translation-sentence-keys-20261104-1433-plan.md
+
+## 2026-11-04 - User manual and screenshot walk
+
+- Add manual-capture.yaml (Android app locales, no hooks) and docs/user-manual/manual.md. docs/MANUAL.md points at it. Plan: sandbox/plans/user-manual-20261104-1931-plan.md
