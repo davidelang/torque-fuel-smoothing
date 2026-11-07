@@ -643,5 +643,10 @@
     "key": "Use %1$s",
     "source": "Use %1$s",
     "text": "%1$s ကို သုံးပါ"
+  },
+  {
+    "key": "Edit profile (recording follows Torque)",
+    "source": "Edit profile (recording follows Torque)",
+    "text": "ပရိုဖိုင်ကို တည်းဖြတ်ရန် (မှတ်တမ်းတင်ခြင်းသည် Torque အတိုင်းဖြစ်သည်)"
   }
 ]

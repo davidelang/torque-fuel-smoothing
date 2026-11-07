@@ -643,5 +643,10 @@
     "key": "Use %1$s",
     "source": "Use %1$s",
     "text": "%1$s વાપરો"
+  },
+  {
+    "key": "Edit profile (recording follows Torque)",
+    "source": "Edit profile (recording follows Torque)",
+    "text": "પ્રોફાઇલ સંપાદિત કરો (રેકોર્ડિંગ Torque મુજબ થાય છે)"
   }
 ]

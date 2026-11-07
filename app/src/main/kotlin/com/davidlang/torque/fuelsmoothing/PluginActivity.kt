@@ -73,6 +73,53 @@ class PluginActivity : Activity() {
     private lateinit var selectPid: EditText
     private lateinit var profileNameView: TextView
     private lateinit var profileName: EditText
+    private lateinit var settingsProfile: Spinner
+    private var editProfileId = ""
+    private var profileChoices: List<Pair<String, String>> = emptyList()
+    private val editorPrefs by lazy { getSharedPreferences("profile_editor", MODE_PRIVATE) }
+
+    private fun editProfileExists(): Boolean =
+        ProfileStore.profiles(filesDir).any { it.id == editProfileId }
+
+    private fun editingRecordingProfile(): Boolean =
+        editProfileExists() && editProfileId == ProfileStore.activeId(filesDir)
+
+    private fun refreshProfileChoices() {
+        val profiles = ProfileStore.profiles(filesDir)
+        if (profiles.none { it.id == editProfileId }) {
+            editProfileId = profiles.firstOrNull { it.id == ProfileStore.activeId(filesDir) }?.id
+                ?: profiles.firstOrNull()?.id.orEmpty()
+            editorPrefs.edit().putString("profileId", editProfileId).apply()
+            currentFocus?.clearFocus()
+            odoMiles.setText("")
+        }
+        val choices = profiles.map { it.id to (ProfileStore.profileField(filesDir, it.id, "name") ?: it.id) }
+        if (choices == profileChoices && settingsProfile.adapter != null) return
+        profileChoices = choices
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item,
+            choices.map { "${it.second} (${it.first})" })
+        settingsProfile.onItemSelectedListener = null
+        settingsProfile.adapter = adapter
+        settingsProfile.isEnabled = choices.isNotEmpty()
+        settingsProfile.setSelection(choices.indexOfFirst { it.first == editProfileId }.coerceAtLeast(0))
+        settingsProfile.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (loading || parent?.adapter !== adapter) return
+                val next = choices.getOrNull(position)?.first ?: return
+                if (next == editProfileId) return
+                if (editProfileExists() && !persist()) {
+                    settingsProfile.setSelection(choices.indexOfFirst { it.first == editProfileId })
+                    return
+                }
+                currentFocus?.clearFocus()
+                editProfileId = next
+                editorPrefs.edit().putString("profileId", next).apply()
+                odoMiles.setText("")
+                loadIntoForm()
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+    }
     private lateinit var vehicleMake: EditText
     private lateinit var detectBtn: Button
     private lateinit var confirmBtn: Button
@@ -108,10 +155,10 @@ class PluginActivity : Activity() {
     }
     private val sourceListen = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            if (loading) return
+            if (loading || !editProfileExists() || parent?.selectedItemPosition != position) return
             val src = FuelSources.catalog.getOrNull(position)?.id ?: return
             if (src == loadedSourceId) return
-            FuelDetect.store(filesDir, ProfileStore.activeId(filesDir), src, src != FuelDetect.NONE)
+            FuelDetect.store(filesDir, editProfileId, src, src != FuelDetect.NONE)
             loadedSourceId = src
             PluginService.notifySourceChanged(this@PluginActivity)
             confirmBtn.visibility = View.GONE
@@ -122,6 +169,9 @@ class PluginActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppStrings.install(this)
+        editProfileId = savedInstanceState?.getString("editProfileId")
+            ?: editorPrefs.getString("profileId", null)
+            ?: ProfileStore.activeId(filesDir)
         val pad = PAD
         val scroll = ScrollView(this)
         val col = LinearLayout(this)
@@ -208,6 +258,9 @@ class PluginActivity : Activity() {
         TipReconciler.run(this, "app start")
 
         // ---- Settings ----
+        col.addView(label(S("Edit profile (recording follows Torque)")))
+        settingsProfile = Spinner(this)
+        col.addView(settingsProfile)
         profileNameView = TextView(this)   // kept for refreshProfile; the name is in the status line
         col.addView(info(S("Profile name"), S("The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.")))
         profileName = edit(InputType.TYPE_CLASS_TEXT)
@@ -224,7 +277,9 @@ class PluginActivity : Activity() {
         sourceSpinner.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         srcRow.addView(sourceSpinner)
         detectBtn = smallButton(S("Detect")) {
+            if (!editingRecordingProfile()) return@smallButton
             val i = Intent(this, PluginService::class.java).setAction(PluginService.ACTION_DETECT)
+                .putExtra(PluginService.EXTRA_TARGET, editProfileId)
             try {
                 if (Build.VERSION.SDK_INT >= 26) startForegroundService(i) else startService(i)
             } catch (t: Throwable) {
@@ -233,9 +288,10 @@ class PluginActivity : Activity() {
         }
         srcRow.addView(detectBtn)
         confirmBtn = smallButton(S("Confirm")) {
+            if (!editingRecordingProfile()) return@smallButton
             val i = Intent(this, PluginService::class.java)
                 .setAction(PluginService.ACTION_CONFIRM_SOURCE)
-                .putExtra(PluginService.EXTRA_TARGET, ProfileStore.activeId(filesDir))
+                .putExtra(PluginService.EXTRA_TARGET, editProfileId)
                 .putExtra(PluginService.EXTRA_SOURCE, loadedSourceId)
             try {
                 if (Build.VERSION.SDK_INT >= 26) startForegroundService(i) else startService(i)
@@ -265,11 +321,11 @@ class PluginActivity : Activity() {
         tankUnit.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val u = VolUnit.entries[position.coerceIn(0, VolUnit.entries.size - 1)]
-                if (loading || u == shownUnit) return
+                if (loading || !editProfileExists() || u == shownUnit) return
                 // Re-express the typed value in the new unit; the stored value stays in gallons.
                 val gal = tank.text.toString().trim().toDoubleOrNull()?.let { shownUnit.toGal(it) }
                 shownUnit = u
-                ProfileStore.setProfileField(filesDir, ProfileStore.activeId(filesDir), "tankUnit", u.name)
+                ProfileStore.setProfileField(filesDir, editProfileId, "tankUnit", u.name)
                 tank.setText(VolUnit.show(gal, u))
                 persist()
             }
@@ -308,8 +364,9 @@ class PluginActivity : Activity() {
         odoMiles.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         odoRow.addView(odoMiles)
         odoRow.addView(smallButton(S("Save pin")) {
+            if (!editProfileExists()) return@smallButton
             val miles = odoMiles.text.toString().toDoubleOrNull() ?: return@smallButton
-            val id = ProfileStore.activeId(filesDir)
+            val id = editProfileId
             ProfileStore.addPin(filesDir, id, miles, System.currentTimeMillis())
         })
         col.addView(odoRow)
@@ -378,6 +435,11 @@ class PluginActivity : Activity() {
         loading = false
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putString("editProfileId", editProfileId)
+        super.onSaveInstanceState(outState)
+    }
+
     override fun onResume() {
         super.onResume()
         if (::detectBtn.isInitialized) {
@@ -433,7 +495,8 @@ class PluginActivity : Activity() {
     }
 
     private fun loadForm() {
-        val c = FixFuelPrefs.load(this)
+        refreshProfileChoices()
+        val c = FixFuelPrefs.load(this, editProfileId, migrateLegacy = false)
         loadedSourceId = c.sourceId
         sourceSpinner.setSelection(FuelSources.indexOf(c.sourceId))
         confirmBtn.visibility = if (c.sourceId != FuelDetect.NONE && !c.sourceConfirmed) View.VISIBLE else View.GONE
@@ -441,15 +504,15 @@ class PluginActivity : Activity() {
         setIfBlankOrInit(tau, c.tauSec.toString())
         setIfBlankOrInit(skew, c.skewPctPerSec.toString())
         setIfBlankOrInit(jump, c.jumpPct.toString())
-        shownUnit = VolUnit.of(ProfileStore.profileField(filesDir, ProfileStore.activeId(filesDir), "tankUnit"))
+        shownUnit = VolUnit.of(ProfileStore.profileField(filesDir, editProfileId, "tankUnit"))
         tankUnit.setSelection(shownUnit.ordinal)
         val shownGal = tank.text.toString().trim().toDoubleOrNull()?.let { shownUnit.toGal(it) }
         val tankStr = if (shownGal != null && c.tankGal != null && kotlin.math.abs(shownGal - c.tankGal) < 0.05) tank.text.toString() else VolUnit.show(c.tankGal, shownUnit)
         if (tank.text.toString() != tankStr && !tank.isFocused) tank.setText(tankStr)
         showStoredInvalid(c)
         refreshSizes(c)
-        val st = c.sourceStatus
-        val lv = FixFuelPrefs.live(this)
+        val st = if (editingRecordingProfile()) c.sourceStatus else ""
+        val lv = if (editingRecordingProfile()) FixFuelPrefs.live(this) else ""
         live.text = listOf(st, lv).filter { it.isNotBlank() }.joinToString("\n")
         syncExtraCards(c.extras)
         refreshActiveSpinner(c.activeTank)
@@ -462,17 +525,18 @@ class PluginActivity : Activity() {
     }
 
     private fun refreshProfile() {
-        val id = ProfileStore.activeId(filesDir)
+        val id = editProfileId
         val name = ProfileStore.profileField(filesDir, id, "name") ?: S("Vehicle 1")
         profileNameView.text = name
         if (!profileName.isFocused && profileName.text.toString() != name) profileName.setText(name)
         val make = ProfileStore.profileField(filesDir, id, "make") ?: ""
         if (!vehicleMake.isFocused && vehicleMake.text.toString() != make) vehicleMake.setText(make)
-        detectBtn.isEnabled = PluginService.ecuConnected
+        detectBtn.isEnabled = PluginService.ecuConnected && editingRecordingProfile()
+        confirmBtn.isEnabled = editingRecordingProfile()
         val notice = File(filesDir, "profile-notice.txt")
         val gap = File(ProfileStore.profileDir(filesDir, id), "gap.txt")
         gapText.text = when {
-            notice.isFile && notice.readText().isNotBlank() -> notice.readText()
+            editingRecordingProfile() && notice.isFile && notice.readText().isNotBlank() -> notice.readText()
             gap.isFile -> gap.readText()
             else -> ""
         }
@@ -619,7 +683,7 @@ class PluginActivity : Activity() {
     }
 
     private fun extrasFromCards(): List<ExtraTank> {
-        val prev = FixFuelPrefs.load(this).extras.associateBy { it.id }
+        val prev = FixFuelPrefs.load(this, editProfileId, migrateLegacy = false).extras.associateBy { it.id }
         return extraCards.sortedBy { it.id }.map { card ->
             val old = prev[card.id]
             ExtraTank(
@@ -683,10 +747,11 @@ class PluginActivity : Activity() {
         show(FixFuelPrefs.KEY_TANK, tank)
     }
 
-    private fun persist() {
+    private fun persist(): Boolean {
+        if (loading || !editProfileExists()) return false
         if (!formValid()) {
             FsLog.i(TAG, "settings not saved: out-of-range field(s) shown in red")
-            return
+            return false
         }
         FixFuelPrefs.save(
             this,
@@ -700,12 +765,14 @@ class PluginActivity : Activity() {
             selectPidName = selectPid.text.toString().trim(),
             showFuelNotification = showNotice.isChecked,
             feed012f = FeedMode.entries[feed012f.selectedItemPosition.coerceIn(0, FeedMode.entries.size - 1)],
+            profileId = editProfileId,
         )
-        val id = ProfileStore.activeId(filesDir)
+        val id = editProfileId
         ProfileStore.setProfileField(filesDir, id, "name", profileName.text.toString().trim().ifBlank { S("Vehicle 1") })
         val make = vehicleMake.text.toString().trim()
         ProfileStore.setProfileField(filesDir, id, "make", if (make.isEmpty()) null else make)
         profileNameView.text = ProfileStore.profileField(filesDir, id, "name") ?: S("Vehicle 1")
+        return true
     }
 
     private lateinit var statusLine: TextView
@@ -761,11 +828,11 @@ class PluginActivity : Activity() {
     /** One or two lines: profile, source, tank estimate. */
     private fun refreshStatus(c: FixFuelConfig) {
         if (!::statusLine.isInitialized) return
-        val id = ProfileStore.activeId(filesDir)
+        val id = editProfileId
         val name = ProfileStore.profileField(filesDir, id, "name") ?: S("Vehicle 1")
         val src = S(FuelSources.byId(c.sourceId).label) + if (c.sourceConfirmed) "" else S("(unconfirmed)")
         val tankTxt = c.tankGal?.let { "${VolUnit.show(it, shownUnit)} ${S(shownUnit.label)}" } ?: S("tank ?")
-        statusLine.text = "$name · $src · $tankTxt" + if (PluginService.ecuConnected) S("· ECU connected") else ""
+        statusLine.text = "$name · $src · $tankTxt" + if (PluginService.ecuConnected && editingRecordingProfile()) S("· ECU connected") else ""
     }
 
     private fun label(s: String): TextView {
@@ -1005,7 +1072,7 @@ class PluginActivity : Activity() {
 
     /** Own chunk size, else the user seed. Band and Kalman show only their own size. Kalman includes sd98 whenever a model is loaded. */
     private fun refreshSizes(c: FixFuelConfig) {
-        val dir = ProfileStore.tankDir(filesDir, ProfileStore.activeId(filesDir), 1)
+        val dir = ProfileStore.tankDir(filesDir, editProfileId, 1)
         val chunk = ProfileStore.storedMap(dir)
         val chunkGal = chunk?.third?.takeIf { it > 0.0 } ?: c.tankGal?.takeIf { it > 0.0 }
         sizeChunk.text = S("Chunk: %1\$s", sizeText(chunkGal))

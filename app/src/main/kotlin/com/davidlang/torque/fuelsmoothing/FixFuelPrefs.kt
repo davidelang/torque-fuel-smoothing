@@ -151,13 +151,17 @@ internal object FixFuelPrefs {
 
     fun prefs(ctx: Context): SharedPreferences = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
-    fun load(ctx: Context): FixFuelConfig {
+    fun load(
+        ctx: Context,
+        profileId: String = ProfileStore.activeId(ctx.filesDir),
+        migrateLegacy: Boolean = true,
+    ): FixFuelConfig {
         val p = prefs(ctx)
         val invalid = LinkedHashMap<String, String>()
         // Tank size is per profile (profile.json tankGal). The old shared setting seeds the active profile once.
         val root = ctx.filesDir
-        val pid = ProfileStore.activeId(root)
-        if (ProfileStore.profileField(root, pid, "tankGal") == null) {
+        val pid = profileId
+        if (migrateLegacy && pid == ProfileStore.activeId(root) && ProfileStore.profileField(root, pid, "tankGal") == null) {
             val legacy = p.getString(KEY_TANK, "")?.trim().orEmpty()
             if (legacy.isNotEmpty() && tankOk(legacy)) {
                 ProfileStore.setTankEntered(root, pid, legacy)
@@ -188,7 +192,7 @@ internal object FixFuelPrefs {
                 val m = feedMode(p.getString(KEY_FEED_012F, null), if (p.contains(KEY_WRITE_012F)) p.getBoolean(KEY_WRITE_012F, true) else null)
                 if (p.getBoolean(KEY_FEED_V2, false)) m else {
                     val n = migrateFeed(m)
-                    p.edit().putString(KEY_FEED_012F, n.name).putBoolean(KEY_FEED_V2, true).apply()
+                    if (migrateLegacy) p.edit().putString(KEY_FEED_012F, n.name).putBoolean(KEY_FEED_V2, true).apply()
                     n
                 }
             },
@@ -208,6 +212,7 @@ internal object FixFuelPrefs {
         selectPidName: String = "",
         showFuelNotification: Boolean = true,
         feed012f: FeedMode = FeedMode.CORRECTED,
+        profileId: String = ProfileStore.activeId(ctx.filesDir),
     ) {
         val e = prefs(ctx).edit()
             .putString(KEY_CUSTOM, customName)
@@ -216,7 +221,7 @@ internal object FixFuelPrefs {
             .putString(KEY_JUMP, jumpPct.toString())
         // Per profile. A value typed by the user is a guess, not a learned estimate (unchanged value keeps the flag).
         val root = ctx.filesDir
-        val pid = ProfileStore.activeId(root)
+        val pid = profileId
         val oldTank = ProfileStore.tankGuess(root, pid)?.toDoubleOrNull()
         val newRaw = if (tankGal != null && tankGal.isFinite() && tankGal > 0.0) tankGal.toString() else ""
         if (oldTank == null || tankGal == null || kotlin.math.abs(oldTank - tankGal) >= 0.05) ProfileStore.setTankEntered(root, pid, newRaw)

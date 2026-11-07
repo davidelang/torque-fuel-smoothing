@@ -454,6 +454,11 @@ class PluginService : Service() {
             }
             ACTION_SOURCE_CHANGED -> onSourceNotice()
             ACTION_DETECT -> {
+                val requestedProfile = intent.getStringExtra(EXTRA_TARGET)
+                if (requestedProfile != null && (requestedProfile != profileId || identity != null)) {
+                    announceSourceChanged()
+                    return START_STICKY
+                }
                 bindTorque()
                 queueFuelDetect("manual")
                 queueDetect()
