@@ -28,6 +28,28 @@ internal object ProfileStore {
         val tankGal: Double?,
     )
 
+    /** Tank-1 fill accounting belongs to the recording profile, never to the process-wide preferences. */
+    fun fillLedger(root: File, id: String): LedgerSeed = synchronized(PROFILE_LOCK) {
+        val file = File(profileDir(root, id), "ledger.json")
+        val data = if (file.isFile) {
+            runCatching { org.json.JSONObject(file.readText()) }
+                .onFailure { FsLog.w("FuelSmooth", "profile fill ledger unreadable for $id: ${it.javaClass.simpleName}") }
+                .getOrNull()
+        } else null
+        val anchor = data?.optDouble("fillAnchorGal", Double.NaN)?.takeIf { it.isFinite() && it > 0.0 }
+        val burn = data?.optDouble("burnSinceFillGal", Double.NaN)?.takeIf { it.isFinite() && it >= 0.0 } ?: 0.0
+        LedgerSeed(anchor, burn, null)
+    }
+
+    fun setFillLedger(root: File, id: String, anchorGal: Double, sinceUsedGal: Double) = synchronized(PROFILE_LOCK) {
+        val file = File(profileDir(root, id), "ledger.json")
+        // Retain every other ledger field, and refuse to overwrite an unreadable existing file.
+        val data = if (file.isFile) org.json.JSONObject(file.readText()) else org.json.JSONObject()
+        data.put("fillAnchorGal", if (anchorGal.isFinite() && anchorGal > 0.0) anchorGal else org.json.JSONObject.NULL)
+        data.put("burnSinceFillGal", if (sinceUsedGal.isFinite()) sinceUsedGal.coerceAtLeast(0.0) else 0.0)
+        writeAtomic(file, data.toString())
+    }
+
     data class ProfileHit(val id: String, val vin: String?, val torqueProfileName: String?)
 
     fun migrate(

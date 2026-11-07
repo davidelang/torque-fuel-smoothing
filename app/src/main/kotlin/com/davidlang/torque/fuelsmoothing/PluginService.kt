@@ -85,6 +85,9 @@ class PluginService : Service() {
     private var lastEcuConnected: Boolean? = null
     private var driveSourcesLogged: Boolean = false
     private var profileId: String = ProfileStore.DEFAULT_ID
+    private var selectedTorqueProfile: String? = null
+    private var torqueProfileCheckedMs = 0L
+    private var profileSelectionReady = false
     /** Wrong/unknown-vehicle hold: sessions go to files/quarantine/<stamp>/ and never touch a profile. */
     private var quarantineDir: File? = null
     private var quarantineSuggest: String? = null
@@ -604,6 +607,14 @@ class PluginService : Service() {
         if (ecu != null && ecu != lastEcuConnected) {
             onEcu(ecu)
         }
+        if (ecu == true) {
+            // OBD_CONNECTED can arrive before the binder. Also notice profile changes without an ECU edge.
+            if (!syncTorqueProfile(t, now)) return
+            if (identity != null) {
+                pumpIdentity(t)
+                return // reload the selected profile's config before reading or publishing any samples
+            }
+        }
         applyActiveTank(active, now)
         if (ecu == true) ensureActiveSession()
         val skipFill = now < suppressFillUntilMs
@@ -834,25 +845,51 @@ class PluginService : Service() {
         if (lastEcuConnected == connected) return
         lastEcuConnected = connected
         if (connected) {
-            selectProfile()
-            ensureActiveSession()
+            profileSelectionReady = false
+            torqueProfileCheckedMs = 0L
         } else {
             onEcuAway()
         }
     }
 
     private fun onEcuAway() {
+        profileSelectionReady = false
+        torqueProfileCheckedMs = 0L
         identity = null
         driveSourcesLogged = false
         closeSession()
         if (tanks[1] == null) tanks[1] = makeRuntime(1)
     }
 
-    private fun selectProfile() {
+    /** The public API exposes only the currently selected Torque profile, not a profile list or setter. */
+    private fun syncTorqueProfile(t: ITorqueService, now: Long): Boolean {
+        if (now - torqueProfileCheckedMs in 0L until 2_000L) return profileSelectionReady
+        torqueProfileCheckedMs = now
+        val name = runCatching { t.getVehicleProfileInformation()?.firstOrNull()?.trim() }
+            .onFailure { FsLog.warn(TAG, "torqueProfile", "Torque selected profile unavailable: ${it.javaClass.simpleName}") }
+            .getOrNull()
+        if (name.isNullOrEmpty()) {
+            FsLog.warn(TAG, "torqueProfileEmpty", "Torque selected profile is blank; recording waits for a profile")
+            profileSelectionReady = false
+            return false
+        }
+        if (profileSelectionReady && name == selectedTorqueProfile) return true
+        // Close under the OLD recording identity before selecting or creating any other profile.
+        identity = null
+        closeSession()
+        fuelDetect = null
+        fuelDetectTried = false
+        detectQueue = null
+        driveSourcesLogged = false
+        selectedTorqueProfile = name
+        selectProfile(name)
+        profileSelectionReady = true
+        return true
+    }
+
+    private fun selectProfile(torqueName: String) {
         if (identity != null) return
         if (tanks.values.any { it.sessions.isOpen }) return
-        val t = torque ?: return
-        val torqueName = runCatching { t.getVehicleProfileInformation()?.firstOrNull() }.getOrNull()
         // VIN is not passed here: it is stored only via the fingerprint, after the identity decision,
         // so a wrong vehicle's VIN can never be stamped onto this profile.
         val sel = ProfileStore.select(filesDir, null, torqueName)
@@ -980,16 +1017,20 @@ class PluginService : Service() {
             }
         }
         FsLog.i(TAG, "identity route: write=${quarantineDir?.path ?: target} suggest=${quarantineSuggest}")
-        ProfileStore.setActiveId(filesDir, next)
-        prefsDirty = true // tank size etc. are per profile
-        // Reconnect already set profileId in onCreate. Both paths still queue one job per tank.
-        if (target == profileId && wasQ == quarantineDir) {
-            queueIdentityRollups(target)
-            return
-        }
+        // A fingerprint route is the recording profile; the setup page must show that same profile.
+        ProfileStore.setActiveId(filesDir, if (quarantineDir == null) target else next)
+        val changed = target != profileId || wasQ != quarantineDir
         profileId = target
+        prefsDirty = true // tank size etc. are per profile
+        reloadCfgIfDirty() // refits and new runtimes must use the destination profile's settings
         queueIdentityRollups(target)
+        if (!changed) return
         priorCache.clear()
+        bandCache = null
+        kalCache = null
+        pidNames = emptyMap()
+        ecuFuelResolved = false
+        lastRawPct = null
         for (id in tanks.keys.toList()) tanks[id] = makeRuntime(id)
     }
 
@@ -1034,10 +1075,12 @@ class PluginService : Service() {
      */
     private fun queueIdentityRollups(target: String) {
         val noticed = booleanArrayOf(false)
+        val jumpPct = cfg.jumpPct
         for ((tank, dir) in kalmanTankDirs(target)) {
+            val nameplate = nameplateFor(tank)
             submitRollup("identity tank$tank", {
                 if (ProfileStore.versionChanged(dir)) {
-                    ProfileStore.rollup(dir, nameplateFor(tank), cfg.jumpPct, openSessions)
+                    ProfileStore.rollup(dir, nameplate, jumpPct, openSessions)
                 } else if (asideStaleKalman(target, tank, dir)) {
                     if (!noticed[0]) {
                         noticed[0] = true
@@ -1051,7 +1094,7 @@ class PluginService : Service() {
                         if (sessions.isEmpty()) {
                             FsLog.i(TAG, "kalman refit (stale) tank$tank: no sessions")
                         } else {
-                            Kalman.update(dir, sessions, cfg.jumpPct, null)
+                            Kalman.update(dir, sessions, jumpPct, null)
                             if (Kalman.loadModel(dir) == null) FsLog.w(TAG, "kalman refit (stale) tank$tank failed")
                         }
                     } finally {
@@ -1397,7 +1440,7 @@ class PluginService : Service() {
     }
 
     private fun ensureActiveSession() {
-        if (identity != null) return
+        if (!profileSelectionReady || identity != null) return
         val id = lastActive.toIntOrNull() ?: 1
         for (tid in tanks.keys.toList()) {
             if (tid != id) closeTankSession(tid)
@@ -1489,7 +1532,8 @@ class PluginService : Service() {
         val dir = ProfileStore.tankDir(filesDir, profileId, id); val np = nameplateFor(id)
         FsLog.i(TAG, "session close tank=$id samples=${closed.size} files=${rt.sessions.sessionCount()}; rollup queued")
         var summary = ""
-        submitRollup("rollup tank$id", { summary = ProfileStore.rollup(dir, np, cfg.jumpPct, openSessions) }) {
+        val jumpPct = cfg.jumpPct
+        submitRollup("rollup tank$id", { summary = ProfileStore.rollup(dir, np, jumpPct, openSessions) }) {
             priorCache.remove(id)
             FsLog.i(TAG, "tank$id $summary")
         }
@@ -1652,15 +1696,16 @@ class PluginService : Service() {
             val dir = ProfileStore.tankDir(filesDir, profileId, rt.id); val np = nameplateFor(rt.id)
             val open = rt.sessions.sessionId; val tid = rt.id
             var ok = false
+            val jumpPct = cfg.jumpPct
             val bytes = open?.let { File(File(dir, "raw"), "$it.jsonl").length() }
-            submitRollup("fill update tank$tid", { ok = ProfileStore.fillUpdate(dir, np, open, cfg.jumpPct, bytes) }) {
+            submitRollup("fill update tank$tid", { ok = ProfileStore.fillUpdate(dir, np, open, jumpPct, bytes) }) {
                 if (ok) priorCache.remove(tid)
             }
         }
         if (rt.id != 1 || quarantineDir != null) return
         val anchor = rt.ledger.rHat.takeIf { rt.ledger.anchored && it.isFinite() && it > 0.0 } ?: return
         rt.fillAnchorGal = anchor
-        FixFuelPrefs.setFillLedger(this, anchor, 0.0)
+        ProfileStore.setFillLedger(filesDir, profileId, anchor, 0.0)
         FsLog.i(TAG, "tank1 fill anchor=$anchor sinceFill=0 smoothed=$smoothed fuelGal=${rt.usedGal}")
     }
 
@@ -1671,7 +1716,7 @@ class PluginService : Service() {
         if (!add.isFinite() || add <= 0.0) return
         val next = rt.sinceFillUsedGal + add
         rt.sinceFillUsedGal = next
-        FixFuelPrefs.setFillLedger(this, anchor, next)
+        ProfileStore.setFillLedger(filesDir, profileId, anchor, next)
         FsLog.i(TAG, "tank1 since-fill used=$next anchor=$anchor added=$add")
     }
 
@@ -1779,8 +1824,10 @@ class PluginService : Service() {
     }
 
     private fun loadTank1Ledger(rt: TankRt) {
-        rt.fillAnchorGal = FixFuelPrefs.fillAnchorGal(this)
-        rt.sinceFillUsedGal = FixFuelPrefs.sinceFillUsedGal(this)
+        // Unowned legacy preferences can belong to a different vehicle. Never use them here.
+        val ledger = ProfileStore.fillLedger(filesDir, profileId)
+        rt.fillAnchorGal = ledger.fillAnchorGal
+        rt.sinceFillUsedGal = ledger.burnSinceFillGal
     }
 
     private fun makeRuntime(id: Int): TankRt {
@@ -1796,7 +1843,7 @@ class PluginService : Service() {
                 sessions = SessionStore(this, id, raw),
             )
         }
-        if (id <= 1) loadTank1Ledger(rt)
+        if (id <= 1 && quarantineDir == null) loadTank1Ledger(rt)
         return rt
     }
 
