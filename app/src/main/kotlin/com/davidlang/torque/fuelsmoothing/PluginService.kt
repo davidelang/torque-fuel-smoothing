@@ -45,6 +45,7 @@ class PluginService : Service() {
         var lastRateMs: Long? = null
         /** Last flow reading as Torque reported it (before unit conversion) and its unit label. */
         var lastFlowRaw: Double? = null
+        var lastFlowPid: String? = null
         var lastLvlL: Double? = null
         /** Usable level reads this session (re-detect when an unconfirmed source gave none all session). */
         var validLevels = 0
@@ -122,6 +123,7 @@ class PluginService : Service() {
      * never on the poll thread). Results are applied back on the main thread.
      */
     private val rollupExec = java.util.concurrent.Executors.newSingleThreadExecutor { r -> Thread(r, "FuelSmooth-rollup") }
+    private val diagnosticCapture = DiagnosticCapture()
     /** Session ids currently being recorded; rollups never read these files. */
     @Volatile private var openSessions: Set<String> = emptySet()
     @Volatile private var destroyed = false
@@ -472,6 +474,7 @@ class PluginService : Service() {
     }
 
     override fun onDestroy() {
+        diagnosticCapture.shutdown()
         TipReconciler.run(this, "service stop")
         stopPolling()
         FixFuelPrefs.prefs(this).unregisterOnSharedPreferenceChangeListener(prefsListener)
@@ -638,6 +641,17 @@ class PluginService : Service() {
         sampleTank(1, t, ecu, speedKmh, now, speedRaw, skipFill)
         for (extra in cfg.extras) {
             sampleTank(extra.id, t, ecu, speedKmh, now, speedRaw, skipFill)
+        }
+        if (ecu == true && identity == null && fuelDetect == null && detectQueue == null && quarantineDir == null) {
+            val rt = tanks.values.firstOrNull { it.sessions.isOpen }
+            if (rt != null) {
+                fun number(x: Double?): Any = x?.takeIf { it.isFinite() } ?: org.json.JSONObject.NULL
+                diagnosticCapture.tick(t, org.json.JSONObject().put("t", now)
+                    .put("speedKmh", number(speedKmh)).put("sessionFuelGal", number(rt.usedGal))
+                    .put("torqueFlowRaw", number(rt.lastFlowRaw)).put("torqueFlowUnit", rt.lastFlowUnit)
+                    .put("torqueFlowPid", rt.lastFlowPid ?: org.json.JSONObject.NULL)
+                    .put("primaryLevelPct", number(lastRawPct)))
+            }
         }
     }
 
@@ -1473,6 +1487,15 @@ class PluginService : Service() {
         sessionFlowMinUnit = null
         rt.validLevels = 0
         val sid = rt.sessions.open(profileId = profileId, app = BuildConfig.VERSION_NAME)
+        if (quarantineDir == null) {
+            runCatching {
+                val fp = Fingerprint.loadAll(filesDir)[profileId]
+                diagnosticCapture.start(profileId, id, sid, selectedTorqueProfile.orEmpty(),
+                    ProfileStore.tankDir(filesDir, profileId, id), fp?.protocol, fp?.bitmaps.orEmpty())
+            }.onFailure {
+                FsLog.warn(TAG, "diagnosticStart", "diagnostic start failed: ${it.javaClass.simpleName}")
+            }
+        }
         FsLog.reset()
         refreshOpen()
         if (!driveSourcesLogged) {
@@ -1486,6 +1509,7 @@ class PluginService : Service() {
     private fun closeTankSession(id: Int) {
         val rt = tanks[id] ?: return
         if (!rt.sessions.isOpen) return
+        diagnosticCapture.end(rt.sessions.sessionId)
         val q = quarantineDir
         if (q != null) {
             // Never write the wrong profile: no ledger, rollup, chunks, model or fills here.
@@ -1577,6 +1601,7 @@ class PluginService : Service() {
             val gmin = readDouble(t, galMinPid ?: Pids.GAL_PER_MIN)
             if (gmin == null || !gmin.isFinite() || gmin < 0.0) {
                 rt.lastFlowRaw = null
+                rt.lastFlowPid = null
                 noteBurn(rt, now, BurnGate.Verdict(false, "noFlow"))
                 return 0.0
             }
@@ -1587,6 +1612,7 @@ class PluginService : Service() {
             logFlowUnitOnce("galMin")
         }
         rt.lastFlowRaw = raw
+        rt.lastFlowPid = pid
         val rpm = readDouble(t, Pids.RPM)
         val maf = if (rpm == null) readDouble(t, Pids.MAF) else null
         val verdict = rt.burnGate.check(
