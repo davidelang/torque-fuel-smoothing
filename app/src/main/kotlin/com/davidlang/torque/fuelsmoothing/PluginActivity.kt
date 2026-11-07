@@ -79,21 +79,21 @@ class PluginActivity : Activity() {
     private val editorPrefs by lazy { getSharedPreferences("profile_editor", MODE_PRIVATE) }
 
     private fun editProfileExists(): Boolean =
-        ProfileStore.profiles(filesDir).any { it.id == editProfileId }
+        editProfileId in ProfileStore.profileIds(filesDir)
 
     private fun editingRecordingProfile(): Boolean =
         editProfileExists() && editProfileId == ProfileStore.activeId(filesDir)
 
     private fun refreshProfileChoices() {
-        val profiles = ProfileStore.profiles(filesDir)
-        if (profiles.none { it.id == editProfileId }) {
-            editProfileId = profiles.firstOrNull { it.id == ProfileStore.activeId(filesDir) }?.id
-                ?: profiles.firstOrNull()?.id.orEmpty()
+        val profiles = ProfileStore.profileIds(filesDir)
+        if (editProfileId !in profiles) {
+            editProfileId = profiles.firstOrNull { it == ProfileStore.activeId(filesDir) }
+                ?: profiles.firstOrNull().orEmpty()
             editorPrefs.edit().putString("profileId", editProfileId).apply()
             currentFocus?.clearFocus()
             odoMiles.setText("")
         }
-        val choices = profiles.map { it.id to (ProfileStore.profileField(filesDir, it.id, "name") ?: it.id) }
+        val choices = profiles.map { id -> id to (ProfileStore.profileField(filesDir, id, "name") ?: id) }
         if (choices == profileChoices && settingsProfile.adapter != null) return
         profileChoices = choices
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item,
