@@ -173,16 +173,16 @@ internal object FillBridgeStore {
             }
             if (mapped != null) {
                 val marker = File(ProfileStore.profileDir(root, mapped.first), "profile.json")
-                val stored = if (marker.isFile) ProfileStore.storedVin(root, mapped.first) else null
+                val stored = if (marker.isFile) Fingerprint.load(marker.parentFile!!).vin else null
                 if (stored != mapped.second || (payload.vin != null && payload.vin != mapped.second)) {
                     return@synchronized Association(null, "VEHICLE_MAPPING_MISMATCH")
                 }
                 return@synchronized Association(mapped.first, null)
             }
             val vin = payload.vin ?: return@synchronized Association(null, "UNKNOWN_VEHICLE")
-            val hits = ProfileStore.profileIds(root).filter {
-                File(ProfileStore.profileDir(root, it), "profile.json").isFile && ProfileStore.storedVin(root, it) == vin
-            }
+            // Connection identity is retained in fingerprint.json, not stamped into profile.json.
+            // Fingerprint.loadAll also supports pre-fingerprint profile.json VINs.
+            val hits = Fingerprint.loadAll(root).filterValues { it.vin == vin }.keys.toList()
             val match = hits.singleOrNull() ?: return@synchronized Association(null, if (hits.isEmpty()) "UNKNOWN_VEHICLE" else "AMBIGUOUS_VEHICLE")
             db.insertOrThrow("vehicle_map", null, ContentValues().apply {
                 put("producer", producer); put("vehicle_id", payload.vehicleId); put("profile_id", match); put("vin", vin)
