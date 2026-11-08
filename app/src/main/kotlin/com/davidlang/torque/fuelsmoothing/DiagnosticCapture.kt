@@ -18,7 +18,10 @@ internal class DiagnosticCapture {
         Spec("46", 1, "degC"), Spec("42", 2, "V"), Spec("5C", 1, "degC"), Spec("05", 1, "degC"),
         Spec("C7", 2, "km"), Spec("21", 2, "km"), Spec("30", 1, "count"), Spec("4D", 2, "min"), Spec("4E", 2, "min"), Spec("1F", 2, "s"),
         Spec("00", 4, "bitmap", "09"), Spec("04", 16, "ASCII", "09"),
-        Spec("06", 4, "hex", "09"), Spec("0A", 20, "ASCII", "09"))
+        Spec("06", 4, "hex", "09"), Spec("0A", 20, "ASCII", "09"),
+        // CARB HD OBD table verifies090D=ENGINE serial, NOT ECU hardware serial.
+        // Layout not independently verified: collect bounded positive raw evidence only.
+        Spec("0D", 0, "raw_hex", "09"))
     // One bus request/5s remains the ceiling. A6->31 separated by one slot, not simultaneous.
     // A6/31/9D nominal20s each. Slow context round-robin; Mode09 succeeds once/session,
     // with at most3 attempts/item and capability discovery before any substantive Mode09 query.
@@ -160,7 +163,7 @@ internal class DiagnosticCapture {
                     }
                     var retryDelayMs = 0L
                     if (current === s && !closed) {
-                        if (status == "decoded") {
+                        if (status == "decoded" || status == "captured_raw") {
                             s.consecutiveFailures.remove(spec.key)
                             s.retryAfterMs.remove(spec.key)
                         } else if (status != "connection_or_profile_changed" && status != "retired_session") {
@@ -278,6 +281,16 @@ internal class DiagnosticCapture {
             .filter { it.length <= 512 && it.matches(Regex("[0-9A-Fa-f :\\r\\n]+")) }.take(64)
         row.put("recombinedReplies", JSONArray(coherent))
         if (combined.size > 64 || combined.any { it.length > 512 }) return "reply_limit_exceeded"
+        if (spec.pid == "0D") {
+            val positives = coherent.filter { ObdReply.payloadAfter(it, "490D") != null }
+            row.put("rawPositiveReplyCount", positives.size)
+                .put("signal", "engine_serial_number_not_ECU_hardware_serial")
+                .put("validity", "raw_only_ESN_layout_not_decoded_no_identity_adoption")
+            if (positives.isEmpty()) return if (replies.any { it.contains("NO DATA", true) }) "no_data" else "no_matching_reply"
+            s.mode09Done.add(spec.key)
+            // Top-level valid stays false and values null: no serial value has been decoded.
+            return "captured_raw"
+        }
         val decoded = JSONArray()
         var mask = 0L
         for ((index, raw) in coherent.withIndex()) {
