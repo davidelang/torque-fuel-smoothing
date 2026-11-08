@@ -71,6 +71,15 @@
                 android:value="Reads the Torque fuel level and fuel rate while the adapter is connected and publishes a smoothed level." />
         </service>
 
+        <!-- Open, data-only receipt transport. Never starts Torque or recording. -->
+        <service
+            android:name=".FillEventBridgeService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.davidlang.torque.fuelsmoothing.action.BIND_FILL_EVENT_BRIDGE" />
+            </intent-filter>
+        </service>
+
         <provider
             android:name=".DataTransferProvider"
             android:authorities="${applicationId}.datatransfer"
