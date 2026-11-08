@@ -310,24 +310,42 @@ internal object ProfileStore {
         return "VIN mismatch $read"
     }
 
-    fun parseVin(parts: List<String>?): String? {
-        if (parts.isNullOrEmpty()) return null
-        val joined = parts.joinToString(" ")
-        val hex = Fingerprint.payload09(parts, "02") ?: joined.uppercase().replace(Regex("[^0-9A-F]"), "")
-        val chars = StringBuilder()
-        var i = 0
-        while (i + 1 < hex.length) {
-            val b = hex.substring(i, i + 2).toIntOrNull(16) ?: break
-            val ch = b.toChar()
-            if (ch in 'A'..'Z' || ch in '0'..'9') chars.append(ch)
-            i += 2
+    /** Complete, framed 0902 only; ambiguous or malformed responses never become identity. */
+    fun parseVin(parts: List<String>?): String? = Mode09Replies.vin(parts)
+
+    /** VIN is the physical key, never the Torque name. No history/model/settings are copied.
+     * profile.json carries VIN before publication, so a retry after interruption finds this profile.
+     */
+    fun physicalProfile(root: File, vin: String, torqueName: String?, initialProfile: String? = null): String = synchronized(PROFILE_LOCK) {
+        require(vin.matches(Regex("[A-HJ-NPR-Z0-9]{17}")))
+        val matches = Fingerprint.loadAll(root).filterValues { it.vin?.equals(vin, ignoreCase = true) == true }.keys
+        require(matches.size <= 1) { "Ambiguous saved physical identity" }
+        matches.singleOrNull()?.let { return@synchronized it }
+        val name = torqueName?.takeIf { it.isNotBlank() } ?: S("Vehicle 1")
+        val digest = java.security.MessageDigest.getInstance("SHA-256").digest(vin.toByteArray(Charsets.US_ASCII))
+            .joinToString("") { "%02x".format(it.toInt() and 255) }
+        // Reuse ONLY the empty placeholder just created by this identity read, not an old
+        // VIN-less vehicle's history. This avoids an extra empty entry on first-ever setup.
+        val initial = initialProfile?.let { profileDir(root, it) }
+        if (initial != null && File(initial, "profile.json").isFile && Fingerprint.load(initial).empty &&
+            initial.walkTopDown().filter { it.isFile }.all { it.parentFile == initial && it.name in setOf("profile.json", "ledger.json") }) {
+            val ledger = org.json.JSONObject(File(initial, "ledger.json").readText())
+            if (ledger.isNull("fillAnchorGal") && ledger.optDouble("burnSinceFillGal", 0.0) == 0.0) {
+                val data = org.json.JSONObject(File(initial, "profile.json").readText())
+                    .put("vin", vin).put("name", "$name · ${vin.takeLast(4)} · ${digest.take(12)}")
+                writeAtomic(File(initial, "profile.json"), data.toString())
+                return@synchronized initial.name
+            }
         }
-        val s = chars.toString()
-        for (start in 0..s.length - 17) {
-            val vin = s.substring(start, start + 17)
-            if (vin.none { it == 'I' || it == 'O' || it == 'Q' }) return vin
-        }
-        return null
+        val base = slug(name).take(20) + "-" + digest.take(12)
+        var id = base
+        var n = 2
+        while (File(root, "profiles/$id").exists()) id = "$base-${n++}"
+        val dir = profileDir(root, id)
+        File(dir, "raw").mkdirs()
+        writeAtomic(File(dir, "ledger.json"), ledgerJson(null))
+        writeAtomic(File(dir, "profile.json"), profileJson(id, "$name · ${vin.takeLast(4)} · ${id.removePrefix(slug(name).take(20) + "-")}", vin, name, System.currentTimeMillis()))
+        id
     }
 
     fun retainRaw(rawDir: File, nowMs: Long, enabled: Boolean = RAW_PRUNE_ENABLED) {

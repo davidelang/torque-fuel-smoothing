@@ -30,7 +30,7 @@ internal class DiagnosticCapture {
     // First two failures use ordinary slots; sustained failures back off, never hot-loop.
     private val retryDelaysMs = longArrayOf(0L, 0L, 30_000L, 60_000L, 120_000L, 240_000L, 300_000L)
     private class Session(val profile: String, val tank: Int, val id: String, val torqueName: String,
-        val file: File, val protocol: String, val bitmaps: Map<String, String>, val mode09Known: Boolean) {
+        val file: File, val protocol: String, val bitmaps: Map<String, String>, val mode09Known: Boolean, val pending: Boolean) {
         var slot = 0
         var slowSlot = 0 // worker-confined
         var mode09Mask: Long? = null
@@ -51,10 +51,10 @@ internal class DiagnosticCapture {
     private val worker = Executors.newSingleThreadExecutor { r -> Thread(r, "FuelSmooth-diagnostics").apply { isDaemon = true } }
 
     fun start(profile: String, tank: Int, id: String, torqueName: String, dir: File,
-        protocol: String?, bitmaps: Map<String, String>, mode09Known: Boolean = false) {
+        protocol: String?, bitmaps: Map<String, String>, mode09Known: Boolean = false, pending: Boolean = false) {
         if (closed || failed) return
         current = Session(profile, tank, id, torqueName, File(File(dir, "diagnostics"), "$id.jsonl"),
-            protocol.orEmpty(), bitmaps.toMap(), mode09Known)
+            protocol.orEmpty(), bitmaps.toMap(), mode09Known, pending)
     }
 
     fun end(id: String?) { if (current?.id == id) current = null }
@@ -96,9 +96,12 @@ internal class DiagnosticCapture {
                         val caps = JSONObject()
                         for (candidate in specs) caps.put(candidate.key, support(s, candidate))
                         write(s, JSONObject().put("event", "open").put("t", queuedMs).put("v", 2)
-                            .put("app", BuildConfig.VERSION_NAME).put("profileId", s.profile).put("tank", s.tank)
+                            .put("app", BuildConfig.VERSION_NAME).put("profileId", if (s.pending) JSONObject.NULL else s.profile).put("tank", s.tank)
+                            .put("recordingScope", if (s.pending) "quarantine" else "physical_vehicle_profile")
+                            .put("candidateProfileId", if (s.pending) s.profile else JSONObject.NULL)
+                            .put("quarantineId", if (s.pending) (s.file.parentFile?.parentFile?.parentFile?.name ?: JSONObject.NULL) else JSONObject.NULL)
                             .put("sessionId", s.id).put("protocol", s.protocol).put("bitmaps", JSONObject(s.bitmaps))
-                            .put("capabilitySource", "saved_identity_fingerprint_plus_session_0900").put("capabilities", caps)
+                            .put("capabilitySource", "current_connection_identity_plus_session_0900").put("capabilities", caps)
                             .put("policy", "CAN_advertised_only_except_0900_discovery_after_known_mode09")
                             .put("maxRequestsPer5s", 1).put("mode09AttemptsMax", 3)
                             .put("a6_31_9dNominalPeriodMs", 20000).put("mode09Known", s.mode09Known)
@@ -159,6 +162,7 @@ internal class DiagnosticCapture {
                         row.remove("decodedReplies")
                         row.remove("rawFrames")
                         row.remove("recombinedReplies")
+                        row.remove("assembledReplies")
                         row.remove("a6Reference")
                     }
                     var retryDelayMs = 0L
@@ -277,10 +281,12 @@ internal class DiagnosticCapture {
             catch (e: Exception) { row.put("recombineErrorType", e.javaClass.simpleName); emptyList<String>() }
         if (current !== s || closed || !torque.isConnectedToECU ||
             torque.getVehicleProfileInformation()?.firstOrNull()?.trim() != s.torqueName) return "retired_session"
-        val coherent = (if (combined.isEmpty()) replies else combined)
-            .filter { it.length <= 512 && it.matches(Regex("[0-9A-Fa-f :\\r\\n]+")) }.take(64)
-        row.put("recombinedReplies", JSONArray(coherent))
+        // API recombination is retained as evidence only: actual Torque versions returned
+        // shuffled numbered fragments. Shared strict framing also protects the identity path.
+        row.put("recombinedReplies", JSONArray(combined.filter { it.length <= 512 && it.matches(Regex("[0-9A-Fa-f :\\r\\n]+")) }.take(64)))
         if (combined.size > 64 || combined.any { it.length > 512 }) return "reply_limit_exceeded"
+        val coherent = Mode09Replies.messages(replies, spec.pid)
+        row.put("assembledReplies", JSONArray(coherent))
         if (spec.pid == "0D") {
             val positives = coherent.filter { ObdReply.payloadAfter(it, "490D") != null }
             row.put("rawPositiveReplyCount", positives.size)
@@ -299,8 +305,8 @@ internal class DiagnosticCapture {
             decoded.put(item)
             if (spec.pid == "00") mask = mask or item.getString("supportedInfoTypesHex").toLong(16)
         }
-        row.put("decodedReplies", decoded).put("recombinedCount", coherent.size)
-            .put("decodedCount", decoded.length()).put("allRepliesDecoded", decoded.length() == coherent.size)
+        row.put("decodedReplies", decoded).put("recombinedCount", combined.size).put("assembledCount", coherent.size)
+            .put("decodedCount", decoded.length()).put("allRepliesDecoded", coherent.isNotEmpty() && decoded.length() == coherent.size)
         if (decoded.length() == 0) return if (replies.any { it.contains("NO DATA", true) }) "no_data" else "unresolved_framing_or_length"
         if (spec.pid == "00") {
             s.mode09Mask = mask

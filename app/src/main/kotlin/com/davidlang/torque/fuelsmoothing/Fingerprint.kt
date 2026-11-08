@@ -4,8 +4,8 @@ import java.io.File
 
 /**
  * Vehicle fingerprint (ECU identity) stored per profile in fingerprint.json, and the deterministic
- * profile match used on connect. Exact VIN wins; else calibration ID; else supported-PID bitmaps +
- * protocol similarity >= BITMAP_MATCH.
+ * profile match used on connect. Only an unambiguous exact VIN automatically identifies a physical vehicle.
+ * Calibration IDs, names and capability bitmaps are never unique physical keys.
  */
 internal object Fingerprint {
     const val FILE = "fingerprint.json"
@@ -26,7 +26,7 @@ internal object Fingerprint {
     ) {
         val empty: Boolean get() = vin == null && calId == null && bitmaps.isEmpty()
 
-        /** Firm enough that a mismatching vehicle is treated as a different vehicle. */
+        /** Historical completeness hint only; never authorizes physical-vehicle matching. */
         val firm: Boolean get() = vin != null || calId != null || (sessions >= FIRM_BITMAP_SESSIONS && bitmaps.isNotEmpty())
     }
 
@@ -40,7 +40,7 @@ internal object Fingerprint {
     sealed class Decision(val why: String) {
         class Normal(why: String) : Decision(why)
 
-        /** Identity is certain (VIN / calibration ID): write this session to [target]. */
+        /** Physical identity is certain (VIN): write this session to [target]. */
         class Route(val target: String, why: String) : Decision(why)
 
         /** Wrong or unknown vehicle, not certain: hold data; [suggest] is a profile id or null = create new. */
@@ -48,54 +48,38 @@ internal object Fingerprint {
     }
 
     // ---------------- parsing of mode 01/09 replies ----------------
-    private fun hexOf(parts: List<String>?): String =
-        parts.orEmpty().joinToString(" ").uppercase().replace(Regex("[^0-9A-F]"), "")
 
     /**
      * Mode 09 payload hex for [pid] across reply formats: CAN multi-frame ("014", "0: 49 02 01 ..", "1: ..")
      * or one "49 pid nn .." line per frame. Frame indexes, byte counts and repeated headers are dropped.
      */
     fun payload09(parts: List<String>?, pid: String): String? {
-        val head = "49$pid"
-        val sb = StringBuilder(); var seen = false
-        for (line0 in parts.orEmpty()) {
-            val line = line0.uppercase().replace(Regex("^\\s*[0-9A-F]{1,2}:"), "")
-            var hex = line.replace(Regex("[^0-9A-F]"), "")
-            if (hex.length <= 3 && !line.contains(' ')) continue
-            val at = hex.indexOf(head)
-            if (at >= 0 && (at == 0 || !seen)) { hex = hex.substring(at + 4).let { if (it.length >= 2) it.substring(2) else "" }; seen = true }
-            if (seen) sb.append(hex)
-        }
-        return if (seen) sb.toString() else null
+        val reply = Mode09Replies.messages(parts, pid).singleOrNull() ?: return null
+        return ObdReply.payloadAfter(reply, "49$pid")?.drop(2)
     }
 
-    /** Printable ASCII after the 49xx header bytes (multi-frame line numbers dropped as non-printable). */
     fun parseAscii(parts: List<String>?, pid: String): String? {
-        val hex = payload09(parts, pid) ?: return null
-        val sb = StringBuilder()
-        var i = 0
-        while (i + 1 < hex.length) {
-            val b = hex.substring(i, i + 2).toInt(16)
-            if (b in 0x21..0x7E) sb.append(b.toChar()) else if (b == 0x20 && sb.isNotEmpty()) sb.append(' ')
-            i += 2
-        }
-        return sb.toString().trim().takeIf { it.length >= 4 }
+        val replies = Mode09Replies.messages(parts, pid)
+        if (replies.isEmpty()) return null
+        val values = replies.map { DiagnosticIdentityDecode.decode(pid, it) ?: return null }
+        val key = if (pid == "04") "calibrationIds" else "ecuNames"
+        return values.joinToString(";") { it.getJSONArray(key).toString() }
     }
 
-    /** CVN: hex bytes after 4906 + count byte. */
     fun parseCvn(parts: List<String>?): String? {
-        val hex = hexOf(parts)
-        val at = hex.indexOf("4906")
-        if (at < 0 || hex.length < at + 14) return null
-        return hex.substring(at + 6, minOf(hex.length, at + 6 + 8)).takeIf { it.length == 8 }
+        val replies = Mode09Replies.messages(parts, "06")
+        if (replies.isEmpty()) return null
+        return replies.map { DiagnosticIdentityDecode.decode("06", it) ?: return null }
+            .joinToString(";") { it.getJSONArray("calibrationVerificationNumbersHex").toString() }
     }
 
     /** "41 00 BE 3F A8 13" -> "BE3FA813". */
     fun parseBitmap(parts: List<String>?, pid: String): String? {
-        val hex = hexOf(parts)
-        val at = hex.indexOf("41" + pid.substring(2))
-        if (at < 0 || hex.length < at + 12) return null
-        return hex.substring(at + 4, at + 12)
+        if (parts.isNullOrEmpty() || parts.size > 64 || parts.any { it.length > 512 }) return null
+        val data = parts.flatMap { it.lines() }.mapNotNull { ObdReply.dataAfter(it, "41" + pid.substring(2), 4) }
+        if (data.isEmpty() || data.any { it.length != 8 }) return null
+        // Capability union only; this is NOT ECU identity or unique ECU attribution.
+        return data.fold(0L) { mask, hex -> mask or hex.toLong(16) }.toString(16).uppercase().padStart(8, '0')
     }
 
     fun merge(stored: Fp, obs: Fp): Fp {
@@ -160,38 +144,19 @@ internal object Fingerprint {
     class Match(val id: String?, val certain: Boolean, val why: String)
 
     fun match(obs: Fp, profiles: Map<String, Fp>): Match {
-        val ids = profiles.keys.sorted()
-        if (obs.vin != null) {
-            ids.firstOrNull { profiles[it]!!.vin.equals(obs.vin, ignoreCase = true) }?.let { return Match(it, true, "vin") }
-        }
-        if (obs.calId != null) {
-            ids.firstOrNull { p -> val f = profiles[p]!!; f.calId == obs.calId && (f.vin == null || obs.vin == null) }
-                ?.let { return Match(it, true, "calId") }
-        }
-        var best: String? = null; var bestS = 0.0
-        for (id in ids) {
-            val f = profiles[id]!!
-            // A known, different VIN or calibration ID rules a profile out.
-            if (obs.vin != null && f.vin != null) continue
-            if (obs.calId != null && f.calId != null && f.calId != obs.calId) continue
-            val s = similarity(obs, f)
-            if (s > bestS) { bestS = s; best = id }
-        }
-        return if (best != null && bestS >= BITMAP_MATCH) Match(best, false, "bitmaps %.2f".format(java.util.Locale.ROOT, bestS))
-        else Match(null, false, "no match (best %.2f)".format(java.util.Locale.ROOT, bestS))
+        val vin = obs.vin ?: return Match(null, false, "physical identity unavailable")
+        val hits = profiles.filterValues { it.vin?.equals(vin, ignoreCase = true) == true }.keys
+        return if (hits.size == 1) Match(hits.single(), true, "vin")
+        else Match(null, false, if (hits.isEmpty()) "new VIN" else "ambiguous saved VIN")
     }
 
-    /** What to do with a session on [active] given the observed identity. */
+    /** Weak ECU configuration evidence is diagnostic context, NOT physical vehicle identity. */
     fun decide(active: String, obs: Fp, profiles: Map<String, Fp>): Decision {
-        if (obs.empty) return Decision.Normal("no ECU identity read")
-        val cur = profiles[active] ?: Fp()
         val m = match(obs, profiles)
         return when {
-            m.id == active -> Decision.Normal("matches $active (${m.why})")
-            m.id != null && m.certain -> Decision.Route(m.id, "identity of ${m.id} (${m.why}), Torque profile is $active")
-            m.id != null -> Decision.Quarantine(m.id, "looks like ${m.id} (${m.why}), Torque profile is $active")
-            cur.firm -> Decision.Quarantine(null, "unknown vehicle on firm profile $active (${m.why})")
-            else -> Decision.Normal("learning $active (${m.why})")
+            m.id == active -> Decision.Normal("matches $active (vin)")
+            m.id != null -> Decision.Route(m.id, "vin")
+            else -> Decision.Quarantine(null, m.why)
         }
     }
 

@@ -26,10 +26,19 @@ internal object DiagnosticIdentityDecode {
             if (pid == "06") items.put(item) else {
                 val bytes = item.chunked(2).map { it.toInt(16) }
                 if (bytes.any { it != 0 && it !in 32..126 }) return null
-                val end = bytes.indexOf(0).let { if (it < 0) bytes.size else it }
-                if (bytes.drop(end).any { it != 0 && it != 32 }) return null
-                val text = bytes.take(end).map { it.toChar() }.joinToString("").trimEnd()
-                if (text.isEmpty()) return null
+                // J1979 ECU-name field: four-byte identifier, separator, fifteen-byte name.
+                // The identifier may be NUL padded independently of the trailing name padding.
+                fun textField(field: List<Int>): String? {
+                    val end = field.indexOf(0).let { if (it < 0) field.size else it }
+                    if (field.drop(end).any { it != 0 && it != 32 }) return null
+                    return field.take(end).map { it.toChar() }.joinToString("").trimEnd().takeIf { it.isNotEmpty() }
+                }
+                val text = if (pid == "0A") {
+                    val identifier = textField(bytes.take(4)) ?: return null
+                    if (bytes[4] != 45) return null
+                    val name = textField(bytes.drop(5)) ?: return null
+                    "$identifier-$name"
+                } else textField(bytes) ?: return null
                 items.put(text)
             }
         }

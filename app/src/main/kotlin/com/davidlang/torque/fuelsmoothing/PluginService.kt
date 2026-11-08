@@ -15,6 +15,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.os.SystemClock
 import android.util.Log
 import org.prowl.torque.remote.ITorqueService
 import java.io.File
@@ -25,15 +26,9 @@ import kotlin.math.roundToInt
 internal fun identityHeader(cmd: String, protocol: String?): String =
     if (cmd == "2216C1" && protocol?.contains("J1850 PWM") == true) "C410F1" else ""
 
-internal fun identityQueue(firm: Boolean, vin: String?, probe: String?): List<String> {
-    val queue = when {
-        firm && vin != null -> mutableListOf("0902")
-        firm -> mutableListOf("0100")
-        else -> mutableListOf("0100", "0902", "0904", "0906", "090A", "2216C1")
-    }
-    if (firm && probe != "ok" && "2216C1" !in queue) queue.add("2216C1")
-    return queue
-}
+@Suppress("UNUSED_PARAMETER")
+internal fun identityQueue(firm: Boolean, vin: String?, probe: String?): List<String> =
+    listOf("0902", "0100") // fresh physical identity AND fresh capability discovery, every connection
 
 class PluginService : Service() {
     private class TankRt(
@@ -95,6 +90,21 @@ class PluginService : Service() {
     /** Profile the user confirmed for the quarantined data (from the notification); null = discard at session end. */
     private var quarantineConfirm: String? = null
     private var quarantineObs: Fingerprint.Fp? = null
+    private var observedIdentity = Fingerprint.Fp()
+    private var connectionMode09Known = false
+    private var identityReady = false
+    private var nextIdentityCheckMs = 0L
+    private fun trustedVehicle(): Boolean = identityReady && identity == null && quarantineDir == null
+
+    /** Settings editor selection is not a recording identity. Pending vehicles use only fresh SAE support. */
+    private fun recordingConfig(): FixFuelConfig {
+        val base = FixFuelPrefs.load(this, profileId, migrateLegacy = false)
+        if (quarantineDir == null) return base
+        val mask = observedIdentity.bitmaps["0120"]?.toLongOrNull(16) ?: 0L
+        return base.copy(sourceId = if ((mask and (1L shl 17)) != 0L) "sae_012f" else FuelDetect.NONE,
+            sourceConfirmed = false, customName = "", sourceStatus = "", tankGal = null,
+            extras = emptyList(), activeTank = FixFuelPrefs.ACTIVE_TANK1, feed012f = FeedMode.OFF)
+    }
     private var pidNames: Map<String, String> = emptyMap()
     private var ecuLevelName: String = ECU_FUEL_NAME
     private var ecuLevelPid: String? = null
@@ -305,6 +315,10 @@ class PluginService : Service() {
     }
 
     private fun reloadImportedState() {
+        // A replaced snapshot does not establish the identity of the currently attached ECU.
+        identity = null; identityReady = false; profileSelectionReady = false
+        observedIdentity = Fingerprint.Fp(); connectionMode09Known = false
+        quarantineDir = null; quarantineObs = null; quarantineSuggest = null; quarantineConfirm = null
         cfg = FixFuelPrefs.load(this)
         FsLog.verbose = getSharedPreferences(FixFuelPrefs.PREFS, MODE_PRIVATE).getBoolean(FsLog.KEY_VERBOSE, false)
         prefsDirty = false
@@ -323,6 +337,7 @@ class PluginService : Service() {
     private var lvlMax: Double? = null
 
     private fun loadLevelScale() {
+        if (!trustedVehicle()) { lvlFull = null; lvlMax = null; return }
         lvlFull = ProfileStore.profileField(filesDir, profileId, LevelScale.KEY_FULL)?.toDoubleOrNull()
         lvlMax = ProfileStore.profileField(filesDir, profileId, LevelScale.KEY_MAX)?.toDoubleOrNull()
     }
@@ -330,7 +345,7 @@ class PluginService : Service() {
     private fun levelUnit(id: Int): Double = if (id == 1 && LevelScale.applies(cfg.sourceId)) LevelScale.unit(lvlFull, lvlMax) else 1.0
 
     private fun seedLevelScale(counts: Double, why: String) {
-        if (lvlFull != null || !LevelScale.applies(cfg.sourceId)) return
+        if (!trustedVehicle() || lvlFull != null || !LevelScale.applies(cfg.sourceId)) return
         lvlFull = counts
         ProfileStore.setProfileField(filesDir, profileId, LevelScale.KEY_FULL, counts.toString())
         FsLog.i(TAG, "level full scale seeded for $profileId: ${"%.0f".format(counts)} counts ($why); units only, tank size still learned")
@@ -339,14 +354,14 @@ class PluginService : Service() {
     private fun reloadCfgIfDirty() {
         if (!prefsDirty) return
         prefsDirty = false
-        cfg = FixFuelPrefs.load(this)
+        cfg = recordingConfig()
         loadLevelScale()
         FsLog.verbose = getSharedPreferences(FixFuelPrefs.PREFS, MODE_PRIVATE).getBoolean(FsLog.KEY_VERBOSE, false)
     }
 
     /** Reload cfg now, whether or not a preference changed, and tell the page. */
     private fun onSourceNotice() {
-        cfg = FixFuelPrefs.load(this)
+        cfg = recordingConfig()
         loadLevelScale()
         prefsDirty = false
         sendBroadcast(Intent(ACTION_SOURCE_CHANGED).setPackage(packageName))
@@ -525,7 +540,8 @@ class PluginService : Service() {
 
     private fun afterBindWork() {
         val t = torque ?: return
-        cfg = FixFuelPrefs.load(this)
+        onEcuAway() // every API binding must establish physical identity again before output
+        cfg = recordingConfig()
         FsLog.verbose = getSharedPreferences(FixFuelPrefs.PREFS, MODE_PRIVATE).getBoolean(FsLog.KEY_VERBOSE, false)
         prefsDirty = false
         priorCache.clear()
@@ -602,32 +618,43 @@ class PluginService : Service() {
     }
 
     private fun sampleOnce() {
-        reloadCfgIfDirty()
-        ensureRuntimes()
         val t = torque ?: return
         val ecu = runCatching { t.isConnectedToECU }.getOrNull()
+        val now = System.currentTimeMillis()
+        if (ecu != null && ecu != lastEcuConnected) onEcu(ecu)
+        if (ecu != true) return // disconnected cached values must never be published as a new car
+        if (!syncTorqueProfile(t, now)) return
+        if (identity == null && SystemClock.elapsedRealtime() >= nextIdentityCheckMs && fuelDetect == null && detectQueue == null) {
+            // A swap can occur without Torque changing profiles or reporting a connection edge.
+            // One paced VIN recheck/minute (pending identity retries/30s), not a vendor scan.
+            invalidateVehicleOutputs(t)
+            try {
+                identity = IdentityRead(profileId, selectedTorqueProfile, Fingerprint.loadAll(filesDir)[profileId],
+                    checkOnly = identityReady)
+            } catch (e: Exception) {
+                identityReady = false
+                nextIdentityCheckMs = SystemClock.elapsedRealtime() + 30_000L
+                FsLog.warn(TAG, "identityStart", "vehicle identity check unavailable: ${e.javaClass.simpleName}")
+                return
+            }
+        }
+        if (identity != null) {
+            pumpIdentity(t)
+            return // destination config/runtime is installed BEFORE the next sample/output
+        }
+        if (!identityReady) return
+        reloadCfgIfDirty()
+        ensureRuntimes()
         if (pidNames.isEmpty()) resolvePids()
         else if (cfg.write012f && !ecuFuelResolved) resolveEcuFuel(t)
-        val now = System.currentTimeMillis()
         val speedRaw = speedPid?.let { readDouble(t, it) } ?: 0.0
         val speedKmh = speedRaw
         val active = resolveActiveTank(t)
-        if (ecu != null && ecu != lastEcuConnected) {
-            onEcu(ecu)
-        }
-        if (ecu == true) {
-            // OBD_CONNECTED can arrive before the binder. Also notice profile changes without an ECU edge.
-            if (!syncTorqueProfile(t, now)) return
-            if (identity != null) {
-                pumpIdentity(t)
-                return // reload the selected profile's config before reading or publishing any samples
-            }
-        }
         applyActiveTank(active, now)
         if (ecu == true) ensureActiveSession()
         val skipFill = now < suppressFillUntilMs
         // Never burst bus queries: at most one identity or one detect command per tick.
-        if (ecu == true && identity == null && !fuelDetectTried && fuelDetect == null &&
+        if (quarantineDir == null && ecu == true && identity == null && !fuelDetectTried && fuelDetect == null &&
             FuelDetect.shouldAutoDetect(cfg.sourceId, ProfileStore.profileField(filesDir, profileId, FuelDetect.KEY_TRIED) == "true")
         ) {
             fuelDetectTried = true // once per connection; the profile flag is set only when the run completes
@@ -642,7 +669,7 @@ class PluginService : Service() {
         for (extra in cfg.extras) {
             sampleTank(extra.id, t, ecu, speedKmh, now, speedRaw, skipFill)
         }
-        if (ecu == true && identity == null && fuelDetect == null && detectQueue == null && quarantineDir == null) {
+        if (ecu == true && identity == null && fuelDetect == null && detectQueue == null) {
             val rt = tanks.values.firstOrNull { it.sessions.isOpen }
             if (rt != null) {
                 fun number(x: Double?): Any = x?.takeIf { it.isFinite() } ?: org.json.JSONObject.NULL
@@ -738,7 +765,7 @@ class PluginService : Service() {
             jumpPct = cfg.jumpPct,
             ignoreFill = skipFill,
         )
-        if (id == 1 && LevelScale.applies(cfg.sourceId)) {
+        if (id == 1 && trustedVehicle() && LevelScale.applies(cfg.sourceId)) {
             // Highest settled (smoothed, tracking, not filling/holding) count only rises; raw slosh never counts.
             LevelScale.raise(lvlMax, smoothed, rt.math.mode == TrackMode.SKEW)?.let { c ->
                 lvlMax = c
@@ -839,6 +866,10 @@ class PluginService : Service() {
 
     private fun publishFromSmoothed(t: ITorqueService, raw: Double, smoothed: Double) {
         val rt = tanks[1] ?: return
+        if (!trustedVehicle()) {
+            publishSmoothed(t, smoothed) // explicitly labelled smoothing only, no old fitted feedback
+            return
+        }
         val chunkOut = livePublish(rt)
         val bandOut = bandPublish(rt)
         val kalOut = kalmanPublish(rt)
@@ -852,6 +883,7 @@ class PluginService : Service() {
     }
 
     private fun publishExtraFrom(t: ITorqueService, id: Int, rt: TankRt, smoothed: Double) {
+        if (!trustedVehicle()) return
         val out = livePublish(rt)
         publishExtra(
             t, id, smoothed, out.correctedPct,
@@ -876,12 +908,17 @@ class PluginService : Service() {
     }
 
     private fun onEcuAway() {
+        closeSession() // close under the previous physical owner before invalidating identity
+        torque?.let { invalidateVehicleOutputs(it) }
         profileSelectionReady = false
         torqueProfileCheckedMs = 0L
         identity = null
+        identityReady = false
+        observedIdentity = Fingerprint.Fp()
+        connectionMode09Known = false
+        quarantineDir = null; quarantineObs = null; quarantineSuggest = null; quarantineConfirm = null
         driveSourcesLogged = false
-        closeSession()
-        if (tanks[1] == null) tanks[1] = makeRuntime(1)
+        resetVehicleRuntime()
     }
 
     /** The public API exposes only the currently selected Torque profile, not a profile list or setter. */
@@ -893,13 +930,26 @@ class PluginService : Service() {
             .getOrNull()
         if (name.isNullOrEmpty()) {
             FsLog.warn(TAG, "torqueProfileEmpty", "Torque selected profile is blank; recording waits for a profile")
+            if (profileSelectionReady || identityReady) {
+                closeSession()
+                invalidateVehicleOutputs(t)
+            }
             profileSelectionReady = false
+            identityReady = false
+            identity = null
+            observedIdentity = Fingerprint.Fp(); connectionMode09Known = false
+            quarantineDir = null; quarantineObs = null; quarantineSuggest = null; quarantineConfirm = null
             return false
         }
         if (profileSelectionReady && name == selectedTorqueProfile) return true
         // Close under the OLD recording identity before selecting or creating any other profile.
-        identity = null
         closeSession()
+        invalidateVehicleOutputs(t)
+        identity = null
+        identityReady = false
+        observedIdentity = Fingerprint.Fp()
+        connectionMode09Known = false
+        quarantineDir = null; quarantineObs = null; quarantineSuggest = null; quarantineConfirm = null
         fuelDetect = null
         fuelDetectTried = false
         detectQueue = null
@@ -919,76 +969,111 @@ class PluginService : Service() {
         val next = sel.id
         val note = sel.vinNote
         if (sel.created) FsLog.i(TAG, "profile created $next for Torque profile '$torqueName'")
-        if (note.isNotBlank()) FsLog.w(TAG, "profile $next: $note (stored ${ProfileStore.storedVin(filesDir, next)})")
+        if (note.isNotBlank()) FsLog.w(TAG, "profile $next: identity mismatch")
         val gapFile = File(ProfileStore.profileDir(filesDir, next), "gap.txt")
         val gap = if (gapFile.isFile) gapFile.readText() else ""
         File(filesDir, "profile-notice.txt").writeText(if (note.isBlank()) gap else note)
         // ECU identity is read one bus command per poll tick (never a burst), then decided in finishIdentity().
         // Sessions wait for the decision (ensureActiveSession), so data never lands in the wrong profile.
         val stored = Fingerprint.loadAll(filesDir)[next]
-        identity = IdentityRead(next, torqueName, stored)
+        identity = IdentityRead(next, torqueName, stored, freshProfile = next.takeIf { sel.created })
         FsLog.i(TAG, "identity read queued for $next (firm=${stored?.firm == true}, steps=${identity!!.queue.size})")
     }
 
     /**
      * Paced ECU identity read: at most one sendCommandGetResponse per poll tick, total capped at
-     * IDENTITY_MAX_MS. A firm profile re-checks its strongest key (VIN if stored, else 0100)
-     * and sends 2216C1 until the stored ford2216C1 probe is ok.
+     * IDENTITY_MAX_MS. Fresh support blocks follow advertised continuation bits; a saved
+     * fingerprint never supplies another physical vehicle's diagnostic capabilities.
      */
-    private inner class IdentityRead(val next: String, val torqueName: String?, stored: Fingerprint.Fp?) {
+    private inner class IdentityRead(val next: String, val torqueName: String?, stored: Fingerprint.Fp?,
+        var checkOnly: Boolean = false, val freshProfile: String? = null) {
         val startMs = System.currentTimeMillis()
+        private val startMono = SystemClock.elapsedRealtime()
+        val evidenceId = "$startMs-${java.util.UUID.randomUUID()}"
         val queue = ArrayDeque<String>()
         val bitmaps = LinkedHashMap<String, String>()
-        var vin: String? = null; var calId: String? = null; var cvn: String? = null; var ecuName: String? = null
+        val evidence = org.json.JSONArray()
+        val expectedVin = if (quarantineDir == null) stored?.vin?.uppercase() else null
+        val previousProbe = stored?.probes?.get("ford2216C1")
+        var vin: String? = null
+        private var initialVin: String? = null
+        private var confirmingVin = false
+        private var needsFinalVin = !checkOnly
+        var retired = false
+        var mode09Known = false
         var probe: String? = null
         var probeRaw: List<String>? = null
-        var bitmapsDone = false
-
-        init {
-            queue.addAll(identityQueue(stored?.firm == true, stored?.vin, stored?.probes["ford2216C1"]))
-        }
+        init { queue.addAll(if (checkOnly) listOf("0902") else identityQueue(false, null, null)) }
 
         fun step(t: ITorqueService): Boolean {
-            if (System.currentTimeMillis() - startMs > IDENTITY_MAX_MS) {
-                FsLog.w(TAG, "identity read capped after ${IDENTITY_MAX_MS}ms; ${queue.size} steps skipped")
+            if (SystemClock.elapsedRealtime() - startMono > IDENTITY_MAX_MS) {
+                FsLog.w(TAG, "identity read capped; ${queue.size} steps skipped")
                 queue.clear()
-            }
-            val c = queue.pollFirst() ?: return true
-            if (runCatching { t.isConnectedToECU }.getOrNull() != true) {
-                queue.clear()
+                vin = null; bitmaps.clear() // incomplete identity bracket never authorizes a profile
                 return true
             }
-            val r = runCatching {
-                t.sendCommandGetResponse(identityHeader(c, runCatching { t.protocolName }.getOrNull()), c)
-            }.getOrNull()?.toList()
+            val c = queue.pollFirst() ?: return true
+            if (runCatching { t.isConnectedToECU }.getOrNull() != true) { retired = true; queue.clear(); return true }
+            val header = identityHeader(c, runCatching { t.protocolName }.getOrNull())
+            val started = System.currentTimeMillis()
+            val r = runCatching { t.sendCommandGetResponse(header, c) }.getOrNull()?.toList()
+            // Private files only: never place full VIN/replies in FsLog, logcat or a notification.
+            evidence.put(org.json.JSONObject().put("pid", c).put("t", started).put("replyMs", System.currentTimeMillis())
+                .put("header", header).put("rawFrames", org.json.JSONArray(r.orEmpty().filter {
+                    it.length <= 512 && it.matches(Regex("[0-9A-Fa-f :\\r\\n]+")) }.take(64)))
+                .put("replyLimitExceeded", r.orEmpty().size > 64 || r.orEmpty().any { it.length > 512 }))
+            val sameConnection = identity === this && torque === t && runCatching {
+                t.isConnectedToECU && t.getVehicleProfileInformation()?.firstOrNull()?.trim() == torqueName
+            }.getOrDefault(false)
+            if (!sameConnection) { retired = true; vin = null; bitmaps.clear(); queue.clear(); return true }
             when (c) {
-                "0902" -> vin = ProfileStore.parseVin(r)
-                "0904" -> calId = Fingerprint.parseAscii(r, "04")
-                "0906" -> cvn = Fingerprint.parseCvn(r)
-                "090A" -> ecuName = Fingerprint.parseAscii(r, "0A")
+                "0902" -> {
+                    mode09Known = mode09Known || Mode09Replies.messages(r, "02").isNotEmpty()
+                    val readVin = ProfileStore.parseVin(r)
+                    if (confirmingVin) {
+                        if (readVin != initialVin) { vin = null; bitmaps.clear() } else vin = readVin
+                    } else {
+                        vin = readVin
+                        initialVin = readVin
+                    }
+                    if (checkOnly && (vin != expectedVin || (quarantineDir != null && vin != null))) {
+                        // End the old owner's recording before capability discovery or any new sample.
+                        closeSession()
+                        identityReady = false
+                        checkOnly = false
+                        needsFinalVin = true
+                        queue.add("0100")
+                    }
+                }
                 "2216C1" -> { probe = r?.joinToString(" ")?.uppercase()?.replace(" ", ""); probeRaw = r }
                 else -> if (c in Fingerprint.BITMAP_PIDS) {
                     val bm = Fingerprint.parseBitmap(r, c)
                     if (bm != null) {
                         bitmaps[c] = bm
-                        // Next bitmap PID only if this one says it is supported; queued right behind.
                         val nextPid = Fingerprint.BITMAP_PIDS.getOrNull(Fingerprint.BITMAP_PIDS.indexOf(c) + 1)
                         if ((bm.toLong(16) and 1L) != 0L && nextPid != null && queue.size < 12) queue.addFirst(nextPid)
                     }
+                    // Preserve the existing Ford probe only on its known J1850 protocol, never
+                    // blindly send a manufacturer command to a newly encountered CAN vehicle.
+                    if (c == "0100" && previousProbe != "ok" && runCatching { t.protocolName }.getOrNull()?.contains("J1850 PWM") == true)
+                        queue.add("2216C1")
                 }
+            }
+            // Preserve partial observations too if the process ends before the decision.
+            persistIdentityEvidence(Quarantine.dir(filesDir, startMs), this, obs(t))
+            if (queue.isEmpty() && needsFinalVin && !confirmingVin) {
+                confirmingVin = true
+                queue.add("0902") // bracket fresh capabilities with consistent physical identity
             }
             return queue.isEmpty()
         }
 
         fun obs(t: ITorqueService): Fingerprint.Fp = Fingerprint.Fp(
-            vin = vin, calId = calId, cvn = cvn, ecuName = ecuName,
-            protocol = runCatching { t.protocolName }.getOrNull()?.takeIf { it.isNotBlank() },
-            bitmaps = bitmaps,
-            probes = probe?.let {
-                val ok = it.contains("6216C1")
-                if (ok) mapOf("ford2216C1" to "ok") else mapOf("ford2216C1" to "no", "ford2216C1Reply" to Fingerprint.replyHex(probeRaw))
-            } ?: emptyMap(),
-        )
+            vin = vin, protocol = runCatching { t.protocolName }.getOrNull()?.takeIf { it.isNotBlank() },
+            bitmaps = bitmaps.toMap(), probes = probe?.let {
+                if (it.contains("6216C1")) mapOf("ford2216C1" to "ok")
+                else mapOf("ford2216C1" to "no", "ford2216C1Reply" to Fingerprint.replyHex(probeRaw))
+            } ?: emptyMap())
     }
 
     private var identity: IdentityRead? = null
@@ -997,64 +1082,110 @@ class PluginService : Service() {
     private fun pumpIdentity(t: ITorqueService) {
         val r = identity ?: return
         if (!r.step(t)) return
-        identity = null
-        finishIdentity(t, r.next, r.torqueName, r.obs(t))
+        if (r.retired) {
+            closeSession()
+            persistIdentityEvidence(Quarantine.dir(filesDir, r.startMs), r, Fingerprint.Fp())
+            identity = null
+            identityReady = false
+            observedIdentity = Fingerprint.Fp()
+            nextIdentityCheckMs = SystemClock.elapsedRealtime() + 30_000L
+            return
+        }
+        // A successful monitor of the SAME VIN keeps the existing session/smoothing/ledger.
+        if (r.checkOnly && r.vin == r.expectedVin) {
+            identity = null
+            nextIdentityCheckMs = SystemClock.elapsedRealtime() + if (quarantineDir == null) 60_000L else 30_000L
+            persistIdentityEvidence(quarantineDir ?: ProfileStore.profileDir(filesDir, profileId), r, r.obs(t))
+            return
+        }
+        try {
+            finishIdentity(t, r)
+        } catch (e: Exception) {
+            identityReady = false // IO/selection failure must not fall through to the old vehicle
+            FsLog.warn(TAG, "identityResolve", "vehicle identity unresolved: ${e.javaClass.simpleName}")
+        } finally {
+            identity = null
+            nextIdentityCheckMs = SystemClock.elapsedRealtime() + if (identityReady && quarantineDir == null) 60_000L else 30_000L
+        }
     }
 
-    private fun finishIdentity(t: ITorqueService, next: String, torqueName: String?, obs: Fingerprint.Fp) {
-        val fps = Fingerprint.loadAll(filesDir)
-        val d = Fingerprint.decide(next, obs, fps)
-        FsLog.i(TAG, "identity decision ${d::class.simpleName} torque='$torqueName' profile=$next: ${d.why} obs=${Fingerprint.redacted(obs)}")
-        // Verbose adds the non-identifying parts only (bitmaps, probes, protocol); VIN/calId/CVN never reach logcat.
-        FsLog.v(TAG, "identity obs detail=${Fingerprint.toJson(obs.copy(vin = null, calId = null, cvn = null))}")
-        val wasQ = quarantineDir
-        quarantineDir = null
-        quarantineSuggest = null
-        quarantineConfirm = null
-        quarantineObs = null
-        var target = next
-        when (d) {
-            is Fingerprint.Decision.Normal -> if (!obs.empty) {
-                Fingerprint.save(ProfileStore.profileDir(filesDir, next), Fingerprint.merge(fps[next] ?: Fingerprint.Fp(), obs))
-            }
-            is Fingerprint.Decision.Route -> {
-                target = d.target
-                Fingerprint.save(ProfileStore.profileDir(filesDir, target), Fingerprint.merge(fps[target] ?: Fingerprint.Fp(), obs))
-                notifyIdentity(
-                    S("Recording to %1\$s", profileName(target)),
-                    S("This vehicle is %1\$s (%2\$s), but Torque's profile is '%3\$s'. Data goes to %1\$s; tap to open Torque and switch profiles.", profileName(target), d.why, torqueName.orEmpty()),
-                    emptyList(),
-                )
-            }
-            is Fingerprint.Decision.Quarantine -> {
-                quarantineDir = Quarantine.dir(filesDir, System.currentTimeMillis())
-                quarantineSuggest = d.suggest
-                quarantineObs = obs
-                val sug = d.suggest?.let { S("Torque profile '%1\$s'", profileName(it)) }
-                    ?: S("a new vehicle profile")
-                notifyIdentity(
-                    S("Wrong vehicle profile?"),
-                    S("Torque profile '%1\$s' doesn't match this vehicle (%2\$s). Suggested: %3\$s. Data is held and discarded at drive end unless you keep it.", torqueName.orEmpty(), d.why, sug),
-                    Fingerprint.actions(d.suggest),
-                )
-            }
+    private fun persistIdentityEvidence(dir: File, r: IdentityRead, obs: Fingerprint.Fp) {
+        try {
+            val data = org.json.JSONObject().put("v", 1).put("t", r.startMs).put("observed", org.json.JSONObject(Fingerprint.toJson(obs)))
+                .put("responses", r.evidence).put("retired", r.retired).put("source", "Torque.sendCommandGetResponse")
+            val file = File(dir, "identity/${r.evidenceId}.json")
+            file.parentFile?.mkdirs()
+            AtomicFile.write(file, data.toString())
+        } catch (e: Exception) {
+            FsLog.warn(TAG, "identityEvidence", "private identity evidence write failed: ${e.javaClass.simpleName}")
         }
-        FsLog.i(TAG, "identity route: write=${quarantineDir?.path ?: target} suggest=${quarantineSuggest}")
-        // A fingerprint route is the recording profile; the setup page must show that same profile.
-        ProfileStore.setActiveId(filesDir, if (quarantineDir == null) target else next)
-        val changed = target != profileId || wasQ != quarantineDir
+    }
+
+    private fun finishIdentity(t: ITorqueService, r: IdentityRead) {
+        val obs = r.obs(t)
+        val fps = Fingerprint.loadAll(filesDir)
+        val hits = fps.filterValues { obs.vin != null && it.vin?.equals(obs.vin, ignoreCase = true) == true }.keys
+        val target = if (obs.vin != null && hits.size <= 1) ProfileStore.physicalProfile(filesDir, obs.vin, r.torqueName, r.freshProfile) else r.next
+        val pending = obs.vin == null || hits.size > 1
+        val wasQ = quarantineDir
+        val nextQ = if (pending) wasQ ?: Quarantine.dir(filesDir, r.startMs) else null
+        val changed = target != profileId || wasQ != nextQ || !identityReady ||
+            observedIdentity.bitmaps != obs.bitmaps || observedIdentity.protocol != obs.protocol
+        if (changed) {
+            closeSession() // previous profile/quarantine still owns every open writer and baseline
+            invalidateVehicleOutputs(t)
+        }
+        quarantineDir = nextQ
+        // VIN-less legacy vehicles can be explicitly confirmed by the user for THIS connection;
+        // a matching name/bitmap never performs that confirmation automatically.
+        quarantineSuggest = if (pending && hits.isNotEmpty()) hits.sorted().first() else if (pending && obs.vin == null) r.next else null
+        if (changed) quarantineConfirm = null
+        quarantineObs = if (pending) obs else null
+        observedIdentity = obs // ONLY this connection's capabilities, never another car's saved bitmap
+        connectionMode09Known = r.mode09Known
+        if (!pending) {
+            Fingerprint.save(ProfileStore.profileDir(filesDir, target), Fingerprint.merge(Fingerprint.load(ProfileStore.profileDir(filesDir, target)), obs))
+        }
+        persistIdentityEvidence(nextQ ?: ProfileStore.profileDir(filesDir, target), r, obs)
+        FsLog.i(TAG, "physical identity ${if (pending) "pending" else "resolved"} profile=$target obs=${Fingerprint.redacted(obs)}")
+        if (pending && wasQ == null) {
+            // Existing translated notice/actions; weak names/configuration never suggest an automatic owner.
+            notifyIdentity(S("Wrong vehicle profile?"), S("Torque profile '%1\$s' doesn't match this vehicle (%2\$s). Suggested: %3\$s. Data is held and discarded at drive end unless you keep it.",
+                r.torqueName.orEmpty(), "VIN", quarantineSuggest?.let { S("Torque profile '%1\$s'", profileName(it)) }
+                    ?: S("a new vehicle profile")), if (hits.size > 1) hits.sorted().take(3) else Fingerprint.actions(quarantineSuggest))
+        } else if (!pending && target != r.next) {
+            notifyIdentity(S("Recording to %1\$s", profileName(target)),
+                S("This vehicle is %1\$s (%2\$s), but Torque's profile is '%3\$s'. Data goes to %1\$s; tap to open Torque and switch profiles.",
+                    profileName(target), "VIN", r.torqueName.orEmpty()), emptyList())
+        }
         profileId = target
-        prefsDirty = true // tank size etc. are per profile
-        reloadCfgIfDirty() // refits and new runtimes must use the destination profile's settings
-        queueIdentityRollups(target)
-        if (!changed) return
-        priorCache.clear()
-        bandCache = null
-        kalCache = null
-        pidNames = emptyMap()
-        ecuFuelResolved = false
-        lastRawPct = null
-        for (id in tanks.keys.toList()) tanks[id] = makeRuntime(id)
+        ProfileStore.setActiveId(filesDir, target)
+        identityReady = true
+        // Config/ledger load only after the final physical owner is installed. No sample is
+        // taken until pumpIdentity returns to the next poll tick.
+        identity = null
+        prefsDirty = true
+        reloadCfgIfDirty()
+        if (changed) {
+            resetVehicleRuntime()
+            if (!pending) queueIdentityRollups(target)
+        }
+    }
+
+    private fun resetVehicleRuntime() {
+        priorCache.clear(); bandCache = null; kalCache = null
+        pidNames = emptyMap(); ecuFuelResolved = false
+        ecuLevelName = ECU_FUEL_NAME; ecuLevelPid = null
+        suppressFillUntilMs = 0L
+        fordPid = null; speedPid = null; fuelUsedPid = null; galHrPid = null; galMinPid = null; mpgPid = null
+        mpgUnit = ""; galHrUnit = ""; galMinUnit = ""; sessionFlowHrUnit = null; sessionFlowMinUnit = null
+        lastRawPct = null; lastLiveLine = null; loggedFlowUnit = false; logged012fWrite = false
+        driveSourcesLogged = false; fuelDetect = null; fuelDetectTried = false; detectQueue = null
+        lastActive = FixFuelPrefs.ACTIVE_TANK1
+        tanks.clear()
+        loadLevelScale()
+        tanks[1] = makeRuntime(1)
+        ensureRuntimes()
     }
 
     /** Tank 1 lives in the profile directory. Later tanks are integer subdirectories of tanks/. */
@@ -1130,8 +1261,8 @@ class PluginService : Service() {
         }
     }
 
-    private fun profileName(id: String): String = ProfileStore.profileField(filesDir, id, "torqueProfileName")
-        ?: ProfileStore.profileField(filesDir, id, "name") ?: id
+    private fun profileName(id: String): String = ProfileStore.profileField(filesDir, id, "name")
+        ?: ProfileStore.profileField(filesDir, id, "torqueProfileName") ?: id
 
     private fun confirmQuarantine(target: String?) {
         if (quarantineDir == null || target == null) {
@@ -1141,8 +1272,34 @@ class PluginService : Service() {
         val now = System.currentTimeMillis()
         val day = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.ROOT).format(java.util.Date(now))
         val id = Quarantine.confirmTarget(filesDir, target, now, S("Vehicle %1\$s", day))
+        val observation = quarantineObs ?: Fingerprint.Fp()
+        val savedVin = Fingerprint.loadAll(filesDir)[id]?.vin
+        if (observation.vin != null && savedVin != null && !observation.vin.equals(savedVin, ignoreCase = true)) {
+            FsLog.w(TAG, "quarantine confirmation rejected: different physical VIN")
+            return
+        }
+        val evidenceDir = quarantineDir ?: return
         quarantineConfirm = id
-        FsLog.i(TAG, "quarantine confirmed by user -> $id")
+        closeSession() // existing explicit Keep action, never an automatic migration of held evidence
+        torque?.let { invalidateVehicleOutputs(it) }
+        // Preserve why a VIN-less profile was trusted, privately and only for this connection.
+        val evidenceFile = File(evidenceDir, "manual-confirmation.json")
+        evidenceFile.parentFile?.mkdirs()
+        AtomicFile.write(evidenceFile, org.json.JSONObject().put("t", now).put("profileId", id)
+            .put("resolution", "explicit_user_confirmation_for_connection").toString())
+        quarantineDir = null; quarantineObs = null; quarantineSuggest = null; quarantineConfirm = null
+        identity = null
+        observedIdentity = observation
+        profileId = id
+        ProfileStore.setActiveId(filesDir, id)
+        val dir = ProfileStore.profileDir(filesDir, id)
+        if (Fingerprint.load(dir).empty) Fingerprint.save(dir, observation)
+        identityReady = true
+        nextIdentityCheckMs = SystemClock.elapsedRealtime() + 60_000L
+        prefsDirty = true
+        reloadCfgIfDirty()
+        resetVehicleRuntime()
+        FsLog.i(TAG, "vehicle confirmed by user for this connection -> $id")
         notifyIdentity(
             S("Keeping drive data"),
             S("This drive will be saved to %1\$s. Torque's plugin API can't create or switch Torque profiles: in Torque, create/select a vehicle profile named '%2\$s'.", profileName(id), profileName(id)),
@@ -1264,6 +1421,36 @@ class PluginService : Service() {
         }
     }
 
+    private fun invalidateVehicleOutputs(t: ITorqueService) {
+        fun invalid(name: String, short: String, unit: String, max: Float = 100f) =
+            setPid(t, name, short, unit, max, Float.NaN)
+        invalid(Pids.PLUGIN_SMOOTHED, "SmFuel", "%")
+        val volumeUnit = remainingOut(0.0).second
+        for ((corr, remain, dte) in listOf(
+            Triple(Pids.PLUGIN_CHUNK_CORRECTED, Pids.PLUGIN_CHUNK_REMAINING, Pids.PLUGIN_CHUNK_DTE),
+            Triple(Pids.PLUGIN_BAND_CORRECTED, Pids.PLUGIN_BAND_REMAINING, Pids.PLUGIN_BAND_DTE),
+            Triple(Pids.PLUGIN_KALMAN_CORRECTED, Pids.PLUGIN_KALMAN_REMAINING, Pids.PLUGIN_KALMAN_DTE))) {
+            invalid(corr, "Corr", "%"); invalid(remain, "Fuel", volumeUnit); invalid(dte, "DTE", dteUnit(), dteMax())
+        }
+        for (name in listOf(Pids.PLUGIN_TANK_CHUNK, Pids.PLUGIN_TANK_BAND, Pids.PLUGIN_TANK_KALMAN)) invalid(name, "Tank", volumeUnit)
+        for (extra in cfg.extras) {
+            val n = Pids.extraPidNames(extra.id)
+            invalid(n.smoothed, n.shortSm, "%"); invalid(n.corrected, n.shortCorr, "%")
+            invalid(n.remaining, n.shortGal, volumeUnit); invalid(n.dte, n.shortDte, dteUnit(), dteMax())
+        }
+        // Withdraw only our own previous stock-slot feedback; this is Torque cache metadata,
+        // never an ECU write. No numeric previous-car correction survives identity pending.
+        if (logged012fWrite && !isFordName(ecuLevelName)) {
+            invalid(ecuLevelName, "Fuel", "%")
+            ecuLevelPid?.takeIf { it != ecuLevelName && !isFordName(it) }?.let { invalid(it, "Fuel", "%") }
+        }
+        logged012fWrite = false
+        lastRawPct = null
+        lastLiveLine = null
+        FixFuelPrefs.setLive(this, "")
+        updatePresence(S("Waiting for fuel source"))
+    }
+
     private fun publishSmoothed(t: ITorqueService, smoothed: Double) {
         setPid(t, Pids.PLUGIN_SMOOTHED, "SmFuel", "%", rmax = 100f, value = LevelScale.display(smoothed, levelUnit(1)).toFloat())
     }
@@ -1272,6 +1459,7 @@ class PluginService : Service() {
 
     /** Band map (model-band.json) for tank 1, reloaded only when the file changes (drive end / fill). */
     private fun bandModel(): Pair<DoubleArray, Double>? {
+        if (!trustedVehicle()) return null
         val f = File(ProfileStore.tankDir(filesDir, profileId, 1), BandFit.FILE)
         val m = if (f.isFile) f.lastModified() else -1L
         bandCache?.let { if (it.first == m) return it.second to it.third }
@@ -1301,6 +1489,7 @@ class PluginService : Service() {
     private var kalCache: Pair<Long, Kalman.Model?>? = null
 
     private fun kalmanModel(): Kalman.Model? {
+        if (!trustedVehicle()) return null
         val f = File(ProfileStore.tankDir(filesDir, profileId, 1), Kalman.MODEL)
         val m = if (f.isFile) f.lastModified() else -1L
         kalCache?.let { if (it.first == m) return it.second }
@@ -1372,6 +1561,7 @@ class PluginService : Service() {
     }
 
     private fun writeStockFuelLevel(t: ITorqueService, smoothedPct: Double, chunkPct: Double, bandPct: Double?, kalmanPct: Double?) {
+        if (!trustedVehicle()) return
         val corrected = FixFuelPrefs.feedValue(cfg.feed012f, LevelScale.display(smoothedPct, levelUnit(1)), chunkPct, bandPct, kalmanPct) ?: return
         val rt1 = tanks[1]
         if (rt1 != null && !rt1.ledger.anchored && (rt1.math.smoothed == null || !corrected.isFinite() || corrected <= 0.0)) {
@@ -1491,15 +1681,13 @@ class PluginService : Service() {
         sessionFlowMinUnit = null
         rt.validLevels = 0
         val sid = rt.sessions.open(profileId = profileId, app = BuildConfig.VERSION_NAME)
-        if (quarantineDir == null) {
-            try {
-                val fp = Fingerprint.loadAll(filesDir)[profileId]
-                diagnosticCapture.start(profileId, id, sid, selectedTorqueProfile.orEmpty(),
-                    ProfileStore.tankDir(filesDir, profileId, id), fp?.protocol, fp?.bitmaps.orEmpty(),
-                    fp?.let { it.vin != null || it.calId != null || it.cvn != null || it.ecuName != null } == true)
-            } catch (e: Exception) {
-                diagnosticCapture.disableAfterFailure(e)
-            }
+        try {
+            val fp = observedIdentity
+            val dir = quarantineDir?.let { Quarantine.rawDir(it, id) } ?: ProfileStore.tankDir(filesDir, profileId, id)
+            diagnosticCapture.start(profileId, id, sid, selectedTorqueProfile.orEmpty(), dir,
+                fp.protocol, fp.bitmaps, connectionMode09Known, pending = quarantineDir != null)
+        } catch (e: Exception) {
+            diagnosticCapture.disableAfterFailure(e)
         }
         FsLog.reset()
         refreshOpen()
@@ -1768,11 +1956,13 @@ class PluginService : Service() {
     )
 
     private fun nameplateFor(id: Int): Double? {
+        if (!identityReady || quarantineDir != null) return null
         return if (id <= 1) cfg.tankGal?.takeIf { it > 0.0 } else cfg.extra(id)?.tankGal?.takeIf { it > 0.0 }
     }
 
     /** Cached; invalidated at bind, profile switch, session-close rollup and pref changes. */
     private fun priorFor(id: Int): Prior {
+        if (!identityReady || quarantineDir != null) return loadPrior(id, null)
         val nameplate = nameplateFor(id)
         priorCache[id]?.let { (np, p) -> if (np == nameplate) return p }
         val p = loadPrior(id, nameplate)
@@ -1783,7 +1973,7 @@ class PluginService : Service() {
     /** A chunk model.json is that fit's own size. Otherwise corrected percent is 1:1 and the cap is the user seed, or none. */
     private fun loadPrior(id: Int, nameplate: Double?): Prior {
         val seed = nameplate?.takeIf { it > 0.0 }
-        val stored = ProfileStore.storedMap(ProfileStore.tankDir(filesDir, profileId, id))
+        val stored = if (identityReady && quarantineDir == null) ProfileStore.storedMap(ProfileStore.tankDir(filesDir, profileId, id)) else null
         if (stored != null) {
             val (edges, g, cap) = stored
             val v = { level: Double -> FuelV2.vAt(level, edges, g) }
@@ -1879,7 +2069,7 @@ class PluginService : Service() {
                 sessions = SessionStore(this, id, raw),
             )
         }
-        if (id <= 1 && quarantineDir == null) loadTank1Ledger(rt)
+        if (id <= 1 && trustedVehicle()) loadTank1Ledger(rt)
         return rt
     }
 
