@@ -1495,7 +1495,8 @@ class PluginService : Service() {
             try {
                 val fp = Fingerprint.loadAll(filesDir)[profileId]
                 diagnosticCapture.start(profileId, id, sid, selectedTorqueProfile.orEmpty(),
-                    ProfileStore.tankDir(filesDir, profileId, id), fp?.protocol, fp?.bitmaps.orEmpty())
+                    ProfileStore.tankDir(filesDir, profileId, id), fp?.protocol, fp?.bitmaps.orEmpty(),
+                    fp?.let { it.vin != null || it.calId != null || it.cvn != null || it.ecuName != null } == true)
             } catch (e: Exception) {
                 diagnosticCapture.disableAfterFailure(e)
             }
