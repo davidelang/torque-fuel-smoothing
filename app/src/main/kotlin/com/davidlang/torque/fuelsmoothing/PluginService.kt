@@ -646,11 +646,15 @@ class PluginService : Service() {
             val rt = tanks.values.firstOrNull { it.sessions.isOpen }
             if (rt != null) {
                 fun number(x: Double?): Any = x?.takeIf { it.isFinite() } ?: org.json.JSONObject.NULL
-                diagnosticCapture.tick(t, org.json.JSONObject().put("t", now)
-                    .put("speedKmh", number(speedKmh)).put("sessionFuelGal", number(rt.usedGal))
-                    .put("torqueFlowRaw", number(rt.lastFlowRaw)).put("torqueFlowUnit", rt.lastFlowUnit)
-                    .put("torqueFlowPid", rt.lastFlowPid ?: org.json.JSONObject.NULL)
-                    .put("primaryLevelPct", number(lastRawPct)))
+                try {
+                    diagnosticCapture.tick(t, org.json.JSONObject().put("t", now)
+                        .put("speedKmh", number(speedKmh)).put("sessionFuelGal", number(rt.usedGal))
+                        .put("torqueFlowRaw", number(rt.lastFlowRaw)).put("torqueFlowUnit", rt.lastFlowUnit)
+                        .put("torqueFlowPid", rt.lastFlowPid ?: org.json.JSONObject.NULL)
+                        .put("primaryLevelPct", number(lastRawPct)))
+                } catch (e: Exception) {
+                    diagnosticCapture.disableAfterFailure(e)
+                }
             }
         }
     }
@@ -1488,12 +1492,12 @@ class PluginService : Service() {
         rt.validLevels = 0
         val sid = rt.sessions.open(profileId = profileId, app = BuildConfig.VERSION_NAME)
         if (quarantineDir == null) {
-            runCatching {
+            try {
                 val fp = Fingerprint.loadAll(filesDir)[profileId]
                 diagnosticCapture.start(profileId, id, sid, selectedTorqueProfile.orEmpty(),
                     ProfileStore.tankDir(filesDir, profileId, id), fp?.protocol, fp?.bitmaps.orEmpty())
-            }.onFailure {
-                FsLog.warn(TAG, "diagnosticStart", "diagnostic start failed: ${it.javaClass.simpleName}")
+            } catch (e: Exception) {
+                diagnosticCapture.disableAfterFailure(e)
             }
         }
         FsLog.reset()

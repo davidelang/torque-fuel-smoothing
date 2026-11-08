@@ -24,27 +24,50 @@ internal class DiagnosticCapture {
     }
     @Volatile private var current: Session? = null
     @Volatile private var closed = false
+    @Volatile private var failed = false
     private val busy = AtomicBoolean(false)
     private val worker = Executors.newSingleThreadExecutor { r -> Thread(r, "FuelSmooth-diagnostics").apply { isDaemon = true } }
 
     fun start(profile: String, tank: Int, id: String, torqueName: String, dir: File,
         protocol: String?, bitmaps: Map<String, String>) {
+        if (closed || failed) return
         current = Session(profile, tank, id, torqueName, File(File(dir, "diagnostics"), "$id.jsonl"),
             protocol.orEmpty(), bitmaps.toMap())
     }
 
     fun end(id: String?) { if (current?.id == id) current = null }
-    fun shutdown() { closed = true; current = null; worker.shutdownNow() }
+    fun shutdown() {
+        closed = true
+        current = null
+        try { worker.shutdownNow() }
+        catch (e: Exception) { disableAfterFailure(e) }
+        finally { busy.set(false) }
+    }
+
+    /** Optional diagnostics fail closed for this service lifetime, never core recording. */
+    fun disableAfterFailure(e: Exception) {
+        if (failed) return
+        failed = true
+        current = null
+        // Logging must not turn diagnostic error handling into a sampler failure either.
+        try {
+            FsLog.warn("FuelSmooth", "diagnosticCapture", "diagnostics disabled until service restart: ${e.javaClass.simpleName}")
+        } catch (_: Exception) { /* recording must continue even if logging fails */ }
+    }
 
     /** Called after normal sampling; context is a snapshot, not a fresh extra sensor query. */
     fun tick(torque: ITorqueService, context: JSONObject) {
         val s = current ?: return
         val mono = SystemClock.elapsedRealtime()
-        if (closed || mono < s.nextMs || !busy.compareAndSet(false, true)) return
-        s.nextMs = mono + 5_000L
-        val spec = specs.first { it.pid == slots[s.slot++ % slots.size] }
-        val queuedMs = System.currentTimeMillis()
-        runCatching {
+        if (closed || failed || mono < s.nextMs || !busy.compareAndSet(false, true)) return
+        var submitted = false
+        try {
+            s.nextMs = mono + 5_000L
+            // Select once, outside the search predicate; keep the cursor bounded across wraps.
+            val pid = slots[s.slot]
+            s.slot = (s.slot + 1) % slots.size
+            val spec = specs.firstOrNull { it.pid == pid } ?: error("unknown diagnostic schedule entry")
+            val queuedMs = System.currentTimeMillis()
             worker.execute {
                 try {
                     if (closed || current !== s) return@execute
@@ -113,12 +136,18 @@ internal class DiagnosticCapture {
                         .put("sessionCurrent", current === s && !closed)
                         .put("attemptFailures", s.failures[spec.pid] ?: 0))
                 } catch (e: Exception) {
-                    FsLog.warn("FuelSmooth", "diagnosticCapture", "diagnostic capture failed: ${e.javaClass.simpleName}")
+                    if (current === s) disableAfterFailure(e)
                 } finally {
                     busy.set(false)
                 }
             }
-        }.onFailure { busy.set(false) }
+            submitted = true
+        } catch (e: Exception) {
+            disableAfterFailure(e)
+        } finally {
+            // Accepted tasks release in their own finally; rejection/setup failure releases here.
+            if (!submitted) busy.set(false)
+        }
     }
 
     private fun support(s: Session, pid: String): String {
