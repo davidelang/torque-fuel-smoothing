@@ -15,12 +15,17 @@ internal class DiagnosticCapture {
         Spec("46", 1, "degC"), Spec("42", 2, "V"), Spec("5C", 1, "degC"), Spec("05", 1, "degC"))
     // At most one request/5s: A6 and 9D each ~15s, each context PID ~60s.
     private val slots = listOf("A6", "9D", "46", "A6", "9D", "42", "A6", "9D", "5C", "A6", "9D", "05")
+    // First two failures use ordinary slots; sustained failures back off, never hot-loop.
+    private val retryDelaysMs = longArrayOf(0L, 0L, 30_000L, 60_000L, 120_000L, 240_000L, 300_000L)
     private class Session(val profile: String, val tank: Int, val id: String, val torqueName: String,
         val file: File, val protocol: String, val bitmaps: Map<String, String>) {
         var slot = 0
         var nextMs = 0L
         var opened = false // worker only; no file writes on the sampling thread
-        val failures = java.util.concurrent.ConcurrentHashMap<String, Int>()
+        val failures = java.util.concurrent.ConcurrentHashMap<String, Int>() // cumulative, for existing readers
+        // Worker-confined, per-session/per-PID state; deadlines use monotonic elapsed time.
+        val consecutiveFailures = HashMap<String, Int>()
+        val retryAfterMs = HashMap<String, Long>()
     }
     @Volatile private var current: Session? = null
     @Volatile private var closed = false
@@ -78,12 +83,13 @@ internal class DiagnosticCapture {
                             .put("app", BuildConfig.VERSION_NAME).put("profileId", s.profile).put("tank", s.tank)
                             .put("sessionId", s.id).put("protocol", s.protocol).put("bitmaps", JSONObject(s.bitmaps))
                             .put("capabilitySource", "saved_identity_fingerprint").put("capabilities", caps).put("policy", "advertised_CAN_only_one_request_per_5s")
-                            .put("volumeIndependence", "unknown"))
+                            .put("volumeIndependence", "unknown")
+                            .put("retryPolicy", "consecutive_3_backoff_30_60_120_240_300s"))
                         s.opened = true
                     }
                     // Do not add diagnostic bus traffic to the older J1850 van, or guess unknown capabilities.
                     if (!s.protocol.contains("15765") || support(s, spec.pid) != "advertised" ||
-                        (s.failures[spec.pid] ?: 0) >= 3) return@execute
+                        SystemClock.elapsedRealtime() < (s.retryAfterMs[spec.pid] ?: 0L)) return@execute
                     val started = System.currentTimeMillis()
                     val startedMono = SystemClock.elapsedRealtime()
                     val row = JSONObject().put("event", "obd").put("queuedMs", queuedMs).put("t", started)
@@ -130,11 +136,25 @@ internal class DiagnosticCapture {
                         row.remove("rawReplies")
                         row.remove("payloads")
                     }
-                    if (status != "decoded") s.failures.merge(spec.pid, 1) { a, b -> a + b }
+                    var retryDelayMs = 0L
+                    if (current === s && !closed) {
+                        if (status == "decoded") {
+                            s.consecutiveFailures.remove(spec.pid)
+                            s.retryAfterMs.remove(spec.pid)
+                        } else if (status != "connection_or_profile_changed" && status != "retired_session") {
+                            s.failures.merge(spec.pid, 1) { a, b -> minOf(a, Int.MAX_VALUE - 1) + b }
+                            val streak = minOf(s.consecutiveFailures[spec.pid] ?: 0, Int.MAX_VALUE - 1) + 1
+                            s.consecutiveFailures[spec.pid] = streak
+                            retryDelayMs = retryDelaysMs[minOf(streak - 1, retryDelaysMs.lastIndex)]
+                            s.retryAfterMs[spec.pid] = SystemClock.elapsedRealtime() + retryDelayMs
+                        }
+                    }
                     write(s, row.put("status", status).put("replyMs", System.currentTimeMillis())
                         .put("elapsedMs", SystemClock.elapsedRealtime() - startedMono)
                         .put("sessionCurrent", current === s && !closed)
-                        .put("attemptFailures", s.failures[spec.pid] ?: 0))
+                        .put("attemptFailures", s.failures[spec.pid] ?: 0)
+                        .put("consecutiveFailures", s.consecutiveFailures[spec.pid] ?: 0)
+                        .put("retryDelayMs", retryDelayMs))
                 } catch (e: Exception) {
                     if (current === s) disableAfterFailure(e)
                 } finally {
