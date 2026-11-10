@@ -112,14 +112,20 @@ Under the field, each learned map has its own size line, in gallons, and a chart
 | Feed fuel level back to Torque (overrides 012F) | Off, Smoothed %, or a corrected percent | | Off writes nothing. Smoothed % writes the smoothed level onto Torque's stock Fuel Level (012F), so existing gauges show it. A corrected-percent choice is described with the map it comes from. Nothing is written until there is a valid value |
 | Smoothing τ seconds | 0 – 600 (0 = no extra averaging) | 0 | Extra exponential averaging on top of slosh rejection |
 | Max skew %/s | greater than 0, up to 10 | 0.05 | The most the smoothed level may change per second while driving |
-| Fill jump % | 10 – 100 | 25 | How far the level must rise while stopped to count as a fill. It is set high on purpose, because slosh can exceed 13% |
 | Verbose logging | on/off | off | Adds per-second lines to the Android log. Off by default |
+
+### Fill detection
+
+| Setting | Valid values | Default | Meaning |
+|---|---|---|---|
+| Settling time (seconds) | 0 – 300 | 60 | How long to wait after stopping for slosh and the parking slope to settle before the parked level is taken as the starting point. Traffic-light stops shorter than this are ignored. 0 takes the starting point at the first stopped reading |
+| Minimum fill % | 1 – 100 | 25 | How far the level must rise above that settled parked level, and stay up, to count as a fill. This replaces Fill jump % and keeps its saved value. Because the parking slope (about 13% on the van, nose-high versus backed in) is already absorbed, it can be set much lower, for example 5% |
 
 **Odometer miles** is optional. Enter the reading and tap **Save pin** to anchor distance for this profile.
 
 ## Fills
 
-A fill starts when the level rises at least the fill-jump percent above the smoothed level while the vehicle is stopped, and stays up for about 20 seconds. A brief sensor glitch is not a fill.
+Stopping changes the reading by itself: the parking slope shows up at once, then slosh dies out. So a fill is not measured against the level you were driving at. Once the vehicle has been stopped for the settling time, a 5-second median of the reading is kept as the settled parked level. A fill starts when the level then rises at least the minimum fill percent above that settled level and stays up for about 20 seconds. A brief sensor glitch is not a fill. Driving off before the settling time ends (a traffic light) starts over at the next stop. If the engine is switched off at the pump and no readings arrive, the level read while stopped before the gap is used as the settled level, so fuel added with the engine off still counts.
 
 The fill continues through pauses of any length, for example when the pump stops at its limit and you re-authorize and pump again. It ends when you drive away, or when the level clearly drops again. The level recorded for the fill is the median of the final plateau, not a single reading.
 

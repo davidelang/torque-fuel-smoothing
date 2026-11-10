@@ -57,6 +57,7 @@ class PluginActivity : Activity() {
     private lateinit var tau: EditText
     private lateinit var skew: EditText
     private lateinit var jump: EditText
+    private lateinit var settle: EditText
     private lateinit var tank: EditText
     private lateinit var tankUnit: Spinner
     private var shownUnit = VolUnit.GAL
@@ -372,9 +373,6 @@ class PluginActivity : Activity() {
         col.addView(info(S("Max skew %/s"), S("Largest change per second the smoothed level may follow; slosh beyond this is ignored.")))
         skew = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
         col.addView(skew)
-        col.addView(info(S("Fill jump %"), S("Rise in level while stopped that counts as a fill.")))
-        jump = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
-        col.addView(jump)
 
         col.addView(info(S("Odometer miles"), S("Optional: enter the odometer reading and Save pin to anchor distance for this profile.")))
         val odoRow = LinearLayout(this)
@@ -415,6 +413,15 @@ class PluginActivity : Activity() {
         }
         col.addView(verbose)
 
+        // Fill detection: wait for the stop to settle, then a rise above that parked level is a fill.
+        col.addView(label(S("Fill detection")))
+        col.addView(info(S("Settling time (seconds)"), S("Wait this long after stopping for slosh and slope to settle, then look for a rise from that level. Traffic-light stops shorter than this are ignored.")))
+        settle = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
+        col.addView(settle)
+        col.addView(info(S("Minimum fill %"), S("Rise above the settled parked level that counts as a fill.")))
+        jump = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
+        col.addView(jump)
+
         // Details (below the settings).
         col.addView(label(S("Details")))
         live = TextView(this)
@@ -430,6 +437,7 @@ class PluginActivity : Activity() {
         tau.addTextChangedListener(watch)
         skew.addTextChangedListener(watch)
         jump.addTextChangedListener(watch)
+        settle.addTextChangedListener(watch)
         tank.addTextChangedListener(watch)
         selectPid.addTextChangedListener(watch)
         profileName.addTextChangedListener(watch)
@@ -529,6 +537,7 @@ class PluginActivity : Activity() {
         setIfBlankOrInit(tau, c.tauSec.toString())
         setIfBlankOrInit(skew, c.skewPctPerSec.toString())
         setIfBlankOrInit(jump, c.jumpPct.toString())
+        setIfBlankOrInit(settle, c.settleSec.toString())
         shownUnit = VolUnit.of(ProfileStore.profileField(filesDir, editProfileId, "tankUnit"))
         tankUnit.setSelection(shownUnit.ordinal)
         val shownGal = tank.text.toString().trim().toDoubleOrNull()?.let { shownUnit.toGal(it) }
@@ -752,6 +761,8 @@ class PluginActivity : Activity() {
             S("above 0, at most %1\$s %%/s", oneDecimal(FixFuelPrefs.MAX_SKEW))) && ok
         ok = markField(jump, FixFuelPrefs.jumpOk(jump.text.toString().trim().toDoubleOrNull()),
             S("%1\$s to %2\$s %%", oneDecimal(FixFuelPrefs.MIN_JUMP), oneDecimal(FixFuelPrefs.MAX_JUMP))) && ok
+        ok = markField(settle, FixFuelPrefs.settleOk(settle.text.toString().trim().toDoubleOrNull()),
+            S("0 to %1\$s s", oneDecimal(FixFuelPrefs.MAX_SETTLE))) && ok
         ok = markField(tank, FixFuelPrefs.tankOk(tank.text.toString()), S("blank or a number above 0")) && ok
         for (card in extraCards) {
             ok = markField(card.tank, FixFuelPrefs.tankOk(card.tank.text.toString()), S("blank or a number above 0")) && ok
@@ -769,6 +780,7 @@ class PluginActivity : Activity() {
         show(FixFuelPrefs.KEY_TAU, tau)
         show(FixFuelPrefs.KEY_SKEW, skew)
         show(FixFuelPrefs.KEY_JUMP, jump)
+        show(FixFuelPrefs.KEY_SETTLE, settle)
         show(FixFuelPrefs.KEY_TANK, tank)
     }
 
@@ -784,6 +796,7 @@ class PluginActivity : Activity() {
             tauSec = tau.text.toString().trim().toDouble(),
             skewPctPerSec = skew.text.toString().trim().toDouble(),
             jumpPct = jump.text.toString().trim().toDouble(),
+            settleSec = settle.text.toString().trim().toDouble(),
             tankGal = tank.text.toString().trim().toDoubleOrNull()?.let { shownUnit.toGal(it) },
             extras = extrasFromCards(),
             activeTank = activeTankFromSpinner(),

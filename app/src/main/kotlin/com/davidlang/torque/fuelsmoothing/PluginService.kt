@@ -800,6 +800,7 @@ class PluginService : Service() {
         if (id == 1) lastRawPct = live
         if (id == 1 && autoMatch != null) autoMatchStep(live, lvlUpd, lvlBusFresh)
         val before = rt.math.smoothed
+        val baseBefore = rt.math.stopBaseline
         val prevMode = rt.math.mode
         val smoothed = rt.math.ingest(
             live,
@@ -808,6 +809,7 @@ class PluginService : Service() {
             tauSec = cfg.tauSec,
             skewPctPerSec = cfg.skewPctPerSec,
             jumpPct = cfg.jumpPct,
+            settleSec = cfg.settleSec,
             ignoreFill = skipFill,
         )
         if (id == 1 && trustedVehicle() && LevelScale.applies(cfg.sourceId)) {
@@ -818,8 +820,8 @@ class PluginService : Service() {
             }
         }
         if (rt.math.mode == TrackMode.FILL && prevMode != TrackMode.FILL) {
-            val delta = live - (before ?: live)
-            FsLog.i(TAG, "tank$id fill start Δ=${"%.1f".format(delta)} raw=$live speedKmh=${"%.1f".format(speedKmh)}")
+            val delta = live - (baseBefore ?: before ?: live)
+            FsLog.i(TAG, "tank$id fill start Δ=${"%.1f".format(delta)} vs settled=${baseBefore?.let { "%.1f".format(it) }} raw=$live speedKmh=${"%.1f".format(speedKmh)}")
             if (logging) rt.sessions.mark("fillStart", now)
         }
         val fillEnded = prevMode == TrackMode.FILL && rt.math.mode != TrackMode.FILL
