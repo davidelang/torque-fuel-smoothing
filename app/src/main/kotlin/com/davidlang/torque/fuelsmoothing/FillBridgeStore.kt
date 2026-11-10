@@ -13,6 +13,7 @@ import java.io.IOException
  * snapshot/import can safely copy/replace it without dangling SQLite handles or WAL sidecars.
  */
 internal object FillBridgeStore {
+    private const val CONTRACT_SHA256 = "84d2321c458b853dd7205980f360cc5f065b264677417ea9398897dbab94d048"
     private const val MAX_PACKETS = 10000L
     private const val MAX_PAYLOAD_BYTES = 16L * 1024L * 1024L
     private var tokens = 12
@@ -70,7 +71,11 @@ internal object FillBridgeStore {
 
     private fun schema(db: SQLiteDatabase) {
         if (db.version != 0 && db.version != 1) throw IOException("unknown fillbridge schema")
-        if (db.version == 1) return
+        if (db.version == 1) {
+            // Re-freeze is payload-validation only; existing ledgers just record the current pin.
+            db.execSQL("UPDATE bridge_meta SET value=? WHERE name='contract_sha256' AND value<>?", arrayOf(CONTRACT_SHA256, CONTRACT_SHA256))
+            return
+        }
         db.beginTransaction()
         try {
             db.execSQL("""CREATE TABLE packets (
@@ -91,7 +96,7 @@ internal object FillBridgeStore {
                 consumption_status TEXT NOT NULL CHECK(consumption_status='NOT_CONSUMED'))""")
             db.execSQL("CREATE INDEX pending_occurrence ON pending_validation(profile_id,occurred_ms)")
             db.execSQL("CREATE TABLE bridge_meta (name TEXT PRIMARY KEY,value TEXT NOT NULL)")
-            db.execSQL("INSERT INTO bridge_meta VALUES ('contract_sha256','9bb7ae552c8cccc9b2a7d12c5c506587e5a0d35c3fb8f0c5d048578abe3e20f9')")
+            db.execSQL("INSERT INTO bridge_meta VALUES ('contract_sha256',?)", arrayOf(CONTRACT_SHA256))
             db.execSQL("INSERT INTO bridge_meta VALUES ('analysis_consumer','NOT_IMPLEMENTED')")
             db.version = 1
             db.setTransactionSuccessful()
@@ -174,7 +179,8 @@ internal object FillBridgeStore {
             if (mapped != null) {
                 val marker = File(ProfileStore.profileDir(root, mapped.first), "profile.json")
                 val stored = if (marker.isFile) Fingerprint.load(marker.parentFile!!).vin else null
-                if (stored != mapped.second || (payload.vin != null && payload.vin != mapped.second)) {
+                val key = FillBridgeProtocol.vinKey(mapped.second)
+                if (FillBridgeProtocol.vinKey(stored) != key || (payload.vin != null && payload.vin != key)) {
                     return@synchronized Association(null, "VEHICLE_MAPPING_MISMATCH")
                 }
                 return@synchronized Association(mapped.first, null)
@@ -182,7 +188,7 @@ internal object FillBridgeStore {
             val vin = payload.vin ?: return@synchronized Association(null, "UNKNOWN_VEHICLE")
             // Connection identity is retained in fingerprint.json, not stamped into profile.json.
             // Fingerprint.loadAll also supports pre-fingerprint profile.json VINs.
-            val hits = Fingerprint.loadAll(root).filterValues { it.vin == vin }.keys.toList()
+            val hits = Fingerprint.loadAll(root).filterValues { FillBridgeProtocol.vinKey(it.vin) == vin }.keys.toList()
             val match = hits.singleOrNull() ?: return@synchronized Association(null, if (hits.isEmpty()) "UNKNOWN_VEHICLE" else "AMBIGUOUS_VEHICLE")
             db.insertOrThrow("vehicle_map", null, ContentValues().apply {
                 put("producer", producer); put("vehicle_id", payload.vehicleId); put("profile_id", match); put("vin", vin)

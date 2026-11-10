@@ -4,7 +4,10 @@ import java.math.BigDecimal
 import java.security.MessageDigest
 import java.util.Currency
 
-/** Frozen contract SHA256 9bb7ae552c8cccc9b2a7d12c5c506587e5a0d35c3fb8f0c5d048578abe3e20f9. */
+/**
+ * Frozen contract SHA256 84d2321c458b853dd7205980f360cc5f065b264677417ea9398897dbab94d048
+ * (torque-ve-contract-v1 re-frozen 2026-11-09; supersedes 9bb7ae552c8cccc9b2a7d12c5c506587e5a0d35c3fb8f0c5d048578abe3e20f9).
+ */
 internal object FillBridgeProtocol {
     const val MAX_BYTES = 32768
     const val MAX_EVENTS = 16
@@ -12,17 +15,21 @@ internal object FillBridgeProtocol {
     private val UUID = Regex("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")
     private val HASH = Regex("[0-9a-f]{64}")
     private val DECIMAL = Regex("(?:0|[1-9][0-9]{0,17})(?:\\.[0-9]{0,8}[1-9])?")
-    private val SOURCES = setOf("torque", "email", "ocr", "manual", "sync", "mixed", "legacy_unknown")
+    private val SOURCES = setOf("torque", "email", "ocr", "manual", "sync", "photo", "mixed", "legacy_unknown")
     private val POINTERS = setOf(
         "/vehicle/syncId", "/vehicle/vin", "/vehicle/name", "/vehicle/make", "/vehicle/model",
-        "/vehicle/year", "/vehicle/displayUnits", "/occurredAtEpochMs", "/quantity", "/cost",
+        "/vehicle/year", "/occurredAtEpochMs", "/quantity", "/cost",
         "/fillExtent", "/economyIgnored", "/odometer", "/rawTorqueOdometer",
     )
 
     class EnvelopeError(val status: String, val batchId: String? = null) : IllegalArgumentException()
     data class Event(val id: String, val revision: Long, val hash: String, val payload: Payload?)
     data class Batch(val producer: String, val id: String, val events: List<Event>)
-    data class Payload(val canonical: String, val vehicleId: String, val vin: String?, val occurredMs: Long, val operation: String)
+    /** [vin] is the ASCII-uppercased match key; [displayUnits] is imperial|metric after odometerUnit mapping. */
+    data class Payload(
+        val canonical: String, val vehicleId: String, val vin: String?, val occurredMs: Long, val operation: String,
+        val displayUnits: String,
+    )
     data class Result(val event: Event, val status: String, val currentRevision: Long? = null, val currentHash: String? = null)
 
     fun capabilities(version: String): String = FillBridgeJson.canonical(linkedMapOf(
@@ -81,12 +88,19 @@ internal object FillBridgeProtocol {
             "economyIgnored", "odometer", "rawTorqueOdometer", "provenance", "voidReason")
         val operation = choice(p["operation"], setOf("upsert", "void"))
         val v = FillBridgeJson.obj(p["vehicle"])
-        FillBridgeJson.keys(v, "syncId", "vin", "name", "make", "model", "year", "displayUnits")
+        // displayUnits is canonical; current Vehicle Expenses sends the exclusive alternate odometerUnit.
+        val unitKey = when {
+            "displayUnits" in v && "odometerUnit" !in v -> "displayUnits"
+            "odometerUnit" in v && "displayUnits" !in v -> "odometerUnit"
+            else -> throw FillBridgeJson.Invalid()
+        }
+        FillBridgeJson.keys(v, "syncId", "vin", "name", "make", "model", "year", unitKey)
         val vehicleId = id(v["syncId"])
         val vin = v["vin"]?.let { vin(FillBridgeJson.string(it)) }
         text(v["name"], 256); text(v["make"], 128); text(v["model"], 128)
         v["year"]?.let { requireValid(FillBridgeJson.integer(it) in 1000L..9999L) }
-        choice(v["displayUnits"], setOf("imperial", "metric"))
+        val displayUnits = if (unitKey == "displayUnits") choice(v["displayUnits"], setOf("imperial", "metric"))
+            else if (choice(v["odometerUnit"], setOf("mi", "km")) == "mi") "imperial" else "metric"
         val occurred = epoch(p["occurredAtEpochMs"])
         p["quantity"]?.let {
             val q = FillBridgeJson.obj(it)
@@ -130,7 +144,7 @@ internal object FillBridgeProtocol {
         choice(provenance["occurrenceTimeQuality"], setOf("confirmed", "source_reported", "unknown"))
         text(provenance["producerBuildAtResolution"], 128)
         for ((path, data) in FillBridgeJson.obj(provenance["fields"])) {
-            requireValid(path in POINTERS)
+            requireValid(path in POINTERS || path == "/vehicle/$unitKey")
             val field = FillBridgeJson.obj(data)
             FillBridgeJson.keys(field, "source", "sourceRef", "observedAtEpochMs", "confirmed")
             choice(field["source"], SOURCES); text(field["sourceRef"], 256)
@@ -146,7 +160,7 @@ internal object FillBridgeProtocol {
         val actual = MessageDigest.getInstance("SHA-256").digest(canonical.toByteArray(Charsets.UTF_8))
             .joinToString("") { (it.toInt() and 255).toString(16).padStart(2, '0') }
         requireValid(actual == hash)
-        return Payload(canonical, vehicleId, vin, occurred, operation)
+        return Payload(canonical, vehicleId, vin, occurred, operation, displayUnits)
     }
 
     private fun epoch(value: Any?): Long = FillBridgeJson.integer(value).also { requireValid(it in 0L..MAX_EPOCH) }
@@ -160,16 +174,16 @@ internal object FillBridgeProtocol {
     private fun choice(value: Any?, choices: Set<String>): String = FillBridgeJson.string(value).also { requireValid(it in choices) }
     private fun requireValid(ok: Boolean) { if (!ok) throw FillBridgeJson.Invalid() }
 
+    /**
+     * Opaque VIN (<=256 UTF-8 bytes, no format or check-digit test: Mode09 fingerprint VINs need
+     * not carry a valid check digit). Returns the ASCII-uppercased association key; an unmatched
+     * VIN is a durable UNKNOWN_VEHICLE quarantine in FillBridgeStore, never INVALID_EVENT.
+     */
     private fun vin(s: String): String {
-        requireValid(Regex("[A-HJ-NPR-Z0-9]{17}").matches(s))
-        // ISO 3779 check digit where mandatory for North-American WMI regions.
-        if (s[0] in "12345") {
-            val letters = "ABCDEFGHJKLMNPRSTUVWXYZ"
-            val values = intArrayOf(1,2,3,4,5,6,7,8,1,2,3,4,5,7,9,2,3,4,5,6,7,8,9)
-            val weights = intArrayOf(8,7,6,5,4,3,2,10,0,9,8,7,6,5,4,3,2)
-            val sum = s.indices.sumOf { i -> (if (s[i] in '0'..'9') s[i] - '0' else values[letters.indexOf(s[i])]) * weights[i] }
-            requireValid(s[8] == if (sum % 11 == 10) 'X' else ('0'.code + sum % 11).toChar())
-        }
-        return s
+        requireValid(s.isNotEmpty() && s.toByteArray(Charsets.UTF_8).size <= 256)
+        return vinKey(s)!!
     }
+
+    /** ASCII-only uppercase fold for VIN comparison (locale-independent). */
+    fun vinKey(s: String?): String? = s?.map { if (it in 'a'..'z') it - 32 else it }?.joinToString("")
 }
