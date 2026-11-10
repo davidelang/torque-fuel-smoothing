@@ -313,10 +313,12 @@ internal object ProfileStore {
     /** Complete, framed 0902 only; ambiguous or malformed responses never become identity. */
     fun parseVin(parts: List<String>?): String? = Mode09Replies.vin(parts)
 
-    /** VIN is the physical key, never the Torque name. No history/model/settings are copied.
+    /** VIN is the physical key, never the Torque name. No history/model is copied. A new profile starts with the
+     * tank size the user entered on [inheritTankFrom] (the Torque-name profile), so Remaining/DTE work at once.
      * profile.json carries VIN before publication, so a retry after interruption finds this profile.
      */
-    fun physicalProfile(root: File, vin: String, torqueName: String?, initialProfile: String? = null): String = synchronized(PROFILE_LOCK) {
+    fun physicalProfile(root: File, vin: String, torqueName: String?, initialProfile: String? = null,
+        inheritTankFrom: String? = null): String = synchronized(PROFILE_LOCK) {
         require(vin.matches(Regex("[A-HJ-NPR-Z0-9]{17}")))
         val matches = Fingerprint.loadAll(root).filterValues { it.vin?.equals(vin, ignoreCase = true) == true }.keys
         require(matches.size <= 1) { "Ambiguous saved physical identity" }
@@ -345,6 +347,10 @@ internal object ProfileStore {
         File(dir, "raw").mkdirs()
         writeAtomic(File(dir, "ledger.json"), ledgerJson(null))
         writeAtomic(File(dir, "profile.json"), profileJson(id, "$name · ${vin.takeLast(4)} · ${id.removePrefix(slug(name).take(20) + "-")}", vin, name, System.currentTimeMillis()))
+        // User setting only (not a learned size): the tank size already entered for this Torque profile.
+        inheritTankFrom?.let { tankGuess(root, it) }?.trim()
+            ?.takeIf { it.toDoubleOrNull()?.let { v -> v.isFinite() && v > 0.0 } == true }
+            ?.let { setProfileField(root, id, "tankGal", it) }
         id
     }
 

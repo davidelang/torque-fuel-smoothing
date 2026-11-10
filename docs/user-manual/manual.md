@@ -61,7 +61,10 @@ Data is tied to the vehicle profile selected in Torque. A new Torque profile nam
 On connect, the plugin reads what the ECU provides (VIN, calibration ID, and similar). It uses that to notice when the selected Torque profile looks like a different vehicle:
 
 - **Recording to …** means the plugin is sure this is a different, already-known vehicle. Data goes to that vehicle. Switch Torque's profile to match.
-- **Wrong vehicle profile?** means the plugin is not sure. The drive is held aside and is not learned from unless you pick an action in the notification (use the suggested profile, or create a new profile). If you do not, the drive is set aside, not deleted, and never used for learning.
+- A vehicle with a known VIN, or a new VIN, is used automatically. A different VIN under the same Torque profile is a different vehicle and gets its own profile, which starts with that Torque profile's tank size.
+- A vehicle that sends no VIN is used automatically when exactly one saved no-VIN profile matches its protocol and supported-PID list, Torque already has that profile selected, and the live fuel level agrees (within 6 points) with the level last recorded for it. This takes a few seconds after connecting.
+- Otherwise the plugin asks, for example **Confirm this is …** or **Which vehicle is this?**. The question is a heads-up notification that stays until answered, and the setup page shows it as a popup and a red banner. **Decide later** hides the popup while you look at other settings; the banner stays, and the popup returns the next time you open the page. Until you choose, the drive is held aside and is not learned from. If you do not choose, the drive is set aside, not deleted, and never used for learning.
+- While a question is open, the dash still shows the live smoothed level, with Remaining (and distance to empty when Torque has a long-term mpg) from the tank-size field. No learned map is used until the vehicle is decided.
 
 Each time Torque connects to the ECU, a new drive starts. The plugin does not assume anything about fuel used between drives. Readings during hard acceleration or braking, and shortly after stopping, are not trusted for learning. Fuel is still counted. Heavy work runs at the end of a drive (ECU disconnect) or after a fill. During a drive the last saved map is used.
 
@@ -143,7 +146,7 @@ Privacy policy: https://play.landing.lang.hm/fuel-smoothing/privacy/
 - **"No fuel level this drive."** The source gave no usable level for that drive. Check the adapter, or run **Detect**.
 - **Level stays blank or held.** Pick the correct fuel source. Match a custom long name exactly. Ignore the first few seconds after connecting.
 - **Fuel used looks about 3.8× too high or too low.** A manufacturer-specific flow PID has the wrong unit. Set that profile's `flowUnit`.
-- **Data went to the wrong vehicle.** Select the right profile in Torque before the drive. Use the notification actions on "Wrong vehicle profile?".
+- **Data went to the wrong vehicle.** Select the right profile in Torque before the drive. Answer the vehicle question in the notification or on the setup page.
 - **Corrected percent or remaining looks off.** More partial tanks tighten the estimate. Early values can be off by several gallons.
 - **Smoothed level reacts slowly after a real change.** That is the max-skew limit. Raise it a little (for example 0.1).
 
@@ -208,6 +211,6 @@ Add these to a Torque display:
 
 Distance to empty is remaining fuel times Torque's long-term mpg. A blank or unknown mpg unit means distance to empty is not written. Remaining and distance to empty follow Torque's display units.
 
-Until this fit has its own size, corrected percent is the smoothed percent (one to one with the gauge). Remaining, distance to empty, and tank size are not written. A PID that is not written is left alone.
+Until this fit has its own size, it is a one-to-one map: corrected percent is the smoothed percent, and Remaining and distance to empty use the tank-size field from the first connection. The fit then learns from there. With the field blank, Remaining and distance to empty are not written. Tank size (kalman) shows only this fit's own size. A PID that is not written is left alone.
 
 When a stored map for this fit cannot be read, a notification is posted once. The title is **Map refitting**. The text is "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes." `%1$s` is the profile name.

@@ -4,8 +4,10 @@ import java.io.File
 
 /**
  * Vehicle fingerprint (ECU identity) stored per profile in fingerprint.json, and the deterministic
- * profile match used on connect. Only an unambiguous exact VIN automatically identifies a physical vehicle.
- * Calibration IDs, names and capability bitmaps are never unique physical keys.
+ * profile match used on connect. An unambiguous exact VIN identifies a physical vehicle. A VIN-less vehicle is
+ * used automatically only when exactly one VIN-less profile survives [vinlessCandidates], Torque is on that
+ * profile, and a fresh live fuel level agrees with its last recorded level (PluginService). Calibration IDs,
+ * names and capability bitmaps alone are never unique physical keys.
  */
 internal object Fingerprint {
     const val FILE = "fingerprint.json"
@@ -148,6 +150,25 @@ internal object Fingerprint {
         val hits = profiles.filterValues { it.vin?.equals(vin, ignoreCase = true) == true }.keys
         return if (hits.size == 1) Match(hits.single(), true, "vin")
         else Match(null, false, if (hits.isEmpty()) "new VIN" else "ambiguous saved VIN")
+    }
+
+    /** Live fuel agreement (gauge percent points) that corroborates a VIN-less fingerprint match. */
+    const val FUEL_MATCH_PTS = 6.0
+
+    /**
+     * VIN-less observation: saved VIN-less profiles this connection cannot rule out. Hard gates only:
+     * no VIN on either side, the same reported protocol, supported-PID bitmaps that agree wherever both
+     * have the same block, and a working Ford 16C1 probe not contradicted. A profile with a saved VIN is
+     * never a candidate (VIN loss stays a confirmation). Torque name and live fuel level are checked by
+     * the caller before anything is used automatically.
+     */
+    fun vinlessCandidates(obs: Fp, profiles: Map<String, Fp>): List<String> {
+        if (obs.vin != null || obs.protocol == null) return emptyList()
+        return profiles.filter { (_, s) ->
+            s.vin == null && s.protocol != null && s.protocol == obs.protocol &&
+                (s.bitmaps.keys.intersect(obs.bitmaps.keys).isEmpty() || similarity(obs, s) >= BITMAP_MATCH) &&
+                !(s.probes["ford2216C1"] == "ok" && obs.probes["ford2216C1"] == "no")
+        }.keys.sorted()
     }
 
     /** Weak ECU configuration evidence is diagnostic context, NOT physical vehicle identity. */

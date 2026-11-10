@@ -77,6 +77,18 @@ class PluginActivity : Activity() {
     private var editProfileId = ""
     private var profileChoices: List<Pair<String, String>> = emptyList()
     private val editorPrefs by lazy { getSharedPreferences("profile_editor", MODE_PRIVATE) }
+    /** Pending vehicle decision: a red banner that stays until answered, plus a popup on every visit. */
+    private lateinit var identityBanner: LinearLayout
+    private var identityBannerT = 0L
+    private var identityShownT = 0L
+    private var identityDialog: android.app.AlertDialog? = null
+    private val identityHandler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val identityTick = object : Runnable {
+        override fun run() {
+            refreshIdentityPending()
+            identityHandler.postDelayed(this, 2000L)
+        }
+    }
 
     private fun editProfileExists(): Boolean =
         editProfileId in ProfileStore.profileIds(filesDir)
@@ -192,6 +204,13 @@ class PluginActivity : Activity() {
         head.addView(smallButton(S("About")) { showPage(S("About"), aboutPage) })
         col.addView(head)
 
+        identityBanner = LinearLayout(this)
+        identityBanner.orientation = LinearLayout.VERTICAL
+        identityBanner.setBackgroundColor(0xFFC62828.toInt())
+        identityBanner.setPadding(pad / 2, pad / 2, pad / 2, pad / 2)
+        identityBanner.visibility = View.GONE
+        col.addView(identityBanner)
+
         statusLine = TextView(this)
         statusLine.textSize = 13f
         statusLine.primary()
@@ -214,7 +233,7 @@ class PluginActivity : Activity() {
         helpPage = LinearLayout(this)
         helpPage.orientation = LinearLayout.VERTICAL
         val help = TextView(this)
-        help.text = S("Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.")
+        help.text = S("Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk and Kalman fits until each learns its own, and new profiles for the same Torque profile start with it. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.")
         help.textSize = 14f
         help.primary()
         helpPage.addView(help)
@@ -442,6 +461,9 @@ class PluginActivity : Activity() {
 
     override fun onResume() {
         super.onResume()
+        identityShownT = 0L // a pending decision pops up again on every return to this page
+        identityHandler.removeCallbacks(identityTick)
+        identityHandler.post(identityTick)
         if (::detectBtn.isInitialized) {
             loading = true
             loadIntoForm()
@@ -475,6 +497,9 @@ class PluginActivity : Activity() {
     }
 
     override fun onPause() {
+        identityHandler.removeCallbacks(identityTick)
+        identityDialog?.dismiss()
+        identityDialog = null
         persist()
         super.onPause()
     }
@@ -778,6 +803,67 @@ class PluginActivity : Activity() {
     private lateinit var statusLine: TextView
     private lateinit var helpPage: LinearLayout
     private lateinit var aboutPage: LinearLayout
+
+    private fun refreshIdentityPending() {
+        val p = IdentityPending.read(filesDir)
+        if (p == null) {
+            identityBanner.visibility = View.GONE
+            identityBannerT = 0L
+            identityDialog?.dismiss()
+            identityDialog = null
+            return
+        }
+        if (identityBannerT != p.t) {
+            identityBannerT = p.t
+            identityBanner.removeAllViews()
+            val head = TextView(this)
+            head.text = S("Vehicle decision pending: %1\$s", p.title)
+            head.textSize = 18f
+            head.setTextColor(0xFFFFFFFF.toInt())
+            head.setTypeface(head.typeface, android.graphics.Typeface.BOLD)
+            identityBanner.addView(head)
+            val body = TextView(this)
+            body.text = p.text
+            body.setTextColor(0xFFFFFFFF.toInt())
+            identityBanner.addView(body)
+            val row = LinearLayout(this)
+            row.orientation = LinearLayout.HORIZONTAL
+            for (c in p.choices) row.addView(smallButton(c.label) { answerIdentity(c.target) })
+            identityBanner.addView(row)
+        }
+        identityBanner.visibility = View.VISIBLE
+        if (identityShownT != p.t) {
+            identityShownT = p.t
+            showIdentityDialog(p)
+        }
+    }
+
+    private fun showIdentityDialog(p: IdentityPending.Pending) {
+        identityDialog?.dismiss()
+        val body = LinearLayout(this)
+        body.orientation = LinearLayout.VERTICAL
+        body.setPadding(PAD, PAD / 2, PAD, 0)
+        val text = TextView(this)
+        text.text = p.text
+        text.textSize = 16f
+        text.primary()
+        body.addView(text)
+        val dialog = android.app.AlertDialog.Builder(this).setTitle(p.title).setView(body).setCancelable(false)
+            .setNegativeButton(S("Decide later"), null).create()
+        for (c in p.choices) body.addView(smallButton(c.label) { dialog.dismiss(); answerIdentity(c.target) })
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.show()
+        identityDialog = dialog
+    }
+
+    private fun answerIdentity(target: String) {
+        val i = Intent(this, PluginService::class.java).setAction(PluginService.ACTION_Q_CONFIRM).putExtra(PluginService.EXTRA_TARGET, target)
+        try {
+            startService(i)
+        } catch (t: Throwable) {
+            FsLog.w(TAG, "identity answer ignored: ${t.javaClass.simpleName} ${t.message}")
+        }
+    }
 
     private fun smallButton(text: String, onClick: () -> Unit): Button {
         val b = Button(this)
