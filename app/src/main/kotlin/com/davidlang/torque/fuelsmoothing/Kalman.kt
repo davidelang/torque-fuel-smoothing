@@ -110,10 +110,11 @@ internal object Kalman {
     }
 
     /**
-     * Refit from stored captures. [jumpPct] is the fill-break threshold (the Minimum fill % pref, FixFuelPrefs.MIN_JUMP..MAX_JUMP); a value outside that throws
-     * and the previous state and model stay. An empty session list does not fit.
+     * Refit from stored captures. Fill breaks use the fixed FuelMath.ANALYSIS_JUMP_PCT (no setting); breaks are found
+     * from the levels themselves, a live fill flag only adds one. An empty session list does not fit.
      */
-    fun update(dir: File, sessions: List<FuelSession>, jumpPct: Double, openName: String? = null): State? {
+    fun update(dir: File, sessions: List<FuelSession>, openName: String? = null): State? {
+        val jumpPct = FuelMath.ANALYSIS_JUMP_PCT
         return try {
             val prevModel = loadModel(dir)
             slopeG = prevModel?.g
@@ -121,9 +122,6 @@ internal object Kalman {
             loadNative()
             quarantineState(dir)
             if (sessions.isEmpty()) return load(dir)
-            if (!FixFuelPrefs.jumpOk(jumpPct)) {
-                throw IllegalArgumentException("jumpPct $jumpPct outside ${FixFuelPrefs.MIN_JUMP}..${FixFuelPrefs.MAX_JUMP}")
-            }
             fitName = sessions.last().name
             val saved = load(dir)
             val (parts, _) = Pieces.cut(sessions, openName)

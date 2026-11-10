@@ -314,7 +314,7 @@ internal object ProfileStore {
     fun parseVin(parts: List<String>?): String? = Mode09Replies.vin(parts)
 
     /** VIN is the physical key, never the Torque name. No history/model is copied. A new profile starts with the
-     * tank size the user entered on [inheritTankFrom] (the Torque-name profile), so Remaining/DTE work at once.
+     * legacy tankGal field of [inheritTankFrom] (the Torque-name profile); no fit reads that field any more.
      * profile.json carries VIN before publication, so a retry after interruption finds this profile.
      */
     fun physicalProfile(root: File, vin: String, torqueName: String?, initialProfile: String? = null,
@@ -391,28 +391,30 @@ internal object ProfileStore {
      * [exclude]: session ids still being recorded (never read mid-drive). Skipped entirely, outputs untouched,
      * when the included raw files and settings are unchanged since the last rollup (RollupCache.enabled).
      * A matching signature with a missing or empty rollup-summary.txt is rebuilt, not returned empty.
-     * [jumpPct] is the Kalman fill-break threshold.
+     * Rise thresholds are constants (FuelMath.ANALYSIS_JUMP_PCT), never a setting.
      */
-    fun rollup(dir: File, nameplate: Double?, jumpPct: Double, exclude: Set<String> = emptySet()): String {
+    fun rollup(dir: File, nameplate: Double?, exclude: Set<String> = emptySet()): String {
         DataLock.lock()
         try {
             val raw = File(dir, "raw")
             val files = if (raw.isDirectory) FuelV2.sessionFiles(raw, exclude) else emptyList()
             val sig = RollupCache.signature(
                 files,
-                "nameplate=$nameplate v=${ChunkFit.VERSION}/${BandFit.VERSION}/${Kalman.VERSION} a=${Pieces.ANALYSIS_VERSION}",
+                "nameplate=$nameplate v=${ChunkFit.VERSION}/${BandFit.VERSION}/${Kalman.VERSION} a=${Pieces.ANALYSIS_VERSION} " +
+                    "chains=${BurnChains.VERSION} jump=${FuelMath.ANALYSIS_JUMP_PCT}",
             )
             val sigFile = File(dir, ROLLUP_SIG)
             if (versionChanged(dir)) {
                 try {
-                    val r = reprocessAll(dir, nameplate, jumpPct, exclude)
+                    val r = reprocessAll(dir, nameplate, exclude)
                     if (files.isNotEmpty()) AtomicFile.write(sigFile, sig)
                     return r
                 } finally {
                     RollupCache.clear()
                 }
             }
-            if (RollupCache.enabled && files.isNotEmpty() && sigFile.isFile && File(dir, "model.json").isFile && sigFile.readText() == sig) {
+            if (RollupCache.enabled && files.isNotEmpty() && sigFile.isFile && File(dir, "model.json").isFile &&
+                File(dir, BurnChains.FILE).isFile && sigFile.readText() == sig) {
                 val stored = storedSummary(File(dir, ROLLUP_SUMMARY))
                 if (stored != null) {
                     runCatching { FsLog.i("FuelSmooth", "rollup skipped: no new or changed raw sessions (${files.size})") }
@@ -422,7 +424,7 @@ internal object ProfileStore {
                 FsLog.w("FuelSmooth", "rollup summary missing or empty: ${summaryFile.path}")
             }
             try {
-                val r = rollupFull(dir, nameplate, exclude, jumpPct)
+                val r = rollupFull(dir, nameplate, exclude)
                 if (files.isNotEmpty()) AtomicFile.write(sigFile, sig)
                 return r
             } finally {
@@ -442,11 +444,11 @@ internal object ProfileStore {
     /**
      * Archives the v1 products, then one rollupFull. Does not lock and does not call rollup.
      */
-    fun reprocessAll(dir: File, nameplate: Double?, jumpPct: Double, exclude: Set<String>): String {
+    fun reprocessAll(dir: File, nameplate: Double?, exclude: Set<String>): String {
         val old = analysisVersion(dir) ?: 1
         FsLog.i("FuelSmooth", "reprocess analysis v$old -> ${Pieces.ANALYSIS_VERSION}")
         for (name in ARCHIVE_PRODUCTS) archiveProduct(dir, name, old)
-        val text = rollupFull(dir, nameplate, exclude, jumpPct)
+        val text = rollupFull(dir, nameplate, exclude)
         AtomicFile.write(File(dir, "analysis.version"), Pieces.ANALYSIS_VERSION.toString())
         return text
     }
@@ -475,7 +477,7 @@ internal object ProfileStore {
         }
     }
 
-    private fun rollupFull(dir: File, nameplate: Double?, exclude: Set<String>, jumpPct: Double): String {
+    private fun rollupFull(dir: File, nameplate: Double?, exclude: Set<String>): String {
         val raw = File(dir, "raw")
         val rawFiles = if (raw.isDirectory) FuelV2.sessionFiles(raw, exclude) else emptyList()
         val prevSig = File(dir, ROLLUP_SIG).takeIf { it.isFile }?.readText()
@@ -495,7 +497,13 @@ internal object ProfileStore {
         if (model != null) AtomicFile.write(File(dir, "model-raw.json"), model.json)
         if (chunkFit != null) writeModelIfChanged(File(dir, "model.json"), chunkFit)
         BandFit.update(dir)
-        Kalman.update(dir, sessions, jumpPct)
+        Kalman.update(dir, sessions)
+        // Burn chains: rebuilt from the stored sessions every rollup; live fill flags are not an input.
+        runCatching {
+            val chains = BurnChains.update(dir, sessions)
+            FsLog.i("FuelSmooth", "chains tank=${tankNumberOf(dir)} n=${chains.size} hard=${chains.count { it.hard }} " +
+                "maxHardGal=${chains.filter { it.hard }.maxOfOrNull { it.burnedGal }?.let { "%.1f".format(it) } ?: "na"}")
+        }.onFailure { FsLog.w("FuelSmooth", "burn chains failed; keeping ${BurnChains.FILE}: ${it.message}") }
         if (model != null) {
             val chunksOut = File(dir, "chunks.jsonl")
             chunksOut.writeText("")
@@ -617,20 +625,20 @@ internal object ProfileStore {
      * [openBytes]: length of the open session's file when the update was queued; only complete lines up to it
      * are read (the recorder keeps appending meanwhile).
      */
-    fun fillUpdate(dir: File, nameplate: Double?, openName: String?, jumpPct: Double, openBytes: Long? = null): Boolean {
+    fun fillUpdate(dir: File, nameplate: Double?, openName: String?, openBytes: Long? = null): Boolean {
         DataLock.lock()
         try {
-            return fillUpdate0(dir, nameplate, openName, jumpPct, openBytes)
+            return fillUpdate0(dir, nameplate, openName, openBytes)
         } finally {
             RollupCache.clear()
             DataLock.unlock()
         }
     }
 
-    private fun fillUpdate0(dir: File, nameplate: Double?, openName: String?, jumpPct: Double, openBytes: Long?): Boolean {
+    private fun fillUpdate0(dir: File, nameplate: Double?, openName: String?, openBytes: Long?): Boolean {
         if (versionChanged(dir)) {
             val ex = if (openName != null) setOf(openName) else emptySet()
-            reprocessAll(dir, nameplate, jumpPct, ex)
+            reprocessAll(dir, nameplate, ex)
         }
         val raw = File(dir, "raw")
         val caps = if (openName != null && openBytes != null) mapOf(openName to openBytes) else emptyMap()
@@ -638,7 +646,7 @@ internal object ProfileStore {
         val json = chunkUpdate(dir, sessions, nameplate, null, openName)
         if (json != null) writeModelIfChanged(File(dir, "model.json"), json)
         BandFit.update(dir)
-        Kalman.update(dir, sessions, jumpPct, openName)
+        Kalman.update(dir, sessions, openName)
         return json != null
     }
 

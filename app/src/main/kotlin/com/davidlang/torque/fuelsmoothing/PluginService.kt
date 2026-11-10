@@ -195,7 +195,6 @@ class PluginService : Service() {
         customName = "",
         tauSec = FixFuelPrefs.DEFAULT_TAU,
         skewPctPerSec = FixFuelPrefs.DEFAULT_SKEW,
-        jumpPct = FixFuelPrefs.DEFAULT_JUMP,
         tankGal = null,
         sourceStatus = "",
     )
@@ -808,8 +807,9 @@ class PluginService : Service() {
             nowMs = now,
             tauSec = cfg.tauSec,
             skewPctPerSec = cfg.skewPctPerSec,
-            jumpPct = cfg.jumpPct,
-            settleSec = cfg.settleSec,
+            // Live fill detect only unlocks the skew limit: fixed 60 s settle and 15 % rise, no settings.
+            jumpPct = FuelMath.LIVE_FOLLOW_PCT,
+            settleSec = FuelMath.FILL_SETTLE_SEC,
             ignoreFill = skipFill,
         )
         if (id == 1 && trustedVehicle() && LevelScale.applies(cfg.sourceId)) {
@@ -931,13 +931,7 @@ class PluginService : Service() {
 
     private fun publishExtraFrom(t: ITorqueService, id: Int, rt: TankRt, smoothed: Double) {
         if (!trustedVehicle()) return
-        val out = livePublish(rt)
-        publishExtra(
-            t, id, smoothed, out.correctedPct,
-            if (out.sized) out.remaining else Double.NaN,
-            if (out.sized) out.dte else Double.NaN,
-            priorFor(id).cap,
-        )
+        publishExtra(t, id, smoothed, livePublish(rt).correctedPct)
     }
 
     private fun onEcu(connected: Boolean) {
@@ -1303,12 +1297,11 @@ class PluginService : Service() {
      */
     private fun queueIdentityRollups(target: String) {
         val noticed = booleanArrayOf(false)
-        val jumpPct = cfg.jumpPct
         for ((tank, dir) in kalmanTankDirs(target)) {
             val nameplate = nameplateFor(tank)
             submitRollup("identity tank$tank", {
                 if (ProfileStore.versionChanged(dir)) {
-                    ProfileStore.rollup(dir, nameplate, jumpPct, openSessions)
+                    ProfileStore.rollup(dir, nameplate, openSessions)
                 } else if (asideStaleKalman(target, tank, dir)) {
                     if (!noticed[0]) {
                         noticed[0] = true
@@ -1322,7 +1315,7 @@ class PluginService : Service() {
                         if (sessions.isEmpty()) {
                             FsLog.i(TAG, "kalman refit (stale) tank$tank: no sessions")
                         } else {
-                            Kalman.update(dir, sessions, jumpPct, null)
+                            Kalman.update(dir, sessions, null)
                             if (Kalman.loadModel(dir) == null) FsLog.w(TAG, "kalman refit (stale) tank$tank failed")
                         }
                     } finally {
@@ -1617,8 +1610,9 @@ class PluginService : Service() {
         runCatching {
             publishSmoothed(t, 0.0)
             for (extra in cfg.extras) {
-                publishExtra(t, extra.id, 0.0, 0.0, Double.NaN, Double.NaN, priorFor(extra.id).cap)
+                publishExtra(t, extra.id, 0.0, 0.0)
             }
+            retireRemainingDte(t)
         }.onFailure { FsLog.w(TAG, "registerPluginPids: ${it.message}") }
         FsLog.i(TAG, "registered tank1 PIDs extras=${cfg.extras.map { it.id }}")
     }
@@ -1643,25 +1637,17 @@ class PluginService : Service() {
             maxs.add(max)
         }
         row(Pids.PLUGIN_SMOOTHED, "SmFuel", "%", 100f, Pids.MODE_SMOOTHED)
+        // Remaining and DTE are no longer registered or written (Torque computes both from the fed level).
         row(Pids.PLUGIN_BAND_CORRECTED, "CorrBand", "%", 100f, Pids.MODE_BAND_CORRECTED)
-        row(Pids.PLUGIN_BAND_REMAINING, "GalBand", remainUnit, bandMax, Pids.MODE_BAND_REMAINING)
-        row(Pids.PLUGIN_BAND_DTE, "DTEBand", dteUnit(), dteMax(), Pids.MODE_BAND_DTE)
         row(Pids.PLUGIN_KALMAN_CORRECTED, "CorrKal", "%", 100f, Pids.MODE_KALMAN_CORRECTED)
-        row(Pids.PLUGIN_KALMAN_REMAINING, "GalKal", remainUnit, kalMax, Pids.MODE_KALMAN_REMAINING)
-        row(Pids.PLUGIN_KALMAN_DTE, "DTEKal", dteUnit(), dteMax(), Pids.MODE_KALMAN_DTE)
         row(Pids.PLUGIN_CHUNK_CORRECTED, "CorrChk", "%", 100f, Pids.MODE_CHUNK_CORRECTED)
-        row(Pids.PLUGIN_CHUNK_REMAINING, "GalChk", remainUnit, chunkMax, Pids.MODE_CHUNK_REMAINING)
-        row(Pids.PLUGIN_CHUNK_DTE, "DTEChk", dteUnit(), dteMax(), Pids.MODE_CHUNK_DTE)
         row(Pids.PLUGIN_TANK_CHUNK, "TankChk", remainUnit, chunkMax, Pids.MODE_TANK_CHUNK)
         row(Pids.PLUGIN_TANK_BAND, "TankBand", remainUnit, bandMax, Pids.MODE_TANK_BAND)
         row(Pids.PLUGIN_TANK_KALMAN, "TankKal", remainUnit, kalMax, Pids.MODE_TANK_KALMAN)
         for (extra in cfg.extras) {
             val n = Pids.extraPidNames(extra.id)
-            val tmax = remainingScale(priorFor(extra.id).cap)
             row(n.smoothed, n.shortSm, "%", 100f, Pids.extraModePid(extra.id, 1))
             row(n.corrected, n.shortCorr, "%", 100f, Pids.extraModePid(extra.id, 2))
-            row(n.remaining, n.shortGal, remainUnit, tmax, Pids.extraModePid(extra.id, 3))
-            row(n.dte, n.shortDte, dteUnit(), dteMax(), Pids.extraModePid(extra.id, 4))
         }
         val count = names.size
         val blank = Array(count) { "" }
@@ -1683,23 +1669,28 @@ class PluginService : Service() {
         FsLog.i(TAG, "sendPIDDataV2 n=$count ok=$ok remainUnit=$remainUnit")
     }
 
-    private fun publishExtra(
-        t: ITorqueService,
-        id: Int,
-        smoothed: Double,
-        corrected: Double,
-        remain: Double,
-        dte: Double,
-        usable: Double?,
-    ) {
+    private fun publishExtra(t: ITorqueService, id: Int, smoothed: Double, corrected: Double) {
         val names = Pids.extraPidNames(id)
         setPid(t, names.smoothed, names.shortSm, "%", rmax = 100f, value = smoothed.toFloat())
         if (corrected.isFinite()) setPid(t, names.corrected, names.shortCorr, "%", rmax = 100f, value = corrected.toFloat())
-        if (remain.isFinite() && usable != null && usable > 0.0) {
-            val (vol, vu) = remainingOut(remain)
-            val rmax = remainingScale(usable)
-            setPid(t, names.remaining, names.shortGal, vu, rmax = rmax, value = vol)
-            if (dte.isFinite()) setPid(t, names.dte, names.shortDte, dteUnit(), rmax = dteMax(), value = dteOut(dte))
+    }
+
+    /**
+     * Remaining and DTE PIDs (tank 1 per fit, and extra tanks) are retired: set to NaN so Torque does not keep a
+     * stale last value on a gauge. Written at registration and whenever vehicle outputs are invalidated.
+     */
+    private fun retireRemainingDte(t: ITorqueService) {
+        fun invalid(name: String, short: String, unit: String, max: Float) = setPid(t, name, short, unit, max, Float.NaN)
+        val volumeUnit = remainingOut(0.0).second
+        for ((remain, short) in listOf(
+            Pids.PLUGIN_CHUNK_REMAINING to "GalChk", Pids.PLUGIN_BAND_REMAINING to "GalBand", Pids.PLUGIN_KALMAN_REMAINING to "GalKal",
+        )) invalid(remain, short, volumeUnit, 100f)
+        for ((dte, short) in listOf(
+            Pids.PLUGIN_CHUNK_DTE to "DTEChk", Pids.PLUGIN_BAND_DTE to "DTEBand", Pids.PLUGIN_KALMAN_DTE to "DTEKal",
+        )) invalid(dte, short, dteUnit(), dteMax())
+        for (extra in cfg.extras) {
+            val n = Pids.extraPidNames(extra.id)
+            invalid(n.remaining, n.shortGal, volumeUnit, 100f); invalid(n.dte, n.shortDte, dteUnit(), dteMax())
         }
     }
 
@@ -1708,18 +1699,13 @@ class PluginService : Service() {
             setPid(t, name, short, unit, max, Float.NaN)
         invalid(Pids.PLUGIN_SMOOTHED, "SmFuel", "%")
         val volumeUnit = remainingOut(0.0).second
-        for ((corr, remain, dte) in listOf(
-            Triple(Pids.PLUGIN_CHUNK_CORRECTED, Pids.PLUGIN_CHUNK_REMAINING, Pids.PLUGIN_CHUNK_DTE),
-            Triple(Pids.PLUGIN_BAND_CORRECTED, Pids.PLUGIN_BAND_REMAINING, Pids.PLUGIN_BAND_DTE),
-            Triple(Pids.PLUGIN_KALMAN_CORRECTED, Pids.PLUGIN_KALMAN_REMAINING, Pids.PLUGIN_KALMAN_DTE))) {
-            invalid(corr, "Corr", "%"); invalid(remain, "Fuel", volumeUnit); invalid(dte, "DTE", dteUnit(), dteMax())
-        }
+        for (corr in listOf(Pids.PLUGIN_CHUNK_CORRECTED, Pids.PLUGIN_BAND_CORRECTED, Pids.PLUGIN_KALMAN_CORRECTED)) invalid(corr, "Corr", "%")
         for (name in listOf(Pids.PLUGIN_TANK_CHUNK, Pids.PLUGIN_TANK_BAND, Pids.PLUGIN_TANK_KALMAN)) invalid(name, "Tank", volumeUnit)
         for (extra in cfg.extras) {
             val n = Pids.extraPidNames(extra.id)
             invalid(n.smoothed, n.shortSm, "%"); invalid(n.corrected, n.shortCorr, "%")
-            invalid(n.remaining, n.shortGal, volumeUnit); invalid(n.dte, n.shortDte, dteUnit(), dteMax())
         }
+        retireRemainingDte(t)
         // Withdraw only our own previous stock-slot feedback; this is Torque cache metadata,
         // never an ECU write. No numeric previous-car correction survives identity pending.
         if (logged012fWrite && !isFordName(ecuLevelName)) {
@@ -1734,30 +1720,25 @@ class PluginService : Service() {
     }
 
     /**
-     * Identity pending: DISPLAY only, from this connection's live gauge. Corrected = smoothed (unity) and
-     * Remaining/DTE = the display profile's entered tank size x smoothed percent. No old fit or ledger.
+     * Identity pending: DISPLAY only, from this connection's live gauge: smoothed, and corrected = smoothed
+     * (unity). No Remaining/DTE, no old fit or ledger.
      */
     private fun publishPending(t: ITorqueService, rt: TankRt, smoothed: Double) {
         publishSmoothed(t, smoothed)
-        val tank = cfg.tankGal?.takeIf { it.isFinite() && it > 0.0 }
-        val out = unityPublish(smoothed, tank, longTermMpg())
-        runCatching { publishFit(t, out, tank, Pids.PLUGIN_KALMAN_CORRECTED, "CorrKal", Pids.PLUGIN_KALMAN_REMAINING, "GalKal", Pids.PLUGIN_KALMAN_DTE, "DTEKal") }
-        runCatching { publishFit(t, out, tank, Pids.PLUGIN_CHUNK_CORRECTED, "CorrChk", Pids.PLUGIN_CHUNK_REMAINING, "GalChk", Pids.PLUGIN_CHUNK_DTE, "DTEChk") }
-        runCatching { publishFit(t, out, null, Pids.PLUGIN_BAND_CORRECTED, "CorrBand", Pids.PLUGIN_BAND_REMAINING, "GalBand", Pids.PLUGIN_BAND_DTE, "DTEBand") }
+        val out = unityPublish(smoothed)
+        runCatching { publishFit(t, out, Pids.PLUGIN_KALMAN_CORRECTED, "CorrKal") }
+        runCatching { publishFit(t, out, Pids.PLUGIN_CHUNK_CORRECTED, "CorrChk") }
+        runCatching { publishFit(t, out, Pids.PLUGIN_BAND_CORRECTED, "CorrBand") }
         if (rt.math.smoothed != null) writeStockFuelLevel(t, smoothed, out.correctedPct, Double.NaN, Double.NaN, pending = true)
         updatePresence(statusText())
     }
 
-    /** Unity map: corrected = smoothed; remaining = [tankGal] x displayed percent; DTE only with a real mpg. */
-    private fun unityPublish(sm: Double, tankGal: Double?, mpg: Double?): TankPublish {
-        if (tankGal == null || tankGal <= 0.0 || !sm.isFinite()) {
-            return TankPublish(Double.NaN, Double.NaN, sm, mpg ?: 0.0, Double.NaN, Double.NaN, sized = false)
-        }
-        val r = tankGal * LevelScale.display(sm, levelUnit(1)) / 100.0
-        val remaining = r + FuelV2.reserveGal(0.0)
-        val dte = mpg?.let { remaining * it } ?: Double.NaN
-        return TankPublish(r, remaining, sm, mpg ?: 0.0, dte, mpg?.let { r * it } ?: Double.NaN, sized = true)
-    }
+    /** Unity map: corrected = smoothed. */
+    private fun unityPublish(sm: Double): TankPublish = corrOnly(sm, sized = sm.isFinite())
+
+    /** Only the corrected percent is used; Remaining and DTE are retired and stay NaN. */
+    private fun corrOnly(corr: Double, sized: Boolean): TankPublish =
+        TankPublish(Double.NaN, Double.NaN, corr, 0.0, Double.NaN, Double.NaN, sized = sized)
 
     private fun publishSmoothed(t: ITorqueService, smoothed: Double) {
         setPid(t, Pids.PLUGIN_SMOOTHED, "SmFuel", "%", rmax = 100f, value = LevelScale.display(smoothed, levelUnit(1)).toFloat())
@@ -1776,22 +1757,14 @@ class PluginService : Service() {
         return loaded
     }
 
-    /** No band model: corrected percent is the smoothed percent, and Remaining, DTE, and tank size are not written. */
+    /** No band model: corrected percent is the smoothed percent. */
     private fun bandPublish(rt: TankRt): TankPublish {
         val sm = rt.math.smoothed?.takeIf { it.isFinite() }
         val loaded = bandModel()
-        val mpg = longTermMpg()
-        if (loaded == null || sm == null) {
-            return TankPublish(Double.NaN, Double.NaN, sm ?: Double.NaN, mpg ?: 0.0, Double.NaN, Double.NaN, sized = false)
-        }
+        if (loaded == null || sm == null) return corrOnly(sm ?: Double.NaN, sized = false)
         val (g, cap) = loaded
         val v = { l: Double -> BandFit.vAt(l.coerceIn(0.0, 100.0), g) }
-        val corr = FuelV2.correctedPct(sm, v, cap).takeIf { it.isFinite() } ?: sm
-        val r = v(sm).coerceAtLeast(0.0)
-        val reserve = FuelV2.reserveGal(0.0)
-        val remaining = r + reserve
-        val dte = mpg?.let { remaining * it } ?: Double.NaN
-        return TankPublish(r, remaining, corr, mpg ?: 0.0, dte, mpg?.let { r * it } ?: Double.NaN, sized = cap > 0.0)
+        return corrOnly(FuelV2.correctedPct(sm, v, cap).takeIf { it.isFinite() } ?: sm, sized = cap > 0.0)
     }
 
     private var kalCache: Pair<Long, Kalman.Model?>? = null
@@ -1806,58 +1779,25 @@ class PluginService : Service() {
         return loaded
     }
 
-    /**
-     * Kalman starts as a unity map: until its fit has its own size, corrected percent is the smoothed percent and
-     * Remaining/DTE use the entered tank size (never Chunk/Band capacity). With no entered size they stay off.
-     */
+    /** Kalman starts as a unity map: until its fit has its own size, corrected percent is the smoothed percent. */
     private fun kalmanPublish(rt: TankRt): TankPublish {
-        val sm = rt.math.smoothed?.takeIf { it.isFinite() }
+        val sm = rt.math.smoothed?.takeIf { it.isFinite() } ?: return corrOnly(Double.NaN, sized = false)
         val km = kalmanModel()
-        val mpg = longTermMpg()
-        if (sm == null) {
-            return TankPublish(Double.NaN, Double.NaN, Double.NaN, mpg ?: 0.0, Double.NaN, Double.NaN, sized = false)
-        }
-        if (km == null || !(km.g98 > 0.0)) return unityPublish(sm, nameplateFor(1), mpg)
-        val corr = FuelV2.correctedPct(sm, { km.v(it) }, km.g98).takeIf { it.isFinite() } ?: sm
-        val r = km.v(sm).coerceAtLeast(0.0)
-        val reserve = FuelV2.reserveGal(0.0)
-        val remaining = r + reserve
-        val dte = mpg?.let { remaining * it } ?: Double.NaN
-        return TankPublish(r, remaining, corr, mpg ?: 0.0, dte, mpg?.let { r * it } ?: Double.NaN, sized = true)
+        if (km == null || !(km.g98 > 0.0)) return unityPublish(sm)
+        return corrOnly(FuelV2.correctedPct(sm, { km.v(it) }, km.g98).takeIf { it.isFinite() } ?: sm, sized = true)
     }
 
-    private fun publishKalman(t: ITorqueService, b: TankPublish) {
-        publishFit(t, b, kalmanModel()?.g98?.takeIf { it > 0.0 } ?: nameplateFor(1), Pids.PLUGIN_KALMAN_CORRECTED, "CorrKal", Pids.PLUGIN_KALMAN_REMAINING, "GalKal", Pids.PLUGIN_KALMAN_DTE, "DTEKal")
-    }
+    private fun publishKalman(t: ITorqueService, b: TankPublish) = publishFit(t, b, Pids.PLUGIN_KALMAN_CORRECTED, "CorrKal")
 
-    private fun publishChunk(t: ITorqueService, b: TankPublish) {
-        publishFit(t, b, priorFor(1).cap, Pids.PLUGIN_CHUNK_CORRECTED, "CorrChk", Pids.PLUGIN_CHUNK_REMAINING, "GalChk", Pids.PLUGIN_CHUNK_DTE, "DTEChk")
-    }
+    private fun publishChunk(t: ITorqueService, b: TankPublish) = publishFit(t, b, Pids.PLUGIN_CHUNK_CORRECTED, "CorrChk")
 
-    private fun publishBand(t: ITorqueService, b: TankPublish) {
-        publishFit(t, b, bandModel()?.second, Pids.PLUGIN_BAND_CORRECTED, "CorrBand", Pids.PLUGIN_BAND_REMAINING, "GalBand", Pids.PLUGIN_BAND_DTE, "DTEBand")
-    }
+    private fun publishBand(t: ITorqueService, b: TankPublish) = publishFit(t, b, Pids.PLUGIN_BAND_CORRECTED, "CorrBand")
 
-    /** Corrected percent is always written when finite. Remaining, DTE, and the size gate stay off until this fit has a size. */
-    private fun publishFit(
-        t: ITorqueService,
-        b: TankPublish,
-        cap: Double?,
-        correctedName: String,
-        correctedShort: String,
-        remainName: String,
-        remainShort: String,
-        dteName: String,
-        dteShort: String,
-    ) {
+    /** Corrected percent is written when finite. Remaining and DTE are not written (retired). */
+    private fun publishFit(t: ITorqueService, b: TankPublish, correctedName: String, correctedShort: String) {
         if (b.correctedPct.isFinite()) {
             setPid(t, correctedName, correctedShort, "%", rmax = 100f, value = b.correctedPct.toFloat())
         }
-        if (!b.sized || cap == null || cap <= 0.0 || !b.remaining.isFinite()) return
-        val (vol, vu) = remainingOut(b.remaining)
-        val rmax = remainingScale(cap)
-        setPid(t, remainName, remainShort, vu, rmax = rmax, value = vol)
-        if (b.dte.isFinite()) setPid(t, dteName, dteShort, dteUnit(), rmax = dteMax(), value = dteOut(b.dte))
     }
 
     /** Tank size per fit. Chunk may use the user seed. Band and Kalman use only their own size. Unwritten PIDs are left alone. */
@@ -1924,8 +1864,8 @@ class PluginService : Service() {
      * Tank capacity cannot be written to Torque: storeInProfile() namespaces every key as "plugin_<key>"
      * (the Pixel's .tdv holds both Torque's tankUsed=128.9 and our plugin_tankUsed=85.6, and tankCapacity
      * stayed 132.49), and ITorqueService has no setter for vehicle-profile fields, nor any call to create or
-     * switch a vehicle profile. So the learned tank size cannot drive Torque's own remaining/DTE, and our
-     * Remaining/DTE PIDs stay required. The plugin therefore writes nothing into the Torque profile
+     * switch a vehicle profile. Torque's own remaining/DTE therefore use the tank size typed into Torque times the
+     * fuel level we feed onto 012F; the plugin no longer publishes Remaining/DTE PIDs of its own. It writes nothing into the Torque profile
      * (the former plugin_tankUsed / plugin_authoritativePct storeInProfile writes were removed).
      */
     private fun configuredIds(): Set<Int> = setOf(1) + cfg.extras.map { it.id }.toSet()
@@ -2031,7 +1971,7 @@ class PluginService : Service() {
                     Fingerprint.save(pd, Fingerprint.merge(Fingerprint.load(pd), o))
                 }
                 val tdir = ProfileStore.tankDir(filesDir, target, id); val np = nameplateFor(id)
-                submitRollup("rollup $target tank$id", { ProfileStore.rollup(tdir, np, cfg.jumpPct, openSessions) }) { priorCache.clear() }
+                submitRollup("rollup $target tank$id", { ProfileStore.rollup(tdir, np, openSessions) }) { priorCache.clear() }
             }
             return
         }
@@ -2068,8 +2008,7 @@ class PluginService : Service() {
         val dir = ProfileStore.tankDir(filesDir, profileId, id); val np = nameplateFor(id)
         FsLog.i(TAG, "session close tank=$id samples=${closed.size} files=${rt.sessions.sessionCount()}; rollup queued")
         var summary = ""
-        val jumpPct = cfg.jumpPct
-        submitRollup("rollup tank$id", { summary = ProfileStore.rollup(dir, np, jumpPct, openSessions) }) {
+        submitRollup("rollup tank$id", { summary = ProfileStore.rollup(dir, np, openSessions) }) {
             priorCache.remove(id)
             FsLog.i(TAG, "tank$id $summary")
         }
@@ -2222,29 +2161,14 @@ class PluginService : Service() {
         return if (Units.prefersLiters(preferredVolumeUnit)) (g * Units.LITERS_PER_GAL).toFloat() else g.toFloat()
     }
 
+    /**
+     * Live fill end: display only. The skew limit was lifted while FILL lasted so the smoothed level could follow
+     * the pump; nothing else changes. No ledger reset, no new chain, no "full" anchor, no mid-drive refit: the maps
+     * and burn chains find the add themselves from the stored levels at the end-of-drive rollup.
+     */
     private fun onFillEnd(rt: TankRt, smoothed: Double, now: Long, logging: Boolean) {
-        rt.fuelAtFillGal = rt.usedGal
-        rt.sinceFillUsedGal = 0.0
-        val prior = priorFor(rt.id)
-        FuelV2.stepFill(rt.ledger, smoothed, smoothed, prior.v, prior.v95, prior.hEst)
         if (logging) rt.sessions.mark("fillEnd", now)
-        if (logging && rt.sessions.isOpen && quarantineDir == null) {
-            // Fill detection: the pre-fill part of this drive is complete; segment it, refit, reload the map.
-            rt.sessions.flush()
-            val dir = ProfileStore.tankDir(filesDir, profileId, rt.id); val np = nameplateFor(rt.id)
-            val open = rt.sessions.sessionId; val tid = rt.id
-            var ok = false
-            val jumpPct = cfg.jumpPct
-            val bytes = open?.let { File(File(dir, "raw"), "$it.jsonl").length() }
-            submitRollup("fill update tank$tid", { ok = ProfileStore.fillUpdate(dir, np, open, jumpPct, bytes) }) {
-                if (ok) priorCache.remove(tid)
-            }
-        }
-        if (rt.id != 1 || quarantineDir != null) return
-        val anchor = rt.ledger.rHat.takeIf { rt.ledger.anchored && it.isFinite() && it > 0.0 } ?: return
-        rt.fillAnchorGal = anchor
-        ProfileStore.setFillLedger(filesDir, profileId, anchor, 0.0)
-        FsLog.i(TAG, "tank1 fill anchor=$anchor sinceFill=0 smoothed=$smoothed fuelGal=${rt.usedGal}")
+        FsLog.i(TAG, "tank${rt.id} live follow end smoothed=$smoothed (display only; analysis runs at rollup)")
     }
 
     /** Adds burn since the last fill end. Does not zero the session fuel integral. */
@@ -2269,10 +2193,12 @@ class PluginService : Service() {
         val ownModel: Boolean,
     )
 
-    private fun nameplateFor(id: Int): Double? {
-        if (!identityReady || quarantineDir != null) return null
-        return if (id <= 1) cfg.tankGal?.takeIf { it > 0.0 } else cfg.extra(id)?.tankGal?.takeIf { it > 0.0 }
-    }
+    /**
+     * No entered seed: a stored profile tankGal is a legacy value (often an old calculated estimate) and is not
+     * used. Each fit reports its own learned size; until then it reads 1:1.
+     */
+    @Suppress("UNUSED_PARAMETER")
+    private fun nameplateFor(id: Int): Double? = null
 
     /** Cached; invalidated at bind, profile switch, session-close rollup and pref changes. */
     private fun priorFor(id: Int): Prior {
@@ -2327,40 +2253,17 @@ class PluginService : Service() {
         return ceil(2.0 * tau * scaled * scaled).toInt().coerceAtLeast(10)
     }
 
-    /** Torque long-term mpg as miles per gallon, or null when the unit or the value cannot be used. */
-    private fun longTermMpg(): Double? {
-        val pid = mpgPid ?: return null
-        val t = torque ?: return null
-        if (mpgUnit.isBlank()) return null
-        val v = readDouble(t, pid) ?: return null
-        if (!v.isFinite() || v <= 0.0) return null
-        val u = mpgUnit.trim().lowercase().replace(" ", "")
-        val mpg = when (u) {
-            "mpg", "mi/gal", "miles/gal" -> v
-            "km/l" -> v * 2.352145833
-            "l/100km" -> 235.214583 / v
-            else -> return null
-        }
-        return mpg.takeIf { it.isFinite() && it > 0.0 }
-    }
-
+    /** Chunk fit (or an extra tank's own map): corrected percent only; 1:1 until that fit has its own model. */
     private fun livePublish(rt: TankRt): TankPublish {
         val prior = priorFor(rt.id)
-        val sm = rt.math.smoothed?.takeIf { it.isFinite() }
-        val mpg = longTermMpg()
+        val sm = rt.math.smoothed?.takeIf { it.isFinite() } ?: return corrOnly(Double.NaN, sized = false)
         val cap = prior.cap
-        val corrected = when {
-            sm == null -> Double.NaN
-            prior.ownModel && cap != null && cap > 0.0 -> FuelV2.correctedPct(sm, prior.v, cap).takeIf { it.isFinite() } ?: sm
-            else -> sm
+        val corrected = if (prior.ownModel && cap != null && cap > 0.0) {
+            FuelV2.correctedPct(sm, prior.v, cap).takeIf { it.isFinite() } ?: sm
+        } else {
+            sm
         }
-        if (sm == null || cap == null || cap <= 0.0) {
-            return TankPublish(Double.NaN, Double.NaN, corrected, mpg ?: 0.0, Double.NaN, Double.NaN, sized = false)
-        }
-        val r = prior.v(sm.coerceIn(0.0, 100.0)).coerceAtLeast(0.0)
-        val remaining = r + prior.reserve
-        val dte = mpg?.let { remaining * it } ?: Double.NaN
-        return TankPublish(r, remaining, corrected, mpg ?: 0.0, dte, mpg?.let { r * it } ?: Double.NaN, sized = true)
+        return corrOnly(corrected, sized = cap != null && cap > 0.0)
     }
 
     private fun loadTank1Ledger(rt: TankRt) {

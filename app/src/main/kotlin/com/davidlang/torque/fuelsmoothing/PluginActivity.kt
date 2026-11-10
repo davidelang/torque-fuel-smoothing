@@ -56,11 +56,6 @@ class PluginActivity : Activity() {
     private lateinit var customName: EditText
     private lateinit var tau: EditText
     private lateinit var skew: EditText
-    private lateinit var jump: EditText
-    private lateinit var settle: EditText
-    private lateinit var tank: EditText
-    private lateinit var tankUnit: Spinner
-    private var shownUnit = VolUnit.GAL
     private lateinit var live: TextView
     private lateinit var sizeChunk: TextView
     private lateinit var sizeBand: TextView
@@ -234,7 +229,7 @@ class PluginActivity : Activity() {
         helpPage = LinearLayout(this)
         helpPage.orientation = LinearLayout.VERTICAL
         val help = TextView(this)
-        help.text = S("Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk and Kalman fits until each learns its own, and new profiles for the same Torque profile start with it. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.")
+        help.text = S("Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.")
         help.textSize = 14f
         help.primary()
         helpPage.addView(help)
@@ -327,30 +322,7 @@ class PluginActivity : Activity() {
         customName = edit(InputType.TYPE_CLASS_TEXT)
         col.addView(customName)
 
-        col.addView(info(S("Tank size"), S("Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.")))
-        val tankRow = LinearLayout(this)
-        tankRow.orientation = LinearLayout.HORIZONTAL
-        tank = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
-        tank.hint = S("blank = no starting size; each fit learns its own.")
-        tank.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-        tankRow.addView(tank)
-        tankUnit = Spinner(this)
-        tankUnit.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, VolUnit.entries.map { S(it.label) })
-        tankRow.addView(tankUnit)
-        col.addView(tankRow)
-        tankUnit.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val u = VolUnit.entries[position.coerceIn(0, VolUnit.entries.size - 1)]
-                if (loading || !editProfileExists() || u == shownUnit) return
-                // Re-express the typed value in the new unit; the stored value stays in gallons.
-                val gal = tank.text.toString().trim().toDoubleOrNull()?.let { shownUnit.toGal(it) }
-                shownUnit = u
-                ProfileStore.setProfileField(filesDir, editProfileId, "tankUnit", u.name)
-                tank.setText(VolUnit.show(gal, u))
-                persist()
-            }
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
+        col.addView(info(S("Learned tank size"), S("Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.")))
         sizeChunk = sizeLine(col, 0xFF1565C0.toInt())
         sizeBand = sizeLine(col, 0xFF2E7D32.toInt())
         sizeKalman = sizeLine(col, 0xFFE65100.toInt())
@@ -413,15 +385,6 @@ class PluginActivity : Activity() {
         }
         col.addView(verbose)
 
-        // Fill detection: wait for the stop to settle, then a rise above that parked level is a fill.
-        col.addView(label(S("Fill detection")))
-        col.addView(info(S("Settling time (seconds)"), S("Wait this long after stopping for slosh and slope to settle, then look for a rise from that level. Traffic-light stops shorter than this are ignored.")))
-        settle = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
-        col.addView(settle)
-        col.addView(info(S("Minimum fill %"), S("Rise above the settled parked level that counts as a fill.")))
-        jump = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
-        col.addView(jump)
-
         // Details (below the settings).
         col.addView(label(S("Details")))
         live = TextView(this)
@@ -436,9 +399,6 @@ class PluginActivity : Activity() {
         customName.addTextChangedListener(watch)
         tau.addTextChangedListener(watch)
         skew.addTextChangedListener(watch)
-        jump.addTextChangedListener(watch)
-        settle.addTextChangedListener(watch)
-        tank.addTextChangedListener(watch)
         selectPid.addTextChangedListener(watch)
         profileName.addTextChangedListener(watch)
         vehicleMake.addTextChangedListener(watch)
@@ -536,13 +496,6 @@ class PluginActivity : Activity() {
         if (customName.text.toString() != c.customName && !customName.isFocused) customName.setText(c.customName)
         setIfBlankOrInit(tau, c.tauSec.toString())
         setIfBlankOrInit(skew, c.skewPctPerSec.toString())
-        setIfBlankOrInit(jump, c.jumpPct.toString())
-        setIfBlankOrInit(settle, c.settleSec.toString())
-        shownUnit = VolUnit.of(ProfileStore.profileField(filesDir, editProfileId, "tankUnit"))
-        tankUnit.setSelection(shownUnit.ordinal)
-        val shownGal = tank.text.toString().trim().toDoubleOrNull()?.let { shownUnit.toGal(it) }
-        val tankStr = if (shownGal != null && c.tankGal != null && kotlin.math.abs(shownGal - c.tankGal) < 0.05) tank.text.toString() else VolUnit.show(c.tankGal, shownUnit)
-        if (tank.text.toString() != tankStr && !tank.isFocused) tank.setText(tankStr)
         showStoredInvalid(c)
         refreshSizes(c)
         val st = if (editingRecordingProfile()) c.sourceStatus else ""
@@ -611,13 +564,9 @@ class PluginActivity : Activity() {
         root.addView(label(S("Tank %1\$d custom long name (e.g. [FuelSmooth] Tank%1\$d Level)", t.id)))
         val name = edit(InputType.TYPE_CLASS_TEXT)
         root.addView(name)
-        root.addView(label(S("Tank %1\$d gallons", t.id)))
-        val gal = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
-        root.addView(gal)
-        val card = ExtraCard(t.id, root, source, name, gal)
+        val card = ExtraCard(t.id, root, source, name)
         bindCard(card, t)
         name.addTextChangedListener(watch)
-        gal.addTextChangedListener(watch)
         source.onItemSelectedListener = extraSourceListen(card)
         remove.setOnClickListener { removeExtra(card) }
         extrasCol.addView(root)
@@ -639,8 +588,6 @@ class PluginActivity : Activity() {
         loadedExtraSource[card.id] = t.sourceId
         card.source.setSelection(FuelSources.indexOf(t.sourceId))
         if (card.customName.text.toString() != t.customName && !card.customName.isFocused) card.customName.setText(t.customName)
-        val g = t.tankGal?.toString() ?: ""
-        if (card.tank.text.toString() != g && !card.tank.isFocused) card.tank.setText(g)
     }
 
     private fun addExtra() {
@@ -724,7 +671,7 @@ class PluginActivity : Activity() {
                 id = card.id,
                 sourceId = old?.sourceId ?: FixFuelPrefs.DEFAULT_SOURCE_T2,
                 customName = card.customName.text.toString().trim(),
-                tankGal = card.tank.text.toString().toDoubleOrNull(),
+                tankGal = old?.tankGal, // legacy stored value, kept untouched; nothing reads it
                 sourceStatus = old?.sourceStatus ?: "",
             )
         }
@@ -759,14 +706,6 @@ class PluginActivity : Activity() {
             S("0 to %1\$s s", oneDecimal(FixFuelPrefs.MAX_TAU))) && ok
         ok = markField(skew, FixFuelPrefs.skewOk(skew.text.toString().trim().toDoubleOrNull()),
             S("above 0, at most %1\$s %%/s", oneDecimal(FixFuelPrefs.MAX_SKEW))) && ok
-        ok = markField(jump, FixFuelPrefs.jumpOk(jump.text.toString().trim().toDoubleOrNull()),
-            S("%1\$s to %2\$s %%", oneDecimal(FixFuelPrefs.MIN_JUMP), oneDecimal(FixFuelPrefs.MAX_JUMP))) && ok
-        ok = markField(settle, FixFuelPrefs.settleOk(settle.text.toString().trim().toDoubleOrNull()),
-            S("0 to %1\$s s", oneDecimal(FixFuelPrefs.MAX_SETTLE))) && ok
-        ok = markField(tank, FixFuelPrefs.tankOk(tank.text.toString()), S("blank or a number above 0")) && ok
-        for (card in extraCards) {
-            ok = markField(card.tank, FixFuelPrefs.tankOk(card.tank.text.toString()), S("blank or a number above 0")) && ok
-        }
         return ok
     }
 
@@ -779,9 +718,6 @@ class PluginActivity : Activity() {
         }
         show(FixFuelPrefs.KEY_TAU, tau)
         show(FixFuelPrefs.KEY_SKEW, skew)
-        show(FixFuelPrefs.KEY_JUMP, jump)
-        show(FixFuelPrefs.KEY_SETTLE, settle)
-        show(FixFuelPrefs.KEY_TANK, tank)
     }
 
     private fun persist(): Boolean {
@@ -795,9 +731,6 @@ class PluginActivity : Activity() {
             customName = customName.text.toString().trim(),
             tauSec = tau.text.toString().trim().toDouble(),
             skewPctPerSec = skew.text.toString().trim().toDouble(),
-            jumpPct = jump.text.toString().trim().toDouble(),
-            settleSec = settle.text.toString().trim().toDouble(),
-            tankGal = tank.text.toString().trim().toDoubleOrNull()?.let { shownUnit.toGal(it) },
             extras = extrasFromCards(),
             activeTank = activeTankFromSpinner(),
             selectPidName = selectPid.text.toString().trim(),
@@ -928,14 +861,13 @@ class PluginActivity : Activity() {
             .setOnDismissListener { sv.removeView(page) }.show()
     }
 
-    /** One or two lines: profile, source, tank estimate. */
+    /** One or two lines: profile, source. */
     private fun refreshStatus(c: FixFuelConfig) {
         if (!::statusLine.isInitialized) return
         val id = editProfileId
         val name = ProfileStore.profileField(filesDir, id, "name") ?: S("Vehicle 1")
         val src = S(FuelSources.byId(c.sourceId).label) + if (c.sourceConfirmed) "" else S("(unconfirmed)")
-        val tankTxt = c.tankGal?.let { "${VolUnit.show(it, shownUnit)} ${S(shownUnit.label)}" } ?: S("tank ?")
-        statusLine.text = "$name · $src · $tankTxt" + if (PluginService.ecuConnected && editingRecordingProfile()) S("· ECU connected") else ""
+        statusLine.text = "$name · $src" + if (PluginService.ecuConnected && editingRecordingProfile()) S("· ECU connected") else ""
     }
 
     private fun label(s: String): TextView {
@@ -1173,11 +1105,11 @@ class PluginActivity : Activity() {
         return t
     }
 
-    /** Own chunk size, else the user seed. Band and Kalman show only their own size. Kalman includes sd98 whenever a model is loaded. */
+    /** Each fit shows only its own learned size (never an entered value). Kalman includes sd98 whenever a model is loaded. */
     private fun refreshSizes(c: FixFuelConfig) {
         val dir = ProfileStore.tankDir(filesDir, editProfileId, 1)
         val chunk = ProfileStore.storedMap(dir)
-        val chunkGal = chunk?.third?.takeIf { it > 0.0 } ?: c.tankGal?.takeIf { it > 0.0 }
+        val chunkGal = chunk?.third?.takeIf { it > 0.0 }
         sizeChunk.text = S("Chunk: %1\$s", sizeText(chunkGal))
         val band = BandFit.load(dir)
         sizeBand.text = S("Band: %1\$s", sizeText(band?.second?.takeIf { it > 0.0 }))
@@ -1462,7 +1394,6 @@ class PluginActivity : Activity() {
         val root: LinearLayout,
         val source: Spinner,
         val customName: EditText,
-        val tank: EditText,
     )
 
     companion object {

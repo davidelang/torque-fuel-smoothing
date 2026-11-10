@@ -1,6 +1,6 @@
 # Fuel Smoothing for Torque
 
-Fuel Smoothing is a plugin for **Torque Pro**. It reads the fuel-level sensor, holds the displayed level steady when fuel sloshes, and learns how much fuel each part of the gauge represents. You get a steadier reading, a corrected percent, and an estimate of fuel remaining.
+Fuel Smoothing is a plugin for **Torque Pro**. It reads the fuel-level sensor, holds the displayed level steady when fuel sloshes, and learns how much fuel each part of the gauge represents. You get a steadier reading and a corrected (linearized) percent. Either can be fed back onto Torque's stock fuel level, so Torque's own fuel remaining and distance to empty use it.
 
 It is not affiliated with Torque or Ian Hawkins.
 
@@ -16,6 +16,8 @@ Braking, accelerating, cornering, and slopes move the fuel in the tank, so the r
 
 The smoothed reading is published as **[FuelSmooth] Smoothed Fuel Level** (short name SmFuel, id ffd001), in percent. Put it on any Torque dashboard.
 
+Earlier versions also published Remaining and DTE PIDs for each fit and each extra tank. Those are no longer written; the plugin blanks them when it connects to Torque, so a gauge still showing one reads empty. Remove those gauges and use Torque's own fuel remaining and distance to empty.
+
 ## Burn gate
 
 While the engine is running, the plugin adds up the fuel used from Torque's fuel-flow reading. Fuel is counted only when RPM is above 0 and the flow reading is fresh and changing. A stale or held value is never counted. If the vehicle reports no RPM, a fresh, changing MAF reading is used instead. The first minute after connecting is a little more lenient while Torque's readings start.
@@ -24,7 +26,7 @@ Fuel is counted only while the engine runs. The plugin itself runs only while To
 
 Standard OBD fuel-rate readings and Torque's calculated fuel flow are always read as liters, which is how they are reported. You do not set that. Only a manufacturer-specific flow PID can need an override, `"flowUnit": "gal"` or `"l"`, in that profile's `profile.json`. There is no settings control for this yet. If fuel used looks about 3.8 times too high or too low, liters and gallons are mixed on that kind of PID.
 
-Display of fuel remaining and distance to empty follows Torque's own units (gallons or liters, miles or km).
+Tank size PIDs are written in Torque's own volume unit (gallons or liters). The plugin does not publish fuel remaining or distance to empty. Torque computes those itself from the fuel level (fed by the plugin when you choose so), the tank size in the Torque vehicle profile, and that profile's long-term mpg.
 
 ## Install and enable
 
@@ -61,12 +63,12 @@ Data is tied to the vehicle profile selected in Torque. A new Torque profile nam
 On connect, the plugin reads what the ECU provides (VIN, calibration ID, and similar). It uses that to notice when the selected Torque profile looks like a different vehicle:
 
 - **Recording to …** means the plugin is sure this is a different, already-known vehicle. Data goes to that vehicle. Switch Torque's profile to match.
-- A vehicle with a known VIN, or a new VIN, is used automatically. A different VIN under the same Torque profile is a different vehicle and gets its own profile, which starts with that Torque profile's tank size.
+- A vehicle with a known VIN, or a new VIN, is used automatically. A different VIN under the same Torque profile is a different vehicle and gets its own profile, which learns its own sizes.
 - A vehicle that sends no VIN is used automatically when exactly one saved no-VIN profile matches its protocol and supported-PID list, Torque already has that profile selected, and the live fuel level agrees (within 6 points) with the level last recorded for it. Until the vehicle is decided, the plugin actively asks the vehicle for what it compares: it re-asks unanswered supported-PID lists, always runs the Ford 16C1 check on a no-VIN J1850 PWM vehicle, and requests fresh fuel readings instead of waiting for Torque's dashboard to poll them. This usually takes a few seconds after connecting; if no fresh level arrives within 90 seconds, it asks.
 - Otherwise the plugin asks, for example **Confirm this is …** or **Which vehicle is this?**. When more than one saved profile could be this vehicle, the question lists every one of them plus **none, it's new**, which starts a new profile. **none, it's new** is offered in every question. The question is a heads-up notification that stays until answered, and the setup page shows it as a popup and a red banner. The notification has buttons only when there are three choices or fewer; with more, tap it to choose on the setup page. **Decide later** hides the popup while you look at other settings; the banner stays, and the popup returns the next time you open the page. Until you choose, the drive is held aside and is not learned from. If you do not choose, the drive is set aside, not deleted, and never used for learning.
-- While a question is open, the dash still shows the live smoothed level, with Remaining (and distance to empty when Torque has a long-term mpg) from the tank-size field. No learned map is used until the vehicle is decided.
+- While a question is open, the dash still shows the live smoothed level, and each corrected percent reads the same as the smoothed level. No learned map is used until the vehicle is decided.
 
-Each time Torque connects to the ECU, a new drive starts. The plugin does not assume anything about fuel used between drives. Readings during hard acceleration or braking, and shortly after stopping, are not trusted for learning. Fuel is still counted. Heavy work runs at the end of a drive (ECU disconnect) or after a fill. During a drive the last saved map is used.
+Each time Torque connects to the ECU, a new drive starts. The plugin does not assume anything about fuel used between drives. Readings during hard acceleration or braking, and shortly after stopping, are not trusted for learning. Fuel is still counted. Heavy work runs at the end of a drive (ECU disconnect). During a drive the last saved map is used.
 
 When there is a fuel-flow reading but no valid level (no reply, a glitch, or an untrusted moment), the drive log stores the level as **-1**, never 0. Minus one means missing: every analysis skips it, and the fuel burned is still counted.
 
@@ -90,15 +92,15 @@ The sources are:
 
 **Custom long name** is only for "Torque extra PID by long name": the exact long name of an extra PID you created in Torque.
 
-**Additional tanks.** **Add additional tank** adds tanks, up to 8 in total. Tank 1 always stays. Each extra tank needs its own Torque extra PID (Mode 22, unique name — not 012F or Ford 16C1). Fuel use is charged only to the active tank. The active tank can be chosen directly or **From PID**, using a select PID whose value is the 1-based tank number. Do not wire a sender onto the PCM fuel-level pin; that causes false fills. Extra tanks publish `[FuelSmooth] Tank N Smoothed`, `Corrected`, `Remaining`, and `DTE`, with N the tank number. Tank 2 uses the shorter names Tank2 Smoothed, Tank2 Corrected, Tank2 Remaining, and Tank2 DTE.
+**Additional tanks.** **Add additional tank** adds tanks, up to 8 in total. Tank 1 always stays. Each extra tank needs its own Torque extra PID (Mode 22, unique name — not 012F or Ford 16C1). Fuel use is charged only to the active tank. The active tank can be chosen directly or **From PID**, using a select PID whose value is the 1-based tank number. Do not wire a sender onto the PCM fuel-level pin; that causes false fills. Extra tanks publish `[FuelSmooth] Tank N Smoothed` and `Corrected`, with N the tank number. Tank 2 uses the shorter names Tank2 Smoothed and Tank2 Corrected.
 
 A **"No fuel level this drive"** notification means the fuel source gave no usable level for a whole drive (at most one alert per drive). Check the adapter, or run **Detect**. The plugin never changes your source on its own. If the level stays blank or held, pick the correct source. For Mode 22 16C1, Torque must have the "[FORD]Fuel Level" PID. For a custom source, the long name must match exactly. The first few seconds after connecting are ignored while Torque's readings settle.
 
-## Tank size
+## Learned tank size
 
-The **Tank size** field is blank, or a number above 0. The unit picker beside it is gal or L. The stored value is always gallons. The plugin never changes what you typed. Blank means you gave no starting size. Invalid entries are shown in red and are not saved.
+There is no tank size to enter in the plugin. Each learned map reports its own size; until it has one, that map reads one to one with the gauge. Enter your tank size in the Torque vehicle profile, where Torque uses it for its own fuel remaining and distance to empty. A tank size stored by earlier versions (typed, or an old calculated estimate) is no longer used. Additional tanks have no size field either.
 
-Under the field, each learned map has its own size line, in gallons, and a chart. The chart's horizontal axis is smoothed percent. The vertical axis is that map's corrected percent minus the smoothed percent. A line on zero means the map matches the gauge one to one.
+Under **Learned tank size**, each learned map has its own size line, in gallons, and a chart. The chart's horizontal axis is smoothed percent. The vertical axis is that map's corrected percent minus the smoothed percent. A line on zero means the map matches the gauge one to one.
 
 ![Size lines and chart](images/phone/fits.jpg)
 
@@ -114,24 +116,27 @@ Under the field, each learned map has its own size line, in gallons, and a chart
 | Max skew %/s | greater than 0, up to 10 | 0.05 | The most the smoothed level may change per second while driving |
 | Verbose logging | on/off | off | Adds per-second lines to the Android log. Off by default |
 
-### Fill detection
-
-| Setting | Valid values | Default | Meaning |
-|---|---|---|---|
-| Settling time (seconds) | 0 – 300 | 60 | How long to wait after stopping for slosh and the parking slope to settle before the parked level is taken as the starting point. Traffic-light stops shorter than this are ignored. 0 takes the starting point at the first stopped reading |
-| Minimum fill % | 1 – 100 | 5 | How far the level must rise above that settled parked level, and stay up, to count as a fill. This replaces Fill jump %. Saved values carry over, so an older install that still has 25% keeps that until you change it |
-
 **Odometer miles** is optional. Enter the reading and tap **Save pin** to anchor distance for this profile.
 
 ## Fills
 
-Stopping changes the reading by itself: the parking slope shows up at once, then slosh dies out. So a fill is not measured against the level you were driving at. Once the vehicle has been stopped for the settling time, a 5-second median of the reading is kept as the settled parked level. A fill starts when the level then rises at least the minimum fill percent above that settled level and stays up for about 20 seconds. A brief sensor glitch is not a fill. Driving off before the settling time ends (a traffic light) starts over at the next stop. If the engine is switched off at the pump and no readings arrive, the level read while stopped before the gap is used as the settled level, so fuel added with the engine off still counts.
+Fills have no settings. The plugin does not need to catch a fill while it happens; drives are analyzed afterwards.
 
-The fill continues through pauses of any length, for example when the pump stops at its limit and you re-authorize and pump again. It ends when you drive away, or when the level clearly drops again. The level recorded for the fill is the median of the final plateau, not a single reading.
+**On the dash.** The smoothed level normally changes at most at the max-skew rate, so a fill would take many minutes to show. To let the dash follow a real fill, the plugin waits until the vehicle has been stopped for 60 seconds (slosh and the parking slope settle; traffic-light stops are ignored), takes that settled parked level, and if the level then rises at least 15% above it and stays up for about 20 seconds, the smoothed level follows the pump directly until you drive away or the level clearly drops. If the engine is switched off at the pump and no readings arrive, the level read while stopped before the gap is used as the settled level. This changes only what is displayed. It does not reset anything, start a new chain, or refit a map. A smaller fill simply catches up at the skew rate.
+
+**In the analysis.** At the end of each drive, the stored drives are checked for fuel added. Only levels read at speed (about 8 km/h or more, after 25 seconds of steady driving) are compared, never parked levels, because how the vehicle is parked (nose up or backed in) can move the gauge more than a small fill. When a drive starts at least 5% higher than the previous drive ended, or the level after a stop of a minute or more is at least 5% higher than before it, fuel was added. The maps do not train across that rise.
 
 If the level ever gets stuck far above the real reading, the plugin re-syncs to the real reading after about 30 seconds stopped, or 2 minutes driving.
 
-Keep driving and filling up. Early corrected and remaining values can be off by several gallons. They improve as more partial tanks are logged.
+### Burn chains
+
+Each stretch with no fuel added is a burn chain: the tank holds at least the fuel burned from the chain's highest level to its lowest. A chain does not need to start full or end empty. A fill, full or partial, ends the chain, and the next chain starts at the level reached after the fill.
+
+When a drive starts at least 5% lower than the previous one ended, some driving was not recorded (for example with the phone not connected). That drop is the chain's gap. A long parked pause with little change is not a gap. A chain with no gap is a firm lower bound on tank size. A chain with a gap is kept too, as a softer bound, because the unrecorded driving may have hidden fuel added.
+
+Chains are rebuilt from the stored drives at the end of every drive and saved per tank in `chains.json`. Each entry has the start level (`startPct`), end level (`endPct`), recorded fuel burned (`burnedGal`), total gap (`gapPct`, with the number of gaps), whether it is a firm bound (`hard`), its start and end times, the number of drives, and how it started and ended (`history`, `rise`, or `open` for the current chain). Chains are a diagnostic and do not change any published value.
+
+Keep driving and filling up. Early corrected values can be off. They improve as more partial tanks are logged.
 
 ## Data and privacy
 
@@ -153,14 +158,15 @@ Privacy policy: https://play.landing.lang.hm/fuel-smoothing/privacy/
 - **Level stays blank or held.** Pick the correct fuel source. Match a custom long name exactly. Ignore the first few seconds after connecting.
 - **Fuel used looks about 3.8× too high or too low.** A manufacturer-specific flow PID has the wrong unit. Set that profile's `flowUnit`.
 - **Data went to the wrong vehicle.** Select the right profile in Torque before the drive. Answer the vehicle question in the notification or on the setup page.
-- **Corrected percent or remaining looks off.** More partial tanks tighten the estimate. Early values can be off by several gallons.
+- **Corrected percent looks off.** More partial tanks tighten the estimate. Early values can be off.
+- **Torque's fuel remaining or distance to empty looks off.** Torque computes those from the fed level and the tank size and long-term mpg in the Torque vehicle profile. Check that tank size against the learned sizes under **Learned tank size**.
 - **Smoothed level reacts slowly after a real change.** That is the max-skew limit. Raise it a little (for example 0.1).
 
 ## Chunk fit
 
-The blue size line under **Tank size** reads **Chunk:** followed by this fit's own learned size in gallons, for example `Chunk: 16.4 gal`. Until this fit has learned a size, the line shows the tank-size field instead, still in gallons. The plugin never changes the field. If the field is blank and this fit has not learned a size, the line reads `Chunk: no size yet`.
+The blue size line under **Learned tank size** reads **Chunk:** followed by this fit's own learned size in gallons, for example `Chunk: 16.4 gal`. Until this fit has learned a size, the line reads `Chunk: no size yet`.
 
-This fit averages the short pieces of each drive across the gauge. Each piece is weighted by the fuel it covers and by how noisy it was, with a bound so one odd drive cannot dominate. It is refit at the end of each drive and after a fill, then saved and loaded at startup. Corrected percent is this fit's fuel at the current gauge divided by this fit's full-to-empty capacity, so 0% and 100% match the gauge and an overall scale error cancels out.
+This fit averages the short pieces of each drive across the gauge. Each piece is weighted by the fuel it covers and by how noisy it was, with a bound so one odd drive cannot dominate. It is refit at the end of each drive, then saved and loaded at startup. Corrected percent is this fit's fuel at the current gauge divided by this fit's full-to-empty capacity, so 0% and 100% match the gauge and an overall scale error cancels out.
 
 On **Feed fuel level back to Torque (overrides 012F)**, **Corrected % (Chunk)** writes this fit's corrected percent onto Torque's stock Fuel Level (012F). That choice is the default.
 
@@ -169,19 +175,15 @@ Add these to a Torque display:
 | Name | Short | Unit | ID |
 |---|---|---|---|
 | [FuelSmooth] Corrected % (chunk) | CorrChk | % | ffd018 |
-| [FuelSmooth] Remaining (chunk) | GalChk | gal or L | ffd019 |
-| [FuelSmooth] DTE (chunk) | DTEChk | miles or km | ffd01a |
 | [FuelSmooth] Tank size (chunk) | TankChk | gal or L | ffd01b |
 
-Distance to empty is remaining fuel times Torque's long-term mpg. A blank or unknown mpg unit means distance to empty is not written. Remaining and distance to empty follow Torque's display units.
-
-Until this fit has its own model, corrected percent is the smoothed percent (one to one with the gauge). Remaining, distance to empty, and tank size then use the tank-size field when that field is set. With the field blank and no learned size, those three are not written. A PID that is not written is left alone.
+Until this fit has its own model, corrected percent is the smoothed percent (one to one with the gauge), and tank size is not written. A PID that is not written is left alone.
 
 ## Band fit
 
-The green size line under **Tank size** reads **Band:** followed by this fit's own learned size in gallons, for example `Band: 16.4 gal`. This line never shows the tank-size field. Until this fit has its own size, it reads `Band: no size yet`.
+The green size line under **Learned tank size** reads **Band:** followed by this fit's own learned size in gallons, for example `Band: 16.4 gal`. Until this fit has its own size, it reads `Band: no size yet`.
 
-This fit is a smooth curve of fuel against gauge position. How smooth the curve is is chosen by testing the map with one drive left out at a time. It is refit at the end of each drive and after a fill, then saved and loaded at startup. Corrected percent is this fit's fuel at the current gauge divided by this fit's full-to-empty capacity, so 0% and 100% match the gauge and an overall scale error cancels out.
+This fit is a smooth curve of fuel against gauge position. How smooth the curve is is chosen by testing the map with one drive left out at a time. It is refit at the end of each drive, then saved and loaded at startup. Corrected percent is this fit's fuel at the current gauge divided by this fit's full-to-empty capacity, so 0% and 100% match the gauge and an overall scale error cancels out.
 
 On **Feed fuel level back to Torque (overrides 012F)**, **Corrected % (Band)** writes this fit's corrected percent onto Torque's stock Fuel Level (012F). Until this fit has a value of its own, that choice writes the smoothed percent instead.
 
@@ -190,19 +192,15 @@ Add these to a Torque display:
 | Name | Short | Unit | ID |
 |---|---|---|---|
 | [FuelSmooth] Corrected % (band) | CorrBand | % | ffd012 |
-| [FuelSmooth] Remaining (band) | GalBand | gal or L | ffd013 |
-| [FuelSmooth] DTE (band) | DTEBand | miles or km | ffd014 |
 | [FuelSmooth] Tank size (band) | TankBand | gal or L | ffd01c |
 
-Distance to empty is remaining fuel times Torque's long-term mpg. A blank or unknown mpg unit means distance to empty is not written. Remaining and distance to empty follow Torque's display units.
-
-Until this fit has its own size, corrected percent is the smoothed percent (one to one with the gauge). Remaining, distance to empty, and tank size are not written. A PID that is not written is left alone.
+Until this fit has its own size, corrected percent is the smoothed percent (one to one with the gauge), and tank size is not written. A PID that is not written is left alone.
 
 ## Kalman fit
 
-The orange size line under **Tank size** reads **Kalman:** followed by this fit's own size in gallons. When the model has an uncertainty, the line includes it, for example `Kalman: 16.4 ± 0.3 gal`. This line never shows the tank-size field. With no size it reads `Kalman: no size yet`, or `Kalman: no size yet ± 0.3 gal` when only the uncertainty is known.
+The orange size line under **Learned tank size** reads **Kalman:** followed by this fit's own size in gallons. When the model has an uncertainty, the line includes it, for example `Kalman: 16.4 ± 0.3 gal`. With no size it reads `Kalman: no size yet`, or `Kalman: no size yet ± 0.3 gal` when only the uncertainty is known.
 
-This fit keeps a running estimate of the fuel in each percent of the gauge, updated once per drive. It also tracks how many different drives have covered each part of the gauge. Capacity is the fuel from empty to 98% of the gauge. It is refit at the end of each drive and after a fill, then saved and loaded at startup. Corrected percent is this fit's fuel at the current gauge divided by that capacity, so 0% and 100% match the gauge and an overall scale error cancels out.
+This fit keeps a running estimate of the fuel in each percent of the gauge, updated once per drive. It also tracks how many different drives have covered each part of the gauge. Capacity is the fuel from empty to 98% of the gauge. It is refit at the end of each drive, then saved and loaded at startup. Corrected percent is this fit's fuel at the current gauge divided by that capacity, so 0% and 100% match the gauge and an overall scale error cancels out.
 
 On **Feed fuel level back to Torque (overrides 012F)**, **Corrected % (Kalman)** writes this fit's corrected percent onto Torque's stock Fuel Level (012F). Until this fit has a value of its own, that choice writes the smoothed percent instead.
 
@@ -211,12 +209,8 @@ Add these to a Torque display:
 | Name | Short | Unit | ID |
 |---|---|---|---|
 | [FuelSmooth] Corrected % (kalman) | CorrKal | % | ffd015 |
-| [FuelSmooth] Remaining (kalman) | GalKal | gal or L | ffd016 |
-| [FuelSmooth] DTE (kalman) | DTEKal | miles or km | ffd017 |
 | [FuelSmooth] Tank size (kalman) | TankKal | gal or L | ffd01d |
 
-Distance to empty is remaining fuel times Torque's long-term mpg. A blank or unknown mpg unit means distance to empty is not written. Remaining and distance to empty follow Torque's display units.
-
-Until this fit has its own size, it is a one-to-one map: corrected percent is the smoothed percent, and Remaining and distance to empty use the tank-size field from the first connection. The fit then learns from there. With the field blank, Remaining and distance to empty are not written. Tank size (kalman) shows only this fit's own size. A PID that is not written is left alone.
+Until this fit has its own size, it is a one-to-one map: corrected percent is the smoothed percent. The fit then learns from there. Tank size (kalman) shows only this fit's own size. A PID that is not written is left alone.
 
 When a stored map for this fit cannot be read, a notification is posted once. The title is **Map refitting**. The text is "Fuel Smoothing is refitting a map for %1$s. That fit reads 1:1 until its refit finishes." `%1$s` is the profile name.

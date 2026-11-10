@@ -19,10 +19,6 @@ internal data class FixFuelConfig(
     val customName: String,
     val tauSec: Double,
     val skewPctPerSec: Double,
-    /** Minimum fill %: rise above the post-stop settled level that counts as a fill (pref jump_pct). */
-    val jumpPct: Double,
-    /** Fill detection settling time, seconds after stopping before the baseline is taken. */
-    val settleSec: Double = FixFuelPrefs.DEFAULT_SETTLE,
     val tankGal: Double?,
     val sourceStatus: String,
     val extras: List<ExtraTank> = emptyList(),
@@ -52,9 +48,11 @@ internal object FixFuelPrefs {
     const val KEY_CUSTOM = "custom_name"
     const val KEY_TAU = "tau_sec"
     const val KEY_SKEW = "skew_pct_per_sec"
-    /** Minimum fill % (was "Fill jump %"; same key so saved values carry over). */
-    const val KEY_JUMP = "jump_pct"
-    const val KEY_SETTLE = "fill_settle_sec"
+    /**
+     * Retired fill-detection settings (Fill jump % / Minimum fill %, Settling time). Never read; removed from the
+     * prefs on the next save so a stored 25 % cannot steer anything. Thresholds are constants (FuelMath).
+     */
+    private val RETIRED_KEYS = listOf("jump_pct", "fill_settle_sec")
     const val KEY_TANK = "tank_gal"
     const val KEY_STATUS = "source_status"
     const val KEY_LIVE = "live_status"
@@ -101,13 +99,8 @@ internal object FixFuelPrefs {
     const val ACTIVE_FROM_PID = "from_pid"
     const val DEFAULT_TAU = 0.0
     const val DEFAULT_SKEW = 0.05
-    const val DEFAULT_JUMP = 5.0
-    const val DEFAULT_SETTLE = FuelMath.FILL_SETTLE_SEC
     const val MAX_TANKS = 8
 
-    const val MIN_JUMP = 1.0
-    const val MAX_JUMP = 100.0
-    const val MAX_SETTLE = 300.0
     const val MAX_TAU = 600.0
     const val MAX_SKEW = 10.0
 
@@ -116,15 +109,6 @@ internal object FixFuelPrefs {
 
     /** Slew limit: finite and > 0 (0 would freeze the smoothed level). */
     fun skewOk(v: Double?): Boolean = v != null && v.isFinite() && v > 0.0 && v <= MAX_SKEW
-
-    /**
-     * Minimum fill %: measured from the post-stop settled baseline (FuelMath), not the moving level, so parking
-     * attitude and stop slosh are already absorbed. MIN_JUMP..MAX_JUMP.
-     */
-    fun jumpOk(v: Double?): Boolean = v != null && v.isFinite() && v >= MIN_JUMP && v <= MAX_JUMP
-
-    /** Fill detection settling time: finite, 0..MAX_SETTLE seconds (0 = baseline on the first stopped sample). */
-    fun settleOk(v: Double?): Boolean = v != null && v.isFinite() && v >= 0.0 && v <= MAX_SETTLE
 
     /** Tank guess: blank (null) is allowed; otherwise finite and > 0. */
     fun tankOk(raw: String): Boolean {
@@ -194,8 +178,6 @@ internal object FixFuelPrefs {
             customName = p.getString(KEY_CUSTOM, "") ?: "",
             tauSec = checked(p, KEY_TAU, DEFAULT_TAU, ::tauOk, invalid),
             skewPctPerSec = checked(p, KEY_SKEW, DEFAULT_SKEW, ::skewOk, invalid),
-            jumpPct = checked(p, KEY_JUMP, DEFAULT_JUMP, ::jumpOk, invalid),
-            settleSec = checked(p, KEY_SETTLE, DEFAULT_SETTLE, ::settleOk, invalid),
             tankGal = tank,
             sourceStatus = p.getString(KEY_STATUS, "") ?: "",
             extras = parseExtras(p.getString(KEY_EXTRAS, "[]") ?: "[]"),
@@ -219,9 +201,6 @@ internal object FixFuelPrefs {
         customName: String,
         tauSec: Double,
         skewPctPerSec: Double,
-        jumpPct: Double,
-        settleSec: Double,
-        tankGal: Double?,
         extras: List<ExtraTank>,
         activeTank: String = ACTIVE_TANK1,
         selectPidName: String = "",
@@ -233,14 +212,7 @@ internal object FixFuelPrefs {
             .putString(KEY_CUSTOM, customName)
             .putString(KEY_TAU, tauSec.toString())
             .putString(KEY_SKEW, skewPctPerSec.toString())
-            .putString(KEY_JUMP, jumpPct.toString())
-            .putString(KEY_SETTLE, settleSec.toString())
-        // Per profile. A value typed by the user is a guess, not a learned estimate (unchanged value keeps the flag).
-        val root = ctx.filesDir
-        val pid = profileId
-        val oldTank = ProfileStore.tankGuess(root, pid)?.toDoubleOrNull()
-        val newRaw = if (tankGal != null && tankGal.isFinite() && tankGal > 0.0) tankGal.toString() else ""
-        if (oldTank == null || tankGal == null || kotlin.math.abs(oldTank - tankGal) >= 0.05) ProfileStore.setTankEntered(root, pid, newRaw)
+        for (k in RETIRED_KEYS) e.remove(k)
         e.putString(KEY_EXTRAS, extrasToJson(extras))
             .putString(KEY_ACTIVE, normalizeActive(activeTank))
             .putString(KEY_SELECT_PID, selectPidName)

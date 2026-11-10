@@ -22,6 +22,9 @@ internal object Pids {
     const val DTE = "ff126a"
 
     const val PLUGIN_SMOOTHED = "[FuelSmooth] Smoothed Fuel Level"
+    // *_REMAINING and *_DTE (and the extra-tank remaining/dte names) are retired: never registered or written
+    // with a value, only set to NaN so Torque drops a stale last value. Torque's own remaining/DTE come from the
+    // level fed onto 012F, Torque's tank size and its long-term mpg.
     const val PLUGIN_BAND_CORRECTED = "[FuelSmooth] Corrected % (band)"
     const val PLUGIN_BAND_REMAINING = "[FuelSmooth] Remaining (band)"
     const val PLUGIN_BAND_DTE = "[FuelSmooth] DTE (band)"

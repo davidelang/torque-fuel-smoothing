@@ -51,7 +51,7 @@ internal class FuelMath {
         nowMs: Long = System.currentTimeMillis(),
         tauSec: Double = 0.0,
         skewPctPerSec: Double = SKEW_PCT_PER_SEC,
-        jumpPct: Double = FILL_JUMP_PCT,
+        jumpPct: Double = LIVE_FOLLOW_PCT,
         settleSec: Double = FILL_SETTLE_SEC,
         ignoreFill: Boolean = false,
         sigmaPct: Double = DEFAULT_SIGMA_PCT,
@@ -80,7 +80,7 @@ internal class FuelMath {
         // Settle-then-rise. Stopping changes the reading by itself (parking attitude/slope shows up at once, then
         // slosh dies out), so a fill is never measured against the smoothed/moving level. Once the vehicle has
         // been stopped continuously for settleSec, a short raw median is frozen as the post-stop baseline. Only
-        // after that does a rise of jumpPct (minimum fill %) above the baseline start a candidate, confirmed when
+        // after that does a rise of jumpPct (LIVE_FOLLOW_PCT in the service) above the baseline start a candidate, confirmed when
         // the median since the candidate is still that far above the same baseline after FILL_CONFIRM_MS (a
         // glitch or a short spike never becomes a fill). Moving again before the baseline exists (a traffic
         // light) clears the stop. While a candidate is pending the smoothed level is frozen.
@@ -206,8 +206,18 @@ internal class FuelMath {
         const val NEAR_EMPTY_PCT = 5.0
         const val GLITCH_RAW_PCT = 1.0
         const val DROP_HOLD_PT = 15.0
-        const val FILL_JUMP_PCT = 5.0
-        /** Default settling time after stopping before the post-stop baseline is taken. */
+        /**
+         * Analysis add threshold (constant, no setting): a rise this large between at-speed levels is fuel added.
+         * Ends a burn chain ([BurnChains]) and breaks the Kalman fit.
+         */
+        const val ANALYSIS_JUMP_PCT = 5.0
+        /**
+         * Live follow threshold (constant, no setting): a settled-then-sustained rise this large lifts the skew
+         * limit (FILL mode) so the dash jumps to a real fill. Display only. Analysis finds adds itself
+         * ([BurnChains], Kalman, Pieces) and never needs this to fire.
+         */
+        const val LIVE_FOLLOW_PCT = 15.0
+        /** Live follow: settling time after stopping before the post-stop baseline is taken (constant, no setting). */
         const val FILL_SETTLE_SEC = 60.0
         /** Raw median length for the post-stop baseline (well inside WINDOW_MS). */
         const val BASELINE_MS = 5_000L
