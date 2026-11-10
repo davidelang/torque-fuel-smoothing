@@ -101,7 +101,7 @@ internal object FixFuelPrefs {
     const val ACTIVE_FROM_PID = "from_pid"
     const val DEFAULT_TAU = 0.0
     const val DEFAULT_SKEW = 0.05
-    const val DEFAULT_JUMP = 25.0
+    const val DEFAULT_JUMP = 5.0
     const val DEFAULT_SETTLE = FuelMath.FILL_SETTLE_SEC
     const val MAX_TANKS = 8
 

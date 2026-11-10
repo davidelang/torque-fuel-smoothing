@@ -119,7 +119,7 @@ Under the field, each learned map has its own size line, in gallons, and a chart
 | Setting | Valid values | Default | Meaning |
 |---|---|---|---|
 | Settling time (seconds) | 0 – 300 | 60 | How long to wait after stopping for slosh and the parking slope to settle before the parked level is taken as the starting point. Traffic-light stops shorter than this are ignored. 0 takes the starting point at the first stopped reading |
-| Minimum fill % | 1 – 100 | 25 | How far the level must rise above that settled parked level, and stay up, to count as a fill. This replaces Fill jump % and keeps its saved value. Because the parking slope (about 13% on the van, nose-high versus backed in) is already absorbed, it can be set much lower, for example 5% |
+| Minimum fill % | 1 – 100 | 5 | How far the level must rise above that settled parked level, and stay up, to count as a fill. This replaces Fill jump %. Saved values carry over, so an older install that still has 25% keeps that until you change it |
 
 **Odometer miles** is optional. Enter the reading and tap **Save pin** to anchor distance for this profile.
 

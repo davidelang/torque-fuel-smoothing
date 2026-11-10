@@ -206,7 +206,7 @@ internal class FuelMath {
         const val NEAR_EMPTY_PCT = 5.0
         const val GLITCH_RAW_PCT = 1.0
         const val DROP_HOLD_PT = 15.0
-        const val FILL_JUMP_PCT = 25.0
+        const val FILL_JUMP_PCT = 5.0
         /** Default settling time after stopping before the post-stop baseline is taken. */
         const val FILL_SETTLE_SEC = 60.0
         /** Raw median length for the post-stop baseline (well inside WINDOW_MS). */
