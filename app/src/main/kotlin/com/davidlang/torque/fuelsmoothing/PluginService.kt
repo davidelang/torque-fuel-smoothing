@@ -105,6 +105,10 @@ class PluginService : Service() {
     private var autoMatchPrevUpd: Long? = null
     private var autoMatchAdopt = false
     private val autoMatchReads = ArrayList<Double>()
+    /** Pending-only fuel probe ticks for the auto-match candidate (alternates Torque refresh / direct bus read). */
+    private var autoMatchProbeTicks = 0
+    private var autoMatchFreshByUpd = 0
+    private var autoMatchFreshByBus = 0
     /** Confirmation to show; posted at [promptAtMs] (a short grace for a transient VIN loss). */
     private var prompt: IdentityPending.Pending? = null
     private var promptAtMs = 0L
@@ -741,12 +745,16 @@ class PluginService : Service() {
             )
         }
         var lvlUpd: Long? = null // set only when the level is read by Torque PID name (null = bus reply)
+        var lvlBusFresh = false // a direct bus reply this tick proves Torque's cached named value is current
         val src = FuelSources.read(t, srcCfg, pidNames) { pid ->
             if (isStock012F(pid)) {
                 FsLog.warn(TAG, "refuse012f", "refusing getPIDValues of 012F (not Ford input)")
                 null
             } else {
-                if (id == 1 && autoMatch != null) lvlUpd = updateTime(t, pid) ?: 0L
+                if (id == 1 && autoMatch != null) {
+                    lvlBusFresh = probeAutoMatchLevel(t, srcCfg.sourceId, pid)
+                    lvlUpd = updateTime(t, pid) ?: 0L
+                }
                 readDouble(t, pid)
             }
         }
@@ -790,7 +798,7 @@ class PluginService : Service() {
         }
         val live = raw!!
         if (id == 1) lastRawPct = live
-        if (id == 1 && autoMatch != null) autoMatchStep(live, lvlUpd)
+        if (id == 1 && autoMatch != null) autoMatchStep(live, lvlUpd, lvlBusFresh)
         val before = rt.math.smoothed
         val prevMode = rt.math.mode
         val smoothed = rt.math.ingest(
@@ -1043,6 +1051,8 @@ class PluginService : Service() {
         var mode09Known = false
         var probe: String? = null
         var probeRaw: List<String>? = null
+        /** Comparison PIDs already re-asked once after an unusable reply (matching needs them, not a timeout). */
+        private val retried = HashSet<String>()
         init { queue.addAll(if (checkOnly) listOf("0902") else identityQueue(false, null, null)) }
 
         fun step(t: ITorqueService): Boolean {
@@ -1086,17 +1096,27 @@ class PluginService : Service() {
                         queue.add("0100")
                     }
                 }
-                "2216C1" -> { probe = r?.joinToString(" ")?.uppercase()?.replace(" ", ""); probeRaw = r }
+                "2216C1" -> {
+                    val reply = r?.joinToString(" ")?.uppercase()?.replace(" ", "")
+                    // One unanswered probe is asked again before it can count as "no" (a matching gate).
+                    if (reply?.contains("6216C1") != true && retried.add(c) && queue.size < 12) queue.addFirst(c)
+                    else { probe = reply; probeRaw = r }
+                }
                 else -> if (c in Fingerprint.BITMAP_PIDS) {
                     val bm = Fingerprint.parseBitmap(r, c)
                     if (bm != null) {
                         bitmaps[c] = bm
                         val nextPid = Fingerprint.BITMAP_PIDS.getOrNull(Fingerprint.BITMAP_PIDS.indexOf(c) + 1)
                         if ((bm.toLong(16) and 1L) != 0L && nextPid != null && queue.size < 12) queue.addFirst(nextPid)
+                    } else if (retried.add(c) && queue.size < 12) {
+                        // The fingerprint compares these blocks: ask once more instead of deciding without them.
+                        queue.addFirst(c)
                     }
                     // Preserve the existing Ford probe only on its known J1850 protocol, never
                     // blindly send a manufacturer command to a newly encountered CAN vehicle.
-                    if (c == "0100" && previousProbe != "ok" && runCatching { t.protocolName }.getOrNull()?.contains("J1850 PWM") == true)
+                    // A VIN-less vehicle is always probed: the 16C1 result is a matching gate.
+                    if (c == "0100" && (previousProbe != "ok" || vin == null) && probe == null && "2216C1" !in queue &&
+                        runCatching { t.protocolName }.getOrNull()?.contains("J1850 PWM") == true)
                         queue.add("2216C1")
                 }
             }
@@ -1381,14 +1401,15 @@ class PluginService : Service() {
         val now = SystemClock.elapsedRealtime()
         val held = S("Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.")
         fun ask(title: String, reason: String, choices: List<String>, delayMs: Long = 0L) {
-            prompt = IdentityPending.Pending(System.currentTimeMillis(), title, "$reason $held", choices.distinct().map {
-                IdentityPending.Choice(it, if (it == NEW_PROFILE) S("Create new profile") else S("Use %1\$s", profileName(it))) })
+            // Every matching profile is listed (no cap) and "none, it's new" is always last.
+            prompt = IdentityPending.Pending(System.currentTimeMillis(), title, "$reason $held",
+                (choices.filter { it != NEW_PROFILE }.distinct() + NEW_PROFILE).map { IdentityPending.Choice(it, choiceLabel(it)) })
             promptAtMs = now + delayMs
             promptPosted = false
         }
         val one = vinless.singleOrNull()
         when {
-            hits.size > 1 -> ask(S("Which vehicle is this?"), S("More than one saved profile has this vehicle's VIN."), hits.take(3))
+            hits.size > 1 -> ask(S("Which vehicle is this?"), S("More than one saved profile has this vehicle's VIN."), hits + NEW_PROFILE)
             one != null && one == sel -> {
                 val last = lastRecordedLevel(sel)
                 if (last == null) {
@@ -1399,14 +1420,15 @@ class PluginService : Service() {
                     autoMatch = sel; autoMatchLast = last
                     autoMatchUntilMs = now + AUTO_MATCH_MS
                     autoMatchPrevUpd = null; autoMatchReads.clear(); autoMatchAdopt = false
-                    FsLog.i(TAG, "identity auto-match candidate $sel (protocol/bitmaps/Torque profile agree; last level ${"%.1f".format(last)}); waiting for live level")
+                    autoMatchProbeTicks = 0; autoMatchFreshByUpd = 0; autoMatchFreshByBus = 0
+                    FsLog.i(TAG, "identity auto-match candidate $sel (protocol/bitmaps/Torque profile agree; last level ${"%.1f".format(last)}); probing live level")
                 }
             }
             one != null -> ask(S("Is this %1\$s?", profileName(one)),
                 S("This vehicle matches %1\$s, but Torque's selected profile is '%2\$s'.", profileName(one), r.torqueName.orEmpty()),
                 listOf(one, NEW_PROFILE))
             vinless.size > 1 -> ask(S("Which vehicle is this?"), S("This vehicle sent no VIN and more than one saved profile could match."),
-                vinless.take(2) + NEW_PROFILE)
+                vinless + NEW_PROFILE)
             fps[sel]?.vin != null -> ask(S("Confirm this is %1\$s", profileName(sel)),
                 S("This vehicle sent no VIN, but %1\$s has a saved VIN.", profileName(sel)), listOf(sel, NEW_PROFILE), VIN_LOSS_GRACE_MS)
             else -> ask(S("Confirm this is %1\$s", profileName(sel)),
@@ -1415,14 +1437,19 @@ class PluginService : Service() {
         FsLog.i(TAG, "identity pending plan: auto=${autoMatch ?: "-"} prompt=${prompt?.choices?.map { it.target } ?: "-"} candidates=$vinless hits=${hits.size} protocol=${obs.protocol ?: "-"}")
     }
 
-    /** Fresh live level for an auto-match candidate. A Torque-PID level counts only once its update time advances. */
-    private fun autoMatchStep(raw: Double, upd: Long?) {
+    /**
+     * Fresh live level for an auto-match candidate. A bus-source level is a fresh reply every tick. A Torque-PID
+     * level counts only when its update time advances, or when this tick's direct bus reply equals the raw reply
+     * behind Torque's cached value ([probeAutoMatchLevel]). A leftover cached value never counts.
+     */
+    private fun autoMatchStep(raw: Double, upd: Long?, busFresh: Boolean) {
         val cand = autoMatch ?: return
         if (autoMatchAdopt) return
         if (upd != null) {
             val advanced = autoMatchPrevUpd != null && upd > 0L && upd != autoMatchPrevUpd
             autoMatchPrevUpd = upd
-            if (!advanced) return
+            if (!advanced && !busFresh) return
+            if (advanced) autoMatchFreshByUpd++ else autoMatchFreshByBus++
         }
         if (!raw.isFinite()) return
         autoMatchReads.add(raw)
@@ -1431,7 +1458,8 @@ class PluginService : Service() {
         val last = autoMatchLast ?: return
         val d = m - last
         val tol = Fingerprint.FUEL_MATCH_PTS * levelUnit(1)
-        FsLog.i(TAG, "identity auto-match $cand live=${"%.1f".format(m)} last=${"%.1f".format(last)} Δ=${"%.1f".format(d)} tol=$tol")
+        FsLog.i(TAG, "identity auto-match $cand live=${"%.1f".format(m)} last=${"%.1f".format(last)} Δ=${"%.1f".format(d)} tol=$tol " +
+            "fresh(upd=$autoMatchFreshByUpd bus=$autoMatchFreshByBus) probeTicks=$autoMatchProbeTicks")
         if (kotlin.math.abs(d) <= tol) {
             autoMatchAdopt = true // applied at the start of the next tick, outside sampling
             return
@@ -1440,11 +1468,47 @@ class PluginService : Service() {
             else S("Its fuel level (%1\$.0f %%) does not match %2\$s's last recorded level (%3\$.0f %%).", m, profileName(cand), last))
     }
 
+    /**
+     * Active fuel probe while a VIN-less auto-match waits for fresh levels (pending only, nothing is learned).
+     * Only the Ford 16C1 gauge read by Torque PID name needs this; bus sources already send their command
+     * every tick. At most one plugin-initiated bus request per tick, alternating:
+     *  - even ticks: Torque's documented refresh request getValueForPid(0x2216C1, triggersDataRefresh = true),
+     *    so Torque re-reads [FORD]Fuel Level and its update time advances (the value returned is ignored);
+     *  - odd ticks (J1850 PWM only, the header the identity probe already uses): a direct 2216C1 read. It counts
+     *    as fresh only if its reply bytes equal the raw reply behind Torque's cached value (getPIDRawResponse),
+     *    i.e. the cached decoded level is what this fresh reply decodes to. The plugin never decodes 16C1 itself,
+     *    because the [FORD]Fuel Level equation is the user's Torque extra-PID definition.
+     * A custom long-name PID has no known command, so it stays on Torque's own polling plus the timeout.
+     */
+    private fun probeAutoMatchLevel(t: ITorqueService, sourceId: String, pid: String): Boolean {
+        if (sourceId != "ford_16c1" || pidNames[Pids.FORD_FUEL_NAME] != pid) return false
+        val tick = autoMatchProbeTicks++
+        if (tick % 2 == 0) {
+            runCatching { t.getValueForPid(Pids.FORD_FUEL_STORED.toLong(), true) }
+                .onFailure { FsLog.warn(TAG, "autoMatchRefresh", "Torque refresh request failed: ${it.javaClass.simpleName}") }
+            return false
+        }
+        val protocol = runCatching { t.protocolName }.getOrNull()
+        if (protocol?.contains("J1850 PWM") != true) return false
+        val fresh = runCatching { t.sendCommandGetResponse(identityHeader(FORD_16C1_CMD, protocol), FORD_16C1_CMD) }.getOrNull()
+        val cached = runCatching { t.getPIDRawResponse(FORD_16C1_CMD) }.getOrNull()
+        val a = ford16c1Reply(fresh)
+        return a != null && a == ford16c1Reply(cached)
+    }
+
+    /** Bytes after the 6216C1 positive-reply marker (header-independent), or null when there is no such reply. */
+    private fun ford16c1Reply(lines: Array<String>?): String? = lines.orEmpty().firstNotNullOfOrNull { line ->
+        val hex = line.replace(" ", "").uppercase()
+        if (!hex.matches(Regex("[0-9A-F]+"))) return@firstNotNullOfOrNull null
+        val i = hex.indexOf("6216C1")
+        if (i < 0) null else hex.substring(i + 6).takeIf { it.length >= 2 }
+    }
+
     private fun failAutoMatch(cand: String, reason: String) {
         autoMatch = null; autoMatchAdopt = false; autoMatchReads.clear()
         val held = S("Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.")
         prompt = IdentityPending.Pending(System.currentTimeMillis(), S("Confirm this is %1\$s", profileName(cand)), "$reason $held",
-            listOf(cand, NEW_PROFILE).map { IdentityPending.Choice(it, if (it == NEW_PROFILE) S("Create new profile") else S("Use %1\$s", profileName(it))) })
+            listOf(cand, NEW_PROFILE).map { IdentityPending.Choice(it, choiceLabel(it)) })
         promptAtMs = 0L
         promptPosted = false
         FsLog.i(TAG, "identity auto-match $cand not confirmed by fuel level; asking")
@@ -1462,7 +1526,10 @@ class PluginService : Service() {
             return true
         }
         val mono = SystemClock.elapsedRealtime()
-        if (cand != null && mono > autoMatchUntilMs) failAutoMatch(cand, S("Its fuel level could not be read to compare with %1\$s.", profileName(cand)))
+        if (cand != null && mono > autoMatchUntilMs) {
+            FsLog.i(TAG, "identity auto-match $cand timed out: reads=${autoMatchReads.size} fresh(upd=$autoMatchFreshByUpd bus=$autoMatchFreshByBus) probeTicks=$autoMatchProbeTicks")
+            failAutoMatch(cand, S("Its fuel level could not be read to compare with %1\$s.", profileName(cand)))
+        }
         val p = prompt
         if (p != null && !promptPosted && mono >= promptAtMs) {
             promptPosted = true
@@ -1478,6 +1545,7 @@ class PluginService : Service() {
         IdentityPending.clear(filesDir)
         prompt = null; promptPosted = false; promptAtMs = 0L
         autoMatch = null; autoMatchLast = null; autoMatchAdopt = false; autoMatchReads.clear(); autoMatchPrevUpd = null
+        autoMatchProbeTicks = 0; autoMatchFreshByUpd = 0; autoMatchFreshByBus = 0
         pendingDisplay = null
     }
 
@@ -1500,6 +1568,10 @@ class PluginService : Service() {
         return null
     }
 
+    /** One label for every identity choice surface (popup, banner, notification). */
+    private fun choiceLabel(target: String): String =
+        if (target == NEW_PROFILE) S("none, it's new") else S("Use %1\$s", profileName(target))
+
     /**
      * Torque's plugin API (ITorqueService) cannot switch or create vehicle profiles and has no popup call,
      * so the notification opens Torque; the action button only decides where held data goes.
@@ -1509,11 +1581,15 @@ class PluginService : Service() {
         val flags = PendingIntent.FLAG_UPDATE_CURRENT or (if (Build.VERSION.SDK_INT >= 23) PendingIntent.FLAG_IMMUTABLE else 0)
         val torque = packageManager.getLaunchIntentForPackage("org.prowl.torque")
         val ask = choices.isNotEmpty()
+        // Android shows about 3 action buttons. A longer list is never cut: the notification opens the setup
+        // page, whose popup and banner list every matching profile and "none, it's new".
+        val actions = if (choices.size <= MAX_NOTIF_ACTIONS) choices else emptyList()
+        val body = if (choices.size > MAX_NOTIF_ACTIONS) "$text ${S("Tap to choose from the full list.")}" else text
         // A decision is loud (heads-up channel, stays until answered) and opens the setup page's prompt.
         val channel = if (ask) CHANNEL_IDENTITY else CHANNEL_ID
         val b = if (Build.VERSION.SDK_INT >= 26) Notification.Builder(this, channel) else @Suppress("DEPRECATION") Notification.Builder(this)
-        b.setSmallIcon(android.R.drawable.stat_sys_warning).setContentTitle(title).setContentText(text)
-            .setStyle(Notification.BigTextStyle().bigText(text)).setAutoCancel(!ask)
+        b.setSmallIcon(android.R.drawable.stat_sys_warning).setContentTitle(title).setContentText(body)
+            .setStyle(Notification.BigTextStyle().bigText(body)).setAutoCancel(!ask)
         if (ask) {
             b.setOngoing(true).setOnlyAlertOnce(true).setCategory(Notification.CATEGORY_REMINDER)
             if (Build.VERSION.SDK_INT < 26) {
@@ -1523,14 +1599,14 @@ class PluginService : Service() {
             b.setContentIntent(PendingIntent.getActivity(this, 40, Intent(this, PluginActivity::class.java)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP), flags))
         } else if (torque != null) b.setContentIntent(PendingIntent.getActivity(this, 41, torque, flags))
-        for ((k, target) in choices.withIndex()) {
+        for ((k, target) in actions.withIndex()) {
             val i = Intent(this, PluginService::class.java).setAction(ACTION_Q_CONFIRM).putExtra(EXTRA_TARGET, target)
-            val label = if (target == NEW_PROFILE) S("Create new profile") else S("Use %1\$s", profileName(target))
+            val label = choiceLabel(target)
             @Suppress("DEPRECATION")
             b.addAction(android.R.drawable.ic_menu_save, label, PendingIntent.getService(this, 42 + k, i, flags))
         }
         nm.notify(IDENTITY_NOTIF_ID, b.build())
-        FsLog.i(TAG, "identity notice: $title | $text | choices=$choices")
+        FsLog.i(TAG, "identity notice: $title | $text | choices=$choices actions=${actions.size}")
     }
 
     private fun registerPluginPids(t: ITorqueService) {
@@ -2579,6 +2655,9 @@ class PluginService : Service() {
         private const val CHANNEL_IDENTITY = "identity_confirm"
         private const val AUTO_MATCH_MS = 90_000L
         private const val AUTO_MATCH_READS = 5
+        /** Android notification action buttons that reliably show. */
+        private const val MAX_NOTIF_ACTIONS = 3
+        private const val FORD_16C1_CMD = "2216C1"
         private const val VIN_LOSS_GRACE_MS = 45_000L
         private const val NOTIF_ID = 350
         private const val POLL_MS = 1000L

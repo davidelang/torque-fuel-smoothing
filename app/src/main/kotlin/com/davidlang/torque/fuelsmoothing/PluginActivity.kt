@@ -827,7 +827,8 @@ class PluginActivity : Activity() {
             body.setTextColor(0xFFFFFFFF.toInt())
             identityBanner.addView(body)
             val row = LinearLayout(this)
-            row.orientation = LinearLayout.HORIZONTAL
+            // Every matching profile plus "none, it's new": stack them when they would not fit on one line.
+            row.orientation = if (p.choices.size > 2) LinearLayout.VERTICAL else LinearLayout.HORIZONTAL
             for (c in p.choices) row.addView(smallButton(c.label) { answerIdentity(c.target) })
             identityBanner.addView(row)
         }
@@ -848,7 +849,10 @@ class PluginActivity : Activity() {
         text.textSize = 16f
         text.primary()
         body.addView(text)
-        val dialog = android.app.AlertDialog.Builder(this).setTitle(p.title).setView(body).setCancelable(false)
+        // Scrolls so a long list of matching profiles keeps "none, it's new" reachable.
+        val scroll = android.widget.ScrollView(this)
+        scroll.addView(body)
+        val dialog = android.app.AlertDialog.Builder(this).setTitle(p.title).setView(scroll).setCancelable(false)
             .setNegativeButton(S("Decide later"), null).create()
         for (c in p.choices) body.addView(smallButton(c.label) { dialog.dismiss(); answerIdentity(c.target) })
         dialog.setCanceledOnTouchOutside(false)
