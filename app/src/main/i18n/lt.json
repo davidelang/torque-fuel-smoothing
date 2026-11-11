@@ -15,11 +15,6 @@
     "text": "Arbatpinigiai yra Play Store versijoje"
   },
   {
-    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "text": "Sparti pradžia\n 1. Įdiekite Torque Pro (mokamą versiją; Torque Lite nepalaiko papildinių) ir susiekite OBD-II adapterį.\n 2. Įjunkite šį papildinį per Torque → Nuostatos → Papildiniai.\n 3. Leiskite pranešimus ir nustatykite akumuliatoriaus naudojimą į Neribojama, kad Torque galėtų paleisti šį papildinį fone.\n 4. Torque programoje pasirinkite vairuojamo automobilio profilį. Duomenys saugomi pagal Torque profilį ir tikrinami pagal automobilio VIN/ECU tapatybę.\n 5. Naujo profilio degalų šaltinis aptinkamas prisijungus; jei prašoma, palyginkite jį su prietaisų skydelio rodmeniu ir palieskite Patvirtinti. Patvirtinti yra sąrankos puslapyje ir pranešime. Galite pasirinkti ir žemiau.\n 6. Bakos dydis yra Chunk pritaikymo pradinis dydis, kol jis išmoks savąjį. Papildinys jo niekada nekeičia; kiekvieno pritaikymo išmoktas dydis rodomas po juo.\n 7. Torque programoje pridėkite rodmenis [FuelSmooth] Smoothed Fuel Level ir kiekvienam pritaikymui Corrected %, Remaining, DTE bei Tank size. DTE yra Remaining padaugintas iš Torque ilgalaikio mpg. Pranešimas pakartotinio pritaikymo metu sako, kad pritaikymas skaito 1:1, kol pritaikymas baigsis.\n 8. Grąžinkite degalų lygį į Torque: Išjungta, išlyginta arba pataisyta iš Chunk, Band ar Kalman pritaikymo į 012F rodmenį.\n 9. Degalai skaičiuojami tik veikiant varikliui. Papildinys veikia tik kai Torque prijungtas prie ECU.\n 10. Važiuokite toliau ir pilkite degalus; tikslumas auga per kelias dalines bakas. Jei pasirodo pranešimas Neteisingas automobilio profilis?, pasirinkite, ką daryti su ta kelione.\n 11. Visi duomenys lieka šiame telefone. GPS ir vieta neįrašomi."
-  },
-  {
     "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "text": "%1$s\nVersija %2$s (%3$s)\nPapildinys programai Torque Pro. Nesusijęs su Torque ar Ian Hawkins.\nVisi duomenys lieka šiame telefone; GPS ir vieta neįrašomi.\n\nLicencija\nCopyright David Lang. Visos teisės saugomos."
@@ -73,11 +68,6 @@
     "key": "Tap to start",
     "source": "Tap to start",
     "text": "Palieskite, kad paleistumėte"
-  },
-  {
-    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "text": "Bakos dydis yra Chunk pritaikymo pradinis dydis, kol jis išmoks savąjį. Papildinys jo niekada nekeičia; kiekvieno pritaikymo išmoktas dydis rodomas po juo."
   },
   {
     "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
@@ -245,16 +235,6 @@
     "text": "Tik šaltiniui „Torque papildomas PID pagal ilgą vardą“: tikslus Torque PID, kuris praneša lygį, ilgas vardas."
   },
   {
-    "key": "Tank size",
-    "source": "Tank size",
-    "text": "Bakos dydis"
-  },
-  {
-    "key": "blank = no starting size; each fit learns its own.",
-    "source": "blank = no starting size; each fit learns its own.",
-    "text": "tuščia = nėra pradinio dydžio; kiekvienas pritaikymas išmoksta savąjį."
-  },
-  {
     "key": "Smoothing τ seconds",
     "source": "Smoothing τ seconds",
     "text": "Lyginimas τ sekundėmis"
@@ -273,16 +253,6 @@
     "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "text": "Didžiausias pokytis per sekundę, kurį išlygintas lygis gali sekti; didesnis teliuskavimas ignoruojamas."
-  },
-  {
-    "key": "Fill jump %",
-    "source": "Fill jump %",
-    "text": "Pylimo šuolis %"
-  },
-  {
-    "key": "Rise in level while stopped that counts as a fill.",
-    "source": "Rise in level while stopped that counts as a fill.",
-    "text": "Lygio kilimas stovint, kuris skaičiuojamas kaip pylimas."
   },
   {
     "key": "Odometer miles",
@@ -335,11 +305,6 @@
     "text": "Bakos %1$d tinkintas ilgas vardas (pvz., [FuelSmooth] Tank%1$d Level)"
   },
   {
-    "key": "Tank %1$d gallons",
-    "source": "Tank %1$d gallons",
-    "text": "Bakos %1$d galonai"
-  },
-  {
     "key": "From PID",
     "source": "From PID",
     "text": "Iš PID"
@@ -355,11 +320,6 @@
     "text": "· ECU prijungtas"
   },
   {
-    "key": "tank ?",
-    "source": "tank ?",
-    "text": "baka ?"
-  },
-  {
     "key": "About %1$s",
     "source": "About %1$s",
     "text": "Apie %1$s"
@@ -373,16 +333,6 @@
     "key": "above 0, at most %1$s %%/s",
     "source": "above 0, at most %1$s %%/s",
     "text": "daugiau nei 0, daugiausia %1$s %%/s"
-  },
-  {
-    "key": "%1$s to %2$s %%",
-    "source": "%1$s to %2$s %%",
-    "text": "%1$s iki %2$s %%"
-  },
-  {
-    "key": "blank or a number above 0",
-    "source": "blank or a number above 0",
-    "text": "tuščia arba skaičius didesnis už 0"
   },
   {
     "key": "stored value out of range",
@@ -605,26 +555,6 @@
     "text": "Šis automobilis yra %1$s (%2$s), bet Torque profilis yra „%3$s“. Duomenys keliauja į %1$s; palieskite, kad atidarytumėte Torque ir pakeistumėte profilį."
   },
   {
-    "key": "Wrong vehicle profile?",
-    "source": "Wrong vehicle profile?",
-    "text": "Neteisingas automobilio profilis?"
-  },
-  {
-    "key": "Torque profile '%1$s'",
-    "source": "Torque profile '%1$s'",
-    "text": "Torque profilis „%1$s“"
-  },
-  {
-    "key": "a new vehicle profile",
-    "source": "a new vehicle profile",
-    "text": "naujas automobilio profilis"
-  },
-  {
-    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "text": "Torque profilis „%1$s“ neatitinka šio automobilio (%2$s). Pasiūlymas: %3$s. Duomenys laikomi ir kelionės pabaigoje atmetami, jei jų nepasiliekate."
-  },
-  {
     "key": "Keeping drive data",
     "source": "Keeping drive data",
     "text": "Kelionės duomenys paliekami"
@@ -635,11 +565,6 @@
     "text": "Ši kelionė bus įrašyta į %1$s. Torque papildinio API negali kurti ar keisti Torque profilių: Torque programoje sukurkite arba pasirinkite automobilio profilį pavadinimu „%2$s“."
   },
   {
-    "key": "Create new profile",
-    "source": "Create new profile",
-    "text": "Sukurti naują profilį"
-  },
-  {
     "key": "Use %1$s",
     "source": "Use %1$s",
     "text": "Naudoti %1$s"
@@ -648,5 +573,120 @@
     "key": "Edit profile (recording follows Torque)",
     "source": "Edit profile (recording follows Torque)",
     "text": "Redaguoti profilį (įrašymas pagal Torque pasirinkimą)"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "Sparti pradžia\n 1. Įdiekite Torque Pro (mokamą versiją; Torque Lite nepalaiko papildinių) ir susiekite OBD-II adapterį.\n 2. Įjunkite šį papildinį per Torque → Nuostatos → Papildiniai.\n 3. Leiskite pranešimus ir nustatykite akumuliatoriaus naudojimą į Neribojama, kad Torque galėtų paleisti šį papildinį fone.\n 4. Torque programoje pasirinkite vairuojamo automobilio profilį. Duomenys saugomi pagal Torque profilį ir tikrinami pagal automobilio VIN/ECU tapatybę.\n 5. Naujo profilio degalų šaltinis aptinkamas prisijungus; jei prašoma, palyginkite jį su prietaisų skydelio rodmeniu ir palieskite Patvirtinti. Patvirtinti yra sąrankos puslapyje ir pranešime. Galite pasirinkti ir žemiau.\n 6. Čia nėra bakos dydžio, kurį reikėtų įvesti. Kiekvienas pritaikymas išmoksta savo dydį, rodomą po Išmoktas bakos dydis; iki tol jo pataisytas procentas skaito 1:1 su rodmeniu. Įveskite bakos dydį Torque automobilio profilyje Torque savam likusiam kurui ir DTE.\n 7. Torque programoje pridėkite rodmenis [FuelSmooth] Smoothed Fuel Level ir kiekvienam pritaikymui Corrected % bei Tank size. Papildinys neskelbia likusio kuro ar DTE. Pranešimas pakartotinio pritaikymo metu sako, kad pritaikymas skaito 1:1, kol pritaikymas baigsis.\n 8. Grąžinkite degalų lygį į Torque: Išjungta, išlyginta arba pataisyta iš Chunk, Band ar Kalman pritaikymo į 012F rodmenį. Tada Torque savas likęs kuras ir DTE naudoja tą lygį kartu su bakos dydžiu ir ilgalaikiu mpg Torque profilyje.\n 9. Degalai skaičiuojami tik veikiant varikliui. Papildinys veikia tik kai Torque prijungtas prie ECU.\n 10. Važiuokite toliau ir pilkite degalus; tikslumas auga per kelias dalines bakas. Jei papildinys negali pasakyti, kokia tai transporto priemonė, klausia pranešime ir šiame puslapyje; pasirinkite, ką daryti su ta kelione.\n 11. Visi duomenys lieka šiame telefone. GPS ir vieta neįrašomi."
+  },
+  {
+    "key": "Learned tank size",
+    "source": "Learned tank size",
+    "text": "Išmoktas bakos dydis"
+  },
+  {
+    "key": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "source": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "text": "Kiekvieno pritaikymo savas išmoktas dydis, kaip praneša papildinys; nėra ką įvesti. Torque savas likęs kuras ir DTE naudoja bakos dydį Torque automobilio profilyje."
+  },
+  {
+    "key": "Vehicle decision pending: %1$s",
+    "source": "Vehicle decision pending: %1$s",
+    "text": "Automobilio sprendimas laukia: %1$s"
+  },
+  {
+    "key": "Decide later",
+    "source": "Decide later",
+    "text": "Spręsti vėliau"
+  },
+  {
+    "key": "This drive will be saved to %1$s.",
+    "source": "This drive will be saved to %1$s.",
+    "text": "Ši kelionė bus įrašyta į %1$s."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "text": "Išlygintas kuras rodomas gyvai dabar. Į profilį niekas neįrašoma, kol nepasirenkate; nepatvirtinti duomenys atmetami kelionės pabaigoje."
+  },
+  {
+    "key": "Which vehicle is this?",
+    "source": "Which vehicle is this?",
+    "text": "Kokia tai transporto priemonė?"
+  },
+  {
+    "key": "More than one saved profile has this vehicle's VIN.",
+    "source": "More than one saved profile has this vehicle's VIN.",
+    "text": "Daugiau nei vienas įrašytas profilis turi šios transporto priemonės VIN."
+  },
+  {
+    "key": "Confirm this is %1$s",
+    "source": "Confirm this is %1$s",
+    "text": "Patvirtinti, kad tai %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "source": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "text": "Ši transporto priemonė atitinka %1$s, bet neatsiuntė VIN, o %1$s neturi įrašyto degalų lygio palyginimui."
+  },
+  {
+    "key": "Is this %1$s?",
+    "source": "Is this %1$s?",
+    "text": "Ar tai %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "source": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "text": "Ši transporto priemonė atitinka %1$s, bet Torque pasirinktas profilis yra '%2$s'."
+  },
+  {
+    "key": "This vehicle sent no VIN and more than one saved profile could match.",
+    "source": "This vehicle sent no VIN and more than one saved profile could match.",
+    "text": "Ši transporto priemonė neatsiuntė VIN ir gali tikti daugiau nei vienas įrašytas profilis."
+  },
+  {
+    "key": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "source": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "text": "Ši transporto priemonė neatsiuntė VIN, bet %1$s turi įrašytą VIN."
+  },
+  {
+    "key": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "source": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "text": "Nė vieno įrašyto profilio piršto atspaudas neatitinka šios transporto priemonės (ji neatsiuntė VIN)."
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "source": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "text": "Jos degalų lygis (%1$.0f %%) didesnis už paskutinį įrašytą %2$s lygį (%3$.0f %%). Ar buvo pripilta?"
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "source": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "text": "Jos degalų lygis (%1$.0f %%) neatitinka paskutinio įrašyto %2$s lygio (%3$.0f %%)."
+  },
+  {
+    "key": "Its fuel level could not be read to compare with %1$s.",
+    "source": "Its fuel level could not be read to compare with %1$s.",
+    "text": "Degalų lygio nepavyko nuskaityti, kad būtų palyginta su %1$s."
+  },
+  {
+    "key": "none, it's new",
+    "source": "none, it's new",
+    "text": "nė vienas, tai nauja"
+  },
+  {
+    "key": "Vehicle decision pending",
+    "source": "Vehicle decision pending",
+    "text": "Automobilio sprendimas laukia"
+  },
+  {
+    "key": "Vehicle confirmation",
+    "source": "Vehicle confirmation",
+    "text": "Automobilio patvirtinimas"
+  },
+  {
+    "key": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "source": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "text": "Klausia, kuri transporto priemonė prijungta, kai jos negalima automatiškai sutapatinti."
   }
 ]

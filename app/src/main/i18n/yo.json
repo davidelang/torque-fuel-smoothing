@@ -15,11 +15,6 @@
     "text": "Àwọn ìmọ̀ràn wà lórí ẹ̀yà Play Store"
   },
   {
-    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "text": "Ìbẹ̀rẹ̀ kíákíá\n 1. Fi Torque Pro sori ẹrọ (ẹ̀yà tí a sanwó; Torque Lite kò ṣe àtìlẹ́yìn fún àwọn plugin) kí o sì so àdàpítà OBD-II pọ̀.\n 2. Tan plugin yìí ní Torque → Àwọn ètò → Plugins.\n 3. Fàyè gba àwọn ìfitónilétí, kí o sì ṣètò lílò bátìrì sí Àìnídíwọ̀n kí Torque lè bẹ̀rẹ̀ plugin yìí ní abẹ́lẹ̀.\n 4. Nínú Torque, yan prófàìlì ọkọ̀ tí o ń wa. A tọ́jú dáta fún prófàìlì Torque kọ̀ọ̀kan, a sì ṣàyẹ̀wò rẹ̀ sí ìdánimọ̀ VIN/ECU ọkọ̀.\n 5. Lórí prófàìlì tuntun a máa rí orísun epo nígbà tí o bá so; bí a bá béèrè, fi wé gẹ́ẹ̀jì páànù kí o sì tẹ̀ Jẹ́rìísí. Jẹ́rìísí wà lórí ojúewé ètò àti nínú ìfitónilétí. O tún lè yàn án ní ìsàlẹ̀.\n 6. Ìwọ̀n tánkì ni ìwọ̀n ìbẹ̀rẹ̀ fún Chunk fit títí tí yóò fi kọ́ tirẹ̀. Plugin kò yí i padà rí; ìwọ̀n tí fit kọ̀ọ̀kan kọ́ hàn ní abẹ́ rẹ̀.\n 7. Nínú Torque, fi àwọn gẹ́ẹ̀jì kún fún [FuelSmooth] Smoothed Fuel Level àti Corrected %, Remaining, DTE àti Tank size fún fit kọ̀ọ̀kan. DTE ni Remaining ní ìsọdipúpọ̀ pẹ̀lú mpg gígùn Torque. Ìfitónilétí nígbà refit sọ pé fit yẹn ń ka 1:1 títí refit yóò fi parí.\n 8. Da ìpele epo padà sí Torque: Pa, dídán, tàbí àtúnṣe láti Chunk, Band tàbí Kalman fit sí gẹ́ẹ̀jì 012F rẹ.\n 9. A ń kà epo nígbà tí ẹ̀rọ ń ṣiṣẹ́ nìkan. Plugin ń ṣiṣẹ́ nígbà tí Torque bá so pọ̀ mọ́ ECU nìkan.\n 10. Máa wa kí o sì máa kún; òtítọ́ ń pọ̀ sí lórí àwọn tánkì àìkún púpọ̀. Bí ìfitónilétí Prófàìlì ọkọ̀ tí kò tọ́? bá hàn, yan ohun tí o fẹ́ ṣe pẹ̀lú ìrìn yẹn.\n 11. Gbogbo dáta dúró lórí fóònù yìí. A kò ṣe àkọsílẹ̀ GPS tàbí ibùdó."
-  },
-  {
     "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "text": "%1$s\nẸ̀yà %2$s (%3$s)\nPlugin fún Torque Pro. Kò ní í ṣe pẹ̀lú Torque tàbí Ian Hawkins.\nGbogbo dáta dúró lórí fóònù yìí; a kò ṣe àkọsílẹ̀ GPS tàbí ibùdó.\n\nÌwé-àṣẹ\nCopyright David Lang. A dá gbogbo ẹ̀tọ́ dúró."
@@ -73,11 +68,6 @@
     "key": "Tap to start",
     "source": "Tap to start",
     "text": "Tẹ̀ láti bẹ̀rẹ̀"
-  },
-  {
-    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "text": "Ìwọ̀n tánkì ni ìwọ̀n ìbẹ̀rẹ̀ fún Chunk fit títí tí yóò fi kọ́ tirẹ̀. Plugin kò yí i padà rí; ìwọ̀n tí fit kọ̀ọ̀kan kọ́ hàn ní abẹ́ rẹ̀."
   },
   {
     "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
@@ -245,16 +235,6 @@
     "text": "Fún orísun Torque extra PID by long name nìkan: orúkọ gígùn gangan PID Torque tó ń sọ ìpele."
   },
   {
-    "key": "Tank size",
-    "source": "Tank size",
-    "text": "Ìwọ̀n tánkì"
-  },
-  {
-    "key": "blank = no starting size; each fit learns its own.",
-    "source": "blank = no starting size; each fit learns its own.",
-    "text": "òfo = kò sí ìwọ̀n ìbẹ̀rẹ̀; fit kọ̀ọ̀kan ń kọ́ tirẹ̀."
-  },
-  {
     "key": "Smoothing τ seconds",
     "source": "Smoothing τ seconds",
     "text": "Ìdán τ ìṣẹ́jú-àáyá"
@@ -273,16 +253,6 @@
     "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "text": "Àyípadà tó tóbi jù lọ ní ìṣẹ́jú-àáyá tí ìpele dídán lè tẹ̀lé; a kò ka ìgbọ̀n tí ó ju èyí lọ."
-  },
-  {
-    "key": "Fill jump %",
-    "source": "Fill jump %",
-    "text": "Ìfò kíkún %"
-  },
-  {
-    "key": "Rise in level while stopped that counts as a fill.",
-    "source": "Rise in level while stopped that counts as a fill.",
-    "text": "Ìgbéga ìpele nígbà ìdúró tí a ń kà sí kíkún."
   },
   {
     "key": "Odometer miles",
@@ -335,11 +305,6 @@
     "text": "Orúkọ gígùn àdáni tánkì %1$d (bíi [FuelSmooth] Tank%1$d Level)"
   },
   {
-    "key": "Tank %1$d gallons",
-    "source": "Tank %1$d gallons",
-    "text": "Gálọ̀ọ̀nù tánkì %1$d"
-  },
-  {
     "key": "From PID",
     "source": "From PID",
     "text": "Láti PID"
@@ -355,11 +320,6 @@
     "text": "· ECU ti so"
   },
   {
-    "key": "tank ?",
-    "source": "tank ?",
-    "text": "tánkì ?"
-  },
-  {
     "key": "About %1$s",
     "source": "About %1$s",
     "text": "Nípa %1$s"
@@ -373,16 +333,6 @@
     "key": "above 0, at most %1$s %%/s",
     "source": "above 0, at most %1$s %%/s",
     "text": "lóke 0, kò ju %1$s %%/s lọ"
-  },
-  {
-    "key": "%1$s to %2$s %%",
-    "source": "%1$s to %2$s %%",
-    "text": "%1$s sí %2$s %%"
-  },
-  {
-    "key": "blank or a number above 0",
-    "source": "blank or a number above 0",
-    "text": "òfo tàbí nọ́ńbà tó ju 0 lọ"
   },
   {
     "key": "stored value out of range",
@@ -605,26 +555,6 @@
     "text": "Ọkọ̀ yìí jẹ́ %1$s (%2$s), ṣùgbọ́n prófàìlì Torque jẹ́ '%3$s'. Dáta ń lọ sí %1$s; tẹ̀ láti ṣí Torque kí o sì yí prófàìlì padà."
   },
   {
-    "key": "Wrong vehicle profile?",
-    "source": "Wrong vehicle profile?",
-    "text": "Prófàìlì ọkọ̀ tí kò tọ́?"
-  },
-  {
-    "key": "Torque profile '%1$s'",
-    "source": "Torque profile '%1$s'",
-    "text": "Prófàìlì Torque '%1$s'"
-  },
-  {
-    "key": "a new vehicle profile",
-    "source": "a new vehicle profile",
-    "text": "prófàìlì ọkọ̀ tuntun"
-  },
-  {
-    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "text": "Prófàìlì Torque '%1$s' kò bá ọkọ̀ yìí mu (%2$s). Àbá: %3$s. A di dáta mú, a sì dá a sílẹ̀ ní òpin ìrìn àyàfi tí o bá pa á mọ́."
-  },
-  {
     "key": "Keeping drive data",
     "source": "Keeping drive data",
     "text": "A ń pa dáta ìrìn mọ́"
@@ -635,11 +565,6 @@
     "text": "A ó fi ìrìn yìí pamọ́ sí %1$s. API plugin Torque kò lè dá tàbí yí prófàìlì Torque padà: nínú Torque, dá tàbí yan prófàìlì ọkọ̀ tó ún jẹ́ '%2$s'."
   },
   {
-    "key": "Create new profile",
-    "source": "Create new profile",
-    "text": "Dá prófàìlì tuntun"
-  },
-  {
     "key": "Use %1$s",
     "source": "Use %1$s",
     "text": "Lo %1$s"
@@ -648,5 +573,120 @@
     "key": "Edit profile (recording follows Torque)",
     "source": "Edit profile (recording follows Torque)",
     "text": "Ṣàtúnṣe prófáìlì (gbígbasilẹ tẹ̀lé Torque)"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "Ìbẹ̀rẹ̀ kíákíá\n 1. Fi Torque Pro sori ẹrọ (ẹ̀yà tí a sanwó; Torque Lite kò ṣe àtìlẹ́yìn fún àwọn plugin) kí o sì so àdàpítà OBD-II pọ̀.\n 2. Tan plugin yìí ní Torque → Àwọn ètò → Plugins.\n 3. Fàyè gba àwọn ìfitónilétí, kí o sì ṣètò lílò bátìrì sí Àìnídíwọ̀n kí Torque lè bẹ̀rẹ̀ plugin yìí ní abẹ́lẹ̀.\n 4. Nínú Torque, yan prófàìlì ọkọ̀ tí o ń wa. A tọ́jú dáta fún prófàìlì Torque kọ̀ọ̀kan, a sì ṣàyẹ̀wò rẹ̀ sí ìdánimọ̀ VIN/ECU ọkọ̀.\n 5. Lórí prófàìlì tuntun a máa rí orísun epo nígbà tí o bá so; bí a bá béèrè, fi wé gẹ́ẹ̀jì páànù kí o sì tẹ̀ Jẹ́rìísí. Jẹ́rìísí wà lórí ojúewé ètò àti nínú ìfitónilétí. O tún lè yàn án ní ìsàlẹ̀.\n 6. Kò sí ìwọ̀n tánkì láti tẹ̀ níbí. Ìbámu kọ̀ọ̀kan kọ́ ìwọ̀n tirẹ̀, tí a fi hàn lábẹ́ Ìwọ̀n tánkì tí a kọ́; títí di ìgbà náà ìpín ọgọ́rùn-ún tí a túnṣe ń kà 1:1 pẹ̀lú mítà. Tẹ ìwọ̀n tánkì sínú prófàìlì ọkọ̀ Torque fún epo tó kù àti DTE ti Torque fúnra rẹ̀.\n 7. Nínú Torque, fi àwọn mítà kún fún [FuelSmooth] Smoothed Fuel Level àti, fún ìbámu kọ̀ọ̀kan, Corrected % àti Tank size. Plugin kò ṣe àtẹ̀jáde epo tó kù tàbí DTE. Ìkìlọ̀ nígbà ìtún-bámu sọ pé ìbámu náà ń kà 1:1 títí ìtún-bámu yóò parí.\n 8. Dá ìpele epo padà sí Torque: Pa, dídán, tàbí tí a túnṣe láti ìbámu Chunk, Band tàbí Kalman, sí mítà 012F rẹ. Epo tó kù àti DTE ti Torque fúnra rẹ̀ lẹ́yìn náà lo ìpele náà pẹ̀lú ìwọ̀n tánkì àti mpg ìgbà pípẹ́ nínú prófàìlì Torque.\n 9. A ń kà epo nígbà tí ẹ̀rọ ń ṣiṣẹ́ nìkan. Plugin ń ṣiṣẹ́ nígbà tí Torque bá so pọ̀ mọ́ ECU nìkan.\n 10. Tẹ̀síwájú láti wa àti láti kún; òtítọ́ ń dàgbà lórí àwọn tánkì àìkún púpọ̀. Tí plugin kò bá lè sọ ọkọ̀ wo ni èyí, ó ń béèrè nínú ìkìlọ̀ àti lórí ojúewé yìí; yan ohun tí a ó ṣe pẹ̀lú ìrìn náà.\n 11. Gbogbo dáta dúró lórí fóònù yìí. A kò ṣe àkọsílẹ̀ GPS tàbí ibùdó."
+  },
+  {
+    "key": "Learned tank size",
+    "source": "Learned tank size",
+    "text": "Ìwọ̀n tánkì tí a kọ́"
+  },
+  {
+    "key": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "source": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "text": "Ìwọ̀n tí ìbámu kọ̀ọ̀kan kọ́ fúnra rẹ̀, bí plugin ṣe ń jábọ̀; kò sí nǹkan láti tẹ̀. Epo tó kù àti DTE ti Torque fúnra rẹ̀ lo ìwọ̀n tánkì nínú prófàìlì ọkọ̀ Torque."
+  },
+  {
+    "key": "Vehicle decision pending: %1$s",
+    "source": "Vehicle decision pending: %1$s",
+    "text": "Ìpinnu ọkọ̀ ń dúró: %1$s"
+  },
+  {
+    "key": "Decide later",
+    "source": "Decide later",
+    "text": "Pinnu nígbà míì"
+  },
+  {
+    "key": "This drive will be saved to %1$s.",
+    "source": "This drive will be saved to %1$s.",
+    "text": "Ìrìn yìí yóò di fipamọ́ sí %1$s."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "text": "Epo tí a dán ń hàn láìfẹ̀ báyìí. Kò sí nǹkan tí a fipamọ́ sí prófàìlì títí o bá yan; a ń da dáta àìjẹ́rìísí nù ní òpin ìrìn."
+  },
+  {
+    "key": "Which vehicle is this?",
+    "source": "Which vehicle is this?",
+    "text": "Ọkọ̀ wo ni èyí?"
+  },
+  {
+    "key": "More than one saved profile has this vehicle's VIN.",
+    "source": "More than one saved profile has this vehicle's VIN.",
+    "text": "Ó ju prófàìlì kan tí a fipamọ́ lọ tó ní VIN ọkọ̀ yìí."
+  },
+  {
+    "key": "Confirm this is %1$s",
+    "source": "Confirm this is %1$s",
+    "text": "Jẹ́rìísí pé èyí ni %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "source": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "text": "Ọkọ̀ yìí bá %1$s mu ṣùgbọ́n kò fi VIN ránṣẹ́, %1$s kò sì ní ìpele epo tí a kọ sílẹ̀ láti fi ṣàfiwé."
+  },
+  {
+    "key": "Is this %1$s?",
+    "source": "Is this %1$s?",
+    "text": "Ṣé èyí ni %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "source": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "text": "Ọkọ̀ yìí bá %1$s mu, ṣùgbọ́n prófàìlì tí a yàn nínú Torque ni '%2$s'."
+  },
+  {
+    "key": "This vehicle sent no VIN and more than one saved profile could match.",
+    "source": "This vehicle sent no VIN and more than one saved profile could match.",
+    "text": "Ọkọ̀ yìí kò fi VIN ránṣẹ́, ó sì lè jẹ́ pé ó ju prófàìlì kan tí a fipamọ́ lọ ló bá a mu."
+  },
+  {
+    "key": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "source": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "text": "Ọkọ̀ yìí kò fi VIN ránṣẹ́, ṣùgbọ́n %1$s ní VIN tí a fipamọ́."
+  },
+  {
+    "key": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "source": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "text": "Ìtẹ̀ka ìka ọwọ́ prófàìlì tí a fipamọ́ kankan kò bá ọkọ̀ yìí mu (kò fi VIN ránṣẹ́)."
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "source": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "text": "Ìpele epo rẹ̀ (%1$.0f %%) ga ju ìpele tí a kọ sílẹ̀ kẹ́yìn ti %2$s (%3$.0f %%). Ṣé a kún un?"
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "source": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "text": "Ìpele epo rẹ̀ (%1$.0f %%) kò bá ìpele tí a kọ sílẹ̀ kẹ́yìn ti %2$s (%3$.0f %%) mu."
+  },
+  {
+    "key": "Its fuel level could not be read to compare with %1$s.",
+    "source": "Its fuel level could not be read to compare with %1$s.",
+    "text": "A kò lè ka ìpele epo láti fi ṣàfiwé pẹ̀lú %1$s."
+  },
+  {
+    "key": "none, it's new",
+    "source": "none, it's new",
+    "text": "kò sí, tuntun ni"
+  },
+  {
+    "key": "Vehicle decision pending",
+    "source": "Vehicle decision pending",
+    "text": "Ìpinnu ọkọ̀ ń dúró"
+  },
+  {
+    "key": "Vehicle confirmation",
+    "source": "Vehicle confirmation",
+    "text": "Ìjẹ́rìísí ọkọ̀"
+  },
+  {
+    "key": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "source": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "text": "Ó ń béèrè ọkọ̀ wo ni ó sopọ̀ nígbà tí kò bá lè bá a mu láìfọwọ́yí."
   }
 ]

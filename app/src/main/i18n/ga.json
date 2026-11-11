@@ -15,11 +15,6 @@
     "text": "Tá na baicseísí sa leagan Play Store"
   },
   {
-    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "text": "Tús tapa\n 1. Suiteáil Torque Pro (an leagan íoctha; ní thacaíonn Torque Lite le breiseáin) agus péireáil an t-adapter OBD-II.\n 2. Cumasaigh an breiseán seo in Torque → Socruithe → Breiseáin.\n 3. Ceadaigh fógraí agus socraigh úsáid na ceallraí ar Gan srian ionas gur féidir le Torque an breiseán seo a thosú sa chúlra.\n 4. In Torque, roghnaigh próifíl na feithicle atá á tiomáint agat. Coinnítear sonraí de réir phróifíl Torque agus seiceáiltear iad in aghaidh aitheantais VIN/ECU na feithicle.\n 5. Ar phróifíl nua braitear foinse an bhreosla nuair a cheanglaíonn tú; má iarrtar ort, déan comparáid leis an tomhas ar an deais agus tapáil Deimhnigh. Tá Deimhnigh ar an leathanach socruithe agus san fhógra. Is féidir é a roghnú thíos freisin.\n 6. Is é méid an umair an méid tosaigh don oiriúint Chunk go dtí go bhfoghlaimíonn sí a ceann féin. Ní athraíonn an breiseán é riamh; taispeántar méid foghlamtha gach oiriúna faoi.\n 7. In Torque, cuir tomhais leis le haghaidh [FuelSmooth] Smoothed Fuel Level agus, do gach oiriúint, Corrected %, Remaining, DTE agus Tank size. Is é DTE Remaining méadaithe faoi mpg fadtéarmach Torque. Deir fógra le linn athoiriúna go léann an oiriúint 1:1 go dtí go gcríochnaíonn an athoiriúnú.\n 8. Cuir leibhéal an bhreosla ar ais chuig Torque: As, smúdáilte, nó ceartaithe ón oiriúint Chunk, Band nó Kalman, ar do thomhas 012F.\n 9. Ní áirítear breosla ach amháin agus an t-inneall ag rith. Ní ritheann an breiseán ach amháin agus Torque ceangailte leis an ECU.\n 10. Lean ort ag tiomáint agus ag líonadh; feabhsaíonn an cruinneas thar roinnt umar páirteach. Má thagann fógra Próifíl feithicle mícheart? aníos, roghnaigh cad a dhéanfaidh tú leis an turas sin.\n 11. Fanann na sonraí go léir ar an bhfón seo. Ní thaifeadtar GPS ná suíomh."
-  },
-  {
     "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "text": "%1$s\nLeagan %2$s (%3$s)\nBreiseán do Torque Pro. Níl baint aige le Torque ná le Ian Hawkins.\nFanann na sonraí go léir ar an bhfón seo; ní thaifeadtar GPS ná suíomh.\n\nCeadúnas\nCopyright David Lang. Gach ceart ar cosaint."
@@ -73,11 +68,6 @@
     "key": "Tap to start",
     "source": "Tap to start",
     "text": "Tapáil chun tosú"
-  },
-  {
-    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "text": "Is é méid an umair an méid tosaigh don oiriúint Chunk go dtí go bhfoghlaimíonn sí a ceann féin. Ní athraíonn an breiseán é riamh; taispeántar méid foghlamtha gach oiriúna faoi."
   },
   {
     "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
@@ -245,16 +235,6 @@
     "text": "Don fhoinse „PID breise Torque de réir ainm fhada“ amháin: ainm fada cruinn an PID Torque a thuairiscíonn an leibhéal."
   },
   {
-    "key": "Tank size",
-    "source": "Tank size",
-    "text": "Méid an umair"
-  },
-  {
-    "key": "blank = no starting size; each fit learns its own.",
-    "source": "blank = no starting size; each fit learns its own.",
-    "text": "folamh = gan mhéid tosaigh; foghlaimíonn gach oiriúint a ceann féin."
-  },
-  {
     "key": "Smoothing τ seconds",
     "source": "Smoothing τ seconds",
     "text": "Smúdáil τ i soicindí"
@@ -273,16 +253,6 @@
     "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "text": "An t-athrú is mó in aghaidh an tsoicind a fhéadfaidh an leibhéal smúdáilte a leanúint; déantar neamhaird de shleamhnú os a chionn sin."
-  },
-  {
-    "key": "Fill jump %",
-    "source": "Fill jump %",
-    "text": "Léim líonta %"
-  },
-  {
-    "key": "Rise in level while stopped that counts as a fill.",
-    "source": "Rise in level while stopped that counts as a fill.",
-    "text": "Ardú leibhéil agus an fheithicil ina stad a áirítear mar líonadh."
   },
   {
     "key": "Odometer miles",
@@ -335,11 +305,6 @@
     "text": "Ainm fada saincheaptha umair %1$d (m.sh. [FuelSmooth] Tank%1$d Level)"
   },
   {
-    "key": "Tank %1$d gallons",
-    "source": "Tank %1$d gallons",
-    "text": "Galúin umair %1$d"
-  },
-  {
     "key": "From PID",
     "source": "From PID",
     "text": "Ó PID"
@@ -355,11 +320,6 @@
     "text": "· ECU ceangailte"
   },
   {
-    "key": "tank ?",
-    "source": "tank ?",
-    "text": "umar ?"
-  },
-  {
     "key": "About %1$s",
     "source": "About %1$s",
     "text": "Timpeall ar %1$s"
@@ -373,16 +333,6 @@
     "key": "above 0, at most %1$s %%/s",
     "source": "above 0, at most %1$s %%/s",
     "text": "os cionn 0, %1$s %%/s ar a mhéad"
-  },
-  {
-    "key": "%1$s to %2$s %%",
-    "source": "%1$s to %2$s %%",
-    "text": "%1$s go %2$s %%"
-  },
-  {
-    "key": "blank or a number above 0",
-    "source": "blank or a number above 0",
-    "text": "folamh nó uimhir os cionn 0"
   },
   {
     "key": "stored value out of range",
@@ -605,26 +555,6 @@
     "text": "Is é an fheithicil seo %1$s (%2$s), ach is é próifíl Torque „%3$s“. Téann sonraí chuig %1$s; tapáil chun Torque a oscailt agus an phróifíl a athrú."
   },
   {
-    "key": "Wrong vehicle profile?",
-    "source": "Wrong vehicle profile?",
-    "text": "Próifíl feithicle mícheart?"
-  },
-  {
-    "key": "Torque profile '%1$s'",
-    "source": "Torque profile '%1$s'",
-    "text": "Próifíl Torque „%1$s“"
-  },
-  {
-    "key": "a new vehicle profile",
-    "source": "a new vehicle profile",
-    "text": "próifíl feithicle nua"
-  },
-  {
-    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "text": "Ní mheaitseálann próifíl Torque „%1$s“ an fheithicil seo (%2$s). Moladh: %3$s. Coinnítear sonraí agus caitear iad ag deireadh an turais mura gcoinníonn tú iad."
-  },
-  {
     "key": "Keeping drive data",
     "source": "Keeping drive data",
     "text": "Sonraí an turais á gcoinneáil"
@@ -635,11 +565,6 @@
     "text": "Sábhálfar an turas seo chuig %1$s. Ní féidir le API breiseáin Torque próifílí Torque a chruthú ná a athrú: in Torque, cruthaigh nó roghnaigh próifíl feithicle darb ainm „%2$s“."
   },
   {
-    "key": "Create new profile",
-    "source": "Create new profile",
-    "text": "Cruthaigh próifíl nua"
-  },
-  {
     "key": "Use %1$s",
     "source": "Use %1$s",
     "text": "Úsáid %1$s"
@@ -648,5 +573,120 @@
     "key": "Edit profile (recording follows Torque)",
     "source": "Edit profile (recording follows Torque)",
     "text": "Cuir próifíl in eagar (leanann an taifeadadh Torque)"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "Tús tapa\n 1. Suiteáil Torque Pro (an leagan íoctha; ní thacaíonn Torque Lite le breiseáin) agus péireáil an t-adapter OBD-II.\n 2. Cumasaigh an breiseán seo in Torque → Socruithe → Breiseáin.\n 3. Ceadaigh fógraí agus socraigh úsáid na ceallraí ar Gan srian ionas gur féidir le Torque an breiseán seo a thosú sa chúlra.\n 4. In Torque, roghnaigh próifíl na feithicle atá á tiomáint agat. Coinnítear sonraí de réir phróifíl Torque agus seiceáiltear iad in aghaidh aitheantais VIN/ECU na feithicle.\n 5. Ar phróifíl nua braitear foinse an bhreosla nuair a cheanglaíonn tú; má iarrtar ort, déan comparáid leis an tomhas ar an deais agus tapáil Deimhnigh. Tá Deimhnigh ar an leathanach socruithe agus san fhógra. Is féidir é a roghnú thíos freisin.\n 6. Níl méid umair le cur isteach anseo. Foghlaimíonn gach oiriúint a méid féin, a thaispeántar faoi Mhéid umair foghlamtha; go dtí sin léann a céatadán ceartaithe 1:1 leis an tomhas. Cuir méid an umair isteach i bpróifíl feithicle Torque do bhreosla atá fágtha agus do DTE de chuid Torque féin.\n 7. In Torque, cuir tomhais leis le haghaidh [FuelSmooth] Smoothed Fuel Level agus, do gach oiriúint, Corrected % agus Tank size. Ní fhoilsíonn an breiseán breosla atá fágtha ná DTE. Deir fógra le linn athoiriúna go léann an oiriúint 1:1 go dtí go gcríochnaíonn an t-athoiriúnú.\n 8. Cuir leibhéal an bhreosla ar ais chuig Torque: As, smúdáilte, nó ceartaithe ón oiriúint Chunk, Band nó Kalman, ar do thomhas 012F. Úsáideann breosla atá fágtha agus DTE de chuid Torque féin an leibhéal sin ansin le méid an umair agus le mpg fadtéarmach i bpróifíl Torque.\n 9. Ní áirítear breosla ach amháin agus an t-inneall ag rith. Ní ritheann an breiseán ach amháin agus Torque ceangailte leis an ECU.\n 10. Lean ort ag tiomáint agus ag líonadh; feabhsaíonn an cruinneas thar roinnt umar páirteach. Mura féidir leis an mbreiseán a rá cén fheithicil í seo, fiafraíonn sé i bhfógra agus ar an leathanach seo; roghnaigh cad a dhéanfaidh tú leis an turas sin.\n 11. Fanann na sonraí go léir ar an bhfón seo. Ní thaifeadtar GPS ná suíomh."
+  },
+  {
+    "key": "Learned tank size",
+    "source": "Learned tank size",
+    "text": "Méid umair foghlamtha"
+  },
+  {
+    "key": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "source": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "text": "Méid foghlamtha féin gach oiriúna, mar a thuairiscíonn an breiseán é; níl aon rud le cur isteach. Úsáideann breosla atá fágtha agus DTE de chuid Torque féin méid an umair i bpróifíl feithicle Torque."
+  },
+  {
+    "key": "Vehicle decision pending: %1$s",
+    "source": "Vehicle decision pending: %1$s",
+    "text": "Cinneadh feithicle ar feitheamh: %1$s"
+  },
+  {
+    "key": "Decide later",
+    "source": "Decide later",
+    "text": "Cinntigh níos déanaí"
+  },
+  {
+    "key": "This drive will be saved to %1$s.",
+    "source": "This drive will be saved to %1$s.",
+    "text": "Sábhálfar an turas seo chuig %1$s."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "text": "Taispeántar breosla smúdáilte beo anois. Ní shábháiltear aon rud i bpróifíl go dtí go roghnaíonn tú; caitear sonraí nár deimhníodh ag deireadh an turais."
+  },
+  {
+    "key": "Which vehicle is this?",
+    "source": "Which vehicle is this?",
+    "text": "Cén fheithicil í seo?"
+  },
+  {
+    "key": "More than one saved profile has this vehicle's VIN.",
+    "source": "More than one saved profile has this vehicle's VIN.",
+    "text": "Tá VIN na feithicle seo ag níos mó ná próifíl shábháilte amháin."
+  },
+  {
+    "key": "Confirm this is %1$s",
+    "source": "Confirm this is %1$s",
+    "text": "Deimhnigh gurb é seo %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "source": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "text": "Meaitseálann an fheithicil seo le %1$s ach níor sheol sí VIN, agus níl leibhéal breosla taifeadta ag %1$s le comparáid a dhéanamh."
+  },
+  {
+    "key": "Is this %1$s?",
+    "source": "Is this %1$s?",
+    "text": "An é seo %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "source": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "text": "Meaitseálann an fheithicil seo le %1$s, ach is é '%2$s' an phróifíl atá roghnaithe in Torque."
+  },
+  {
+    "key": "This vehicle sent no VIN and more than one saved profile could match.",
+    "source": "This vehicle sent no VIN and more than one saved profile could match.",
+    "text": "Níor sheol an fheithicil seo VIN agus d'fhéadfadh níos mó ná próifíl shábháilte amháin meaitseáil."
+  },
+  {
+    "key": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "source": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "text": "Níor sheol an fheithicil seo VIN, ach tá VIN sábháilte ag %1$s."
+  },
+  {
+    "key": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "source": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "text": "Ní mheaitseálann méarlorg aon phróifíle sábháilte leis an bhfeithicil seo (níor sheol sí VIN)."
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "source": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "text": "Tá a leibhéal breosla (%1$.0f %%) níos airde ná an leibhéal deireanach a taifeadadh de %2$s (%3$.0f %%). An líonadh é?"
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "source": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "text": "Ní mheaitseálann a leibhéal breosla (%1$.0f %%) leis an leibhéal deireanach a taifeadadh de %2$s (%3$.0f %%)."
+  },
+  {
+    "key": "Its fuel level could not be read to compare with %1$s.",
+    "source": "Its fuel level could not be read to compare with %1$s.",
+    "text": "Níorbh fhéidir leibhéal an bhreosla a léamh chun é a chur i gcomparáid le %1$s."
+  },
+  {
+    "key": "none, it's new",
+    "source": "none, it's new",
+    "text": "ceann ar bith, tá sé nua"
+  },
+  {
+    "key": "Vehicle decision pending",
+    "source": "Vehicle decision pending",
+    "text": "Cinneadh feithicle ar feitheamh"
+  },
+  {
+    "key": "Vehicle confirmation",
+    "source": "Vehicle confirmation",
+    "text": "Deimhniú feithicle"
+  },
+  {
+    "key": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "source": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "text": "Fiafraíonn sé cén fheithicil atá ceangailte nuair nach féidir é a mheaitseáil go huathoibríoch."
   }
 ]

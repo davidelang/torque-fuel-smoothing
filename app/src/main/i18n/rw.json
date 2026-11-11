@@ -15,11 +15,6 @@
     "text": "Amatipsi ari mu verisiyo ya Play Store"
   },
   {
-    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "text": "Gutangira vuba\n1. Shyiramo Torque Pro (verisiyo yishyurwa; Torque Lite idashyigikira plugins) hanyuma uhuze adapter yawe ya OBD-II.\n2. Fungura iyi plugin muri Torque → Igenamiterere → Plugins.\n3. Emera imenyesha, kandi ushyire ikoreshwa rya batiri kuri Nta gipimo kugira ngo Torque ishobore gutangiza iyi plugin inyuma.\n4. Muri Torque, hitamo profil y'imodoka y'imodoka uyobora. Amakuru abikwa kuri buri profil ya Torque kandi ageragezwa n'umwirondoro VIN/ECU w'imodoka.\n5. Ku profil nshya, inkomoko y'amavuta imenywa iyo uhuza; niba ubajijwe, uyigereranye n'igipimo cyo ku kibaho hanyuma ukande Emeza. Emeza iri ku ipaji yo gushiraho no mu menyesha. Ushobora kandi kuyihitamo hepfo.\n6. Ingano y'itanki ni ingano yo gutangiriraho y'guhuza Chunk kugeza yige iya yo. Plugin ntigira icyo ihindura; ingano buri guhuza kwize igaragara hepfo yayo.\n7. Muri Torque, ongeraho ibipimo bya [FuelSmooth] Smoothed Fuel Level n'ibya buri guhuza: Corrected %, Remaining, DTE na Tank size. DTE ni Remaining ikubye mpg y'igihe kirekire ya Torque. Itangazo mu gihe cyo kongera guhuza rivuga ko uko guhuza gusoma 1:1 kugeza kongera guhuza kurangira.\n8. Subiza urwego rw'amavuta kuri Torque: Kuzimya, Kurambura, cyangwa Gukosora biva mu guhuza Chunk, Band cyangwa Kalman ku gipimo cyawe cya 012F.\n9. Amavuta abarwa gusa igihe moteri ikora. Plugin ikora gusa igihe Torque ifatanyije na ECU.\n10. Komeza kuyobora no kuzuza; ukuri kurushaho kuboneka ku matanki atuzuye menshi. Niba imenyesha Profil y'imodoka itari yo? igaragara, hitamo icyo ukora kuri urwo rugendo.\n11. Amakuru yose aguma kuri iyi telefoni. Nta GPS cyangwa ahantu bifashwe."
-  },
-  {
     "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "text": "%1$s\nVerisiyo %2$s (%3$s)\nPlugin ya Torque Pro. Ntabwo ifitanye isano na Torque cyangwa Ian Hawkins.\nAmakuru yose aguma kuri iyi telefoni; nta GPS cyangwa ahantu bifashwe.\n\nUruhushya\nCopyright David Lang. Uburenganzira bwose burabitswe."
@@ -73,11 +68,6 @@
     "key": "Tap to start",
     "source": "Tap to start",
     "text": "Kanda utangire"
-  },
-  {
-    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "text": "Ingano y'itanki ni ingano yo gutangiriraho y'guhuza Chunk kugeza yige iya yo. Plugin ntigira icyo ihindura; ingano buri guhuza kwize igaragara hepfo yayo."
   },
   {
     "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
@@ -245,16 +235,6 @@
     "text": "Gusa ku nkomoko «PID y'inyongera ya Torque ukurikije izina rirerire»: izina rirerire nyaryo rya PID ya Torque itanga urwego."
   },
   {
-    "key": "Tank size",
-    "source": "Tank size",
-    "text": "Ingano y'itanki"
-  },
-  {
-    "key": "blank = no starting size; each fit learns its own.",
-    "source": "blank = no starting size; each fit learns its own.",
-    "text": "ubusa = nta ngano yo gutangiriraho; buri guhuza kwigira kwayo."
-  },
-  {
     "key": "Smoothing τ seconds",
     "source": "Smoothing τ seconds",
     "text": "Kurambura τ amasegonda"
@@ -273,16 +253,6 @@
     "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "text": "Ihunduka rinini buri segonda urwego rwarambuye rushobora gukurikira; kunyeganyega kurenze ibyo ntikibarwa."
-  },
-  {
-    "key": "Fill jump %",
-    "source": "Fill jump %",
-    "text": "Gusimbuka k'uzuza %"
-  },
-  {
-    "key": "Rise in level while stopped that counts as a fill.",
-    "source": "Rise in level while stopped that counts as a fill.",
-    "text": "Kuzamuka k'urwego uri ahagaze kubarwa nk'uzuza."
   },
   {
     "key": "Odometer miles",
@@ -335,11 +305,6 @@
     "text": "Izina rirerire ryihariye ry'itanki %1$d (urugero [FuelSmooth] Tank%1$d Level)"
   },
   {
-    "key": "Tank %1$d gallons",
-    "source": "Tank %1$d gallons",
-    "text": "Itanki %1$d gallons"
-  },
-  {
     "key": "From PID",
     "source": "From PID",
     "text": "Iva kuri PID"
@@ -355,11 +320,6 @@
     "text": "· ECU ihujwe"
   },
   {
-    "key": "tank ?",
-    "source": "tank ?",
-    "text": "itanki ?"
-  },
-  {
     "key": "About %1$s",
     "source": "About %1$s",
     "text": "Ibyerekeye %1$s"
@@ -373,16 +333,6 @@
     "key": "above 0, at most %1$s %%/s",
     "source": "above 0, at most %1$s %%/s",
     "text": "hejuru ya 0, ntarenze %1$s %%/s"
-  },
-  {
-    "key": "%1$s to %2$s %%",
-    "source": "%1$s to %2$s %%",
-    "text": "%1$s kugeza %2$s %%"
-  },
-  {
-    "key": "blank or a number above 0",
-    "source": "blank or a number above 0",
-    "text": "ubusa cyangwa umubare urenze 0"
   },
   {
     "key": "stored value out of range",
@@ -605,26 +555,6 @@
     "text": "Iyi modoka ni %1$s (%2$s), ariko profil ya Torque ni '%3$s'. Amakuru ajya kuri %1$s; kanda ufungure Torque uhindure profil."
   },
   {
-    "key": "Wrong vehicle profile?",
-    "source": "Wrong vehicle profile?",
-    "text": "Profil y'imodoka itari yo?"
-  },
-  {
-    "key": "Torque profile '%1$s'",
-    "source": "Torque profile '%1$s'",
-    "text": "Profil ya Torque '%1$s'"
-  },
-  {
-    "key": "a new vehicle profile",
-    "source": "a new vehicle profile",
-    "text": "profil nshya y'imodoka"
-  },
-  {
-    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "text": "Profil ya Torque '%1$s' ihuye n'iyi modoka (%2$s). Igitekerezo: %3$s. Amakuru abikwa kandi ajugunywa ku mpera y'urugendo keretse uyabika."
-  },
-  {
     "key": "Keeping drive data",
     "source": "Keeping drive data",
     "text": "Amakuru y'urugendo arabikwa"
@@ -635,11 +565,6 @@
     "text": "Uru rugendo ruzabikwa muri %1$s. API ya plugin ya Torque ntishobora gukora cyangwa guhindura profil za Torque: muri Torque, kora cyangwa hitamo profil y'imodoka yitwa '%2$s'."
   },
   {
-    "key": "Create new profile",
-    "source": "Create new profile",
-    "text": "Kora profil nshya"
-  },
-  {
     "key": "Use %1$s",
     "source": "Use %1$s",
     "text": "Koresha %1$s"
@@ -648,5 +573,120 @@
     "key": "Edit profile (recording follows Torque)",
     "source": "Edit profile (recording follows Torque)",
     "text": "Hindura umwirondoro (kwandika amakuru bikurikiza Torque)"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "Gutangira vuba\n1. Shyiramo Torque Pro (verisiyo yishyurwa; Torque Lite idashyigikira plugins) hanyuma uhuze adapter yawe ya OBD-II.\n2. Fungura iyi plugin muri Torque → Igenamiterere → Plugins.\n3. Emera imenyesha, kandi ushyire ikoreshwa rya batiri kuri Nta gipimo kugira ngo Torque ishobore gutangiza iyi plugin inyuma.\n4. Muri Torque, hitamo profil y'imodoka y'imodoka uyobora. Amakuru abikwa kuri buri profil ya Torque kandi ageragezwa n'umwirondoro VIN/ECU w'imodoka.\n5. Ku profil nshya, inkomoko y'amavuta imenywa iyo uhuza; niba ubajijwe, uyigereranye n'igipimo cyo ku kibaho hanyuma ukande Emeza. Emeza iri ku ipaji yo gushiraho no mu menyesha. Ushobora kandi kuyihitamo hepfo.\n6. Nta ngano y'itanki yo kwinjiza hano. Buri guhuza kwigira ingano yawo, igaragara munsi y'Ingano y'itanki yize; kugeza ubwo ijana ryakosowe risoma 1:1 n'igipimo. Injiza ingano y'itanki muri profil y'imodoka ya Torque ku mavuta asigaye na DTE bya Torque ubwayo.\n7. Muri Torque, ongeraho ibipimo bya [FuelSmooth] Smoothed Fuel Level n'ibya buri guhuza: Corrected % na Tank size. Plugin ntabwo itangaza amavuta asigaye cyangwa DTE. Itangazo mu gihe cyo kongera guhuza rivuga ko uko guhuza gusoma 1:1 kugeza kongera guhuza kurangira.\n8. Subiza urwego rw'amavuta kuri Torque: Kuzimya, Kurambura, cyangwa Gukosora biva mu guhuza Chunk, Band cyangwa Kalman ku gipimo cyawe cya 012F. Amavuta asigaye na DTE bya Torque ubwayo hanyuma bikoresha urwo rwego hamwe n'ingano y'itanki na mpg y'igihe kirekire muri profil ya Torque.\n9. Amavuta abarwa gusa igihe moteri ikora. Plugin ikora gusa igihe Torque ifatanyije na ECU.\n10. Komeza gutwara no kuzuza; ukuri kurakura ku matanki atuzuye menshi. Niba plugin idashobora kuvuga iyi ni iyihe modoka, ibaza mu itangazo no kuri iyi paji; hitamo icyo ukora kuri urwo rugendo.\n11. Amakuru yose aguma kuri iyi telefoni. Nta GPS cyangwa ahantu bifashwe."
+  },
+  {
+    "key": "Learned tank size",
+    "source": "Learned tank size",
+    "text": "Ingano y'itanki yize"
+  },
+  {
+    "key": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "source": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "text": "Ingano buri guhuza kwize ubwako, nk'uko plugin ibitangaza; nta kintu cyo kwinjiza. Amavuta asigaye na DTE bya Torque ubwayo bikoresha ingano y'itanki muri profil y'imodoka ya Torque."
+  },
+  {
+    "key": "Vehicle decision pending: %1$s",
+    "source": "Vehicle decision pending: %1$s",
+    "text": "Icyemezo cy'imodoka kirategereje: %1$s"
+  },
+  {
+    "key": "Decide later",
+    "source": "Decide later",
+    "text": "Fata icyemezo nyuma"
+  },
+  {
+    "key": "This drive will be saved to %1$s.",
+    "source": "This drive will be saved to %1$s.",
+    "text": "Uru rugendo ruzabikwa muri %1$s."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "text": "Amavuta arambuye agaragara ubu ako kanya. Nta kintu kibikwa muri profil kugeza uhisemo; amakuru ataremezwa asibwa ku mpera y'urugendo."
+  },
+  {
+    "key": "Which vehicle is this?",
+    "source": "Which vehicle is this?",
+    "text": "Iyi ni iyihe modoka?"
+  },
+  {
+    "key": "More than one saved profile has this vehicle's VIN.",
+    "source": "More than one saved profile has this vehicle's VIN.",
+    "text": "Profil zabitswe zirenze imwe zifite VIN y'iyi modoka."
+  },
+  {
+    "key": "Confirm this is %1$s",
+    "source": "Confirm this is %1$s",
+    "text": "Emeza ko iyi ari %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "source": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "text": "Iyi modoka ihuye na %1$s ariko ntiyohereje VIN, kandi %1$s nta rwego rw'amavuta rwanditswe rwo kugereranya."
+  },
+  {
+    "key": "Is this %1$s?",
+    "source": "Is this %1$s?",
+    "text": "Iyi ni %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "source": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "text": "Iyi modoka ihuye na %1$s, ariko profil yatoranijwe muri Torque ni '%2$s'."
+  },
+  {
+    "key": "This vehicle sent no VIN and more than one saved profile could match.",
+    "source": "This vehicle sent no VIN and more than one saved profile could match.",
+    "text": "Iyi modoka ntiyohereje VIN kandi profil zabitswe zirenze imwe zishobora guhura."
+  },
+  {
+    "key": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "source": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "text": "Iyi modoka ntiyohereje VIN, ariko %1$s ifite VIN yabitswe."
+  },
+  {
+    "key": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "source": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "text": "Ikiranga cy'intoki cya profil yabitswe nta na kimwe gihuye n'iyi modoka (ntiyohereje VIN)."
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "source": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "text": "Urwego rw'amavuta rwayo (%1$.0f %%) ruri hejuru y'urwego rwanditswe rwa nyuma rwa %2$s (%3$.0f %%). Rwuzuye?"
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "source": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "text": "Urwego rw'amavuta rwayo (%1$.0f %%) ntiruhura n'urwego rwanditswe rwa nyuma rwa %2$s (%3$.0f %%)."
+  },
+  {
+    "key": "Its fuel level could not be read to compare with %1$s.",
+    "source": "Its fuel level could not be read to compare with %1$s.",
+    "text": "Urwego rw'amavuta ntirwashoboye gusomwa kugira ngo rugereranywe na %1$s."
+  },
+  {
+    "key": "none, it's new",
+    "source": "none, it's new",
+    "text": "nta na kimwe, ni nshya"
+  },
+  {
+    "key": "Vehicle decision pending",
+    "source": "Vehicle decision pending",
+    "text": "Icyemezo cy'imodoka kirategereje"
+  },
+  {
+    "key": "Vehicle confirmation",
+    "source": "Vehicle confirmation",
+    "text": "Kwemeza imodoka"
+  },
+  {
+    "key": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "source": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "text": "Kubaza iyihe modoka ihujwe iyo idashobora guhuzwa mu buryo bwikora."
   }
 ]

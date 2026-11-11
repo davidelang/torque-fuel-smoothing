@@ -15,11 +15,6 @@
     "text": "Cashuuraduhu waxay ku jiraan nooca Play Store"
   },
   {
-    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "text": "Bilow degdeg ah\n1. Ku rakib Torque Pro (nooca lacagta leh; Torque Lite ma taageero plugins) oo isku xir adapterkaaga OBD-II.\n2. Daar plugin-kan gudaha Torque → Settings → Plugins.\n3. Oggolow ogeysiisyada, oo isticmaalka baytariga u deji Aan xadidnayn si Torque u bilaabi karo plugin-kan gadaal.\n4. Torque gudaheed, dooro astaanta gaariga ee baabuurka aad wado. Xogta waxaa lagu hayaa astaanta Torque, waxaana lala barbardhigaa aqoonsiga VIN/ECU ee gaariga.\n5. Astaanta cusub, isha shidaalka waa la baadhaa markaad ku xirto; haddii lagu weydiiyo, la barbar dhig cabbirka dashboard-ka kadibna taabo Xaqiiji. Xaqiiji wuxuu ku yaal bogga dejinta iyo ogeysiiska. Waxaad sidoo kale ka dooran kartaa hoos.\n6. Cabbirka taangigu waa cabbirka bilowga ee la-qabsiga Chunk ilaa uu barto midkiisa. Plugin-ku waligiis ma beddelo; cabbirka la bartay ee la-qabsiga kasta ayaa hoostiisa lagu muujiyaa.\n7. Torque gudaheed, ku dar cabbirro [FuelSmooth] Smoothed Fuel Level iyo, la-qabsiga kasta, Corrected %, Remaining, DTE iyo Tank size. DTE waa Remaining lagu dhufto mpg-ga muddada dheer ee Torque. Ogeyn inta la-qabsiga dib loo habeynayo waxay sheegaysaa in la-qabsigaasi akhriyo 1:1 ilaa dib-u-habeyntu dhammaato.\n8. Heerka shidaalka ku celi Torque: Dami, Jilicsan, ama Saxan oo ka yimid la-qabsiga Chunk, Band ama Kalman ee cabbirkaaga 012F.\n9. Shidaalka waxaa la tiriyaa oo keliya inta mishiinku socdo. Plugin-ku wuxuu shaqeeyaa oo keliya inta Torque ku xiran yahay ECU.\n10. Sii wad wadista iyo buuxinta; saxnaantu waxay kor u kacdaa dhowr taangi oo qayb ah. Haddii ogeysiiska Astaanta gaariga khaldan? soo baxdo, dooro waxa lagula sameeyo safarkaas.\n11. Dhammaan xogtu waxay ku sii nagtaa telefoonkan. GPS ama goob lama duubo."
-  },
-  {
     "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "text": "%1$s\nNooca %2$s (%3$s)\nPlugin loogu talagalay Torque Pro. Kuma xidhna Torque ama Ian Hawkins.\nDhammaan xogtu waxay ku sii nagtaa telefoonkan; GPS ama goob lama duubo.\n\nShatiga\nCopyright David Lang. Dhammaan xuquuqda way xifdisan yihiin."
@@ -73,11 +68,6 @@
     "key": "Tap to start",
     "source": "Tap to start",
     "text": "Taabo si aad u bilowdo"
-  },
-  {
-    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "text": "Cabbirka taangigu waa cabbirka bilowga ee la-qabsiga Chunk ilaa uu barto midkiisa. Plugin-ku waligiis ma beddelo; cabbirka la bartay ee la-qabsiga kasta ayaa hoostiisa lagu muujiyaa."
   },
   {
     "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
@@ -245,16 +235,6 @@
     "text": "Kaliya isha «PID dheeri ah oo Torque ah magaca dheer»: magaca dheer ee saxda ah ee PID-ka Torque ee sheega heerka."
   },
   {
-    "key": "Tank size",
-    "source": "Tank size",
-    "text": "Cabbirka taangiga"
-  },
-  {
-    "key": "blank = no starting size; each fit learns its own.",
-    "source": "blank = no starting size; each fit learns its own.",
-    "text": "madhan = bilow cabbir ma jiro; la-qabsiga kasta wuxuu bartaa midkiisa."
-  },
-  {
     "key": "Smoothing τ seconds",
     "source": "Smoothing τ seconds",
     "text": "Jilcin τ ilbiriqsi"
@@ -273,16 +253,6 @@
     "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "text": "Isbeddelka ugu weyn ilbiriqsigii ee heerka la jilciyey raaci karo; gariirka ka sarreeya waa la iska indhatiraa."
-  },
-  {
-    "key": "Fill jump %",
-    "source": "Fill jump %",
-    "text": "Boodka buuxinta %"
-  },
-  {
-    "key": "Rise in level while stopped that counts as a fill.",
-    "source": "Rise in level while stopped that counts as a fill.",
-    "text": "Kor u kaca heerka intaad taagan tahay oo loo tiriyo buuxin."
   },
   {
     "key": "Odometer miles",
@@ -335,11 +305,6 @@
     "text": "Magac dheer gaar ah oo taangi %1$d (tusaale [FuelSmooth] Tank%1$d Level)"
   },
   {
-    "key": "Tank %1$d gallons",
-    "source": "Tank %1$d gallons",
-    "text": "Taangi %1$d gallons"
-  },
-  {
     "key": "From PID",
     "source": "From PID",
     "text": "Ka yimid PID"
@@ -355,11 +320,6 @@
     "text": "· ECU waa ku xiran yahay"
   },
   {
-    "key": "tank ?",
-    "source": "tank ?",
-    "text": "taangi ?"
-  },
-  {
     "key": "About %1$s",
     "source": "About %1$s",
     "text": "Ku saabsan %1$s"
@@ -373,16 +333,6 @@
     "key": "above 0, at most %1$s %%/s",
     "source": "above 0, at most %1$s %%/s",
     "text": "ka sarreeya 0, ugu badnaan %1$s %%/s"
-  },
-  {
-    "key": "%1$s to %2$s %%",
-    "source": "%1$s to %2$s %%",
-    "text": "%1$s ilaa %2$s %%"
-  },
-  {
-    "key": "blank or a number above 0",
-    "source": "blank or a number above 0",
-    "text": "madhan ama tiro ka weyn 0"
   },
   {
     "key": "stored value out of range",
@@ -605,26 +555,6 @@
     "text": "Gaarigan waa %1$s (%2$s), laakiin astaanta Torque waa '%3$s'. Xogtu waxay aaddaa %1$s; taabo si aad u furto Torque oo aad u bedesho astaanta."
   },
   {
-    "key": "Wrong vehicle profile?",
-    "source": "Wrong vehicle profile?",
-    "text": "Astaanta gaariga khaldan?"
-  },
-  {
-    "key": "Torque profile '%1$s'",
-    "source": "Torque profile '%1$s'",
-    "text": "Astaanta Torque '%1$s'"
-  },
-  {
-    "key": "a new vehicle profile",
-    "source": "a new vehicle profile",
-    "text": "astaanta gaari cusub"
-  },
-  {
-    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "text": "Astaanta Torque '%1$s' kuma habboona gaarigan (%2$s). Soo jeedin: %3$s. Xogta waa la hayaa, waana la tuuraa dhammaadka safarka haddii aadan haysan."
-  },
-  {
     "key": "Keeping drive data",
     "source": "Keeping drive data",
     "text": "Xogta safarka waa la hayaa"
@@ -635,11 +565,6 @@
     "text": "Safarkan waxaa lagu kaydin doonaa %1$s. API-ga plugin ee Torque ma abuuri karo ama ma beddeli karo astaamaha Torque: Torque gudaheed, abuuro ama dooro astaanta gaariga oo lagu magacaabo '%2$s'."
   },
   {
-    "key": "Create new profile",
-    "source": "Create new profile",
-    "text": "Samee astaanta cusub"
-  },
-  {
     "key": "Use %1$s",
     "source": "Use %1$s",
     "text": "Isticmaal %1$s"
@@ -648,5 +573,120 @@
     "key": "Edit profile (recording follows Torque)",
     "source": "Edit profile (recording follows Torque)",
     "text": "Wax ka beddel borofaylka (duubistu waxay raacdaa Torque)"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "Bilow degdeg ah\n1. Ku rakib Torque Pro (nooca lacagta leh; Torque Lite ma taageero plugins) oo isku xir adapterkaaga OBD-II.\n2. Daar plugin-kan gudaha Torque → Settings → Plugins.\n3. Oggolow ogeysiisyada, oo isticmaalka baytariga u deji Aan xadidnayn si Torque u bilaabi karo plugin-kan gadaal.\n4. Torque gudaheed, dooro astaanta gaariga ee baabuurka aad wado. Xogta waxaa lagu hayaa astaanta Torque, waxaana lala barbardhigaa aqoonsiga VIN/ECU ee gaariga.\n5. Astaanta cusub, isha shidaalka waa la baadhaa markaad ku xirto; haddii lagu weydiiyo, la barbar dhig cabbirka dashboard-ka kadibna taabo Xaqiiji. Xaqiiji wuxuu ku yaal bogga dejinta iyo ogeysiiska. Waxaad sidoo kale ka dooran kartaa hoos.\n6. Halkan ma jirto cabbir taangi lagu geliyo. Fit kasta wuxuu barta cabbirkiisa, oo lagu muujiyo Cabbirka taangiga la bartay; ilaa markaas boqolkiisa la saxay wuxuu akhriyaa 1:1 cabbirka. Geli cabbirka taangiga astaanta gaariga Torque si loogu talagalo shidaalka haray iyo DTE ee Torque laftiisa.\n7. Torque ku dar cabbirro [FuelSmooth] Smoothed Fuel Level iyo, fit kasta, Corrected % iyo Tank size. Plugin ma daabacayo shidaal haray ama DTE. Ogeysiis inta lagu jiro refit wuxuu leeyahay fit-kaas wuxuu akhriyaa 1:1 ilaa refit dhammaado.\n8. Heerka shidaalka ku celi Torque: Dami, jilicsan, ama laga saxay fit-ka Chunk, Band ama Kalman, cabbirkaaga 012F. Kadib shidaalka haray iyo DTE ee Torque laftiisa waxay isticmaalaan heerkaas iyagoo la socda cabbirka taangiga iyo mpg-ga muddada dheer ee astaanta Torque.\n9. Shidaalka waxaa la tiriyaa oo keliya inta mishiinku socdo. Plugin-ku wuxuu shaqeeyaa oo keliya inta Torque ku xiran yahay ECU.\n10. Sii wad wadista iyo buuxinta; saxnaanta waxay kortaa dhowr taangi oo qayb ah. Haddii plugin aanu sheegi karin gaarigan kee, wuxuu ku weydiinayaa ogeysiis iyo boggan; dooro waxa laga qabanayo safarkaas.\n11. Dhammaan xogtu waxay ku sii nagtaa telefoonkan. GPS ama goob lama duubo."
+  },
+  {
+    "key": "Learned tank size",
+    "source": "Learned tank size",
+    "text": "Cabbirka taangiga la bartay"
+  },
+  {
+    "key": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "source": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "text": "Cabbirka fit kasta uu bartay, sida plugin u sheego; ma jiro wax la geliyo. Shidaalka haray iyo DTE ee Torque laftiisa waxay isticmaalaan cabbirka taangiga ee astaanta gaariga Torque."
+  },
+  {
+    "key": "Vehicle decision pending: %1$s",
+    "source": "Vehicle decision pending: %1$s",
+    "text": "Go'aanka gaariga waa la sugayaa: %1$s"
+  },
+  {
+    "key": "Decide later",
+    "source": "Decide later",
+    "text": "Go'aan qaado dambe"
+  },
+  {
+    "key": "This drive will be saved to %1$s.",
+    "source": "This drive will be saved to %1$s.",
+    "text": "Safarkan waxaa lagu kaydin doonaa %1$s."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "text": "Shidaalka la jilciyay hadda si toos ah ayaa loo tusayaa. Waxba lama kaydiyo astaanta ilaa aad doorato; xogta aan la xaqiijin waa la tuuraa dhammaadka safarka."
+  },
+  {
+    "key": "Which vehicle is this?",
+    "source": "Which vehicle is this?",
+    "text": "Gaarigan kee?"
+  },
+  {
+    "key": "More than one saved profile has this vehicle's VIN.",
+    "source": "More than one saved profile has this vehicle's VIN.",
+    "text": "In ka badan hal astaanta la kaydiyay ayaa leh VIN-ka gaarigan."
+  },
+  {
+    "key": "Confirm this is %1$s",
+    "source": "Confirm this is %1$s",
+    "text": "Xaqiiji in kan yahay %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "source": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "text": "Gaarigan wuxuu la mid yahay %1$s laakiin ma dirin VIN, %1$s na ma laha heer shidaal la duubay oo la barbardhigo."
+  },
+  {
+    "key": "Is this %1$s?",
+    "source": "Is this %1$s?",
+    "text": "Kani ma %1$s baa?"
+  },
+  {
+    "key": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "source": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "text": "Gaarigan wuxuu la mid yahay %1$s, laakiin astaanta lagu doortay Torque waa '%2$s'."
+  },
+  {
+    "key": "This vehicle sent no VIN and more than one saved profile could match.",
+    "source": "This vehicle sent no VIN and more than one saved profile could match.",
+    "text": "Gaarigan ma dirin VIN, in ka badan hal astaanta la kaydiyayna way ku habboonaan karaan."
+  },
+  {
+    "key": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "source": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "text": "Gaarigan ma dirin VIN, laakiin %1$s wuxuu leeyahay VIN la kaydiyay."
+  },
+  {
+    "key": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "source": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "text": "Faraha astaanta la kaydiyay midkoodna kuma habboona gaarigan (ma dirin VIN)."
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "source": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "text": "Heerka shidaalkiisa (%1$.0f %%) wuu ka sarreeyaa heerka ugu dambeeyay ee la duubay ee %2$s (%3$.0f %%). Ma la buuxiyay?"
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "source": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "text": "Heerka shidaalkiisa (%1$.0f %%) kuma habboona heerka ugu dambeeyay ee la duubay ee %2$s (%3$.0f %%)."
+  },
+  {
+    "key": "Its fuel level could not be read to compare with %1$s.",
+    "source": "Its fuel level could not be read to compare with %1$s.",
+    "text": "Heerka shidaalka lama akhrin karin si loo barbardhigo %1$s."
+  },
+  {
+    "key": "none, it's new",
+    "source": "none, it's new",
+    "text": "midna, waa cusub"
+  },
+  {
+    "key": "Vehicle decision pending",
+    "source": "Vehicle decision pending",
+    "text": "Go'aanka gaariga waa la sugayaa"
+  },
+  {
+    "key": "Vehicle confirmation",
+    "source": "Vehicle confirmation",
+    "text": "Xaqiijinta gaariga"
+  },
+  {
+    "key": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "source": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "text": "Wuxuu weydiinayaa gaariga ku xiran marka si otomaatig ah loo waayi karin."
   }
 ]

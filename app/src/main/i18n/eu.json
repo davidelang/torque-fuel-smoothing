@@ -15,11 +15,6 @@
     "text": "Propina Play Store bertsioan daude"
   },
   {
-    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "text": "Hasiera azkarra\n 1. Instalatu Torque Pro (ordainpeko bertsioa; Torque Lite-k ez ditu pluginak onartzen) eta parekatu OBD-II egokigailua.\n 2. Gaitu plugin hau Torque → Ezarpenak → Pluginak atalean.\n 3. Baimendu jakinarazpenak eta ezarri bateriaren erabilera Mugarik gabe, Torque-k plugin hau atzeko planoan abiaraz dezan.\n 4. Torque-n aukeratu gidatzen ari zaren ibilgailuaren profila. Datuak Torque profilaka gordetzen dira eta ibilgailuaren VIN/ECU identitatearekin egiaztatzen dira.\n 5. Profil berri batean erregai-iturria konektatzean hautematen da; eskatzen bazaizu, alderatu aginte-paneleko neurgailuarekin eta sakatu Berretsi. Berretsi konfigurazio-orrian eta jakinarazpenean dago. Behean ere aukera dezakezu.\n 6. Deposituaren tamaina Chunk doikuntzaren hasierako tamaina da, berea ikasi arte. Pluginak ez du inoiz aldatzen; doikuntza bakoitzaren ikasitako tamaina azpian agertzen da.\n 7. Torque-n gehitu neurgailuak [FuelSmooth] Smoothed Fuel Levelerako eta doikuntza bakoitzerako Corrected %, Remaining, DTE eta Tank size. DTE Remaining bider Torque-ren epe luzeko mpg da. Berdoikuntza batean abisu batek esaten du doikuntzak 1:1 irakurtzen duela berdoikuntza amaitu arte.\n 8. Itzuli erregai-maila Torque-ra: Itzalita, leundua edo Chunk, Band edo Kalman doikuntzatik zuzendua, 012F neurgailura.\n 9. Erregaia motorra martxan dagoen bitartean soilik zenbatzen da. Plugina Torque ECU-ra konektatuta dagoen bitartean soilik exekutatzen da.\n 10. Jarraitu gidatzen eta betetzen; zehaztasuna hainbat depositu partzialetan hobetzen da. Ibilgailu-profil okerra? jakinarazpena agertzen bada, aukeratu zer egin bidaia horrekin.\n 11. Datu guztiak telefono honetan geratzen dira. Ez da GPS edo kokapenik erregistratzen."
-  },
-  {
     "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "text": "%1$s\nBertsioa %2$s (%3$s)\nTorque Pro-rako plugina. Ez dago Torque edo Ian Hawkins-ekin lotuta.\nDatu guztiak telefono honetan geratzen dira; ez da GPS edo kokapenik erregistratzen.\n\nLizentzia\nCopyright David Lang. Eskubide guztiak erreserbatuta."
@@ -73,11 +68,6 @@
     "key": "Tap to start",
     "source": "Tap to start",
     "text": "Sakatu abiarazteko"
-  },
-  {
-    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "text": "Deposituaren tamaina Chunk doikuntzaren hasierako tamaina da, berea ikasi arte. Pluginak ez du inoiz aldatzen; doikuntza bakoitzaren ikasitako tamaina azpian agertzen da."
   },
   {
     "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
@@ -245,16 +235,6 @@
     "text": "«Torque PID gehigarria izen luzeaz» iturrirako soilik: maila ematen duen Torque PID-aren izen luze zehatza."
   },
   {
-    "key": "Tank size",
-    "source": "Tank size",
-    "text": "Deposituaren tamaina"
-  },
-  {
-    "key": "blank = no starting size; each fit learns its own.",
-    "source": "blank = no starting size; each fit learns its own.",
-    "text": "hutsik = hasierako tamainarik ez; doikuntza bakoitzak berea ikasten du."
-  },
-  {
     "key": "Smoothing τ seconds",
     "source": "Smoothing τ seconds",
     "text": "Leuntzea τ segundotan"
@@ -273,16 +253,6 @@
     "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "text": "Maila leunduak segundoko jarrai dezakeen aldaketarik handiena; hortik gorako kulunka baztertu egiten da."
-  },
-  {
-    "key": "Fill jump %",
-    "source": "Fill jump %",
-    "text": "Betetze-jauzia %"
-  },
-  {
-    "key": "Rise in level while stopped that counts as a fill.",
-    "source": "Rise in level while stopped that counts as a fill.",
-    "text": "Geldi dagoela betetze gisa hartzen den maila-igoera."
   },
   {
     "key": "Odometer miles",
@@ -335,11 +305,6 @@
     "text": "%1$d. deposituaren izen luze pertsonalizatua (adib. [FuelSmooth] Tank%1$d Level)"
   },
   {
-    "key": "Tank %1$d gallons",
-    "source": "Tank %1$d gallons",
-    "text": "%1$d. deposituaren galoiak"
-  },
-  {
     "key": "From PID",
     "source": "From PID",
     "text": "PID-etik"
@@ -355,11 +320,6 @@
     "text": "· ECU konektatuta"
   },
   {
-    "key": "tank ?",
-    "source": "tank ?",
-    "text": "depositu ?"
-  },
-  {
     "key": "About %1$s",
     "source": "About %1$s",
     "text": "%1$s inguru"
@@ -373,16 +333,6 @@
     "key": "above 0, at most %1$s %%/s",
     "source": "above 0, at most %1$s %%/s",
     "text": "0tik gora, gehienez %1$s %%/s"
-  },
-  {
-    "key": "%1$s to %2$s %%",
-    "source": "%1$s to %2$s %%",
-    "text": "%1$s–%2$s %%"
-  },
-  {
-    "key": "blank or a number above 0",
-    "source": "blank or a number above 0",
-    "text": "hutsik edo 0 baino handiagoa den zenbaki bat"
   },
   {
     "key": "stored value out of range",
@@ -605,26 +555,6 @@
     "text": "Ibilgailu hau %1$s da (%2$s), baina Torque-ren profila «%3$s» da. Datuak %1$s-(e)ra doaz; sakatu Torque ireki eta profila aldatzeko."
   },
   {
-    "key": "Wrong vehicle profile?",
-    "source": "Wrong vehicle profile?",
-    "text": "Ibilgailu-profil okerra?"
-  },
-  {
-    "key": "Torque profile '%1$s'",
-    "source": "Torque profile '%1$s'",
-    "text": "Torque profila «%1$s»"
-  },
-  {
-    "key": "a new vehicle profile",
-    "source": "a new vehicle profile",
-    "text": "ibilgailu-profil berri bat"
-  },
-  {
-    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "text": "«%1$s» Torque profila ez dator bat ibilgailu honekin (%2$s). Iradokizuna: %3$s. Datuak gorde egiten dira eta bidaiaren amaieran baztertzen, gordetzen ez badituzu."
-  },
-  {
     "key": "Keeping drive data",
     "source": "Keeping drive data",
     "text": "Bidaiaren datuak gordetzen"
@@ -635,11 +565,6 @@
     "text": "Bidaia hau %1$s-(e)n gordeko da. Torque-ren plugin APIak ezin ditu Torque profilik sortu edo aldatu: Torque-n sortu edo aukeratu «%2$s» izeneko ibilgailu-profil bat."
   },
   {
-    "key": "Create new profile",
-    "source": "Create new profile",
-    "text": "Sortu profil berria"
-  },
-  {
     "key": "Use %1$s",
     "source": "Use %1$s",
     "text": "Erabili %1$s"
@@ -648,5 +573,120 @@
     "key": "Edit profile (recording follows Torque)",
     "source": "Edit profile (recording follows Torque)",
     "text": "Editatu profila (grabazioak Torque-ri jarraitzen dio)"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "Hasiera azkarra\n 1. Instalatu Torque Pro (ordainpeko bertsioa; Torque Lite-k ez ditu pluginak onartzen) eta parekatu OBD-II egokigailua.\n 2. Gaitu plugin hau Torque → Ezarpenak → Pluginak atalean.\n 3. Baimendu jakinarazpenak eta ezarri bateriaren erabilera Mugarik gabe, Torque-k plugin hau atzeko planoan abiaraz dezan.\n 4. Torque-n aukeratu gidatzen ari zaren ibilgailuaren profila. Datuak Torque profilaka gordetzen dira eta ibilgailuaren VIN/ECU identitatearekin egiaztatzen dira.\n 5. Profil berri batean erregai-iturria konektatzean hautematen da; eskatzen bazaizu, alderatu aginte-paneleko neurgailuarekin eta sakatu Berretsi. Berretsi konfigurazio-orrian eta jakinarazpenean dago. Behean ere aukera dezakezu.\n 6. Hemen ez dago deposituaren tamainarik sartzeko. Doikuntza bakoitzak bere tamaina ikasten du, Ikasi den deposituaren tamaina atalean; ordura arte haren ehuneko zuzenduak 1:1 irakurtzen du neurgailuarekin. Sartu deposituaren tamaina Torque-ren ibilgailu-profilean, Torque-ren beraren geratzen den erregaiarentzat eta DTE-rentzat.\n 7. Torque-n gehitu neurgailuak [FuelSmooth] Smoothed Fuel Levelerako eta doikuntza bakoitzerako Corrected % eta Tank size. Pluginak ez du geratzen den erregairik edo DTE-rik argitaratzen. Berdoikuntza batean abisu batek esaten du doikuntzak 1:1 irakurtzen duela berdoikuntza amaitu arte.\n 8. Itzuli erregai-maila Torque-ra: Itzalita, leundua edo Chunk, Band edo Kalman doikuntzatik zuzendua, 012F neurgailura. Torque-ren beraren geratzen den erregaiak eta DTE-k maila hori erabiltzen dute gero deposituaren tamainarekin eta Torque profilaren epe luzeko mpg-arekin.\n 9. Erregaia motorra martxan dagoen bitartean soilik zenbatzen da. Plugina Torque ECU-ra konektatuta dagoen bitartean soilik exekutatzen da.\n 10. Jarraitu gidatzen eta betetzen; zehaztasuna hainbat depositu partzialetan hobetzen da. Pluginak ezin badu esan zein ibilgailu den, jakinarazpen batean eta orri honetan galdetzen du; aukeratu zer egin bidaia horrekin.\n 11. Datu guztiak telefono honetan geratzen dira. Ez da GPS edo kokapenik erregistratzen."
+  },
+  {
+    "key": "Learned tank size",
+    "source": "Learned tank size",
+    "text": "Ikasi den deposituaren tamaina"
+  },
+  {
+    "key": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "source": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "text": "Doikuntza bakoitzaren beraren ikasitako tamaina, pluginak jakinarazten duena; ez dago ezer sartzeko. Torque-ren beraren geratzen den erregaiak eta DTE-k Torque-ren ibilgailu-profilaren deposituaren tamaina erabiltzen dute."
+  },
+  {
+    "key": "Vehicle decision pending: %1$s",
+    "source": "Vehicle decision pending: %1$s",
+    "text": "Ibilgailuaren erabakia zain: %1$s"
+  },
+  {
+    "key": "Decide later",
+    "source": "Decide later",
+    "text": "Erabaki geroago"
+  },
+  {
+    "key": "This drive will be saved to %1$s.",
+    "source": "This drive will be saved to %1$s.",
+    "text": "Bidaia hau %1$s profilera gordeko da."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "text": "Leundutako erregaia zuzenean erakusten da orain. Ez da ezer gordetzen profil batean zuk aukeratu arte; berretsi gabeko datuak bidaia amaitzean baztertzen dira."
+  },
+  {
+    "key": "Which vehicle is this?",
+    "source": "Which vehicle is this?",
+    "text": "Zein ibilgailu da hau?"
+  },
+  {
+    "key": "More than one saved profile has this vehicle's VIN.",
+    "source": "More than one saved profile has this vehicle's VIN.",
+    "text": "Gordetako profil batek baino gehiagok du ibilgailu honen VIN."
+  },
+  {
+    "key": "Confirm this is %1$s",
+    "source": "Confirm this is %1$s",
+    "text": "Berretsi hau %1$s dela"
+  },
+  {
+    "key": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "source": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "text": "Ibilgailu hau %1$s-(r)ekin bat dator baina ez du VIN-ik bidali, eta %1$s-(e)k ez du erregistratutako erregai-mailarik alderatzeko."
+  },
+  {
+    "key": "Is this %1$s?",
+    "source": "Is this %1$s?",
+    "text": "Hau %1$s da?"
+  },
+  {
+    "key": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "source": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "text": "Ibilgailu hau %1$s-(r)ekin bat dator, baina Torque-n hautatutako profila '%2$s' da."
+  },
+  {
+    "key": "This vehicle sent no VIN and more than one saved profile could match.",
+    "source": "This vehicle sent no VIN and more than one saved profile could match.",
+    "text": "Ibilgailu honek ez du VIN-ik bidali eta gordetako profil batek baino gehiagok bat egin lezake."
+  },
+  {
+    "key": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "source": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "text": "Ibilgailu honek ez du VIN-ik bidali, baina %1$s-(e)k gordetako VIN bat du."
+  },
+  {
+    "key": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "source": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "text": "Gordetako profil bakar baten hatz-markak ere ez du ibilgailu honekin bat egiten (ez du VIN-ik bidali)."
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "source": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "text": "Haren erregai-maila (%1$.0f %%) %2$s-(r)en azken erregistratutako maila (%3$.0f %%) baino altuagoa da. Bete al da?"
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "source": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "text": "Haren erregai-maila (%1$.0f %%) ez dator bat %2$s-(r)en azken erregistratutako mailarekin (%3$.0f %%)."
+  },
+  {
+    "key": "Its fuel level could not be read to compare with %1$s.",
+    "source": "Its fuel level could not be read to compare with %1$s.",
+    "text": "Ezin izan da erregai-maila irakurri %1$s-(r)ekin alderatzeko."
+  },
+  {
+    "key": "none, it's new",
+    "source": "none, it's new",
+    "text": "bat ere ez, berria da"
+  },
+  {
+    "key": "Vehicle decision pending",
+    "source": "Vehicle decision pending",
+    "text": "Ibilgailuaren erabakia zain"
+  },
+  {
+    "key": "Vehicle confirmation",
+    "source": "Vehicle confirmation",
+    "text": "Ibilgailuaren berrespena"
+  },
+  {
+    "key": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "source": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "text": "Galdetzen du zein ibilgailu dagoen konektatuta automatikoki parekatu ezin denean."
   }
 ]

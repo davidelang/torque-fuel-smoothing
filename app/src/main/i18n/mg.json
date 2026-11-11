@@ -15,11 +15,6 @@
     "text": "Ao amin'ny kinova Play Store ny vola fanomezana"
   },
   {
-    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "text": "Fanombohana haingana\n1. Apetraho ny Torque Pro (ny kinova karamaina; tsy mahazaka plugins ny Torque Lite) ary ampiarahina ny adapter OBD-II-nao.\n2. Alefaso ity plugin ity ao amin'ny Torque → Fikirana → Plugins.\n3. Avelao ny fampahafantarana, ary apetraho ho Tsy voafetra ny fampiasana bateria mba hahafahan'ny Torque manomboka ity plugin ity any aoriana.\n4. Ao amin'ny Torque, fidio ny mombamomba ny fiara ho an'ny fiara entinao. Tehirizina isaky ny mombamomba Torque ny angona ary ampitahaina amin'ny mombamomba VIN/ECU ny fiara.\n5. Amin'ny mombamomba vaovao dia fantatra ny loharanon-tsolika rehefa mifandray ianao; raha anontaniana, ampitahao amin'ny famantarana eo amin'ny solaitrabe dia tsindrio Hamafiso. Ao amin'ny pejy fametrahana sy ao amin'ny fampahafantarana ny Hamafiso. Azonao fidina eto ambany koa.\n6. Ny haben'ny tanky no haben'ny fanombohana ho an'ny fanitsiana Chunk mandra-pianarany ny azy. Tsy ovain'ilay plugin mihitsy izany; aseho eo ambaniny ny haben'ny nianaran'ny fanitsiana tsirairay.\n7. Ao amin'ny Torque, ampio fandrefesana ho an'ny [FuelSmooth] Smoothed Fuel Level ary, ho an'ny fanitsiana tsirairay, Corrected %, Remaining, DTE ary Tank size. Ny DTE dia Remaining ampitomboina amin'ny mpg maharitra an'ny Torque. Fampahafantarana mandritra ny fanitsiana indray no milaza fa mamaky 1:1 izany fanitsiana izany mandra-pahavitan'ny fanitsiana indray.\n8. Avereno any amin'ny Torque ny haavon'ny solika: Vonoy, Malama, na Ahitsy avy amin'ny fanitsiana Chunk, Band na Kalman ho eo amin'ny fandrefesana 012F-nao.\n9. Ny solika ihany no isaina rehefa mandeha ny motera. Ny plugin ihany no mandeha rehefa mifandray amin'ny ECU ny Torque.\n10. Tohizo ny fitondrana sy ny famenoana; mihatsara ny fahamarinana amin'ny tanky tsy feno maromaro. Raha miseho ny fampahafantarana Mombamomba fiara diso?, fidio izay hatao amin'izany dia izany.\n11. Mijanona amin'ity finday ity ny angona rehetra. Tsy misy GPS na toerana voarakitra."
-  },
-  {
     "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "text": "%1$s\nKinova %2$s (%3$s)\nPlugin ho an'ny Torque Pro. Tsy mifandray amin'ny Torque na Ian Hawkins.\nMijanona amin'ity finday ity ny angona rehetra; tsy misy GPS na toerana voarakitra.\n\nFahazoan-dàlana\nCopyright David Lang. Zo rehetra voatokana."
@@ -73,11 +68,6 @@
     "key": "Tap to start",
     "source": "Tap to start",
     "text": "Tsindrio hanombohana"
-  },
-  {
-    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "text": "Ny haben'ny tanky no haben'ny fanombohana ho an'ny fanitsiana Chunk mandra-pianarany ny azy. Tsy ovain'ilay plugin mihitsy izany; aseho eo ambaniny ny haben'ny nianaran'ny fanitsiana tsirairay."
   },
   {
     "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
@@ -245,16 +235,6 @@
     "text": "Ho an'ny loharano «PID fanampiny Torque araka ny anarana lava» ihany: ny anarana lava marina an'ny PID Torque izay mitatitra ny haavo."
   },
   {
-    "key": "Tank size",
-    "source": "Tank size",
-    "text": "Haben'ny tanky"
-  },
-  {
-    "key": "blank = no starting size; each fit learns its own.",
-    "source": "blank = no starting size; each fit learns its own.",
-    "text": "foana = tsy misy habe fanombohana; mianatra ny azy ny fanitsiana tsirairay."
-  },
-  {
     "key": "Smoothing τ seconds",
     "source": "Smoothing τ seconds",
     "text": "Fanalefahana τ segondra"
@@ -273,16 +253,6 @@
     "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "text": "Ny fiovana lehibe indrindra isan-tsegondra azon'ny haavo malama arahina; tsy raharahaina ny fihovitrovitra mihoatra izany."
-  },
-  {
-    "key": "Fill jump %",
-    "source": "Fill jump %",
-    "text": "Fitsambikinana famenoana %"
-  },
-  {
-    "key": "Rise in level while stopped that counts as a fill.",
-    "source": "Rise in level while stopped that counts as a fill.",
-    "text": "Ny fiakaran'ny haavo rehefa mijanona izay isaina ho famenoana."
   },
   {
     "key": "Odometer miles",
@@ -335,11 +305,6 @@
     "text": "Anarana lava manokana an'ny tanky %1$d (oh. [FuelSmooth] Tank%1$d Level)"
   },
   {
-    "key": "Tank %1$d gallons",
-    "source": "Tank %1$d gallons",
-    "text": "Tanky %1$d gallons"
-  },
-  {
     "key": "From PID",
     "source": "From PID",
     "text": "Avy amin'ny PID"
@@ -355,11 +320,6 @@
     "text": "· ECU mifandray"
   },
   {
-    "key": "tank ?",
-    "source": "tank ?",
-    "text": "tanky ?"
-  },
-  {
     "key": "About %1$s",
     "source": "About %1$s",
     "text": "Mombamomba ny %1$s"
@@ -373,16 +333,6 @@
     "key": "above 0, at most %1$s %%/s",
     "source": "above 0, at most %1$s %%/s",
     "text": "mihoatra ny 0, ambony indrindra %1$s %%/s"
-  },
-  {
-    "key": "%1$s to %2$s %%",
-    "source": "%1$s to %2$s %%",
-    "text": "%1$s ka hatramin'ny %2$s %%"
-  },
-  {
-    "key": "blank or a number above 0",
-    "source": "blank or a number above 0",
-    "text": "foana na isa mihoatra ny 0"
   },
   {
     "key": "stored value out of range",
@@ -605,26 +555,6 @@
     "text": "Ity fiara ity dia %1$s (%2$s), fa ny mombamomba Torque dia '%3$s'. Mankany amin'ny %1$s ny angona; tsindrio hanokafana ny Torque sy hanovana mombamomba."
   },
   {
-    "key": "Wrong vehicle profile?",
-    "source": "Wrong vehicle profile?",
-    "text": "Mombamomba fiara diso?"
-  },
-  {
-    "key": "Torque profile '%1$s'",
-    "source": "Torque profile '%1$s'",
-    "text": "Mombamomba Torque '%1$s'"
-  },
-  {
-    "key": "a new vehicle profile",
-    "source": "a new vehicle profile",
-    "text": "mombamomba fiara vaovao"
-  },
-  {
-    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "text": "Ny mombamomba Torque '%1$s' tsy mifanaraka amin'ity fiara ity (%2$s). Soso-kevitra: %3$s. Tazomina ny angona ary ariana amin'ny faran'ny dia raha tsy tazoninao."
-  },
-  {
     "key": "Keeping drive data",
     "source": "Keeping drive data",
     "text": "Tazomina ny angon'ny dia"
@@ -635,11 +565,6 @@
     "text": "Hotehirizina ao amin'ny %1$s ity dia ity. Tsy afaka mamorona na manova mombamomba Torque ny API plugin an'ny Torque: ao amin'ny Torque, mamorona na mifidiana mombamomba fiara antsoina hoe '%2$s'."
   },
   {
-    "key": "Create new profile",
-    "source": "Create new profile",
-    "text": "Mamorona mombamomba vaovao"
-  },
-  {
     "key": "Use %1$s",
     "source": "Use %1$s",
     "text": "Ampiasao ny %1$s"
@@ -648,5 +573,120 @@
     "key": "Edit profile (recording follows Torque)",
     "source": "Edit profile (recording follows Torque)",
     "text": "Hanova mombamomba (manaraka an’i Torque ny firaketana)"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "Fanombohana haingana\n1. Apetraho ny Torque Pro (ny kinova karamaina; tsy mahazaka plugins ny Torque Lite) ary ampiarahina ny adapter OBD-II-nao.\n2. Alefaso ity plugin ity ao amin'ny Torque → Fikirana → Plugins.\n3. Avelao ny fampahafantarana, ary apetraho ho Tsy voafetra ny fampiasana bateria mba hahafahan'ny Torque manomboka ity plugin ity any aoriana.\n4. Ao amin'ny Torque, fidio ny mombamomba ny fiara ho an'ny fiara entinao. Tehirizina isaky ny mombamomba Torque ny angona ary ampitahaina amin'ny mombamomba VIN/ECU ny fiara.\n5. Amin'ny mombamomba vaovao dia fantatra ny loharanon-tsolika rehefa mifandray ianao; raha anontaniana, ampitahao amin'ny famantarana eo amin'ny solaitrabe dia tsindrio Hamafiso. Ao amin'ny pejy fametrahana sy ao amin'ny fampahafantarana ny Hamafiso. Azonao fidina eto ambany koa.\n6. Tsy misy haben'ny tanky hampidirina eto. Ny fanitsiana tsirairay mianatra ny azy, aseho eo ambanin'ny Haben'ny tanky nianarana; mandra-pahatongan'izany ny isan-jato voahitsy dia mamaky 1:1 miaraka amin'ny fandrefesana. Ampidiro ny haben'ny tanky ao amin'ny mombamomba fiara Torque ho an'ny solika sisa sy DTE an'ny Torque mihitsy.\n7. Ao amin'ny Torque, ampio fandrefesana ho an'ny [FuelSmooth] Smoothed Fuel Level ary, ho an'ny fanitsiana tsirairay, Corrected % sy Tank size. Tsy mamoaka solika sisa na DTE ilay plugin. Fampahafantarana mandritra ny fanitsiana indray no milaza fa mamaky 1:1 izany fanitsiana izany mandra-pahavitan'ny fanitsiana indray.\n8. Avereno any amin'ny Torque ny haavon'ny solika: Vonoy, Malama, na Ahitsy avy amin'ny fanitsiana Chunk, Band na Kalman ho eo amin'ny fandrefesana 012F-nao. Ny solika sisa sy DTE an'ny Torque mihitsy dia mampiasa izany haavo izany miaraka amin'ny haben'ny tanky sy ny mpg maharitra ao amin'ny mombamomba Torque.\n9. Ny solika ihany no isaina rehefa mandeha ny motera. Ny plugin ihany no mandeha rehefa mifandray amin'ny ECU ny Torque.\n10. Tohizo ny fitondrana sy ny famenoana; mihatsara ny fahamarinana amin'ny tanky tsy feno maromaro. Raha tsy afaka milaza ny plugin hoe fiara inona ity, manontany amin'ny fampahafantarana sy amin'ity pejy ity izy; fidio izay hatao amin'izany dia izany.\n11. Mijanona amin'ity finday ity ny angona rehetra. Tsy misy GPS na toerana voarakitra."
+  },
+  {
+    "key": "Learned tank size",
+    "source": "Learned tank size",
+    "text": "Haben'ny tanky nianarana"
+  },
+  {
+    "key": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "source": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "text": "Ny haben'ny nianaran'ny fanitsiana tsirairay, araka ny tatitry ny plugin; tsy misy hampidirina. Ny solika sisa sy DTE an'ny Torque mihitsy dia mampiasa ny haben'ny tanky ao amin'ny mombamomba fiara Torque."
+  },
+  {
+    "key": "Vehicle decision pending: %1$s",
+    "source": "Vehicle decision pending: %1$s",
+    "text": "Fanapahan-kevitra momba ny fiara miandry: %1$s"
+  },
+  {
+    "key": "Decide later",
+    "source": "Decide later",
+    "text": "Manapaha aoriana"
+  },
+  {
+    "key": "This drive will be saved to %1$s.",
+    "source": "This drive will be saved to %1$s.",
+    "text": "Ity dia ity dia hotehirizina ao amin'ny %1$s."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "text": "Solika malama no aseho mivantana izao. Tsy misy voatahiry ao amin'ny mombamomba mandra-mifidy ianao; ariana ny angona tsy voamarina amin'ny faran'ny dia."
+  },
+  {
+    "key": "Which vehicle is this?",
+    "source": "Which vehicle is this?",
+    "text": "Fiara inona ity?"
+  },
+  {
+    "key": "More than one saved profile has this vehicle's VIN.",
+    "source": "More than one saved profile has this vehicle's VIN.",
+    "text": "Mihoatra ny iray ny mombamomba voatahiry manana ny VIN an'ity fiara ity."
+  },
+  {
+    "key": "Confirm this is %1$s",
+    "source": "Confirm this is %1$s",
+    "text": "Hamafiso fa ity dia %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "source": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "text": "Mifanaraka amin'ny %1$s ity fiara ity nefa tsy nandefa VIN, ary tsy manana haavon-tsolika voarakitra hampitahaina ny %1$s."
+  },
+  {
+    "key": "Is this %1$s?",
+    "source": "Is this %1$s?",
+    "text": "Ity ve %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "source": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "text": "Mifanaraka amin'ny %1$s ity fiara ity, fa ny mombamomba voafidy ao amin'ny Torque dia '%2$s'."
+  },
+  {
+    "key": "This vehicle sent no VIN and more than one saved profile could match.",
+    "source": "This vehicle sent no VIN and more than one saved profile could match.",
+    "text": "Tsy nandefa VIN ity fiara ity ary mety hifanaraka ny mombamomba voatahiry mihoatra ny iray."
+  },
+  {
+    "key": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "source": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "text": "Tsy nandefa VIN ity fiara ity, fa manana VIN voatahiry ny %1$s."
+  },
+  {
+    "key": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "source": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "text": "Tsy mifanaraka amin'ity fiara ity ny dihin-tanana na iray amin'ny mombamomba voatahiry (tsy nandefa VIN)."
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "source": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "text": "Ny haavon'ny solika (%1$.0f %%) dia avo kokoa noho ny haavo voarakitra farany an'ny %2$s (%3$.0f %%). Nofenoina ve?"
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "source": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "text": "Ny haavon'ny solika (%1$.0f %%) dia tsy mifanaraka amin'ny haavo voarakitra farany an'ny %2$s (%3$.0f %%)."
+  },
+  {
+    "key": "Its fuel level could not be read to compare with %1$s.",
+    "source": "Its fuel level could not be read to compare with %1$s.",
+    "text": "Tsy voavaky ny haavon'ny solika mba hampitahaina amin'ny %1$s."
+  },
+  {
+    "key": "none, it's new",
+    "source": "none, it's new",
+    "text": "tsy misy, vaovao izy"
+  },
+  {
+    "key": "Vehicle decision pending",
+    "source": "Vehicle decision pending",
+    "text": "Fanapahan-kevitra momba ny fiara miandry"
+  },
+  {
+    "key": "Vehicle confirmation",
+    "source": "Vehicle confirmation",
+    "text": "Fanamafisana fiara"
+  },
+  {
+    "key": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "source": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "text": "Manontany hoe fiara inona no mifandray rehefa tsy azo ampifandraisina ho azy."
   }
 ]

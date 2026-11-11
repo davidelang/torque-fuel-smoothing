@@ -15,11 +15,6 @@
     "text": "Mae'r awgrymiadau ar fersiwn Play Store"
   },
   {
-    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "text": "Cychwyn cyflym\n 1. Gosodwch Torque Pro (y fersiwn taledig; nid yw Torque Lite yn cynnal ategion) a phârwyoch yr addasydd OBD-II.\n 2. Galluogwch yr ategyn hwn yn Torque → Gosodiadau → Ategion.\n 3. Caniatewch hysbysiadau a gosodwch ddefnydd batri i Ddigyfyngiad fel y gall Torque gychwyn yr ategyn hwn yn y cefndir.\n 4. Yn Torque, dewiswch broffil y cerbyd rydych yn ei yrru. Cedwir data fesul proffil Torque a'i wirio yn erbyn hunaniaeth VIN/ECU y cerbyd.\n 5. Ar broffil newydd canfyddir ffynhonnell y tanwydd wrth gysylltu; os gofynnir, cymharwch hi â mesurydd y dangosfwrdd a thapio Cadarnhau. Mae Cadarnhau ar y dudalen gosod ac yn yr hysbysiad. Gallwch ei ddewis isod hefyd.\n 6. Maint y tanc yw maint cychwyn ffitiad Chunk nes iddo ddysgu ei faint ei hun. Nid yw'r ategyn byth yn ei newid; dangosir maint dysgedig pob ffitiad oddi tano.\n 7. Yn Torque, ychwanegwch fesuryddion ar gyfer [FuelSmooth] Smoothed Fuel Level ac, ar gyfer pob ffitiad, Corrected %, Remaining, DTE a Tank size. DTE yw Remaining wedi'i luosi ag mpg hirdymor Torque. Dywed hysbysiad yn ystod ailffitio fod y ffitiad yn darllen 1:1 nes i'r ailffitio orffen.\n 8. Anfonwch lefel y tanwydd yn ôl i Torque: I ffwrdd, llyfn, neu wedi'i gywiro o ffitiad Chunk, Band neu Kalman, ar eich mesurydd 012F.\n 9. Dim ond tra bo'r injan yn rhedeg y cyfrifir tanwydd. Dim ond tra bo Torque wedi'i gysylltu â'r ECU y mae'r ategyn yn rhedeg.\n 10. Daliwch ati i yrru ac i lenwi; mae cywirdeb yn tyfu dros sawl tanc rhannol. Os yw hysbysiad Proffil cerbyd anghywir? yn ymddangos, dewiswch beth i'w wneud â'r daith honno.\n 11. Mae'r holl ddata'n aros ar y ffôn hwn. Ni chofnodir GPS na lleoliad."
-  },
-  {
     "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "text": "%1$s\nFersiwn %2$s (%3$s)\nAtegyn ar gyfer Torque Pro. Nid yw'n gysylltiedig â Torque nac Ian Hawkins.\nMae'r holl ddata'n aros ar y ffôn hwn; ni chofnodir GPS na lleoliad.\n\nTrwydded\nCopyright David Lang. Cedwir pob hawl."
@@ -73,11 +68,6 @@
     "key": "Tap to start",
     "source": "Tap to start",
     "text": "Tapiwch i gychwyn"
-  },
-  {
-    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "text": "Maint y tanc yw maint cychwyn ffitiad Chunk nes iddo ddysgu ei faint ei hun. Nid yw'r ategyn byth yn ei newid; dangosir maint dysgedig pob ffitiad oddi tano."
   },
   {
     "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
@@ -245,16 +235,6 @@
     "text": "Ar gyfer y ffynhonnell „PID ychwanegol Torque yn ôl enw hir“ yn unig: enw hir union y PID Torque sy'n adrodd y lefel."
   },
   {
-    "key": "Tank size",
-    "source": "Tank size",
-    "text": "Maint y tanc"
-  },
-  {
-    "key": "blank = no starting size; each fit learns its own.",
-    "source": "blank = no starting size; each fit learns its own.",
-    "text": "gwag = dim maint cychwyn; mae pob ffitiad yn dysgu ei faint ei hun."
-  },
-  {
     "key": "Smoothing τ seconds",
     "source": "Smoothing τ seconds",
     "text": "Llyfnhau τ mewn eiliadau"
@@ -273,16 +253,6 @@
     "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "text": "Y newid mwyaf yr eiliad y gall y lefel lyfn ei ddilyn; anwybyddir siglo y tu hwnt i hynny."
-  },
-  {
-    "key": "Fill jump %",
-    "source": "Fill jump %",
-    "text": "Naid llenwi %"
-  },
-  {
-    "key": "Rise in level while stopped that counts as a fill.",
-    "source": "Rise in level while stopped that counts as a fill.",
-    "text": "Cynnydd yn y lefel wrth sefyll sy'n cyfrif fel llenwad."
   },
   {
     "key": "Odometer miles",
@@ -335,11 +305,6 @@
     "text": "Enw hir personol tanc %1$d (e.e. [FuelSmooth] Tank%1$d Level)"
   },
   {
-    "key": "Tank %1$d gallons",
-    "source": "Tank %1$d gallons",
-    "text": "Galwyni tanc %1$d"
-  },
-  {
     "key": "From PID",
     "source": "From PID",
     "text": "O PID"
@@ -355,11 +320,6 @@
     "text": "· ECU wedi cysylltu"
   },
   {
-    "key": "tank ?",
-    "source": "tank ?",
-    "text": "tanc ?"
-  },
-  {
     "key": "About %1$s",
     "source": "About %1$s",
     "text": "Tua %1$s"
@@ -373,16 +333,6 @@
     "key": "above 0, at most %1$s %%/s",
     "source": "above 0, at most %1$s %%/s",
     "text": "uwchlaw 0, %1$s %%/s ar y mwyaf"
-  },
-  {
-    "key": "%1$s to %2$s %%",
-    "source": "%1$s to %2$s %%",
-    "text": "%1$s i %2$s %%"
-  },
-  {
-    "key": "blank or a number above 0",
-    "source": "blank or a number above 0",
-    "text": "gwag neu rif uwchlaw 0"
   },
   {
     "key": "stored value out of range",
@@ -605,26 +555,6 @@
     "text": "Y cerbyd hwn yw %1$s (%2$s), ond proffil Torque yw „%3$s“. Mae data'n mynd i %1$s; tapiwch i agor Torque a newid proffil."
   },
   {
-    "key": "Wrong vehicle profile?",
-    "source": "Wrong vehicle profile?",
-    "text": "Proffil cerbyd anghywir?"
-  },
-  {
-    "key": "Torque profile '%1$s'",
-    "source": "Torque profile '%1$s'",
-    "text": "Proffil Torque „%1$s“"
-  },
-  {
-    "key": "a new vehicle profile",
-    "source": "a new vehicle profile",
-    "text": "proffil cerbyd newydd"
-  },
-  {
-    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "text": "Nid yw proffil Torque „%1$s“ yn cyfateb i'r cerbyd hwn (%2$s). Awgrym: %3$s. Cedwir data a'i daflu ar ddiwedd y daith oni bai eich bod yn ei gadw."
-  },
-  {
     "key": "Keeping drive data",
     "source": "Keeping drive data",
     "text": "Yn cadw data'r daith"
@@ -635,11 +565,6 @@
     "text": "Bydd y daith hon yn cael ei chadw i %1$s. Ni all API ategyn Torque greu na newid proffiliau Torque: yn Torque, crëwch neu dewiswch broffil cerbyd o'r enw „%2$s“."
   },
   {
-    "key": "Create new profile",
-    "source": "Create new profile",
-    "text": "Creu proffil newydd"
-  },
-  {
     "key": "Use %1$s",
     "source": "Use %1$s",
     "text": "Defnyddio %1$s"
@@ -648,5 +573,120 @@
     "key": "Edit profile (recording follows Torque)",
     "source": "Edit profile (recording follows Torque)",
     "text": "Golygu proffil (mae recordio yn dilyn Torque)"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "Cychwyn cyflym\n 1. Gosodwch Torque Pro (y fersiwn taledig; nid yw Torque Lite yn cynnal ategion) a phârwyoch yr addasydd OBD-II.\n 2. Galluogwch yr ategyn hwn yn Torque → Gosodiadau → Ategion.\n 3. Caniatewch hysbysiadau a gosodwch ddefnydd batri i Ddigyfyngiad fel y gall Torque gychwyn yr ategyn hwn yn y cefndir.\n 4. Yn Torque, dewiswch broffil y cerbyd rydych yn ei yrru. Cedwir data fesul proffil Torque a'i wirio yn erbyn hunaniaeth VIN/ECU y cerbyd.\n 5. Ar broffil newydd canfyddir ffynhonnell y tanwydd wrth gysylltu; os gofynnir, cymharwch hi â mesurydd y dangosfwrdd a thapio Cadarnhau. Mae Cadarnhau ar y dudalen gosod ac yn yr hysbysiad. Gallwch ei ddewis isod hefyd.\n 6. Nid oes maint tanc i'w roi yma. Mae pob ffitiad yn dysgu ei faint ei hun, a ddangosir o dan Maint tanc a ddysgwyd; tan hynny mae ei ganran wedi'i chywiro yn darllen 1:1 gyda'r mesurydd. Rhowch faint y tanc ym mhroffil cerbyd Torque ar gyfer tanwydd sy'n weddill a DTE Torque ei hun.\n 7. Yn Torque, ychwanegwch fesuryddion ar gyfer [FuelSmooth] Smoothed Fuel Level ac, ar gyfer pob ffitiad, Corrected % a Tank size. Nid yw'r ategyn yn cyhoeddi tanwydd sy'n weddill nac DTE. Dywed hysbysiad yn ystod ailffitio fod y ffitiad yn darllen 1:1 nes i'r ailffitio orffen.\n 8. Anfonwch lefel y tanwydd yn ôl i Torque: I ffwrdd, llyfn, neu wedi'i gywiro o ffitiad Chunk, Band neu Kalman, ar eich mesurydd 012F. Yna mae tanwydd sy'n weddill a DTE Torque ei hun yn defnyddio'r lefel honno gyda maint y tanc a'r mpg hirdymor ym mhroffil Torque.\n 9. Dim ond tra bo'r injan yn rhedeg y cyfrifir tanwydd. Dim ond tra bo Torque wedi'i gysylltu â'r ECU y mae'r ategyn yn rhedeg.\n 10. Daliwch ati i yrru ac i lenwi; mae cywirdeb yn tyfu dros sawl tanc rhannol. Os na all yr ategyn ddweud pa gerbyd yw hwn, mae'n gofyn mewn hysbysiad ac ar y dudalen hon; dewiswch beth i'w wneud â'r daith honno.\n 11. Mae'r holl ddata'n aros ar y ffôn hwn. Ni chofnodir GPS na lleoliad."
+  },
+  {
+    "key": "Learned tank size",
+    "source": "Learned tank size",
+    "text": "Maint tanc a ddysgwyd"
+  },
+  {
+    "key": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "source": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "text": "Maint dysgedig pob ffitiad ei hun, fel y mae'r ategyn yn ei adrodd; nid oes dim i'w roi. Mae tanwydd sy'n weddill a DTE Torque ei hun yn defnyddio maint y tanc ym mhroffil cerbyd Torque."
+  },
+  {
+    "key": "Vehicle decision pending: %1$s",
+    "source": "Vehicle decision pending: %1$s",
+    "text": "Penderfyniad cerbyd yn aros: %1$s"
+  },
+  {
+    "key": "Decide later",
+    "source": "Decide later",
+    "text": "Penderfynu yn nes ymlaen"
+  },
+  {
+    "key": "This drive will be saved to %1$s.",
+    "source": "This drive will be saved to %1$s.",
+    "text": "Bydd y daith hon yn cael ei chadw i %1$s."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "text": "Dangosir tanwydd llyfn yn fyw nawr. Ni chedwir dim i broffil nes i chi ddewis; caiff data heb ei gadarnhau ei daflu ar ddiwedd y daith."
+  },
+  {
+    "key": "Which vehicle is this?",
+    "source": "Which vehicle is this?",
+    "text": "Pa gerbyd yw hwn?"
+  },
+  {
+    "key": "More than one saved profile has this vehicle's VIN.",
+    "source": "More than one saved profile has this vehicle's VIN.",
+    "text": "Mae gan fwy nag un proffil sydd wedi'i gadw VIN y cerbyd hwn."
+  },
+  {
+    "key": "Confirm this is %1$s",
+    "source": "Confirm this is %1$s",
+    "text": "Cadarnhau mai hwn yw %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "source": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "text": "Mae'r cerbyd hwn yn cyfateb i %1$s ond ni anfonodd VIN, ac nid oes gan %1$s lefel tanwydd wedi'i chofnodi i'w chymharu."
+  },
+  {
+    "key": "Is this %1$s?",
+    "source": "Is this %1$s?",
+    "text": "Ai hwn yw %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "source": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "text": "Mae'r cerbyd hwn yn cyfateb i %1$s, ond y proffil a ddewiswyd yn Torque yw '%2$s'."
+  },
+  {
+    "key": "This vehicle sent no VIN and more than one saved profile could match.",
+    "source": "This vehicle sent no VIN and more than one saved profile could match.",
+    "text": "Ni anfonodd y cerbyd hwn VIN a gallai mwy nag un proffil sydd wedi'i gadw gyfateb."
+  },
+  {
+    "key": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "source": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "text": "Ni anfonodd y cerbyd hwn VIN, ond mae gan %1$s VIN wedi'i gadw."
+  },
+  {
+    "key": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "source": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "text": "Nid yw olion bysedd unrhyw broffil sydd wedi'i gadw yn cyfateb i'r cerbyd hwn (ni anfonodd VIN)."
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "source": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "text": "Mae ei lefel tanwydd (%1$.0f %%) yn uwch na lefel olaf a gofnodwyd %2$s (%3$.0f %%). A gafodd ei lenwi?"
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "source": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "text": "Nid yw ei lefel tanwydd (%1$.0f %%) yn cyfateb i lefel olaf a gofnodwyd %2$s (%3$.0f %%)."
+  },
+  {
+    "key": "Its fuel level could not be read to compare with %1$s.",
+    "source": "Its fuel level could not be read to compare with %1$s.",
+    "text": "Ni ellid darllen lefel y tanwydd i'w chymharu â %1$s."
+  },
+  {
+    "key": "none, it's new",
+    "source": "none, it's new",
+    "text": "dim, mae'n newydd"
+  },
+  {
+    "key": "Vehicle decision pending",
+    "source": "Vehicle decision pending",
+    "text": "Penderfyniad cerbyd yn aros"
+  },
+  {
+    "key": "Vehicle confirmation",
+    "source": "Vehicle confirmation",
+    "text": "Cadarnhad cerbyd"
+  },
+  {
+    "key": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "source": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "text": "Yn gofyn pa gerbyd sydd wedi'i gysylltu pan na ellir ei baru'n awtomatig."
   }
 ]

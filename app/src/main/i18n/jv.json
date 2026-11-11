@@ -15,11 +15,6 @@
     "text": "Tip ana ing versi Play Store"
   },
   {
-    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "text": "Wiwitan cepet\n1. Pasang Torque Pro (versi mbayar; Torque Lite ora ndhukung plugin) lan pasangake adaptor OBD-II panjenengan.\n2. Uripake plugin iki ing Torque → Setelan → Plugin.\n3. Idini kabar, lan setel panggunaan baterei dadi Ora diwatesi supaya Torque bisa miwiti plugin iki ing latar mburi.\n4. Ing Torque, pilih profil kendaraan kanggo mobil sing panjenengan kemudikake. Data disimpen saben profil Torque lan dicocogake karo identitas VIN/ECU kendaraan.\n5. Ing profil anyar, sumber bahan bakar dideteksi nalika nyambung; yen ditakoni, bandingake karo jarum ing dasbor banjur tutul Konfirmasi. Konfirmasi ana ing kaca setelan lan ing kabar. Panjenengan uga bisa milih ing ngisor.\n6. Ukuran tangki iku ukuran wiwitan kanggo pas Chunk nganti dheweke sinau ukurane dhewe. Plugin ora nate ngowahi; ukuran sing disinaoni saben pas dituduhake ing ngisore.\n7. Ing Torque, tambahake jarum kanggo [FuelSmooth] Smoothed Fuel Level lan, kanggo saben pas, Corrected %, Remaining, DTE lan Tank size. DTE yaiku Remaining dikali mpg jangka dawa Torque. Kabar nalika pas dipas maneh ngandhakake yen pas kuwi maca 1:1 nganti pas maneh rampung.\n8. Balikake level bahan bakar menyang Torque: Mati, Dilus, utawa Didandani saka pas Chunk, Band utawa Kalman menyang jarum 012F panjenengan.\n9. Bahan bakar mung dietung nalika mesin mlaku. Plugin mung mlaku nalika Torque kasambung karo ECU.\n10. Terusake nyopir lan ngisi; akurasi mundhak sajroning sawetara tangki sebagian. Yen kabar Profil kendaraan salah? muncul, pilih apa sing ditindakake kanggo lelungan kuwi.\n11. Kabeh data tetep ing ponsel iki. Ora ana GPS utawa lokasi sing direkam."
-  },
-  {
     "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "text": "%1$s\nVersi %2$s (%3$s)\nPlugin kanggo Torque Pro. Ora kagandheng karo Torque utawa Ian Hawkins.\nKabeh data tetep ing ponsel iki; ora ana GPS utawa lokasi sing direkam.\n\nLisensi\nCopyright David Lang. Kabeh hak dilindhungi."
@@ -73,11 +68,6 @@
     "key": "Tap to start",
     "source": "Tap to start",
     "text": "Tutul kanggo miwiti"
-  },
-  {
-    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "text": "Ukuran tangki iku ukuran wiwitan kanggo pas Chunk nganti dheweke sinau ukurane dhewe. Plugin ora nate ngowahi; ukuran sing disinaoni saben pas dituduhake ing ngisore."
   },
   {
     "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
@@ -245,16 +235,6 @@
     "text": "Mung kanggo sumber «PID tambahan Torque miturut jeneng dawa»: jeneng dawa sing pas saka PID Torque sing nglapurake level."
   },
   {
-    "key": "Tank size",
-    "source": "Tank size",
-    "text": "Ukuran tangki"
-  },
-  {
-    "key": "blank = no starting size; each fit learns its own.",
-    "source": "blank = no starting size; each fit learns its own.",
-    "text": "kosong = ora ana ukuran wiwitan; saben pas sinau ukurane dhewe."
-  },
-  {
     "key": "Smoothing τ seconds",
     "source": "Smoothing τ seconds",
     "text": "Nglus τ detik"
@@ -273,16 +253,6 @@
     "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "text": "Owah paling gedhe saben detik sing bisa dilacak level sing dilusake; goyangan ngluwihi iki dilirwakake."
-  },
-  {
-    "key": "Fill jump %",
-    "source": "Fill jump %",
-    "text": "Lompatan ngisi %"
-  },
-  {
-    "key": "Rise in level while stopped that counts as a fill.",
-    "source": "Rise in level while stopped that counts as a fill.",
-    "text": "Munggahing level nalika mandheg sing dietung minangka ngisi."
   },
   {
     "key": "Odometer miles",
@@ -335,11 +305,6 @@
     "text": "Jeneng dawa khusus tangki %1$d (contone [FuelSmooth] Tank%1$d Level)"
   },
   {
-    "key": "Tank %1$d gallons",
-    "source": "Tank %1$d gallons",
-    "text": "Tangki %1$d gallons"
-  },
-  {
     "key": "From PID",
     "source": "From PID",
     "text": "Saka PID"
@@ -355,11 +320,6 @@
     "text": "· ECU kasambung"
   },
   {
-    "key": "tank ?",
-    "source": "tank ?",
-    "text": "tangki ?"
-  },
-  {
     "key": "About %1$s",
     "source": "About %1$s",
     "text": "Bab %1$s"
@@ -373,16 +333,6 @@
     "key": "above 0, at most %1$s %%/s",
     "source": "above 0, at most %1$s %%/s",
     "text": "ndhuwur 0, paling akeh %1$s %%/s"
-  },
-  {
-    "key": "%1$s to %2$s %%",
-    "source": "%1$s to %2$s %%",
-    "text": "%1$s nganti %2$s %%"
-  },
-  {
-    "key": "blank or a number above 0",
-    "source": "blank or a number above 0",
-    "text": "kosong utawa angka ndhuwur 0"
   },
   {
     "key": "stored value out of range",
@@ -605,26 +555,6 @@
     "text": "Kendaraan iki %1$s (%2$s), nanging profil Torque yaiku '%3$s'. Data menyang %1$s; tutul kanggo mbukak Torque lan ngganti profil."
   },
   {
-    "key": "Wrong vehicle profile?",
-    "source": "Wrong vehicle profile?",
-    "text": "Profil kendaraan salah?"
-  },
-  {
-    "key": "Torque profile '%1$s'",
-    "source": "Torque profile '%1$s'",
-    "text": "Profil Torque '%1$s'"
-  },
-  {
-    "key": "a new vehicle profile",
-    "source": "a new vehicle profile",
-    "text": "profil kendaraan anyar"
-  },
-  {
-    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "text": "Profil Torque '%1$s' ora cocog karo kendaraan iki (%2$s). Saran: %3$s. Data ditahan lan dibuwang ing pungkasane lelungan kajaba panjenengan nyimpen."
-  },
-  {
     "key": "Keeping drive data",
     "source": "Keeping drive data",
     "text": "Data lelungan disimpen"
@@ -635,11 +565,6 @@
     "text": "Lelungan iki bakal disimpen menyang %1$s. API plugin Torque ora bisa nggawe utawa ngganti profil Torque: ing Torque, gawe utawa pilih profil kendaraan aran '%2$s'."
   },
   {
-    "key": "Create new profile",
-    "source": "Create new profile",
-    "text": "Gawe profil anyar"
-  },
-  {
     "key": "Use %1$s",
     "source": "Use %1$s",
     "text": "Enggo %1$s"
@@ -648,5 +573,120 @@
     "key": "Edit profile (recording follows Torque)",
     "source": "Edit profile (recording follows Torque)",
     "text": "Sunting profil (rekaman manut Torque)"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "Wiwitan cepet\n1. Pasang Torque Pro (versi mbayar; Torque Lite ora ndhukung plugin) lan pasangake adaptor OBD-II panjenengan.\n2. Uripake plugin iki ing Torque → Setelan → Plugin.\n3. Idini kabar, lan setel panggunaan baterei dadi Ora diwatesi supaya Torque bisa miwiti plugin iki ing latar mburi.\n4. Ing Torque, pilih profil kendaraan kanggo mobil sing panjenengan kemudikake. Data disimpen saben profil Torque lan dicocogake karo identitas VIN/ECU kendaraan.\n5. Ing profil anyar, sumber bahan bakar dideteksi nalika nyambung; yen ditakoni, bandingake karo jarum ing dasbor banjur tutul Konfirmasi. Konfirmasi ana ing kaca setelan lan ing kabar. Panjenengan uga bisa milih ing ngisor.\n6. Ora ana ukuran tangki sing dilebokake ing kene. Saben pas sinau ukurane dhewe, ditampilake ing Ukuran tangki sing disinaoni; nganti iku persen sing didandani maca 1:1 karo jarum. Lebokake ukuran tangki ing profil kendaraan Torque kanggo sisa bahan bakar lan DTE duweke Torque dhewe.\n7. Ing Torque, tambahake jarum kanggo [FuelSmooth] Smoothed Fuel Level lan, kanggo saben pas, Corrected % lan Tank size. Plugin ora nerbitake sisa bahan bakar utawa DTE. Kabar nalika pas dipas maneh ngandhakake yen pas kuwi maca 1:1 nganti pas maneh rampung.\n8. Balikake level bahan bakar menyang Torque: Mati, Dilus, utawa Didandani saka pas Chunk, Band utawa Kalman menyang jarum 012F panjenengan. Sisa bahan bakar lan DTE duweke Torque dhewe banjur nganggo level kuwi karo ukuran tangki lan mpg jangka dawa ing profil Torque.\n9. Bahan bakar mung dietung nalika mesin mlaku. Plugin mung mlaku nalika Torque kasambung karo ECU.\n10. Terusake nyopir lan ngisi; akurasi mundhak sajroning sawetara tangki sebagian. Yen plugin ora bisa ngandhani kendaraan endi iki, dheweke takon ing kabar lan ing kaca iki; pilih apa sing ditindakake kanggo lelungan kuwi.\n11. Kabeh data tetep ing ponsel iki. Ora ana GPS utawa lokasi sing direkam."
+  },
+  {
+    "key": "Learned tank size",
+    "source": "Learned tank size",
+    "text": "Ukuran tangki sing disinaoni"
+  },
+  {
+    "key": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "source": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "text": "Ukuran sing disinaoni duweke saben pas, kaya sing dilapurake plugin; ora ana sing dilebokake. Sisa bahan bakar lan DTE duweke Torque dhewe nganggo ukuran tangki ing profil kendaraan Torque."
+  },
+  {
+    "key": "Vehicle decision pending: %1$s",
+    "source": "Vehicle decision pending: %1$s",
+    "text": "Putusan kendaraan ditundha: %1$s"
+  },
+  {
+    "key": "Decide later",
+    "source": "Decide later",
+    "text": "Putus mengko"
+  },
+  {
+    "key": "This drive will be saved to %1$s.",
+    "source": "This drive will be saved to %1$s.",
+    "text": "Lelungan iki bakal disimpen menyang %1$s."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "text": "Bahan bakar sing dilus ditampilake langsung saiki. Ora ana sing disimpen menyang profil nganti panjenengan milih; data sing durung dikonfirmasi dibuwang ing pungkasan lelungan."
+  },
+  {
+    "key": "Which vehicle is this?",
+    "source": "Which vehicle is this?",
+    "text": "Iki kendaraan endi?"
+  },
+  {
+    "key": "More than one saved profile has this vehicle's VIN.",
+    "source": "More than one saved profile has this vehicle's VIN.",
+    "text": "Luwih saka siji profil sing disimpen nduweni VIN kendaraan iki."
+  },
+  {
+    "key": "Confirm this is %1$s",
+    "source": "Confirm this is %1$s",
+    "text": "Konfirmasi iki %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "source": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "text": "Kendaraan iki cocog karo %1$s nanging ora ngirim VIN, lan %1$s ora nduweni level bahan bakar sing kacathet kanggo dibandhingake."
+  },
+  {
+    "key": "Is this %1$s?",
+    "source": "Is this %1$s?",
+    "text": "Apa iki %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "source": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "text": "Kendaraan iki cocog karo %1$s, nanging profil sing dipilih ing Torque yaiku '%2$s'."
+  },
+  {
+    "key": "This vehicle sent no VIN and more than one saved profile could match.",
+    "source": "This vehicle sent no VIN and more than one saved profile could match.",
+    "text": "Kendaraan iki ora ngirim VIN lan luwih saka siji profil sing disimpen bisa cocog."
+  },
+  {
+    "key": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "source": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "text": "Kendaraan iki ora ngirim VIN, nanging %1$s nduweni VIN sing disimpen."
+  },
+  {
+    "key": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "source": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "text": "Sidik driji ora ana profil sing disimpen sing cocog karo kendaraan iki (ora ngirim VIN)."
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "source": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "text": "Level bahan bakare (%1$.0f %%) luwih dhuwur tinimbang level pungkasan sing kacathet saka %2$s (%3$.0f %%). Apa diisi?"
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "source": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "text": "Level bahan bakare (%1$.0f %%) ora cocog karo level pungkasan sing kacathet saka %2$s (%3$.0f %%)."
+  },
+  {
+    "key": "Its fuel level could not be read to compare with %1$s.",
+    "source": "Its fuel level could not be read to compare with %1$s.",
+    "text": "Level bahan bakar ora bisa diwaca kanggo dibandhingake karo %1$s."
+  },
+  {
+    "key": "none, it's new",
+    "source": "none, it's new",
+    "text": "ora ana, iki anyar"
+  },
+  {
+    "key": "Vehicle decision pending",
+    "source": "Vehicle decision pending",
+    "text": "Putusan kendaraan ditundha"
+  },
+  {
+    "key": "Vehicle confirmation",
+    "source": "Vehicle confirmation",
+    "text": "Konfirmasi kendaraan"
+  },
+  {
+    "key": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "source": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "text": "Takon kendaraan endi sing nyambung nalika ora bisa dicocogake kanthi otomatis."
   }
 ]

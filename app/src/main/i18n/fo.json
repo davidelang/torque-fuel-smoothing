@@ -15,11 +15,6 @@
     "text": "Drykkjupeningur er í Play Store-útgávuni"
   },
   {
-    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "text": "Skjótt byrjan\n1. Legg Torque Pro inn (hina goldnu útgávuna; Torque Lite stuðlar ikki plugins) og par tín OBD-II-adapter.\n2. Ger hetta plugin virkið í Torque → Stillingar → Plugins.\n3. Loyv fráboðanum, og set battaríbrúk til Óavmarkað, so Torque kann byrja hetta plugin í bakgrundini.\n4. Vel í Torque akfarsprofilin fyri bilin, tú koyrir. Dáta verða goymd fyri hvønn Torque-profil og kannað móti VIN/ECU-samleikanum hjá akfarinum.\n5. Á einum nýggjum profili verður brennievniskeldan uppdagað, tá tú bindur í; verður tú spurdur, ber hana saman við mátaran á instrumentborðinum og trýst á Vátta. Vátta er á uppsetingarsíðuni og í fráboðanini. Tú kanst eisini velja hana niðanfyri.\n6. Tangastødd er byrjanarstøddin hjá Chunk-tillagingini, til hon lærir sína egnu. Plugin broytir hana ongantíð; lærda støddin hjá hvørjari tillaging sæst undir henni.\n7. Legg í Torque málarar afturat fyri [FuelSmooth] Smoothed Fuel Level og fyri hvørja tillaging Corrected %, Remaining, DTE og Tank size. DTE er Remaining faldað við langtíðar mpg hjá Torque. Ein boð undir endurtillaging sigur, at tann tillagingin lesur 1:1, til endurtillagingin er liðug.\n8. Send brennievnisstøðuna aftur til Torque: Av, Slættað ella Rættað úr Chunk-, Band- ella Kalman-tillagingini á tín 012F-mátara.\n9. Brennievni verður bert talt, meðan motorurin gongur. Plugin koyrir bert, meðan Torque er bundið at ECU.\n10. Halt fram at koyra og fylla; neyvleikin veksur yvir fleiri lutvíst fyltar tangar. Kemur fráboðanin Skeivt akfarsprofil?, vel hvat skal henda við teirri ferðini.\n11. Øll dáta verða verandi á hesum telefoninum. Eingin GPS ella staðseting verður skrásett."
-  },
-  {
     "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "text": "%1$s\nÚtgáva %2$s (%3$s)\nEitt plugin til Torque Pro. Ikki knýtt at Torque ella Ian Hawkins.\nØll dáta verða verandi á hesum telefoninum; eingin GPS ella staðseting verður skrásett.\n\nLoyvi\nCopyright David Lang. Øll rættindi vard."
@@ -73,11 +68,6 @@
     "key": "Tap to start",
     "source": "Tap to start",
     "text": "Trýst fyri at byrja"
-  },
-  {
-    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "text": "Tangastødd er byrjanarstøddin hjá Chunk-tillagingini, til hon lærir sína egnu. Plugin broytir hana ongantíð; lærda støddin hjá hvørjari tillaging sæst undir henni."
   },
   {
     "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
@@ -245,16 +235,6 @@
     "text": "Bert fyri kelduna «eyka-PID í Torque eftir longum navni»: nágreiniliga langa navnið á PID í Torque, sum sigur støðuna."
   },
   {
-    "key": "Tank size",
-    "source": "Tank size",
-    "text": "Tangastødd"
-  },
-  {
-    "key": "blank = no starting size; each fit learns its own.",
-    "source": "blank = no starting size; each fit learns its own.",
-    "text": "tómt = eingin byrjanarstødd; hvør tillaging lærir sína egnu."
-  },
-  {
     "key": "Smoothing τ seconds",
     "source": "Smoothing τ seconds",
     "text": "Sløtting τ sekund"
@@ -273,16 +253,6 @@
     "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "text": "Størsta broyting um sekundið, sum slættaða støðan má fylgja; skvettur oman fyri hetta verður loypt um."
-  },
-  {
-    "key": "Fill jump %",
-    "source": "Fill jump %",
-    "text": "Áfyllingarhopp %"
-  },
-  {
-    "key": "Rise in level while stopped that counts as a fill.",
-    "source": "Rise in level while stopped that counts as a fill.",
-    "text": "Hækking í støðu, meðan tú stendur stillur, sum telist sum áfylling."
   },
   {
     "key": "Odometer miles",
@@ -335,11 +305,6 @@
     "text": "Serligt langt navn hjá tanga %1$d (t.d. [FuelSmooth] Tank%1$d Level)"
   },
   {
-    "key": "Tank %1$d gallons",
-    "source": "Tank %1$d gallons",
-    "text": "Tangi %1$d gallons"
-  },
-  {
     "key": "From PID",
     "source": "From PID",
     "text": "Frá PID"
@@ -355,11 +320,6 @@
     "text": "· ECU bundin í"
   },
   {
-    "key": "tank ?",
-    "source": "tank ?",
-    "text": "tangi ?"
-  },
-  {
     "key": "About %1$s",
     "source": "About %1$s",
     "text": "Um %1$s"
@@ -373,16 +333,6 @@
     "key": "above 0, at most %1$s %%/s",
     "source": "above 0, at most %1$s %%/s",
     "text": "yvir 0, í mesta lagi %1$s %%/s"
-  },
-  {
-    "key": "%1$s to %2$s %%",
-    "source": "%1$s to %2$s %%",
-    "text": "%1$s til %2$s %%"
-  },
-  {
-    "key": "blank or a number above 0",
-    "source": "blank or a number above 0",
-    "text": "tómt ella eitt tal yvir 0"
   },
   {
     "key": "stored value out of range",
@@ -605,26 +555,6 @@
     "text": "Hetta akfarið er %1$s (%2$s), men profilurin í Torque er '%3$s'. Dáta fara til %1$s; trýst fyri at lata Torque upp og skifta profil."
   },
   {
-    "key": "Wrong vehicle profile?",
-    "source": "Wrong vehicle profile?",
-    "text": "Skeivt akfarsprofil?"
-  },
-  {
-    "key": "Torque profile '%1$s'",
-    "source": "Torque profile '%1$s'",
-    "text": "Torque-profil '%1$s'"
-  },
-  {
-    "key": "a new vehicle profile",
-    "source": "a new vehicle profile",
-    "text": "eitt nýtt akfarsprofil"
-  },
-  {
-    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "text": "Profilurin í Torque '%1$s' samsvarar ikki við hetta akfarið (%2$s). Uppskot: %3$s. Dáta verða hildin og blakað, tá ferðin endar, uttan so at tú varðveitir tey."
-  },
-  {
     "key": "Keeping drive data",
     "source": "Keeping drive data",
     "text": "Ferðardáta verða varðveitt"
@@ -635,11 +565,6 @@
     "text": "Henda ferðin verður goymd í %1$s. Plugin-API hjá Torque kann ikki stovna ella skifta profilar í Torque: stovna ella vel í Torque ein akfarsprofil við navninum '%2$s'."
   },
   {
-    "key": "Create new profile",
-    "source": "Create new profile",
-    "text": "Stovna nýggjan profil"
-  },
-  {
     "key": "Use %1$s",
     "source": "Use %1$s",
     "text": "Nýt %1$s"
@@ -648,5 +573,120 @@
     "key": "Edit profile (recording follows Torque)",
     "source": "Edit profile (recording follows Torque)",
     "text": "Broyt vanga (upptøka fylgir Torque)"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "Skjótt byrjan\n1. Legg Torque Pro inn (hina goldnu útgávuna; Torque Lite stuðlar ikki plugins) og par tín OBD-II-adapter.\n2. Ger hetta plugin virkið í Torque → Stillingar → Plugins.\n3. Loyv fráboðanum, og set battaríbrúk til Óavmarkað, so Torque kann byrja hetta plugin í bakgrundini.\n4. Vel í Torque akfarsprofilin fyri bilin, tú koyrir. Dáta verða goymd fyri hvønn Torque-profil og kannað móti VIN/ECU-samleikanum hjá akfarinum.\n5. Á einum nýggjum profili verður brennievniskeldan uppdagað, tá tú bindur í; verður tú spurdur, ber hana saman við mátaran á instrumentborðinum og trýst á Vátta. Vátta er á uppsetingarsíðuni og í fráboðanini. Tú kanst eisini velja hana niðanfyri.\n6. Her er ongin tangastødd at seta inn. Hvør tillaging lærir sína egnu stødd, víst undir Lærd tangastødd; til tá lesur rættaði prosenturin 1:1 við mátaran. Set tangastøddina inn í akfarsprofilin hjá Torque til egið eftirverandi brennievni og DTE hjá Torque.\n7. Legg í Torque málarar afturat fyri [FuelSmooth] Smoothed Fuel Level og fyri hvørja tillaging Corrected % og Tank size. Plugin almannager ikki eftirverandi brennievni ella DTE. Ein boð undir endurtillaging sigur, at tann tillagingin lesur 1:1, til endurtillagingin er liðug.\n8. Send brennievnisstøðuna aftur til Torque: Av, Slættað ella Rættað úr Chunk-, Band- ella Kalman-tillagingini á tín 012F-mátara. Egið eftirverandi brennievni og DTE hjá Torque brúka síðani ta støðuna saman við tangastøddini og langtíðar mpg í Torque-profilinum.\n9. Brennievni verður bert talt, meðan motorurin gongur. Plugin koyrir bert, meðan Torque er bundið at ECU.\n10. Halt fram at koyra og fylla; neyvleikin veksur yvir fleiri lutvíst fyltar tangar. Kann plugin ikki siga, hvør bilur hetta er, spyrr tað í eini fráboðan og á hesi síðu; vel hvat skal henda við teirri ferðini.\n11. Øll dáta verða verandi á hesum telefoninum. Eingin GPS ella staðseting verður skrásett."
+  },
+  {
+    "key": "Learned tank size",
+    "source": "Learned tank size",
+    "text": "Lærd tangastødd"
+  },
+  {
+    "key": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "source": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "text": "Egin lærda stødd hjá hvørjari tillaging, sum plugin fráboðar; einki er at seta inn. Egið eftirverandi brennievni og DTE hjá Torque brúka tangastøddina í akfarsprofilinum hjá Torque."
+  },
+  {
+    "key": "Vehicle decision pending: %1$s",
+    "source": "Vehicle decision pending: %1$s",
+    "text": "Avgerð um akfar bíðar: %1$s"
+  },
+  {
+    "key": "Decide later",
+    "source": "Decide later",
+    "text": "Avgør seinni"
+  },
+  {
+    "key": "This drive will be saved to %1$s.",
+    "source": "This drive will be saved to %1$s.",
+    "text": "Henda ferðin verður goymd í %1$s."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "text": "Slættað brennievni verður víst beinleiðis nú. Einki verður goymt í ein profil, fyrr enn tú velur; óváttað dáta verða blakað burtur í endanum av ferðini."
+  },
+  {
+    "key": "Which vehicle is this?",
+    "source": "Which vehicle is this?",
+    "text": "Hvør bilur er hetta?"
+  },
+  {
+    "key": "More than one saved profile has this vehicle's VIN.",
+    "source": "More than one saved profile has this vehicle's VIN.",
+    "text": "Meira enn ein goymdur profil hevur VIN hjá hesum akfari."
+  },
+  {
+    "key": "Confirm this is %1$s",
+    "source": "Confirm this is %1$s",
+    "text": "Vátta at hetta er %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "source": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "text": "Hetta akfarið samsvarar við %1$s men sendi einki VIN, og %1$s hevur onga skrásetta brennievnisstøðu at samanbera við."
+  },
+  {
+    "key": "Is this %1$s?",
+    "source": "Is this %1$s?",
+    "text": "Er hetta %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "source": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "text": "Hetta akfarið samsvarar við %1$s, men valdi profilurin í Torque er '%2$s'."
+  },
+  {
+    "key": "This vehicle sent no VIN and more than one saved profile could match.",
+    "source": "This vehicle sent no VIN and more than one saved profile could match.",
+    "text": "Hetta akfarið sendi einki VIN, og meira enn ein goymdur profil kann samsvara."
+  },
+  {
+    "key": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "source": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "text": "Hetta akfarið sendi einki VIN, men %1$s hevur eitt goymt VIN."
+  },
+  {
+    "key": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "source": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "text": "Fingramerkið hjá ongum goymdum profili samsvarar við hetta akfarið (tað sendi einki VIN)."
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "source": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "text": "Brennievnisstøðan (%1$.0f %%) er hægri enn seinast skrásetta støðan hjá %2$s (%3$.0f %%). Varð fylt?"
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "source": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "text": "Brennievnisstøðan (%1$.0f %%) samsvarar ikki við seinast skrásettu støðuna hjá %2$s (%3$.0f %%)."
+  },
+  {
+    "key": "Its fuel level could not be read to compare with %1$s.",
+    "source": "Its fuel level could not be read to compare with %1$s.",
+    "text": "Brennievnisstøðan kundi ikki lesast til samanbering við %1$s."
+  },
+  {
+    "key": "none, it's new",
+    "source": "none, it's new",
+    "text": "ongin, hon er nýggj"
+  },
+  {
+    "key": "Vehicle decision pending",
+    "source": "Vehicle decision pending",
+    "text": "Avgerð um akfar bíðar"
+  },
+  {
+    "key": "Vehicle confirmation",
+    "source": "Vehicle confirmation",
+    "text": "Váttan av akfari"
+  },
+  {
+    "key": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "source": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "text": "Spyr, hvør bilur er sambundin, tá tað ikki kann samsvarast sjálvvirkandi."
   }
 ]

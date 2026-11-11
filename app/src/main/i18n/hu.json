@@ -15,11 +15,6 @@
     "text": "A borravaló a Play Store változatban érhető el"
   },
   {
-    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "text": "Gyors kezdés\n 1. Telepítse a Torque Pro alkalmazást (a fizetős változatot; a Torque Lite nem támogat bővítményeket), és párosítsa az OBD-II adaptert.\n 2. Engedélyezze ezt a bővítményt a Torque → Beállítások → Bővítmények menüben.\n 3. Engedélyezze az értesítéseket, és állítsa az akkuhasználatot Korlátlanra, hogy a Torque a háttérben elindíthassa ezt a bővítményt.\n 4. A Torque alkalmazásban válassza ki a vezetett jármű profilját. Az adatok Torque-profilonként maradnak meg, és a jármű VIN/ECU azonosítójával ellenőrizhetők.\n 5. Új profilnál a tüzelőanyag-forrás csatlakozáskor derül ki; ha kérik, hasonlítsa össze a műszerfali mutatóval, és koppintson a Megerősítésre. A Megerősítés a beállítóoldalon és az értesítésben van. Alább is kiválaszthatja.\n 6. A tartályméret a Chunk illesztés kiinduló mérete, amíg meg nem tanulja a sajátját. A bővítmény sosem változtatja meg; az egyes illesztések tanult mérete alatta látható.\n 7. A Torque alkalmazásban adjon hozzá műszereket a [FuelSmooth] Smoothed Fuel Level értékhez, és minden illesztéshez a Corrected %, Remaining, DTE és Tank size értékekhez. A DTE a Remaining szorozva a Torque hosszú távú mpg értékével. Újraillesztés közben egy értesítés jelzi, hogy az illesztés 1:1 arányt olvas, amíg az újraillesztés be nem fejeződik.\n 8. Küldje vissza a tüzelőanyagszintet a Torque felé: Ki, simított, vagy a Chunk, Band vagy Kalman illesztésből korrigált érték a 012F műszerre.\n 9. A tüzelőanyag csak járó motornál számít. A bővítmény csak akkor fut, amikor a Torque csatlakozik az ECU-hoz.\n 10. Vezessen tovább, és tankoljon; a pontosság több részleges tartály alatt javul. Ha Rossz járműprofil? értesítés jelenik meg, döntse el, mi történjen azzal az úttal.\n 11. Minden adat ezen a telefonon marad. GPS és helyadat nem kerül rögzítésre."
-  },
-  {
     "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "text": "%1$s\nVerzió %2$s (%3$s)\nBővítmény a Torque Pro alkalmazáshoz. Nem áll kapcsolatban a Torque-kal vagy Ian Hawkinszal.\nMinden adat ezen a telefonon marad; GPS és helyadat nem kerül rögzítésre.\n\nLicenc\nCopyright David Lang. Minden jog fenntartva."
@@ -73,11 +68,6 @@
     "key": "Tap to start",
     "source": "Tap to start",
     "text": "Koppintson az indításhoz"
-  },
-  {
-    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "text": "A tartályméret a Chunk illesztés kiinduló mérete, amíg meg nem tanulja a sajátját. A bővítmény sosem változtatja meg; az egyes illesztések tanult mérete alatta látható."
   },
   {
     "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
@@ -245,16 +235,6 @@
     "text": "Csak a „Torque extra PID hosszú név szerint” forráshoz: a szintet jelentő Torque PID pontos hosszú neve."
   },
   {
-    "key": "Tank size",
-    "source": "Tank size",
-    "text": "Tartályméret"
-  },
-  {
-    "key": "blank = no starting size; each fit learns its own.",
-    "source": "blank = no starting size; each fit learns its own.",
-    "text": "üres = nincs kiinduló méret; minden illesztés a sajátját tanulja."
-  },
-  {
     "key": "Smoothing τ seconds",
     "source": "Smoothing τ seconds",
     "text": "Simítás τ másodpercben"
@@ -273,16 +253,6 @@
     "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "text": "A legnagyobb másodpercenkénti változás, amelyet a simított szint követhet; az ezen túli lötyögés kimarad."
-  },
-  {
-    "key": "Fill jump %",
-    "source": "Fill jump %",
-    "text": "Tankolási ugrás %"
-  },
-  {
-    "key": "Rise in level while stopped that counts as a fill.",
-    "source": "Rise in level while stopped that counts as a fill.",
-    "text": "Álló helyzetben a szint emelkedése, amely tankolásnak számít."
   },
   {
     "key": "Odometer miles",
@@ -335,11 +305,6 @@
     "text": "%1$d. tartály egyéni hosszú neve (pl. [FuelSmooth] Tank%1$d Level)"
   },
   {
-    "key": "Tank %1$d gallons",
-    "source": "Tank %1$d gallons",
-    "text": "%1$d. tartály gallonban"
-  },
-  {
     "key": "From PID",
     "source": "From PID",
     "text": "PID-ből"
@@ -355,11 +320,6 @@
     "text": "· ECU csatlakoztatva"
   },
   {
-    "key": "tank ?",
-    "source": "tank ?",
-    "text": "tartály ?"
-  },
-  {
     "key": "About %1$s",
     "source": "About %1$s",
     "text": "Körülbelül %1$s"
@@ -373,16 +333,6 @@
     "key": "above 0, at most %1$s %%/s",
     "source": "above 0, at most %1$s %%/s",
     "text": "0 felett, legfeljebb %1$s %%/s"
-  },
-  {
-    "key": "%1$s to %2$s %%",
-    "source": "%1$s to %2$s %%",
-    "text": "%1$s–%2$s %%"
-  },
-  {
-    "key": "blank or a number above 0",
-    "source": "blank or a number above 0",
-    "text": "üres, vagy 0-nál nagyobb szám"
   },
   {
     "key": "stored value out of range",
@@ -605,26 +555,6 @@
     "text": "Ez a jármű %1$s (%2$s), de a Torque profilja „%3$s”. Az adatok ide kerülnek: %1$s; koppintson a Torque megnyitásához és a profilváltáshoz."
   },
   {
-    "key": "Wrong vehicle profile?",
-    "source": "Wrong vehicle profile?",
-    "text": "Rossz járműprofil?"
-  },
-  {
-    "key": "Torque profile '%1$s'",
-    "source": "Torque profile '%1$s'",
-    "text": "Torque-profil: „%1$s”"
-  },
-  {
-    "key": "a new vehicle profile",
-    "source": "a new vehicle profile",
-    "text": "új járműprofil"
-  },
-  {
-    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "text": "A(z) „%1$s” Torque-profil nem egyezik ezzel a járművel (%2$s). Javaslat: %3$s. Az adatok megmaradnak, és az út végén törlődnek, hacsak nem tartja meg őket."
-  },
-  {
     "key": "Keeping drive data",
     "source": "Keeping drive data",
     "text": "Az út adatainak megtartása"
@@ -635,11 +565,6 @@
     "text": "Ez az út ide lesz mentve: %1$s. A Torque bővítmény-API-ja nem tud Torque-profilt létrehozni vagy váltani: a Torque-ban hozzon létre vagy válasszon „%2$s” nevű járműprofilt."
   },
   {
-    "key": "Create new profile",
-    "source": "Create new profile",
-    "text": "Új profil létrehozása"
-  },
-  {
     "key": "Use %1$s",
     "source": "Use %1$s",
     "text": "%1$s használata"
@@ -648,5 +573,120 @@
     "key": "Edit profile (recording follows Torque)",
     "source": "Edit profile (recording follows Torque)",
     "text": "Profil szerkesztése (a rögzítés a Torque-ot követi)"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "Gyors kezdés\n 1. Telepítse a Torque Pro alkalmazást (a fizetős változatot; a Torque Lite nem támogat bővítményeket), és párosítsa az OBD-II adaptert.\n 2. Engedélyezze ezt a bővítményt a Torque → Beállítások → Bővítmények menüben.\n 3. Engedélyezze az értesítéseket, és állítsa az akkuhasználatot Korlátlanra, hogy a Torque a háttérben elindíthassa ezt a bővítményt.\n 4. A Torque alkalmazásban válassza ki a vezetett jármű profilját. Az adatok Torque-profilonként maradnak meg, és a jármű VIN/ECU azonosítójával ellenőrizhetők.\n 5. Új profilnál a tüzelőanyag-forrás csatlakozáskor derül ki; ha kérik, hasonlítsa össze a műszerfali mutatóval, és koppintson a Megerősítésre. A Megerősítés a beállítóoldalon és az értesítésben van. Alább is kiválaszthatja.\n 6. Itt nincs megadható tartályméret. Minden illesztés megtanulja a saját méretét, ami a Tanult tartályméret alatt látható; addig a korrigált százaléka 1:1 arányban olvas a műszerrel. A tartályméretet a Torque járműprofiljában adja meg a Torque saját maradék üzemanyagához és DTE-jéhez.\n 7. A Torque alkalmazásban adjon hozzá műszereket a [FuelSmooth] Smoothed Fuel Level értékhez, és minden illesztéshez a Corrected % és Tank size értékekhez. A bővítmény nem teszi közzé a maradék üzemanyagot és a DTE-t. Újraillesztés közben egy értesítés jelzi, hogy az illesztés 1:1 arányt olvas, amíg az újraillesztés be nem fejeződik.\n 8. Küldje vissza a tüzelőanyagszintet a Torque felé: Ki, simított, vagy a Chunk, Band vagy Kalman illesztésből korrigált érték a 012F műszerre. A Torque saját maradék üzemanyaga és DTE-je ezután ezt a szintet használja a tartálymérettel és a Torque-profil hosszú távú mpg értékével.\n 9. A tüzelőanyag csak járó motornál számít. A bővítmény csak akkor fut, amikor a Torque csatlakozik az ECU-hoz.\n 10. Vezessen tovább, és tankoljon; a pontosság több részleges tartály alatt javul. Ha a bővítmény nem tudja megmondani, melyik jármű ez, értesítésben és ezen az oldalon kérdez; döntse el, mi történjen azzal az úttal.\n 11. Minden adat ezen a telefonon marad. GPS és helyadat nem kerül rögzítésre."
+  },
+  {
+    "key": "Learned tank size",
+    "source": "Learned tank size",
+    "text": "Tanult tartályméret"
+  },
+  {
+    "key": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "source": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "text": "Az egyes illesztések saját tanult mérete, ahogy a bővítmény jelzi; nincs mit megadni. A Torque saját maradék üzemanyaga és DTE-je a Torque járműprofiljának tartályméretét használja."
+  },
+  {
+    "key": "Vehicle decision pending: %1$s",
+    "source": "Vehicle decision pending: %1$s",
+    "text": "Járműdöntés függőben: %1$s"
+  },
+  {
+    "key": "Decide later",
+    "source": "Decide later",
+    "text": "Döntés később"
+  },
+  {
+    "key": "This drive will be saved to %1$s.",
+    "source": "This drive will be saved to %1$s.",
+    "text": "Ez az út a %1$s profilba lesz mentve."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "text": "A simított üzemanyag most élőben látszik. Semmi nem kerül profilba, amíg nem választ; a meg nem erősített adatok az út végén eldobódnak."
+  },
+  {
+    "key": "Which vehicle is this?",
+    "source": "Which vehicle is this?",
+    "text": "Melyik jármű ez?"
+  },
+  {
+    "key": "More than one saved profile has this vehicle's VIN.",
+    "source": "More than one saved profile has this vehicle's VIN.",
+    "text": "Több mentett profilnak is megvan ennek a járműnek a VIN-je."
+  },
+  {
+    "key": "Confirm this is %1$s",
+    "source": "Confirm this is %1$s",
+    "text": "Megerősítés, hogy ez %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "source": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "text": "Ez a jármű egyezik ezzel: %1$s, de nem küldött VIN-t, és %1$s nem rendelkezik rögzített üzemanyagszinttel az összehasonlításhoz."
+  },
+  {
+    "key": "Is this %1$s?",
+    "source": "Is this %1$s?",
+    "text": "Ez %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "source": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "text": "Ez a jármű egyezik ezzel: %1$s, de a Torque-ban kiválasztott profil '%2$s'."
+  },
+  {
+    "key": "This vehicle sent no VIN and more than one saved profile could match.",
+    "source": "This vehicle sent no VIN and more than one saved profile could match.",
+    "text": "Ez a jármű nem küldött VIN-t, és egynél több mentett profil is egyezhet."
+  },
+  {
+    "key": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "source": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "text": "Ez a jármű nem küldött VIN-t, de %1$s rendelkezik mentett VIN-nel."
+  },
+  {
+    "key": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "source": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "text": "Egyetlen mentett profil ujjlenyomata sem egyezik ezzel a járművel (nem küldött VIN-t)."
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "source": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "text": "Az üzemanyagszintje (%1$.0f %%) magasabb, mint %2$s utoljára rögzített szintje (%3$.0f %%). Feltöltötték?"
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "source": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "text": "Az üzemanyagszintje (%1$.0f %%) nem egyezik %2$s utoljára rögzített szintjével (%3$.0f %%)."
+  },
+  {
+    "key": "Its fuel level could not be read to compare with %1$s.",
+    "source": "Its fuel level could not be read to compare with %1$s.",
+    "text": "Az üzemanyagszintet nem lehetett kiolvasni a %1$s értékkel való összehasonlításhoz."
+  },
+  {
+    "key": "none, it's new",
+    "source": "none, it's new",
+    "text": "egyik sem, új"
+  },
+  {
+    "key": "Vehicle decision pending",
+    "source": "Vehicle decision pending",
+    "text": "Járműdöntés függőben"
+  },
+  {
+    "key": "Vehicle confirmation",
+    "source": "Vehicle confirmation",
+    "text": "Jármű megerősítése"
+  },
+  {
+    "key": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "source": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "text": "Megkérdezi, melyik jármű van csatlakoztatva, ha nem lehet automatikusan párosítani."
   }
 ]

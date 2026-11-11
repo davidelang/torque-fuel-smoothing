@@ -15,11 +15,6 @@
     "text": "Бакшишите са във версията от Play Store"
   },
   {
-    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "text": "Бърз старт\n 1. Инсталирайте Torque Pro (платената версия; Torque Lite не поддържа приставки) и сдвоете адаптера OBD-II.\n 2. Включете тази приставка в Torque → Настройки → Приставки.\n 3. Разрешете известията и задайте използването на батерията на Неограничено, за да може Torque да стартира тази приставка на заден план.\n 4. В Torque изберете профила на автомобила, който карате. Данните се пазят по профил на Torque и се сверяват с самоличността VIN/ECU на автомобила.\n 5. При нов профил източникът на гориво се открива при свързване; ако бъдете попитани, сравнете го с показателя на таблото и докоснете Потвърди. Потвърди е на страницата за настройка и в известието. Може да го изберете и по-долу.\n 6. Размерът на резервоара е началният размер за напасването Chunk, докато то не научи своя. Приставката никога не го променя; наученият размер на всяко напасване е показан под него.\n 7. В Torque добавете показатели за [FuelSmooth] Smoothed Fuel Level и за всяко напасване Corrected %, Remaining, DTE и Tank size. DTE е Remaining по дългосрочния mpg на Torque. Известие по време на повторно напасване казва, че напасването чете 1:1, докато повторното напасване не завърши.\n 8. Връщайте нивото на горивото към Torque: Изкл., изгладено или коригирано от напасването Chunk, Band или Kalman към показателя 012F.\n 9. Горивото се брои само докато двигателят работи. Приставката работи само докато Torque е свързан към ECU.\n 10. Продължавайте да карате и да зареждате; точността расте през няколко частични резервоара. Ако се появи известие Грешен профил на автомобила?, изберете какво да стане с това пътуване.\n 11. Всички данни остават на този телефон. GPS и местоположение не се записват."
-  },
-  {
     "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "text": "%1$s\nВерсия %2$s (%3$s)\nПриставка за Torque Pro. Не е свързана с Torque или Ian Hawkins.\nВсички данни остават на този телефон; GPS и местоположение не се записват.\n\nЛиценз\nCopyright David Lang. Всички права запазени."
@@ -73,11 +68,6 @@
     "key": "Tap to start",
     "source": "Tap to start",
     "text": "Докоснете за старт"
-  },
-  {
-    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "text": "Размерът на резервоара е началният размер за напасването Chunk, докато то не научи своя. Приставката никога не го променя; наученият размер на всяко напасване е показан под него."
   },
   {
     "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
@@ -245,16 +235,6 @@
     "text": "Само за източника „Допълнителен PID на Torque по дълго име“: точното дълго име на PID в Torque, който съобщава нивото."
   },
   {
-    "key": "Tank size",
-    "source": "Tank size",
-    "text": "Размер на резервоара"
-  },
-  {
-    "key": "blank = no starting size; each fit learns its own.",
-    "source": "blank = no starting size; each fit learns its own.",
-    "text": "празно = няма начален размер; всяко напасване научава своя."
-  },
-  {
     "key": "Smoothing τ seconds",
     "source": "Smoothing τ seconds",
     "text": "Изглаждане τ в секунди"
@@ -273,16 +253,6 @@
     "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "text": "Най-голямата промяна в секунда, която изгладеното ниво може да следва; плискането над нея се пренебрегва."
-  },
-  {
-    "key": "Fill jump %",
-    "source": "Fill jump %",
-    "text": "Скок при зареждане %"
-  },
-  {
-    "key": "Rise in level while stopped that counts as a fill.",
-    "source": "Rise in level while stopped that counts as a fill.",
-    "text": "Покачване на нивото при спрял автомобил, което се брои за зареждане."
   },
   {
     "key": "Odometer miles",
@@ -335,11 +305,6 @@
     "text": "Собствено дълго име на резервоар %1$d (напр. [FuelSmooth] Tank%1$d Level)"
   },
   {
-    "key": "Tank %1$d gallons",
-    "source": "Tank %1$d gallons",
-    "text": "Галони на резервоар %1$d"
-  },
-  {
     "key": "From PID",
     "source": "From PID",
     "text": "От PID"
@@ -355,11 +320,6 @@
     "text": "· ECU е свързан"
   },
   {
-    "key": "tank ?",
-    "source": "tank ?",
-    "text": "резервоар ?"
-  },
-  {
     "key": "About %1$s",
     "source": "About %1$s",
     "text": "Около %1$s"
@@ -373,16 +333,6 @@
     "key": "above 0, at most %1$s %%/s",
     "source": "above 0, at most %1$s %%/s",
     "text": "над 0, най-много %1$s %%/s"
-  },
-  {
-    "key": "%1$s to %2$s %%",
-    "source": "%1$s to %2$s %%",
-    "text": "%1$s до %2$s %%"
-  },
-  {
-    "key": "blank or a number above 0",
-    "source": "blank or a number above 0",
-    "text": "празно или число над 0"
   },
   {
     "key": "stored value out of range",
@@ -605,26 +555,6 @@
     "text": "Този автомобил е %1$s (%2$s), но профилът на Torque е „%3$s“. Данните отиват в %1$s; докоснете, за да отворите Torque и да смените профила."
   },
   {
-    "key": "Wrong vehicle profile?",
-    "source": "Wrong vehicle profile?",
-    "text": "Грешен профил на автомобила?"
-  },
-  {
-    "key": "Torque profile '%1$s'",
-    "source": "Torque profile '%1$s'",
-    "text": "Профил на Torque „%1$s“"
-  },
-  {
-    "key": "a new vehicle profile",
-    "source": "a new vehicle profile",
-    "text": "нов профил на автомобил"
-  },
-  {
-    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "text": "Профилът на Torque „%1$s“ не съвпада с този автомобил (%2$s). Предложение: %3$s. Данните се задържат и се изхвърлят в края на пътуването, освен ако не ги запазите."
-  },
-  {
     "key": "Keeping drive data",
     "source": "Keeping drive data",
     "text": "Запазване на данните от пътуването"
@@ -635,11 +565,6 @@
     "text": "Това пътуване ще бъде запазено в %1$s. API на приставката на Torque не може да създава или сменя профили на Torque: в Torque създайте или изберете профил на автомобил с име „%2$s“."
   },
   {
-    "key": "Create new profile",
-    "source": "Create new profile",
-    "text": "Създай нов профил"
-  },
-  {
     "key": "Use %1$s",
     "source": "Use %1$s",
     "text": "Използвай %1$s"
@@ -648,5 +573,120 @@
     "key": "Edit profile (recording follows Torque)",
     "source": "Edit profile (recording follows Torque)",
     "text": "Редактиране на профил (записът следва Torque)"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "Бърз старт\n 1. Инсталирайте Torque Pro (платената версия; Torque Lite не поддържа приставки) и сдвоете адаптера OBD-II.\n 2. Включете тази приставка в Torque → Настройки → Приставки.\n 3. Разрешете известията и задайте използването на батерията на Неограничено, за да може Torque да стартира тази приставка на заден план.\n 4. В Torque изберете профила на автомобила, който карате. Данните се пазят по профил на Torque и се сверяват с самоличността VIN/ECU на автомобила.\n 5. При нов профил източникът на гориво се открива при свързване; ако бъдете попитани, сравнете го с показателя на таблото и докоснете Потвърди. Потвърди е на страницата за настройка и в известието. Може да го изберете и по-долу.\n 6. Тук няма размер на резервоара за въвеждане. Всяко напасване учи своя размер, показан под Научен размер на резервоара; дотогава коригираният му процент чете 1:1 с показателя. Въведете размера на резервоара в профила на автомобила в Torque за собственото оставащо гориво и DTE на Torque.\n 7. В Torque добавете показатели за [FuelSmooth] Smoothed Fuel Level и за всяко напасване Corrected % и Tank size. Приставката не публикува оставащо гориво или DTE. Известие по време на повторно напасване казва, че напасването чете 1:1, докато повторното напасване не завърши.\n 8. Връщайте нивото на горивото към Torque: Изкл., изгладено или коригирано от напасването Chunk, Band или Kalman към показателя 012F. Собствените оставащо гориво и DTE на Torque после ползват това ниво заедно с размера на резервоара и дългосрочния mpg в профила на Torque.\n 9. Горивото се брои само докато двигателят работи. Приставката работи само докато Torque е свързан към ECU.\n 10. Продължавайте да карате и да зареждате; точността расте през няколко частични резервоара. Ако приставката не може да каже кое е това превозно средство, пита в известие и на тази страница; изберете какво да стане с това пътуване.\n 11. Всички данни остават на този телефон. GPS и местоположение не се записват."
+  },
+  {
+    "key": "Learned tank size",
+    "source": "Learned tank size",
+    "text": "Научен размер на резервоара"
+  },
+  {
+    "key": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "source": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "text": "Собственият научен размер на всяко напасване, както го съобщава приставката; няма какво да се въвежда. Собствените оставащо гориво и DTE на Torque ползват размера на резервоара в профила на автомобила в Torque."
+  },
+  {
+    "key": "Vehicle decision pending: %1$s",
+    "source": "Vehicle decision pending: %1$s",
+    "text": "Решението за автомобила чака: %1$s"
+  },
+  {
+    "key": "Decide later",
+    "source": "Decide later",
+    "text": "Реши по-късно"
+  },
+  {
+    "key": "This drive will be saved to %1$s.",
+    "source": "This drive will be saved to %1$s.",
+    "text": "Това пътуване ще бъде записано в %1$s."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "text": "Изгладеното гориво се показва на живо. Нищо не се записва в профил, докато не изберете; непотвърдените данни се отхвърлят в края на пътуването."
+  },
+  {
+    "key": "Which vehicle is this?",
+    "source": "Which vehicle is this?",
+    "text": "Кое превозно средство е това?"
+  },
+  {
+    "key": "More than one saved profile has this vehicle's VIN.",
+    "source": "More than one saved profile has this vehicle's VIN.",
+    "text": "Повече от един записан профил има VIN на това превозно средство."
+  },
+  {
+    "key": "Confirm this is %1$s",
+    "source": "Confirm this is %1$s",
+    "text": "Потвърди, че това е %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "source": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "text": "Това превозно средство съвпада с %1$s, но не е изпратило VIN, и %1$s няма записано ниво на горивото за сравнение."
+  },
+  {
+    "key": "Is this %1$s?",
+    "source": "Is this %1$s?",
+    "text": "Това ли е %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "source": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "text": "Това превозно средство съвпада с %1$s, но избраният в Torque профил е '%2$s'."
+  },
+  {
+    "key": "This vehicle sent no VIN and more than one saved profile could match.",
+    "source": "This vehicle sent no VIN and more than one saved profile could match.",
+    "text": "Това превозно средство не е изпратило VIN и повече от един записан профил може да съвпадне."
+  },
+  {
+    "key": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "source": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "text": "Това превозно средство не е изпратило VIN, но %1$s има записан VIN."
+  },
+  {
+    "key": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "source": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "text": "Отпечатъкът на никой записан профил не съвпада с това превозно средство (не е изпратило VIN)."
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "source": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "text": "Нивото му на гориво (%1$.0f %%) е по-високо от последното записано ниво на %2$s (%3$.0f %%). Зареждано ли е?"
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "source": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "text": "Нивото му на гориво (%1$.0f %%) не съвпада с последното записано ниво на %2$s (%3$.0f %%)."
+  },
+  {
+    "key": "Its fuel level could not be read to compare with %1$s.",
+    "source": "Its fuel level could not be read to compare with %1$s.",
+    "text": "Нивото на горивото не можа да се прочете за сравнение с %1$s."
+  },
+  {
+    "key": "none, it's new",
+    "source": "none, it's new",
+    "text": "никое, ново е"
+  },
+  {
+    "key": "Vehicle decision pending",
+    "source": "Vehicle decision pending",
+    "text": "Решението за автомобила чака"
+  },
+  {
+    "key": "Vehicle confirmation",
+    "source": "Vehicle confirmation",
+    "text": "Потвърждение на автомобила"
+  },
+  {
+    "key": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "source": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "text": "Пита кое превозно средство е свързано, когато не може да се съпостави автоматично."
   }
 ]

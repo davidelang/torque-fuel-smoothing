@@ -15,11 +15,6 @@
     "text": "टीपा Play Store आवृत्तीवर आहेत"
   },
   {
-    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "text": "जलद सुरुवात\n 1. Torque Pro स्थापित करा (सशुल्क आवृत्ती; Torque Lite प्लगइन समर्थित करत नाही) आणि OBD-II अडॅप्टर जोडा.\n 2. हे प्लगइन Torque → सेटिंग्ज → Plugins मध्ये सुरू करा.\n 3. सूचनांना परवानगी द्या आणि बॅटरी वापर अनिर्बंध ठेवा जेणेकरून Torque हे प्लगइन पार्श्वभूमीत सुरू करू शकेल.\n 4. Torque मध्ये तुम्ही चालवत असलेल्या वाहनाची प्रोफाइल निवडा. डेटा प्रत्येक Torque प्रोफाइलसाठी ठेवला जातो आणि वाहनाच्या VIN/ECU ओळखीशी तपासला जातो.\n 5. नवीन प्रोफाइलवर इंधन स्रोत जोडताना सापडतो; विचारले तर डॅश गेजशी जुळवा आणि पुष्टी करा दाबा. पुष्टी करा सेटअप पानावर आणि सूचनेत आहे. खालीही निवडू शकता.\n 6. टाकीचा आकार Chunk फिटचा सुरुवातीचा आकार आहे जोपर्यंत तो स्वतःचा शिकत नाही. प्लगइन तो कधीही बदलत नाही; प्रत्येक फिटचा शिकलेला आकार त्याखाली दिसतो.\n 7. Torque मध्ये [FuelSmooth] Smoothed Fuel Level आणि प्रत्येक फिटचे Corrected %, Remaining, DTE व Tank size गेज जोडा. DTE म्हणजे Remaining गुणिले Torque चे दीर्घकालीन mpg. रीफिट दरम्यान सूचना सांगते की तो फिट 1:1 वाचतो जोपर्यंत रीफिट संपत नाही.\n 8. इंधन पातळी Torque कडे परत पाठवा: बंद, गुळगुळीत, किंवा Chunk, Band अथवा Kalman फिटमधून दुरुस्त, तुमच्या 012F गेजवर.\n 9. इंधन फक्त इंजिन चालू असताना मोजले जाते. प्लगइन फक्त Torque ECU ला जोडलेले असताना चालते.\n 10. चालवत आणि भरत राहा; अचूकता अनेक आंशिक टाक्यांवर वाढते. चुकीची वाहन प्रोफाइल? सूचना आली तर त्या ड्राइव्हचे काय करायचे ते निवडा.\n 11. सर्व डेटा या फोनवर राहतो. GPS किंवा स्थान नोंदवले जात नाही."
-  },
-  {
     "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "text": "%1$s\nआवृत्ती %2$s (%3$s)\nTorque Pro साठी प्लगइन. Torque किंवा Ian Hawkins शी संलग्न नाही.\nसर्व डेटा या फोनवर राहतो; GPS किंवा स्थान नोंदवले जात नाही.\n\nपरवाना\nCopyright David Lang. सर्व हक्क राखीव."
@@ -73,11 +68,6 @@
     "key": "Tap to start",
     "source": "Tap to start",
     "text": "सुरू करण्यासाठी टॅप करा"
-  },
-  {
-    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "text": "टाकीचा आकार Chunk फिटचा सुरुवातीचा आकार आहे जोपर्यंत तो स्वतःचा शिकत नाही. प्लगइन तो कधीही बदलत नाही; प्रत्येक फिटचा शिकलेला आकार त्याखाली दिसतो."
   },
   {
     "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
@@ -245,16 +235,6 @@
     "text": "फक्त स्रोत Torque extra PID by long name साठी: पातळी सांगणाऱ्या Torque PID चे अचूक दीर्घ नाव."
   },
   {
-    "key": "Tank size",
-    "source": "Tank size",
-    "text": "टाकीचा आकार"
-  },
-  {
-    "key": "blank = no starting size; each fit learns its own.",
-    "source": "blank = no starting size; each fit learns its own.",
-    "text": "रिकामे = सुरुवातीचा आकार नाही; प्रत्येक फिट स्वतःचा शिकतो."
-  },
-  {
     "key": "Smoothing τ seconds",
     "source": "Smoothing τ seconds",
     "text": "गुळगुळीत τ सेकंद"
@@ -273,16 +253,6 @@
     "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "text": "प्रति सेकंद सर्वात मोठा बदल जो गुळगुळीत पातळी अनुसरू शकते; यापलीकडचे हलणे दुर्लक्षित."
-  },
-  {
-    "key": "Fill jump %",
-    "source": "Fill jump %",
-    "text": "भराई उडी %"
-  },
-  {
-    "key": "Rise in level while stopped that counts as a fill.",
-    "source": "Rise in level while stopped that counts as a fill.",
-    "text": "थांबले असता पातळीची वाढ जी भराई मानली जाते."
   },
   {
     "key": "Odometer miles",
@@ -335,11 +305,6 @@
     "text": "टाकी %1$d सानुकूल दीर्घ नाव (उदा. [FuelSmooth] Tank%1$d Level)"
   },
   {
-    "key": "Tank %1$d gallons",
-    "source": "Tank %1$d gallons",
-    "text": "टाकी %1$d गॅलन"
-  },
-  {
     "key": "From PID",
     "source": "From PID",
     "text": "PID वरून"
@@ -355,11 +320,6 @@
     "text": "· ECU जोडलेला"
   },
   {
-    "key": "tank ?",
-    "source": "tank ?",
-    "text": "टाकी ?"
-  },
-  {
     "key": "About %1$s",
     "source": "About %1$s",
     "text": "%1$s विषयी"
@@ -373,16 +333,6 @@
     "key": "above 0, at most %1$s %%/s",
     "source": "above 0, at most %1$s %%/s",
     "text": "0 पेक्षा जास्त, जास्तीत जास्त %1$s %%/s"
-  },
-  {
-    "key": "%1$s to %2$s %%",
-    "source": "%1$s to %2$s %%",
-    "text": "%1$s ते %2$s %%"
-  },
-  {
-    "key": "blank or a number above 0",
-    "source": "blank or a number above 0",
-    "text": "रिकामे किंवा 0 पेक्षा मोठी संख्या"
   },
   {
     "key": "stored value out of range",
@@ -605,26 +555,6 @@
     "text": "हे वाहन %1$s आहे (%2$s), पण Torque ची प्रोफाइल '%3$s' आहे. डेटा %1$s कडे जातो; Torque उघडून प्रोफाइल बदलण्यासाठी टॅप करा."
   },
   {
-    "key": "Wrong vehicle profile?",
-    "source": "Wrong vehicle profile?",
-    "text": "चुकीची वाहन प्रोफाइल?"
-  },
-  {
-    "key": "Torque profile '%1$s'",
-    "source": "Torque profile '%1$s'",
-    "text": "Torque प्रोफाइल '%1$s'"
-  },
-  {
-    "key": "a new vehicle profile",
-    "source": "a new vehicle profile",
-    "text": "नवी वाहन प्रोफाइल"
-  },
-  {
-    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "text": "Torque प्रोफाइल '%1$s' या वाहनाशी जुळत नाही (%2$s). सुचवलेले: %3$s. डेटा धरला जातो आणि तुम्ही ठेवला नाही तर ड्राइव्ह शेवटी टाकला जातो."
-  },
-  {
     "key": "Keeping drive data",
     "source": "Keeping drive data",
     "text": "ड्राइव्ह डेटा ठेवला जात आहे"
@@ -635,11 +565,6 @@
     "text": "ही ड्राइव्ह %1$s वर जतन होईल. Torque चे प्लगइन API Torque प्रोफाइल तयार किंवा बदलू शकत नाही: Torque मध्ये '%2$s' नावाची वाहन प्रोफाइल तयार करा किंवा निवडा."
   },
   {
-    "key": "Create new profile",
-    "source": "Create new profile",
-    "text": "नवी प्रोफाइल तयार करा"
-  },
-  {
     "key": "Use %1$s",
     "source": "Use %1$s",
     "text": "%1$s वापरा"
@@ -648,5 +573,120 @@
     "key": "Edit profile (recording follows Torque)",
     "source": "Edit profile (recording follows Torque)",
     "text": "प्रोफाइल संपादित करा (रेकॉर्डिंग Torque नुसार होते)"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "जलद सुरुवात\n 1. Torque Pro स्थापित करा (सशुल्क आवृत्ती; Torque Lite प्लगइन समर्थित करत नाही) आणि OBD-II अडॅप्टर जोडा.\n 2. हे प्लगइन Torque → सेटिंग्ज → Plugins मध्ये सुरू करा.\n 3. सूचनांना परवानगी द्या आणि बॅटरी वापर अनिर्बंध ठेवा जेणेकरून Torque हे प्लगइन पार्श्वभूमीत सुरू करू शकेल.\n 4. Torque मध्ये तुम्ही चालवत असलेल्या वाहनाची प्रोफाइल निवडा. डेटा प्रत्येक Torque प्रोफाइलसाठी ठेवला जातो आणि वाहनाच्या VIN/ECU ओळखीशी तपासला जातो.\n 5. नवीन प्रोफाइलवर इंधन स्रोत जोडताना सापडतो; विचारले तर डॅश गेजशी जुळवा आणि पुष्टी करा दाबा. पुष्टी करा सेटअप पानावर आणि सूचनेत आहे. खालीही निवडू शकता.\n 6. येथे टाकीचा आकार भरायचा नाही. प्रत्येक फिट स्वतःचा आकार शिकतो, तो शिकलेल्या टाकी आकाराखाली दिसतो; तोपर्यंत त्याची दुरुस्त टक्केवारी गेजसोबत 1:1 वाचते. Torque च्या स्वतःच्या उरलेल्या इंधनासाठी आणि DTE साठी टाकीचा आकार Torque वाहन प्रोफाइलमध्ये भरा.\n 7. Torque मध्ये [FuelSmooth] Smoothed Fuel Level आणि प्रत्येक फिटचे Corrected % व Tank size गेज जोडा. प्लगइन उरलेले इंधन किंवा DTE प्रकाशित करत नाही. रीफिट दरम्यान सूचना सांगते की तो फिट 1:1 वाचतो जोपर्यंत रीफिट संपत नाही.\n 8. इंधन पातळी Torque कडे परत पाठवा: बंद, गुळगुळीत, किंवा Chunk, Band अथवा Kalman फिटमधून दुरुस्त, तुमच्या 012F गेजवर. नंतर Torque चे स्वतःचे उरलेले इंधन आणि DTE ती पातळी Torque प्रोफाइलच्या टाकी आकाराशी आणि दीर्घकालीन mpg शी वापरते.\n 9. इंधन फक्त इंजिन चालू असताना मोजले जाते. प्लगइन फक्त Torque ECU ला जोडलेले असताना चालते.\n 10. चालवत आणि भरत राहा; अचूकता अनेक आंशिक टाक्यांवर वाढते. प्लगइन हे कोणते वाहन आहे हे सांगू शकत नसेल तर सूचनेत आणि या पानावर विचारते; त्या ड्राइव्हचे काय करायचे ते निवडा.\n 11. सर्व डेटा या फोनवर राहतो. GPS किंवा स्थान नोंदवले जात नाही."
+  },
+  {
+    "key": "Learned tank size",
+    "source": "Learned tank size",
+    "text": "शिकलेला टाकी आकार"
+  },
+  {
+    "key": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "source": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "text": "प्रत्येक फिटचा स्वतःचा शिकलेला आकार, प्लगइन जसा कळवतो; भरायचे काही नाही. Torque चे स्वतःचे उरलेले इंधन आणि DTE Torque वाहन प्रोफाइलमधील टाकीचा आकार वापरते."
+  },
+  {
+    "key": "Vehicle decision pending: %1$s",
+    "source": "Vehicle decision pending: %1$s",
+    "text": "वाहन निर्णय प्रलंबित: %1$s"
+  },
+  {
+    "key": "Decide later",
+    "source": "Decide later",
+    "text": "नंतर ठरवा"
+  },
+  {
+    "key": "This drive will be saved to %1$s.",
+    "source": "This drive will be saved to %1$s.",
+    "text": "ही ड्राइव्ह %1$s मध्ये जतन होईल."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "text": "गुळगुळीत इंधन आता थेट दाखवले जाते. तुम्ही निवडेपर्यंत प्रोफाइलमध्ये काही जतन होत नाही; अपुष्ट डेटा ड्राइव्हच्या शेवटी टाकला जातो."
+  },
+  {
+    "key": "Which vehicle is this?",
+    "source": "Which vehicle is this?",
+    "text": "हे कोणते वाहन आहे?"
+  },
+  {
+    "key": "More than one saved profile has this vehicle's VIN.",
+    "source": "More than one saved profile has this vehicle's VIN.",
+    "text": "एकापेक्षा जास्त जतन केलेल्या प्रोफाइलमध्ये या वाहनाचा VIN आहे."
+  },
+  {
+    "key": "Confirm this is %1$s",
+    "source": "Confirm this is %1$s",
+    "text": "पुष्टी करा की हे %1$s आहे"
+  },
+  {
+    "key": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "source": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "text": "हे वाहन %1$s शी जुळते पण VIN पाठवला नाही, आणि %1$s कडे तुलनासाठी नोंदलेली इंधन पातळी नाही."
+  },
+  {
+    "key": "Is this %1$s?",
+    "source": "Is this %1$s?",
+    "text": "हे %1$s आहे का?"
+  },
+  {
+    "key": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "source": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "text": "हे वाहन %1$s शी जुळते, पण Torque मध्ये निवडलेली प्रोफाइल '%2$s' आहे."
+  },
+  {
+    "key": "This vehicle sent no VIN and more than one saved profile could match.",
+    "source": "This vehicle sent no VIN and more than one saved profile could match.",
+    "text": "या वाहनाने VIN पाठवला नाही आणि एकापेक्षा जास्त जतन केलेल्या प्रोफाइल जुळू शकतात."
+  },
+  {
+    "key": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "source": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "text": "या वाहनाने VIN पाठवला नाही, पण %1$s कडे जतन केलेला VIN आहे."
+  },
+  {
+    "key": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "source": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "text": "कोणत्याही जतन केलेल्या प्रोफाइलचा फिंगरप्रिंट या वाहनाशी जुळत नाही (त्याने VIN पाठवला नाही)."
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "source": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "text": "त्याची इंधन पातळी (%1$.0f %%) %2$s च्या शेवटच्या नोंदलेल्या पातळीपेक्षा (%3$.0f %%) जास्त आहे. भरले होते का?"
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "source": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "text": "त्याची इंधन पातळी (%1$.0f %%) %2$s च्या शेवटच्या नोंदलेल्या पातळीशी (%3$.0f %%) जुळत नाही."
+  },
+  {
+    "key": "Its fuel level could not be read to compare with %1$s.",
+    "source": "Its fuel level could not be read to compare with %1$s.",
+    "text": "%1$s शी तुलना करण्यासाठी इंधन पातळी वाचता आली नाही."
+  },
+  {
+    "key": "none, it's new",
+    "source": "none, it's new",
+    "text": "काहीही नाही, हे नवीन आहे"
+  },
+  {
+    "key": "Vehicle decision pending",
+    "source": "Vehicle decision pending",
+    "text": "वाहन निर्णय प्रलंबित"
+  },
+  {
+    "key": "Vehicle confirmation",
+    "source": "Vehicle confirmation",
+    "text": "वाहन पुष्टी"
+  },
+  {
+    "key": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "source": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "text": "आपोआप जुळवता येत नसेल तेव्हा कोणते वाहन जोडले आहे ते विचारते."
   }
 ]

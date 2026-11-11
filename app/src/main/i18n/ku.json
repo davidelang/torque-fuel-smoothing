@@ -15,11 +15,6 @@
     "text": "Bexş di guhertoya Play Store de ne"
   },
   {
-    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "text": "Destpêka bilez\n1. Torque Pro saz bike (guhertoya bi pere; Torque Lite pêvekan piştgirî nake) û adaptera xwe ya OBD-II cot bike.\n2. Vê pêvekê di Torque → Mîheng → Pêvek de veke.\n3. Agahdariyan bihêle, û bikaranîna bateriyê bike Bê sînor da ku Torque karibe vê pêvekê di paşperdeyê de bide destpêkirin.\n4. Di Torque de, profîla wesayîtê ya otomobîla ku tu diajotî hilbijêre. Dane li gorî her profîla Torque têne hilanîn û bi nasnameya VIN/ECU ya wesayîtê re tên berawirdkirin.\n5. Li profîleke nû, çavkaniya sotemeniyê dema ku tu girê didî tê tesbîtkirin; heke bê pirsîn, bi pîvana panelê re bide ber hev û Piştrast bike bitikîne. Piştrast bike li rûpela sazkirinê û di agahdariyê de ye. Tu dikarî li jêr jî hilbijêrî.\n6. Mezinahiya tankê mezinahiya destpêkê ye ji bo lihevhatina Chunk heta ku ya xwe hîn bibe. Pêvek qet wê naguherîne; mezinahiya hînkirî ya her lihevhatinê li binê wê tê nîşandan.\n7. Di Torque de, pîvanan ji bo [FuelSmooth] Smoothed Fuel Level û, ji bo her lihevhatinê, Corrected %, Remaining, DTE û Tank size zêde bike. DTE Remaining car mpg ya demdirêj a Torque ye. Agahdariyek di dema ji nû ve lihevkirinê de dibêje ku ew lihevhatin 1:1 dixwîne heta ji nû ve lihevhatin biqede.\n8. Asta sotemeniyê vegerîne Torque: Girtî, Nermkirî, an Rastkirî ji lihevhatina Chunk, Band an Kalman li ser pîvana te ya 012F.\n9. Sotemenî tenê dema motor dixebite tê hejmartin. Pêvek tenê dema Torque bi ECU ve girêdayî ye dixebite.\n10. Ajotin û dagirtinê bidomîne; rastbûn di çend tankên qismî de zêde dibe. Heke agahdariya Profîla wesayîtê ya çewt? xuya bibe, hilbijêre ku bi wê rêwîtiyê çi bikî.\n11. Hemû dane li ser vî telefonî dimînin. GPS an cih nayê tomarkirin."
-  },
-  {
     "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "text": "%1$s\nGuherto %2$s (%3$s)\nPêvekek ji bo Torque Pro. Ne girêdayî Torque an Ian Hawkins e.\nHemû dane li ser vî telefonî dimînin; GPS an cih nayê tomarkirin.\n\nLîsans\nCopyright David Lang. Hemû maf parastî ne."
@@ -73,11 +68,6 @@
     "key": "Tap to start",
     "source": "Tap to start",
     "text": "Bitikîne da dest pê bike"
-  },
-  {
-    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "text": "Mezinahiya tankê mezinahiya destpêkê ye ji bo lihevhatina Chunk heta ku ya xwe hîn bibe. Pêvek qet wê naguherîne; mezinahiya hînkirî ya her lihevhatinê li binê wê tê nîşandan."
   },
   {
     "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
@@ -245,16 +235,6 @@
     "text": "Tenê ji bo çavkaniya «PID-a zêde ya Torque li gorî navê dirêj»: navê dirêj ê rast ê PID-a Torque ku astê radigihîne."
   },
   {
-    "key": "Tank size",
-    "source": "Tank size",
-    "text": "Mezinahiya tankê"
-  },
-  {
-    "key": "blank = no starting size; each fit learns its own.",
-    "source": "blank = no starting size; each fit learns its own.",
-    "text": "vala = mezinahiya destpêkê tune; her lihevhatin ya xwe hîn dibe."
-  },
-  {
     "key": "Smoothing τ seconds",
     "source": "Smoothing τ seconds",
     "text": "Nermkirin τ saniye"
@@ -273,16 +253,6 @@
     "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "text": "Guhertina herî mezin di saniyeyekê de ku asta nermkirî dikare bişopîne; pêlên ji vê mezintir nayên hesibandin."
-  },
-  {
-    "key": "Fill jump %",
-    "source": "Fill jump %",
-    "text": "Bazdana dagirtinê %"
-  },
-  {
-    "key": "Rise in level while stopped that counts as a fill.",
-    "source": "Rise in level while stopped that counts as a fill.",
-    "text": "Bilindbûna astê dema ku radiwestî ku wek dagirtin tê hesibandin."
   },
   {
     "key": "Odometer miles",
@@ -335,11 +305,6 @@
     "text": "Navê dirêj ê taybet ê tank %1$d (mînak [FuelSmooth] Tank%1$d Level)"
   },
   {
-    "key": "Tank %1$d gallons",
-    "source": "Tank %1$d gallons",
-    "text": "Tank %1$d gallons"
-  },
-  {
     "key": "From PID",
     "source": "From PID",
     "text": "Ji PID"
@@ -355,11 +320,6 @@
     "text": "· ECU girêdayî ye"
   },
   {
-    "key": "tank ?",
-    "source": "tank ?",
-    "text": "tank ?"
-  },
-  {
     "key": "About %1$s",
     "source": "About %1$s",
     "text": "Derbarê %1$s"
@@ -373,16 +333,6 @@
     "key": "above 0, at most %1$s %%/s",
     "source": "above 0, at most %1$s %%/s",
     "text": "ji 0 zêdetir, herî zêde %1$s %%/s"
-  },
-  {
-    "key": "%1$s to %2$s %%",
-    "source": "%1$s to %2$s %%",
-    "text": "%1$s heta %2$s %%"
-  },
-  {
-    "key": "blank or a number above 0",
-    "source": "blank or a number above 0",
-    "text": "vala an hejmarek ji 0 mezintir"
   },
   {
     "key": "stored value out of range",
@@ -605,26 +555,6 @@
     "text": "Ev wesayît %1$s e (%2$s), lê profîla Torque '%3$s' e. Dane diçin %1$s; bitikîne da Torque vebikî û profîlê biguherînî."
   },
   {
-    "key": "Wrong vehicle profile?",
-    "source": "Wrong vehicle profile?",
-    "text": "Profîla wesayîtê ya çewt?"
-  },
-  {
-    "key": "Torque profile '%1$s'",
-    "source": "Torque profile '%1$s'",
-    "text": "Profîla Torque '%1$s'"
-  },
-  {
-    "key": "a new vehicle profile",
-    "source": "a new vehicle profile",
-    "text": "profîleke nû ya wesayîtê"
-  },
-  {
-    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "text": "Profîla Torque '%1$s' bi vê wesayîtê re li hev nake (%2$s). Pêşniyar: %3$s. Dane têne girtin û di dawiya rêwîtiyê de têne avêtin heta ku tu wan nehêlî."
-  },
-  {
     "key": "Keeping drive data",
     "source": "Keeping drive data",
     "text": "Daneyên rêwîtiyê têne hilanîn"
@@ -635,11 +565,6 @@
     "text": "Ev rêwîtî dê di %1$s de were tomarkirin. API-ya pêvekê ya Torque nikare profîlên Torque biafirîne an biguherîne: di Torque de, profîleke wesayîtê bi navê '%2$s' biafirîne an hilbijêre."
   },
   {
-    "key": "Create new profile",
-    "source": "Create new profile",
-    "text": "Profîleke nû biafirîne"
-  },
-  {
     "key": "Use %1$s",
     "source": "Use %1$s",
     "text": "%1$s bikar bîne"
@@ -648,5 +573,120 @@
     "key": "Edit profile (recording follows Torque)",
     "source": "Edit profile (recording follows Torque)",
     "text": "Profîlê biguherîne (tomarkirin li gorî Torque ye)"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "Destpêka bilez\n1. Torque Pro saz bike (guhertoya bi pere; Torque Lite pêvekan piştgirî nake) û adaptera xwe ya OBD-II cot bike.\n2. Vê pêvekê di Torque → Mîheng → Pêvek de veke.\n3. Agahdariyan bihêle, û bikaranîna bateriyê bike Bê sînor da ku Torque karibe vê pêvekê di paşperdeyê de bide destpêkirin.\n4. Di Torque de, profîla wesayîtê ya otomobîla ku tu diajotî hilbijêre. Dane li gorî her profîla Torque têne hilanîn û bi nasnameya VIN/ECU ya wesayîtê re tên berawirdkirin.\n5. Li profîleke nû, çavkaniya sotemeniyê dema ku tu girê didî tê tesbîtkirin; heke bê pirsîn, bi pîvana panelê re bide ber hev û Piştrast bike bitikîne. Piştrast bike li rûpela sazkirinê û di agahdariyê de ye. Tu dikarî li jêr jî hilbijêrî.\n6. Li vir mezinahiya tankê ya ku were nivîsandin tune ye. Her lihevhatin mezinahiya xwe hîn dibe, di bin Mezinahiya tankê ya hînkirî de tê nîşandan; heta wê demê ji sedî ya rastkirî bi pîvanê re 1:1 dixwîne. Mezinahiya tankê têxe profîla wesayîtê ya Torque ji bo sotemeniya mayî û DTE ya Torque bi xwe.\n7. Di Torque de, pîvanan ji bo [FuelSmooth] Smoothed Fuel Level û, ji bo her lihevhatinê, Corrected % û Tank size zêde bike. Pêvek sotemeniya mayî an DTE belav nake. Agahdariyek di dema ji nû ve lihevkirinê de dibêje ku ew lihevhatin 1:1 dixwîne heta ji nû ve lihevhatin biqede.\n8. Asta sotemeniyê vegerîne Torque: Girtî, Nermkirî, an Rastkirî ji lihevhatina Chunk, Band an Kalman li ser pîvana te ya 012F. Paşê sotemeniya mayî û DTE ya Torque bi xwe wê astê bi mezinahiya tankê û mpg ya demdirêj a profîla Torque bikar tîne.\n9. Sotemenî tenê dema motor dixebite tê hejmartin. Pêvek tenê dema Torque bi ECU ve girêdayî ye dixebite.\n10. Ajotin û dagirtinê bidomîne; rastbûn di çend tankên qismî de zêde dibe. Heke pêvek nikaribe bêje ev kîjan wesayît e, di agahdariyê û li ser vê rûpelê de dipirse; hilbijêre ku bi wê rêwîtiyê çi bikî.\n11. Hemû dane li ser vî telefonî dimînin. GPS an cih nayê tomarkirin."
+  },
+  {
+    "key": "Learned tank size",
+    "source": "Learned tank size",
+    "text": "Mezinahiya tankê ya hînkirî"
+  },
+  {
+    "key": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "source": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "text": "Mezinahiya hînkirî ya her lihevhatinê bi xwe, wekî pêvek radigihîne; tiştek tune ku were nivîsandin. Sotemeniya mayî û DTE ya Torque bi xwe mezinahiya tankê ya profîla wesayîtê ya Torque bikar tîne."
+  },
+  {
+    "key": "Vehicle decision pending: %1$s",
+    "source": "Vehicle decision pending: %1$s",
+    "text": "Biryara wesayîtê li bendê ye: %1$s"
+  },
+  {
+    "key": "Decide later",
+    "source": "Decide later",
+    "text": "Paşê biryar bide"
+  },
+  {
+    "key": "This drive will be saved to %1$s.",
+    "source": "This drive will be saved to %1$s.",
+    "text": "Ev rêwîtî dê li %1$s were tomarkirin."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "text": "Sotemeniya nermkirî niha zindî tê nîşandan. Heta tu hilbijêrî tiştek li profîlekê nayê tomarkirin; daneyên nepiştrastkirî di dawiya rêwîtiyê de têne avêtin."
+  },
+  {
+    "key": "Which vehicle is this?",
+    "source": "Which vehicle is this?",
+    "text": "Ev kîjan wesayît e?"
+  },
+  {
+    "key": "More than one saved profile has this vehicle's VIN.",
+    "source": "More than one saved profile has this vehicle's VIN.",
+    "text": "Ji yekê zêdetir profîlên tomarkirî VIN ya vê wesayîtê hene."
+  },
+  {
+    "key": "Confirm this is %1$s",
+    "source": "Confirm this is %1$s",
+    "text": "Piştrast bike ku ev %1$s e"
+  },
+  {
+    "key": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "source": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "text": "Ev wesayît bi %1$s re li hev tê lê VIN neşandiye, û %1$s asta sotemeniyê ya tomarkirî ji bo berhevdanê tune."
+  },
+  {
+    "key": "Is this %1$s?",
+    "source": "Is this %1$s?",
+    "text": "Ev %1$s e?"
+  },
+  {
+    "key": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "source": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "text": "Ev wesayît bi %1$s re li hev tê, lê profîla di Torque de hilbijartî '%2$s' e."
+  },
+  {
+    "key": "This vehicle sent no VIN and more than one saved profile could match.",
+    "source": "This vehicle sent no VIN and more than one saved profile could match.",
+    "text": "Ev wesayîtê VIN neşandiye û ji yekê zêdetir profîlên tomarkirî dikarin li hev bên."
+  },
+  {
+    "key": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "source": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "text": "Ev wesayîtê VIN neşandiye, lê %1$s VIN yekê tomarkirî heye."
+  },
+  {
+    "key": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "source": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "text": "Şopa tiliya tu profîleke tomarkirî bi vê wesayîtê re li hev nayê (VIN neşandiye)."
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "source": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "text": "Asta sotemeniya wê (%1$.0f %%) ji asta dawî ya tomarkirî ya %2$s (%3$.0f %%) bilindtir e. Hatiye dagirtin?"
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "source": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "text": "Asta sotemeniya wê (%1$.0f %%) bi asta dawî ya tomarkirî ya %2$s (%3$.0f %%) re li hev nayê."
+  },
+  {
+    "key": "Its fuel level could not be read to compare with %1$s.",
+    "source": "Its fuel level could not be read to compare with %1$s.",
+    "text": "Asta sotemeniyê nehat xwendin da ku bi %1$s re were berhevdan."
+  },
+  {
+    "key": "none, it's new",
+    "source": "none, it's new",
+    "text": "tu yek, nû ye"
+  },
+  {
+    "key": "Vehicle decision pending",
+    "source": "Vehicle decision pending",
+    "text": "Biryara wesayîtê li bendê ye"
+  },
+  {
+    "key": "Vehicle confirmation",
+    "source": "Vehicle confirmation",
+    "text": "Piştrastkirina wesayîtê"
+  },
+  {
+    "key": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "source": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "text": "Dema ku nikare bixweber were hevberkirin dipirse ka kîjan wesayît girêdayî ye."
   }
 ]

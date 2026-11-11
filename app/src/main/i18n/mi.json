@@ -15,11 +15,6 @@
     "text": "Kei te putanga Play Store ngā takoha"
   },
   {
-    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "text": "Tīmatanga tere\n1. Tāutahia a Torque Pro (te putanga utu; kāore a Torque Lite e tautoko monohanga) ka takiruatia tō urutau OBD-II.\n2. Whakahohea tēnei monohanga i Torque → Tautuhinga → Monohanga.\n3. Tukua ngā whakamōhiotanga, ā, whakatakotoria te whakamahi pūhiko ki Kāore he rāhuitanga kia taea ai e Torque te tīmata i tēnei monohanga i te papamuri.\n4. I Torque, tīpakohia te kōtaha waka mō te motokā e taraiwa ana koe. Ka puritia ngā raraunga mō ia kōtaha Torque, ā, ka tirohia ki te tuakiri VIN/ECU o te waka.\n5. I te kōtaha hōu ka kitea te pūtake hinu ina tūhono koe; ki te pātaitia, whakatauritea ki te ine i te papatohu ka pāwhiritia Whakaū. Kei te whārangi tatūnga, kei te whakamōhiotanga hoki a Whakaū. Ka taea hoki te tīpako i raro nei.\n6. Ko te rahi o te taika te rahi tīmatanga mō te urutau Chunk kia ako ra anō i tōna ake. Kāore te monohanga e huri i tērā; ka whakaaturia te rahi kua akohia o ia urutau i raro iho.\n7. I Torque, tāpirihia ngā ine mō [FuelSmooth] Smoothed Fuel Level me, mō ia urutau, Corrected %, Remaining, DTE me Tank size. Ko DTE ko Remaining whakareatia ki te mpg wā-roa o Torque. E kī ana tētahi pānui i te wā whakahou ka pānui taua urutau i te 1:1 kia mutu rā anō te whakahou.\n8. Whakahokia te taumata hinu ki a Torque: Weto, Rēmana, Whakatika rānei mai i te urutau Chunk, Band, Kalman rānei ki tō ine 012F.\n9. Ka tatauria te hinu anake i te wā e rere ana te mīhini. Ka rere te monohanga anake i te wā e tūhono ana a Torque ki te ECU.\n10. Haere tonu ki te taraiwa, ki te whakakī; ka tipu te tika i roto i ētahi taika wāhanga. Ki te puta te whakamōhiotanga Kōtaha waka hē?, kōwhiria he aha mō taua haerenga.\n11. Ka noho ngā raraunga katoa ki tēnei waea. Kāore he GPS, he tauwāhi rānei e tāruatia ana."
-  },
-  {
     "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "text": "%1$s\nPutanga %2$s (%3$s)\nHe monohanga mō Torque Pro. Kāore e pā ana ki a Torque, ki a Ian Hawkins rānei.\nKa noho ngā raraunga katoa ki tēnei waea; kāore he GPS, he tauwāhi rānei e tāruatia ana.\n\nRaihana\nCopyright David Lang. Kei te rāhuitia ngā motika katoa."
@@ -73,11 +68,6 @@
     "key": "Tap to start",
     "source": "Tap to start",
     "text": "Pāwhiria kia tīmata"
-  },
-  {
-    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "text": "Ko te rahi o te taika te rahi tīmatanga mō te urutau Chunk kia ako ra anō i tōna ake. Kāore te monohanga e huri i tērā; ka whakaaturia te rahi kua akohia o ia urutau i raro iho."
   },
   {
     "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
@@ -245,16 +235,6 @@
     "text": "Mō te pūtake «PID tāpiri Torque mā te ingoa roa» anake: te ingoa roa tika o te PID Torque e pūrongo ana i te taumata."
   },
   {
-    "key": "Tank size",
-    "source": "Tank size",
-    "text": "Rahi o te taika"
-  },
-  {
-    "key": "blank = no starting size; each fit learns its own.",
-    "source": "blank = no starting size; each fit learns its own.",
-    "text": "putu = kāore he rahi tīmatanga; ka ako ia urutau i tōna ake."
-  },
-  {
     "key": "Smoothing τ seconds",
     "source": "Smoothing τ seconds",
     "text": "Whakaene τ hēkona"
@@ -273,16 +253,6 @@
     "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "text": "Te huringa nui rawa ia hēkona ka whāia e te taumata rēmana; ka warewarehia te rutu i tua atu."
-  },
-  {
-    "key": "Fill jump %",
-    "source": "Fill jump %",
-    "text": "Peke whakakī %"
-  },
-  {
-    "key": "Rise in level while stopped that counts as a fill.",
-    "source": "Rise in level while stopped that counts as a fill.",
-    "text": "Te pikinga o te taumata i a koe e tū ana e tatauria ana hei whakakī."
   },
   {
     "key": "Odometer miles",
@@ -335,11 +305,6 @@
     "text": "Ingoa roa ritenga o te taika %1$d (hei tauira [FuelSmooth] Tank%1$d Level)"
   },
   {
-    "key": "Tank %1$d gallons",
-    "source": "Tank %1$d gallons",
-    "text": "Ngā gallons o te taika %1$d"
-  },
-  {
     "key": "From PID",
     "source": "From PID",
     "text": "Mai i te PID"
@@ -355,11 +320,6 @@
     "text": "· Kua tūhono te ECU"
   },
   {
-    "key": "tank ?",
-    "source": "tank ?",
-    "text": "taika ?"
-  },
-  {
     "key": "About %1$s",
     "source": "About %1$s",
     "text": "Mō %1$s"
@@ -373,16 +333,6 @@
     "key": "above 0, at most %1$s %%/s",
     "source": "above 0, at most %1$s %%/s",
     "text": "i runga ake i te 0, kaua e nui ake i te %1$s %%/s"
-  },
-  {
-    "key": "%1$s to %2$s %%",
-    "source": "%1$s to %2$s %%",
-    "text": "%1$s ki te %2$s %%"
-  },
-  {
-    "key": "blank or a number above 0",
-    "source": "blank or a number above 0",
-    "text": "putu, he tau rānei i runga ake i te 0"
   },
   {
     "key": "stored value out of range",
@@ -605,26 +555,6 @@
     "text": "Ko tēnei waka ko %1$s (%2$s), engari ko te kōtaha Torque ko '%3$s'. Ka haere ngā raraunga ki %1$s; pāwhiria kia huaki a Torque ka whakawhiti i te kōtaha."
   },
   {
-    "key": "Wrong vehicle profile?",
-    "source": "Wrong vehicle profile?",
-    "text": "Kōtaha waka hē?"
-  },
-  {
-    "key": "Torque profile '%1$s'",
-    "source": "Torque profile '%1$s'",
-    "text": "Kōtaha Torque '%1$s'"
-  },
-  {
-    "key": "a new vehicle profile",
-    "source": "a new vehicle profile",
-    "text": "tētahi kōtaha waka hōu"
-  },
-  {
-    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "text": "Kāore te kōtaha Torque '%1$s' e rite ana ki tēnei waka (%2$s). Huatau: %3$s. Ka puritia ngā raraunga, ā, ka ākiritia i te mutunga o te haerenga ki te kore koe e pupuri."
-  },
-  {
     "key": "Keeping drive data",
     "source": "Keeping drive data",
     "text": "E puritia ana ngā raraunga haerenga"
@@ -635,11 +565,6 @@
     "text": "Ka tiakina tēnei haerenga ki %1$s. Kāore e taea e te API monohanga o Torque te hanga, te whakawhiti rānei i ngā kōtaha Torque: i Torque, hangaia, tīpakohia rānei tētahi kōtaha waka ko '%2$s' te ingoa."
   },
   {
-    "key": "Create new profile",
-    "source": "Create new profile",
-    "text": "Waihanga kōtaha hōu"
-  },
-  {
     "key": "Use %1$s",
     "source": "Use %1$s",
     "text": "Whakamahia %1$s"
@@ -648,5 +573,120 @@
     "key": "Edit profile (recording follows Torque)",
     "source": "Edit profile (recording follows Torque)",
     "text": "Whakatika kōtaha (ka whai te tuhi i a Torque)"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "Tīmatanga tere\n1. Tāutahia a Torque Pro (te putanga utu; kāore a Torque Lite e tautoko monohanga) ka takiruatia tō urutau OBD-II.\n2. Whakahohea tēnei monohanga i Torque → Tautuhinga → Monohanga.\n3. Tukua ngā whakamōhiotanga, ā, whakatakotoria te whakamahi pūhiko ki Kāore he rāhuitanga kia taea ai e Torque te tīmata i tēnei monohanga i te papamuri.\n4. I Torque, tīpakohia te kōtaha waka mō te motokā e taraiwa ana koe. Ka puritia ngā raraunga mō ia kōtaha Torque, ā, ka tirohia ki te tuakiri VIN/ECU o te waka.\n5. I te kōtaha hōu ka kitea te pūtake hinu ina tūhono koe; ki te pātaitia, whakatauritea ki te ine i te papatohu ka pāwhiritia Whakaū. Kei te whārangi tatūnga, kei te whakamōhiotanga hoki a Whakaū. Ka taea hoki te tīpako i raro nei.\n6. Kāore he rahi taika hei tāuru i konei. Ka ako ia urutau i tōna ake rahi, e whakaaturia ana i raro i te Rahi taika kua akohia; tae noa ki reira ka pānui tōna ōrau kua whakatikahia i te 1:1 me te ine. Tāurua te rahi o te taika ki te kōtaha waka a Torque mō te hinu e toe ana me te DTE a Torque ake.\n7. I Torque, tāpirihia ngā ine mō [FuelSmooth] Smoothed Fuel Level me, mō ia urutau, Corrected % me Tank size. Kāore te monohanga e whakaputa i te hinu e toe ana, i te DTE rānei. E kī ana tētahi pānui i te wā whakahou ka pānui taua urutau i te 1:1 kia mutu rā anō te whakahou.\n8. Whakahokia te taumata hinu ki a Torque: Weto, Rēmana, Whakatika rānei mai i te urutau Chunk, Band, Kalman rānei ki tō ine 012F. Ka whakamahi te hinu e toe ana me te DTE a Torque ake i taua taumata me te rahi o te taika me te mpg wā-roa i te kōtaha Torque.\n9. Ka tatauria te hinu anake i te wā e rere ana te mīhini. Ka rere te monohanga anake i te wā e tūhono ana a Torque ki te ECU.\n10. Haere tonu ki te taraiwa, ki te whakakī; ka tipu te tika i roto i ētahi taika wāhanga. Ki te kore e taea e te monohanga te kī ko tēhea waka tēnei, ka ui ia i tētahi whakamōhiotanga me tēnei whārangi; kōwhiria he aha mō taua haerenga.\n11. Ka noho ngā raraunga katoa ki tēnei waea. Kāore he GPS, he tauwāhi rānei e tāruatia ana."
+  },
+  {
+    "key": "Learned tank size",
+    "source": "Learned tank size",
+    "text": "Rahi taika kua akohia"
+  },
+  {
+    "key": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "source": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "text": "Te rahi kua akohia a ia urutau ake, e pērā ana te pūrongo a te monohanga; kāore he mea hei tāuru. Ka whakamahi te hinu e toe ana me te DTE a Torque ake i te rahi o te taika i te kōtaha waka a Torque."
+  },
+  {
+    "key": "Vehicle decision pending: %1$s",
+    "source": "Vehicle decision pending: %1$s",
+    "text": "E tatari ana te whakatau waka: %1$s"
+  },
+  {
+    "key": "Decide later",
+    "source": "Decide later",
+    "text": "Whakatau ā muri"
+  },
+  {
+    "key": "This drive will be saved to %1$s.",
+    "source": "This drive will be saved to %1$s.",
+    "text": "Ka tiakina tēnei haerenga ki %1$s."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "text": "Kei te whakaaturia te hinu rēmana ā-ora ināianei. Kāore he mea e tiakina ki tētahi kōtaha kia kōwhiri rā anō koe; ka ākiritia ngā raraunga kāore i whakaūngia i te mutunga o te haerenga."
+  },
+  {
+    "key": "Which vehicle is this?",
+    "source": "Which vehicle is this?",
+    "text": "Ko tēhea waka tēnei?"
+  },
+  {
+    "key": "More than one saved profile has this vehicle's VIN.",
+    "source": "More than one saved profile has this vehicle's VIN.",
+    "text": "Neke atu i te kotahi ngā kōtaha kua tiakina kei a rātou te VIN o tēnei waka."
+  },
+  {
+    "key": "Confirm this is %1$s",
+    "source": "Confirm this is %1$s",
+    "text": "Whakaū ko tēnei a %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "source": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "text": "E ōrite ana tēnei waka ki a %1$s engari kāore i tukuna he VIN, ā kāore he taumata hinu kua tuhia a %1$s hei whakataurite."
+  },
+  {
+    "key": "Is this %1$s?",
+    "source": "Is this %1$s?",
+    "text": "Ko tēnei a %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "source": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "text": "E ōrite ana tēnei waka ki a %1$s, engari ko te kōtaha kua tīpakohia i Torque ko '%2$s'."
+  },
+  {
+    "key": "This vehicle sent no VIN and more than one saved profile could match.",
+    "source": "This vehicle sent no VIN and more than one saved profile could match.",
+    "text": "Kāore tēnei waka i tuku VIN, ā tērā pea neke atu i te kotahi ngā kōtaha kua tiakina ka ōrite."
+  },
+  {
+    "key": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "source": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "text": "Kāore tēnei waka i tuku VIN, engari he VIN kua tiakina tā %1$s."
+  },
+  {
+    "key": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "source": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "text": "Kāore te matimati o tētahi kōtaha kua tiakina e ōrite ki tēnei waka (kāore i tuku VIN)."
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "source": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "text": "He teitei ake tōna taumata hinu (%1$.0f %%) i te taumata whakamutunga i tuhia o %2$s (%3$.0f %%). I whakakīa?"
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "source": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "text": "Kāore tōna taumata hinu (%1$.0f %%) e ōrite ki te taumata whakamutunga i tuhia o %2$s (%3$.0f %%)."
+  },
+  {
+    "key": "Its fuel level could not be read to compare with %1$s.",
+    "source": "Its fuel level could not be read to compare with %1$s.",
+    "text": "Kāore i taea te pānui i te taumata hinu hei whakataurite ki a %1$s."
+  },
+  {
+    "key": "none, it's new",
+    "source": "none, it's new",
+    "text": "kāore tētahi, he hōu"
+  },
+  {
+    "key": "Vehicle decision pending",
+    "source": "Vehicle decision pending",
+    "text": "E tatari ana te whakatau waka"
+  },
+  {
+    "key": "Vehicle confirmation",
+    "source": "Vehicle confirmation",
+    "text": "Whakaū waka"
+  },
+  {
+    "key": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "source": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "text": "Ka ui ko tēhea waka kua tūhono ina kore e taea te ōrite aunoa."
   }
 ]

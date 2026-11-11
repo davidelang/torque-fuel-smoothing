@@ -15,11 +15,6 @@
     "text": "Bahshishi ziko kwenye toleo la Play Store"
   },
   {
-    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected %, Remaining, DTE and Tank size. DTE is Remaining times Torque's long-term mpg. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
-    "text": "Mwanzo wa haraka\n 1. Sakinisha Torque Pro (toleo la kulipia; Torque Lite haiauni programu-jalizi) na oanisha adapta ya OBD-II.\n 2. Washa programu-jalizi hii katika Torque → Mipangilio → Programu-jalizi.\n 3. Ruhusu arifa na uweke matumizi ya betri kuwa Bila kikomo ili Torque iweze kuanzisha programu-jalizi hii chinichini.\n 4. Katika Torque, chagua wasifu wa gari unaloendesha. Data huhifadhiwa kwa kila wasifu wa Torque na hukaguliwa dhidi ya utambulisho wa VIN/ECU wa gari.\n 5. Kwenye wasifu mpya chanzo cha mafuta hugunduliwa unapounganisha; ukiombwa, linganisha na mita ya dashibodi na uguse Thibitisha. Thibitisha iko kwenye ukurasa wa usanidi na katika arifa. Unaweza pia kuichagua hapa chini.\n 6. Ukubwa wa tangi ni ukubwa wa kuanzia wa ulinganifu wa Chunk hadi ujifunze wake. Programu-jalizi haibadilishi kamwe; ukubwa uliofunzwa wa kila ulinganifu huonyeshwa chini yake.\n 7. Katika Torque, ongeza mita za [FuelSmooth] Smoothed Fuel Level na, kwa kila ulinganifu, Corrected %, Remaining, DTE na Tank size. DTE ni Remaining kuzidishwa na mpg ya muda mrefu ya Torque. Arifa wakati wa ulinganifu upya husema ulinganifu huo unasoma 1:1 hadi ulinganifu upya ukamilike.\n 8. Rudisha kiwango cha mafuta kwa Torque: Imezimwa, iliyolainishwa, au iliyosahihishwa kutoka ulinganifu wa Chunk, Band au Kalman, kwenye mita yako ya 012F.\n 9. Mafuta huhesabiwa tu injini inapoendesha. Programu-jalizi huendesha tu Torque ikiwa imeunganishwa na ECU.\n 10. Endelea kuendesha na kujaza; usahihi hukua katika matangi kadhaa ya sehemu. Arifa ya Wasifu mbaya wa gari? ikitokea, chagua la kufanya na safari hiyo.\n 11. Data yote hubaki kwenye simu hii. GPS wala mahali haparekodiwi."
-  },
-  {
     "key": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "source": "%1$s\nVersion %2$s (%3$s)\nA plugin for Torque Pro. Not affiliated with Torque or Ian Hawkins.\nAll data stays on this phone; no GPS or location is recorded.\n\nLicense\nCopyright David Lang. All rights reserved.",
     "text": "%1$s\nToleo %2$s (%3$s)\nProgramu-jalizi ya Torque Pro. Haihusiani na Torque wala Ian Hawkins.\nData yote hubaki kwenye simu hii; GPS wala mahali haparekodiwi.\n\nLeseni\nCopyright David Lang. Haki zote zimehifadhiwa."
@@ -73,11 +68,6 @@
     "key": "Tap to start",
     "source": "Tap to start",
     "text": "Gusa ili kuanza"
-  },
-  {
-    "key": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "source": "Tank size is the starting size for the Chunk fit until it learns its own. The plugin never changes it; each fit's learned size is shown below it.",
-    "text": "Ukubwa wa tangi ni ukubwa wa kuanzia wa ulinganifu wa Chunk hadi ujifunze wake. Programu-jalizi haibadilishi kamwe; ukubwa uliofunzwa wa kila ulinganifu huonyeshwa chini yake."
   },
   {
     "key": "Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.",
@@ -245,16 +235,6 @@
     "text": "Kwa chanzo „PID ya ziada ya Torque kwa jina refu“ pekee: jina refu kamili la PID ya Torque inayoripoti kiwango."
   },
   {
-    "key": "Tank size",
-    "source": "Tank size",
-    "text": "Ukubwa wa tangi"
-  },
-  {
-    "key": "blank = no starting size; each fit learns its own.",
-    "source": "blank = no starting size; each fit learns its own.",
-    "text": "tupu = hakuna ukubwa wa kuanzia; kila ulinganifu hujifunza wake."
-  },
-  {
     "key": "Smoothing τ seconds",
     "source": "Smoothing τ seconds",
     "text": "Ulainishaji τ kwa sekunde"
@@ -273,16 +253,6 @@
     "key": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "source": "Largest change per second the smoothed level may follow; slosh beyond this is ignored.",
     "text": "Mabadiliko makubwa zaidi kwa sekunde ambayo kiwango kilicholainishwa kinaweza kufuata; mtikisiko zaidi ya hapo hupuuzwa."
-  },
-  {
-    "key": "Fill jump %",
-    "source": "Fill jump %",
-    "text": "Mruko wa kujaza %"
-  },
-  {
-    "key": "Rise in level while stopped that counts as a fill.",
-    "source": "Rise in level while stopped that counts as a fill.",
-    "text": "Kupanda kwa kiwango ukiwa umesimama kunakohesabiwa kama kujaza."
   },
   {
     "key": "Odometer miles",
@@ -335,11 +305,6 @@
     "text": "Jina refu maalum cha tangi %1$d (k.m. [FuelSmooth] Tank%1$d Level)"
   },
   {
-    "key": "Tank %1$d gallons",
-    "source": "Tank %1$d gallons",
-    "text": "Galoni za tangi %1$d"
-  },
-  {
     "key": "From PID",
     "source": "From PID",
     "text": "Kutoka PID"
@@ -355,11 +320,6 @@
     "text": "· ECU imeunganishwa"
   },
   {
-    "key": "tank ?",
-    "source": "tank ?",
-    "text": "tangi ?"
-  },
-  {
     "key": "About %1$s",
     "source": "About %1$s",
     "text": "Takriban %1$s"
@@ -373,16 +333,6 @@
     "key": "above 0, at most %1$s %%/s",
     "source": "above 0, at most %1$s %%/s",
     "text": "juu ya 0, isiyozidi %1$s %%/s"
-  },
-  {
-    "key": "%1$s to %2$s %%",
-    "source": "%1$s to %2$s %%",
-    "text": "%1$s hadi %2$s %%"
-  },
-  {
-    "key": "blank or a number above 0",
-    "source": "blank or a number above 0",
-    "text": "tupu au nambari kubwa kuliko 0"
   },
   {
     "key": "stored value out of range",
@@ -605,26 +555,6 @@
     "text": "Gari hili ni %1$s (%2$s), lakini wasifu wa Torque ni „%3$s“. Data huenda kwa %1$s; gusa ili kufungua Torque na kubadilisha wasifu."
   },
   {
-    "key": "Wrong vehicle profile?",
-    "source": "Wrong vehicle profile?",
-    "text": "Wasifu mbaya wa gari?"
-  },
-  {
-    "key": "Torque profile '%1$s'",
-    "source": "Torque profile '%1$s'",
-    "text": "Wasifu wa Torque „%1$s“"
-  },
-  {
-    "key": "a new vehicle profile",
-    "source": "a new vehicle profile",
-    "text": "wasifu mpya wa gari"
-  },
-  {
-    "key": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "source": "Torque profile '%1$s' doesn't match this vehicle (%2$s). Suggested: %3$s. Data is held and discarded at drive end unless you keep it.",
-    "text": "Wasifu wa Torque „%1$s“ haulingani na gari hili (%2$s). Pendekezo: %3$s. Data huhifadhiwa na hutupwa mwishoni mwa safari isipokuwa ukiihifadhi."
-  },
-  {
     "key": "Keeping drive data",
     "source": "Keeping drive data",
     "text": "Data ya safari inahifadhiwa"
@@ -635,11 +565,6 @@
     "text": "Safari hii itahifadhiwa kwa %1$s. API ya programu-jalizi ya Torque haiwezi kuunda au kubadilisha wasifu wa Torque: katika Torque, unda au chagua wasifu wa gari uitwao „%2$s“."
   },
   {
-    "key": "Create new profile",
-    "source": "Create new profile",
-    "text": "Unda wasifu mpya"
-  },
-  {
     "key": "Use %1$s",
     "source": "Use %1$s",
     "text": "Tumia %1$s"
@@ -648,5 +573,120 @@
     "key": "Edit profile (recording follows Torque)",
     "source": "Edit profile (recording follows Torque)",
     "text": "Hariri wasifu (kurekodi kunafuata Torque)"
+  },
+  {
+    "key": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "source": "Quick start\n 1. Install Torque Pro (the paid version; Torque Lite does not support plugins) and pair your OBD-II adapter.\n 2. Enable this plugin in Torque → Settings → Plugins.\n 3. Allow notifications, and set battery use to Unrestricted so Torque can start this plugin in the background.\n 4. In Torque, select the vehicle profile for the car you are driving. Data is kept per Torque profile and checked against the vehicle's VIN/ECU identity.\n 5. On a new profile the fuel source is detected when you connect; if asked, compare it with your dash gauge and tap Confirm. Confirm is on the setup page and in the notification. You can also pick it below.\n 6. There is no tank size to enter here. Each fit learns its own size, shown under Learned tank size; until then its corrected percent reads 1:1 with the gauge. Enter your tank size in the Torque vehicle profile for Torque's own remaining fuel and DTE.\n 7. In Torque, add gauges for [FuelSmooth] Smoothed Fuel Level and each fit's Corrected % and Tank size. The plugin does not publish remaining fuel or DTE. A notice during a refit says that fit reads 1:1 until its refit finishes.\n 8. Feed fuel level back to Torque: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit onto your 012F gauge. Torque's own fuel remaining and DTE then use that level with the tank size and long-term mpg in the Torque profile.\n 9. Fuel is counted only while the engine runs. The plugin runs only while Torque is connected to the ECU.\n 10. Keep driving and filling up; accuracy builds over several partial tanks. If the plugin cannot tell which vehicle this is, it asks in a notification and on this page; choose what to do with that drive.\n 11. All data stays on this phone. No GPS or location is recorded.",
+    "text": "Mwanzo wa haraka\n 1. Sakinisha Torque Pro (toleo la kulipia; Torque Lite haiauni programu-jalizi) na oanisha adapta ya OBD-II.\n 2. Washa programu-jalizi hii katika Torque → Mipangilio → Programu-jalizi.\n 3. Ruhusu arifa na uweke matumizi ya betri kuwa Bila kikomo ili Torque iweze kuanzisha programu-jalizi hii chinichini.\n 4. Katika Torque, chagua wasifu wa gari unaloendesha. Data huhifadhiwa kwa kila wasifu wa Torque na hukaguliwa dhidi ya utambulisho wa VIN/ECU wa gari.\n 5. Kwenye wasifu mpya chanzo cha mafuta hugunduliwa unapounganisha; ukiombwa, linganisha na mita ya dashibodi na uguse Thibitisha. Thibitisha iko kwenye ukurasa wa usanidi na katika arifa. Unaweza pia kuichagua hapa chini.\n 6. Hakuna ukubwa wa tanki wa kuingiza hapa. Kila ulinganifu hujifunza ukubwa wake, unaoonyeshwa chini ya Ukubwa wa tanki uliofunzwa; hadi hapo asilimia iliyosahihishwa husoma 1:1 na mita. Ingiza ukubwa wa tanki katika wasifu wa gari wa Torque kwa mafuta yaliyosalia na DTE vya Torque yenyewe.\n 7. Katika Torque, ongeza mita za [FuelSmooth] Smoothed Fuel Level na, kwa kila ulinganifu, Corrected % na Tank size. Programu jalizi haichapishi mafuta yaliyosalia wala DTE. Arifa wakati wa ulinganifu upya husema ulinganifu huo unasoma 1:1 hadi ulinganifu upya ukamilike.\n 8. Rudisha kiwango cha mafuta kwa Torque: Imezimwa, iliyolainishwa, au iliyosahihishwa kutoka ulinganifu wa Chunk, Band au Kalman, kwenye mita yako ya 012F. Kisha mafuta yaliyosalia na DTE vya Torque yenyewe hutumia kiwango hicho pamoja na ukubwa wa tanki na mpg ya muda mrefu katika wasifu wa Torque.\n 9. Mafuta huhesabiwa tu injini inapoendesha. Programu-jalizi huendesha tu Torque ikiwa imeunganishwa na ECU.\n 10. Endelea kuendesha na kujaza; usahihi hukua kupitia matanki kadhaa ya sehemu. Ikiwa programu jalizi haiwezi kusema hili ni gari gani, huuliza katika arifa na kwenye ukurasa huu; chagua cha kufanya na safari hiyo.\n 11. Data yote hubaki kwenye simu hii. GPS wala mahali haparekodiwi."
+  },
+  {
+    "key": "Learned tank size",
+    "source": "Learned tank size",
+    "text": "Ukubwa wa tanki uliofunzwa"
+  },
+  {
+    "key": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "source": "Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.",
+    "text": "Ukubwa uliofunzwa wa kila ulinganifu, kama programu jalizi inavyoripoti; hakuna cha kuingiza. Mafuta yaliyosalia na DTE vya Torque yenyewe hutumia ukubwa wa tanki katika wasifu wa gari wa Torque."
+  },
+  {
+    "key": "Vehicle decision pending: %1$s",
+    "source": "Vehicle decision pending: %1$s",
+    "text": "Uamuzi wa gari unasubiri: %1$s"
+  },
+  {
+    "key": "Decide later",
+    "source": "Decide later",
+    "text": "Amua baadaye"
+  },
+  {
+    "key": "This drive will be saved to %1$s.",
+    "source": "This drive will be saved to %1$s.",
+    "text": "Safari hii itahifadhiwa kwenye %1$s."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
+    "text": "Mafuta yaliyolainishwa yanaonyeshwa moja kwa moja sasa. Hakuna kinachohifadhiwa kwenye wasifu hadi uchague; data isiyothibitishwa hutupwa mwishoni mwa safari."
+  },
+  {
+    "key": "Which vehicle is this?",
+    "source": "Which vehicle is this?",
+    "text": "Hili ni gari gani?"
+  },
+  {
+    "key": "More than one saved profile has this vehicle's VIN.",
+    "source": "More than one saved profile has this vehicle's VIN.",
+    "text": "Zaidi ya wasifu mmoja uliohifadhiwa una VIN ya gari hili."
+  },
+  {
+    "key": "Confirm this is %1$s",
+    "source": "Confirm this is %1$s",
+    "text": "Thibitisha kuwa hili ni %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "source": "This vehicle matches %1$s but sent no VIN, and %1$s has no recorded fuel level to compare.",
+    "text": "Gari hili linalingana na %1$s lakini halikutuma VIN, na %1$s haina kiwango cha mafuta kilichorekodiwa cha kulinganisha."
+  },
+  {
+    "key": "Is this %1$s?",
+    "source": "Is this %1$s?",
+    "text": "Je, hili ni %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "source": "This vehicle matches %1$s, but Torque's selected profile is '%2$s'.",
+    "text": "Gari hili linalingana na %1$s, lakini wasifu uliochaguliwa katika Torque ni '%2$s'."
+  },
+  {
+    "key": "This vehicle sent no VIN and more than one saved profile could match.",
+    "source": "This vehicle sent no VIN and more than one saved profile could match.",
+    "text": "Gari hili halikutuma VIN na zaidi ya wasifu mmoja uliohifadhiwa unaweza kulingana."
+  },
+  {
+    "key": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "source": "This vehicle sent no VIN, but %1$s has a saved VIN.",
+    "text": "Gari hili halikutuma VIN, lakini %1$s ina VIN iliyohifadhiwa."
+  },
+  {
+    "key": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "source": "No saved profile's fingerprint matches this vehicle (it sent no VIN).",
+    "text": "Alama ya kidole ya wasifu wowote uliohifadhiwa hailingani na gari hili (halikutuma VIN)."
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "source": "Its fuel level (%1$.0f %%) is higher than %2$s's last recorded level (%3$.0f %%). Was it filled?",
+    "text": "Kiwango chake cha mafuta (%1$.0f %%) ni cha juu kuliko kiwango cha mwisho kilichorekodiwa cha %2$s (%3$.0f %%). Je, kilijazwa?"
+  },
+  {
+    "key": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "source": "Its fuel level (%1$.0f %%) does not match %2$s's last recorded level (%3$.0f %%).",
+    "text": "Kiwango chake cha mafuta (%1$.0f %%) hakilingani na kiwango cha mwisho kilichorekodiwa cha %2$s (%3$.0f %%)."
+  },
+  {
+    "key": "Its fuel level could not be read to compare with %1$s.",
+    "source": "Its fuel level could not be read to compare with %1$s.",
+    "text": "Kiwango cha mafuta hakikuweza kusomwa ili kulinganishwa na %1$s."
+  },
+  {
+    "key": "none, it's new",
+    "source": "none, it's new",
+    "text": "hakuna, ni mpya"
+  },
+  {
+    "key": "Vehicle decision pending",
+    "source": "Vehicle decision pending",
+    "text": "Uamuzi wa gari unasubiri"
+  },
+  {
+    "key": "Vehicle confirmation",
+    "source": "Vehicle confirmation",
+    "text": "Uthibitisho wa gari"
+  },
+  {
+    "key": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "source": "Asks which vehicle is connected when it cannot be matched automatically.",
+    "text": "Huuliza gari lipi limeunganishwa wakati haliwezi kulinganishwa kiotomatiki."
   }
 ]
