@@ -7,14 +7,42 @@ library plus the openssl binary (RS256 signing of the service-account JWT); noth
   play-publish --aab FILE --version-code N --aapt2 PATH --key SA.json
                [--notes-file FILE | --notes-base REV] [--dry-run]
 
-Every failure prints one ERROR line and exits 1. --dry-run inserts an edit, reads the tracks
-and bundles, computes and shows the notes, then deletes the edit (no upload, no commit).
+  play-publish --max-version-code --key SA.json
+               (--package ID | --aab FILE --aapt2 PATH --work-dir DIR)
 
-Notes base (highest Play release name, must be an ancestor of HEAD): prefer the
-@<commit> build provenance this script writes into every new release name; else a legacy
--g<hash> from git describe; else, when the name is exactly N (<tag>) with no provenance, the
-local annotated/lightweight tag <tag> if it exists and peels to one commit. Never guesses a
-branch or HEAD. --notes-base REV overrides (must be an ancestor); --notes-file needs no base.
+Every failure prints one ERROR line and exits 1. --dry-run finalizes the notes first, then
+opens a short-lived edit to read the tracks and check the notes base, then deletes the edit
+(no upload, no commit).
+
+No service-account token and no Play API call happens until the release notes are final, so
+sitting in the editor cannot expire the ~1h OAuth access token or an open Play edit.
+
+Notes base (must be an ancestor of HEAD), chosen without contacting Play:
+  --notes-file FILE  uses FILE; no base commit is needed
+  --notes-base REV   git log REV..HEAD
+  otherwise          the local moving tag play (master) or <branch>/play (any other branch),
+                     the commit last successfully uploaded by deploy --play
+
+If that tag is missing, this is an error (nothing uploaded, Play not contacted). Seed a
+lightweight tag on the commit last uploaded to Play, and do not push it:
+
+  git tag play <commit>            # master
+  git tag <branch>/play <commit>   # any other branch
+
+The commit is the @hash in the highest Play release name (for example
+"36 (v0.9.10 @1bd75c80b0f4)"), or pass --notes-base <commit> this once; a successful
+upload creates the tag. Never guesses a branch or HEAD. Not an annotated tag: git describe
+would then pick play as versionName.
+
+After a successful Play edit commit, the tag is force-moved to this bundle's build commit
+(git tag -f, never pushed), the same way deploy moves deployed / <branch>/deployed after
+a successful device install.
+
+--max-version-code prints Play's highest versionCode across every track and every uploaded
+bundle (0 if there are none) as the line "max-version-code N" and exits. Used by
+build_app --play. It needs --key and either --package or a readable --aab (to read the
+applicationId). No upload.
+
 Release names look like "25 (v0.9.3 @a36abf76ad08)": readable versionName plus the stamped
 build commit (not a blind HEAD read at upload time). Bundle versionName is unchanged.
 """
@@ -178,6 +206,93 @@ def releases(tracks):
             for vc in r.get("versionCodes", []):
                 yield t["track"], int(vc), r.get("name", "")
 
+
+def max_version_code(tracks, bundles):
+    """Highest versionCode on any track or uploaded bundle. 0 if Play has none."""
+    codes = []
+    for tr in tracks:
+        for r in tr.get("releases", []):
+            for vc in r.get("versionCodes", []):
+                try:
+                    n = int(vc)
+                except (TypeError, ValueError):
+                    die("Play track %s has a non-integer versionCode: %r" % (tr.get("track"), vc))
+                if n < 0:
+                    die("Play track %s has a negative versionCode: %d" % (tr.get("track"), n))
+                codes.append(n)
+    for b in bundles:
+        raw = b.get("versionCode", None)
+        if raw is None:
+            die("Play bundle listing is missing versionCode")
+        try:
+            n = int(raw)
+        except (TypeError, ValueError):
+            die("Play bundle listing has a non-integer versionCode: %r" % (raw,))
+        if n < 0:
+            die("Play bundle listing has a negative versionCode: %d" % n)
+        codes.append(n)
+    return max(codes) if codes else 0
+
+
+def play_tag_name():
+    """Moving Play-upload tag: play on master, <branch>/play on any other branch.
+
+    Mirrors deploy's deployed / <branch>/deployed. Detached HEAD is refused: there is no
+    branch to name the tag.
+    """
+    branch = run(["git", "rev-parse", "--abbrev-ref", "HEAD"]).strip()
+    if not branch or branch == "HEAD":
+        die("the play tag is play on master and <branch>/play on any other branch; this checkout is detached")
+    return "play" if branch == "master" else "%s/play" % branch
+
+
+def play_tag_commit(name):
+    """Peeled commit of refs/tags/<name>, or None if the tag does not exist. Tags only."""
+    return git_commit("refs/tags/" + name)
+
+
+def move_play_tag(commit):
+    """Force-move the local play tag to commit. Lightweight, never pushed."""
+    full = git_commit(commit)
+    if not full:
+        die("cannot move the play tag: %s is not a commit" % commit)
+    name = play_tag_name()
+    run(["git", "tag", "-f", name, full])
+    got = play_tag_commit(name)
+    if got != full:
+        die("after git tag -f %s, the tag is %s, not %s" % (name, got, full))
+    print("Updated local '%s' tag to %s (not pushed)" % (name, full[:12]))
+    return name
+
+
+def local_notes_base(notes_file, notes_base_arg):
+    """Notes base with no Play auth. Returns (commit or None, source).
+
+    source is 'notes-file', 'notes-base', or 'play-tag'.
+    """
+    if notes_file:
+        print("Release notes from --notes-file %s (no base commit needed)" % notes_file)
+        return None, "notes-file"
+    if notes_base_arg:
+        base = git_commit(notes_base_arg)
+        if not base:
+            die("--notes-base %s is not a commit in this repository" % notes_base_arg)
+        require_ancestor(base, "--notes-base %s" % notes_base_arg)
+        print("Notes from --notes-base %s (%s)..HEAD" % (notes_base_arg, base[:12]))
+        return base, "notes-base"
+    name = play_tag_name()
+    base = play_tag_commit(name)
+    if not base:
+        die("no local '%s' tag to start the notes after. Seed a lightweight tag on the commit last "
+            "uploaded to Play (the @hash in the highest Play release name), and do not push it:  "
+            "git tag %s <commit>    Or pass --notes-base <commit> or --notes-file FILE this once; "
+            "a successful ./deploy --play creates the tag. Play is not queried before the notes "
+            "editor; nothing uploaded" % (name, name))
+    require_ancestor(base, "tag %s" % name)
+    print("Notes from %s..HEAD (local '%s' tag)" % (base[:12], name))
+    return base, "play-tag"
+
+
 def get_notes(base, notes_file):
     if notes_file:
         try:
@@ -255,13 +370,73 @@ def verify(pkg, track, vc):
         die("after commit, the %s track does not list versionCode %d" % (track, vc))
     print("verified: %s track has versionCode %d (status %s)" % (track, vc, ",".join(st)))
 
+def main_max_version_code():
+    """Query Play for the highest versionCode. No upload. stdout is one 'max-version-code N' line."""
+    global TOKEN, WORK_DIR
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(line_buffering=True)
+    ap = argparse.ArgumentParser(
+        prog="play-publish",
+        description="Print Play's highest versionCode (all tracks and bundles) and exit. "
+        "Used by ./build_app --play. No upload.",
+        epilog="Details: the docstring at the top of play-publish.")
+    ap.add_argument("--max-version-code", action="store_true", required=True,
+                    help="print Play's highest versionCode and exit")
+    ap.add_argument("--key", required=True, metavar="SA.json", help="service-account key file")
+    ap.add_argument("--package", metavar="ID", help="applicationId (or give --aab to read it)")
+    ap.add_argument("--aab", metavar="FILE", help="bundle to read the applicationId from")
+    ap.add_argument("--aapt2", metavar="PATH", help="aapt2 binary, required with --aab")
+    ap.add_argument("--work-dir", metavar="DIR", help="scratch dir for aapt2 (required with --aab; never /tmp)")
+    a = ap.parse_args()
+    if not a.package and not a.aab:
+        die("--max-version-code needs --package or --aab (to read the applicationId); nothing queried")
+    pkg = a.package
+    if a.aab:
+        if not a.aapt2:
+            die("--aab needs --aapt2")
+        if not a.work_dir:
+            die("--aab needs --work-dir (scratch for the manifest copy; never /tmp)")
+        if not (os.path.isdir(a.work_dir) and os.access(a.work_dir, os.W_OK)):
+            die("--work-dir %s is missing or not writable" % a.work_dir)
+        WORK_DIR = a.work_dir
+        aab_pkg, _vc, _vn = badging(a.aab, a.aapt2)
+        if pkg and pkg != aab_pkg:
+            die("--package %s does not match applicationId %s from %s" % (pkg, aab_pkg, a.aab))
+        pkg = aab_pkg
+    elif a.aapt2 or a.work_dir:
+        die("--aapt2 and --work-dir are only used with --aab")
+    TOKEN, who = token(a.key)
+    print("Service account: %s" % who, file=sys.stderr)
+    edit = http("POST", API + pkg + "/edits", body=b"{}")["id"]
+    query_err = False
+    try:
+        tracks, bundles = read_state(pkg, edit)
+        n = max_version_code(tracks, bundles)
+    except SystemExit:
+        query_err = True
+        raise
+    finally:
+        # Always drop the short-lived query edit. http() already printed a DELETE
+        # failure; don't let that SystemExit hide the original query error.
+        try:
+            http("DELETE", API + pkg + "/edits/" + edit)
+        except SystemExit:
+            if not query_err:
+                raise
+    print("max-version-code %d" % n)
+    return 0
+
+
 def main():
+    if "--max-version-code" in sys.argv:
+        return main_max_version_code()
     global TOKEN
-    sys.stdout.reconfigure(line_buffering=True)
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(line_buffering=True)
     ap = argparse.ArgumentParser(
         prog="play-publish",
         description="Upload the recorded Play bundle to Internal testing, then promote it to alpha. "
-                    "Called by ./deploy --play.",
+        "Called by ./deploy --play. Notes are finalized before any Play auth.",
         epilog="Details: the docstring at the top of play-publish.")
     ap.add_argument("--aab", required=True, metavar="FILE", help="the bundle to upload")
     ap.add_argument("--version-code", required=True, type=int, metavar="N", help="versionCode the build recorded")
@@ -272,8 +447,8 @@ def main():
     nb = ap.add_mutually_exclusive_group()
     nb.add_argument("--notes-file", metavar="FILE", help="release notes (default: computed from the commits)")
     nb.add_argument("--notes-base", metavar="REV",
-                    help="compute the notes from REV..HEAD instead of the commit named by Play's highest release")
-    ap.add_argument("--dry-run", action="store_true", help="read and show everything, then delete the edit (no upload)")
+                    help="compute the notes from REV..HEAD instead of the local play tag")
+    ap.add_argument("--dry-run", action="store_true", help="finalize notes, read Play, delete the edit (no upload)")
     ap.add_argument("--work-dir", required=True, metavar="DIR", help="scratch dir for the notes file and manifest copy (never /tmp)")
     a = ap.parse_args()
     global WORK_DIR
@@ -297,6 +472,14 @@ def main():
     release_name = format_release_name(vc, vname, build_commit)
     print("Bundle: %s  versionCode %d  versionName %s" % (pkg, vc, vname))
     print("Release name will be: %s (stamped build %s)" % (release_name, build_commit[:12]))
+
+    # Notes first: no token(), no Play HTTP. The OAuth access token lasts ~1h (service-account
+    # JWT exp is now+3600, and Google's token response is typically 3600s); an open Play edit
+    # lasts up to 24h. Either can fail if they are obtained before a long editor session.
+    base, _source = local_notes_base(a.notes_file, a.notes_base)
+    notes = get_notes(base, a.notes_file)
+    print("Release notes (%d/%d chars):\n%s" % (len(notes), NOTES_LIMIT, notes))
+
     TOKEN, who = token(a.key)
     print("Service account: %s" % who)
     edit = http("POST", API + pkg + "/edits", body=b"{}")["id"]
@@ -314,43 +497,9 @@ def main():
             print("Play now: highest versionCode %d on %s ('%s')" % (top[1], top[0], top[2]))
         else:
             print("Play now: no release on any track")
-        base = None
-        fix = "; give ./deploy --play --notes-base REV (the commit to start the notes after) or --notes-file FILE"
-        if a.notes_file:
-            print("Release notes from --notes-file %s (no base commit needed)" % a.notes_file)
-        elif a.notes_base:
-            base = git_commit(a.notes_base)
-            if not base:
-                die("--notes-base %s is not a commit in this repository" % a.notes_base)
-            require_ancestor(base, "--notes-base %s" % a.notes_base)
-            print("Notes from --notes-base %s (%s)..HEAD" % (a.notes_base, base[:12]))
-        else:
-            if not top:
-                die("Play lists no release on any track, so there is no base commit for the notes" + fix)
-            # Local must not be named "token": that would shadow the module-level token()
-            # helper and make TOKEN, who = token(a.key) raise UnboundLocalError before auth.
-            kind, base_tok = notes_base_from_release_name(top[2])
-            if kind is None:
-                die("highest release (versionCode %d on %s) is named '%s'; %s%s" % (top[1], top[0], top[2], base_tok, fix))
-            if kind == "tag":
-                base = resolve_exact_tag(base_tok)
-                if not base:
-                    die("highest release (versionCode %d on %s) is named '%s'; no @commit/-g<hash>, and no local tag '%s'%s"
-                        % (top[1], top[0], top[2], base_tok, fix))
-                require_ancestor(base, "tag %s from '%s'" % (base_tok, top[2]))
-                print("Notes from %s..HEAD (exact local tag %s from that release name)" % (base[:12], base_tok))
-            else:
-                base = git_commit(base_tok)
-                if not base:
-                    die("base commit %s (from '%s') is not in this repository (history rewritten?)%s" % (base_tok, top[2], fix))
-                require_ancestor(base, "%s %s from '%s'" % (kind, base_tok, top[2]))
-                how = "stamped @commit" if kind == "provenance" else "legacy -g<hash> in versionName"
-                print("Notes from %s..HEAD (%s in that release name)" % (base[:12], how))
         for t in tracks:
             for r in t.get("releases", []):
                 print("  %-10s %-10s %s %s" % (t["track"], r.get("status", ""), ",".join(r.get("versionCodes", [])), r.get("name", "")))
-        notes = get_notes(base, a.notes_file)
-        print("Release notes (%d/%d chars):\n%s" % (len(notes), NOTES_LIMIT, notes))
         if a.dry_run:
             http("DELETE", API + pkg + "/edits/" + edit)
             edit = None
@@ -370,8 +519,12 @@ def main():
         http("POST", API + pkg + "/edits/" + edit + ":commit?changesNotSentForReview=false")
         edit = None
         print("committed: internal and alpha <- versionCode %d (one commit, sent for review)" % vc)
+        # Play already has the release; move the local tag even if verify later fails.
+        move_play_tag(build_commit)
     finally:
         if edit:
+            # http() already printed the DELETE error; swallowing SystemExit here keeps the
+            # original upload/commit error as the exit (a second die() would hide it).
             try:
                 http("DELETE", API + pkg + "/edits/" + edit)
             except SystemExit:

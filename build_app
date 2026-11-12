@@ -51,16 +51,20 @@
 #        'git rm --cached' command to untrack them (never run by build_app).
 #     3. Integrity check: the tree must be clean (generated paths aside); every build comes
 #        from that one commit.
-#     4. Play only: testing-version y/N check (only on a branch with a BRANCH-start tag) and
-#        password prompts, before any gradle work, so an unattended build never stalls part-way.
-#     5. Play only, before any gradle work: app/versionCode.txt goes N -> N+1, committed alone
-#        as "versionCode N+1 (play build)". Every selected build (standard, test, play) then
-#        comes from that bump commit, so all records share one commit. Without --play nothing
-#        is bumped. If a build fails, the bump commit stays (history is never rewritten); the
-#        next --play bumps again (gaps are fine for Play).
+#     4. Play only, before any gradle work, so an unattended build never stalls part-way:
+#        testing-version y/N (only on a branch with a BRANCH-start tag); then query Play for
+#        the highest versionCode (all tracks and uploaded bundles, same service-account as
+#        deploy --play). If that query fails, nothing is built or committed. Then password
+#        prompts.
+#     5. Play only, before any gradle work: app/versionCode.txt is set to Play's highest
+#        versionCode plus one (Play is the source of truth, even if the local file is higher)
+#        and committed alone as "versionCode N (play build)" when the file changed. Every
+#        selected build then comes from that commit (or from HEAD if the file was already N).
+#        Without --play nothing is changed. If a build fails, a bump commit stays (history is
+#        never rewritten); the next --play queries Play again (gaps are fine for Play).
 #     6. --release-tag only: an annotated tag of that name is created on the commit the builds
 #        will use (the bump commit when --play is selected). Refused when the name is missing,
-#        already exists, is 'builds' or '*/builds', ends in '-start', contains '+', or this
+#        already exists, is 'builds' or '*/builds', is 'play' or '*/play', ends in '-start', contains '+', or this
 #        branch has a <branch>-start tag (that describe would hide the release name), or, without
 #        --play, when HEAD already has another annotated tag (describe could pick it). A failed
 #        run deletes the tag this run created. There is no prompt.
@@ -88,6 +92,10 @@
 #   release_bundle_path Play build: AAB that task produces, relative to the worktree (required)
 #   The release_* keys have no default: a Play build whose keys are unset stops before the commit
 #   phase, naming each missing key (also in single-user mode: signing stays local to this machine).
+#   play_service_account_json  Play build and deploy --play: absolute path to the Play service-account
+#                       JSON (required; same file deploy --play uses).
+#   play_application_id Play build: applicationId on Play, used to query the next versionCode.
+#                       Optional when play-bundle.aab (or release_bundle_path) is already readable.
 #   release_gradle_args Play build: extra space-separated gradle args (e.g. -Pfuelsmoothing.official=true)
 #   fuelsmoothing_official  --standard only: 1 appends -Pfuelsmoothing.official=true;
 #                       absent or empty appends nothing; any other value is
@@ -143,7 +151,7 @@ options:
   -h, --help                   show this help message and exit
   -s, --standard               the app's standard build
   -t, --test                   the app's test build
-  -p, --play, --bundle         signed Play AAB (needs a terminal for the passwords)
+  -p, --play, --bundle         signed Play AAB (versionCode from Play; needs a terminal for the passwords)
   -T, --release-tag NAME       annotated tag on the commit these builds use
   -c, --signing-config FILE    single-user Play signing: key=value file
   -K, --release-keystore V     single-user Play signing: release_keystore
@@ -317,8 +325,10 @@ RELEASE_TAG_CREATED=false
 # Single-user Play signing, given explicitly (no implicit lookup): --signing-config FILE and/or
 # --release-keystore/--release-key-alias/--release-bundle-task/--release-bundle-path/
 # --release-gradle-args VALUE. Stored as SIGN_<key>; a key given twice is an error.
+# play_service_account_json and play_application_id are also accepted in the signing-config
+# file (no short flags): needed to query Play for the next versionCode.
 declare -A SIGN=()
-SIGN_KEYS="release_keystore release_key_alias release_bundle_task release_bundle_path release_gradle_args"
+SIGN_KEYS="release_keystore release_key_alias release_bundle_task release_bundle_path release_gradle_args play_service_account_json play_application_id"
 SIGN_SOURCE=""
 sign_set() {  # sign_set KEY VALUE ORIGIN
   if [ -n "${SIGN[$1]+x}" ]; then
@@ -548,6 +558,9 @@ if [ "$BUILD_PLAY" = true ]; then
   [ -z "$RELEASE_KEY_ALIAS" ] && _ba_missing="$_ba_missing release_key_alias"
   [ -z "$RELEASE_BUNDLE_TASK" ] && _ba_missing="$_ba_missing release_bundle_task"
   [ -z "$AAB" ] && _ba_missing="$_ba_missing release_bundle_path"
+  PLAY_SA_JSON=$(play_key play_service_account_json)
+  PLAY_APP_ID=$(play_key play_application_id)
+  [ -z "$PLAY_SA_JSON" ] && _ba_missing="$_ba_missing play_service_account_json"
   if [ -n "$_ba_missing" ]; then
     if [ "$SINGLE_USER" = false ]; then
       echo "ERROR: the Play build is selected but these keys are unset in $(pwd)/project.config:$_ba_missing" >&2
@@ -560,6 +573,7 @@ if [ "$BUILD_PLAY" = true ]; then
     echo "           release_key_alias=upload" >&2
     echo "           release_bundle_task=bundlePlayRelease" >&2
     echo "           release_bundle_path=app/build/outputs/bundle/playRelease/app-play-release.aab" >&2
+    echo "           play_service_account_json=/home/$PRIMARY_USER/keys/play-service-account.json" >&2
     echo "  The keystore and passwords stay on this machine. Or select builds explicitly (e.g. --standard --test)." >&2
     exit 1
   fi
@@ -582,6 +596,28 @@ if [ "$BUILD_PLAY" = true ]; then
   fi
   read -r -a RELEASE_GRADLE_ARGS <<< "$(play_key release_gradle_args)"
   check_play_link "$AAB"
+  if [[ "$PLAY_SA_JSON" != /* ]]; then
+    echo "ERROR: play_service_account_json must be an absolute path: $PLAY_SA_JSON" >&2
+    exit 1
+  fi
+  if [ ! -f "$PLAY_SA_JSON" ] || [ ! -r "$PLAY_SA_JSON" ]; then
+    echo "ERROR: play_service_account_json=$PLAY_SA_JSON is missing or not readable by $(id -un). Nothing built or committed." >&2
+    exit 1
+  fi
+  if [ -n "$PLAY_APP_ID" ] && ! [[ "$PLAY_APP_ID" =~ ^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)+$ ]]; then
+    echo "ERROR: play_application_id='$PLAY_APP_ID' is not an applicationId." >&2
+    exit 1
+  fi
+  if [ ! -x "$_BA_DIR/play-publish" ]; then
+    echo "ERROR: $_BA_DIR/play-publish missing (ships with the android-gradle build type; used to query Play for the next versionCode)." >&2
+    exit 1
+  fi
+  for _bin in python3 openssl; do
+    if ! command -v "$_bin" >/dev/null; then
+      echo "ERROR: the Play build needs $_bin on PATH (to query Play for the next versionCode)." >&2
+      exit 1
+    fi
+  done
 fi
 
 # ai-shared + ai-code required (agent caches are ai-coder:ai-code). Do not sg one group.
@@ -843,7 +879,7 @@ play_bump_note() {
   local rc=${1:-$?}
   drop_release_tag "$rc"
   if [ "$PLAY_BUMPED" = true ] && [ "$rc" -ne 0 ]; then
-    echo "NOTE: the build failed after versionCode $NEW_VERSION_CODE was committed ($(git rev-parse --short "$BUILT_COMMIT")). That commit stays; the next --play bumps to $((NEW_VERSION_CODE + 1)) (gaps are fine for Play)." >&2
+    echo "NOTE: the build failed after versionCode $NEW_VERSION_CODE was committed ($(git rev-parse --short "$BUILT_COMMIT")). That commit stays; the next --play queries Play again for the next versionCode (gaps are fine for Play)." >&2
   fi
 }
 # Refuse a name that git describe would not use as versionName. Nothing is committed.
@@ -866,6 +902,10 @@ validate_release_tag() {
       ;;
     builds|*/builds)
       echo "ERROR: --release-tag '$RELEASE_TAG' is a moving builds tag, not a release name." >&2
+      exit 1
+      ;;
+    play|*/play)
+      echo "ERROR: --release-tag '$RELEASE_TAG' is a moving Play-upload tag, not a release name." >&2
       exit 1
       ;;
     *-start)
@@ -914,8 +954,10 @@ create_release_tag() {
 # Before the Play bump, so a refused name commits nothing and asks for no passwords.
 validate_release_tag
 
-# Play preflight on the committed HEAD: testing-version check and passwords, all before any
-# gradle work, so an unattended run never stops part-way waiting for input.
+# Play preflight on the committed HEAD: testing-version check, Play versionCode query, and
+# passwords, all before any gradle work, so an unattended run never stops part-way waiting
+# for input. The query is before the password prompts so a missing credential or API failure
+# fails fast and does not ask for secrets.
 if [ "$BUILD_PLAY" = true ]; then
   # Runs as coder_user like every build. The upload keystore must be readable by coder_user
   # (how is the machine owner's choice; see keystore_access_report); what protects it is the password, which only the person at this terminal types.
@@ -949,6 +991,65 @@ if [ "$BUILD_PLAY" = true ]; then
       y|Y|yes|YES) ;;
       *) echo "Aborted: testing version (nothing built or committed)." >&2; exit 1 ;;
     esac
+  fi
+
+  # Next versionCode from Play (source of truth), not from the local file. Fail and do not
+  # build if Play cannot be queried. applicationId: play_application_id if set, else the
+  # existing Play bundle (play-bundle.aab). If both exist they must match (play-publish checks).
+  PLAY_PKG="$PLAY_APP_ID"
+  PLAY_QUERY_AAB=""
+  if [ -r "$PLAY_LINK" ]; then
+    PLAY_QUERY_AAB="$PLAY_LINK"
+  elif [ -r "$AAB" ]; then
+    PLAY_QUERY_AAB="$AAB"
+  fi
+  if [ -z "$PLAY_PKG" ] && [ -z "$PLAY_QUERY_AAB" ]; then
+    echo "ERROR: cannot determine the Play applicationId to query the latest versionCode (set play_application_id= in project.config, or leave a readable Play bundle at $PLAY_LINK). Nothing built or committed." >&2
+    exit 1
+  fi
+  _pp_query=("$_BA_DIR/play-publish" --max-version-code --key "$PLAY_SA_JSON")
+  [ -n "$PLAY_PKG" ] && _pp_query+=(--package "$PLAY_PKG")
+  if [ -n "$PLAY_QUERY_AAB" ]; then
+    if [ ! -f "$_BA_DIR/orch/ve-resolve-orch" ]; then
+      echo "ERROR: missing $_BA_DIR/orch/ve-resolve-orch (needed to locate the SDK aapt2 to read $PLAY_QUERY_AAB)." >&2
+      exit 1
+    fi
+    # shellcheck source=/dev/null
+    . "$_BA_DIR/orch/ve-resolve-orch"
+    if ! QUERY_AAPT2=$(ve_aapt2_from_sdk "$_BA_DIR"); then
+      echo "ERROR: cannot locate the SDK aapt2 (sdk.dir in local.properties, or ANDROID_HOME) to read $PLAY_QUERY_AAB. Nothing built or committed." >&2
+      exit 1
+    fi
+    PLAY_QUERY_WORK="$(pwd)/app/build/outputs/build_app"
+    if [ ! -d "$PLAY_QUERY_WORK" ]; then
+      mkdir -p "$PLAY_QUERY_WORK" || {
+        echo "ERROR: could not create $PLAY_QUERY_WORK (scratch for reading the Play bundle; never /tmp). Nothing built or committed." >&2
+        exit 1
+      }
+    fi
+    if [ ! -w "$PLAY_QUERY_WORK" ]; then
+      echo "ERROR: $PLAY_QUERY_WORK is not writable by $(id -un) (scratch for reading the Play bundle). Nothing built or committed." >&2
+      exit 1
+    fi
+    _pp_query+=(--aab "$PLAY_QUERY_AAB" --aapt2 "$QUERY_AAPT2" --work-dir "$PLAY_QUERY_WORK")
+  fi
+  echo "Querying Play for the highest versionCode..."
+  if ! PLAY_UPSTREAM_LINE=$("${_pp_query[@]}"); then
+    echo "ERROR: could not query Play for the latest versionCode (see above). The Play build was not started; nothing built or committed." >&2
+    exit 1
+  fi
+  if [ -z "$PLAY_PKG" ]; then
+    PLAY_PKG="(from $PLAY_QUERY_AAB)"
+  fi
+  if ! [[ "$PLAY_UPSTREAM_LINE" =~ ^max-version-code[[:space:]]+([0-9]+)$ ]]; then
+    echo "ERROR: play-publish --max-version-code printed '$PLAY_UPSTREAM_LINE', not 'max-version-code N'. The Play build was not started; nothing built or committed." >&2
+    exit 1
+  fi
+  UPSTREAM_VERSION_CODE="${BASH_REMATCH[1]}"
+  NEW_VERSION_CODE=$((UPSTREAM_VERSION_CODE + 1))
+  echo "Play upstream highest versionCode is $UPSTREAM_VERSION_CODE ($PLAY_PKG); this build will use $NEW_VERSION_CODE."
+  if [ "$OLD_VERSION_CODE" -gt "$NEW_VERSION_CODE" ]; then
+    echo "NOTE: local app/versionCode.txt is $OLD_VERSION_CODE, higher than Play upstream $UPSTREAM_VERSION_CODE; using Play as truth ($NEW_VERSION_CODE)."
   fi
 
   # Passwords live only in this process's environment and gradle's; never on a command line or disk.
@@ -1019,16 +1120,20 @@ JSH
   fi
   echo "Upload key: $RELEASE_KEYSTORE alias $RELEASE_KEY_ALIAS (SHA256 $UPLOAD_SHA256)"
 
-  # versionCode bump before any gradle work (header, step 5): every build comes from it.
-  NEW_VERSION_CODE=$((OLD_VERSION_CODE + 1))
-  printf '%s\n' "$NEW_VERSION_CODE" > app/versionCode.txt
-  git commit -q --only -m "versionCode $NEW_VERSION_CODE (play build)" -- app/versionCode.txt || {
-    echo "ERROR: could not commit app/versionCode.txt ($NEW_VERSION_CODE)." >&2
-    exit 1
-  }
-  BUILT_COMMIT=$(git rev-parse HEAD) || exit 1
-  PLAY_BUMPED=true
-  trap play_bump_note EXIT
+  # versionCode from Play, before any gradle work (header, step 5): every build comes from it.
+  if [ "$OLD_VERSION_CODE" -eq "$NEW_VERSION_CODE" ]; then
+    echo "app/versionCode.txt is already $NEW_VERSION_CODE; no bump commit."
+    BUILT_COMMIT=$(git rev-parse HEAD) || exit 1
+  else
+    printf '%s\n' "$NEW_VERSION_CODE" > app/versionCode.txt
+    git commit -q --only -m "versionCode $NEW_VERSION_CODE (play build)" -- app/versionCode.txt || {
+      echo "ERROR: could not commit app/versionCode.txt ($NEW_VERSION_CODE)." >&2
+      exit 1
+    }
+    BUILT_COMMIT=$(git rev-parse HEAD) || exit 1
+    PLAY_BUMPED=true
+    trap play_bump_note EXIT
+  fi
 fi
 
 # After the bump when there is one, so the tag is on the commit Gradle is about to build.
@@ -1040,7 +1145,11 @@ if [ "$BUILD_PLAY" = true ]; then
   else
     VERSION_DESC=$(git describe --always --exclude '*+*') || exit 1
   fi
-  echo "versionCode $OLD_VERSION_CODE -> $NEW_VERSION_CODE, committed $(git rev-parse --short HEAD); every build comes from it (versionName $VERSION_DESC)"
+  if [ "$PLAY_BUMPED" = true ]; then
+    echo "versionCode $OLD_VERSION_CODE -> $NEW_VERSION_CODE, committed $(git rev-parse --short HEAD); every build comes from it (versionName $VERSION_DESC)"
+  else
+    echo "versionCode $NEW_VERSION_CODE (already in app/versionCode.txt, no bump commit); every build comes from $(git rev-parse --short HEAD) (versionName $VERSION_DESC)"
+  fi
 fi
 
 # Homes under this worktree. orch_root is read/seed only (keystore copy).

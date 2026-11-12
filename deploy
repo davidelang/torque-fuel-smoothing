@@ -33,19 +33,24 @@
 #                  Internal testing and alpha (closed testing) in one commit, sent for review.
 #                  Refused when the bundle is missing, not from HEAD, changed since the build, or
 #                  its versionCode is already on Play. Needs play_service_account_json= in
-#                  project.config. No adb, devices, or gradle flags.
+#                  project.config. No adb, devices, or gradle flags. Notes are finalized before
+#                  any Play auth. After a successful Play edit commit, the local play tag
+#                  (play / <branch>/play; lightweight, never pushed) moves to the bundle's build
+#                  commit, like the deployed tag after a device install.
 #     -n, --dry-run
-#                  With --play: open an edit, read the tracks, compute and show the notes, then
-#                  delete the edit. Nothing is uploaded or committed.
+#                  With --play: finalize the notes, then read the tracks with a short-lived
+#                  edit and delete it. Nothing is uploaded or committed; the play tag is not moved.
 #     -N, --notes-file FILE
 #                  With --play: release notes from FILE instead of $EDITOR (vi when unset) on the git log
-#                  since the commit named by the highest Play release, minus subjects matching
+#                  since the local play / <branch>/play tag, minus subjects matching
 #                  play-notes-exclude(.local) (en-US, max 500 characters; over it, Enter re-edits).
 #                  No base commit is needed with FILE.
 #     -B, --notes-base REV
-#                  With --play: start the git-log notes after REV instead of the commit named by
-#                  Play's highest release (stamped @commit, legacy -g<hash>, or exact local tag).
-#                  REV must be an ancestor of HEAD. Not with --notes-file.
+#                  With --play: start the git-log notes after REV instead of the local
+#                  play / <branch>/play tag. REV must be an ancestor of HEAD. Not with --notes-file.
+#                  A missing play tag is an error unless --notes-base or --notes-file is given;
+#                  seed it with git tag play <commit> (lightweight, do not push) or pass -B once
+#                  (a successful upload creates the tag).
 #     -h, --help   Print this usage and exit.
 #
 #   Devices: tablet, emulator -> emulator-5554; phone -> deploy_serial= in project.config;
@@ -79,7 +84,7 @@ options:
   -p, --play             upload the recorded Play bundle to Internal testing and alpha
   -n, --dry-run          with --play: show everything, upload and commit nothing
   -N, --notes-file FILE  with --play: release notes from FILE instead of the editor
-  -B, --notes-base REV   with --play: notes from REV..HEAD (override Play release provenance)
+  -B, --notes-base REV   with --play: notes from REV..HEAD (override the local play tag)
 
 Details: the comment at the top of ./deploy.
 USAGE
