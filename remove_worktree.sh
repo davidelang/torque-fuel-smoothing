@@ -131,8 +131,8 @@ if [ "$DIR_PRESENT" -eq 0 ]; then
     echo "Directory already gone; clearing the git worktree registration only."
 else
 # Make the tree deletable by us, in this order, each step loud and fatal:
-# 1. the root-owned ENGINEERING_LOG.md loses chattr +a (chown/chmod/unlink of an
-#    append-only file is refused, even for root);
+# 1. a leftover append-only flag on ENGINEERING_LOG.md is cleared (chown/chmod/unlink
+#    of that file is refused, even for root);
 # 2. if anything in the tree is not ours (root-owned log, files of another agent
 #    user), sudo chown -R gives it to us;
 # 3. chmod -R u+rwX, so git worktree remove can unlink everything.

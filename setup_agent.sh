@@ -155,10 +155,10 @@ while true; do
     continue
   fi
   echo "Removing stale non-worktree directory agent-$N (failed prior setup_agent run)..."
-  # Its log is root-owned and may be append-only, so the removal needs root.
+  # Its log is root-owned. A leftover append-only flag blocks rm, so clear it.
   if [ -e "agent-$N/ENGINEERING_LOG.md" ] || [ -L "agent-$N/ENGINEERING_LOG.md" ]; then
     _real=$(readlink -f -- "agent-$N/ENGINEERING_LOG.md")
-    sudo chattr -a -- "$_real" || _setup_die "cannot lift chattr +a on $_real"
+    sudo chattr -a -- "$_real" || _setup_die "cannot clear a leftover append-only flag on $_real"
   fi
   sudo rm -rf -- "agent-$N" || _setup_die "cannot remove stale agent-$N (try: sudo rm -rf agent-$N)"
   AGENT_ID="agent-$N"
@@ -471,7 +471,7 @@ _ctx_id="$(sed -n 's/^- \*\*Agent ID:\*\* //p' AGENT_CONTEXT.md | head -1 | tr -
 #    - copy latest critical infra files
 #    - build the setuid helper
 #    - run the standard permission fixers (via sudo for root:ai-shared parts
-#      like ENGINEERING_LOG.md ownership + chattr +a, and wrapper)
+#      like ENGINEERING_LOG.md ownership, and wrapper)
 #    This ensures the new agent can immediately use append-to-engineering-log,
 #    run-as-primary re-exec, correct setgid, etc. without extra steps.
 AGENT_ABS=$(pwd)
