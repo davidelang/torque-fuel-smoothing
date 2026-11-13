@@ -22,9 +22,8 @@ internal object Pids {
     const val DTE = "ff126a"
 
     const val PLUGIN_SMOOTHED = "[FuelSmooth] Smoothed Fuel Level"
-    // *_REMAINING and *_DTE (and the extra-tank remaining/dte names) are retired: never registered or written
-    // with a value, only set to NaN so Torque drops a stale last value. Torque's own remaining/DTE come from the
-    // level fed onto 012F, Torque's tank size and its long-term mpg.
+    // *_REMAINING and *_DTE (and the extra-tank remaining/dte names) are retired: never registered or written.
+    // Torque's own remaining/DTE come from the level fed onto 012F, Torque's tank size and its long-term mpg.
     const val PLUGIN_BAND_CORRECTED = "[FuelSmooth] Corrected % (band)"
     const val PLUGIN_BAND_REMAINING = "[FuelSmooth] Remaining (band)"
     const val PLUGIN_BAND_DTE = "[FuelSmooth] DTE (band)"
@@ -54,6 +53,66 @@ internal object Pids {
     const val PLUGIN_T2_REMAINING = "[FuelSmooth] Tank2 Remaining"
     const val PLUGIN_T2_DTE = "[FuelSmooth] Tank2 DTE"
     const val MODE_SMOOTHED = "ffd001"
+
+    enum class PluginPidKind { PERCENT, VOLUME }
+
+    /**
+     * One Torque extra-PID row. Register, publish and invalidate must use this exact
+     * long name, short name, unit and min/max so Torque keeps a single entry per output.
+     * Volume [unit] is pinned at registration ([volumeUnit]); a unit change can mint a new entry.
+     */
+    data class PluginPid(
+        val name: String,
+        val shortName: String,
+        val modeAndPid: String,
+        val kind: PluginPidKind,
+        val percentMax: Float = 100f,
+    )
+
+    /** Tank-size gauge max: fixed so a learned-size change does not mint a new Torque entry. */
+    const val TANK_SIZE_MAX_GAL = 100f
+
+    fun volumeUnit(prefersLiters: Boolean): String = if (prefersLiters) "l" else "gal"
+
+    fun volumeMax(prefersLiters: Boolean): Float =
+        if (prefersLiters) TANK_SIZE_MAX_GAL * Units.LITERS_PER_GAL.toFloat() else TANK_SIZE_MAX_GAL
+
+    fun tank1Outputs(): List<PluginPid> = listOf(
+        PluginPid(PLUGIN_SMOOTHED, "SmFuel", MODE_SMOOTHED, PluginPidKind.PERCENT),
+        PluginPid(PLUGIN_BAND_CORRECTED, "CorrBand", MODE_BAND_CORRECTED, PluginPidKind.PERCENT),
+        PluginPid(PLUGIN_KALMAN_CORRECTED, "CorrKal", MODE_KALMAN_CORRECTED, PluginPidKind.PERCENT),
+        PluginPid(PLUGIN_CHUNK_CORRECTED, "CorrChk", MODE_CHUNK_CORRECTED, PluginPidKind.PERCENT),
+        PluginPid(PLUGIN_TANK_CHUNK, "TankChk", MODE_TANK_CHUNK, PluginPidKind.VOLUME),
+        PluginPid(PLUGIN_TANK_BAND, "TankBand", MODE_TANK_BAND, PluginPidKind.VOLUME),
+        PluginPid(PLUGIN_TANK_KALMAN, "TankKal", MODE_TANK_KALMAN, PluginPidKind.VOLUME),
+    )
+
+    fun extraOutputs(id: Int): List<PluginPid> {
+        val n = extraPidNames(id)
+        return listOf(
+            PluginPid(n.smoothed, n.shortSm, extraModePid(id, 1), PluginPidKind.PERCENT),
+            PluginPid(n.corrected, n.shortCorr, extraModePid(id, 2), PluginPidKind.PERCENT),
+        )
+    }
+
+    fun allOutputs(extraIds: Iterable<Int> = emptyList()): List<PluginPid> =
+        tank1Outputs() + extraIds.flatMap { extraOutputs(it) }
+
+    fun output(name: String, extraIds: Iterable<Int> = emptyList()): PluginPid? =
+        allOutputs(extraIds).firstOrNull { it.name == name }
+
+    /** Retired Remaining/DTE long names. Never registered or written (a write would re-create them in Torque). */
+    fun retiredNames(extraIds: Iterable<Int> = emptyList()): List<String> {
+        val tank1 = listOf(
+            PLUGIN_BAND_REMAINING, PLUGIN_BAND_DTE,
+            PLUGIN_KALMAN_REMAINING, PLUGIN_KALMAN_DTE,
+            PLUGIN_CHUNK_REMAINING, PLUGIN_CHUNK_DTE,
+        )
+        return tank1 + extraIds.flatMap { id ->
+            val n = extraPidNames(id)
+            listOf(n.remaining, n.dte)
+        }
+    }
 
     fun extraModePid(id: Int, which: Int): String {
         check(id in 2..8 && which in 1..4)

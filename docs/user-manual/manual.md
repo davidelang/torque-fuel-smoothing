@@ -16,7 +16,7 @@ Braking, accelerating, cornering, and slopes move the fuel in the tank, so the r
 
 The smoothed reading is published as **[FuelSmooth] Smoothed Fuel Level** (short name SmFuel, id ffd001), in percent. Put it on any Torque dashboard.
 
-Earlier versions also published Remaining and DTE PIDs for each fit and each extra tank. Those are no longer written; the plugin blanks them when it connects to Torque, so a gauge still showing one reads empty. Remove those gauges and use Torque's own fuel remaining and distance to empty.
+Earlier versions also published Remaining and DTE PIDs for each fit and each extra tank. Those are no longer registered or written. The plugin does not blank them on connect, because a write under those names would create the entries again. In Torque, open **Manage extra PIDs** and delete leftover **[FuelSmooth] Remaining** and **DTE** rows, any **0-equation** **[FixFuel]** or **[OldFord]** rows, and any second copy of a Smoothed, Corrected, or Tank size reading. Keep the one entry per output that updates on the next connected drive (the live short names are SmFuel, CorrChk, CorrBand, CorrKal, TankChk, TankBand, and TankKal). Use Torque's own fuel remaining and distance to empty.
 
 ## Burn gate
 
@@ -26,7 +26,7 @@ Fuel is counted only while the engine runs. The plugin itself runs only while To
 
 Standard OBD fuel-rate readings and Torque's calculated fuel flow are always read as liters, which is how they are reported. You do not set that. Only a manufacturer-specific flow PID can need an override, `"flowUnit": "gal"` or `"l"`, in that profile's `profile.json`. There is no settings control for this yet. If fuel used looks about 3.8 times too high or too low, liters and gallons are mixed on that kind of PID.
 
-Tank size PIDs are written in Torque's own volume unit (gallons or liters). The plugin does not publish fuel remaining or distance to empty. Torque computes those itself from the fuel level (fed by the plugin when you choose so), the tank size in the Torque vehicle profile, and that profile's long-term mpg.
+Tank size PIDs are written in Torque's own volume unit (gallons or liters). That unit is fixed when the plugin registers the readings with Torque, so a later unit change does not create a second Tank size entry. The plugin does not publish fuel remaining or distance to empty. Torque computes those itself from the fuel level (fed by the plugin when you choose so), the tank size in the Torque vehicle profile, and that profile's long-term mpg.
 
 ## Install and enable
 
@@ -155,7 +155,8 @@ Privacy policy: https://play.landing.lang.hm/fuel-smoothing/privacy/
 - **No [FuelSmooth] PIDs in Torque.** Enable the plugin under Torque → Settings → Plugins. Restart Torque, then open Fuel Smoothing once.
 - **Plugin does not start in the background.** Set battery use to Unrestricted. Tap the "Tap to start" notification if you see it.
 - **"No fuel level this drive."** The source gave no usable level for that drive. Check the adapter, or run **Detect**.
-- **Level stays blank or held.** Pick the correct fuel source. Match a custom long name exactly. Ignore the first few seconds after connecting.
+- **Level stays blank or held.** Pick the correct fuel source. Match a custom long name exactly. Ignore the first few seconds after connecting. If a [FuelSmooth] gauge showed a value and then stayed blank, it is likely bound to a leftover twin entry; delete the extra [FuelSmooth] / 0-equation rows as above and add the gauge again while Torque is connected to the vehicle.
+- **Each [FuelSmooth] output appears twice in Torque.** Delete the copy that never updates (often a short name like Corr or Tank, or a 0-equation import). The plugin now registers, updates, and clears each output under the same long name, short name, and unit.
 - **Fuel used looks about 3.8× too high or too low.** A manufacturer-specific flow PID has the wrong unit. Set that profile's `flowUnit`.
 - **Data went to the wrong vehicle.** Select the right profile in Torque before the drive. Answer the vehicle question in the notification or on the setup page.
 - **Corrected percent looks off.** More partial tanks tighten the estimate. Early values can be off.

@@ -70,6 +70,9 @@ class PluginService : Service() {
     private var galHrUnit: String = ""
     private var galMinUnit: String = ""
     private var preferredVolumeUnit: String = ""
+    /** Volume unit/max pinned at PID registration so a later preferred-unit change does not mint a twin. */
+    private var pidVolumeUnit: String = "gal"
+    private var pidVolumeMax: Float = Pids.TANK_SIZE_MAX_GAL
     private var preferredDistanceUnit: String = ""
     private var loggedFlowUnit: Boolean = false
     private var lastActive: String = FixFuelPrefs.ACTIVE_TANK1
@@ -663,7 +666,8 @@ class PluginService : Service() {
             // A swap can occur without Torque changing profiles or reporting a connection edge.
             // One paced VIN recheck/minute (pending identity retries/30s), not a vendor scan.
             // A same-vehicle monitor keeps the dash live; a detected change invalidates in IdentityRead.
-            if (!identityReady) invalidateVehicleOutputs(t)
+            // Do not blank gauges here: starting a check is not a vehicle change, and a NaN write
+            // with the wrong short name was minting empty twin entries.
             try {
                 identity = IdentityRead(profileId, selectedTorqueProfile, Fingerprint.loadAll(filesDir)[profileId],
                     checkOnly = identityReady)
@@ -1607,110 +1611,100 @@ class PluginService : Service() {
     private fun registerPluginPids(t: ITorqueService) {
         runCatching { sendExtraPidRows(t) }
             .onFailure { FsLog.w(TAG, "sendPIDDataV2: ${it.message}") }
-        runCatching {
-            publishSmoothed(t, 0.0)
-            for (extra in cfg.extras) {
-                publishExtra(t, extra.id, 0.0, 0.0)
-            }
-            retireRemainingDte(t)
-        }.onFailure { FsLog.w(TAG, "registerPluginPids: ${it.message}") }
-        FsLog.i(TAG, "registered tank1 PIDs extras=${cfg.extras.map { it.id }}")
+        runCatching { logPluginPidInventory(t) }
+            .onFailure { FsLog.w(TAG, "pluginPidInventory: ${it.message}") }
+        FsLog.i(TAG, "registered tank1 PIDs extras=${cfg.extras.map { it.id }} volumeUnit=$pidVolumeUnit")
     }
 
     private fun sendExtraPidRows(t: ITorqueService) {
-        val remainUnit = remainingOut(0.0).second
-        val chunkMax = remainingScale(priorFor(1).cap)
-        val bandMax = remainingScale(bandModel()?.second)
-        val kalMax = remainingScale(kalmanModel()?.g98?.takeIf { it > 0.0 })
-        val names = mutableListOf<String>()
-        val shorts = mutableListOf<String>()
-        val modes = mutableListOf<String>()
-        val units = mutableListOf<String>()
-        val mins = mutableListOf<Float>()
-        val maxs = mutableListOf<Float>()
-        fun row(name: String, shortName: String, unit: String, max: Float, modePid: String) {
-            names.add(name)
-            shorts.add(shortName)
-            modes.add(modePid)
-            units.add(unit)
-            mins.add(0f)
-            maxs.add(max)
-        }
-        row(Pids.PLUGIN_SMOOTHED, "SmFuel", "%", 100f, Pids.MODE_SMOOTHED)
-        // Remaining and DTE are no longer registered or written (Torque computes both from the fed level).
-        row(Pids.PLUGIN_BAND_CORRECTED, "CorrBand", "%", 100f, Pids.MODE_BAND_CORRECTED)
-        row(Pids.PLUGIN_KALMAN_CORRECTED, "CorrKal", "%", 100f, Pids.MODE_KALMAN_CORRECTED)
-        row(Pids.PLUGIN_CHUNK_CORRECTED, "CorrChk", "%", 100f, Pids.MODE_CHUNK_CORRECTED)
-        row(Pids.PLUGIN_TANK_CHUNK, "TankChk", remainUnit, chunkMax, Pids.MODE_TANK_CHUNK)
-        row(Pids.PLUGIN_TANK_BAND, "TankBand", remainUnit, bandMax, Pids.MODE_TANK_BAND)
-        row(Pids.PLUGIN_TANK_KALMAN, "TankKal", remainUnit, kalMax, Pids.MODE_TANK_KALMAN)
-        for (extra in cfg.extras) {
-            val n = Pids.extraPidNames(extra.id)
-            row(n.smoothed, n.shortSm, "%", 100f, Pids.extraModePid(extra.id, 1))
-            row(n.corrected, n.shortCorr, "%", 100f, Pids.extraModePid(extra.id, 2))
-        }
-        val count = names.size
-        val blank = Array(count) { "" }
-        val eq = Array(count) { "" }
-        val diag = arrayOfNulls<String>(count)
+        // Pin unit and max at registration. sendPIDDataV2 (empty equation, unique ffd0xx ModeAndPID)
+        // lists the row in Manage extra PIDs; setPIDInformation then updates that same name-keyed row.
+        // A "0" equation used to make Torque import a second 0% entry; the equation stays empty.
+        val prefersLiters = Units.prefersLiters(preferredVolumeUnit)
+        pidVolumeUnit = Pids.volumeUnit(prefersLiters)
+        pidVolumeMax = Pids.volumeMax(prefersLiters)
+        val rows = Pids.allOutputs(cfg.extras.map { it.id })
+        val names = rows.map { it.name }.toTypedArray()
+        val shorts = rows.map { it.shortName }.toTypedArray()
+        val modes = rows.map { it.modeAndPid }.toTypedArray()
+        val units = rows.map { pluginUnit(it) }.toTypedArray()
+        val mins = FloatArray(rows.size) { 0f }
+        val maxs = rows.map { pluginMax(it) }.toFloatArray()
+        val blank = Array(rows.size) { "" }
+        val eq = Array(rows.size) { "" }
+        val diag = arrayOfNulls<String>(rows.size)
         val ok = t.sendPIDDataV2(
             BuildConfig.APPLICATION_ID,
-            names.toTypedArray(),
-            shorts.toTypedArray(),
-            modes.toTypedArray(),
+            names,
+            shorts,
+            modes,
             eq,
-            mins.toFloatArray(),
-            maxs.toFloatArray(),
-            units.toTypedArray(),
+            mins,
+            maxs,
+            units,
             blank,
             diag,
             diag,
         )
-        FsLog.i(TAG, "sendPIDDataV2 n=$count ok=$ok remainUnit=$remainUnit")
+        FsLog.i(TAG, "sendPIDDataV2 n=${rows.size} ok=$ok remainUnit=$pidVolumeUnit")
+    }
+
+    /** Torque's list of [FuelSmooth] rows after bind: id, long name, short, unit. Twins show as repeated names. */
+    private fun logPluginPidInventory(t: ITorqueService) {
+        val all = t.listAllPIDs() ?: return
+        val infos = t.getPIDInformation(all) ?: return
+        val n = minOf(all.size, infos.size)
+        val rows = ArrayList<String>()
+        for (i in 0 until n) {
+            val info = infos[i] ?: continue
+            val parts = info.split(',')
+            val name = parts.getOrNull(0)?.trim().orEmpty()
+            if (!name.startsWith("[FuelSmooth]") && !name.startsWith("[FixFuel]") && !name.startsWith("[OldFord]")) continue
+            val short = parts.getOrNull(1)?.trim().orEmpty()
+            val unit = parts.getOrNull(2)?.trim().orEmpty()
+            val eq = parts.getOrNull(3)?.trim().orEmpty()
+            rows.add("${all[i]} name=$name short=$short unit=$unit eq=${eq.ifEmpty { "empty" }}")
+        }
+        FsLog.i(TAG, "plugin PID inventory n=${rows.size}: ${rows.joinToString(" | ")}")
+    }
+
+    private fun pluginUnit(pid: Pids.PluginPid): String =
+        if (pid.kind == Pids.PluginPidKind.PERCENT) "%" else pidVolumeUnit
+
+    private fun pluginMax(pid: Pids.PluginPid): Float =
+        if (pid.kind == Pids.PluginPidKind.PERCENT) pid.percentMax else pidVolumeMax
+
+    private fun setPluginPid(t: ITorqueService, pid: Pids.PluginPid, value: Float) {
+        setPid(t, pid.name, pid.shortName, pluginUnit(pid), pluginMax(pid), value)
+    }
+
+    private fun setPluginPid(t: ITorqueService, name: String, value: Float) {
+        val pid = Pids.output(name, cfg.extras.map { it.id }) ?: return
+        setPluginPid(t, pid, value)
     }
 
     private fun publishExtra(t: ITorqueService, id: Int, smoothed: Double, corrected: Double) {
         val names = Pids.extraPidNames(id)
-        setPid(t, names.smoothed, names.shortSm, "%", rmax = 100f, value = smoothed.toFloat())
-        if (corrected.isFinite()) setPid(t, names.corrected, names.shortCorr, "%", rmax = 100f, value = corrected.toFloat())
-    }
-
-    /**
-     * Remaining and DTE PIDs (tank 1 per fit, and extra tanks) are retired: set to NaN so Torque does not keep a
-     * stale last value on a gauge. Written at registration and whenever vehicle outputs are invalidated.
-     */
-    private fun retireRemainingDte(t: ITorqueService) {
-        fun invalid(name: String, short: String, unit: String, max: Float) = setPid(t, name, short, unit, max, Float.NaN)
-        val volumeUnit = remainingOut(0.0).second
-        for ((remain, short) in listOf(
-            Pids.PLUGIN_CHUNK_REMAINING to "GalChk", Pids.PLUGIN_BAND_REMAINING to "GalBand", Pids.PLUGIN_KALMAN_REMAINING to "GalKal",
-        )) invalid(remain, short, volumeUnit, 100f)
-        for ((dte, short) in listOf(
-            Pids.PLUGIN_CHUNK_DTE to "DTEChk", Pids.PLUGIN_BAND_DTE to "DTEBand", Pids.PLUGIN_KALMAN_DTE to "DTEKal",
-        )) invalid(dte, short, dteUnit(), dteMax())
-        for (extra in cfg.extras) {
-            val n = Pids.extraPidNames(extra.id)
-            invalid(n.remaining, n.shortGal, volumeUnit, 100f); invalid(n.dte, n.shortDte, dteUnit(), dteMax())
+        for (pid in Pids.extraOutputs(id)) {
+            val v = when (pid.name) {
+                names.smoothed -> smoothed
+                names.corrected -> corrected
+                else -> Double.NaN
+            }
+            if (v.isFinite()) setPluginPid(t, pid, v.toFloat())
         }
     }
 
     private fun invalidateVehicleOutputs(t: ITorqueService) {
-        fun invalid(name: String, short: String, unit: String, max: Float = 100f) =
-            setPid(t, name, short, unit, max, Float.NaN)
-        invalid(Pids.PLUGIN_SMOOTHED, "SmFuel", "%")
-        val volumeUnit = remainingOut(0.0).second
-        for (corr in listOf(Pids.PLUGIN_CHUNK_CORRECTED, Pids.PLUGIN_BAND_CORRECTED, Pids.PLUGIN_KALMAN_CORRECTED)) invalid(corr, "Corr", "%")
-        for (name in listOf(Pids.PLUGIN_TANK_CHUNK, Pids.PLUGIN_TANK_BAND, Pids.PLUGIN_TANK_KALMAN)) invalid(name, "Tank", volumeUnit)
-        for (extra in cfg.extras) {
-            val n = Pids.extraPidNames(extra.id)
-            invalid(n.smoothed, n.shortSm, "%"); invalid(n.corrected, n.shortCorr, "%")
+        for (pid in Pids.allOutputs(cfg.extras.map { it.id })) {
+            setPluginPid(t, pid, Float.NaN)
         }
-        retireRemainingDte(t)
         // Withdraw only our own previous stock-slot feedback; this is Torque cache metadata,
         // never an ECU write. No numeric previous-car correction survives identity pending.
+        // Retired Remaining/DTE names are never written (a NaN write would re-create them).
         if (logged012fWrite && !isFordName(ecuLevelName)) {
-            invalid(ecuLevelName, "Fuel", "%")
-            ecuLevelPid?.takeIf { it != ecuLevelName && !isFordName(it) }?.let { invalid(it, "Fuel", "%") }
+            setPid(t, ecuLevelName, "Fuel", "%", 100f, Float.NaN)
+            ecuLevelPid?.takeIf { it != ecuLevelName && !isFordName(it) }?.let { setPid(t, it, "Fuel", "%", 100f, Float.NaN) }
         }
         logged012fWrite = false
         lastRawPct = null
@@ -1726,9 +1720,9 @@ class PluginService : Service() {
     private fun publishPending(t: ITorqueService, rt: TankRt, smoothed: Double) {
         publishSmoothed(t, smoothed)
         val out = unityPublish(smoothed)
-        runCatching { publishFit(t, out, Pids.PLUGIN_KALMAN_CORRECTED, "CorrKal") }
-        runCatching { publishFit(t, out, Pids.PLUGIN_CHUNK_CORRECTED, "CorrChk") }
-        runCatching { publishFit(t, out, Pids.PLUGIN_BAND_CORRECTED, "CorrBand") }
+        runCatching { publishFit(t, out, Pids.PLUGIN_KALMAN_CORRECTED) }
+        runCatching { publishFit(t, out, Pids.PLUGIN_CHUNK_CORRECTED) }
+        runCatching { publishFit(t, out, Pids.PLUGIN_BAND_CORRECTED) }
         if (rt.math.smoothed != null) writeStockFuelLevel(t, smoothed, out.correctedPct, Double.NaN, Double.NaN, pending = true)
         updatePresence(statusText())
     }
@@ -1741,7 +1735,7 @@ class PluginService : Service() {
         TankPublish(Double.NaN, Double.NaN, corr, 0.0, Double.NaN, Double.NaN, sized = sized)
 
     private fun publishSmoothed(t: ITorqueService, smoothed: Double) {
-        setPid(t, Pids.PLUGIN_SMOOTHED, "SmFuel", "%", rmax = 100f, value = LevelScale.display(smoothed, levelUnit(1)).toFloat())
+        setPluginPid(t, Pids.PLUGIN_SMOOTHED, LevelScale.display(smoothed, levelUnit(1)).toFloat())
     }
 
     private var bandCache: Triple<Long, DoubleArray, Double>? = null
@@ -1787,29 +1781,27 @@ class PluginService : Service() {
         return corrOnly(FuelV2.correctedPct(sm, { km.v(it) }, km.g98).takeIf { it.isFinite() } ?: sm, sized = true)
     }
 
-    private fun publishKalman(t: ITorqueService, b: TankPublish) = publishFit(t, b, Pids.PLUGIN_KALMAN_CORRECTED, "CorrKal")
+    private fun publishKalman(t: ITorqueService, b: TankPublish) = publishFit(t, b, Pids.PLUGIN_KALMAN_CORRECTED)
 
-    private fun publishChunk(t: ITorqueService, b: TankPublish) = publishFit(t, b, Pids.PLUGIN_CHUNK_CORRECTED, "CorrChk")
+    private fun publishChunk(t: ITorqueService, b: TankPublish) = publishFit(t, b, Pids.PLUGIN_CHUNK_CORRECTED)
 
-    private fun publishBand(t: ITorqueService, b: TankPublish) = publishFit(t, b, Pids.PLUGIN_BAND_CORRECTED, "CorrBand")
+    private fun publishBand(t: ITorqueService, b: TankPublish) = publishFit(t, b, Pids.PLUGIN_BAND_CORRECTED)
 
     /** Corrected percent is written when finite. Remaining and DTE are not written (retired). */
-    private fun publishFit(t: ITorqueService, b: TankPublish, correctedName: String, correctedShort: String) {
-        if (b.correctedPct.isFinite()) {
-            setPid(t, correctedName, correctedShort, "%", rmax = 100f, value = b.correctedPct.toFloat())
-        }
+    private fun publishFit(t: ITorqueService, b: TankPublish, correctedName: String) {
+        if (b.correctedPct.isFinite()) setPluginPid(t, correctedName, b.correctedPct.toFloat())
     }
 
-    /** Tank size per fit. Chunk may use the user seed. Band and Kalman use only their own size. Unwritten PIDs are left alone. */
+    /** Tank size per fit, in the unit pinned at registration. Unwritten PIDs are left alone. */
     private fun publishTankSizes(t: ITorqueService) {
-        fun pub(name: String, short: String, gal: Double?) {
+        fun pub(name: String, gal: Double?) {
             if (gal == null || !gal.isFinite() || gal <= 0.0) return
-            val (vol, vu) = remainingOut(gal)
-            setPid(t, name, short, vu, rmax = remainingScale(gal), value = vol)
+            val vol = if (pidVolumeUnit == "l") (gal * Units.LITERS_PER_GAL).toFloat() else gal.toFloat()
+            setPluginPid(t, name, vol)
         }
-        pub(Pids.PLUGIN_TANK_CHUNK, "TankChk", priorFor(1).cap)
-        pub(Pids.PLUGIN_TANK_BAND, "TankBand", bandModel()?.second)
-        pub(Pids.PLUGIN_TANK_KALMAN, "TankKal", kalmanModel()?.g98?.takeIf { it > 0.0 })
+        pub(Pids.PLUGIN_TANK_CHUNK, priorFor(1).cap)
+        pub(Pids.PLUGIN_TANK_BAND, bandModel()?.second)
+        pub(Pids.PLUGIN_TANK_KALMAN, kalmanModel()?.g98?.takeIf { it > 0.0 })
     }
 
     /** [pending]: only this connection's smoothed (unity) value may be fed while identity is unresolved. */
