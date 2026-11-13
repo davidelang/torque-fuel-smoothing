@@ -53,6 +53,7 @@ class PluginService : Service() {
         /** Session fuelGal at the last fill end. Open resets this with usedGal. */
         var fuelAtFillGal: Double = 0.0
         val ledger = TankLedger()
+        val stale = StaleLevelGuard()
     }
 
     private val handler = Handler(Looper.getMainLooper())
@@ -753,11 +754,13 @@ class PluginService : Service() {
         }
         var lvlUpd: Long? = null // set only when the level is read by Torque PID name (null = bus reply)
         var lvlBusFresh = false // a direct bus reply this tick proves Torque's cached named value is current
+        var levelPid: String? = null
         val src = FuelSources.read(t, srcCfg, pidNames) { pid ->
             if (isStock012F(pid)) {
                 FsLog.warn(TAG, "refuse012f", "refusing getPIDValues of 012F (not Ford input)")
                 null
             } else {
+                levelPid = pid
                 if (id == 1 && autoMatch != null) {
                     lvlBusFresh = probeAutoMatchLevel(t, srcCfg.sourceId, pid)
                     lvlUpd = updateTime(t, pid) ?: 0L
@@ -779,7 +782,27 @@ class PluginService : Service() {
             FsLog.i(TAG, "tank$id level re-anchored to ${rt.math.smoothed} after sustained low readings (raw=$raw)")
             if (logging0) rt.sessions.mark("reanchor", now, "\"sm\":${rt.math.smoothed}")
         }
-        val valid = rt.math.isValidSample(raw, ecu, rt.math.smoothed) && !src.missing
+        var stale = false
+        if (raw != null && raw.isFinite() && !src.missing) {
+            val tankGal = priorFor(id).cap
+            when (rt.stale.observe(raw, rt.usedGal, tankGal)) {
+                StaleLevelGuard.Verdict.REFRESH -> {
+                    requestLevelRefresh(t, srcCfg.sourceId, levelPid)
+                    val burn = rt.usedGal - rt.stale.usedAtChange
+                    FsLog.i(TAG, "tank$id stale level refresh: unchanged ${"%.2f".format(raw)} while burn=${"%.3f".format(burn)} gal (threshold=${"%.2f".format(LevelTrust.staleBurnGal(tankGal))})")
+                }
+                StaleLevelGuard.Verdict.STALE -> {
+                    stale = true
+                    if (!rt.stale.logged) {
+                        rt.stale.logged = true
+                        val burn = rt.usedGal - rt.stale.usedAtChange
+                        FsLog.w(TAG, "tank$id stale level: unchanged ${"%.2f".format(raw)} while burn=${"%.3f".format(burn)} gal; not used as auto-match baseline")
+                    }
+                }
+                StaleLevelGuard.Verdict.OK -> {}
+            }
+        }
+        val valid = !stale && rt.math.isValidSample(raw, ecu, rt.math.smoothed) && !src.missing
         val logging = rt.sessions.isOpen && lastActive == id.toString()
         if (!valid) {
             rt.math.hold()
@@ -789,7 +812,7 @@ class PluginService : Service() {
                 rt.sessions.append(
                     sampleRow(
                         id, now, raw ?: Double.NaN, held ?: Double.NaN, speedRaw,
-                        fill = false, ok = false, why = holdWhy(raw, ecu, src.missing, rt.math.smoothed),
+                        fill = false, ok = false, why = if (stale) LevelTrust.WHY_STALE else holdWhy(raw, ecu, src.missing, rt.math.smoothed),
                         mode = TrackMode.HOLD, ecu = ecu == true,
                     ),
                 )
@@ -798,7 +821,7 @@ class PluginService : Service() {
             if (held != null) {
                 if (id == 1) publishFromSmoothed(t, raw ?: held, held) else publishExtraFrom(t, id, rt, held)
             }
-            holdWhy(raw, ecu, src.missing, rt.math.smoothed).let { why ->
+            (if (stale) LevelTrust.WHY_STALE else holdWhy(raw, ecu, src.missing, rt.math.smoothed)).let { why ->
                 FsLog.change(TAG, "state$id", "hold $why", "tank$id hold raw=$raw why=$why src=${src.how}")
             }
             return
@@ -1485,6 +1508,20 @@ class PluginService : Service() {
      *    because the [FORD]Fuel Level equation is the user's Torque extra-PID definition.
      * A custom long-name PID has no known command, so it stays on Torque's own polling plus the timeout.
      */
+    /**
+     * Ask Torque to re-read a named fuel-level PID (triggersDataRefresh). Used when the live level
+     * has stayed put while fuel used grew enough to prove the cached value is stale. One request;
+     * the new value is picked up on a later tick.
+     */
+    private fun requestLevelRefresh(t: ITorqueService, sourceId: String, pid: String?) {
+        val numeric = pid?.substringBefore(',')?.trim()?.let { token ->
+            token.toLongOrNull() ?: token.toLongOrNull(16)
+        } ?: if (sourceId == "ford_16c1") Pids.FORD_FUEL_STORED.toLong() else null
+        if (numeric == null) return
+        runCatching { t.getValueForPid(numeric, true) }
+            .onFailure { FsLog.warn(TAG, "staleRefresh", "Torque refresh request failed: ${it.javaClass.simpleName}") }
+    }
+
     private fun probeAutoMatchLevel(t: ITorqueService, sourceId: String, pid: String): Boolean {
         if (sourceId != "ford_16c1" || pidNames[Pids.FORD_FUEL_NAME] != pid) return false
         val tick = autoMatchProbeTicks++
@@ -1554,23 +1591,10 @@ class PluginService : Service() {
         pendingDisplay = null
     }
 
-    /** Last smoothed tank-1 level recorded for [profile] with its configured source (newest raw sessions first). */
+    /** Last trusted smoothed tank-1 level for [profile]. Frozen or stale samples are skipped. */
     private fun lastRecordedLevel(profile: String): Double? {
         val src = FuelDetect.load(filesDir, profile).first
-        if (src == FuelDetect.NONE) return null
-        val raw = File(ProfileStore.tankDir(filesDir, profile, 1), "raw")
-        val files = raw.listFiles { f -> f.isFile && f.name.endsWith(".jsonl") }?.sortedByDescending { it.name }?.take(40) ?: return null
-        for (f in files) {
-            val lines = runCatching { f.readLines() }.getOrNull() ?: continue
-            for (line in lines.asReversed()) {
-                if (!line.startsWith("{\"t\":")) continue
-                val o = runCatching { org.json.JSONObject(line) }.getOrNull() ?: continue
-                if (o.optString("lvlSrc") != src) continue
-                val sm = o.optDouble("sm", Double.NaN)
-                if (sm.isFinite() && sm > 0.0) return sm
-            }
-        }
-        return null
+        return LevelTrust.lastTrustedLevel(File(ProfileStore.tankDir(filesDir, profile, 1), "raw"), src)
     }
 
     /** One label for every identity choice surface (popup, banner, notification). */
