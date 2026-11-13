@@ -389,12 +389,13 @@ repo_has_commit() {
 }
 
 
-# Disable every filter.* configured on REPO except LFS, so a checkout of src
-# matches a network clone: tokens stay raw and smudge scripts do not run.
-# A linked worktree (or worktree add) inherits the host repo's config, including
-# a required manage-configs smudge that needs a gitignored project.config the
-# new tree does not have. If worktree add still fails, the caller keeps the
-# existing loud FAIL (no network fallback).
+# Disable every filter.* configured on REPO except LFS, and skip host hooks,
+# so a checkout of src matches a network clone: tokens stay raw and smudge
+# scripts do not run. A linked worktree (or worktree add) inherits the host
+# repo's config and hooks, including a required manage-configs smudge and a
+# post-checkout hook that need a gitignored project.config the new tree does
+# not have. LFS stays enabled (its filter is not disabled). If worktree add
+# still fails, the caller keeps the existing loud FAIL (no network fallback).
 collect_nofilter_config() {
   local -n _nofilter_cfg="$1"
   local repo="$2" key name
@@ -430,7 +431,7 @@ git_nofilter() {
   shift
   local -a cfg=()
   collect_nofilter_config cfg "$repo" || return 1
-  git -c "safe.directory=$repo" -C "$repo" "${cfg[@]}" "$@"
+  git -c "safe.directory=$repo" -C "$repo" -c core.hooksPath=/dev/null "${cfg[@]}" "$@"
 }
 
 # Detach at pin sha and discard local mods so patches re-apply cleanly.
