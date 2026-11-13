@@ -137,6 +137,37 @@ cfg() {
   sed -n "/^$1=/{s/^$1=//;p;q}" project.config | tr -d '\r'
 }
 
+# require_named_branch / moving_tag_name: keep in sync with build_app.
+# git rev-parse --abbrev-ref HEAD is "HEAD" when the checkout is detached. Using that as
+# a branch name produced tags called HEAD/builds and HEAD/deployed. Refuse that.
+require_named_branch() {
+  local branch
+  branch=$(git rev-parse --abbrev-ref HEAD) || exit 1
+  if [ -z "$branch" ] || [ "$branch" = HEAD ]; then
+    echo "ERROR: this checkout is detached; ${1:-this} is only done on a named branch (master: the unprefixed tag; otherwise <branch>/...). Check out a branch and retry." >&2
+    exit 1
+  fi
+  printf '%s\n' "$branch"
+}
+
+moving_tag_name() {
+  local base="$1" branch
+  if [ -z "$base" ]; then
+    echo "ERROR: moving_tag_name needs a tag base (builds, deployed, deployed-test)." >&2
+    exit 1
+  fi
+  branch=$(git rev-parse --abbrev-ref HEAD) || exit 1
+  if [ -z "$branch" ] || [ "$branch" = HEAD ]; then
+    echo "ERROR: this checkout is detached; the '$base' / '<branch>/$base' tag is only used on a named branch. Check out a branch and retry." >&2
+    exit 1
+  fi
+  if [ "$branch" = master ]; then
+    printf '%s\n' "$base"
+  else
+    printf '%s/%s\n' "$branch" "$base"
+  fi
+}
+
 if [ "$SINGLE_USER" = true ]; then
   echo "NOTICE: single-user mode: $SINGLE_USER_WHY."
   echo "  Deploying as $(id -un): no re-exec, no role or group checks."
@@ -182,6 +213,10 @@ if [ -n "$MISSING" ]; then
   exit 1
 fi
 fi
+
+# Refuse a detached checkout early: the deployed tag would otherwise be named HEAD/deployed
+# (and play-publish already refuses detached for the play tag).
+require_named_branch "the deployed tag (deployed / <branch>/deployed)" >/dev/null
 
 rebuild=0
 if [ "${REBUILD:-0}" = "1" ]; then rebuild=1; fi
@@ -655,14 +690,9 @@ if [ "$failed" -ne 0 ]; then
   exit 1
 fi
 
-CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 TAG_BASE="deployed"
 if [ "$mode" = test ]; then TAG_BASE="deployed-test"; fi
-if [ "$CURRENT_BRANCH" == "master" ]; then
-  TAG_NAME="$TAG_BASE"
-else
-  TAG_NAME="${CURRENT_BRANCH}/$TAG_BASE"
-fi
+TAG_NAME=$(moving_tag_name "$TAG_BASE") || exit 1
 echo "Install successful ($PKG $VERSION_NAME). Updating '$TAG_NAME' tag."
 git tag -f "$TAG_NAME"
 git describe --tags --always

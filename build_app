@@ -51,11 +51,14 @@
 #        'git rm --cached' command to untrack them (never run by build_app).
 #     3. Integrity check: the tree must be clean (generated paths aside); every build comes
 #        from that one commit.
-#     4. Play only, before any gradle work, so an unattended build never stalls part-way:
-#        testing-version y/N (only on a branch with a BRANCH-start tag); then query Play for
-#        the highest versionCode (all tracks and uploaded bundles, same service-account as
-#        deploy --play). If that query fails, nothing is built or committed. Then password
-#        prompts.
+#     4. Play only. If a Play build is selected, query Play for the highest versionCode
+#        (all tracks and uploaded bundles, same service-account as deploy --play) as the
+#        invoking user, BEFORE any re-exec as coder_user (play_service_account_json is
+#        typically mode 640 and not readable by coder_user). The integer is passed to the
+#        coder_user phase; that phase must not open the key. If the query fails, or the
+#        value is missing after re-exec, nothing is built or committed (no fallback to the
+#        local file). After re-exec: testing-version y/N (only on a branch with a
+#        BRANCH-start tag); then password prompts.
 #     5. Play only, before any gradle work: app/versionCode.txt is set to Play's highest
 #        versionCode plus one (Play is the source of truth, even if the local file is higher)
 #        and committed alone as "versionCode N (play build)" when the file changed. Every
@@ -215,11 +218,177 @@ cfg() {
   sed -n "s/^$1=//p" project.config | tr -d '\r' | head -1
 }
 
+# Script dir (needed before re-exec, so a Play versionCode query can run as the invoker).
+_BA_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+# require_named_branch [WHAT]
+# git rev-parse --abbrev-ref HEAD is "HEAD" when the checkout is detached. Using that as
+# a branch name produced tags called HEAD/builds and HEAD/deployed. Refuse that.
+# Call this directly (not inside $()), so exit stops the script; build_app has no set -e.
+require_named_branch() {
+  local branch
+  branch=$(git rev-parse --abbrev-ref HEAD) || exit 1
+  if [ -z "$branch" ] || [ "$branch" = HEAD ]; then
+    echo "ERROR: this checkout is detached; ${1:-this} is only done on a named branch (master: the unprefixed tag; otherwise <branch>/...). Check out a branch and retry." >&2
+    exit 1
+  fi
+  printf '%s\n' "$branch"
+}
+
+# moving_tag_name BASE
+# Local moving tags: BASE on master, <branch>/BASE on any other branch (builds, deployed,
+# deployed-test). Keep in sync with deploy.
+moving_tag_name() {
+  local base="$1" branch
+  if [ -z "$base" ]; then
+    echo "ERROR: moving_tag_name needs a tag base (builds, deployed, deployed-test)." >&2
+    exit 1
+  fi
+  branch=$(git rev-parse --abbrev-ref HEAD) || exit 1
+  if [ -z "$branch" ] || [ "$branch" = HEAD ]; then
+    echo "ERROR: this checkout is detached; the '$base' / '<branch>/$base' tag is only used on a named branch. Check out a branch and retry." >&2
+    exit 1
+  fi
+  if [ "$branch" = master ]; then
+    printf '%s\n' "$base"
+  else
+    printf '%s/%s\n' "$branch" "$base"
+  fi
+}
+
+# _ba_play_will_run "$@"
+# True when this invocation will include a Play build (same rules as the later flag parse:
+# -p/--play/--bundle, or no build flags in multi-user mode). --release-tag and signing
+# options do not count as build-selection flags.
+_ba_play_will_run() {
+  local parsed a pre=() flag_seen=0 play=0
+  for a in "$@"; do
+    [ "$a" = "--" ] && break
+    pre+=("$a")
+  done
+  if ! parsed=$(getopt -o +hstpT:c:K:A:B:P:G: -l help,standard,test,play,bundle,release-tag:,signing-config:,release-keystore:,release-key-alias:,release-bundle-task:,release-bundle-path:,release-gradle-args: -- ${pre[@]+"${pre[@]}"} 2>/dev/null); then
+    return 1
+  fi
+  eval set -- "$parsed"
+  while true; do
+    case "$1" in
+      -s|--standard|-t|--test) flag_seen=1; shift ;;
+      -p|--play|--bundle) play=1; flag_seen=1; shift ;;
+      -h|--help) return 1 ;;
+      -T|--release-tag|-c|--signing-config|-K|--release-keystore|-A|--release-key-alias|-B|--release-bundle-task|-P|--release-bundle-path|-G|--release-gradle-args) shift 2 ;;
+      --) shift; break ;;
+      *) shift ;;
+    esac
+  done
+  if [ "$play" -eq 1 ]; then
+    return 0
+  fi
+  if [ "$flag_seen" -eq 0 ] && [ "$SINGLE_USER" = false ]; then
+    return 0
+  fi
+  return 1
+}
+
+# query_play_upstream_version_code
+# Talks to Play (play-publish --max-version-code) as the current user and sets
+# UPSTREAM_VERSION_CODE. No fallback to the local versionCode file. Needs a readable
+# play_service_account_json and either play_application_id or a readable Play bundle.
+query_play_upstream_version_code() {
+  local sa pkg aab play_query_aab line aapt2 work _bin
+  local -a _pp_query
+  sa="${PLAY_SA_JSON:-$(cfg play_service_account_json)}"
+  pkg="${PLAY_APP_ID:-$(cfg play_application_id)}"
+  aab="${AAB:-$(cfg release_bundle_path)}"
+  if [ -z "$sa" ]; then
+    echo "ERROR: play_service_account_json is not set (needed to query Play for the next versionCode). Nothing built or committed." >&2
+    exit 1
+  fi
+  if [[ "$sa" != /* ]]; then
+    echo "ERROR: play_service_account_json must be an absolute path: $sa" >&2
+    exit 1
+  fi
+  if [ ! -f "$sa" ] || [ ! -r "$sa" ]; then
+    echo "ERROR: play_service_account_json=$sa is missing or not readable by $(id -un). Nothing built or committed." >&2
+    exit 1
+  fi
+  if [ ! -x "$_BA_DIR/play-publish" ]; then
+    echo "ERROR: $_BA_DIR/play-publish missing (ships with the android-gradle build type; used to query Play for the next versionCode)." >&2
+    exit 1
+  fi
+  for _bin in python3 openssl; do
+    if ! command -v "$_bin" >/dev/null; then
+      echo "ERROR: the Play build needs $_bin on PATH (to query Play for the next versionCode)." >&2
+      exit 1
+    fi
+  done
+  play_query_aab=""
+  if [ -r "$PLAY_LINK" ]; then
+    play_query_aab="$PLAY_LINK"
+  elif [ -n "$aab" ] && [ -r "$aab" ]; then
+    play_query_aab="$aab"
+  fi
+  if [ -z "$pkg" ] && [ -z "$play_query_aab" ]; then
+    echo "ERROR: cannot determine the Play applicationId to query the latest versionCode (set play_application_id= in project.config, or leave a readable Play bundle at $PLAY_LINK). Nothing built or committed." >&2
+    exit 1
+  fi
+  _pp_query=("$_BA_DIR/play-publish" --max-version-code --key "$sa")
+  [ -n "$pkg" ] && _pp_query+=(--package "$pkg")
+  if [ -n "$play_query_aab" ]; then
+    if [ ! -f "$_BA_DIR/orch/ve-resolve-orch" ]; then
+      echo "ERROR: missing $_BA_DIR/orch/ve-resolve-orch (needed to locate the SDK aapt2 to read $play_query_aab)." >&2
+      exit 1
+    fi
+    # shellcheck source=/dev/null
+    . "$_BA_DIR/orch/ve-resolve-orch"
+    if ! aapt2=$(ve_aapt2_from_sdk "$_BA_DIR"); then
+      echo "ERROR: cannot locate the SDK aapt2 (sdk.dir in local.properties, or ANDROID_HOME) to read $play_query_aab. Nothing built or committed." >&2
+      exit 1
+    fi
+    work="$(pwd)/app/build/outputs/build_app"
+    if [ ! -d "$work" ]; then
+      mkdir -p "$work" || {
+        echo "ERROR: could not create $work (scratch for reading the Play bundle; never /tmp). Nothing built or committed." >&2
+        exit 1
+      }
+    fi
+    if [ ! -w "$work" ]; then
+      echo "ERROR: $work is not writable by $(id -un) (scratch for reading the Play bundle). Nothing built or committed." >&2
+      exit 1
+    fi
+    _pp_query+=(--aab "$play_query_aab" --aapt2 "$aapt2" --work-dir "$work")
+  fi
+  echo "Querying Play for the highest versionCode as $(id -un)..."
+  if ! line=$("${_pp_query[@]}"); then
+    echo "ERROR: could not query Play for the latest versionCode (see above). The Play build was not started; nothing built or committed." >&2
+    exit 1
+  fi
+  if ! [[ "$line" =~ ^max-version-code[[:space:]]+([0-9]+)$ ]]; then
+    echo "ERROR: play-publish --max-version-code printed '$line', not 'max-version-code N'. The Play build was not started; nothing built or committed." >&2
+    exit 1
+  fi
+  UPSTREAM_VERSION_CODE="${BASH_REMATCH[1]}"
+  if [ -z "$pkg" ]; then
+    pkg="(from $play_query_aab)"
+  fi
+  echo "Play upstream highest versionCode is $UPSTREAM_VERSION_CODE ($pkg); this build will use $((UPSTREAM_VERSION_CODE + 1))."
+}
+
+# Accept a Play upstream versionCode already queried by the invoking user. Dies if the
+# value is missing or not an integer. The child must not open play_service_account_json.
+accept_play_upstream_version_code() {
+  if ! [[ "${1:-}" =~ ^[0-9]+$ ]]; then
+    echo "ERROR: BUILD_APP_PLAY_UPSTREAM_VERSION_CODE is missing or not an integer (got '${1:-}'). The Play versionCode query must run as $PRIMARY_USER before the re-exec as $CODER_USER; $CODER_USER must not read play_service_account_json. Nothing built or committed." >&2
+    exit 1
+  fi
+  UPSTREAM_VERSION_CODE="$1"
+}
+
 if [ "$SINGLE_USER" = true ]; then
   echo "NOTICE: single-user mode: $SINGLE_USER_WHY."
   echo "  Building as $(id -un) in this worktree: no sudo re-exec, no group checks, no permission"
   echo "  model; orch_root is this worktree and the Gradle cache is ./.gradle-home."
   PRIMARY_USER=$(id -un)
+  require_named_branch "the builds tag (builds / <branch>/builds)" >/dev/null
 else
 PRIMARY_USER=$(cfg primary_user)
 if [ -z "$PRIMARY_USER" ]; then
@@ -236,6 +405,29 @@ if [ -z "$CODER_USER" ]; then
   echo "ERROR: coder_user unset in project.config" >&2
   exit 1
 fi
+# Refuse a detached checkout early: the builds tag would otherwise be named HEAD/builds.
+require_named_branch "the builds tag (builds / <branch>/builds)" >/dev/null
+
+# If a Play build is selected, query Play as the invoking user BEFORE re-exec as
+# coder_user. play_service_account_json is typically owned by primary_user (mode 640)
+# and is not readable by coder_user; that is intentional. The integer is passed to
+# the child in BUILD_APP_PLAY_UPSTREAM_VERSION_CODE. The child validates it and
+# must not open the key. No fallback to the local versionCode file.
+if _ba_play_will_run "$@"; then
+  if [ "$(id -un)" != "$CODER_USER" ]; then
+    query_play_upstream_version_code
+  elif [ -n "${BUILD_APP_INVOKER:-}" ]; then
+    accept_play_upstream_version_code "${BUILD_APP_PLAY_UPSTREAM_VERSION_CODE:-}"
+  else
+    _sa=$(cfg play_service_account_json)
+    if [ -z "$_sa" ] || [ ! -r "$_sa" ]; then
+      echo "ERROR: play_service_account_json${_sa:+ ($_sa)} is not readable by $CODER_USER. Run ./build_app as $PRIMARY_USER so the Play versionCode query can run before the re-exec as $CODER_USER. Nothing built or committed." >&2
+      exit 1
+    fi
+    query_play_upstream_version_code
+  fi
+fi
+
 if [ "$(id -un)" != "$CODER_USER" ]; then
   INVOKER_NAME=$(git config user.name)
   INVOKER_EMAIL=$(git config user.email)
@@ -249,6 +441,7 @@ if [ "$(id -un)" != "$CODER_USER" ]; then
     GIT_AUTHOR_NAME="$INVOKER_NAME" GIT_AUTHOR_EMAIL="$INVOKER_EMAIL" \
     GIT_COMMITTER_NAME="$INVOKER_NAME" GIT_COMMITTER_EMAIL="$INVOKER_EMAIL" \
     BUILD_APP_INVOKER="$(id -un)" \
+    ${UPSTREAM_VERSION_CODE:+BUILD_APP_PLAY_UPSTREAM_VERSION_CODE="$UPSTREAM_VERSION_CODE"} \
     "$0" "$@"
 fi
 fi
@@ -596,28 +789,32 @@ if [ "$BUILD_PLAY" = true ]; then
   fi
   read -r -a RELEASE_GRADLE_ARGS <<< "$(play_key release_gradle_args)"
   check_play_link "$AAB"
-  if [[ "$PLAY_SA_JSON" != /* ]]; then
-    echo "ERROR: play_service_account_json must be an absolute path: $PLAY_SA_JSON" >&2
-    exit 1
-  fi
-  if [ ! -f "$PLAY_SA_JSON" ] || [ ! -r "$PLAY_SA_JSON" ]; then
-    echo "ERROR: play_service_account_json=$PLAY_SA_JSON is missing or not readable by $(id -un). Nothing built or committed." >&2
-    exit 1
-  fi
   if [ -n "$PLAY_APP_ID" ] && ! [[ "$PLAY_APP_ID" =~ ^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)+$ ]]; then
     echo "ERROR: play_application_id='$PLAY_APP_ID' is not an applicationId." >&2
     exit 1
   fi
-  if [ ! -x "$_BA_DIR/play-publish" ]; then
-    echo "ERROR: $_BA_DIR/play-publish missing (ships with the android-gradle build type; used to query Play for the next versionCode)." >&2
-    exit 1
-  fi
-  for _bin in python3 openssl; do
-    if ! command -v "$_bin" >/dev/null; then
-      echo "ERROR: the Play build needs $_bin on PATH (to query Play for the next versionCode)." >&2
+  # The service-account JSON is queried as the invoker (before re-exec). When the
+  # upstream versionCode is already in hand, coder_user must not open the key.
+  if [ -z "${UPSTREAM_VERSION_CODE:-}" ]; then
+    if [[ "$PLAY_SA_JSON" != /* ]]; then
+      echo "ERROR: play_service_account_json must be an absolute path: $PLAY_SA_JSON" >&2
       exit 1
     fi
-  done
+    if [ ! -f "$PLAY_SA_JSON" ] || [ ! -r "$PLAY_SA_JSON" ]; then
+      echo "ERROR: play_service_account_json=$PLAY_SA_JSON is missing or not readable by $(id -un). Nothing built or committed." >&2
+      exit 1
+    fi
+    if [ ! -x "$_BA_DIR/play-publish" ]; then
+      echo "ERROR: $_BA_DIR/play-publish missing (ships with the android-gradle build type; used to query Play for the next versionCode)." >&2
+      exit 1
+    fi
+    for _bin in python3 openssl; do
+      if ! command -v "$_bin" >/dev/null; then
+        echo "ERROR: the Play build needs $_bin on PATH (to query Play for the next versionCode)." >&2
+        exit 1
+      fi
+    done
+  fi
 fi
 
 # ai-shared + ai-code required (agent caches are ai-coder:ai-code). Do not sg one group.
@@ -954,10 +1151,10 @@ create_release_tag() {
 # Before the Play bump, so a refused name commits nothing and asks for no passwords.
 validate_release_tag
 
-# Play preflight on the committed HEAD: testing-version check, Play versionCode query, and
-# passwords, all before any gradle work, so an unattended run never stops part-way waiting
-# for input. The query is before the password prompts so a missing credential or API failure
-# fails fast and does not ask for secrets.
+# Play preflight on the committed HEAD: testing-version check and passwords, all before
+# any gradle work, so an unattended run never stops part-way waiting for input. The Play
+# versionCode query already ran as the invoker before re-exec (or runs here in single-user
+# mode), still before the password prompts.
 if [ "$BUILD_PLAY" = true ]; then
   # Runs as coder_user like every build. The upload keystore must be readable by coder_user
   # (how is the machine owner's choice; see keystore_access_report); what protects it is the password, which only the person at this terminal types.
@@ -993,61 +1190,19 @@ if [ "$BUILD_PLAY" = true ]; then
     esac
   fi
 
-  # Next versionCode from Play (source of truth), not from the local file. Fail and do not
-  # build if Play cannot be queried. applicationId: play_application_id if set, else the
-  # existing Play bundle (play-bundle.aab). If both exist they must match (play-publish checks).
-  PLAY_PKG="$PLAY_APP_ID"
-  PLAY_QUERY_AAB=""
-  if [ -r "$PLAY_LINK" ]; then
-    PLAY_QUERY_AAB="$PLAY_LINK"
-  elif [ -r "$AAB" ]; then
-    PLAY_QUERY_AAB="$AAB"
-  fi
-  if [ -z "$PLAY_PKG" ] && [ -z "$PLAY_QUERY_AAB" ]; then
-    echo "ERROR: cannot determine the Play applicationId to query the latest versionCode (set play_application_id= in project.config, or leave a readable Play bundle at $PLAY_LINK). Nothing built or committed." >&2
+  # Next versionCode from Play (source of truth), not from the local file. In multi-user
+  # mode the invoker already queried (before re-exec) and passed
+  # BUILD_APP_PLAY_UPSTREAM_VERSION_CODE; do not open the service-account JSON here.
+  # Single-user (no re-exec) queries now, still before the password prompts.
+  if [ -z "${UPSTREAM_VERSION_CODE:-}" ]; then
+    query_play_upstream_version_code
+  elif ! [[ "$UPSTREAM_VERSION_CODE" =~ ^[0-9]+$ ]]; then
+    echo "ERROR: UPSTREAM_VERSION_CODE is not an integer (got '$UPSTREAM_VERSION_CODE'). Nothing built or committed." >&2
     exit 1
+  else
+    echo "Using Play upstream versionCode $UPSTREAM_VERSION_CODE (queried before re-exec${BUILD_APP_INVOKER:+ as $BUILD_APP_INVOKER}); this build will use $((UPSTREAM_VERSION_CODE + 1))."
   fi
-  _pp_query=("$_BA_DIR/play-publish" --max-version-code --key "$PLAY_SA_JSON")
-  [ -n "$PLAY_PKG" ] && _pp_query+=(--package "$PLAY_PKG")
-  if [ -n "$PLAY_QUERY_AAB" ]; then
-    if [ ! -f "$_BA_DIR/orch/ve-resolve-orch" ]; then
-      echo "ERROR: missing $_BA_DIR/orch/ve-resolve-orch (needed to locate the SDK aapt2 to read $PLAY_QUERY_AAB)." >&2
-      exit 1
-    fi
-    # shellcheck source=/dev/null
-    . "$_BA_DIR/orch/ve-resolve-orch"
-    if ! QUERY_AAPT2=$(ve_aapt2_from_sdk "$_BA_DIR"); then
-      echo "ERROR: cannot locate the SDK aapt2 (sdk.dir in local.properties, or ANDROID_HOME) to read $PLAY_QUERY_AAB. Nothing built or committed." >&2
-      exit 1
-    fi
-    PLAY_QUERY_WORK="$(pwd)/app/build/outputs/build_app"
-    if [ ! -d "$PLAY_QUERY_WORK" ]; then
-      mkdir -p "$PLAY_QUERY_WORK" || {
-        echo "ERROR: could not create $PLAY_QUERY_WORK (scratch for reading the Play bundle; never /tmp). Nothing built or committed." >&2
-        exit 1
-      }
-    fi
-    if [ ! -w "$PLAY_QUERY_WORK" ]; then
-      echo "ERROR: $PLAY_QUERY_WORK is not writable by $(id -un) (scratch for reading the Play bundle). Nothing built or committed." >&2
-      exit 1
-    fi
-    _pp_query+=(--aab "$PLAY_QUERY_AAB" --aapt2 "$QUERY_AAPT2" --work-dir "$PLAY_QUERY_WORK")
-  fi
-  echo "Querying Play for the highest versionCode..."
-  if ! PLAY_UPSTREAM_LINE=$("${_pp_query[@]}"); then
-    echo "ERROR: could not query Play for the latest versionCode (see above). The Play build was not started; nothing built or committed." >&2
-    exit 1
-  fi
-  if [ -z "$PLAY_PKG" ]; then
-    PLAY_PKG="(from $PLAY_QUERY_AAB)"
-  fi
-  if ! [[ "$PLAY_UPSTREAM_LINE" =~ ^max-version-code[[:space:]]+([0-9]+)$ ]]; then
-    echo "ERROR: play-publish --max-version-code printed '$PLAY_UPSTREAM_LINE', not 'max-version-code N'. The Play build was not started; nothing built or committed." >&2
-    exit 1
-  fi
-  UPSTREAM_VERSION_CODE="${BASH_REMATCH[1]}"
   NEW_VERSION_CODE=$((UPSTREAM_VERSION_CODE + 1))
-  echo "Play upstream highest versionCode is $UPSTREAM_VERSION_CODE ($PLAY_PKG); this build will use $NEW_VERSION_CODE."
   if [ "$OLD_VERSION_CODE" -gt "$NEW_VERSION_CODE" ]; then
     echo "NOTE: local app/versionCode.txt is $OLD_VERSION_CODE, higher than Play upstream $UPSTREAM_VERSION_CODE; using Play as truth ($NEW_VERSION_CODE)."
   fi
@@ -1420,12 +1575,8 @@ if [ "$BUILD_PLAY" = true ]; then
   build_play
 fi
 
-CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-if [ "$CURRENT_BRANCH" == "master" ]; then
-    TAG_NAME="builds"
-else
-    TAG_NAME="${CURRENT_BRANCH}/builds"
-fi
+CURRENT_BRANCH=$(require_named_branch "the builds tag (builds / <branch>/builds)") || exit 1
+TAG_NAME=$(moving_tag_name builds) || exit 1
 echo "All selected builds succeeded:$SELECTED. Updating '$TAG_NAME' tag."
 git tag -f "$TAG_NAME"
 # Same version string as the gradle versionName: BRANCH-start tag when it exists, else 'git describe --always --exclude '*+*''.
