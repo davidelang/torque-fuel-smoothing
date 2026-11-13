@@ -388,12 +388,57 @@ repo_has_commit() {
   git -C "$1" cat-file -e "${2}^{commit}" 2>/dev/null
 }
 
+
+# Disable every filter.* configured on REPO except LFS, so a checkout of src
+# matches a network clone: tokens stay raw and smudge scripts do not run.
+# A linked worktree (or worktree add) inherits the host repo's config, including
+# a required manage-configs smudge that needs a gitignored project.config the
+# new tree does not have. If worktree add still fails, the caller keeps the
+# existing loud FAIL (no network fallback).
+collect_nofilter_config() {
+  local -n _nofilter_cfg="$1"
+  local repo="$2" key name
+  _nofilter_cfg=()
+  [[ -n "$repo" ]] || return 0
+  local out rc=0
+  out=$(git -c "safe.directory=$repo" -C "$repo" config --get-regexp '^filter\..*\.(smudge|required)$' 2>&1) && rc=0 || rc=$?
+  if [[ $rc -eq 1 && -z "$out" ]]; then
+    return 0
+  fi
+  if [[ $rc -ne 0 ]]; then
+    echo "    FAIL: git -C $repo config --get-regexp filter.* failed (rc=$rc): $out" >&2
+    return 1
+  fi
+  while IFS= read -r line; do
+    [[ -n "$line" ]] || continue
+    key="${line%% *}"
+    name="${key#filter.}"
+    if [[ "$name" == *.smudge ]]; then
+      name="${name%.smudge}"
+      [[ "$name" == "lfs" ]] && continue
+      _nofilter_cfg+=(-c "$key=cat")
+    elif [[ "$name" == *.required ]]; then
+      name="${name%.required}"
+      [[ "$name" == "lfs" ]] && continue
+      _nofilter_cfg+=(-c "$key=false")
+    fi
+  done <<< "$out"
+}
+
+git_nofilter() {
+  local repo="$1"
+  shift
+  local -a cfg=()
+  collect_nofilter_config cfg "$repo" || return 1
+  git -c "safe.directory=$repo" -C "$repo" "${cfg[@]}" "$@"
+}
+
 # Detach at pin sha and discard local mods so patches re-apply cleanly.
 # Keeps untracked build products (bin/, build/, android/.gradle*) for iterate.
 checkout_pin_clean() {
   local src="$1" sha="$2"
-  git -C "$src" checkout --detach "$sha" 2>/dev/null || return 1
-  git -C "$src" reset --hard "$sha" 2>/dev/null || return 1
+  git_nofilter "$src" checkout --detach "$sha" 2>/dev/null || return 1
+  git_nofilter "$src" reset --hard "$sha" 2>/dev/null || return 1
   return 0
 }
 
@@ -777,7 +822,7 @@ materialize_at_sha() {
     fi
     echo "    worktree add --detach $src @ $sha (from $host)"
     local err
-    if err=$(git -C "$host" worktree add --detach "$src" "$sha" 2>&1); then
+    if err=$(git_nofilter "$host" worktree add --detach "$src" "$sha" 2>&1); then
       echo "    linked worktree OK @ $sha"
       return 0
     fi
@@ -1050,14 +1095,14 @@ cmd_rw() {
     fi
     if git -C "$host" show-ref --verify --quiet "refs/heads/$branch" 2>/dev/null; then
       # branch exists — try worktree add
-      if git -C "$host" worktree add "$src" "$branch" 2>/dev/null; then
+      if git_nofilter "$host" worktree add "$src" "$branch" 2>/dev/null; then
         echo "    worktree existing branch $branch"
       else
         echo "    FAIL: cannot worktree add $branch (already checked out elsewhere?). Use --branch other-name" >&2
         return 1
       fi
     else
-      if git -C "$host" worktree add -b "$branch" "$src" "$base" 2>/dev/null; then
+      if git_nofilter "$host" worktree add -b "$branch" "$src" "$base" 2>/dev/null; then
         echo "    worktree new branch $branch @ $base"
       else
         echo "    worktree failed — clone fallback"
@@ -1070,7 +1115,7 @@ cmd_rw() {
   if [[ -z "$host" || ! -d "$src" ]]; then
     if ! materialize_at_sha "$name" "$base"; then return 1; fi
     ensure_writable_tree "$src"
-    git -C "$src" checkout -B "$branch" "$base"
+    git_nofilter "$src" checkout -B "$branch" "$base"
     echo "    clone/branch $branch @ $base"
   fi
   ensure_writable_tree "$src"
@@ -1306,14 +1351,14 @@ cmd_upgrade() {
   ensure_writable_tree "$src"
   if host="$(local_repo_for "$name")"; then
     rm -rf "$src"
-    git -C "$host" worktree add -b "$BRANCH_OVERRIDE" "$src" "$ref" 2>/dev/null \
-      || { git clone "$host" "$src"; git -C "$src" checkout -B "$BRANCH_OVERRIDE" "$ref"; }
+    git_nofilter "$host" worktree add -b "$BRANCH_OVERRIDE" "$src" "$ref" 2>/dev/null \
+      || { git clone "$host" "$src"; git_nofilter "$src" checkout -B "$BRANCH_OVERRIDE" "$ref"; }
   else
     local url
     url="$(yaml_get "$(lock_path "$name")" git_https)"
     rm -rf "$src"
     git clone "$url" "$src"
-    git -C "$src" checkout -B "$BRANCH_OVERRIDE" "$ref"
+    git_nofilter "$src" checkout -B "$BRANCH_OVERRIDE" "$ref"
   fi
   sha="$(git -C "$src" rev-parse HEAD)"
   write_status "$name" "rw" "$BRANCH_OVERRIDE" "$sha" "upgrade_ref: $ref"
