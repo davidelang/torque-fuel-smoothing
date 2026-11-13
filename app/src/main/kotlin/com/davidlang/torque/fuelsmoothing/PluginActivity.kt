@@ -75,8 +75,8 @@ class PluginActivity : Activity() {
     private val editorPrefs by lazy { getSharedPreferences("profile_editor", MODE_PRIVATE) }
     /** Pending vehicle decision: a red banner that stays until answered, plus a popup on every visit. */
     private lateinit var identityBanner: LinearLayout
-    private var identityBannerT = 0L
-    private var identityShownT = 0L
+    private var identityBannerKey = ""
+    private var identityShownKey = ""
     private var identityDialog: android.app.AlertDialog? = null
     private val identityHandler = android.os.Handler(android.os.Looper.getMainLooper())
     private val identityTick = object : Runnable {
@@ -429,7 +429,7 @@ class PluginActivity : Activity() {
 
     override fun onResume() {
         super.onResume()
-        identityShownT = 0L // a pending decision pops up again on every return to this page
+        identityShownKey = "" // a pending decision pops up again on every return to this page
         identityHandler.removeCallbacks(identityTick)
         identityHandler.post(identityTick)
         if (::detectBtn.isInitialized) {
@@ -751,38 +751,61 @@ class PluginActivity : Activity() {
     private lateinit var aboutPage: LinearLayout
 
     private fun refreshIdentityPending() {
-        val p = IdentityPending.read(filesDir)
-        if (p == null) {
+        Unassigned.adoptOrphans(filesDir, skip = PluginService.instance?.liveQuarantineDir())
+        val live = IdentityPending.read(filesDir)
+        val held = Unassigned.list(filesDir)
+        if (live == null && held.isEmpty()) {
             identityBanner.visibility = View.GONE
-            identityBannerT = 0L
+            identityBannerKey = ""
             identityDialog?.dismiss()
             identityDialog = null
             return
         }
-        if (identityBannerT != p.t) {
-            identityBannerT = p.t
+        val key = (live?.t?.toString() ?: "") + ":" + held.joinToString(",") { "${it.id}:${it.endedMs}" }
+        if (identityBannerKey != key) {
+            identityBannerKey = key
             identityBanner.removeAllViews()
-            val head = TextView(this)
-            head.text = S("Vehicle decision pending: %1\$s", p.title)
-            head.textSize = 18f
-            head.setTextColor(0xFFFFFFFF.toInt())
-            head.setTypeface(head.typeface, android.graphics.Typeface.BOLD)
-            identityBanner.addView(head)
-            val body = TextView(this)
-            body.text = p.text
-            body.setTextColor(0xFFFFFFFF.toInt())
-            identityBanner.addView(body)
-            val row = LinearLayout(this)
-            // Every matching profile plus "none, it's new": stack them when they would not fit on one line.
-            row.orientation = if (p.choices.size > 2) LinearLayout.VERTICAL else LinearLayout.HORIZONTAL
-            for (c in p.choices) row.addView(smallButton(c.label) { answerIdentity(c.target) })
-            identityBanner.addView(row)
+            if (live != null) identityBanner.addView(decisionBlock(live.title, live.text, live.choices.map { it.label to { answerIdentity(it.target) } }))
+            for (e in held) {
+                val actions = ArrayList<Pair<String, () -> Unit>>()
+                val choices = if (e.choices.isNotEmpty()) e.choices else defaultUnassignedChoices()
+                for (c in choices) actions.add(c.label to { answerUnassigned(e.id, c.target) })
+                actions.add(S("Discard this drive") to { confirmDiscardUnassigned(e.id) })
+                identityBanner.addView(decisionBlock(e.title.ifBlank { S("Unassigned drive") }, e.text, actions))
+            }
         }
         identityBanner.visibility = View.VISIBLE
-        if (identityShownT != p.t) {
-            identityShownT = p.t
-            showIdentityDialog(p)
+        if (identityShownKey != key) {
+            identityShownKey = key
+            if (live != null) showIdentityDialog(live)
+            else held.firstOrNull()?.let { showUnassignedDialog(it) }
         }
+    }
+
+    private fun defaultUnassignedChoices(): List<Unassigned.Choice> {
+        val ids = ProfileStore.profileIds(filesDir)
+        val choices = ids.map { Unassigned.Choice(it, S("Use %1\$s", ProfileStore.profileField(filesDir, it, "name") ?: it)) }
+        return choices + Unassigned.Choice(PluginService.NEW_PROFILE, S("none, it's new"))
+    }
+
+    private fun decisionBlock(title: String, bodyText: String, actions: List<Pair<String, () -> Unit>>): LinearLayout {
+        val block = LinearLayout(this)
+        block.orientation = LinearLayout.VERTICAL
+        val head = TextView(this)
+        head.text = S("Vehicle decision pending: %1\$s", title)
+        head.textSize = 18f
+        head.setTextColor(0xFFFFFFFF.toInt())
+        head.setTypeface(head.typeface, android.graphics.Typeface.BOLD)
+        block.addView(head)
+        val body = TextView(this)
+        body.text = bodyText
+        body.setTextColor(0xFFFFFFFF.toInt())
+        block.addView(body)
+        val row = LinearLayout(this)
+        row.orientation = if (actions.size > 2) LinearLayout.VERTICAL else LinearLayout.HORIZONTAL
+        for ((label, click) in actions) row.addView(smallButton(label, click))
+        block.addView(row)
+        return block
     }
 
     private fun showIdentityDialog(p: IdentityPending.Pending) {
@@ -795,7 +818,6 @@ class PluginActivity : Activity() {
         text.textSize = 16f
         text.primary()
         body.addView(text)
-        // Scrolls so a long list of matching profiles keeps "none, it's new" reachable.
         val scroll = android.widget.ScrollView(this)
         scroll.addView(body)
         val dialog = android.app.AlertDialog.Builder(this).setTitle(p.title).setView(scroll).setCancelable(false)
@@ -806,12 +828,58 @@ class PluginActivity : Activity() {
         identityDialog = dialog
     }
 
+    private fun showUnassignedDialog(e: Unassigned.Entry) {
+        identityDialog?.dismiss()
+        val body = LinearLayout(this)
+        body.orientation = LinearLayout.VERTICAL
+        body.setPadding(PAD, PAD / 2, PAD, 0)
+        val text = TextView(this)
+        text.text = e.text.ifBlank {
+            S("This drive is kept unassigned and is not used for learning until you assign it to a vehicle.")
+        }
+        text.textSize = 16f
+        text.primary()
+        body.addView(text)
+        val scroll = android.widget.ScrollView(this)
+        scroll.addView(body)
+        val title = e.title.ifBlank { S("Unassigned drive") }
+        val dialog = android.app.AlertDialog.Builder(this).setTitle(title).setView(scroll).setCancelable(false)
+            .setNegativeButton(S("Decide later"), null).create()
+        val choices = if (e.choices.isNotEmpty()) e.choices else defaultUnassignedChoices()
+        for (c in choices) body.addView(smallButton(c.label) { dialog.dismiss(); answerUnassigned(e.id, c.target) })
+        body.addView(smallButton(S("Discard this drive")) { dialog.dismiss(); confirmDiscardUnassigned(e.id) })
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.show()
+        identityDialog = dialog
+    }
+
     private fun answerIdentity(target: String) {
-        val i = Intent(this, PluginService::class.java).setAction(PluginService.ACTION_Q_CONFIRM).putExtra(PluginService.EXTRA_TARGET, target)
+        startPluginAction(Intent(this, PluginService::class.java).setAction(PluginService.ACTION_Q_CONFIRM)
+            .putExtra(PluginService.EXTRA_TARGET, target), "identity answer")
+    }
+
+    private fun answerUnassigned(id: String, target: String) {
+        startPluginAction(Intent(this, PluginService::class.java).setAction(PluginService.ACTION_UNASSIGNED_ASSIGN)
+            .putExtra(PluginService.EXTRA_UNASSIGNED_ID, id).putExtra(PluginService.EXTRA_TARGET, target), "unassigned assign")
+    }
+
+    private fun confirmDiscardUnassigned(id: String) {
+        android.app.AlertDialog.Builder(this)
+            .setTitle(S("Discard this drive"))
+            .setMessage(S("Discard this unassigned drive? It will not be used for learning."))
+            .setNegativeButton(S("Decide later"), null)
+            .setPositiveButton(S("Discard this drive")) { _, _ ->
+                startPluginAction(Intent(this, PluginService::class.java).setAction(PluginService.ACTION_UNASSIGNED_DISCARD)
+                    .putExtra(PluginService.EXTRA_UNASSIGNED_ID, id), "unassigned discard")
+            }
+            .show()
+    }
+
+    private fun startPluginAction(i: Intent, what: String) {
         try {
             startService(i)
         } catch (t: Throwable) {
-            FsLog.w(TAG, "identity answer ignored: ${t.javaClass.simpleName} ${t.message}")
+            FsLog.w(TAG, "$what ignored: ${t.javaClass.simpleName} ${t.message}")
         }
     }
 

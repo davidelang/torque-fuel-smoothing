@@ -119,16 +119,22 @@ class IdentityTest {
     }
 
     @Test
-    fun test35QuarantineNeverWritesWrongProfileAndDiscards() {
+    fun test35QuarantineNeverWritesWrongProfileAndParksUnassigned() {
         val root = twoProfiles()
         val d = Fingerprint.decide("van", Fingerprint.Fp(protocol = car.protocol, bitmaps = car.bitmaps), Fingerprint.loadAll(root))
         assertTrue(d is Fingerprint.Decision.Quarantine)
         val vanBefore = snapshot(File(root, "profiles/van"))
         val carBefore = snapshot(File(root, "profiles/car"))
         val q = quarantinedSession(root, 1000L)
-        val moved = Quarantine.resolve(root, q, 1, null)
-        assertEquals(1, moved.size)
-        assertTrue(moved[0].path.contains("quarantine/discarded"))
+        // Unanswered close no longer moves the files; resolve(null) leaves them for Unassigned.park.
+        assertTrue(Quarantine.resolve(root, q, 1, null).isEmpty())
+        val parked = Unassigned.park(root, q, "Van", "Confirm this is van", "kept unassigned",
+            listOf(Unassigned.Choice("van", "Use van"), Unassigned.Choice(Fingerprint.NEW_PROFILE, "none, it's new")),
+            van, 1000L, 2000L)
+        assertTrue(parked != null)
+        assertTrue(parked!!.dir.path.contains("/unassigned/1000"))
+        assertTrue(Unassigned.hasSessionJsonl(parked.dir))
+        assertEquals(1, Unassigned.list(root).size)
         assertEquals(vanBefore, snapshot(File(root, "profiles/van")))
         assertEquals(carBefore, snapshot(File(root, "profiles/car")))
     }

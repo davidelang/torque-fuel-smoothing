@@ -233,8 +233,8 @@ internal object Fingerprint {
 
 /**
  * Quarantined sessions live under files/quarantine/<stamp>/t<tank>/ and never touch a profile. At session
- * end they are moved into the confirmed profile's raw dir, or (unconfirmed) set aside in
- * files/quarantine/discarded/ where no learning code reads them.
+ * end they are moved into the confirmed profile's raw dir, or (if the user did not answer) parked in
+ * files/unassigned/<stamp>/, still not learned from, until the user assigns or explicitly discards them.
  */
 internal object Quarantine {
     fun dir(root: File, stamp: Long): File = File(root, "quarantine/$stamp")
@@ -247,12 +247,12 @@ internal object Quarantine {
         return ProfileStore.createProfile(root, newName, nowMs)
     }
 
-    /** Returns the files moved. [target] null = discard (set aside, not learned). */
+    /** Returns the files moved. [target] null leaves the files in [qdir] for [Unassigned.park]. */
     fun resolve(root: File, qdir: File, tank: Int, target: String?): List<File> {
         val src = rawDir(qdir, tank)
         val files = src.listFiles { f -> f.isFile && f.name.endsWith(".jsonl") }?.sortedBy { it.name } ?: return emptyList()
-        val dest = if (target != null) File(ProfileStore.tankDir(root, target, tank), "raw")
-        else File(root, "quarantine/discarded/${qdir.name}/t$tank")
+        if (target == null) return emptyList()
+        val dest = File(ProfileStore.tankDir(root, target, tank), "raw")
         dest.mkdirs()
         val out = ArrayList<File>()
         for (f in files) {

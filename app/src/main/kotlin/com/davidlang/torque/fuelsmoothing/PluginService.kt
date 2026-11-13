@@ -89,8 +89,9 @@ class PluginService : Service() {
     private var profileSelectionReady = false
     /** Wrong/unknown-vehicle hold: sessions go to files/quarantine/<stamp>/ and never touch a profile. */
     private var quarantineDir: File? = null
+    internal fun liveQuarantineDir(): File? = quarantineDir
     private var quarantineSuggest: String? = null
-    /** Profile the user confirmed for the quarantined data (from the notification); null = discard at session end. */
+    /** Profile the user confirmed for the quarantined data (from the notification); null = park unassigned at session end. */
     private var quarantineConfirm: String? = null
     private var quarantineObs: Fingerprint.Fp? = null
     private var observedIdentity = Fingerprint.Fp()
@@ -474,7 +475,8 @@ class PluginService : Service() {
             S("Vehicle 1"),
         )
         profileId = ProfileStore.activeId(filesDir)
-        IdentityPending.clear(filesDir) // no identity is pending before this service reads one
+        IdentityPending.clear(filesDir) // no live identity prompt before this service reads one
+        Unassigned.adoptOrphans(filesDir)
         migrateLegacySource()
         tanks[1] = makeRuntime(1)
         ensureChannel()
@@ -493,6 +495,8 @@ class PluginService : Service() {
             ACTION_PID_QUERY, ACTION_PID_PLUGIN -> bindTorque()
             ACTION_OBD_DISCONNECTED -> onEcu(false)
             ACTION_Q_CONFIRM -> confirmQuarantine(intent.getStringExtra(EXTRA_TARGET))
+            ACTION_UNASSIGNED_ASSIGN -> assignUnassigned(intent.getStringExtra(EXTRA_UNASSIGNED_ID), intent.getStringExtra(EXTRA_TARGET))
+            ACTION_UNASSIGNED_DISCARD -> discardUnassigned(intent.getStringExtra(EXTRA_UNASSIGNED_ID))
             ACTION_CONFIRM_SOURCE -> {
                 val pid = intent.getStringExtra(EXTRA_TARGET)
                 val src = intent.getStringExtra(EXTRA_SOURCE)
@@ -963,6 +967,8 @@ class PluginService : Service() {
         connectionMode09Known = false
         quarantineDir = null; quarantineObs = null; quarantineSuggest = null; quarantineConfirm = null
         clearPendingIdentity()
+        Unassigned.adoptOrphans(filesDir)
+        refreshUnassignedNotice()
         driveSourcesLogged = false
         resetVehicleRuntime()
     }
@@ -1398,7 +1404,7 @@ class PluginService : Service() {
         hits: List<String>, vinless: List<String>) {
         val sel = r.next
         val now = SystemClock.elapsedRealtime()
-        val held = S("Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.")
+        val held = S("Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.")
         fun ask(title: String, reason: String, choices: List<String>, delayMs: Long = 0L) {
             // Every matching profile is listed (no cap) and "none, it's new" is always last.
             prompt = IdentityPending.Pending(System.currentTimeMillis(), title, "$reason $held",
@@ -1505,7 +1511,7 @@ class PluginService : Service() {
 
     private fun failAutoMatch(cand: String, reason: String) {
         autoMatch = null; autoMatchAdopt = false; autoMatchReads.clear()
-        val held = S("Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.")
+        val held = S("Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.")
         prompt = IdentityPending.Pending(System.currentTimeMillis(), S("Confirm this is %1\$s", profileName(cand)), "$reason $held",
             listOf(cand, NEW_PROFILE).map { IdentityPending.Choice(it, choiceLabel(it)) })
         promptAtMs = 0L
@@ -1955,15 +1961,18 @@ class PluginService : Service() {
             val closedQ = rt.sessions.close()
             refreshRecording()
             val target = quarantineConfirm
-            val moved = Quarantine.resolve(filesDir, q, id, target)
-            FsLog.i(TAG, "quarantine close tank=$id samples=${closedQ.size} -> ${target ?: "discarded (not learned)"} files=${moved.map { it.name }}")
             if (target != null) {
+                val moved = Quarantine.resolve(filesDir, q, id, target)
+                FsLog.i(TAG, "quarantine close tank=$id samples=${closedQ.size} -> $target files=${moved.map { it.name }}")
                 quarantineObs?.let { o ->
                     val pd = ProfileStore.profileDir(filesDir, target)
                     Fingerprint.save(pd, Fingerprint.merge(Fingerprint.load(pd), o))
                 }
                 val tdir = ProfileStore.tankDir(filesDir, target, id); val np = nameplateFor(id)
                 submitRollup("rollup $target tank$id", { ProfileStore.rollup(tdir, np, openSessions) }) { priorCache.clear() }
+            } else {
+                // Left in the quarantine dir; closeSession parks the tree as unassigned.
+                FsLog.i(TAG, "quarantine close tank=$id samples=${closedQ.size} -> unassigned (not learned)")
             }
             return
         }
@@ -2007,8 +2016,93 @@ class PluginService : Service() {
     }
 
     private fun closeSession() {
+        val q = quarantineDir
+        val confirm = quarantineConfirm
+        val obs = quarantineObs
+        val pendingPrompt = prompt
+        val suggest = quarantineSuggest
         for (id in tanks.keys.toList()) closeTankSession(id)
+        if (q != null && confirm == null) parkUnassigned(q, obs, pendingPrompt, suggest)
         TipReconciler.run(this, "session close")
+    }
+
+    /** Keep unanswered quarantine data as an unassigned drive. Never learned from until the user assigns it. */
+    private fun parkUnassigned(
+        q: File,
+        obs: Fingerprint.Fp?,
+        pendingPrompt: IdentityPending.Pending?,
+        suggest: String?,
+    ) {
+        if (!Unassigned.hasSessionJsonl(q)) return
+        val title = pendingPrompt?.title ?: S("Unassigned drive")
+        val text = pendingPrompt?.text
+            ?: S("This drive is kept unassigned and is not used for learning until you assign it to a vehicle.")
+        val choices = pendingPrompt?.choices?.map { Unassigned.Choice(it.target, it.label) }
+            ?: (listOfNotNull(suggest) + NEW_PROFILE).map { Unassigned.Choice(it, choiceLabel(it)) }
+        val started = q.name.toLongOrNull() ?: 0L
+        val parked = Unassigned.park(
+            filesDir, q, selectedTorqueProfile, title, text, choices, obs, started, System.currentTimeMillis(),
+        )
+        FsLog.i(TAG, "quarantine parked unassigned id=${parked?.id ?: q.name} files=${if (parked != null) Unassigned.hasSessionJsonl(parked.dir) else false}")
+        refreshUnassignedNotice()
+    }
+
+    private fun assignUnassigned(id: String?, target: String?) {
+        if (id.isNullOrEmpty() || target == null) {
+            FsLog.i(TAG, "unassigned assign ignored (id=$id target=$target)")
+            return
+        }
+        val now = System.currentTimeMillis()
+        val day = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.ROOT).format(java.util.Date(now))
+        val entry = Unassigned.read(Unassigned.dir(filesDir, id))
+        val profile = Quarantine.confirmTarget(filesDir, target, now, S("Vehicle %1\$s", day))
+        val observation = entry?.fingerprint
+        val savedVin = Fingerprint.loadAll(filesDir)[profile]?.vin
+        if (observation?.vin != null && savedVin != null && !observation.vin.equals(savedVin, ignoreCase = true)) {
+            FsLog.w(TAG, "unassigned assignment rejected: different physical VIN")
+            return
+        }
+        val tanks = entry?.let { Unassigned.tanksWithFiles(it.dir) } ?: emptyList()
+        val moved = Unassigned.assign(filesDir, id, profile)
+        if (observation != null && !observation.empty) {
+            val pd = ProfileStore.profileDir(filesDir, profile)
+            Fingerprint.save(pd, Fingerprint.merge(Fingerprint.load(pd), observation))
+        }
+        for (tank in tanks) {
+            val tdir = ProfileStore.tankDir(filesDir, profile, tank)
+            val np = nameplateFor(tank)
+            submitRollup("rollup $profile tank$tank", { ProfileStore.rollup(tdir, np, openSessions) }) { priorCache.clear() }
+        }
+        FsLog.i(TAG, "unassigned $id assigned -> $profile files=${moved.map { it.name }}")
+        refreshUnassignedNotice()
+        notifyIdentity(S("Keeping drive data"), S("This drive will be saved to %1\$s.", profileName(profile)), emptyList())
+    }
+
+    private fun discardUnassigned(id: String?) {
+        if (id.isNullOrEmpty()) return
+        if (Unassigned.discard(filesDir, id)) {
+            FsLog.i(TAG, "unassigned $id discarded by user")
+        }
+        refreshUnassignedNotice()
+    }
+
+    /** Heads-up reminder for parked unassigned drives; opens the setup page. No auto-delete. */
+    private fun refreshUnassignedNotice() {
+        val entries = Unassigned.list(filesDir)
+        val nm = notificationManager() ?: return
+        if (entries.isEmpty()) {
+            if (prompt == null || !promptPosted) nm.cancel(IDENTITY_NOTIF_ID)
+            return
+        }
+        if (promptPosted && prompt != null) return // live question already occupies this notification
+        val n = entries.size
+        val first = entries.first()
+        val title = if (n == 1) first.title.ifBlank { S("Unassigned drive") }
+        else S("%1\$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.", n)
+        val text = first.text.ifBlank {
+            S("This drive is kept unassigned and is not used for learning until you assign it to a vehicle.")
+        }
+        notifyIdentity(title, text, emptyList())
     }
 
     private fun integrateGalHr(t: ITorqueService, now: Long, rt: TankRt): Double {
@@ -2320,6 +2414,7 @@ class PluginService : Service() {
         val sid = tanks[1]?.sessions?.sessionId
         return buildString {
             if (promptPosted) append(S("Vehicle decision pending")).append(" · ")
+            else if (Unassigned.hasAny(filesDir)) append(S("Vehicle decision pending")).append(" · ")
             if (p == null) append(S("Waiting for fuel source"))
             else append(S("raw %1\$.1f%%", p))
             if (sid != null) append(S("sess %1\$s", sid.takeLast(8)))
@@ -2563,7 +2658,10 @@ class PluginService : Service() {
         private const val FILL_SWITCH_DEBOUNCE_MS = 5000L
         private const val FULL_FILL_PCT = 90.0
         const val ACTION_Q_CONFIRM = "com.davidlang.torque.fuelsmoothing.QUARANTINE_CONFIRM"
+        const val ACTION_UNASSIGNED_ASSIGN = "com.davidlang.torque.fuelsmoothing.UNASSIGNED_ASSIGN"
+        const val ACTION_UNASSIGNED_DISCARD = "com.davidlang.torque.fuelsmoothing.UNASSIGNED_DISCARD"
         const val EXTRA_TARGET = "target"
+        const val EXTRA_UNASSIGNED_ID = "unassignedId"
         const val NEW_PROFILE = Fingerprint.NEW_PROFILE
         const val IDENTITY_NOTIF_ID = 4242
         const val DETECT_NOTIF_ID = 4243
