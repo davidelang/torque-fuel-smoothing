@@ -30,17 +30,68 @@ internal class FuelMath {
     private val low = ArrayDeque<Pair<Long, Double>>()
     private var lowMoving = false
 
-    fun isValidSample(raw: Double?, ecuConnected: Boolean?, lastGood: Double? = smoothed): Boolean {
+    /**
+     * Range-adaptive inputs for the low end (tank 1 of a confirmed vehicle only). Null keeps the plain slew path
+     * everywhere (extra tanks, pending vehicles).
+     * [burnGal]: fuel counted this tick. [levelPerGal]: level units per gallon at a level (chunk map), null or
+     * returning null when there is no map (then the counter does not move the level). [sdPct]: steady-driving raw
+     * noise (level units) at a level ([BandNoise]).
+     */
+    class LowInput(val burnGal: Double, val levelPerGal: ((Double) -> Double?)?, val sdPct: (Double) -> Double)
+
+    /** Raw has been a solid 0 (>= SOLID_SHARE zeros over SOLID_MS while moving): level held at 0 ("at/below the 0% point"). */
+    var solidZero: Boolean = false
+        private set
+    /** Last speed sample was steady driving (>= LOW_STEADY_KMH, |accel| <= LOW_STEADY_ACC, no hard braking in LOW_BRAKE_HOLD_MS). */
+    var steadyNow: Boolean = false
+        private set
+    /** The last update used the low-range path. */
+    var lowPath: Boolean = false
+        private set
+    private val speeds = ArrayDeque<Pair<Long, Double>>()
+    private var brakeMs: Long? = null
+    /** (time, raw == 0, moving) for the solid-zero test, low-range inputs only. */
+    private val zeros = ArrayDeque<Triple<Long, Boolean, Boolean>>()
+    private var acqFromMs: Long? = null
+    private var acqUntilMs = 0L
+    private var acquiring = false
+
+    /**
+     * [lowRange] (range-adaptive tank 1): a raw 0 is a valid reading ("at or below the sender's 0% point") whenever
+     * the level is in the low range (<= LOW_RANGE_PCT): a bouncing 0 is a noisy low reading for the median, a solid
+     * 0 holds the level at 0. Without it the old rule stands (0 only once smoothed <= NEAR_EMPTY_PCT).
+     */
+    fun isValidSample(raw: Double?, ecuConnected: Boolean?, lastGood: Double? = smoothed, lowRange: Boolean = false): Boolean {
         if (ecuConnected == false) return false
         if (raw == null || !raw.isFinite()) return false
         if (raw > 100.0 || raw < 0.0) return false
+        val near = nearEmpty(lowRange) * unit
         if (raw == 0.0) {
-            return lastGood != null && lastGood <= NEAR_EMPTY_PCT * unit
+            return lastGood != null && lastGood <= near
         }
-        if (lastGood != null && lastGood > NEAR_EMPTY_PCT * unit && raw < GLITCH_RAW_PCT * unit) return false
-        if (lastGood != null && lastGood > NEAR_EMPTY_PCT * unit && lastGood - raw > DROP_HOLD_PT * unit) return false
+        if (lastGood != null && lastGood > near && raw < GLITCH_RAW_PCT * unit) return false
+        if (lastGood != null && lastGood > near && lastGood - raw > DROP_HOLD_PT * unit) return false
         return raw > 0.0 && raw <= 100.0
     }
+
+    /**
+     * A rejected or missing reading with low-range inputs. Below LOW_RANGE_PCT the fuel counter still moves the
+     * level (no reading is not "no burn"); a solid 0 stays at 0. Otherwise the same as [hold].
+     */
+    fun holdLow(speedKmh: Double, nowMs: Long, low: LowInput) {
+        noteSpeed(nowMs, speedKmh)
+        hold()
+        val s = smoothed ?: return
+        if (mode == TrackMode.FILL) return
+        if (solidZero) {
+            smoothed = 0.0
+            return
+        }
+        if (s < LOW_RANGE_PCT * unit) smoothed = predict(s, low)
+    }
+
+    /** Median of the raw readings since [fromMs] (inside WINDOW_MS); the smoothed level when there are none. */
+    fun rawMedian(fromMs: Long): Double = median(fromMs)
 
     fun hold() {
         // A rejected reading during a fill does not end the fill.
@@ -59,6 +110,8 @@ internal class FuelMath {
         sigmaPct: Double = DEFAULT_SIGMA_PCT,
         /** Session cumulative fuel used (gal), or null if unknown. Lets a fill tell "parked, no burn" apart. */
         usedGal: Double? = null,
+        /** Range-adaptive low-end inputs; null = plain slew path at every level. */
+        low: LowInput? = null,
     ): Double {
         val prev = smoothed
         val last = lastIngestMs
@@ -73,10 +126,21 @@ internal class FuelMath {
         lastIngestMs = nowMs
         window.addLast(nowMs to raw)
         while (window.isNotEmpty() && nowMs - window.first().first > WINDOW_MS) window.removeFirst()
+        val steady = noteSpeed(nowMs, speedKmh)
+        if (low != null) {
+            zeros.addLast(Triple(nowMs, raw == 0.0, speedKmh > FILL_ENTER_SPEED_KMH))
+            while (zeros.isNotEmpty() && nowMs - zeros.first().first > SOLID_MS) zeros.removeFirst()
+        }
         if (prev == null) {
             smoothed = raw
             mode = TrackMode.SKEW
             return raw
+        }
+        if (low != null && last != null && nowMs - last > GAP_REACQUIRE_MS) {
+            // No reading for a while (parked, or a drive that was not logged): fuel may have burned off the counter.
+            acqFromMs = nowMs
+            acqUntilMs = nowMs + ACQ_MS
+            acquiring = false
         }
         if (mode == TrackMode.FILL) {
             return followFill(speedKmh, nowMs, sigmaPct, usedGal)
@@ -103,6 +167,9 @@ internal class FuelMath {
                     fillCandMs = null
                     clearStop()
                     mode = TrackMode.FILL
+                    solidZero = false
+                    acquiring = false
+                    acqUntilMs = 0L
                     val m = median(nowMs - MEDIAN_MS)
                     fillPeak = m
                     fillStillMed = m
@@ -116,6 +183,10 @@ internal class FuelMath {
         }
         fillCandMs = null
         val dtSec = if (last == null) 1.0 else ((nowMs - last).coerceAtLeast(0L) / 1000.0).coerceAtLeast(0.001)
+        if (low != null && (prev < LOW_RANGE_PCT * unit || solidZero)) {
+            return lowStep(prev, nowMs, dtSec, steady, speedKmh, skewPctPerSec, low)
+        }
+        lowPath = false
         // The sender saturates at 99.9: a reading at the ceiling means "at least full", not that exact number.
         // It may pull the level up to the ceiling but never pulls a level already at/above it down.
         val target = if (raw >= SENDER_CEIL_PCT * unit && prev >= raw) prev else raw
@@ -130,6 +201,92 @@ internal class FuelMath {
         smoothed = y
         mode = TrackMode.SKEW
         return y
+    }
+
+    /**
+     * Low range (< LOW_RANGE_PCT, replay: sandbox/lowrange-20261118/replay.py). The fuel counter carries the level
+     * (prediction = level - burn x level-per-gallon from the chunk map); the gauge only pulls it, and only:
+     * - toward the 30 s raw MEDIAN (outlier resistant; zeros are censored lows and cannot move a median until they
+     *   are half the window),
+     * - while driving steadily (LOW_STEADY_KMH, |accel| <= LOW_STEADY_ACC, LOW_BRAKE_HOLD_MS after hard braking),
+     * - slowly: time constant LOW_TAU_SEC x max(1, (band sd / LOW_SD_REF_PCT)^2), within the usual slew limit.
+     * Solid 0 (>= SOLID_SHARE zeros over SOLID_MS while moving) holds 0 until zeros fall below SOLID_EXIT_SHARE
+     * with a median >= SOLID_EXIT_MED_PCT (the caller counts the burn while held as reserve evidence).
+     * After an ingest gap > GAP_REACQUIRE_MS, if the first ACQ_WAIT_MS of readings disagree with the carried level by
+     * more than ACQ_DIFF_PCT (unlogged burn, missed fill), the level re-acquires fast (ACQ_TAU_SEC, no slew limit);
+     * so does a 30 s median more than LIVE_FOLLOW_PCT above it (a rise the fill detector did not take).
+     */
+    private fun lowStep(prev: Double, nowMs: Long, dtSec: Double, steady: Boolean, speedKmh: Double, skewPctPerSec: Double, low: LowInput): Double {
+        lowPath = true
+        mode = TrackMode.SKEW
+        val n = zeros.size
+        val z = zeros.count { it.second }
+        val mv = zeros.count { it.third }
+        val span = if (n > 0) zeros.last().first - zeros.first().first else 0L
+        val med = median(nowMs - LOW_MEDIAN_MS)
+        if (solidZero) {
+            if (n >= SOLID_MIN_N && z.toDouble() / n < SOLID_EXIT_SHARE && med >= SOLID_EXIT_MED_PCT * unit) {
+                solidZero = false
+            } else {
+                smoothed = 0.0
+                return 0.0
+            }
+        } else if (n >= SOLID_MIN_N && span >= SOLID_MS - SOLID_SPAN_SLACK_MS && z.toDouble() / n >= SOLID_SHARE &&
+            mv.toDouble() / n >= 0.5 && speedKmh > FILL_ENTER_SPEED_KMH
+        ) {
+            solidZero = true
+            smoothed = 0.0
+            return 0.0
+        }
+        val pred = predict(prev, low)
+        val d = minOf(dtSec, LOW_DT_CAP_SEC)
+        if (!acquiring && med - pred > LIVE_FOLLOW_PCT * unit) {
+            // The 30 s median far above the carried level is a rise the fill detector did not take (moving off
+            // the pump, suppressed fill): follow it fast instead of crawling up at the low-range rate.
+            acquiring = true
+            acqFromMs = nowMs
+            acqUntilMs = nowMs + ACQ_MS
+        }
+        if (nowMs < acqUntilMs) {
+            val from = acqFromMs ?: nowMs
+            if (!acquiring && nowMs - from >= ACQ_WAIT_MS) {
+                if (abs(median(from) - pred) > ACQ_DIFF_PCT * unit) acquiring = true else acqUntilMs = nowMs
+            }
+            if (acquiring) {
+                val y = (pred + (med - pred) * d / (ACQ_TAU_SEC + d)).coerceAtLeast(0.0)
+                smoothed = y
+                return y
+            }
+        }
+        if (!steady) {
+            smoothed = pred
+            return pred
+        }
+        val ratio = low.sdPct(prev) / (LOW_SD_REF_PCT * unit)
+        val f = if (ratio.isFinite()) maxOf(1.0, ratio * ratio) else 1.0
+        val a = d / (LOW_TAU_SEC * f + d)
+        val maxStep = skewPctPerSec.coerceAtLeast(0.0) * unit * dtSec
+        val y = (pred + (a * (med - pred)).coerceIn(-maxStep, maxStep)).coerceAtLeast(0.0)
+        smoothed = y
+        return y
+    }
+
+    private fun predict(prev: Double, low: LowInput): Double {
+        val per = low.levelPerGal?.invoke(prev)
+        if (per == null || !per.isFinite() || per <= 0.0 || !(low.burnGal > 0.0) || !low.burnGal.isFinite()) return prev
+        return (prev - low.burnGal * per).coerceAtLeast(0.0)
+    }
+
+    /** Speed history for the steady-driving gate; accel = speed change over the last ACCEL_SPAN_MS. */
+    private fun noteSpeed(nowMs: Long, speedKmh: Double): Boolean {
+        speeds.addLast(nowMs to speedKmh)
+        while (speeds.isNotEmpty() && nowMs - speeds.first().first > SPEED_HIST_MS) speeds.removeFirst()
+        val old = speeds.lastOrNull { nowMs - it.first >= ACCEL_SPAN_MS }
+        val acc = if (old == null) 0.0 else (speedKmh - old.second) / 3.6 / ((nowMs - old.first) / 1000.0).coerceAtLeast(0.001)
+        if (abs(acc) > LOW_BRAKE_ACC) brakeMs = nowMs
+        val b = brakeMs
+        steadyNow = speedKmh >= LOW_STEADY_KMH && abs(acc) <= LOW_STEADY_ACC && (b == null || nowMs - b >= LOW_BRAKE_HOLD_MS)
+        return steadyNow
     }
 
     /**
@@ -233,6 +390,34 @@ internal class FuelMath {
     companion object {
         const val SKEW_PCT_PER_SEC = 0.05
         const val NEAR_EMPTY_PCT = 5.0
+        /** Low range: range-adaptive smoothing below this, and raw 0 is valid at or below it (lowRange callers). */
+        const val LOW_RANGE_PCT = 20.0
+        /** Band sd that gets the base time constant (the quietest steady bands, 10-15 % and 80-95 %). */
+        const val LOW_SD_REF_PCT = 1.3
+        /** Base gauge time constant in the low range; tuned by replay over the 08-27/09-11/10-08/11-18 tanks. */
+        const val LOW_TAU_SEC = 40.0
+        const val LOW_STEADY_KMH = 30.0
+        /** m/s^2 */
+        const val LOW_STEADY_ACC = 0.3
+        const val LOW_BRAKE_ACC = 1.0
+        const val LOW_BRAKE_HOLD_MS = 10_000L
+        const val LOW_MEDIAN_MS = 30_000L
+        const val LOW_DT_CAP_SEC = 5.0
+        const val ACCEL_SPAN_MS = 3_000L
+        const val SPEED_HIST_MS = 12_000L
+        const val SOLID_MS = 60_000L
+        const val SOLID_SPAN_SLACK_MS = 10_000L
+        const val SOLID_SHARE = 0.8
+        const val SOLID_MIN_N = 30
+        const val SOLID_EXIT_SHARE = 0.2
+        const val SOLID_EXIT_MED_PCT = 2.0
+        const val GAP_REACQUIRE_MS = 300_000L
+        const val ACQ_MS = 60_000L
+        const val ACQ_WAIT_MS = 10_000L
+        const val ACQ_TAU_SEC = 5.0
+        const val ACQ_DIFF_PCT = 5.0
+
+        fun nearEmpty(lowRange: Boolean): Double = if (lowRange) LOW_RANGE_PCT else NEAR_EMPTY_PCT
         const val GLITCH_RAW_PCT = 1.0
         const val DROP_HOLD_PT = 15.0
         /**

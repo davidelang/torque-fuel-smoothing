@@ -791,10 +791,14 @@ class PluginService : Service() {
             FsLog.i(TAG, "tank$id level re-anchored to ${rt.math.smoothed} after sustained low readings (raw=$raw)")
             if (logging0) rt.sessions.mark("reanchor", now, "\"sm\":${rt.math.smoothed}")
         }
+        // Range-adaptive low end: tank 1 of a confirmed vehicle only (a pending vehicle learns nothing).
+        val lowSt = if (id == 1 && trustedVehicle()) lowStateFor() else null
+        val lowRange = lowSt != null
         var stale = false
         if (raw != null && raw.isFinite() && !src.missing) {
             val tankGal = priorFor(id).cap
-            when (rt.stale.observe(raw, rt.usedGal, tankGal, FuelMath.SENDER_CEIL_PCT * rt.math.unit)) {
+            when (rt.stale.observe(raw, rt.usedGal, tankGal, FuelMath.SENDER_CEIL_PCT * rt.math.unit,
+                floor = if (lowRange) 0.0 else Double.NEGATIVE_INFINITY)) {
                 StaleLevelGuard.Verdict.REFRESH -> {
                     requestLevelRefresh(t, srcCfg.sourceId, levelPid)
                     val burn = rt.usedGal - rt.stale.usedAtChange
@@ -811,28 +815,30 @@ class PluginService : Service() {
                 StaleLevelGuard.Verdict.OK -> {}
             }
         }
-        val valid = !stale && rt.math.isValidSample(raw, ecu, rt.math.smoothed) && !src.missing
+        val valid = !stale && rt.math.isValidSample(raw, ecu, rt.math.smoothed, lowRange) && !src.missing
         val logging = rt.sessions.isOpen && lastActive == id.toString()
+        // Burn before the level step: in the low range the fuel counter carries the level ([FuelMath.lowStep]).
+        val dF = if (logging) integrateGalHr(t, now, rt) else 0.0
+        val lowIn = lowSt?.let { lowInputFor(rt, dF, it) }
         if (!valid) {
-            rt.math.hold()
+            val whyHold = if (stale) LevelTrust.WHY_STALE else holdWhy(raw, ecu, src.missing, rt.math.smoothed, lowRange)
+            if (lowIn != null) rt.math.holdLow(speedKmh, now, lowIn) else rt.math.hold()
             val held = rt.math.smoothed
-            val dF = if (logging) integrateGalHr(t, now, rt) else 0.0
             if (logging) {
                 rt.sessions.append(
                     sampleRow(
                         id, now, raw ?: Double.NaN, held ?: Double.NaN, speedRaw,
-                        fill = false, ok = false, why = if (stale) LevelTrust.WHY_STALE else holdWhy(raw, ecu, src.missing, rt.math.smoothed),
+                        fill = false, ok = false, why = whyHold,
                         mode = TrackMode.HOLD, ecu = ecu == true,
                     ),
                 )
                 stepLive(rt, dF)
             }
+            if (lowSt != null) lowAfter(rt, lowSt, raw, false, speedKmh, now, dF, logging)
             if (held != null) {
                 if (id == 1) publishFromSmoothed(t, raw ?: held, held) else publishExtraFrom(t, id, rt, held)
             }
-            (if (stale) LevelTrust.WHY_STALE else holdWhy(raw, ecu, src.missing, rt.math.smoothed)).let { why ->
-                FsLog.change(TAG, "state$id", "hold $why", "tank$id hold raw=$raw why=$why src=${src.how}")
-            }
+            FsLog.change(TAG, "state$id", "hold $whyHold", "tank$id hold raw=$raw why=$whyHold src=${src.how}")
             return
         }
         val live = raw!!
@@ -853,6 +859,7 @@ class PluginService : Service() {
             ignoreFill = skipFill,
             // Burn signal for "parked, no fuel burned" at the top of a fill; only integrated while logging.
             usedGal = if (logging) rt.usedGal else null,
+            low = lowIn,
         )
         if (id == 1 && trustedVehicle() && LevelScale.applies(cfg.sourceId)) {
             // Highest settled (smoothed, tracking, not filling/holding) count only rises; raw slosh never counts.
@@ -871,7 +878,7 @@ class PluginService : Service() {
             FsLog.i(TAG, "tank$id fill end raw=$live smoothed=$smoothed")
             onFillEnd(rt, smoothed, now, logging)
         }
-        val dF = if (logging) integrateGalHr(t, now, rt) else 0.0
+        if (lowSt != null) lowAfter(rt, lowSt, live, true, speedKmh, now, dF, logging)
         if (logging) {
             rt.sessions.append(
                 sampleRow(
@@ -938,12 +945,13 @@ class PluginService : Service() {
         }
     }
 
-    private fun holdWhy(raw: Double?, ecu: Boolean?, missing: Boolean, lastGood: Double?): String {
+    private fun holdWhy(raw: Double?, ecu: Boolean?, missing: Boolean, lastGood: Double?, lowRange: Boolean = false): String {
         if (missing || raw == null || !raw.isFinite()) return "missing"
         if (ecu == false) return "ecu"
         val u = levelUnit(1)
-        if (lastGood != null && lastGood > FuelMath.NEAR_EMPTY_PCT * u && raw < FuelMath.GLITCH_RAW_PCT * u) return "glitch<1"
-        if (lastGood != null && lastGood > FuelMath.NEAR_EMPTY_PCT * u && lastGood - raw > FuelMath.DROP_HOLD_PT * u) {
+        val near = FuelMath.nearEmpty(lowRange) * u
+        if (lastGood != null && lastGood > near && raw < FuelMath.GLITCH_RAW_PCT * u) return "glitch<1"
+        if (lastGood != null && lastGood > near && lastGood - raw > FuelMath.DROP_HOLD_PT * u) {
             return "held:drop>15"
         }
         return "missing"
@@ -2193,6 +2201,7 @@ class PluginService : Service() {
             onFillEnd(rt, anchor, System.currentTimeMillis(), true)
         }
         if (id == 1) commitTank1SinceFill(rt)
+        if (id == 1) saveLowState()
         val closed = rt.sessions.close()
         if (id == 1 && quarantineDir == null && FuelDetect.noSourceAlert(cfg.sourceId, closed.size, ProfileStore.profileField(filesDir, profileId, FuelDetect.KEY_NONE_ALERTED) == "true")) {
             ProfileStore.setProfileField(filesDir, profileId, FuelDetect.KEY_NONE_ALERTED, "true")
@@ -2467,6 +2476,95 @@ class PluginService : Service() {
     private fun onFillEnd(rt: TankRt, smoothed: Double, now: Long, logging: Boolean) {
         if (logging) rt.sessions.mark("fillEnd", now)
         FsLog.i(TAG, "tank${rt.id} live follow end smoothed=$smoothed (display only; analysis runs at rollup)")
+        if (rt.id == 1 && trustedVehicle()) closeLowTank(rt, now, "fill", logging)
+    }
+
+    // ---- Range-adaptive low end (tank 1, confirmed vehicle): band noise, solid 0, reserve evidence ----
+    private var lowState: LowRangeState? = null
+    private var lowStateProfile: String? = null
+    private var lowLastMs: Long? = null
+    private var lowWasSolid = false
+
+    /** The confirmed profile's low-range state (loaded once per profile; the previous profile's is saved first). */
+    private fun lowStateFor(): LowRangeState? {
+        if (lowStateProfile != profileId || lowState == null) {
+            saveLowState()
+            lowState = runCatching { LowRange.load(ProfileStore.profileDir(filesDir, profileId)) }.getOrNull() ?: LowRangeState()
+            lowStateProfile = profileId
+            lowLastMs = null
+            lowWasSolid = false
+        }
+        return lowState
+    }
+
+    private fun saveLowState() {
+        val st = lowState ?: return
+        val p = lowStateProfile ?: return
+        runCatching { LowRange.save(ProfileStore.profileDir(filesDir, p), st) }
+            .onFailure { FsLog.w(TAG, "low-range state not saved: ${it.javaClass.simpleName}") }
+    }
+
+    /** Counter burn, the chunk map's level-per-gallon (none without a map) and the profile's band noise. */
+    private fun lowInputFor(rt: TankRt, dF: Double, st: LowRangeState): FuelMath.LowInput {
+        val prior = priorFor(rt.id)
+        val u = rt.math.unit
+        return FuelMath.LowInput(
+            burnGal = dF,
+            levelPerGal = { lvl -> prior.gpp(lvl / u).takeIf { it.isFinite() && it > 0.0 }?.let { u / it } },
+            sdPct = { lvl -> BandNoise.sd(st.bands, lvl / u) * u },
+        )
+    }
+
+    /** Per sample after the level step: this tank's band noise, first raw 0, solid-0 burn, missed-fill end. */
+    private fun lowAfter(rt: TankRt, st: LowRangeState, raw: Double?, valid: Boolean, speedKmh: Double, now: Long, dF: Double, logging: Boolean) {
+        val sm = rt.math.smoothed ?: return
+        val u = rt.math.unit
+        val tk = st.tank
+        val dt = lowLastMs?.let { (now - it).coerceIn(0L, 15_000L) / 1000.0 } ?: 0.0
+        lowLastMs = now
+        if (sm < FuelMath.LOW_RANGE_PCT * u && tk.lowSinceMs == null) tk.lowSinceMs = now
+        if (tk.lowSinceMs != null) tk.minSmoothed = minOf(tk.minSmoothed ?: sm, sm)
+        if (tk.firstZeroMs != null) {
+            tk.sinceFirstZeroGal += dF
+        } else if (valid && raw == 0.0) {
+            tk.firstZeroMs = now
+            if (logging) rt.sessions.mark("firstZero", now)
+            FsLog.i(TAG, "tank1 first raw 0 this tank (smoothed=${"%.2f".format(sm)})")
+        }
+        val solid = rt.math.solidZero
+        if (solid) {
+            if (!lowWasSolid) {
+                tk.solidEntries++
+                tk.solidEnterMs = now
+                if (logging) rt.sessions.mark("solidZero", now)
+                FsLog.i(TAG, "tank1 solid raw 0: level held at 0; burn counts as reserve evidence")
+            }
+            tk.solidGal += dF
+            tk.solidSec += dt
+            tk.solidKm += speedKmh.coerceAtLeast(0.0) * dt / 3600.0
+        } else if (lowWasSolid) {
+            if (logging) rt.sessions.mark("solidZeroEnd", now, "\"gal\":${"%.3f".format(java.util.Locale.ROOT, tk.solidGal)}")
+            FsLog.i(TAG, "tank1 solid raw 0 ended (tank solid-0 burn ${"%.3f".format(tk.solidGal)} gal)")
+        }
+        lowWasSolid = solid
+        if (valid && raw != null && rt.math.steadyNow && rt.math.mode == TrackMode.SKEW) {
+            BandNoise.add(tk.bands, raw / u, (raw - rt.math.rawMedian(now - FuelMath.LOW_MEDIAN_MS)) / u)
+        }
+        if (tk.lowSinceMs != null && rt.math.mode == TrackMode.SKEW && sm >= LowRange.MISSED_FILL_PCT * u) {
+            closeLowTank(rt, now, "rise", logging)
+        }
+    }
+
+    /** A fill ends the tank: fold its noise into the profile bands and keep its reserve evidence. */
+    private fun closeLowTank(rt: TankRt, now: Long, why: String, logging: Boolean) {
+        val st = lowStateFor() ?: return
+        val summary = LowRange.closeTank(st, now, why)
+        lowWasSolid = false
+        saveLowState()
+        val tk = summary.optJSONObject("tank")
+        FsLog.i(TAG, "tank1 low-range tank closed ($why): solid0 ${"%.3f".format(tk?.optDouble("solidGal", 0.0) ?: 0.0)} gal, " +
+            "since first 0 ${"%.3f".format(tk?.optDouble("sinceFirstZeroGal", 0.0) ?: 0.0)} gal, reserveMin=${st.reserveMinGal}")
+        if (logging) rt.sessions.mark("lowTankClose", now, "\"why\":\"$why\"")
     }
 
     /** Adds burn since the last fill end. Does not zero the session fuel integral. */
