@@ -35,14 +35,24 @@ if (officialChosen && devChosen) {
             "and -Pfuelsmoothing.dev.package=<applicationId>.",
     )
 }
-if (!officialChosen && !devChosen) {
+// build_app runs the unit tests in their own Gradle call, before any packaging, and passes no
+// package choice to it. A run whose every requested task is a JVM unit-test task ("test",
+// "testDebugUnitTest", ":app:testReleaseUnitTest", ...) builds no APK, so it may configure
+// without a choice; it is configured like the official build, so the build_app packaging call that
+// follows (which does pass -Pfuelsmoothing.official=true) reuses what the tests compiled. Any
+// packaging task still requires the explicit choice.
+val unitTestTaskPattern = Regex("""^(:?app:)?test([A-Z][A-Za-z0-9]*UnitTest)?$""")
+val requestedTasks = gradle.startParameter.taskNames
+val unitTestsOnly = requestedTasks.isNotEmpty() && requestedTasks.all { unitTestTaskPattern.matches(it) }
+if (!officialChosen && !devChosen && !unitTestsOnly) {
     error(
         "Set -Pfuelsmoothing.official=true (or FUELSMOOTHING_OFFICIAL=1) " +
             "for com.davidlang.torque.fuelsmoothing, or -Pfuelsmoothing.dev.package=<applicationId> " +
             "for a dev package.",
     )
 }
-val fuelsmoothingApplicationId = if (officialChosen) {
+val officialConfig = officialChosen || (unitTestsOnly && !devChosen)
+val fuelsmoothingApplicationId = if (officialConfig) {
     officialApplicationId
 } else {
     val devPackage = devProp ?: error("-Pfuelsmoothing.dev.package is empty")
@@ -113,7 +123,7 @@ android {
             error("versionName: git describe printed nothing")
         }
         versionName = rawVersion
-        if (!officialChosen) {
+        if (!officialConfig) {
             resValue("string", "app_name", "Fuel Smoothing for Torque (local)")
         }
         ndk {
@@ -251,7 +261,7 @@ val generateI18nStrings = tasks.register<GenerateI18nStrings>("generateI18nStrin
     watched.from(layout.projectDirectory.dir("src/main/kotlin"))
     watched.from(rootProject.layout.projectDirectory.file("scripts/i18n_generate_resources.py"))
     watched.from(rootProject.layout.projectDirectory.file("scripts/i18n_catalog.py"))
-    emitAppName.set(officialChosen)
+    emitAppName.set(officialConfig)
     resDir.set(layout.buildDirectory.dir("generated/i18n/res"))
     kotlinDir.set(layout.buildDirectory.dir("generated/i18n/kotlin"))
 }
