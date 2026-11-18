@@ -720,11 +720,13 @@ class PluginService : Service() {
             sampleTank(extra.id, t, ecu, speedKmh, now, speedRaw, skipFill)
         }
         if (ecu == true && identity == null && fuelDetect == null && detectQueue == null) {
+            val probing = vehicleProbe?.let { stepVehicleProbe(t, it); true } ?: false
             val rt = tanks.values.firstOrNull { it.sessions.isOpen }
             if (rt != null) {
                 fun number(x: Double?): Any = x?.takeIf { it.isFinite() } ?: org.json.JSONObject.NULL
                 try {
-                    diagnosticCapture.tick(t, org.json.JSONObject().put("t", now)
+                    // No diagnostic bus request while the ID probe is pacing its own (one bus request at a time).
+                    if (!probing) diagnosticCapture.tick(t, org.json.JSONObject().put("t", now)
                         .put("speedKmh", number(speedKmh)).put("sessionFuelGal", number(rt.usedGal))
                         .put("torqueFlowRaw", number(rt.lastFlowRaw)).put("torqueFlowUnit", rt.lastFlowUnit)
                         .put("torqueFlowPid", rt.lastFlowPid ?: org.json.JSONObject.NULL)
@@ -988,6 +990,7 @@ class PluginService : Service() {
     }
 
     private fun onEcuAway() {
+        stopVehicleProbe("disconnected")
         closeSession() // close under the previous physical owner before invalidating identity
         torque?.let { invalidateVehicleOutputs(it) }
         profileSelectionReady = false
@@ -1026,6 +1029,7 @@ class PluginService : Service() {
             return false
         }
         if (profileSelectionReady && name == selectedTorqueProfile) return true
+        stopVehicleProbe("torque_profile_changed")
         // Close under the OLD recording identity before selecting or creating any other profile.
         closeSession()
         invalidateVehicleOutputs(t)
@@ -1174,6 +1178,8 @@ class PluginService : Service() {
     }
 
     private var identity: IdentityRead? = null
+    /** Paced one-time Ford ID probe / Check vehicle read; never runs alongside an identity read or detect. */
+    private var vehicleProbe: VehicleProbe? = null
 
     /** Called once per poll tick while connected; finishes the identity decision when the paced read is done. */
     private fun pumpIdentity(t: ITorqueService) {
@@ -1220,6 +1226,62 @@ class PluginService : Service() {
         } catch (e: Exception) {
             FsLog.warn(TAG, "identityEvidence", "private identity evidence write failed: ${e.javaClass.simpleName}")
         }
+    }
+
+    /** One paced probe request at most (5 s apart); aborts when the connection or Torque profile changes. */
+    private fun stepVehicleProbe(t: ITorqueService, p: VehicleProbe) {
+        val mono = SystemClock.elapsedRealtime()
+        if (!p.due(mono) && mono - p.startMono <= VehicleProbe.MAX_TOTAL_MS) return
+        val same = runCatching {
+            t.isConnectedToECU && t.getVehicleProfileInformation()?.firstOrNull()?.trim() == selectedTorqueProfile
+        }.getOrDefault(false)
+        if (!same) p.abort("connection_or_profile_changed")
+        val done = p.finished || p.step(mono, System.currentTimeMillis()) { h, c -> t.sendCommandGetResponse(h, c)?.toList() }
+        if (done) {
+            vehicleProbe = null
+            finishVehicleProbe(p)
+        }
+    }
+
+    private fun stopVehicleProbe(why: String) {
+        val p = vehicleProbe ?: return
+        vehicleProbe = null
+        p.abort(why)
+        finishVehicleProbe(p)
+    }
+
+    /** Ring entry always; stable answers into fingerprint.json; the one-time flag only for a complete probe. */
+    private fun finishVehicleProbe(p: VehicleProbe) {
+        try {
+            val dir = ProfileStore.profileDir(filesDir, p.profile)
+            IdentityChecks.record(dir, p.json())
+            val stable = p.stable()
+            if (stable.isNotEmpty() || p.abortReason == null) {
+                Fingerprint.save(dir, Fingerprint.withIdProbe(Fingerprint.load(dir), stable, complete = p.abortReason == null))
+            }
+            // Log-safe: identity payloads are hashed in stable(); raw replies stay in the private ring only.
+            FsLog.i(TAG, "vehicle probe ${p.kind} profile=${p.profile} steps=${p.results.length()} aborted=${p.abortReason ?: "-"} stable=$stable")
+            onVehicleProbeDone(p)
+        } catch (e: Exception) {
+            FsLog.warn(TAG, "vehicleProbe", "vehicle probe record failed: ${e.javaClass.simpleName}")
+        }
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    private fun onVehicleProbeDone(p: VehicleProbe) {}
+
+    /**
+     * One-time Ford ID probe when [profile]'s fingerprint has none yet. Automatic only on J1850 PWM (the known
+     * Ford PCM path); other vehicles get it from the Check vehicle button only.
+     */
+    private fun maybeQueueIdProbe(profile: String) {
+        if (vehicleProbe != null) return
+        val protocol = observedIdentity.protocol
+        if (protocol?.contains("J1850 PWM") != true) return
+        if (Fingerprint.load(ProfileStore.profileDir(filesDir, profile)).probes[Fingerprint.ID_PROBE] != null) return
+        vehicleProbe = VehicleProbe("auto", profile, protocol, System.currentTimeMillis(), SystemClock.elapsedRealtime(),
+            firstDelayMs = 10_000L)
+        FsLog.i(TAG, "one-time ID probe queued for $profile")
     }
 
     private fun finishIdentity(t: ITorqueService, r: IdentityRead) {
@@ -1282,6 +1344,7 @@ class PluginService : Service() {
             resetVehicleRuntime()
             if (!pending) queueIdentityRollups(target)
         }
+        if (!pending) maybeQueueIdProbe(target)
     }
 
     private fun resetVehicleRuntime() {
@@ -1419,6 +1482,7 @@ class PluginService : Service() {
         prefsDirty = true
         reloadCfgIfDirty()
         resetVehicleRuntime()
+        maybeQueueIdProbe(id)
         if (automatic != null) {
             FsLog.i(TAG, "vehicle matched automatically for this connection -> $id")
             return

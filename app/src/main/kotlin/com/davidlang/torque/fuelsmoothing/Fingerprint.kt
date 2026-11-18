@@ -111,6 +111,24 @@ internal object Fingerprint {
         return out
     }
 
+    /** Set (to VehicleProbe.VERSION) once a one-time ID probe has completed for this profile. */
+    const val ID_PROBE = "idProbe"
+    const val VARIES = "varies"
+
+    /**
+     * Adds ID-probe answers ("id:<step>" keys) to [f]. An answer that differs from the stored one becomes
+     * [VARIES] (never used for matching). [complete] marks the one-time probe done.
+     */
+    fun withIdProbe(f: Fp, stable: Map<String, String>, complete: Boolean): Fp {
+        val out = LinkedHashMap(f.probes)
+        for ((k, v) in stable) {
+            val old = out[k]
+            out[k] = if (old == null || old == v) v else VARIES
+        }
+        if (complete) out[ID_PROBE] = VehicleProbe.VERSION
+        return f.copy(probes = out)
+    }
+
     /** Key recording that [sourceId] returned usable levels in a real session (live evidence beats the probe). */
     fun liveKey(sourceId: String) = "live:$sourceId"
 
