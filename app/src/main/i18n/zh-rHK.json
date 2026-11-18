@@ -605,11 +605,6 @@
     "text": "這次行程會儲存到 %1$s。"
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "正在即時顯示平滑後的燃油。在你選擇之前，不會向設定檔儲存任何內容；未確認的資料會在行程結束時捨棄。"
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "這是哪輛車？"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "在無法自動配對時，詢問連接的是哪輛車。"
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "檢查 / 更換 / 偵測車輛"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "低於 % 的低位平滑"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "低過呢個液位時，平滑液位只跟住平穩行駛嘅讀數，錶針嘈雜嘅區間會跟得慢啲（0 = 關閉）。"
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "低位 τ 秒"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "低位範圍內平滑液位嘅時間常數。"
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "低位雜訊倍數"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "喺錶針較嘈嘅區間額外平滑（0 = 無，1 = 預設，更高 = 更強）。"
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "記錄手機感測器（診斷）：加速度計、GPS 航向、速度同高度變化；絕不會記錄位置"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "低位數據模式（接近空箱時額外記錄）：仲剩 %1$d / %2$d 箱"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "低位數據模式：已完成（已記錄 %1$d 箱）"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0 至 %1$s %%"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0 至 %1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "捨棄呢次行駛"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "未指定嘅行駛"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "呢次行駛會保持未指定，喺你將佢指定畀一架車之前唔會用嚟學習。"
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "捨棄呢次未指定嘅行駛？佢唔會用嚟學習。"
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "車輛檢查已停止"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "檢查喺完成前停咗（%1$s）。到而家為止嘅結果已儲存喺呢架車嘅檢查記錄。"
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "車輛檢查：%1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "呢架車同 %1$s 相符（%2$s）。結果已儲存喺呢架車嘅檢查記錄。"
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "指紋"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "車輛檢查：%1$s？"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "呢架車同 %1$s 相符，而唔係 %2$s。點按更換車輛，為呢次行駛揀車。"
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "車輛檢查：未確認"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "呢架車同 %1$s 已儲存嘅指紋唔符。保留佢可以為 %1$s 儲存呢次指紋，或者點按更換車輛。"
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "保留 %1$s"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "更換車輛"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "車輛檢查"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "請先喺 Torque 入面連接車輛，然後再點按檢查 / 更換 / 偵測車輛。"
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "平滑後嘅燃油而家即時顯示緊。喺你揀之前，唔會儲存任何內容去設定檔。如果行駛結束前仍未揀，數據會保持未指定，喺你於設定頁指定之前唔會用嚟學習。"
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "車輛檢查：請揀呢次行駛屬於邊架車。"
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "有 %1$d 次未指定嘅行駛等緊。請打開設定頁，將佢哋指定畀一架車。"
   }
 ]

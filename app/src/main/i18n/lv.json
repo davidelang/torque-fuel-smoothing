@@ -605,11 +605,6 @@
     "text": "Šis brauciens tiks saglabāts %1$s."
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "Izlīdzinātā degviela tagad tiek rādīta tiešraidē. Profilā nekas netiek saglabāts, kamēr neizvēlaties; neapstiprinātie dati tiek atmesti brauciena beigās."
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "Kurš transportlīdzeklis tas ir?"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "Jautā, kurš transportlīdzeklis ir pieslēgts, kad to nevar automātiski saskaņot."
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "Pārbaudīt / mainīt / noteikt transportlīdzekli"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "Zemā diapazona izlīdzināšana zem %"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "Zem šī līmeņa izlīdzinātais līmenis seko tikai vienmērīgas braukšanas rādījumiem, lēnāk tur, kur rādītājs ir trokšņains (0 = izslēgts)."
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "Zemais diapazons τ sekundēs"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "Izlīdzinātā līmeņa laika konstante zemajā diapazonā."
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "Zemā diapazona trokšņa reizinātājs"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "Papildu izlīdzināšana trokšņainās rādītāja joslās (0 = nav, 1 = noklusējums, augstāks = stiprāks)."
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "Reģistrēt tālruņa sensorus (diagnostika): akselerometru, GPS virzienu, ātrumu un augstuma maiņu; nekad atrašanās vietu"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "Zemā diapazona datu režīms (papildu žurnāls tuvu tukšam): atlikuši %1$d no %2$d tvertnēm"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "Zemā diapazona datu režīms: pabeigts (reģistrētas %1$d tvertnes)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0 līdz %1$s %%"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0 līdz %1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "Atmest šo braucienu"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "Nepiešķirts brauciens"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "Šis brauciens paliek nepiešķirts un netiek izmantots mācīšanai, kamēr to nepiešķirat transportlīdzeklim."
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "Atmest šo nepiešķirto braucienu? Tas netiks izmantots mācīšanai."
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "Transportlīdzekļa pārbaude apturēta"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "Pārbaude apstājās pirms beigām (%1$s). Līdzšinējie rezultāti ir saglabāti transportlīdzekļa pārbaužu vēsturē."
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "Transportlīdzekļa pārbaude: %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "Šis transportlīdzeklis atbilst %1$s (%2$s). Rezultāti ir saglabāti transportlīdzekļa pārbaužu vēsturē."
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "nospiedums"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "Transportlīdzekļa pārbaude: %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "Šis transportlīdzeklis atbilst %1$s, nevis %2$s. Pieskarieties Mainīt transportlīdzekli, lai izvēlētos šī brauciena transportlīdzekli."
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "Transportlīdzekļa pārbaude: nav apstiprināta"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "Šis transportlīdzeklis neatbilst saglabātam %1$s nospiedumam. Paturiet to, lai saglabātu šo nospiedumu %1$s, vai pieskarieties Mainīt transportlīdzekli."
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "Paturēt %1$s"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "Mainīt transportlīdzekli"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "Transportlīdzekļa pārbaude"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "Vispirms Torque izveidojiet savienojumu ar transportlīdzekli un pēc tam vēlreiz pieskarieties Pārbaudīt / mainīt / noteikt transportlīdzekli."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "Izlīdzināta degviela tagad tiek rādīta tiešraidē. Profilā nekas netiek saglabāts, kamēr neizvēlaties. Ja neizvēlaties pirms brauciena beigām, dati paliek nepiešķirti un netiek izmantoti mācīšanai, kamēr tos nepiešķirat iestatījumu lapā."
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "Transportlīdzekļa pārbaude: izvēlieties transportlīdzekli, kuram pieder šis brauciens."
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "%1$d nepiešķirti braucieni gaida. Atveriet iestatījumu lapu, lai tos piešķirtu transportlīdzeklim."
   }
 ]

@@ -605,11 +605,6 @@
     "text": "See sõit salvestatakse kohta %1$s."
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "Silutud kütust näidatakse praegu otse. Profiili ei salvestata midagi, kuni valite; kinnitamata andmed hüljatakse sõidu lõpus."
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "Milline sõiduk see on?"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "Küsib, milline sõiduk on ühendatud, kui seda ei saa automaatselt sobitada."
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "Kontrolli / vaheta / tuvasta sõiduk"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "Madala vahemiku silumine alla %"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "Sellest tasemest allpool järgib silutud tase ainult ühtlase sõidu näite, aeglasemalt seal, kus näidik on mürarikas (0 = väljas)."
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "Madal vahemik τ sekundites"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "Silutud taseme ajakonstant madalas vahemikus."
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "Madala vahemiku müra kordaja"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "Lisasilumine mürarikastes näidiku ribades (0 = puudub, 1 = vaikimisi, suurem = tugevam)."
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "Logi telefoni andureid (diagnostika): kiirendusandur, GPS-i suund, kiirus ja kõrguse muutus; mitte kunagi asukohta"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "Madala vahemiku andmerežiim (lisalogi tühja lähedal): jäänud %1$d / %2$d paaki"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "Madala vahemiku andmerežiim: valmis (%1$d paaki logitud)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0 kuni %1$s %%"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0 kuni %1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "Hülga see sõit"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "Määramata sõit"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "See sõit jääb määramata ega lähe õppimisse, kuni määrate selle sõidukile."
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "Kas hüljata see määramata sõit? Seda ei kasutata õppimiseks."
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "Sõiduki kontroll peatatud"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "Kontroll peatus enne lõppu (%1$s). Senised tulemused on salvestatud sõiduki kontrolliajalukku."
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "Sõiduki kontroll: %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "See sõiduk vastab üksusele %1$s (%2$s). Tulemused on salvestatud sõiduki kontrolliajalukku."
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "sõrmejälg"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "Sõiduki kontroll: %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "See sõiduk vastab üksusele %1$s, mitte %2$s. Puudutage Vaheta sõidukit, et valida selle sõidu sõiduk."
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "Sõiduki kontroll: kinnitamata"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "See sõiduk ei vasta salvestatud sõrmejäljele üksuse %1$s jaoks. Hoidke see alles, et salvestada see sõrmejälg üksusele %1$s, või puudutage Vaheta sõidukit."
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "Hoia %1$s"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "Vaheta sõidukit"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "Sõiduki kontroll"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "Looge esmalt Torque’is ühendus sõidukiga ja puudutage siis uuesti Kontrolli / vaheta / tuvasta sõiduk."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "Silutud kütust näidatakse nüüd otse. Profiili ei salvestata midagi, kuni valite. Kui te ei vali enne sõidu lõppu, jäävad andmed määramata ega lähe õppimisse, kuni määrate need seadistuslehel."
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "Sõiduki kontroll: valige sõiduk, millele see sõit kuulub."
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "%1$d määramata sõitu ootab. Avage seadistusleht, et määrata need sõidukile."
   }
 ]

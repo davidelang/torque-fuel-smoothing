@@ -605,11 +605,6 @@
     "text": "Ez az út a %1$s profilba lesz mentve."
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "A simított üzemanyag most élőben látszik. Semmi nem kerül profilba, amíg nem választ; a meg nem erősített adatok az út végén eldobódnak."
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "Melyik jármű ez?"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "Megkérdezi, melyik jármű van csatlakoztatva, ha nem lehet automatikusan párosítani."
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "Jármű ellenőrzése / cseréje / felismerése"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "Alacsony tartomány simítása % alatt"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "E szint alatt a simított szint csak egyenletes haladás közbeni értékeket követ, lassabban ott, ahol a műszer zajos (0 = ki)."
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "Alacsony tartomány τ másodpercben"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "A simított szint időállandója az alacsony tartományban."
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "Alacsony tartomány zajszorzója"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "További simítás a műszer zajos sávjaiban (0 = nincs, 1 = alapértelmezett, nagyobb = erősebb)."
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "Telefonérzékelők naplózása (diagnosztika): gyorsulásmérő, GPS-irány, sebesség és magasságváltozás; soha a helyzet"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "Alacsony tartomány adatmód (többletnapló üres közelében): %1$d / %2$d tartály van hátra"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "Alacsony tartomány adatmód: kész (%1$d tartály naplózva)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0–%1$s %%"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0–%1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "Út elvetése"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "Hozzá nem rendelt út"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "Ez az út hozzá nem rendelt marad, és nem használjuk tanulásra, amíg nem rendeli járműhöz."
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "Eldobja ezt a hozzá nem rendelt utat? Nem lesz tanulásra használva."
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "A járműellenőrzés leállt"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "Az ellenőrzés a befejezés előtt leállt (%1$s). Az eddigi eredmények a jármű ellenőrzési előzményeiben vannak mentve."
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "Járműellenőrzés: %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "Ez a jármű egyezik ezzel: %1$s (%2$s). Az eredmények a jármű ellenőrzési előzményeiben vannak mentve."
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "ujjlenyomat"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "Járműellenőrzés: %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "Ez a jármű ezzel egyezik: %1$s, nem ezzel: %2$s. Koppintson a Jármű cseréje elemre az út járművének kiválasztásához."
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "Járműellenőrzés: nincs megerősítve"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "Ez a jármű nem egyezik a %1$s számára mentett ujjlenyomattal. Tartsa meg, hogy ez az ujjlenyomat mentésre kerüljön %1$s számára, vagy koppintson a Jármű cseréje elemre."
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "%1$s megtartása"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "Jármű cseréje"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "Járműellenőrzés"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "Először csatlakozzon a járműhöz a Torque-ban, majd koppintson újra a Jármű ellenőrzése / cseréje / felismerése elemre."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "A simított üzemanyag most élőben látszik. Semmi nem kerül profilba, amíg nem választ. Ha az út vége előtt nem választ, az adatok hozzá nem rendeltek maradnak, és nem használjuk őket tanulásra, amíg a beállítóoldalon hozzá nem rendeli őket."
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "Járműellenőrzés: válassza ki, melyik járműhöz tartozik ez az út."
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "%1$d hozzá nem rendelt út várakozik. Nyissa meg a beállítóoldalt, hogy járműhöz rendelje őket."
   }
 ]

@@ -605,11 +605,6 @@
     "text": "Le ndlela izogcinwa ku-%1$s."
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "Uphethiloli obushelelezi uboniswa bukhoma manje. Akukho okugcinwayo kuphrofayela kuze ukhethe; idatha engaqinisekisiwe ilahlwa ekupheleni kwendlela."
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "Lo umuphi umoto?"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "Ibuza ukuthi yimuphi umoto oxhunyiwe uma ingakwazi ukuhambisana ngokuzenzakalelayo."
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "Hlola / shintsha / thola imoto"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "Ukubusheleleza kwebanga eliphansi ngaphansi kuka-%"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "Ngaphansi kwalezinga izinga elibushelelezi lilandela kuphela ukufundwa kokushayela okuzinzile, kancane lapho igeyji inomsindo (0 = icishiwe)."
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "Ibanga eliphansi τ imizuzwana"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "Isikhathi esingaguquki sezinga elibushelelezi ebangeni eliphansi."
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "Isiphindaphindi somsindo webanga eliphansi"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "Ukubusheleleza okwengeziwe emabhendi egeyji anomsindo (0 = akukho, 1 = okuzenzakalelayo, phezulu = kuqine)."
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "Loga izinzwa zefoni (ukuxilonga): i-accelerometer, isiqondiso se-GPS, isivinini noshintsho kobude; ungaze uloge indawo"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "Imodi yedatha yebanga eliphansi (ilogu eyengeziwe eduze kokungabi nalutho): amathangi angu-%1$d kwangu-%2$d asele"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "Imodi yedatha yebanga eliphansi: kuqediwe (amathangi angu-%1$d alogwe)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0 kuya ku-%1$s %%"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0 kuya ku-%1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "Lahla lo hambo"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "Uhambo olungabiwe"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "Lo hambo uhlala ungabiwanga futhi awusetshenziselwa ukufunda uze uwunikeze imoto."
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "Uyalulahla lolu hambo olungabiwe? Ngeke lusetshenziselwe ukufunda."
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "Ukuhlolwa kwemoto kumisiwe"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "Ukuhlola kumile ngaphambi kokuqeda (%1$s). Imiphumela kuze kube manje igcinwe emlandweni wokuhlola wemoto."
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "Ukuhlolwa kwemoto: %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "Le moto ifana ne-%1$s (%2$s). Imiphumela igcinwe emlandweni wokuhlola wemoto."
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "izigxivizo zeminwe"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "Ukuhlolwa kwemoto: %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "Le moto ifana ne-%1$s, hhayi ne-%2$s. Thinta Shintsha imoto ukuze ukhethe imoto yalo hambo."
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "Ukuhlolwa kwemoto: akuqinisekisiwe"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "Le moto ayifani nezigxivizo zeminwe ezigciniwe ze-%1$s. Yigcine ukuze ugcine lezi zigxivizo zeminwe ze-%1$s, noma uthinte Shintsha imoto."
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "Gcina i-%1$s"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "Shintsha imoto"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "Ukuhlolwa kwemoto"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "Qala uxhume emotweni ku-Torque, bese uthinta futhi Hlola / shintsha / thola imoto."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "Uphethiloli obushelelezi uboniswa bukhoma manje. Akukho lutho olugcinwa kuphrofayela uze ukhethe. Uma ungakhethi ngaphambi kokuphela kohambo, idatha ihlala ingabiwanga futhi ayisetshenziselwa ukufunda uze uyinikeze ekhasini lokusetha."
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "Ukuhlolwa kwemoto: khetha imoto lo hambo ongowayo."
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "Kuhambo olungabiwe olungu-%1$d olulindile. Vula ikhasi lokusetha ukuze ulunikeze imoto."
   }
 ]

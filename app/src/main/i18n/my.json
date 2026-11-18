@@ -605,11 +605,6 @@
     "text": "ဤခရီးကို %1$s သို့ သိမ်းမည်။"
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "ချောမွေ့လောင်စာကို ယခု တိုက်ရိုက် ပြနေသည်။ သင်ရွေးသည်အထိ ပရိုဖိုင်သို့ ဘာမှ မသိမ်းပါ။ မအတည်ပြုရသေးသော ဒေတာကို ခရီးအဆုံးတွင် ပစ်ပါသည်။"
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "ဤသည် ဘယ်ယာဉ်လဲ?"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "အလိုအလျောက် ကိုက်ညီအောင် မလုပ်နိုင်သောအခါ ဘယ်ယာဉ် ချိတ်ဆက်ထားသည်ကို မေးသည်။"
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "ယာဉ်ကို စစ် / ပြောင်း / ရှာပါ"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "% အောက် နိမ့်အပိုင်း ချောမွေ့ခြင်း"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "ဤအဆင့်အောက်တွင် ချောမွေ့သောအဆင့်သည် တည်ငြိမ်မောင်းနှင်မှု ဖတ်ရှုချက်များကိုသာ လိုက်ပြီး တိုင်းကိရိယာ ဆူညံသည့်နေရာတွင် ပိုနှေးသည် (0 = ပိတ်)။"
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "နိမ့်အပိုင်း τ စက္ကန့်"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "နိမ့်အပိုင်းရှိ ချောမွေ့သောအဆင့်၏ အချိန်ကိန်းသေ။"
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "နိမ့်အပိုင်း ဆူညံမှု မြှောက်ကိန်း"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "ဆူညံသော တိုင်းကိရိယာ အပိုင်းများတွင် ထပ်ဆောင်း ချောမွေ့ခြင်း (0 = မရှိ၊ 1 = ပုံသေ၊ ပိုမြင့် = ပိုပြင်း)။"
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "ဖုန်းအာရုံခံများကို မှတ်တမ်းတင်ပါ (စစ်ဆေးမှု)− အရှိန်တိုင်းကိရိယာ၊ GPS ဦးတည်ချက်၊ အမြန်နှုန်းနှင့် အမြင့်ပြောင်းလဲမှု။ တည်နေရာကို မည်သည့်အခါမျှ မမှတ်ပါ"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "နိမ့်အပိုင်း ဒေတာမုဒ် (အလွတ်နီးပါး ထပ်ဆောင်းမှတ်တမ်း)− တိုင်ကီ %2$d မှ %1$d ကျန်"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "နိမ့်အပိုင်း ဒေတာမုဒ်− ပြီးပါပြီ (တိုင်ကီ %1$d မှတ်ပြီး)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0 မှ %1$s %%"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0 မှ %1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "ဤမောင်းနှင်မှုကို ပစ်ပါ"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "မသတ်မှတ်ရသေးသော မောင်းနှင်မှု"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "ဤမောင်းနှင်မှုသည် မသတ်မှတ်ရသေးဘဲ ကျန်ပြီး ယာဉ်တစ်စီးသို့ မသတ်မှတ်မချင်း သင်ယူရန် မသုံးပါ။"
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "ဤမသတ်မှတ်ရသေးသော မောင်းနှင်မှုကို ပစ်မလား။ သင်ယူရန် မသုံးပါ။"
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "ယာဉ်စစ်ဆေးမှု ရပ်သွားသည်"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "စစ်ဆေးမှု မပြီးမီ ရပ်သွားသည် (%1$s)။ ယခုအထိ ရလဒ်များကို ယာဉ်၏ စစ်ဆေးမှု မှတ်တမ်းတွင် သိမ်းထားသည်။"
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "ယာဉ်စစ်ဆေးမှု− %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "ဤယာဉ်သည် %1$s နှင့် ကိုက်ညီသည် (%2$s)။ ရလဒ်များကို ယာဉ်၏ စစ်ဆေးမှု မှတ်တမ်းတွင် သိမ်းထားသည်။"
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "လက်ဗွေ"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "ယာဉ်စစ်ဆေးမှု− %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "ဤယာဉ်သည် %1$s နှင့် ကိုက်ညီပြီး %2$s နှင့် မကိုက်ညီပါ။ ဤမောင်းနှင်မှု၏ ယာဉ်ကို ရွေးရန် ယာဉ်ပြောင်းပါ ကို နှိပ်ပါ။"
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "ယာဉ်စစ်ဆေးမှု− အတည်မပြုရသေး"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "ဤယာဉ်သည် %1$s အတွက် သိမ်းထားသော လက်ဗွေနှင့် မကိုက်ညီပါ။ ဤလက်ဗွေကို %1$s အတွက် သိမ်းရန် ထားပါ၊ သို့မဟုတ် ယာဉ်ပြောင်းပါ ကို နှိပ်ပါ။"
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "%1$s ကို ထားပါ"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "ယာဉ်ပြောင်းပါ"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "ယာဉ်စစ်ဆေးမှု"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "Torque တွင် ယာဉ်နှင့် အရင်ချိတ်ဆက်ပါ၊ ထို့နောက် ယာဉ်ကို စစ် / ပြောင်း / ရှာပါ ကို ထပ်နှိပ်ပါ။"
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "ချောမွေ့သော လောင်စာကို ယခု တိုက်ရိုက် ပြသနေသည်။ သင် မရွေးမချင်း ပရိုဖိုင်သို့ ဘာမှ မသိမ်းပါ။ မောင်းနှင်မှု မကုန်မီ မရွေးပါက ဒေတာသည် မသတ်မှတ်ရသေးဘဲ ကျန်ပြီး စနစ်သတ်မှတ်စာမျက်နှာတွင် မသတ်မှတ်မချင်း သင်ယူရန် မသုံးပါ။"
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "ယာဉ်စစ်ဆေးမှု− ဤမောင်းနှင်မှု ပိုင်ဆိုင်သော ယာဉ်ကို ရွေးပါ။"
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "မသတ်မှတ်ရသေးသော မောင်းနှင်မှု %1$d ခု စောင့်နေသည်။ ယာဉ်တစ်စီးသို့ သတ်မှတ်ရန် စနစ်သတ်မှတ်စာမျက်နှာကို ဖွင့်ပါ။"
   }
 ]

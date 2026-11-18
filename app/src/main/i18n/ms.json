@@ -605,11 +605,6 @@
     "text": "Perjalanan ini akan disimpan ke %1$s."
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "Bahan api yang dilicinkan ditunjukkan secara langsung sekarang. Tiada apa disimpan ke profil sehingga anda memilih; data yang belum disahkan dibuang pada akhir perjalanan."
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "Kenderaan mana ini?"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "Bertanya kenderaan mana yang bersambung apabila ia tidak dapat dipadankan secara automatik."
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "Semak / tukar / kesan kenderaan"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "Pelicinan julat rendah di bawah %"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "Di bawah paras ini paras yang dilicinkan hanya mengikut bacaan pemanduan stabil, lebih perlahan di tempat tolok bising (0 = mati)."
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "Julat rendah τ dalam saat"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "Pemalar masa paras yang dilicinkan pada julat rendah."
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "Pengganda hingar julat rendah"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "Pelicinan tambahan pada jalur tolok yang bising (0 = tiada, 1 = lalai, lebih tinggi = lebih kuat)."
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "Log sensor telefon (diagnostik): pecutan, haluan GPS, kelajuan dan perubahan ketinggian; jangan sekali-kali kedudukan"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "Mod data julat rendah (log tambahan hampir kosong): %1$d daripada %2$d tangki tinggal"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "Mod data julat rendah: selesai (%1$d tangki dilog)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0 hingga %1$s %%"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0 hingga %1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "Buang pemanduan ini"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "Pemanduan belum ditetapkan"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "Pemanduan ini kekal belum ditetapkan dan tidak digunakan untuk pembelajaran sehingga anda menetapkannya kepada kenderaan."
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "Buang pemanduan belum ditetapkan ini? Ia tidak akan digunakan untuk pembelajaran."
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "Semakan kenderaan dihentikan"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "Semakan berhenti sebelum selesai (%1$s). Keputusan setakat ini disimpan dalam sejarah semakan kenderaan."
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "Semakan kenderaan: %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "Kenderaan ini sepadan dengan %1$s (%2$s). Keputusan disimpan dalam sejarah semakan kenderaan."
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "cap jari"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "Semakan kenderaan: %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "Kenderaan ini sepadan dengan %1$s, bukan %2$s. Ketik Tukar kenderaan untuk memilih kenderaan pemanduan ini."
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "Semakan kenderaan: tidak disahkan"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "Kenderaan ini tidak sepadan dengan cap jari tersimpan untuk %1$s. Simpan untuk menyimpan cap jari ini bagi %1$s, atau ketik Tukar kenderaan."
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "Simpan %1$s"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "Tukar kenderaan"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "Semakan kenderaan"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "Sambung ke kenderaan dalam Torque dahulu, kemudian ketik semula Semak / tukar / kesan kenderaan."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "Bahan api yang dilicinkan ditunjukkan secara langsung sekarang. Tiada apa-apa disimpan ke profil sehingga anda memilih. Jika anda tidak memilih sebelum pemanduan tamat, data kekal belum ditetapkan dan tidak digunakan untuk pembelajaran sehingga anda menetapkannya di halaman persediaan."
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "Semakan kenderaan: pilih kenderaan yang memiliki pemanduan ini."
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "%1$d pemanduan belum ditetapkan sedang menunggu. Buka halaman persediaan untuk menetapkannya kepada kenderaan."
   }
 ]

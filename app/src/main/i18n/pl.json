@@ -605,11 +605,6 @@
     "text": "Ten przejazd zostanie zapisany w %1$s."
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "Wygładzone paliwo jest teraz pokazywane na żywo. Nic nie jest zapisywane w profilu, dopóki nie wybierzesz; niepotwierdzone dane są odrzucane na końcu przejazdu."
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "Jaki to pojazd?"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "Pyta, który pojazd jest podłączony, gdy nie da się go dopasować automatycznie."
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "Sprawdź / zmień / wykryj pojazd"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "Wygładzanie niskiego zakresu poniżej %"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "Poniżej tego poziomu wygładzony poziom śledzi tylko odczyty przy równomiernej jeździe, wolniej tam, gdzie wskaźnik jest szumny (0 = wył.)."
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "Niski zakres τ sekundy"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "Stała czasowa wygładzonego poziomu w niskim zakresie."
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "Mnożnik szumu niskiego zakresu"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "Dodatkowe wygładzanie w szumnych pasmach wskaźnika (0 = brak, 1 = domyślnie, wyżej = mocniej)."
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "Zapisuj czujniki telefonu (diagnostyka): akcelerometr, kierunek GPS, prędkość i zmianę wysokości; nigdy pozycji"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "Tryb danych niskiego zakresu (dodatkowy zapis blisko pustego): zostało %1$d z %2$d zbiorników"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "Tryb danych niskiego zakresu: ukończony (zapisano zbiorników: %1$d)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0 do %1$s %%"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0 do %1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "Odrzuć ten przejazd"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "Nieprzypisany przejazd"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "Ten przejazd pozostaje nieprzypisany i nie służy do uczenia, dopóki nie przypiszesz go do pojazdu."
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "Odrzucić ten nieprzypisany przejazd? Nie będzie używany do uczenia."
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "Sprawdzanie pojazdu zatrzymane"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "Sprawdzanie zatrzymało się przed końcem (%1$s). Dotychczasowe wyniki zapisano w historii sprawdzeń pojazdu."
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "Sprawdzanie pojazdu: %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "Ten pojazd pasuje do %1$s (%2$s). Wyniki zapisano w historii sprawdzeń pojazdu."
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "odcisk"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "Sprawdzanie pojazdu: %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "Ten pojazd pasuje do %1$s, nie do %2$s. Stuknij Zmień pojazd, aby wybrać pojazd tego przejazdu."
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "Sprawdzanie pojazdu: niepotwierdzone"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "Ten pojazd nie pasuje do zapisanego odcisku dla %1$s. Zachowaj go, aby zapisać ten odcisk dla %1$s, albo stuknij Zmień pojazd."
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "Zachowaj %1$s"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "Zmień pojazd"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "Sprawdzanie pojazdu"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "Najpierw połącz się z pojazdem w Torque, a potem stuknij ponownie Sprawdź / zmień / wykryj pojazd."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "Wygładzone paliwo jest teraz pokazywane na żywo. Nic nie jest zapisywane w profilu, dopóki nie wybierzesz. Jeśli nie wybierzesz przed końcem przejazdu, dane pozostaną nieprzypisane i nie będą używane do uczenia, dopóki nie przypiszesz ich na stronie ustawień."
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "Sprawdzanie pojazdu: wybierz pojazd, do którego należy ten przejazd."
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "Oczekuje nieprzypisanych przejazdów: %1$d. Otwórz stronę ustawień, aby przypisać je do pojazdu."
   }
 ]

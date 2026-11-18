@@ -605,11 +605,6 @@
     "text": "Kini nga biyahe itipigan sa %1$s."
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "Ang live nga hinapsay nga sugnod gipakita na karon. Walay itipigan sa profile hangtod mopili ka; ang wala nakumpirma nga datos ilabay sa kataposan sa biyahe."
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "Unsang sakyanan kini?"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "Mangutana unsang sakyanan ang konektado kung dili kini awtomatikong mapareha."
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "Susiha / usba / detekta ang sakyanan"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "Pagpahapsay sa ubos nga range ubos sa %"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "Ubos niini nga lebel ang hinapsay nga lebel mosunod lang sa mga reading sa tul-id nga pagmaneho, mas hinay kung saba ang gauge (0 = off)."
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "Ubos nga range τ segundo"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "Time constant sa hinapsay nga lebel sa ubos nga range."
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "Multiplier sa saba sa ubos nga range"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "Dugang pagpahapsay sa saba nga mga band sa gauge (0 = wala, 1 = default, mas taas = mas kusog)."
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "I-log ang mga sensor sa telepono (diagnostic): accelerometer, ulohan sa GPS, katulin ug kausaban sa kahitas-an; dili gyod ang posisyon"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "Data mode sa ubos nga range (dugang log duol sa walay sulod): %1$d sa %2$d ka tangke ang nahibilin"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "Data mode sa ubos nga range: nahuman (%1$d ka tangke na-log)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0 hangtod %1$s %%"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0 hangtod %1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "Ilabay kini nga biyahe"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "Wala ma-assign nga biyahe"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "Kini nga biyahe magpabilin nga wala ma-assign ug dili gamiton sa pagkat-on hangtod i-assign nimo kini sa usa ka sakyanan."
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "Ilabay kini nga wala ma-assign nga biyahe? Dili kini gamiton sa pagkat-on."
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "Mihunong ang pagsusi sa sakyanan"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "Mihunong ang pagsusi sa wala pa mahuman (%1$s). Ang mga resulta hangtod karon gitipigan sa kasaysayan sa pagsusi sa sakyanan."
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "Pagsusi sa sakyanan: %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "Kini nga sakyanan motakdo sa %1$s (%2$s). Ang mga resulta gitipigan sa kasaysayan sa pagsusi sa sakyanan."
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "fingerprint"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "Pagsusi sa sakyanan: %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "Kini nga sakyanan motakdo sa %1$s, dili sa %2$s. Pindota ang Usba ang sakyanan aron pilion ang sakyanan niini nga biyahe."
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "Pagsusi sa sakyanan: wala nakumpirma"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "Kini nga sakyanan dili motakdo sa na-save nga fingerprint alang sa %1$s. Itago kini aron ma-save kini nga fingerprint alang sa %1$s, o pindota ang Usba ang sakyanan."
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "Itago ang %1$s"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "Usba ang sakyanan"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "Pagsusi sa sakyanan"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "Pakigkonekta una sa sakyanan sa Torque, dayon pindota pag-usab ang Susiha / usba / detekta ang sakyanan."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "Ang hinapsay nga sugnod gipakita na karon nga live. Walay ma-save sa profile hangtod mopili ka. Kung dili ka mopili sa dili pa matapos ang biyahe, ang data magpabilin nga wala ma-assign ug dili gamiton sa pagkat-on hangtod i-assign nimo kini sa panid sa setup."
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "Pagsusi sa sakyanan: pilia ang sakyanan nga iya niini nga biyahe."
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "%1$d ka wala ma-assign nga biyahe naghulat. Ablihi ang panid sa setup aron i-assign kini sa usa ka sakyanan."
   }
 ]

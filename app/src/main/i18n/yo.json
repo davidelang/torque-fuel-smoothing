@@ -605,11 +605,6 @@
     "text": "Ìrìn yìí yóò di fipamọ́ sí %1$s."
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "Epo tí a dán ń hàn láìfẹ̀ báyìí. Kò sí nǹkan tí a fipamọ́ sí prófàìlì títí o bá yan; a ń da dáta àìjẹ́rìísí nù ní òpin ìrìn."
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "Ọkọ̀ wo ni èyí?"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "Ó ń béèrè ọkọ̀ wo ni ó sopọ̀ nígbà tí kò bá lè bá a mu láìfọwọ́yí."
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "Ṣàyẹ̀wò / yí / wá ọkọ̀"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "Ìdán ìpín kékeré ní ìsàlẹ̀ %"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "Ní ìsàlẹ̀ ipele yìí ipele dídán tẹ̀lé àwọn kíkà ìwakọ̀ tó dúró nìkan, díẹ̀díẹ̀ níbi tí géejì bá ń ariwo (0 = pa)."
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "Ìpín kékeré τ ìṣẹ́jú-àáyá"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "Àkókò tó dúró ti ipele dídán ní ìpín kékeré."
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "Ìsọdipúpọ̀ ariwo ìpín kékeré"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "Ìdán àfikún ní àwọn ẹgbẹ́ géejì tó ń ariwo (0 = kò sí, 1 = àìyípadà, ga = lágbára)."
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "Ṣe àkọsílẹ̀ àwọn sẹ́nsọ̀ fóònù (àyẹ̀wò): accelerometer, ìtọ́sọ́nà GPS, ìyára àti ìyípadà gígà; má ṣe àkọsílẹ̀ ipò"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "Ipò data ìpín kékeré (àkọsílẹ̀ àfikún nítòsí òfo): tankì %1$d nínú %2$d kù"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "Ipò data ìpín kékeré: parí (tankì %1$d ni a kọ sílẹ̀)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0 sí %1$s %%"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0 sí %1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "Pa ìrìnàjò yìí tì"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "Ìrìnàjò tí a kò yàn"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "Ìrìnàjò yìí dúró láìyàn, a kò sì lò ó fún ẹ̀kọ́ títí o fi yàn án sí ọkọ̀."
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "Pa ìrìnàjò tí a kò yàn yìí tì? A kò ní lò ó fún ẹ̀kọ́."
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "Àyẹ̀wò ọkọ̀ dúró"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "Àyẹ̀wò dúró kí ó tó parí (%1$s). Àwọn àbájáde títí di báyìí wà ní ìtàn àyẹ̀wò ọkọ̀."
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "Àyẹ̀wò ọkọ̀: %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "Ọkọ̀ yìí bá %1$s mu (%2$s). Àwọn àbájáde wà ní ìtàn àyẹ̀wò ọkọ̀."
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "ìtẹ̀ka"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "Àyẹ̀wò ọkọ̀: %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "Ọkọ̀ yìí bá %1$s mu, kì í ṣe %2$s. Tẹ Yí ọkọ̀ láti yan ọkọ̀ ìrìnàjò yìí."
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "Àyẹ̀wò ọkọ̀: kò tíì jẹ́rìí"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "Ọkọ̀ yìí kò bá ìtẹ̀ka tí a fipamọ́ fún %1$s mu. Pa á mọ́ láti fi ìtẹ̀ka yìí pamọ́ fún %1$s, tàbí tẹ Yí ọkọ̀."
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "Pa %1$s mọ́"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "Yí ọkọ̀"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "Àyẹ̀wò ọkọ̀"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "Kọ́kọ́ so mọ́ ọkọ̀ nínú Torque, lẹ́yìn náà tẹ Ṣàyẹ̀wò / yí / wá ọkọ̀ lẹ́ẹ̀kan sí i."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "Epo dídán ń hàn tààrà báyìí. Kò sí ohun tó ń wọ profaili títí o fi yàn. Bí o kò bá yàn kí ìrìnàjò tó parí, data dúró láìyàn, a kò sì lò ó fún ẹ̀kọ́ títí o fi yàn án lórí ojúewé ètò."
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "Àyẹ̀wò ọkọ̀: yan ọkọ̀ tí ìrìnàjò yìí jẹ́ ti rẹ̀."
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "Ìrìnàjò %1$d tí a kò yàn ń dúró. Ṣí ojúewé ètò láti yàn wọ́n sí ọkọ̀."
   }
 ]

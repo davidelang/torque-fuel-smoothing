@@ -605,11 +605,6 @@
     "text": "Lelungan iki bakal disimpen menyang %1$s."
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "Bahan bakar sing dilus ditampilake langsung saiki. Ora ana sing disimpen menyang profil nganti panjenengan milih; data sing durung dikonfirmasi dibuwang ing pungkasan lelungan."
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "Iki kendaraan endi?"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "Takon kendaraan endi sing nyambung nalika ora bisa dicocogake kanthi otomatis."
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "Priksa / ganti / deteksi kendaraan"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "Nglus rentang ngisor ing sangisore %"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "Ing sangisore tingkat iki, tingkat sing dilus mung ngetutake wacan nyopir ajeg, luwih alon ing papan gauge rame (0 = mati)."
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "Rentang ngisor τ detik"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "Konstanta wektu tingkat sing dilus ing rentang ngisor."
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "Pangali gangguan rentang ngisor"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "Nglus tambahan ing pita gauge sing rame (0 = ora ana, 1 = gawan, luwih dhuwur = luwih kuwat)."
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "Cathet sensor ponsel (diagnostik): akselerometer, arah GPS, kacepetan lan owah-owahan dhuwur; aja posisi"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "Mode data rentang ngisor (log tambahan cedhak kosong): isih %1$d saka %2$d tangki"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "Mode data rentang ngisor: rampung (%1$d tangki dicathet)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0 nganti %1$s %%"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0 nganti %1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "Buwang lelungan iki"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "Lelungan durung ditemtokake"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "Lelungan iki tetep durung ditemtokake lan ora dianggo sinau nganti sampeyan nemtokake menyang kendaraan."
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "Buwang lelungan sing durung ditemtokake iki? Ora bakal dianggo sinau."
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "Priksa kendaraan mandheg"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "Priksa mandheg sadurunge rampung (%1$s). Asil nganti saiki disimpen ing riwayat priksa kendaraan."
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "Priksa kendaraan: %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "Kendaraan iki cocog karo %1$s (%2$s). Asil disimpen ing riwayat priksa kendaraan."
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "sidik driji"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "Priksa kendaraan: %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "Kendaraan iki cocog karo %1$s, dudu %2$s. Tutul Ganti kendaraan kanggo milih kendaraan lelungan iki."
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "Priksa kendaraan: durung dikonfirmasi"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "Kendaraan iki ora cocog karo sidik driji sing disimpen kanggo %1$s. Simpen supaya sidik driji iki kasimpen kanggo %1$s, utawa tutul Ganti kendaraan."
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "Simpen %1$s"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "Ganti kendaraan"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "Priksa kendaraan"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "Sambungake dhisik menyang kendaraan ing Torque, banjur tutul maneh Priksa / ganti / deteksi kendaraan."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "Bahan bakar sing dilus ditampilake langsung saiki. Ora ana sing disimpen ing profil nganti sampeyan milih. Yen ora milih sadurunge lelungan rampung, data tetep durung ditemtokake lan ora dianggo sinau nganti sampeyan nemtokake ing kaca setelan."
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "Priksa kendaraan: pilih kendaraan sing nduweni lelungan iki."
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "%1$d lelungan durung ditemtokake ngenteni. Bukak kaca setelan kanggo nemtokake menyang kendaraan."
   }
 ]

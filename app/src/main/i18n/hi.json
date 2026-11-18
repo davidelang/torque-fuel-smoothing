@@ -605,11 +605,6 @@
     "text": "यह ड्राइव %1$s में सहेजी जाएगी."
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "चिकना ईंधन अभी लाइव दिख रहा है. जब तक आप न चुनें, प्रोफ़ाइल में कुछ नहीं सहेजा जाता; अपुष्ट डेटा ड्राइव के अंत में छोड़ दिया जाता है."
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "यह कौन सा वाहन है?"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "जब स्वतः मिलान न हो सके तो पूछता है कि कौन सा वाहन जुड़ा है."
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "वाहन जाँचें / बदलें / पता लगाएँ"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "% से नीचे निम्न-श्रेणी स्मूथिंग"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "इस स्तर से नीचे चिकना स्तर केवल स्थिर ड्राइविंग के पाठ्यों का अनुसरण करता है, जहाँ गेज शोरगुल वाला हो वहाँ धीरे (0 = बंद)।"
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "निम्न श्रेणी τ सेकंड"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "निम्न श्रेणी में चिकने स्तर का समय स्थिरांक।"
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "निम्न श्रेणी का शोर गुणक"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "शोरगुल वाली गेज पट्टियों में अतिरिक्त स्मूथिंग (0 = नहीं, 1 = डिफ़ॉल्ट, अधिक = मजबूत)।"
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "फ़ोन सेंसर लॉग करें (निदान): एक्सेलरोमीटर, GPS दिशा, गति और ऊँचाई बदलाव; कभी स्थिति नहीं"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "निम्न-श्रेणी डेटा मोड (खाली के पास अतिरिक्त लॉग): %2$d में से %1$d टैंक शेष"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "निम्न-श्रेणी डेटा मोड: समाप्त (%1$d टैंक लॉग हुए)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0 से %1$s %%"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0 से %1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "यह ड्राइव छोड़ें"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "असाइन न हुई ड्राइव"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "यह ड्राइव असाइन हुए बिना रहती है और जब तक आप इसे किसी वाहन को न दें, सीखने में उपयोग नहीं होती।"
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "यह असाइन न हुई ड्राइव छोड़ें? यह सीखने में उपयोग नहीं होगी।"
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "वाहन जाँच रुकी"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "जाँच समाप्त होने से पहले रुक गई (%1$s)। अब तक के परिणाम वाहन के जाँच इतिहास में सहेजे गए हैं।"
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "वाहन जाँच: %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "यह वाहन %1$s से मेल खाता है (%2$s)। परिणाम वाहन के जाँच इतिहास में सहेजे गए हैं।"
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "फ़िंगरप्रिंट"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "वाहन जाँच: %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "यह वाहन %1$s से मेल खाता है, %2$s से नहीं। इस ड्राइव का वाहन चुनने के लिए वाहन बदलें टैप करें।"
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "वाहन जाँच: पुष्टि नहीं"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "यह वाहन %1$s के सहेजे फ़िंगरप्रिंट से मेल नहीं खाता। इस फ़िंगरप्रिंट को %1$s के लिए सहेजने हेतु इसे रखें, या वाहन बदलें टैप करें।"
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "%1$s रखें"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "वाहन बदलें"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "वाहन जाँच"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "पहले Torque में वाहन से जुड़ें, फिर वाहन जाँचें / बदलें / पता लगाएँ फिर से टैप करें।"
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "चिकना ईंधन अभी लाइव दिखाया जा रहा है। जब तक आप चुनें नहीं, प्रोफ़ाइल में कुछ सहेजा नहीं जाता। यदि ड्राइव समाप्त होने से पहले नहीं चुनते, तो डेटा असाइन हुए बिना रहता है और सेटअप पेज पर असाइन करने तक सीखने में उपयोग नहीं होता।"
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "वाहन जाँच: चुनें यह ड्राइव किस वाहन की है।"
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "%1$d असाइन न हुई ड्राइव प्रतीक्षा में हैं। उन्हें वाहन को देने के लिए सेटअप पेज खोलें।"
   }
 ]

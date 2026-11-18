@@ -605,11 +605,6 @@
     "text": "මෙම ධාවනය %1$s වෙත සුරකිනු ඇත."
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "සුමට ඉන්ධනය දැන් සජීවීව පෙන්වයි. ඔබ තෝරන තුරු පැතිකඩකට කිසිවක් සුරැකෙන්නේ නැත; තහවුරු නොකළ දත්ත ධාවනය අවසානයේ ඉවත දමයි."
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "මෙය කුමන වාහනයද?"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "ස්වයංක්‍රීයව ගැලපිය නොහැකි විට කුමන වාහනය සම්බන්ධදැයි අසයි."
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "වාහනය පරීක්ෂා / වෙනස් / සොයන්න"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "% යටතේ අඩු පරාස සුමට කිරීම"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "මෙම මට්ටමට පහළින් සුමට මට්ටම ස්ථාවර රියදුරු කියවීම් පමණක් අනුගමනය කරයි, මිනුම ඝෝෂාකාරී තැන වඩා සෙමින් (0 = අක්‍රිය)."
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "අඩු පරාසය τ තත්පර"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "අඩු පරාසයේ සුමට මට්ටමේ කාල නියතය."
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "අඩු පරාසයේ ඝෝෂා ගුණකය"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "ඝෝෂාකාරී මිනුම් පටිවල අමතර සුමට කිරීම (0 = නැත, 1 = පෙරනිමි, වැඩි = ශක්තිමත්)."
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "දුරකථන සංවේදක ලොග් කරන්න (රෝග විනිශ්චය): ත්වරණමානය, GPS දිශාව, වේගය සහ උස වෙනස; කිසිවිට ස්ථානය නොවේ"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "අඩු පරාස දත්ත ප්‍රකාරය (හිස් අසල අමතර ලොග්): ටැංකි %2$d න් %1$d ඉතිරි"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "අඩු පරාස දත්ත ප්‍රකාරය: අවසන් (%1$d ටැංකි ලොග් විය)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0 සිට %1$s %%"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0 සිට %1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "මෙම ධාවනය ඉවතලන්න"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "පැවරී නැති ධාවනය"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "මෙම ධාවනය පැවරී නැතිව පවතින අතර ඔබ එය වාහනයකට පවරන තුරු ඉගෙනීමට භාවිත නොවේ."
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "මෙම පැවරී නැති ධාවනය ඉවතලන්නද? එය ඉගෙනීමට භාවිත නොවේ."
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "වාහන පරීක්ෂාව නැවතුණි"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "පරීක්ෂාව අවසන් වීමට පෙර නැවතුණි (%1$s). මේ දක්වා ප්‍රතිඵල වාහනයේ පරීක්ෂා ඉතිහාසයේ සුරකින ලදි."
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "වාහන පරීක්ෂාව: %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "මෙම වාහනය %1$s සමඟ ගැලපේ (%2$s). ප්‍රතිඵල වාහනයේ පරීක්ෂා ඉතිහාසයේ සුරකින ලදි."
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "ඇඟිලි සලකුණ"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "වාහන පරීක්ෂාව: %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "මෙම වාහනය %1$s සමඟ ගැලපේ, %2$s සමඟ නොවේ. මෙම ධාවනයේ වාහනය තේරීමට වාහනය වෙනස් කරන්න තට්ටු කරන්න."
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "වාහන පරීක්ෂාව: තහවුරු නැත"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "මෙම වාහනය %1$s සඳහා සුරැකි ඇඟිලි සලකුණක් සමඟ නොගැලපේ. මෙම ඇඟිලි සලකුණ %1$s සඳහා සුරැකීමට එය තබන්න, නැතහොත් වාහනය වෙනස් කරන්න තට්ටු කරන්න."
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "%1$s තබන්න"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "වාහනය වෙනස් කරන්න"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "වාහන පරීක්ෂාව"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "පළමුව Torque තුළ වාහනයට සම්බන්ධ වන්න, පසුව වාහනය පරීක්ෂා / වෙනස් / සොයන්න නැවත තට්ටු කරන්න."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "සුමට ඉන්ධන දැන් සජීවීව පෙන්වයි. ඔබ තෝරන තුරු පැතිකඩකට කිසිවක් සුරැකෙන්නේ නැත. ධාවනය අවසන් වීමට පෙර නොතෝරන්නේ නම් දත්ත පැවරී නැතිව පවතින අතර සැකසුම් පිටුවේ පවරන තුරු ඉගෙනීමට භාවිත නොවේ."
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "වාහන පරීක්ෂාව: මෙම ධාවනය අයත් වාහනය තෝරන්න."
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "පැවරී නැති ධාවන %1$dක් බලා සිටී. ඒවා වාහනයකට පැවරීමට සැකසුම් පිටුව විවෘත කරන්න."
   }
 ]

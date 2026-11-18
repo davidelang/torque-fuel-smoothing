@@ -605,11 +605,6 @@
     "text": "Bu gediş %1$s profilinə saxlanılacaq."
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "Canlı hamarlanmış yanacaq indi göstərilir. Siz seçənə qədər heç nə profilə yazılmır; təsdiqlənməmiş məlumat gedişin sonunda atılır."
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "Bu hansı avtomobildir?"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "Avtomatik uyğunlaşdıra bilməyəndə hansı avtomobilin qoşulduğunu soruşur."
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "Avtomobili yoxla / dəyiş / aşkarla"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "% altında aşağı diapazon hamarlaması"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "Bu səviyyədən aşağı hamarlanmış səviyyə yalnız sabit sürüş oxunuşlarını izləyir, göstərici səs-küylü olanda daha yavaş (0 = sönülü)."
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "Aşağı diapazon τ saniyə"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "Aşağı diapazonda hamarlanmış səviyyənin zaman sabiti."
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "Aşağı diapazon səs-küy vuruğu"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "Səs-küylü göstərici zolaqlarında əlavə hamarlama (0 = yox, 1 = standart, yüksək = güclü)."
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "Telefon sensorlarını jurnal et (diaqnostika): akselerometr, GPS istiqaməti, sürət və hündürlük dəyişməsi; heç vaxt mövqe"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "Aşağı diapazon məlumat rejimi (boşa yaxın əlavə jurnal): %2$d bakdan %1$d qalıb"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "Aşağı diapazon məlumat rejimi: bitdi (%1$d bak jurnal edildi)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0 – %1$s %%"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0 – %1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "Bu gedişi at"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "Təyin edilməmiş gediş"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "Bu gediş təyin edilməmiş qalır və siz onu avtomobilə təyin edənə qədər öyrənmə üçün istifadə olunmur."
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "Bu təyin edilməmiş gediş atılsın? Öyrənmə üçün istifadə olunmayacaq."
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "Avtomobil yoxlaması dayandı"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "Yoxlama bitmədən dayandı (%1$s). İndiyə qədərki nəticələr avtomobilin yoxlama tarixçəsində saxlanılıb."
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "Avtomobil yoxlaması: %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "Bu avtomobil %1$s ilə uyğun gəlir (%2$s). Nəticələr avtomobilin yoxlama tarixçəsində saxlanılıb."
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "barmaq izi"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "Avtomobil yoxlaması: %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "Bu avtomobil %1$s ilə uyğun gəlir, %2$s ilə yox. Bu gediş üçün avtomobili seçmək üçün Avtomobili dəyiş düyməsinə toxunun."
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "Avtomobil yoxlaması: təsdiqlənməyib"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "Bu avtomobil %1$s üçün saxlanmış barmaq izi ilə uyğun gəlmir. Bu barmaq izini %1$s üçün saxlamaq üçün onu saxlayın, və ya Avtomobili dəyiş düyməsinə toxunun."
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "%1$s saxla"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "Avtomobili dəyiş"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "Avtomobil yoxlaması"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "Əvvəlcə Torque içində avtomobilə qoşulun, sonra Avtomobili yoxla / dəyiş / aşkarla düyməsinə yenidən toxunun."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "Hamarlanmış yanacaq indi canlı göstərilir. Siz seçənə qədər profilə heç nə saxlanılmır. Gediş bitmədən seçməsəniz, məlumat təyin edilməmiş qalır və quraşdırma səhifəsində təyin edənə qədər öyrənmə üçün istifadə olunmur."
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "Avtomobil yoxlaması: bu gedişin aid olduğu avtomobili seçin."
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "%1$d təyin edilməmiş gediş gözləyir. Onları avtomobilə təyin etmək üçün quraşdırma səhifəsini açın."
   }
 ]

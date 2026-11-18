@@ -605,11 +605,6 @@
     "text": "이 주행은 %1$s에 저장됩니다."
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "평활한 연료가 지금 실시간으로 표시됩니다. 고르기 전에는 프로필에 아무것도 저장되지 않습니다. 확인되지 않은 데이터는 주행이 끝날 때 버려집니다."
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "어느 차량인가요?"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "자동으로 맞출 수 없을 때 어느 차량이 연결되었는지 묻습니다."
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "차량 확인 / 변경 / 감지"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "% 미만 저역 평활"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "이 수준 아래에서는 평활한 수준이 안정 주행 값만 따르며, 게이지가 불안정한 구간에서는 더 천천히 따릅니다 (0 = 끄기)."
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "저역 τ 초"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "저역에서 평활한 수준의 시상수."
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "저역 잡음 배수"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "게이지의 잡음 구간에서 추가 평활 (0 = 없음, 1 = 기본, 클수록 강함)."
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "휴대전화 센서 기록 (진단): 가속도계, GPS 방향, 속도와 고도 변화. 위치는 기록하지 않음"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "저역 데이터 모드 (비어 갈 때 추가 기록): 탱크 %1$d / %2$d 남음"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "저역 데이터 모드: 완료 (%1$d개 탱크 기록)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0 ~ %1$s %%"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0 ~ %1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "이 주행 버리기"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "미지정 주행"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "이 주행은 지정되지 않은 채로 남으며, 차량에 지정할 때까지 학습에 쓰이지 않습니다."
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "이 미지정 주행을 버릴까요? 학습에 쓰이지 않습니다."
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "차량 확인이 중지됨"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "확인이 끝나기 전에 멈췄습니다 (%1$s). 지금까지의 결과는 차량의 확인 기록에 저장되었습니다."
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "차량 확인: %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "이 차량은 %1$s와 일치합니다 (%2$s). 결과는 차량의 확인 기록에 저장되었습니다."
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "지문"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "차량 확인: %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "이 차량은 %1$s와 일치하고 %2$s와는 일치하지 않습니다. 이 주행의 차량을 고르려면 차량 변경을 누르세요."
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "차량 확인: 확인되지 않음"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "이 차량은 %1$s에 저장된 지문과 일치하지 않습니다. 이 지문을 %1$s에 저장하려면 유지하고, 아니면 차량 변경을 누르세요."
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "%1$s 유지"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "차량 변경"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "차량 확인"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "먼저 Torque에서 차량에 연결한 다음 차량 확인 / 변경 / 감지를 다시 누르세요."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "평활한 연료가 지금 실시간으로 표시됩니다. 고르기 전에는 프로필에 아무것도 저장되지 않습니다. 주행이 끝나기 전에 고르지 않으면 데이터는 미지정으로 남고, 설정 페이지에서 지정할 때까지 학습에 쓰이지 않습니다."
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "차량 확인: 이 주행이 속한 차량을 고르세요."
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "미지정 주행 %1$d건이 대기 중입니다. 설정 페이지를 열어 차량에 지정하세요."
   }
 ]

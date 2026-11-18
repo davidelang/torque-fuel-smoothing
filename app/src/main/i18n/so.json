@@ -605,11 +605,6 @@
     "text": "Safarkan waxaa lagu kaydin doonaa %1$s."
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "Shidaalka la jilciyay hadda si toos ah ayaa loo tusayaa. Waxba lama kaydiyo astaanta ilaa aad doorato; xogta aan la xaqiijin waa la tuuraa dhammaadka safarka."
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "Gaarigan kee?"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "Wuxuu weydiinayaa gaariga ku xiran marka si otomaatig ah loo waayi karin."
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "Baadh / beddel / ogow gaariga"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "Jilcinta heerka hoose ka hooseeya %"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "Ka hooseeya heerkan heerka la jilciyay wuxuu raacaa kaliya akhrinta wadista deggan, si gaabis ah meesha cabbirku qaylo leeyahay (0 = dansan)."
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "Heerka hoose τ ilbiriqsi"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "Joogtada waqtiga ee heerka la jilciyay ee heerka hoose."
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "Isku-dhufashada qaylada heerka hoose"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "Jilcin dheeraad ah oo ku yaal xadadka cabbirka qaylada leh (0 = midna, 1 = caadi, sare = xoog badan)."
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "Diiwaangeli dareemayaasha taleefanka (baadhitaan): xawaare-cabbir, jihada GPS, xawaaraha iyo isbeddelka sarreynta; waligiis meesha ha diiwaangelin"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "Habka xogta heerka hoose (diiwaan dheeraad ah oo u dhow madhan): %1$d ka mid ah %2$d taangi ayaa haray"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "Habka xogta heerka hoose: waa dhammaatay (%1$d taangi ayaa la diiwaangeliyay)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0 ilaa %1$s %%"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0 ilaa %1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "Tuur safarkan"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "Safar aan la qoondeyn"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "Safarkan wuxuu ahaanayaa mid aan la qoondeyn lamana loo isticmaalo barashada ilaa aad uga qoondayso gaari."
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "Tuur safarkan aan la qoondeyn? Lama isticmaali doono barashada."
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "Baadhitaanka gaariga waa joogsaday"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "Baadhitaanku wuxuu joogsaday ka hor inta uusan dhammaan (%1$s). Natiijooyinka ilaa hadda waxaa lagu kaydiyay taariikhda baadhitaanka gaariga."
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "Baadhitaanka gaariga: %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "Gaarigan wuxuu la mid yahay %1$s (%2$s). Natiijooyinka waxaa lagu kaydiyay taariikhda baadhitaanka gaariga."
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "faraha sawir"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "Baadhitaanka gaariga: %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "Gaarigan wuxuu la mid yahay %1$s, ma aha %2$s. Taabo Beddel gaariga si aad u doorato gaariga safarkan."
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "Baadhitaanka gaariga: lama xaqiijin"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "Gaarigan kuma mid aha faraha sawir ee loo kaydiyay %1$s. Hayso si aad u kaydiso farahan sawir ee %1$s, ama taabo Beddel gaariga."
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "Hayso %1$s"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "Beddel gaariga"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "Baadhitaanka gaariga"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "Marka hore ku xidh gaariga gudaha Torque, ka dibna mar kale taabo Baadh / beddel / ogow gaariga."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "Shidaalka la jilciyay hadda si toos ah ayaa loo tusayaa. Waxba lama kaydiyo profile ilaa aad doorato. Haddii aadan dooran ka hor inta safarku dhammaan, xogtu waxay ahaanaysaa mid aan la qoondeyn lamana loo isticmaalo barashada ilaa aad uga qoondayso bogga dejinta."
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "Baadhitaanka gaariga: dooro gaariga uu safarkan leeyahay."
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "%1$d safar oo aan la qoondeyn ayaa sugaya. Fur bogga dejinta si aad ugu qoondayso gaari."
   }
 ]

@@ -605,11 +605,6 @@
     "text": "Гэтая паездка будзе захавана ў %1$s."
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "Згладжанае паліва паказваецца ўжывую. У профіль нічога не захоўваецца, пакуль вы не выбераце; непацверджаныя даныя адкідаюцца ў канцы паездкі."
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "Які гэта аўтамабіль?"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "Пытае, які аўтамабіль падключаны, калі яго нельга супаставіць аўтаматычна."
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "Праверыць / змяніць / выявіць аўтамабіль"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "Згладжванне нізкага дыяпазону ніжэй за %"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "Ніжэй за гэты ўзровень згладжаны ўзровень сочыць толькі за паказаннямі роўнай язды, павольней там, дзе датчык шумны (0 = выкл.)."
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "Нізкі дыяпазон τ у секундах"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "Пастаянная часу згладжанага ўзроўню ў нізкім дыяпазоне."
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "Множнік шуму нізкага дыяпазону"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "Дадатковае згладжванне ў шумных палосах датчыка (0 = няма, 1 = прадвызначана, вышэй = мацней)."
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "Запісваць датчыкі тэлефона (дыягностыка): акселерометр, кірунак GPS, хуткасць і змену вышыні; ніколі не становішча"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "Рэжым даных нізкага дыяпазону (дадатковы запіс каля пустога): засталося %1$d з %2$d бакаў"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "Рэжым даных нізкага дыяпазону: гатова (запісана бакаў: %1$d)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0 да %1$s %%"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0 да %1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "Адкінуць гэту паездку"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "Непрызначаная паездка"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "Гэта паездка застаецца непрызначанай і не выкарыстоўваецца для навучання, пакуль вы не прызначыце яе аўтамабілю."
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "Адкінуць гэту непрызначаную паездку? Яна не будзе выкарыстоўвацца для навучання."
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "Праверка аўтамабіля спынена"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "Праверка спынілася да завяршэння (%1$s). Вынікі на гэты момант захаваны ў гісторыі праверак аўтамабіля."
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "Праверка аўтамабіля: %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "Гэты аўтамабіль супадае з %1$s (%2$s). Вынікі захаваны ў гісторыі праверак аўтамабіля."
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "адбітак"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "Праверка аўтамабіля: %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "Гэты аўтамабіль супадае з %1$s, а не з %2$s. Націсніце Змяніць аўтамабіль, каб выбраць аўтамабіль для гэтай паездкі."
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "Праверка аўтамабіля: не пацверджана"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "Гэты аўтамабіль не супадае з захаваным адбіткам для %1$s. Пакіньце яго, каб захаваць гэты адбітак для %1$s, або націсніце Змяніць аўтамабіль."
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "Пакінуць %1$s"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "Змяніць аўтамабіль"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "Праверка аўтамабіля"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "Спачатку падключыцеся да аўтамабіля ў Torque, потым зноў націсніце Праверыць / змяніць / выявіць аўтамабіль."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "Згладжанае паліва цяпер паказваецца ўжывую. У профіль нічога не захоўваецца, пакуль вы не выбераце. Калі не выбераце да канца паездкі, даныя застануцца непрызначанымі і не будуць выкарыстоўвацца для навучання, пакуль вы не прызначыце іх на старонцы наладкі."
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "Праверка аўтамабіля: выберыце аўтамабіль, якому належыць гэта паездка."
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "Чакае непрызначаных паездак: %1$d. Адкрыйце старонку наладкі, каб прызначыць іх аўтамабілю."
   }
 ]

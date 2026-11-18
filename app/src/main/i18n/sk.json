@@ -605,11 +605,6 @@
     "text": "Táto jazda sa uloží do %1$s."
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "Vyhladené palivo sa teraz ukazuje naživo. Do profilu sa nič neuloží, kým nevyberiete; nepotvrdené údaje sa na konci jazdy zahodia."
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "Ktoré je to vozidlo?"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "Pýta sa, ktoré vozidlo je pripojené, keď ho nemožno spárovať automaticky."
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "Skontrolovať / zmeniť / rozpoznať vozidlo"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "Vyhladenie nízkeho rozsahu pod %"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "Pod touto hladinou sleduje vyhladená hladina len údaje pri pokojnej jazde, pomalšie tam, kde je ukazovateľ rušivý (0 = vypnuté)."
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "Nízky rozsah τ v sekundách"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "Časová konštanta vyhladenej hladiny v nízkom rozsahu."
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "Násobiteľ šumu nízkeho rozsahu"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "Ďalšie vyhladenie v rušivých pásmach ukazovateľa (0 = žiadne, 1 = predvolené, vyššie = silnejšie)."
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "Zaznamenávať senzory telefónu (diagnostika): akcelerometer, smer GPS, rýchlosť a zmenu výšky; nikdy polohu"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "Dátový režim nízkeho rozsahu (ďalší záznam blízko prázdnej): zostáva %1$d z %2$d nádrží"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "Dátový režim nízkeho rozsahu: hotovo (zaznamenaných nádrží: %1$d)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0 až %1$s %%"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0 až %1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "Zahodiť túto jazdu"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "Nepriradená jazda"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "Táto jazda zostáva nepriradená a nepoužíva sa na učenie, kým ju nepriradíte vozidlu."
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "Zahodiť túto nepriradenú jazdu? Nebude sa používať na učenie."
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "Kontrola vozidla zastavená"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "Kontrola sa zastavila pred dokončením (%1$s). Doterajšie výsledky sú uložené v histórii kontrol vozidla."
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "Kontrola vozidla: %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "Toto vozidlo zodpovedá %1$s (%2$s). Výsledky sú uložené v histórii kontrol vozidla."
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "odtlačok"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "Kontrola vozidla: %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "Toto vozidlo zodpovedá %1$s, nie %2$s. Klepnite na Zmeniť vozidlo a vyberte vozidlo pre túto jazdu."
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "Kontrola vozidla: nepotvrdené"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "Toto vozidlo nezodpovedá uloženému odtlačku pre %1$s. Ponechajte ho, aby sa tento odtlačok uložil pre %1$s, alebo klepnite na Zmeniť vozidlo."
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "Ponechať %1$s"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "Zmeniť vozidlo"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "Kontrola vozidla"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "Najprv sa v Torque pripojte k vozidlu a potom znova klepnite na Skontrolovať / zmeniť / rozpoznať vozidlo."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "Vyhladené palivo sa teraz zobrazuje naživo. Do profilu sa nič neukladá, kým nevyberiete. Ak nevyberiete pred koncom jazdy, údaje zostanú nepriradené a nepoužívajú sa na učenie, kým ich nepriradíte na stránke nastavenia."
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "Kontrola vozidla: vyberte vozidlo, ku ktorému táto jazda patrí."
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "Čaká nepriradených jázd: %1$d. Otvorte stránku nastavenia a priraďte ich vozidlu."
   }
 ]

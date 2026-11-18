@@ -605,11 +605,6 @@
     "text": "Αυτή η διαδρομή θα αποθηκευτεί στο %1$s."
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "Το εξομαλυμένο καύσιμο εμφανίζεται τώρα ζωντανά. Τίποτα δεν αποθηκεύεται σε προφίλ μέχρι να επιλέξετε· τα μη επιβεβαιωμένα δεδομένα απορρίπτονται στο τέλος της διαδρομής."
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "Ποιο όχημα είναι αυτό;"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "Ρωτά ποιο όχημα είναι συνδεδεμένο όταν δεν μπορεί να αντιστοιχιστεί αυτόματα."
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "Έλεγχος / αλλαγή / εντοπισμός οχήματος"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "Εξομάλυνση χαμηλού εύρους κάτω από %"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "Κάτω από αυτό το επίπεδο η εξομαλυμένη στάθμη ακολουθεί μόνο μετρήσεις σταθερής οδήγησης, πιο αργά όπου το όργανο είναι θορυβώδες (0 = ανενεργό)."
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "Χαμηλό εύρος τ σε δευτερόλεπτα"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "Χρονική σταθερά της εξομαλυμένης στάθμης στο χαμηλό εύρος."
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "Πολλαπλασιαστής θορύβου χαμηλού εύρους"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "Επιπλέον εξομάλυνση σε θορυβώδεις ζώνες του οργάνου (0 = καμία, 1 = προεπιλογή, υψηλότερη = ισχυρότερη)."
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "Καταγραφή αισθητήρων τηλεφώνου (διάγνωση): επιταχυνσιόμετρο, κατεύθυνση GPS, ταχύτητα και μεταβολή ύψους· ποτέ η θέση"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "Λειτουργία δεδομένων χαμηλού εύρους (επιπλέον καταγραφή κοντά στο άδειο): απομένουν %1$d από %2$d δεξαμενές"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "Λειτουργία δεδομένων χαμηλού εύρους: ολοκληρώθηκε (%1$d δεξαμενές καταγράφηκαν)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0 έως %1$s %%"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0 έως %1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "Απόρριψη αυτής της διαδρομής"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "Μη αντιστοιχισμένη διαδρομή"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "Αυτή η διαδρομή μένει μη αντιστοιχισμένη και δεν χρησιμοποιείται για εκμάθηση μέχρι να την αντιστοιχίσετε σε όχημα."
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "Απόρριψη αυτής της μη αντιστοιχισμένης διαδρομής; Δεν θα χρησιμοποιηθεί για εκμάθηση."
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "Ο έλεγχος οχήματος σταμάτησε"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "Ο έλεγχος σταμάτησε πριν ολοκληρωθεί (%1$s). Τα αποτελέσματα μέχρι τώρα αποθηκεύτηκαν στο ιστορικό ελέγχων του οχήματος."
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "Έλεγχος οχήματος: %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "Αυτό το όχημα ταιριάζει με %1$s (%2$s). Τα αποτελέσματα αποθηκεύτηκαν στο ιστορικό ελέγχων του οχήματος."
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "αποτύπωμα"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "Έλεγχος οχήματος: %1$s;"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "Αυτό το όχημα ταιριάζει με %1$s, όχι με %2$s. Πατήστε Αλλαγή οχήματος για να επιλέξετε το όχημα αυτής της διαδρομής."
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "Έλεγχος οχήματος: δεν επιβεβαιώθηκε"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "Αυτό το όχημα δεν ταιριάζει με αποθηκευμένο αποτύπωμα για %1$s. Κρατήστε το για να αποθηκεύσετε αυτό το αποτύπωμα για %1$s, ή πατήστε Αλλαγή οχήματος."
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "Διατήρηση %1$s"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "Αλλαγή οχήματος"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "Έλεγχος οχήματος"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "Συνδεθείτε πρώτα στο όχημα στο Torque και μετά πατήστε ξανά Έλεγχος / αλλαγή / εντοπισμός οχήματος."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "Το εξομαλυμένο καύσιμο εμφανίζεται τώρα ζωντανά. Τίποτα δεν αποθηκεύεται σε προφίλ μέχρι να επιλέξετε. Αν δεν επιλέξετε πριν τελειώσει η διαδρομή, τα δεδομένα μένουν μη αντιστοιχισμένα και δεν χρησιμοποιούνται για εκμάθηση μέχρι να τα αντιστοιχίσετε στη σελίδα ρύθμισης."
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "Έλεγχος οχήματος: επιλέξτε το όχημα στο οποίο ανήκει αυτή η διαδρομή."
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "%1$d μη αντιστοιχισμένες διαδρομές σε αναμονή. Ανοίξτε τη σελίδα ρύθμισης για να τις αντιστοιχίσετε σε όχημα."
   }
 ]

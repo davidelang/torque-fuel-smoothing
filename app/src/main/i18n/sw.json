@@ -605,11 +605,6 @@
     "text": "Safari hii itahifadhiwa kwenye %1$s."
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "Mafuta yaliyolainishwa yanaonyeshwa moja kwa moja sasa. Hakuna kinachohifadhiwa kwenye wasifu hadi uchague; data isiyothibitishwa hutupwa mwishoni mwa safari."
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "Hili ni gari gani?"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "Huuliza gari lipi limeunganishwa wakati haliwezi kulinganishwa kiotomatiki."
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "Kagua / badilisha / tambua gari"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "Ulainishaji wa masafa ya chini chini ya %"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "Chini ya kiwango hiki kiwango laini hufuata tu masomo ya uendeshaji thabiti, polepole zaidi palipo na kelele kwenye mita (0 = imezimwa)."
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "Masafa ya chini τ kwa sekunde"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "Kigezo cha muda cha kiwango laini katika masafa ya chini."
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "Kizidishi cha kelele cha masafa ya chini"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "Ulainishaji wa ziada katika bendi zenye kelele za mita (0 = hakuna, 1 = chaguo-msingi, juu zaidi = imara zaidi)."
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "Rekodi vitambuzi vya simu (uchunguzi): kipima kasi, mwelekeo wa GPS, kasi na mabadiliko ya kimo; kamwe si mahali"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "Hali ya data ya masafa ya chini (kumbukumbu ya ziada karibu na tupu): matangi %1$d kati ya %2$d yamesalia"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "Hali ya data ya masafa ya chini: imekamilika (matangi %1$d yamerekodiwa)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0 hadi %1$s %%"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0 hadi %1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "Tupa safari hii"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "Safari isiyogawiwa"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "Safari hii hubaki bila kugawiwa na haitumiki kujifunza hadi uigawie gari."
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "Utatupa safari hii isiyogawiwa? Haitatumika kujifunza."
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "Ukaguzi wa gari umesimama"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "Ukaguzi ulisimama kabla haujamaliza (%1$s). Matokeo hadi sasa yamehifadhiwa katika historia ya ukaguzi wa gari."
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "Ukaguzi wa gari: %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "Gari hili linaendana na %1$s (%2$s). Matokeo yamehifadhiwa katika historia ya ukaguzi wa gari."
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "alama ya kidole"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "Ukaguzi wa gari: %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "Gari hili linaendana na %1$s, si %2$s. Gusa Badilisha gari ili kuchagua gari la safari hii."
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "Ukaguzi wa gari: haujathibitishwa"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "Gari hili halingani na alama ya kidole iliyohifadhiwa ya %1$s. Liweke ili kuhifadhi alama hii ya kidole ya %1$s, au gusa Badilisha gari."
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "Weka %1$s"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "Badilisha gari"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "Ukaguzi wa gari"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "Kwanza unganisha na gari katika Torque, kisha gusa tena Kagua / badilisha / tambua gari."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "Mafuta yaliyolainishwa yanaonyeshwa moja kwa moja sasa. Hakuna kinachohifadhiwa kwenye wasifu hadi uchague. Usipochagua kabla safari haijaisha, data hubaki bila kugawiwa na haitumiki kujifunza hadi uigawie kwenye ukurasa wa usanidi."
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "Ukaguzi wa gari: chagua gari ambalo safari hii inamiliki."
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "Safari %1$d zisizogawiwa zinasubiri. Fungua ukurasa wa usanidi ili kuzigawia gari."
   }
 ]

@@ -605,11 +605,6 @@
     "text": "ಈ ಡ್ರೈವ್ %1$s ಗೆ ಉಳಿಸಲಾಗುತ್ತದೆ."
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "ನಯ ಇಂಧನ ಈಗ ಲೈವ್ ತೋರಿಸಲಾಗುತ್ತಿದೆ. ನೀವು ಆಯ್ಕೆಮಾಡುವವರೆಗೆ ಪ್ರೊಫೈಲ್‌ಗೆ ಏನೂ ಉಳಿಸಲಾಗುವುದಿಲ್ಲ; ದೃಢೀಕರಿಸದ ಡೇಟಾ ಡ್ರೈವ್ ಕೊನೆಯಲ್ಲಿ ತ್ಯಜಿಸಲಾಗುತ್ತದೆ."
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "ಇದು ಯಾವ ವಾಹನ?"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಹೊಂದಿಸಲಾಗದಾಗ ಯಾವ ವಾಹನ ಸಂಪರ್ಕವಾಗಿದೆ ಎಂದು ಕೇಳುತ್ತದೆ."
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "ವಾಹನ ಪರಿಶೀಲಿಸಿ / ಬದಲಿಸಿ / ಹುಡುಕಿ"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "% ಕೆಳಗೆ ಕಡಿಮೆ ವ್ಯಾಪ್ತಿ ನಯಗೊಳಿಸುವಿಕೆ"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "ಈ ಮಟ್ಟದ ಕೆಳಗೆ ನಯ ಮಟ್ಟ ಸ್ಥಿರ ಚಾಲನೆಯ ಓದುಗಳನ್ನು ಮಾತ್ರ ಅನುಸರಿಸುತ್ತದೆ, ಗೇಜ್ ಗದ್ದಲವಿರುವಲ್ಲಿ ನಿಧಾನವಾಗಿ (0 = ಆಫ್)."
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "ಕಡಿಮೆ ವ್ಯಾಪ್ತಿ τ ಸೆಕೆಂಡು"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "ಕಡಿಮೆ ವ್ಯಾಪ್ತಿಯಲ್ಲಿ ನಯ ಮಟ್ಟದ ಸಮಯ ಸ್ಥಿರಾಂಕ."
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "ಕಡಿಮೆ ವ್ಯಾಪ್ತಿಯ ಗದ್ದಲ ಗುಣಕ"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "ಗದ್ದಲದ ಗೇಜ್ ಬ್ಯಾಂಡ್‌ಗಳಲ್ಲಿ ಹೆಚ್ಚುವರಿ ನಯಗೊಳಿಸುವಿಕೆ (0 = ಇಲ್ಲ, 1 = ಡೀಫಾಲ್ಟ್, ಹೆಚ್ಚು = ಬಲವಾಗಿ)."
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "ಫೋನ್ ಸಂವೇದಕಗಳನ್ನು ದಾಖಲಿಸಿ (ರೋಗನಿರ್ಣಯ): ಆಕ್ಸೆಲರೋಮೀಟರ್, GPS ದಿಕ್ಕು, ವೇಗ ಮತ್ತು ಎತ್ತರ ಬದಲಾವಣೆ; ಎಂದಿಗೂ ಸ್ಥಾನವಲ್ಲ"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "ಕಡಿಮೆ ವ್ಯಾಪ್ತಿ ಡೇಟಾ ಮೋಡ್ (ಖಾಲಿ ಹತ್ತಿರ ಹೆಚ್ಚುವರಿ ಲಾಗ್): %2$d ರಲ್ಲಿ %1$d ಟ್ಯಾಂಕ್ ಉಳಿದಿದೆ"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "ಕಡಿಮೆ ವ್ಯಾಪ್ತಿ ಡೇಟಾ ಮೋಡ್: ಮುಗಿದಿದೆ (%1$d ಟ್ಯಾಂಕ್ ದಾಖಲಾಗಿದೆ)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0 ರಿಂದ %1$s %%"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0 ರಿಂದ %1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "ಈ ಡ್ರೈವ್ ತ್ಯಜಿಸಿ"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "ನಿಯೋಜಿಸದ ಡ್ರೈವ್"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "ಈ ಡ್ರೈವ್ ನಿಯೋಜಿಸದೆ ಉಳಿಯುತ್ತದೆ ಮತ್ತು ನೀವು ಅದನ್ನು ವಾಹನಕ್ಕೆ ನಿಯೋಜಿಸುವವರೆಗೆ ಕಲಿಕೆಗೆ ಬಳಸಲಾಗುವುದಿಲ್ಲ."
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "ಈ ನಿಯೋಜಿಸದ ಡ್ರೈವ್ ತ್ಯಜಿಸುವುದೇ? ಅದನ್ನು ಕಲಿಕೆಗೆ ಬಳಸಲಾಗುವುದಿಲ್ಲ."
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "ವಾಹನ ಪರಿಶೀಲನೆ ನಿಂತಿದೆ"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "ಪರಿಶೀಲನೆ ಮುಗಿಯುವ ಮೊದಲು ನಿಂತಿದೆ (%1$s). ಇಲ್ಲಿಯವರೆಗಿನ ಫಲಿತಾಂಶಗಳು ವಾಹನದ ಪರಿಶೀಲನೆ ಇತಿಹಾಸದಲ್ಲಿ ಉಳಿಸಲಾಗಿದೆ."
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "ವಾಹನ ಪರಿಶೀಲನೆ: %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "ಈ ವಾಹನ %1$s ಗೆ ಹೊಂದಿಕೆಯಾಗುತ್ತದೆ (%2$s). ಫಲಿತಾಂಶಗಳು ವಾಹನದ ಪರಿಶೀಲನೆ ಇತಿಹಾಸದಲ್ಲಿ ಉಳಿಸಲಾಗಿದೆ."
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "ಬೆರಳಚ್ಚು"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "ವಾಹನ ಪರಿಶೀಲನೆ: %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "ಈ ವಾಹನ %1$s ಗೆ ಹೊಂದಿಕೆಯಾಗುತ್ತದೆ, %2$s ಗೆ ಅಲ್ಲ. ಈ ಡ್ರೈವ್‌ನ ವಾಹನವನ್ನು ಆಯ್ಕೆಮಾಡಲು ವಾಹನ ಬದಲಿಸಿ ಒತ್ತಿ."
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "ವಾಹನ ಪರಿಶೀಲನೆ: ದೃಢಪಡಿಸಿಲ್ಲ"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "ಈ ವಾಹನ %1$s ಗಾಗಿ ಉಳಿಸಿದ ಬೆರಳಚ್ಚಿಗೆ ಹೊಂದಿಕೆಯಾಗುವುದಿಲ್ಲ. ಈ ಬೆರಳಚ್ಚನ್ನು %1$s ಗಾಗಿ ಉಳಿಸಲು ಅದನ್ನು ಇರಿಸಿ, ಅಥವಾ ವಾಹನ ಬದಲಿಸಿ ಒತ್ತಿ."
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "%1$s ಇರಿಸಿ"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "ವಾಹನ ಬದಲಿಸಿ"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "ವಾಹನ ಪರಿಶೀಲನೆ"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "ಮೊದಲು Torque ನಲ್ಲಿ ವಾಹನಕ್ಕೆ ಸಂಪರ್ಕಿಸಿ, ನಂತರ ವಾಹನ ಪರಿಶೀಲಿಸಿ / ಬದಲಿಸಿ / ಹುಡುಕಿ ಅನ್ನು ಮತ್ತೆ ಒತ್ತಿ."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "ನಯ ಇಂಧನವನ್ನು ಈಗ ಲೈವ್ ತೋರಿಸಲಾಗುತ್ತಿದೆ. ನೀವು ಆಯ್ಕೆಮಾಡುವವರೆಗೆ ಪ್ರೊಫೈಲ್‌ಗೆ ಏನೂ ಉಳಿಸಲಾಗುವುದಿಲ್ಲ. ಡ್ರೈವ್ ಮುಗಿಯುವ ಮೊದಲು ಆಯ್ಕೆಮಾಡದಿದ್ದರೆ ಡೇಟಾ ನಿಯೋಜಿಸದೆ ಉಳಿಯುತ್ತದೆ ಮತ್ತು ಸೆಟಪ್ ಪುಟದಲ್ಲಿ ನಿಯೋಜಿಸುವವರೆಗೆ ಕಲಿಕೆಗೆ ಬಳಸಲಾಗುವುದಿಲ್ಲ."
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "ವಾಹನ ಪರಿಶೀಲನೆ: ಈ ಡ್ರೈವ್ ಯಾವ ವಾಹನದ್ದು ಎಂಬುದನ್ನು ಆಯ್ಕೆಮಾಡಿ."
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "%1$d ನಿಯೋಜಿಸದ ಡ್ರೈವ್ ಕಾಯುತ್ತಿವೆ. ಅವುಗಳನ್ನು ವಾಹನಕ್ಕೆ ನಿಯೋಜಿಸಲು ಸೆಟಪ್ ಪುಟ ತೆರೆಯಿರಿ."
   }
 ]

@@ -605,11 +605,6 @@
     "text": "Bydd y daith hon yn cael ei chadw i %1$s."
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "Dangosir tanwydd llyfn yn fyw nawr. Ni chedwir dim i broffil nes i chi ddewis; caiff data heb ei gadarnhau ei daflu ar ddiwedd y daith."
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "Pa gerbyd yw hwn?"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "Yn gofyn pa gerbyd sydd wedi'i gysylltu pan na ellir ei baru'n awtomatig."
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "Gwirio / newid / canfod cerbyd"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "Llyfnhau ystod isel o dan %"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "O dan y lefel hon mae’r lefel lyfn yn dilyn darlleniadau gyrru cyson yn unig, yn arafach lle mae’r mesurydd yn swnllyd (0 = i ffwrdd)."
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "Ystod isel τ mewn eiliadau"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "Cysonyn amser y lefel lyfn yn yr ystod isel."
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "Lluosydd sŵn yr ystod isel"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "Llyfnhau ychwanegol mewn bandiau mesurydd swnllyd (0 = dim, 1 = diofyn, uwch = cryfach)."
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "Cofnodi synwyryddion y ffôn (diagnostig): cyflymromedr, cyfeiriad GPS, cyflymder a newid uchder; byth y safle"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "Modd data ystod isel (cofnodi ychwanegol yn agos at wag): %1$d o %2$d tanc ar ôl"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "Modd data ystod isel: wedi gorffen (%1$d tanc wedi’u cofnodi)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0 i %1$s %%"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0 i %1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "Taflu’r gyrru hon"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "Gyrru heb ei neilltuo"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "Mae’r gyrru hon yn aros heb ei neilltuo ac ni chaiff ei defnyddio ar gyfer dysgu nes i chi ei neilltuo i gerbyd."
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "Taflu’r gyrru hon heb ei neilltuo? Ni chaiff ei defnyddio ar gyfer dysgu."
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "Gwiriad cerbyd wedi stopio"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "Stopiodd y gwiriad cyn gorffen (%1$s). Mae’r canlyniadau hyd yma wedi’u cadw yn hanes gwiriadau’r cerbyd."
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "Gwiriad cerbyd: %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "Mae’r cerbyd hwn yn cyfateb i %1$s (%2$s). Mae’r canlyniadau wedi’u cadw yn hanes gwiriadau’r cerbyd."
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "ôl bys"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "Gwiriad cerbyd: %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "Mae’r cerbyd hwn yn cyfateb i %1$s, nid i %2$s. Tapiwch Newid cerbyd i ddewis cerbyd y gyrru hon."
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "Gwiriad cerbyd: heb ei gadarnhau"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "Nid yw’r cerbyd hwn yn cyfateb i ôl bys sydd wedi’i gadw ar gyfer %1$s. Cadwch ef i gadw’r ôl bys hwn ar gyfer %1$s, neu tapiwch Newid cerbyd."
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "Cadw %1$s"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "Newid cerbyd"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "Gwiriad cerbyd"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "Cysylltwch â’r cerbyd yn Torque yn gyntaf, yna tapiwch Gwirio / newid / canfod cerbyd eto."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "Mae tanwydd llyfn yn cael ei ddangos yn fyw nawr. Nid oes dim yn cael ei gadw i broffil nes i chi ddewis. Os na fyddwch yn dewis cyn i’r gyrru orffen, cedwir y data heb ei neilltuo ac ni chaiff ei ddefnyddio ar gyfer dysgu nes i chi ei neilltuo ar y dudalen gosod."
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "Gwiriad cerbyd: dewiswch y cerbyd y mae’r gyrru hon yn perthyn iddo."
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "%1$d gyrru heb eu neilltuo yn aros. Agorwch y dudalen gosod i’w neilltuo i gerbyd."
   }
 ]

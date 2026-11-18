@@ -605,11 +605,6 @@
     "text": "Энэ аялал %1$s руу хадгалагдана."
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "Тэгшитгэсэн түлш одоо шууд харагдаж байна. Та сонгох хүртэл профайлд юу ч хадгалагдахгүй; баталгаажаагүй өгөгдөл аяллын төгсгөлд хаягдана."
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "Энэ аль тээврийн хэрэгсэл вэ?"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "Автоматаар тааруулж чадахгүй үед аль тээврийн хэрэгсэл холбогдсоныг асууна."
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "Тээврийн хэрэгслийг шалгах / солих / илрүүлэх"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "% -аас доош нам муж тэгшитгэл"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "Энэ түвшнээс доош тэгшитгэсэн түвшин зөвхөн жигд жолоодлогын уншилтыг дагадаг, хэмжигч шуугиантай газарт илүү удаан (0 = унтраалттай)."
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "Нам муж τ секунд"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "Нам муж дахь тэгшитгэсэн түвшний хугацааны тогтмол."
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "Нам мужийн шуугианы үржүүлэгч"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "Шуугиантай хэмжигчийн зурваст нэмэлт тэгшитгэл (0 = байхгүй, 1 = анхдагч, өндөр = хүчтэй)."
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "Утасны мэдрэгчийг бүртгэх (оношлогоо): хурдасгуур, GPS чиглэл, хурд ба өндрийн өөрчлөлт; хэзээ ч байршил биш"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "Нам мужийн өгөгдлийн горим (хоосон ойролцоо нэмэлт бүртгэл): %2$d савнаас %1$d үлдсэн"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "Нам мужийн өгөгдлийн горим: дууссан (%1$d сав бүртгэгдсэн)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0-оос %1$s %%"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0-оос %1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "Энэ аяллыг хаях"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "Оноогоогүй аялал"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "Энэ аялал оноогоогүй хэвээр үлдэж, та тээврийн хэрэгсэлд оноох хүртэл сургалтад ашиглагдахгүй."
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "Энэ оноогоогүй аяллыг хаях уу? Сургалтад ашиглагдахгүй."
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "Тээврийн хэрэгслийн шалгалт зогслоо"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "Шалгалт дуусахаас өмнө зогслоо (%1$s). Одоог хүртэлх үр дүн тээврийн хэрэгслийн шалгалтын түүхэнд хадгалагдсан."
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "Тээврийн хэрэгслийн шалгалт: %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "Энэ тээврийн хэрэгсэл %1$s-тай таарна (%2$s). Үр дүн тээврийн хэрэгслийн шалгалтын түүхэнд хадгалагдсан."
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "хурууны хээ"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "Тээврийн хэрэгслийн шалгалт: %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "Энэ тээврийн хэрэгсэл %1$s-тай таарна, %2$s-тай биш. Энэ аяллын тээврийн хэрэгслийг сонгохын тулд Тээврийн хэрэгсэл солих дээр дарна уу."
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "Тээврийн хэрэгслийн шалгалт: баталгаажаагүй"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "Энэ тээврийн хэрэгсэл %1$s-д хадгалсан хурууны хээтэй таарахгүй. Энэ хурууны хээг %1$s-д хадгалахын тулд үлдээнэ үү, эсвэл Тээврийн хэрэгсэл солих дээр дарна уу."
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "%1$s үлдээх"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "Тээврийн хэрэгсэл солих"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "Тээврийн хэрэгслийн шалгалт"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "Эхлээд Torque дотор тээврийн хэрэгсэлд холбогдоод, дараа нь Тээврийн хэрэгслийг шалгах / солих / илрүүлэх дээр дахин дарна уу."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "Тэгшитгэсэн түлш одоо шууд харагдаж байна. Та сонгох хүртэл профайлд юу ч хадгалагдахгүй. Аялал дуусахаас өмнө сонгохгүй бол өгөгдөл оноогоогүй үлдэж, тохиргооны хуудсанд оноох хүртэл сургалтад ашиглагдахгүй."
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "Тээврийн хэрэгслийн шалгалт: энэ аялал аль тээврийн хэрэгслийнх болохыг сонгоно уу."
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "%1$d оноогоогүй аялал хүлээж байна. Тэдгээрийг тээврийн хэрэгсэлд оноохын тулд тохиргооны хуудсыг нээнэ үү."
   }
 ]

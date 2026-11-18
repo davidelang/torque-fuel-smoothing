@@ -605,11 +605,6 @@
     "text": "Thèid an draibh seo a shàbhaladh gu %1$s."
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "Tha connadh rèidh ga shealltainn beò a-nis. Cha tèid dad a shàbhaladh gu pròifil gus an tagh thu; thèid dàta gun dearbhadh a thilgeil air falbh aig deireadh an draibh."
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "Dè an carbad a tha seo?"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "A' faighneachd dè an carbad a tha ceangailte nuair nach gabh a mhaidseadh gu fèin-obrachail."
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "Thoir sùil / atharraich / lorg carbad"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "Rèidheachadh raon ìosal fo %"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "Fo ìre seo cha lean an ìre rèidh ach leughaidhean draibhidh seasmhach, nas slaodaiche far a bheil an t-inneal fuaimneach (0 = dheth)."
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "Raon ìosal τ diogan"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "Seasmhach ùine na h-ìre rèidh anns an raon ìosal."
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "Iomadaichear fuaim an raoin ìosal"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "Rèidheachadh a bharrachd ann am bannan fuaimneach an inneil (0 = gin, 1 = bunaiteach, nas àirde = nas làidire)."
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "Logaich mothaichearan an fhòn (diagnosachd): luathadair, ceann GPS, astar agus atharrachadh àirde; na logaich an suidheachadh gu bràth"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "Modh dàta raon ìosal (loga a bharrachd faisg air falamh): %1$d de %2$d tanca air fhàgail"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "Modh dàta raon ìosal: deiseil (%1$d tanca air an logadh)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0 gu %1$s %%"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0 gu %1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "Tilg an turas seo"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "Turas gun sònrachadh"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "Fanaidh an turas seo gun sònrachadh agus cha tèid a chleachdadh airson ionnsachaidh gus an sònraich thu e do charbad."
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "A bheil thu airson an turas gun sònrachadh seo a thilgeil? Cha tèid a chleachdadh airson ionnsachaidh."
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "Sguir sgrùdadh a’ charbaid"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "Sguir an sgrùdadh mus robh e deiseil (%1$s). Chaidh na toraidhean gu ruige seo a shàbhaladh ann an eachdraidh sgrùdaidh a’ charbaid."
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "Sgrùdadh carbaid: %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "Tha an carbad seo a’ freagairt air %1$s (%2$s). Chaidh na toraidhean a shàbhaladh ann an eachdraidh sgrùdaidh a’ charbaid."
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "lorg-meòir"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "Sgrùdadh carbaid: %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "Tha an carbad seo a’ freagairt air %1$s, chan ann air %2$s. Gnogaibh air Atharraich carbad gus carbad an turais seo a thaghadh."
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "Sgrùdadh carbaid: gun dearbhadh"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "Chan eil an carbad seo a’ freagairt air lorg-meòir a chaidh a shàbhaladh airson %1$s. Cùm e gus an lorg-meòir seo a shàbhaladh airson %1$s, no gnogaibh air Atharraich carbad."
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "Cùm %1$s"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "Atharraich carbad"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "Sgrùdadh carbaid"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "Ceangail ris a’ charbad ann an Torque an toiseach, an uair sin gnogaibh air Thoir sùil / atharraich / lorg carbad a-rithist."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "Tha connadh rèidh ga shealltainn beò a-nis. Chan eil dad ga shàbhaladh ann am pròifil gus an tagh thu. Mura tagh thu mus crìochnaich an turas, fuirichidh an dàta gun sònrachadh agus cha tèid a chleachdadh airson ionnsachaidh gus an sònraich thu e air an duilleig shuidhichidh."
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "Sgrùdadh carbaid: tagh an carbad dham buin an turas seo."
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "%1$d turas gun sònrachadh a’ feitheamh. Fosgail an duilleag shuidhichidh gus an sònrachadh do charbad."
   }
 ]

@@ -605,11 +605,6 @@
     "text": "Bu ýöriş %1$s içine ýazdyrylar."
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "Tekizlenen ýangyç häzir göni görkezilýär. Siz saýlaýançaňyz profila hiç zat ýazylmaýar; tassyklanmadyk maglumat ýörişiň soňunda taşlanýar."
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "Bu haýsy ulag?"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "Awtomatiki gabat getirip bolmadykda haýsy ulagyň birikdirilendigini soraýar."
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "Ulagy barla / çalşyr / anykla"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "% -den aşak pes aralyk tekizlemesi"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "Bu derejeden aşakda tekizlenen dereje diňe deň sürüşiň görkezijilerini yzarlaýar, görkeziji galmagally ýerinde haýal (0 = öçük)."
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "Pes aralyk τ sekunt"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "Pes aralykda tekizlenen derejäniň wagt hemişeligi."
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "Pes aralygyň galmagal köpeldijisi"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "Galmagally görkeziji zolaklarynda goşmaça tekizleme (0 = ýok, 1 = deslapky, ýokary = güýçli)."
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "Telefon sensorlaryny ýazga al (anyklaýyş): tizlendiriji, GPS ugry, tizlik we beýiklik üýtgemesi; hiç haçan ýerleşme"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "Pes aralyk maglumat tertibi (boşa ýakyn goşmaça ýazgy): %2$d bakdan %1$d galdy"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "Pes aralyk maglumat tertibi: tamamlanyldy (%1$d bak ýazga alyndy)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0-dan %1$s %%"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0-dan %1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "Bu ýörelgäni taşla"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "Bellenmedik ýörelge"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "Bu ýörelge bellenmän galýar we ony ulaga bellemänkäňiz öwreniş üçin ulanylmaýar."
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "Bu bellenmedik ýörelge taşlansynmy? Öwreniş üçin ulanylmaz."
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "Ulag barlagy durdy"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "Barlag gutarmanka durdy (%1$s). Şu wagta çenli netijeler ulagyň barlag taryhynda saklandy."
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "Ulag barlagy: %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "Bu ulag %1$s bilen gabat gelýär (%2$s). Netijeler ulagyň barlag taryhynda saklandy."
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "barmak yzy"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "Ulag barlagy: %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "Bu ulag %1$s bilen gabat gelýär, %2$s bilen däl. Bu ýörelgäniň ulagyny saýlamak üçin Ulagy çalşyr basyň."
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "Ulag barlagy: tassyklanmady"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "Bu ulag %1$s üçin saklanan barmak yzy bilen gabat gelmeýär. Bu barmak yzyny %1$s üçin saklamak üçin ony saklaň ýa-da Ulagy çalşyr basyň."
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "%1$s sakla"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "Ulagy çalşyr"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "Ulag barlagy"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "Ilki Torque içinde ulaga birigiň, soňra Ulagy barla / çalşyr / anykla düwmesine gaýtadan basyň."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "Tekizlenen ýangyç häzir göni görkezilýär. Saýlaýançaňyz profilde hiç zat saklanmaýar. Ýörelge gutarmanka saýlamasaňyz, maglumat bellenmän galýar we gurmak sahypasynda bellemänkäňiz öwreniş üçin ulanylmaýar."
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "Ulag barlagy: bu ýörelgäniň haýsy ulaga degişlidigini saýlaň."
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "%1$d bellenmedik ýörelge garaşýar. Olary ulaga bellemek üçin gurmak sahypasyny açyň."
   }
 ]

@@ -605,11 +605,6 @@
     "text": "Ity dia ity dia hotehirizina ao amin'ny %1$s."
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "Solika malama no aseho mivantana izao. Tsy misy voatahiry ao amin'ny mombamomba mandra-mifidy ianao; ariana ny angona tsy voamarina amin'ny faran'ny dia."
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "Fiara inona ity?"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "Manontany hoe fiara inona no mifandray rehefa tsy azo ampifandraisina ho azy."
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "Hamarino / ovay / fantaro ny fiara"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "Fanalefahana amin'ny faritra ambany eo ambanin'ny %"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "Eo ambanin'io haavo io dia ny haavo malama ihany no manaraka ny famakiana mitondra milamina, miadana kokoa any amin'ny toerana mitabataba ny fandrefesana (0 = maty)."
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "Faritra ambany τ segondra"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "Tsy miova amin'ny fotoana ny haavo malama amin'ny faritra ambany."
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "Mampitombo ny tabataba amin'ny faritra ambany"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "Fanalefahana fanampiny amin'ny fehin-kibo mitabataba (0 = tsy misy, 1 = mahazatra, avo kokoa = matanjaka kokoa)."
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "Soraty ny sensoran'ny finday (fizahana): accelerometer, lalana GPS, hafainganam-pandeha ary fiovan'ny haavo; aza soratana ny toerana"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "Fomba angona faritra ambany (firaketana fanampiny akaikin'ny foana): %1$d amin'ny %2$d tanky sisa"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "Fomba angona faritra ambany: vita (tanky %1$d voarakitra)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0 hatramin'ny %1$s %%"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0 hatramin'ny %1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "Ario ity dia ity"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "Dia tsy voatondro"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "Mijanona tsy voatondro ity dia ity ary tsy ampiasaina hianarana mandra-panondroanao azy amin'ny fiara."
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "Ario ity dia tsy voatondro ity? Tsy hampiasaina hianarana izy."
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "Nijanona ny fanamarinana fiara"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "Nijanona ny fanamarinana talohan'ny fahavita (%1$s). Voatahiry ao amin'ny tantaran'ny fanamarinana ny fiara ny vokatra hatreto."
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "Fanamarinana fiara: %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "Mifanaraka amin'ny %1$s ity fiara ity (%2$s). Voatahiry ao amin'ny tantaran'ny fanamarinana ny fiara ny vokatra."
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "dihan-tanana"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "Fanamarinana fiara: %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "Mifanaraka amin'ny %1$s ity fiara ity, fa tsy amin'ny %2$s. Tsindrio Ovao ny fiara mba hisafidianana ny fiaran'ity dia ity."
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "Fanamarinana fiara: tsy voamarina"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "Tsy mifanaraka amin'ny dihan-tanana voatahiry ho an'ny %1$s ity fiara ity. Tehirizo mba hitehirizana ity dihan-tanana ity ho an'ny %1$s, na tsindrio Ovao ny fiara."
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "Tehirizo %1$s"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "Ovao ny fiara"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "Fanamarinana fiara"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "Mifandraisa amin'ny fiara ao amin'ny Torque aloha, dia tsindrio indray Hamarino / ovay / fantaro ny fiara."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "Aseho mivantana izao ny solika malama. Tsy misy voatahiry amin'ny mombamomba mandra-pisafidiananao. Raha tsy misafidy ianao alohan'ny hifaranan'ny dia, mijanona tsy voatondro ny angona ary tsy ampiasaina hianarana mandra-panondroanao azy ao amin'ny pejy fametrahana."
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "Fanamarinana fiara: safidio ny fiara tompon'ity dia ity."
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "%1$d dia tsy voatondro no miandry. Sokafy ny pejy fametrahana mba hanondroana azy ireo amin'ny fiara."
   }
 ]

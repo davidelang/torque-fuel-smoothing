@@ -605,11 +605,6 @@
     "text": "இந்தப் பயணம் %1$s இல் சேமிக்கப்படும்."
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "மென்மையான எரிபொருள் இப்போது நேரடியாகக் காட்டப்படுகிறது. நீங்கள் தேர்ந்தெடுக்கும் வரை சுயவிவரத்தில் ஒன்றும் சேமிக்கப்படாது; உறுதிப்படுத்தாத தரவு பயண முடிவில் விடப்படும்."
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "இது எந்த வாகனம்?"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "தானாகப் பொருத்த முடியாதபோது எந்த வாகனம் இணைந்துள்ளது என்று கேட்கிறது."
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "வாகனத்தைச் சரிபார் / மாற்று / கண்டறி"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "% க்குக் கீழ் குறைந்த வரம்பு மென்மை"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "இந்த அளவுக்குக் கீழ் மென்மையான அளவு நிலையான ஓட்ட வாசிப்புகளை மட்டும் பின்தொடரும், அளவி சத்தமாக இருக்கும் இடத்தில் மெதுவாக (0 = அணை)."
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "குறைந்த வரம்பு τ வினாடி"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "குறைந்த வரம்பில் மென்மையான அளவின் நேர மாறிலி."
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "குறைந்த வரம்பின் இரைச்சல் பெருக்கி"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "இரைச்சலான அளவி பட்டைகளில் கூடுதல் மென்மை (0 = இல்லை, 1 = இயல்பு, அதிகம் = வலுவானது)."
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "தொலைபேசி உணரிகளைப் பதிவுசெய் (கண்டறிதல்): முடுக்கமானி, GPS திசை, வேகம் மற்றும் உயர மாற்றம்; ஒருபோதும் இடம் அல்ல"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "குறைந்த வரம்பு தரவு முறை (காலிக்கு அருகில் கூடுதல் பதிவு): %2$d தொட்டிகளில் %1$d மீதம்"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "குறைந்த வரம்பு தரவு முறை: முடிந்தது (%1$d தொட்டிகள் பதிவாயின)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0 முதல் %1$s %%"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0 முதல் %1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "இந்த ஓட்டத்தை நீக்கு"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "ஒதுக்கப்படாத ஓட்டம்"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "இந்த ஓட்டம் ஒதுக்கப்படாமல் இருக்கும், நீங்கள் அதை ஒரு வாகனத்திற்கு ஒதுக்கும் வரை கற்றலுக்குப் பயன்படாது."
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "இந்த ஒதுக்கப்படாத ஓட்டத்தை நீக்கவா? அது கற்றலுக்குப் பயன்படாது."
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "வாகனச் சரிபார்ப்பு நின்றது"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "சரிபார்ப்பு முடிவதற்குள் நின்றது (%1$s). இதுவரை உள்ள முடிவுகள் வாகனத்தின் சரிபார்ப்பு வரலாற்றில் சேமிக்கப்பட்டன."
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "வாகனச் சரிபார்ப்பு: %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "இந்த வாகனம் %1$s உடன் பொருந்துகிறது (%2$s). முடிவுகள் வாகனத்தின் சரிபார்ப்பு வரலாற்றில் சேமிக்கப்பட்டன."
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "கைரேகை"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "வாகனச் சரிபார்ப்பு: %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "இந்த வாகனம் %1$s உடன் பொருந்துகிறது, %2$s உடன் அல்ல. இந்த ஓட்டத்தின் வாகனத்தைத் தேர்ந்தெடுக்க வாகனத்தை மாற்று தட்டவும்."
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "வாகனச் சரிபார்ப்பு: உறுதிப்படுத்தப்படவில்லை"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "இந்த வாகனம் %1$s க்கான சேமித்த கைரேகையுடன் பொருந்தவில்லை. இந்த கைரேகையை %1$s க்குச் சேமிக்க அதை வைத்திருங்கள், அல்லது வாகனத்தை மாற்று தட்டவும்."
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "%1$s வைத்திரு"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "வாகனத்தை மாற்று"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "வாகனச் சரிபார்ப்பு"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "முதலில் Torque இல் வாகனத்துடன் இணைத்து, பிறகு வாகனத்தைச் சரிபார் / மாற்று / கண்டறி மீண்டும் தட்டவும்."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "மென்மையான எரிபொருள் இப்போது நேரடியாகக் காட்டப்படுகிறது. நீங்கள் தேர்ந்தெடுக்கும் வரை சுயவிவரத்தில் எதுவும் சேமிக்கப்படாது. ஓட்டம் முடிவதற்குள் தேர்ந்தெடுக்காவிட்டால் தரவு ஒதுக்கப்படாமல் இருக்கும், அமைப்புப் பக்கத்தில் ஒதுக்கும் வரை கற்றலுக்குப் பயன்படாது."
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "வாகனச் சரிபார்ப்பு: இந்த ஓட்டம் எந்த வாகனத்திற்குச் சொந்தம் என்பதைத் தேர்ந்தெடுக்கவும்."
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "%1$d ஒதுக்கப்படாத ஓட்டங்கள் காத்திருக்கின்றன. அவற்றை ஒரு வாகனத்திற்கு ஒதுக்க அமைப்புப் பக்கத்தைத் திறக்கவும்."
   }
 ]

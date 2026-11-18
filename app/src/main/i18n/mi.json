@@ -605,11 +605,6 @@
     "text": "Ka tiakina tēnei haerenga ki %1$s."
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "Kei te whakaaturia te hinu rēmana ā-ora ināianei. Kāore he mea e tiakina ki tētahi kōtaha kia kōwhiri rā anō koe; ka ākiritia ngā raraunga kāore i whakaūngia i te mutunga o te haerenga."
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "Ko tēhea waka tēnei?"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "Ka ui ko tēhea waka kua tūhono ina kore e taea te ōrite aunoa."
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "Tirohia / whakarerekētia / tautuhia te waka"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "Whakaene awhe iti i raro i te %"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "I raro i tēnei taumata ka whai te taumata rēmana i ngā pānui taraiwa mārire anake, āta ake i ngā wāhi ngangau te ine (0 = weto)."
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "Awhe iti τ hēkona"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "Te taurite wā o te taumata rēmana i te awhe iti."
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "Whakarea haruru awhe iti"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "Whakaene tāpiri i ngā awhenga ine ngangau (0 = kāore, 1 = taunoa, teitei ake = kaha ake)."
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "Tuhia ngā pūoko waea (tātaritanga): ine tere, ahunga GPS, tere me te huringa teitei; kaua rawa te tūnga"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "Aratau raraunga awhe iti (rangitaki tāpiri tata ki te putu): %1$d o ngā tank %2$d e toe ana"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "Aratau raraunga awhe iti: kua oti (%1$d tank kua tuhia)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0 ki te %1$s %%"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0 ki te %1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "Makaa tēnei haere"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "Haere kāore anō kia tautapa"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "Ka noho tēnei haere kāore anō kia tautapa, ā kāore e whakamahia mō te ako kia tautapahia e koe ki tētahi waka."
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "Me maka tēnei haere kāore anō kia tautapa? Kāore e whakamahia mō te ako."
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "Kua mutu te tirotiro waka"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "I mutu te tirotiro i mua i te otinga (%1$s). Kua tiakina ngā hua tae noa ki nāianei ki te hītori tirotiro o te waka."
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "Tirotiro waka: %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "E hāngai ana tēnei waka ki %1$s (%2$s). Kua tiakina ngā hua ki te hītori tirotiro o te waka."
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "matimati"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "Tirotiro waka: %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "E hāngai ana tēnei waka ki %1$s, ehara i a %2$s. Pāwhiria Whakarerekē waka kia kōwhiria te waka mō tēnei haere."
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "Tirotiro waka: kāore anō kia whakaūngia"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "Kāore tēnei waka e hāngai ana ki tētahi matimati kua tiakina mō %1$s. Puritia kia tiakina tēnei matimati mō %1$s, pāwhiritia rānei Whakarerekē waka."
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "Puritia %1$s"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "Whakarerekē waka"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "Tirotiro waka"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "Tūhono tuatahi ki te waka i roto i a Torque, kātahi ka pāwhiri anō i te Tirohia / whakarerekētia / tautuhia te waka."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "Kei te whakaatu ora ināianei te wahie rēmana. Kāore he mea e tiakina ki tētahi kōtaha kia kōwhiria rā anō e koe. Ki te kore koe e kōwhiri i mua i te mutunga o te haere, ka noho ngā raraunga kāore anō kia tautapa, ā kāore e whakamahia mō te ako kia tautapahia e koe i te whārangi tatūnga."
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "Tirotiro waka: kōwhiria te waka nōna tēnei haere."
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "%1$d haere kāore anō kia tautapa e tatari ana. Huakina te whārangi tatūnga kia tautapahia ki tētahi waka."
   }
 ]

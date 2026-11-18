@@ -605,11 +605,6 @@
     "text": "Bidaia hau %1$s profilera gordeko da."
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "Leundutako erregaia zuzenean erakusten da orain. Ez da ezer gordetzen profil batean zuk aukeratu arte; berretsi gabeko datuak bidaia amaitzean baztertzen dira."
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "Zein ibilgailu da hau?"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "Galdetzen du zein ibilgailu dagoen konektatuta automatikoki parekatu ezin denean."
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "Egiaztatu / aldatu / detektatu ibilgailua"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "Tarte baxuko leuntzea % azpitik"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "Maila honen azpitik, leundutako mailak gidatze egonkorreko irakurketak bakarrik jarraitzen ditu, motelago neurgailua zaratatsua den lekuan (0 = itzalita)."
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "Tarte baxua τ segundotan"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "Tarte baxuko leundutako mailaren denbora-konstantea."
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "Tarte baxuko zarata-biderkatzailea"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "Leuntze gehigarria neurgailuaren banda zaratatsuetan (0 = bat ere ez, 1 = lehenetsia, handiagoa = indartsuagoa)."
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "Erregistratu telefonoaren sentsoreak (diagnostikoa): azelerometroa, GPS norabidea, abiadura eta altuera-aldaketa; inoiz ez posizioa"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "Tarte baxuko datu-modua (erregistro gehigarria hutsaren ondoan): %1$d / %2$d tanga falta dira"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "Tarte baxuko datu-modua: amaituta (%1$d tanga erregistratuta)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0tik %1$s %%ra"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0tik %1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "Baztertu bidaia hau"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "Esleitu gabeko bidaia"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "Bidaia hau esleitu gabe geratzen da eta ez da ikaskuntzarako erabiltzen ibilgailu bati esleitu arte."
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "Baztertu esleitu gabeko bidaia hau? Ez da ikaskuntzarako erabiliko."
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "Ibilgailuaren egiaztapena gelditu da"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "Egiaztapena amaitu aurretik gelditu da (%1$s). Orain arteko emaitzak ibilgailuaren egiaztapen-historian gorde dira."
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "Ibilgailuaren egiaztapena: %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "Ibilgailu hau %1$s batekin bat dator (%2$s). Emaitzak ibilgailuaren egiaztapen-historian gorde dira."
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "hatz-marka"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "Ibilgailuaren egiaztapena: %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "Ibilgailu hau %1$s batekin bat dator, ez %2$s batekin. Sakatu Aldatu ibilgailua bidaia honetarako ibilgailua aukeratzeko."
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "Ibilgailuaren egiaztapena: berretsi gabe"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "Ibilgailu hau ez dator bat %1$s baterako gordetako hatz-marka batekin. Gorde ezazu hatz-marka hau %1$s baterako gordetzeko, edo sakatu Aldatu ibilgailua."
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "Mantendu %1$s"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "Aldatu ibilgailua"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "Ibilgailuaren egiaztapena"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "Konektatu lehenik ibilgailura Torque-n, eta sakatu berriro Egiaztatu / aldatu / detektatu ibilgailua."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "Leundutako erregaia zuzenean erakusten da orain. Ez da ezer gordetzen profil batean zuk aukeratu arte. Bidaia amaitu aurretik aukeratzen ez baduzu, datuak esleitu gabe geratzen dira eta ez dira ikaskuntzarako erabiltzen konfigurazio-orrian esleitu arte."
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "Ibilgailuaren egiaztapena: aukeratu bidaia hau zein ibilgailuri dagokion."
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "%1$d esleitu gabeko bidaia zain. Ireki konfigurazio-orria ibilgailu bati esleitzeko."
   }
 ]

@@ -605,11 +605,6 @@
     "text": "ეს მგზავრობა შეინახება %1$s-ში."
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "გლუვი საწვავი ახლა პირდაპირ ჩანს. პროფილში არაფერი ინახება, სანამ არ აირჩევთ; დაუდასტურებელი მონაცემები იშლება მგზავრობის ბოლოს."
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "რომელი მანქანაა ეს?"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "ეკითხება რომელი მანქანაა შეერთებული, როცა ავტომატურად შედარება ვერ ხერხდება."
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "შეამოწმე / შეცვალე / აღმოაჩინე ავტომობილი"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "დაბალი დიაპაზონის გლუვვა % -ზე ქვემოთ"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "ამ დონის ქვემოთ გლუვი დონე მიჰყვება მხოლოდ თანაბარი მოძრაობის ჩვენებებს, ნელა იქ, სადაც საზომი ხმაურიანია (0 = გამორთული)."
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "დაბალი დიაპაზონი τ წამი"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "გლუვი დონის დროის მუდმივა დაბალ დიაპაზონში."
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "დაბალი დიაპაზონის ხმაურის მამრავლი"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "დამატებითი გლუვვა საზომის ხმაურიან ზოლებში (0 = არა, 1 = ნაგულისხმევი, მაღალი = ძლიერი)."
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "ტელეფონის სენსორების ჩაწერა (დიაგნოსტიკა): აქსელერომეტრი, GPS მიმართულება, სიჩქარე და სიმაღლის ცვლილება; არასოდეს მდებარეობა"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "დაბალი დიაპაზონის მონაცემთა რეჟიმი (დამატებითი ჩანაწერი ცარიელთან): დარჩა %1$d %2$d ავზიდან"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "დაბალი დიაპაზონის მონაცემთა რეჟიმი: დასრულდა (%1$d ავზი ჩაიწერა)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0-დან %1$s %%-მდე"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0-დან %1$s-მდე"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "ამ მგზავრობის გაუქმება"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "მიუნიჭებელი მგზავრობა"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "ეს მგზავრობა რჩება მიუნიჭებელი და არ გამოიყენება სწავლისთვის, სანამ ავტომობილს არ მიანიჭებთ."
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "გაუქმდეს ეს მიუნიჭებელი მგზავრობა? სწავლისთვის არ გამოიყენება."
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "ავტომობილის შემოწმება შეჩერდა"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "შემოწმება დასრულებამდე შეჩერდა (%1$s). აქამდე შედეგები შენახულია ავტომობილის შემოწმების ისტორიაში."
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "ავტომობილის შემოწმება: %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "ეს ავტომობილი ემთხვევა %1$s-ს (%2$s). შედეგები შენახულია ავტომობილის შემოწმების ისტორიაში."
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "ანაბეჭდი"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "ავტომობილის შემოწმება: %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "ეს ავტომობილი ემთხვევა %1$s-ს, არა %2$s-ს. შეეხეთ ავტომობილის შეცვლას ამ მგზავრობის ავტომობილის ასარჩევად."
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "ავტომობილის შემოწმება: არ არის დადასტურებული"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "ეს ავტომობილი არ ემთხვევა %1$s-ის შენახულ ანაბეჭდს. შეინახეთ ის, რომ ეს ანაბეჭდი შეინახოს %1$s-ისთვის, ან შეეხეთ ავტომობილის შეცვლას."
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "%1$s შენარჩუნება"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "ავტომობილის შეცვლა"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "ავტომობილის შემოწმება"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "ჯერ Torque-ში დაუკავშირდით ავტომობილს, შემდეგ კვლავ შეეხეთ შეამოწმე / შეცვალე / აღმოაჩინე ავტომობილი."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "გლუვი საწვავი ახლა პირდაპირ ჩანს. პროფილში არაფერი ინახება, სანამ არ აირჩევთ. თუ მგზავრობის დასრულებამდე არ აირჩევთ, მონაცემები რჩება მიუნიჭებელი და სწავლისთვის არ გამოიყენება, სანამ გამართვის გვერდზე არ მიანიჭებთ."
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "ავტომობილის შემოწმება: აირჩიეთ ავტომობილი, რომელსაც ეს მგზავრობა ეკუთვნის."
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "%1$d მიუნიჭებელი მგზავრობა ელოდება. გახსენით გამართვის გვერდი ავტომობილზე მისანიჭებლად."
   }
 ]

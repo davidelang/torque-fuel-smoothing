@@ -605,11 +605,6 @@
     "text": "Bu safar %1$s ichiga saqlanadi."
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "Tekislangan yoqilg‘i hozir jonli ko‘rsatilmoqda. Siz tanlamaguningizcha profilga hech narsa saqlanmaydi; tasdiqlanmagan ma’lumot safar oxirida tashlanadi."
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "Bu qaysi avtomobil?"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "Avtomatik moslashtira olmaganda qaysi avtomobil ulanganini so‘raydi."
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "Transportni tekshirish / almashtirish / aniqlash"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "% dan past past diapazon tekislashi"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "Bu darajadan past tekislangan daraja faqat barqaror haydash ko‘rsatkichlarini kuzatadi, o‘lchagich shovqinli joyda sekinroq (0 = o‘chiq)."
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "Past diapazon τ soniya"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "Past diapazondagi tekislangan darajaning vaqt doimiysi."
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "Past diapazon shovqin ko‘paytirgichi"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "Shovqinli o‘lchagich polosalarida qo‘shimcha tekislash (0 = yo‘q, 1 = standart, yuqori = kuchliroq)."
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "Telefon sensorlarini yozish (tashxis): akselerometr, GPS yo‘nalishi, tezlik va balandlik o‘zgarishi; hech qachon joylashuv"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "Past diapazon ma’lumot rejimi (bo‘shga yaqin qo‘shimcha jurnal): %2$d bakdan %1$d qoldi"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "Past diapazon ma’lumot rejimi: tugadi (%1$d bak yozildi)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0 dan %1$s %%"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0 dan %1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "Bu safarni tashlash"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "Tayinlanmagan safar"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "Bu safar tayinlanmagan qoladi va uni transportga tayinlamaguningizcha o‘rganish uchun ishlatilmaydi."
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "Bu tayinlanmagan safar tashlansinmi? U o‘rganish uchun ishlatilmaydi."
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "Transport tekshiruvi to‘xtadi"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "Tekshiruv tugamasdan to‘xtadi (%1$s). Hozirgacha natijalar transportning tekshiruv tarixida saqlandi."
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "Transport tekshiruvi: %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "Bu transport %1$s bilan mos keladi (%2$s). Natijalar transportning tekshiruv tarixida saqlandi."
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "barmoq izi"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "Transport tekshiruvi: %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "Bu transport %1$s bilan mos keladi, %2$s bilan emas. Bu safar transportini tanlash uchun Transportni almashtirish tugmasini bosing."
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "Transport tekshiruvi: tasdiqlanmadi"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "Bu transport %1$s uchun saqlangan barmoq iziga mos kelmaydi. Bu barmoq izini %1$s uchun saqlash uchun qoldiring yoki Transportni almashtirish tugmasini bosing."
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "%1$s qoldirish"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "Transportni almashtirish"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "Transport tekshiruvi"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "Avval Torque ichida transportga ulaning, keyin Transportni tekshirish / almashtirish / aniqlash tugmasini qayta bosing."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "Tekislangan yoqilg‘i hozir jonli ko‘rsatilmoqda. Siz tanlamaguningizcha profilga hech narsa saqlanmaydi. Safar tugashidan oldin tanlamasangiz, ma’lumot tayinlanmagan qoladi va sozlash sahifasida tayinlamaguningizcha o‘rganish uchun ishlatilmaydi."
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "Transport tekshiruvi: bu safar qaysi transportga tegishli ekanini tanlang."
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "%1$d tayinlanmagan safar kutyapti. Ularni transportga tayinlash uchun sozlash sahifasini oching."
   }
 ]

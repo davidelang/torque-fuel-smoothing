@@ -605,11 +605,6 @@
     "text": "Ši kelionė bus įrašyta į %1$s."
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "Išlygintas kuras rodomas gyvai dabar. Į profilį niekas neįrašoma, kol nepasirenkate; nepatvirtinti duomenys atmetami kelionės pabaigoje."
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "Kokia tai transporto priemonė?"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "Klausia, kuri transporto priemonė prijungta, kai jos negalima automatiškai sutapatinti."
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "Tikrinti / keisti / aptikti transporto priemonę"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "Žemo diapazono lyginimas žemiau %"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "Žemiau šio lygio išlygintas lygis seka tik tolygaus važiavimo rodmenis, lėčiau ten, kur rodiklis triukšmingas (0 = išjungta)."
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "Žemas diapazonas τ sekundėmis"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "Išlyginto lygio laiko konstanta žemame diapazone."
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "Žemo diapazono triukšmo daugiklis"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "Papildomas lyginimas triukšminguose rodiklio ruožuose (0 = nėra, 1 = numatyta, didesnis = stipresnis)."
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "Registruoti telefono jutiklius (diagnostika): akselerometrą, GPS kryptį, greitį ir aukščio pokytį; niekada vietos"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "Žemo diapazono duomenų režimas (papildomas žurnalas arti tuščio): liko %1$d iš %2$d bakų"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "Žemo diapazono duomenų režimas: baigta (užregistruota bakų: %1$d)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0 iki %1$s %%"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0 iki %1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "Atmesti šią kelionę"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "Nepriskirta kelionė"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "Ši kelionė lieka nepriskirta ir nenaudojama mokymuisi, kol jos nepriskirsite transporto priemonei."
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "Atmesti šią nepriskirtą kelionę? Ji nebus naudojama mokymuisi."
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "Transporto priemonės patikra sustabdyta"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "Patikra sustojo nebaigusi (%1$s). Iki šiol gauti rezultatai išsaugoti transporto priemonės patikrų istorijoje."
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "Transporto priemonės patikra: %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "Ši transporto priemonė atitinka %1$s (%2$s). Rezultatai išsaugoti transporto priemonės patikrų istorijoje."
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "piršto atspaudas"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "Transporto priemonės patikra: %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "Ši transporto priemonė atitinka %1$s, ne %2$s. Palieskite Keisti transporto priemonę, kad pasirinktumėte šios kelionės transporto priemonę."
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "Transporto priemonės patikra: nepatvirtinta"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "Ši transporto priemonė neatitinka išsaugoto %1$s piršto atspaudo. Palikite jį, kad šis piršto atspaudas būtų išsaugotas %1$s, arba palieskite Keisti transporto priemonę."
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "Palikti %1$s"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "Keisti transporto priemonę"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "Transporto priemonės patikra"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "Pirmiausia prisijunkite prie transporto priemonės „Torque“, tada vėl palieskite Tikrinti / keisti / aptikti transporto priemonę."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "Išlyginti degalai rodomi tiesiogiai dabar. Į profilį niekas neįrašoma, kol nepasirenkate. Jei nepasirinksite iki kelionės pabaigos, duomenys liks nepriskirti ir nebus naudojami mokymuisi, kol jų nepriskirsite sąrankos puslapyje."
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "Transporto priemonės patikra: pasirinkite transporto priemonę, kuriai priklauso ši kelionė."
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "Laukia nepriskirtų kelionių: %1$d. Atidarykite sąrankos puslapį ir priskirkite jas transporto priemonei."
   }
 ]

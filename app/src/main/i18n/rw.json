@@ -605,11 +605,6 @@
     "text": "Uru rugendo ruzabikwa muri %1$s."
   },
   {
-    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose; unconfirmed data is discarded at drive end.",
-    "text": "Amavuta arambuye agaragara ubu ako kanya. Nta kintu kibikwa muri profil kugeza uhisemo; amakuru ataremezwa asibwa ku mpera y'urugendo."
-  },
-  {
     "key": "Which vehicle is this?",
     "source": "Which vehicle is this?",
     "text": "Iyi ni iyihe modoka?"
@@ -688,5 +683,165 @@
     "key": "Asks which vehicle is connected when it cannot be matched automatically.",
     "source": "Asks which vehicle is connected when it cannot be matched automatically.",
     "text": "Kubaza iyihe modoka ihujwe iyo idashobora guhuzwa mu buryo bwikora."
+  },
+  {
+    "key": "Check / change / detect vehicle",
+    "source": "Check / change / detect vehicle",
+    "text": "Reba / hindura / menya imodoka"
+  },
+  {
+    "key": "Low-range smoothing below %",
+    "source": "Low-range smoothing below %",
+    "text": "Kurambura urwego rwo hasi munsi ya %"
+  },
+  {
+    "key": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "source": "Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).",
+    "text": "Munsi y'uru rwego urwego rwarambuye rukurikira gusa ibipimo byo gutwara neza, buhoro aho igipimo gifite urusaku (0 = kizimye)."
+  },
+  {
+    "key": "Low-range τ seconds",
+    "source": "Low-range τ seconds",
+    "text": "Urwego rwo hasi τ amasegonda"
+  },
+  {
+    "key": "Time constant of the smoothed level in the low range.",
+    "source": "Time constant of the smoothed level in the low range.",
+    "text": "Igihe kidahinduka cy'urwego rwarambuye mu rwego rwo hasi."
+  },
+  {
+    "key": "Low-range noise multiplier",
+    "source": "Low-range noise multiplier",
+    "text": "Igikuba cy'urusaku rw'urwego rwo hasi"
+  },
+  {
+    "key": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "source": "Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).",
+    "text": "Kurambura kw'inyongera mu mirongo y'igipimo ifite urusaku (0 = nta na kimwe, 1 = bisanzwe, hejuru = gikomeye)."
+  },
+  {
+    "key": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "source": "Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position",
+    "text": "Andika senseri za terefone (isuzuma): igipimo cy'iyihuta, icyerekezo cya GPS, umuvuduko n'ihinduka ry'uburebure; ntuzigere wandike ahantu"
+  },
+  {
+    "key": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "source": "Low-range data mode (extra logging near empty): %1$d of %2$d tanks left",
+    "text": "Uburyo bw'amakuru bw'urwego rwo hasi (inyandiko y'inyongera hafi y'ubusa): hasigaye tanki %1$d muri %2$d"
+  },
+  {
+    "key": "Low-range data mode: finished (%1$d tanks logged)",
+    "source": "Low-range data mode: finished (%1$d tanks logged)",
+    "text": "Uburyo bw'amakuru bw'urwego rwo hasi: byarangiye (tanki %1$d zanditswe)"
+  },
+  {
+    "key": "0 to %1$s %%",
+    "source": "0 to %1$s %%",
+    "text": "0 kugeza %1$s %%"
+  },
+  {
+    "key": "0 to %1$s",
+    "source": "0 to %1$s",
+    "text": "0 kugeza %1$s"
+  },
+  {
+    "key": "Discard this drive",
+    "source": "Discard this drive",
+    "text": "Hagarika uru rugendo"
+  },
+  {
+    "key": "Unassigned drive",
+    "source": "Unassigned drive",
+    "text": "Urugendo rutaragenewe"
+  },
+  {
+    "key": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "source": "This drive is kept unassigned and is not used for learning until you assign it to a vehicle.",
+    "text": "Uru rugendo rugumana rutaragenewe kandi ntirukoreshwa mu kwiga kugeza urugenewe ku modoka."
+  },
+  {
+    "key": "Discard this unassigned drive? It will not be used for learning.",
+    "source": "Discard this unassigned drive? It will not be used for learning.",
+    "text": "Hagarika uru rugendo rutaragenewe? Ntibirukoreshwa mu kwiga."
+  },
+  {
+    "key": "Vehicle check stopped",
+    "source": "Vehicle check stopped",
+    "text": "Isuzuma ry'imodoka ryahagaze"
+  },
+  {
+    "key": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "source": "The check stopped before it finished (%1$s). Results so far are saved in the vehicle's check history.",
+    "text": "Isuzuma ryahagaze ritara rangira (%1$s). Ibisubizo kugeza ubu byabitswe mu mateka y'isuzuma ry'imodoka."
+  },
+  {
+    "key": "Vehicle check: %1$s",
+    "source": "Vehicle check: %1$s",
+    "text": "Isuzuma ry'imodoka: %1$s"
+  },
+  {
+    "key": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "source": "This vehicle matches %1$s (%2$s). Results are saved in the vehicle's check history.",
+    "text": "Iyi modoka ihuye na %1$s (%2$s). Ibisubizo byabitswe mu mateka y'isuzuma ry'imodoka."
+  },
+  {
+    "key": "fingerprint",
+    "source": "fingerprint",
+    "text": "igikumwe"
+  },
+  {
+    "key": "Vehicle check: %1$s?",
+    "source": "Vehicle check: %1$s?",
+    "text": "Isuzuma ry'imodoka: %1$s?"
+  },
+  {
+    "key": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "source": "This vehicle matches %1$s, not %2$s. Tap Change vehicle to choose the vehicle for this drive.",
+    "text": "Iyi modoka ihuye na %1$s, ntabwo ari %2$s. Kanda Hindura imodoka kugira ngo uhitemo imodoka y'uru rugendo."
+  },
+  {
+    "key": "Vehicle check: not confirmed",
+    "source": "Vehicle check: not confirmed",
+    "text": "Isuzuma ry'imodoka: ntiryemejwe"
+  },
+  {
+    "key": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "source": "This vehicle does not match a saved fingerprint for %1$s. Keep it to save this fingerprint for %1$s, or tap Change vehicle.",
+    "text": "Iyi modoka ntihuye n'igikumwe cyabitswe cya %1$s. Kigumane kugira ngo ubike iki gikumwe cya %1$s, cyangwa ukande Hindura imodoka."
+  },
+  {
+    "key": "Keep %1$s",
+    "source": "Keep %1$s",
+    "text": "Gumana %1$s"
+  },
+  {
+    "key": "Change vehicle",
+    "source": "Change vehicle",
+    "text": "Hindura imodoka"
+  },
+  {
+    "key": "Vehicle check",
+    "source": "Vehicle check",
+    "text": "Isuzuma ry'imodoka"
+  },
+  {
+    "key": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "source": "Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again.",
+    "text": "Banza uhuze imodoka muri Torque, hanyuma ukande nanone Reba / hindura / menya imodoka."
+  },
+  {
+    "key": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "source": "Live smoothed fuel is shown now. Nothing is saved to a profile until you choose. If you do not choose before the drive ends, the data is kept unassigned and is not used for learning until you assign it on the setup page.",
+    "text": "Amavuta yarambuye aragaragara ubu ako kanya. Nta kintu kibikwa muri porofayili kugeza uhitse. Nuhitamo mbere y'uko urugendo rurarangira, amakuru agumana ataragenewe kandi ntakoreshwa mu kwiga kugeza uyagenewe ku ipaji yo gushiraho."
+  },
+  {
+    "key": "Vehicle check: choose the vehicle this drive belongs to.",
+    "source": "Vehicle check: choose the vehicle this drive belongs to.",
+    "text": "Isuzuma ry'imodoka: hitamo imodoka uru rugendo rubarizwamo."
+  },
+  {
+    "key": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "source": "%1$d unassigned drive(s) waiting. Open the setup page to assign them to a vehicle.",
+    "text": "Ingendo %1$d zitaragenewe zitegereje. Fungura ipaji yo gushiraho kugira ngo uzigenewe ku modoka."
   }
 ]
