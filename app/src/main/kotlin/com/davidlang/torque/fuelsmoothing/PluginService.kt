@@ -785,7 +785,7 @@ class PluginService : Service() {
         var stale = false
         if (raw != null && raw.isFinite() && !src.missing) {
             val tankGal = priorFor(id).cap
-            when (rt.stale.observe(raw, rt.usedGal, tankGal)) {
+            when (rt.stale.observe(raw, rt.usedGal, tankGal, FuelMath.SENDER_CEIL_PCT * rt.math.unit)) {
                 StaleLevelGuard.Verdict.REFRESH -> {
                     requestLevelRefresh(t, srcCfg.sourceId, levelPid)
                     val burn = rt.usedGal - rt.stale.usedAtChange
@@ -842,6 +842,8 @@ class PluginService : Service() {
             jumpPct = FuelMath.LIVE_FOLLOW_PCT,
             settleSec = FuelMath.FILL_SETTLE_SEC,
             ignoreFill = skipFill,
+            // Burn signal for "parked, no fuel burned" at the top of a fill; only integrated while logging.
+            usedGal = if (logging) rt.usedGal else null,
         )
         if (id == 1 && trustedVehicle() && LevelScale.applies(cfg.sourceId)) {
             // Highest settled (smoothed, tracking, not filling/holding) count only rises; raw slosh never counts.
@@ -2000,7 +2002,7 @@ class PluginService : Service() {
             }
             return
         }
-        rt.math.finishFill()?.let { anchor ->
+        rt.math.finishFill(rt.usedGal)?.let { anchor ->
             FsLog.i(TAG, "tank$id fill still open at session close; ending at plateau $anchor")
             onFillEnd(rt, anchor, System.currentTimeMillis(), true)
         }

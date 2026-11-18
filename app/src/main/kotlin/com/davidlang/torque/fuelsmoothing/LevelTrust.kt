@@ -72,10 +72,13 @@ internal class StaleLevelGuard {
 
     enum class Verdict { OK, REFRESH, STALE }
 
-    fun observe(level: Double, usedGal: Double, tankGal: Double?): Verdict {
+    /** [ceil]: sender ceiling in the source's units (FuelMath.SENDER_CEIL_PCT times the level unit). */
+    fun observe(level: Double, usedGal: Double, tankGal: Double?, ceil: Double = FuelMath.SENDER_CEIL_PCT): Verdict {
         if (!level.isFinite()) return Verdict.OK
         val prev = lastLevel
-        if (prev == null || abs(level - prev) >= LevelTrust.LEVEL_EPS) {
+        // At the sender ceiling (99.9, overfilled tank) the reading is "at least full" and is expected to sit
+        // unchanged while gallons burn off the neck; it is never stale. Tracking restarts from the ceiling.
+        if (level >= ceil || prev == null || abs(level - prev) >= LevelTrust.LEVEL_EPS) {
             lastLevel = level
             usedAtChange = usedGal
             refreshAsked = false

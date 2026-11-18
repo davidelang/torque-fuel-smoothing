@@ -54,4 +54,19 @@ class LevelTrustTest {
         assertNull(LevelTrust.lastTrustedLevel(dir, FuelDetect.NONE))
         assertNull(LevelTrust.lastTrustedLevel(dir, "toyota_7c0_2129"))
     }
+
+    @Test
+    fun test119CeilingReadingIsNeverStale() {
+        // 2026-11-18 fill: raw pinned at 99.90 while the first gallons burned off the neck.
+        val g = StaleLevelGuard()
+        for (i in 0..40) assertEquals(StaleLevelGuard.Verdict.OK, g.observe(99.9, i * 0.05, 39.6))
+        // Below the ceiling the guard works as before, counting burn from the last ceiling reading.
+        assertEquals(StaleLevelGuard.Verdict.OK, g.observe(99.5, 2.0, 39.6))
+        assertEquals(StaleLevelGuard.Verdict.OK, g.observe(99.5, 2.4, 39.6))
+        assertEquals(StaleLevelGuard.Verdict.REFRESH, g.observe(99.5, 2.6, 39.6))
+        // Count sources pass their own ceiling (unit-scaled); 99.9 counts on a 255-count sender is not full.
+        val c = StaleLevelGuard()
+        assertEquals(StaleLevelGuard.Verdict.OK, c.observe(99.9, 0.0, 39.6, FuelMath.SENDER_CEIL_PCT * 2.55))
+        assertEquals(StaleLevelGuard.Verdict.REFRESH, c.observe(99.9, 0.6, 39.6, FuelMath.SENDER_CEIL_PCT * 2.55))
+    }
 }

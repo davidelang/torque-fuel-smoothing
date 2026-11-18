@@ -18,6 +18,8 @@ internal class FuelMath {
     private var lastIngestMs: Long? = null
     private var fillPeak: Double = 0.0
     private var fillStillMed: Double = 0.0
+    /** Session fuel used (gal) when [fillPeak] was last raised; null when the caller gives no burn signal. */
+    private var fillPeakUsedGal: Double? = null
     private var fillCandMs: Long? = null
     private var movingSinceMs: Long? = null
     /** Start of the current continuous stop (speed <= FILL_ENTER_SPEED_KMH); null while moving. */
@@ -55,6 +57,8 @@ internal class FuelMath {
         settleSec: Double = FILL_SETTLE_SEC,
         ignoreFill: Boolean = false,
         sigmaPct: Double = DEFAULT_SIGMA_PCT,
+        /** Session cumulative fuel used (gal), or null if unknown. Lets a fill tell "parked, no burn" apart. */
+        usedGal: Double? = null,
     ): Double {
         val prev = smoothed
         val last = lastIngestMs
@@ -75,7 +79,7 @@ internal class FuelMath {
             return raw
         }
         if (mode == TrackMode.FILL) {
-            return followFill(speedKmh, nowMs, sigmaPct)
+            return followFill(speedKmh, nowMs, sigmaPct, usedGal)
         }
         // Settle-then-rise. Stopping changes the reading by itself (parking attitude/slope shows up at once, then
         // slosh dies out), so a fill is never measured against the smoothed/moving level. Once the vehicle has
@@ -102,6 +106,7 @@ internal class FuelMath {
                     val m = median(nowMs - MEDIAN_MS)
                     fillPeak = m
                     fillStillMed = m
+                    fillPeakUsedGal = usedGal
                     movingSinceMs = null
                     smoothed = m
                     return m
@@ -111,11 +116,14 @@ internal class FuelMath {
         }
         fillCandMs = null
         val dtSec = if (last == null) 1.0 else ((nowMs - last).coerceAtLeast(0L) / 1000.0).coerceAtLeast(0.001)
+        // The sender saturates at 99.9: a reading at the ceiling means "at least full", not that exact number.
+        // It may pull the level up to the ceiling but never pulls a level already at/above it down.
+        val target = if (raw >= SENDER_CEIL_PCT * unit && prev >= raw) prev else raw
         val ema = if (tauSec <= 0.0) {
-            raw
+            target
         } else {
             val a = dtSec / (tauSec + dtSec)
-            a * raw + (1.0 - a) * prev
+            a * target + (1.0 - a) * prev
         }
         val maxStep = skewPctPerSec.coerceAtLeast(0.0) * unit * dtSec
         val y = prev + (ema - prev).coerceIn(-maxStep, maxStep)
@@ -128,18 +136,34 @@ internal class FuelMath {
      * FILL stays on through pump pauses of any length (pump limit, re-authorisation). It ends when the vehicle
      * drives away (anchor = median of the last stationary window, i.e. the final plateau) or when the level
      * really drops: 20 s median below the peak by more than max(3 %, 3 sigma) (anchor = that median).
+     *
+     * Top of tank: parked with no fuel burned since the peak ([usedGal] known and grown by less than
+     * FILL_NO_BURN_GAL), fuel cannot have left, so a falling reading (the sender reads 99.9 then sags to ~98 as
+     * the neck fills) neither ends nor lowers the fill: the level shown and the final anchor are the higher of
+     * the peak and the settled median. Without a burn signal the old rule applies.
      */
-    private fun followFill(speedKmh: Double, nowMs: Long, sigmaPct: Double): Double {
+    private fun followFill(speedKmh: Double, nowMs: Long, sigmaPct: Double, usedGal: Double?): Double {
         val med = median(nowMs - MEDIAN_MS)
+        if (fillPeakUsedGal == null) fillPeakUsedGal = usedGal
+        val peakUsed = fillPeakUsedGal
+        val noBurn = usedGal != null && peakUsed != null && usedGal - peakUsed < FILL_NO_BURN_GAL
+        val plateau = if (noBurn) maxOf(fillPeak, fillStillMed) else fillStillMed
         if (speedKmh > FILL_EXIT_SPEED_KMH) {
             val since = movingSinceMs ?: nowMs.also { movingSinceMs = it }
-            if (nowMs - since >= FILL_EXIT_MOVE_MS) return endFill(fillStillMed)
-            smoothed = fillStillMed
-            return fillStillMed
+            if (nowMs - since >= FILL_EXIT_MOVE_MS) return endFill(plateau)
+            smoothed = plateau
+            return plateau
         }
         movingSinceMs = null
-        if (med > fillPeak) fillPeak = med
+        if (med > fillPeak) {
+            fillPeak = med
+            fillPeakUsedGal = usedGal
+        }
         fillStillMed = med
+        if (noBurn) {
+            smoothed = fillPeak
+            return fillPeak
+        }
         val drop = maxOf(FILL_DROP_MIN_PCT * unit, 3.0 * sigmaPct)
         if (med < fillPeak - drop) return endFill(med)
         smoothed = med
@@ -162,7 +186,12 @@ internal class FuelMath {
     }
 
     /** Ends an open FILL (e.g. at session close) at the plateau median; returns the anchor or null. */
-    fun finishFill(): Double? = if (mode == TrackMode.FILL) endFill(fillStillMed) else null
+    fun finishFill(usedGal: Double? = null): Double? {
+        if (mode != TrackMode.FILL) return null
+        val peakUsed = fillPeakUsedGal
+        val noBurn = usedGal != null && peakUsed != null && usedGal - peakUsed < FILL_NO_BURN_GAL
+        return endFill(if (noBurn) maxOf(fillPeak, fillStillMed) else fillStillMed)
+    }
 
     /**
      * Stuck-level recovery. Call with every raw reading before [isValidSample]. Readings more than
@@ -229,6 +258,10 @@ internal class FuelMath {
         const val FILL_EXIT_MOVE_MS = 10_000L
         const val FILL_DROP_MIN_PCT = 3.0
         const val DEFAULT_SIGMA_PCT = 1.0
+        /** Fuel burned since the fill peak below this (gal) counts as "parked, no burn" (idle ~0.6 gal/h). */
+        const val FILL_NO_BURN_GAL = 0.1
+        /** Sender ceiling: the ford 16C1 level saturates at 99.90; at/above this a reading means "at least full". */
+        const val SENDER_CEIL_PCT = 99.85
         const val MEDIAN_MS = 20_000L
         const val WINDOW_MS = 30_000L
         const val REANCHOR_STOP_MS = 30_000L
