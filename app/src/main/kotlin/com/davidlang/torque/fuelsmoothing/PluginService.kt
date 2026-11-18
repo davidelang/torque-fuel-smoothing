@@ -27,8 +27,16 @@ internal fun identityHeader(cmd: String, protocol: String?): String =
     if (cmd == "2216C1" && protocol?.contains("J1850 PWM") == true) "C410F1" else ""
 
 @Suppress("UNUSED_PARAMETER")
-internal fun identityQueue(firm: Boolean, vin: String?, probe: String?): List<String> =
-    listOf("0902", "0100") // fresh physical identity AND fresh capability discovery, every connection
+/** Fresh physical identity AND fresh capability discovery (exact 0100 bitmap), on every connection. */
+internal fun identityQueue(): List<String> = listOf("0902", "0100")
+
+/**
+ * After the 0100 reply: queue the Ford 2216C1 probe? Only on J1850 PWM (never a manufacturer command to an
+ * unknown CAN vehicle). A VIN-less read always probes (16C1 is a solid-fingerprint gate, [Fingerprint.solidMatch]);
+ * a VIN read probes until the profile has a stored "ok". Never queued twice or after it answered.
+ */
+internal fun wantsFordProbe(previousProbe: String?, vin: String?, probed: Boolean, queued: Boolean, protocol: String?): Boolean =
+    (previousProbe != "ok" || vin == null) && !probed && !queued && protocol?.contains("J1850 PWM") == true
 
 class PluginService : Service() {
     private class TankRt(
@@ -1163,7 +1171,7 @@ class PluginService : Service() {
         var probeRaw: List<String>? = null
         /** Comparison PIDs already re-asked once after an unusable reply (matching needs them, not a timeout). */
         private val retried = HashSet<String>()
-        init { queue.addAll(if (checkOnly) listOf("0902") else identityQueue(false, null, null)) }
+        init { queue.addAll(if (checkOnly) listOf("0902") else identityQueue()) }
 
         fun step(t: ITorqueService): Boolean {
             if (SystemClock.elapsedRealtime() - startMono > IDENTITY_MAX_MS) {
@@ -1225,8 +1233,8 @@ class PluginService : Service() {
                     // Preserve the existing Ford probe only on its known J1850 protocol, never
                     // blindly send a manufacturer command to a newly encountered CAN vehicle.
                     // A VIN-less vehicle is always probed: the 16C1 result is a matching gate.
-                    if (c == "0100" && (previousProbe != "ok" || vin == null) && probe == null && "2216C1" !in queue &&
-                        runCatching { t.protocolName }.getOrNull()?.contains("J1850 PWM") == true)
+                    if (c == "0100" && wantsFordProbe(previousProbe, vin, probe != null, "2216C1" in queue,
+                            runCatching { t.protocolName }.getOrNull()))
                         queue.add("2216C1")
                 }
             }

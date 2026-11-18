@@ -70,8 +70,14 @@ class IdentityTest {
 
     @Test
     fun test34FingerprintParseMergeAndMatch() {
-        val reply = listOf("49 02 01 31 46 54 42", "49 02 02 57 33 58 4D", "49 02 03 35 48 4B 41", "49 02 04 31 32 33 34", "49 02 05 35")
-        assertEquals("1FTBW3XM5HKA12345", ProfileStore.parseVin(reply))
+        // A complete, declared-length CAN 0902 block is a VIN.
+        val can = listOf("014", "0: 49 02 01 31 46 54", "1: 42 57 33 58 4D 35 48", "2: 4B 41 31 32 33 34 35")
+        assertEquals("1FTBW3XM5HKA12345", ProfileStore.parseVin(can))
+        // Per-line packets are never concatenated into a VIN (no ECU address; fail closed, 80422781).
+        val lines = listOf("49 02 01 31 46 54 42", "49 02 02 57 33 58 4D", "49 02 03 35 48 4B 41", "49 02 04 31 32 33 34", "49 02 05 35")
+        assertNull(ProfileStore.parseVin(lines))
+        // A block that is short of its declared length is not a VIN either.
+        assertNull(ProfileStore.parseVin(listOf("014", "0: 49 02 01 31 46 54", "1: 42 57 33 58 4D 35 48")))
         assertEquals("BE3FA813", Fingerprint.parseBitmap(listOf("41 00 BE 3F A8 13"), "0100"))
         val obs = Fingerprint.Fp(protocol = van.protocol, bitmaps = mapOf("0100" to "BE3FA813"))
         val m = Fingerprint.merge(Fingerprint.Fp(), obs)
@@ -80,10 +86,12 @@ class IdentityTest {
         val all = mapOf("van" to van, "car" to car)
         // VIN wins, even over a conflicting calibration ID.
         assertEquals("van", Fingerprint.match(Fingerprint.Fp(vin = van.vin, calId = car.calId), all).id)
-        assertTrue(Fingerprint.match(Fingerprint.Fp(calId = car.calId), all).let { it.id == "car" && it.certain })
-        // Bitmaps + protocol: similar enough = match (not certain); a different protocol never matches.
+        assertTrue(Fingerprint.match(Fingerprint.Fp(vin = van.vin), all).certain)
+        // Calibration IDs and bitmaps are never physical keys (VIN-less vehicles go through solidMatch /
+        // vinlessCandidates and a confirmation instead): no match, even for an identical bitmap.
+        assertNull(Fingerprint.match(Fingerprint.Fp(calId = car.calId), all).id)
         val bm = Fingerprint.match(Fingerprint.Fp(protocol = van.protocol, bitmaps = van.bitmaps), all)
-        assertEquals("van", bm.id); assertFalse(bm.certain)
+        assertNull(bm.id); assertFalse(bm.certain)
         assertNull(Fingerprint.match(Fingerprint.Fp(protocol = "SAE J1850 PWM", bitmaps = van.bitmaps), all).id)
         // Round trip.
         assertEquals(van, Fingerprint.fromJson(Fingerprint.toJson(van)))
@@ -91,13 +99,14 @@ class IdentityTest {
         assertTrue(Fingerprint.decide("van", Fingerprint.Fp(vin = van.vin), all) is Fingerprint.Decision.Normal)
         val r = Fingerprint.decide("van", Fingerprint.Fp(vin = car.vin), all)
         assertTrue(r is Fingerprint.Decision.Route && r.target == "car")
+        // Another car's bitmap is held, and a bitmap never suggests a profile by itself.
         val q = Fingerprint.decide("van", Fingerprint.Fp(protocol = car.protocol, bitmaps = car.bitmaps), all)
-        assertTrue(q is Fingerprint.Decision.Quarantine && q.suggest == "car")
+        assertTrue(q is Fingerprint.Decision.Quarantine && q.suggest == null)
         val n = Fingerprint.decide("van", Fingerprint.Fp(vin = "WVWZZZ1JZXW000001"), all)
         assertTrue(n is Fingerprint.Decision.Quarantine && n.suggest == null)
-        // Nothing read from the ECU, or a still-learning profile: normal.
-        assertTrue(Fingerprint.decide("van", Fingerprint.Fp(), all) is Fingerprint.Decision.Normal)
-        assertTrue(Fingerprint.decide("new", Fingerprint.Fp(vin = "WVWZZZ1JZXW000001"), mapOf("new" to Fingerprint.Fp())) is Fingerprint.Decision.Normal)
+        // Nothing read from the ECU, or an unknown VIN on a still-learning profile: never silently normal.
+        assertTrue(Fingerprint.decide("van", Fingerprint.Fp(), all) is Fingerprint.Decision.Quarantine)
+        assertTrue(Fingerprint.decide("new", Fingerprint.Fp(vin = "WVWZZZ1JZXW000001"), mapOf("new" to Fingerprint.Fp())) is Fingerprint.Decision.Quarantine)
     }
 
     private fun twoProfiles(): File {
@@ -208,14 +217,21 @@ class IdentityTest {
     }
 
     @Test
-    fun test101FirmProfileProbesUntilOkNoDoubleQueue() {
-        assertEquals(listOf("0902", "2216C1"), identityQueue(true, "1FTBW3XM5HKA12345", "no"))
-        assertEquals(listOf("0902"), identityQueue(true, "1FTBW3XM5HKA12345", "ok"))
-        assertEquals(listOf("0100"), identityQueue(true, null, "ok"))
-        assertEquals(listOf("0902", "2216C1"), identityQueue(true, "1FTBW3XM5HKA12345", null))
-        assertEquals(listOf("0100", "2216C1"), identityQueue(true, null, null))
-        assertEquals(listOf("0100", "0902", "0904", "0906", "090A", "2216C1"), identityQueue(false, "1FTBW3XM5HKA12345", "no"))
-        assertEquals(listOf("0100", "0902", "0904", "0906", "090A", "2216C1"), identityQueue(false, null, null))
+    fun test101EveryConnectionReadsVinAndBitmapAnd16C1ProbeIsGatedNoDoubleQueue() {
+        // The one check per connection compares protocol + the exact 0100 bitmap (+ 16C1): both are always read,
+        // whatever the profile already knows.
+        assertEquals(listOf("0902", "0100"), identityQueue())
+        val pwm = "SAE J1850 PWM"
+        val vin = "1FTBW3XM5HKA12345"
+        assertTrue(wantsFordProbe(null, null, false, false, pwm))
+        assertTrue(wantsFordProbe("ok", null, false, false, pwm)) // VIN-less: every connection (solid gate)
+        assertTrue(wantsFordProbe("no", vin, false, false, pwm)) // VIN vehicle: until a stored "ok"
+        assertTrue(wantsFordProbe(null, vin, false, false, pwm))
+        assertFalse(wantsFordProbe("ok", vin, false, false, pwm))
+        assertFalse(wantsFordProbe(null, null, false, true, pwm)) // already queued (0100 re-ask): no double queue
+        assertFalse(wantsFordProbe(null, null, true, false, pwm)) // already answered this read
+        assertFalse(wantsFordProbe(null, null, false, false, "ISO 15765-4 (CAN 11/500)")) // never on CAN
+        assertFalse(wantsFordProbe(null, null, false, false, null))
     }
 
 }
