@@ -31,6 +31,10 @@ internal data class FixFuelConfig(
     val sensorLog: Boolean = false,
     /** Low-range data mode switch ([LowRange.KEY_MODE]); on by default (3 tanks per vehicle, then it stops). */
     val lowRangeMode: Boolean = true,
+    /** Smoothed level strength in the low range (map-free, [FuelMath.LowInput]): threshold %, time constant, noise multiplier. */
+    val lowRangePct: Double = FixFuelPrefs.DEFAULT_LOW_PCT,
+    val lowTauSec: Double = FixFuelPrefs.DEFAULT_LOW_TAU,
+    val lowNoiseMult: Double = FixFuelPrefs.DEFAULT_LOW_NOISE,
     /** Stored values that failed validation: pref key -> raw stored text. Runtime uses defaults for these. */
     val invalid: Map<String, String> = emptyMap(),
 ) {
@@ -52,6 +56,9 @@ internal object FixFuelPrefs {
     const val KEY_CUSTOM = "custom_name"
     const val KEY_TAU = "tau_sec"
     const val KEY_SKEW = "skew_pct_per_sec"
+    const val KEY_LOW_PCT = "low_range_pct"
+    const val KEY_LOW_TAU = "low_tau_sec"
+    const val KEY_LOW_NOISE = "low_noise_mult"
     /**
      * Retired fill-detection settings (Fill jump % / Minimum fill %, Settling time). Never read; removed from the
      * prefs on the next save so a stored 25 % cannot steer anything. Thresholds are constants (FuelMath).
@@ -107,6 +114,21 @@ internal object FixFuelPrefs {
 
     const val MAX_TAU = 600.0
     const val MAX_SKEW = 10.0
+    /** Low-range smoothing defaults: map-free replay best (sandbox/lowrange-20261118/grid2.txt). */
+    const val DEFAULT_LOW_PCT = FuelMath.LOW_RANGE_PCT
+    const val DEFAULT_LOW_TAU = FuelMath.LOW_TAU_SEC
+    const val DEFAULT_LOW_NOISE = FuelMath.LOW_NOISE_MULT
+    const val MAX_LOW_PCT = 50.0
+    const val MAX_LOW_NOISE = 5.0
+
+    /** Low-range threshold: 0 (off) .. MAX_LOW_PCT % of gauge. */
+    fun lowPctOk(v: Double?): Boolean = v != null && v.isFinite() && v >= 0.0 && v <= MAX_LOW_PCT
+
+    /** Low-range time constant: 0..MAX_TAU s. */
+    fun lowTauOk(v: Double?): Boolean = tauOk(v)
+
+    /** Noise multiplier: 0 (no band weighting) .. MAX_LOW_NOISE. */
+    fun lowNoiseOk(v: Double?): Boolean = v != null && v.isFinite() && v >= 0.0 && v <= MAX_LOW_NOISE
 
     /** Smoothing time constant: finite, 0..MAX_TAU. */
     fun tauOk(v: Double?): Boolean = v != null && v.isFinite() && v >= 0.0 && v <= MAX_TAU
@@ -190,6 +212,9 @@ internal object FixFuelPrefs {
             showFuelNotification = p.getBoolean(KEY_SHOW_NOTICE, true),
             sensorLog = p.getBoolean(SensorLog.KEY, false),
             lowRangeMode = p.getBoolean(LowRange.KEY_MODE, true),
+            lowRangePct = checked(p, KEY_LOW_PCT, DEFAULT_LOW_PCT, ::lowPctOk, invalid),
+            lowTauSec = checked(p, KEY_LOW_TAU, DEFAULT_LOW_TAU, ::lowTauOk, invalid),
+            lowNoiseMult = checked(p, KEY_LOW_NOISE, DEFAULT_LOW_NOISE, ::lowNoiseOk, invalid),
             feed012f = run {
                 val m = feedMode(p.getString(KEY_FEED_012F, null), if (p.contains(KEY_WRITE_012F)) p.getBoolean(KEY_WRITE_012F, true) else null)
                 if (p.getBoolean(KEY_FEED_V2, false)) m else {
@@ -213,11 +238,17 @@ internal object FixFuelPrefs {
         showFuelNotification: Boolean = true,
         feed012f: FeedMode = FeedMode.CORRECTED,
         profileId: String = ProfileStore.activeId(ctx.filesDir),
+        lowRangePct: Double = DEFAULT_LOW_PCT,
+        lowTauSec: Double = DEFAULT_LOW_TAU,
+        lowNoiseMult: Double = DEFAULT_LOW_NOISE,
     ) {
         val e = prefs(ctx).edit()
             .putString(KEY_CUSTOM, customName)
             .putString(KEY_TAU, tauSec.toString())
             .putString(KEY_SKEW, skewPctPerSec.toString())
+            .putString(KEY_LOW_PCT, lowRangePct.toString())
+            .putString(KEY_LOW_TAU, lowTauSec.toString())
+            .putString(KEY_LOW_NOISE, lowNoiseMult.toString())
         for (k in RETIRED_KEYS) e.remove(k)
         e.putString(KEY_EXTRAS, extrasToJson(extras))
             .putString(KEY_ACTIVE, normalizeActive(activeTank))

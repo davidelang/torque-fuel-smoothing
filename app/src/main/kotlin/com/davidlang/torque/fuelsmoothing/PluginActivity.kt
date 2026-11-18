@@ -56,6 +56,9 @@ class PluginActivity : Activity() {
     private lateinit var customName: EditText
     private lateinit var tau: EditText
     private lateinit var skew: EditText
+    private lateinit var lowPct: EditText
+    private lateinit var lowTau: EditText
+    private lateinit var lowNoise: EditText
     private lateinit var live: TextView
     private lateinit var sizeChunk: TextView
     private lateinit var sizeBand: TextView
@@ -355,6 +358,15 @@ class PluginActivity : Activity() {
         col.addView(info(S("Max skew %/s"), S("Largest change per second the smoothed level may follow; slosh beyond this is ignored.")))
         skew = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
         col.addView(skew)
+        col.addView(info(S("Low-range smoothing below %"), S("Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).")))
+        lowPct = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
+        col.addView(lowPct)
+        col.addView(info(S("Low-range τ seconds"), S("Time constant of the smoothed level in the low range.")))
+        lowTau = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
+        col.addView(lowTau)
+        col.addView(info(S("Low-range noise multiplier"), S("Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).")))
+        lowNoise = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
+        col.addView(lowNoise)
 
         col.addView(info(S("Odometer miles"), S("Optional: enter the odometer reading and Save pin to anchor distance for this profile.")))
         val odoRow = LinearLayout(this)
@@ -436,6 +448,9 @@ class PluginActivity : Activity() {
         customName.addTextChangedListener(watch)
         tau.addTextChangedListener(watch)
         skew.addTextChangedListener(watch)
+        lowPct.addTextChangedListener(watch)
+        lowTau.addTextChangedListener(watch)
+        lowNoise.addTextChangedListener(watch)
         selectPid.addTextChangedListener(watch)
         profileName.addTextChangedListener(watch)
         vehicleMake.addTextChangedListener(watch)
@@ -533,6 +548,9 @@ class PluginActivity : Activity() {
         if (customName.text.toString() != c.customName && !customName.isFocused) customName.setText(c.customName)
         setIfBlankOrInit(tau, c.tauSec.toString())
         setIfBlankOrInit(skew, c.skewPctPerSec.toString())
+        setIfBlankOrInit(lowPct, c.lowRangePct.toString())
+        setIfBlankOrInit(lowTau, c.lowTauSec.toString())
+        setIfBlankOrInit(lowNoise, c.lowNoiseMult.toString())
         showStoredInvalid(c)
         refreshSizes(c)
         val st = if (editingRecordingProfile()) c.sourceStatus else ""
@@ -743,6 +761,12 @@ class PluginActivity : Activity() {
             S("0 to %1\$s s", oneDecimal(FixFuelPrefs.MAX_TAU))) && ok
         ok = markField(skew, FixFuelPrefs.skewOk(skew.text.toString().trim().toDoubleOrNull()),
             S("above 0, at most %1\$s %%/s", oneDecimal(FixFuelPrefs.MAX_SKEW))) && ok
+        ok = markField(lowPct, FixFuelPrefs.lowPctOk(lowPct.text.toString().trim().toDoubleOrNull()),
+            S("0 to %1\$s %%", oneDecimal(FixFuelPrefs.MAX_LOW_PCT))) && ok
+        ok = markField(lowTau, FixFuelPrefs.lowTauOk(lowTau.text.toString().trim().toDoubleOrNull()),
+            S("0 to %1\$s s", oneDecimal(FixFuelPrefs.MAX_TAU))) && ok
+        ok = markField(lowNoise, FixFuelPrefs.lowNoiseOk(lowNoise.text.toString().trim().toDoubleOrNull()),
+            S("0 to %1\$s", oneDecimal(FixFuelPrefs.MAX_LOW_NOISE))) && ok
         return ok
     }
 
@@ -755,6 +779,9 @@ class PluginActivity : Activity() {
         }
         show(FixFuelPrefs.KEY_TAU, tau)
         show(FixFuelPrefs.KEY_SKEW, skew)
+        show(FixFuelPrefs.KEY_LOW_PCT, lowPct)
+        show(FixFuelPrefs.KEY_LOW_TAU, lowTau)
+        show(FixFuelPrefs.KEY_LOW_NOISE, lowNoise)
     }
 
     private fun persist(): Boolean {
@@ -774,6 +801,9 @@ class PluginActivity : Activity() {
             showFuelNotification = showNotice.isChecked,
             feed012f = FeedMode.entries[feed012f.selectedItemPosition.coerceIn(0, FeedMode.entries.size - 1)],
             profileId = editProfileId,
+            lowRangePct = lowPct.text.toString().trim().toDouble(),
+            lowTauSec = lowTau.text.toString().trim().toDouble(),
+            lowNoiseMult = lowNoise.text.toString().trim().toDouble(),
         )
         val id = editProfileId
         ProfileStore.setProfileField(filesDir, id, "name", profileName.text.toString().trim().ifBlank { S("Vehicle 1") })

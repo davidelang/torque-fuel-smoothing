@@ -843,7 +843,7 @@ class PluginService : Service() {
                 StaleLevelGuard.Verdict.OK -> {}
             }
         }
-        val valid = !stale && rt.math.isValidSample(raw, ecu, rt.math.smoothed, lowRange) && !src.missing
+        val valid = !stale && rt.math.isValidSample(raw, ecu, rt.math.smoothed, lowRange, cfg.lowRangePct) && !src.missing
         val logging = rt.sessions.isOpen && lastActive == id.toString()
         // Burn before the level step: the corrected outputs carry it below the low range ([CorrectedLow]);
         // smoothed is map-free and only uses it for the parked-fill rule.
@@ -984,7 +984,7 @@ class PluginService : Service() {
         if (missing || raw == null || !raw.isFinite()) return "missing"
         if (ecu == false) return "ecu"
         val u = levelUnit(1)
-        val near = FuelMath.nearEmpty(lowRange) * u
+        val near = FuelMath.nearEmpty(lowRange, cfg.lowRangePct) * u
         if (lastGood != null && lastGood > near && raw < FuelMath.GLITCH_RAW_PCT * u) return "glitch<1"
         if (lastGood != null && lastGood > near && lastGood - raw > FuelMath.DROP_HOLD_PT * u) {
             return "held:drop>15"
@@ -1024,7 +1024,7 @@ class PluginService : Service() {
     }
 
     /** Low-range threshold for tank 1, level units. */
-    private fun lowRangeLevel(rt: TankRt): Double = FuelMath.LOW_RANGE_PCT * rt.math.unit
+    private fun lowRangeLevel(rt: TankRt): Double = cfg.lowRangePct * rt.math.unit
 
     /**
      * Tank 1 corrected output with its own map: below the low range the counter burn moves it through that map
@@ -2651,7 +2651,12 @@ class PluginService : Service() {
     /** Map-free low-range inputs: the profile's raw band noise only (no tank map, no burn). */
     private fun lowInputFor(st: LowRangeState): FuelMath.LowInput {
         val u = levelUnit(1)
-        return FuelMath.LowInput(sdPct = { lvl -> BandNoise.sd(st.bands, lvl / u) * u })
+        return FuelMath.LowInput(
+            sdPct = { lvl -> BandNoise.sd(st.bands, lvl / u) * u },
+            rangePct = cfg.lowRangePct,
+            tauSec = cfg.lowTauSec,
+            noiseMult = cfg.lowNoiseMult,
+        )
     }
 
     /** Per sample after the level step: this tank's band noise, first raw 0, solid-0 burn, missed-fill end. */
