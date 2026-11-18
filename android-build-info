@@ -8,11 +8,14 @@ Declaration: the COMMITTED project-facts.md of this worktree (app branch), secti
                                                          test app) or instrumentation:<variant>
                                                          (e.g. instrumentation:x86_64Debug: that
                                                          variant's app + its androidTest APK)
+  - **Unit tests:** <task>[, <task>...]                  optional; default 'test' (every module's
+                                                         unit tests of every enabled variant), e.g.
+                                                         testDebugUnitTest. Not 'none'.
 Layout: Gradle's output-metadata.json files under app/build/outputs/apk (variantName, outputFile,
 applicationId, versionName). Nothing comes from project.config, no app id is hard-coded.
 
   decl                       print the declaration (standard=..., test=...)
-  tasks standard|test        gradle tasks for that build
+  tasks standard|test|unit   gradle tasks for that build (unit: the unit-test tasks)
   clean standard|test        delete the previous outputs of that build's variants (so every
                              output present afterwards was produced by this run)
   stamp standard|test        after gradle: record that build's APKs (commit, metadata, sha256) in
@@ -23,6 +26,12 @@ applicationId, versionName). Nothing comes from project.config, no app id is har
                              sha256, versionCode) in app/build/outputs/build_app/play.json
   select play                for deploy --play: check that stamp against HEAD and the file, then
                              print 'bundle <aab> <versionCode> <commit>'
+  unit-report DIR GRADLE_RC TASK...
+                             after build_app's unit-test gradle call (TASKs): read the Test tasks its init
+                             script listed in DIR (graph, ran.*), print every failing test with
+                             its message, write that to app/build/outputs/build_app/unit-tests.txt;
+                             exit 1 when a test failed, gradle failed, or no test task was in the
+                             graph
 Exit 1 with an ERROR line on any problem.
 """
 import hashlib, json, os, re, shutil, subprocess, sys
@@ -31,7 +40,10 @@ FACTS = "project-facts.md"
 SECTION = "## Build and commit"
 STD_RX = re.compile(r"- \*\*Standard build:\*\* ([a-z][A-Za-z0-9]*)")
 TEST_RX = re.compile(r"- \*\*Test build:\*\* (.+)")
-LABEL_RX = re.compile(r"\s*[-*+]\s*[*_`]*\s*(standard|test)[ _-]?build\b", re.I)
+UNIT_RX = re.compile(r"- \*\*Unit tests:\*\* (.+)")
+LABEL_RX = re.compile(r"\s*[-*+]\s*[*_`]*\s*((standard|test)[ _-]?build\b|unit[ _-]?tests?\s*[*_`]*\s*:)", re.I)
+TASK_RX = re.compile(r":?[A-Za-z][A-Za-z0-9_]*(?::[A-Za-z][A-Za-z0-9_]*)*")
+PACKAGING_RX = re.compile(r"(assemble|bundle|install|package)[A-Z0-9_].*|(assemble|bundle|build)")
 ITEM_RX = re.compile(r"(?:instrumentation:([a-z][A-Za-z0-9_]*)|([a-z][A-Za-z0-9]*))")
 APK_ROOT = os.path.join("app", "build", "outputs", "apk")
 STAMP_DIR = os.path.join("app", "build", "outputs", "build_app")
@@ -60,20 +72,22 @@ def decl():
     if len(heads) != 1:
         die("%s has %d '%s' sections (need exactly 1)" % (FACTS, len(heads), SECTION))
     end = next((i for i in range(heads[0] + 1, len(lines)) if lines[i].startswith("#")), len(lines))
-    std, test, stray = [], [], []
+    std, test, unit, stray = [], [], [], []
     for i, l in enumerate(lines):
         s = l.rstrip()
         inside = heads[0] < i < end
-        m1, m2 = STD_RX.fullmatch(s), TEST_RX.fullmatch(s)
+        m1, m2, m3 = STD_RX.fullmatch(s), TEST_RX.fullmatch(s), UNIT_RX.fullmatch(s)
         if inside and m1:
             std.append(m1.group(1))
         elif inside and m2:
             test.append(m2.group(1).strip())
+        elif inside and m3:
+            unit.append(m3.group(1).strip())
         elif LABEL_RX.match(l):
             stray.append("line %d: %s" % (i + 1, l.strip()[:80]))
     if stray:
         die("%s: build-declaration item that is not exactly '- **Standard build:** <type>' / "
-            "'- **Test build:** ...' in '%s' (%s)" % (FACTS, SECTION, "; ".join(stray)))
+            "'- **Test build:** ...' / '- **Unit tests:** ...' in '%s' (%s)" % (FACTS, SECTION, "; ".join(stray)))
     for name, vals in (("Standard build", std), ("Test build", test)):
         if len(vals) != 1:
             die("%s: need exactly one '- **%s:**' line in '%s', found %d" % (FACTS, name, SECTION, len(vals)))
@@ -89,9 +103,27 @@ def decl():
         for kind, v in items:
             if kind == "buildtype" and v == std[0]:
                 die("%s: Test build '%s' is the standard build type; a test build must differ" % (FACTS, v))
-    return {"standard": std[0], "test": items}
+    if len(unit) > 1:
+        die("%s: need at most one '- **Unit tests:**' line in '%s', found %d" % (FACTS, SECTION, len(unit)))
+    units = ["test"]
+    if unit:
+        units = [x.strip() for x in unit[0].split(",")]
+        for t in units:
+            if t == "none":
+                die("%s: '- **Unit tests:** none' is not allowed; every build_app run runs the unit "
+                    "tests (name the tasks, or drop the line for 'test')" % FACTS)
+            if not TASK_RX.fullmatch(t):
+                die("%s: Unit tests item '%s' is not a Gradle task name (e.g. testDebugUnitTest)" % (FACTS, t))
+            if PACKAGING_RX.fullmatch(t.rsplit(":", 1)[-1]):
+                die("%s: Unit tests item '%s' is a packaging task; name the unit-test tasks "
+                    "(e.g. testDebugUnitTest)" % (FACTS, t))
+        if len(set(units)) != len(units):
+            die("%s: Unit tests lists a task twice" % FACTS)
+    return {"standard": std[0], "test": items, "unit": units}
 
 def tasks(d, kind):
+    if kind == "unit":
+        return d["unit"]
     if kind == "standard":
         return ["assemble" + cap(d["standard"])]
     if not d["test"]:
@@ -282,6 +314,98 @@ def select_play():
         die("%s changed since the play build recorded it; run ./build_app --play" % s["aab"])
     print("bundle %s %d %s" % (s["aab"], s["version_code"], s["commit"]))
 
+def rel(p):
+    r = os.path.relpath(p)
+    return p if r.startswith("..") else r
+
+def failure_text(el):
+    """One line for a JUnit <failure>/<error>: the message (assertions) or 'Type: message'."""
+    typ = el.get("type") or ""
+    msg = el.get("message")
+    if msg is None:
+        msg = (el.text or "").strip()
+    lines = [l.strip() for l in msg.splitlines() if l.strip()]
+    first = lines[0] if lines else ""
+    if typ and first.startswith(typ):  # Gradle writes the exception's toString(): 'Type: message'
+        first = first[len(typ):].lstrip(":").strip()
+    if typ and not typ.endswith(("AssertionError", "ComparisonFailure", "AssertionFailedError")):
+        first = typ + (": " + first if first else "")
+    first = first or typ or "(no message)"
+    return first if len(first) <= 200 else first[:197] + "..."
+
+def unit_report(unit_dir, gradle_rc, task_names):
+    """Report build_app's unit-test gradle call; 0 = every test task passed or was up to date."""
+    import xml.etree.ElementTree as ET
+    try:
+        rc = int(gradle_rc)
+    except ValueError:
+        die("unit-report: gradle exit status '%s' is not an integer" % gradle_rc)
+    graph = os.path.join(unit_dir, "graph")
+    names = " ".join(task_names)
+    if not os.path.isfile(graph):
+        die("Gradle stopped before its task graph was ready (exit %d, see its output above); no unit "
+            "test ran (Unit tests: %s)" % (rc, names))
+    tasks_in_graph = []
+    with open(graph) as f:
+        for line in f:
+            parts = line.rstrip("\n").split("\t")
+            if len(parts) != 3:
+                die("unit-report: malformed line in %s: %r" % (graph, line))
+            tasks_in_graph.append(parts)
+    if not tasks_in_graph:
+        die("the unit-test tasks (%s) include no test task; fix '- **Unit tests:**' in %s" % (names, FACTS))
+    ran = set(os.listdir(unit_dir)) - {"graph"}
+    total = skipped = 0
+    failed, ran_tasks, fresh, reports = [], [], [], []
+    for path, xml_dir, html_dir in tasks_in_graph:
+        if "ran." + path.replace(":", "_") not in ran:
+            fresh.append(path)
+            continue
+        ran_tasks.append(path)
+        task_failed = False
+        xmls = sorted(x for x in os.listdir(xml_dir) if x.endswith(".xml")) if os.path.isdir(xml_dir) else []
+        for x in xmls:
+            try:
+                root = ET.parse(os.path.join(xml_dir, x)).getroot()
+            except ET.ParseError as e:
+                die("unit-report: %s: %s" % (os.path.join(xml_dir, x), e))
+            for tc in root.iter("testcase"):
+                total += 1
+                if tc.find("skipped") is not None:
+                    skipped += 1
+                for kind in ("failure", "error"):
+                    el = tc.find(kind)
+                    if el is not None:
+                        failed.append("%s.%s: %s" % (tc.get("classname"), tc.get("name"), failure_text(el)))
+                        task_failed = True
+                        break
+        if task_failed:
+            reports.append(rel(os.path.join(html_dir, "index.html")))
+    out = []
+    if failed:
+        out.append("UNIT TESTS FAILED: %d of %d tests in %s. Nothing was packaged." % (len(failed), total, ", ".join(ran_tasks)))
+        out += ["  " + f for f in failed]
+        out += ["Report: " + r for r in reports]
+    elif rc != 0 and ran_tasks:
+        out.append("ERROR: Gradle failed (exit %d); the test tasks that ran (%s) have no failing test. See the "
+                   "Gradle output above (compilation or another task). Nothing was packaged." % (rc, ", ".join(ran_tasks)))
+    elif rc != 0:
+        out.append("ERROR: Gradle failed (exit %d) before any unit test ran (compilation or another task; see the "
+                   "Gradle output above). Nothing was packaged." % rc)
+    else:
+        parts = []
+        if ran_tasks:
+            parts.append("%d tests (%d skipped) in %s" % (total, skipped, ", ".join(ran_tasks)))
+        if fresh:
+            parts.append("up to date (passed before, inputs unchanged): " + ", ".join(fresh))
+        out.append("Unit tests passed: " + "; ".join(parts) + ".")
+    text = "\n".join(out) + "\n"
+    os.makedirs(STAMP_DIR, exist_ok=True)
+    with open(os.path.join(STAMP_DIR, "unit-tests.txt"), "w") as f:
+        f.write(text)
+    sys.stdout.write(text)
+    return 1 if failed or rc != 0 else 0
+
 def main(argv):
     if len(argv) == 3 and argv[0] == "stamp-play":
         stamp_play(argv[1], argv[2])
@@ -293,6 +417,12 @@ def main(argv):
         d = decl()
         print("standard=%s" % d["standard"])
         print("test=%s" % (",".join("%s:%s" % x for x in d["test"]) or "none"))
+        print("unit=%s" % ",".join(d["unit"]))
+        return 0
+    if len(argv) >= 4 and argv[0] == "unit-report":
+        return unit_report(argv[1], argv[2], argv[3:])
+    if argv == ["tasks", "unit"]:
+        print(" ".join(tasks(decl(), "unit")))
         return 0
     if len(argv) != 2 or argv[0] not in ("tasks", "clean", "stamp", "select") or argv[1] not in ("standard", "test"):
         print(__doc__, file=sys.stderr)
