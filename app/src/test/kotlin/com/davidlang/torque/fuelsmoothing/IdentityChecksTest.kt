@@ -30,7 +30,7 @@ class IdentityChecksTest {
     @Test
     fun test128ArchiveMovesIdentityOnlyFoldersAndNeverDrives() {
         val root = tmp()
-        fun put(rel: String, text: String = "{}") = File(root, rel).apply { parentFile.mkdirs(); writeText(text) }
+        fun put(rel: String, text: String = "{}") = File(root, rel).apply { parentFile!!.mkdirs(); writeText(text) }
         put("quarantine/1794513859060/identity/a.json")
         put("quarantine/1794513859061/identity/b.json")
         put("quarantine/1794513859061/match-confirmation.json")
