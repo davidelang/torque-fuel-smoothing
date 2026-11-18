@@ -54,6 +54,12 @@ class PluginService : Service() {
         var fuelAtFillGal: Double = 0.0
         val ledger = TankLedger()
         val stale = StaleLevelGuard()
+        /** Sample time of the current tick (one [CorrectedLow] step per tick). */
+        var tickMs: Long = 0L
+        /** Tank 1: burn-driven corrected level below the low range, one per corrected output. */
+        val corrChunk = CorrectedLow()
+        val corrBand = CorrectedLow()
+        val corrKal = CorrectedLow()
     }
 
     private val handler = Handler(Looper.getMainLooper())
@@ -808,6 +814,7 @@ class PluginService : Service() {
         if (id == 1) FsLog.change(TAG, "source", "${cfg.sourceId} ${src.how} $lastActive", "source ${cfg.sourceId} ${src.how} active=$lastActive")
         val raw = src.pct
         val logging0 = rt.sessions.isOpen && lastActive == id.toString()
+        rt.tickMs = now
         if (!src.missing && ecu != false && rt.math.checkReanchor(raw, speedKmh, now)) {
             FsLog.i(TAG, "tank$id level re-anchored to ${rt.math.smoothed} after sustained low readings (raw=$raw)")
             if (logging0) rt.sessions.mark("reanchor", now, "\"sm\":${rt.math.smoothed}")
@@ -995,9 +1002,18 @@ class PluginService : Service() {
             publishPending(t, rt, smoothed)
             return
         }
-        val chunkOut = livePublish(rt)
-        val bandOut = bandPublish(rt)
-        val kalOut = kalmanPublish(rt)
+        val prior = priorFor(1)
+        val chunkOut = lowCorrected(rt, rt.corrChunk, livePublish(rt), prior.cap?.takeIf { prior.ownModel })
+        val bandOut = lowCorrected(rt, rt.corrBand, bandPublish(rt), bandModel()?.second)
+        val kalOut = lowCorrected(rt, rt.corrKal, kalmanPublish(rt), kalmanModel()?.g98)
+        lowRowPending?.let { row ->
+            lowRowPending = null
+            fun num(x: Double): Any = x.takeIf { it.isFinite() } ?: org.json.JSONObject.NULL
+            runCatching {
+                diagnosticCapture.row(row.put("correctedChunkPct", num(chunkOut.correctedPct))
+                    .put("correctedBandPct", num(bandOut.correctedPct)).put("correctedKalmanPct", num(kalOut.correctedPct)))
+            }
+        }
         publishSmoothed(t, smoothed)
         runCatching { publishBand(t, bandOut) }
         runCatching { publishKalman(t, kalOut) }
@@ -1005,6 +1021,22 @@ class PluginService : Service() {
         runCatching { publishTankSizes(t) }
         writeStockFuelLevel(t, smoothed, chunkOut.correctedPct, bandOut.correctedPct, kalOut.correctedPct)
         updatePresence(statusText())
+    }
+
+    /** Low-range threshold for tank 1, level units. */
+    private fun lowRangeLevel(rt: TankRt): Double = FuelMath.LOW_RANGE_PCT * rt.math.unit
+
+    /**
+     * Tank 1 corrected output with its own map: below the low range the counter burn moves it through that map
+     * ([CorrectedLow]); [capGal] null (unity, no own size) leaves it as given.
+     */
+    private fun lowCorrected(rt: TankRt, c: CorrectedLow, out: TankPublish, capGal: Double?): TankPublish {
+        val sm = rt.math.smoothed?.takeIf { it.isFinite() } ?: return out
+        val y = c.step(
+            out.correctedPct, sm, lowRangeLevel(rt), rt.math.solidZero, rt.math.lowPulled, rt.math.reacquiring,
+            rt.usedGal, capGal ?: Double.NaN, rt.tickMs,
+        )
+        return if (y == out.correctedPct || !y.isFinite()) out else out.copy(correctedPct = y)
     }
 
     private fun publishExtraFrom(t: ITorqueService, id: Int, rt: TankRt, smoothed: Double) {
@@ -2529,6 +2561,9 @@ class PluginService : Service() {
      * 15 %, until the next fill. While on: sensor rows, a per-sample diagnostics row (no bus traffic), the fast level
      * poll when safe ([nextPollMs]), the achieved fresh-level rate every minute, and "lowRange" session marks.
      */
+    /** This tick's low-range diagnostics row; publishFromSmoothed adds the corrected outputs and writes it. */
+    private var lowRowPending: org.json.JSONObject? = null
+
     private fun lowModeStep(rt: TankRt, st: LowRangeState, raw: Double?, valid: Boolean, why: String?, speedKmh: Double,
         now: Long, dF: Double, levelPid: String?, logging: Boolean) {
         val sm = rt.math.smoothed ?: return
@@ -2582,9 +2617,9 @@ class PluginService : Service() {
         }
         if (logging) {
             fun num(x: Double?): Any = x?.takeIf { it.isFinite() } ?: org.json.JSONObject.NULL
-            diagnosticCapture.row(org.json.JSONObject().put("event", "lowRange").put("t", now)
+            lowRowPending = (org.json.JSONObject().put("event", "lowRange").put("t", now)
                 .put("raw", num(raw)).put("valid", valid).put("why", why ?: org.json.JSONObject.NULL).put("sm", num(sm))
-                .put("mode", rt.math.mode.name).put("lowPath", rt.math.lowPath).put("steady", rt.math.steadyNow)
+                .put("mode", rt.math.mode.name).put("lowPath", rt.math.lowPath).put("steady", rt.math.steadyNow).put("pulled", rt.math.lowPulled)
                 .put("solidZero", rt.math.solidZero).put("speedKmh", num(speedKmh)).put("burnGal", num(dF))
                 .put("sessionFuelGal", num(rt.usedGal)).put("flowRaw", num(rt.lastFlowRaw)).put("flowUnit", rt.lastFlowUnit)
                 .put("median30", num(rt.math.rawMedian(now - FuelMath.LOW_MEDIAN_MS))).put("median60Pct", num(med60))
