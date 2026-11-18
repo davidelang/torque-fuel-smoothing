@@ -33,6 +33,7 @@
 #   one line each (strict: missing, duplicate or malformed lines stop the build):
 #     - **Standard build:** debug
 #     - **Test build:** qa | instrumentation:x86_64Debug | none | a comma-separated list
+#     - **Unit tests:** testDebugUnitTest   (optional; default 'test'; a comma-separated list)
 #   Which APKs came out is read from Gradle's output-metadata.json and recorded, with the commit
 #   and sha256, in app/build/outputs/build_app/<standard|test>.json for ./deploy
 #   (android-build-info, next to this script, does the parsing and recording).
@@ -40,6 +41,8 @@
 #   project.config is optional. Without one (or with unsmudged @@TOKEN@@ values) build_app runs in
 #   single-user mode: no sudo re-exec, no group checks, no permission model, orch_root = this
 #   worktree, Gradle cache in ./.gradle-home. It says so when it starts.
+#   JVM unit tests use .gradle-home/build-app-tmp.<pid> (java.io.tmpdir and
+#   TMPDIR). That directory is removed when the run ends. /tmp is not used.
 #
 #   Order of work:
 #     1. Check the config for every selected build. If the Play build is selected (also by
@@ -71,8 +74,14 @@
 #        branch has a <branch>-start tag (that describe would hide the release name), or, without
 #        --play, when HEAD already has another annotated tag (describe could pick it). A failed
 #        run deletes the tag this run created. There is no prompt.
-#     7. Builds in sequence: standard, test, play. The first failure stops everything.
-#     8. The builds tag moves only after every selected build succeeded.
+#     7. Unit tests, on every run (also --play alone), before any packaging: one gradle call of
+#        the '- **Unit tests:**' tasks with --continue, so every test task runs. Any failure
+#        lists every failing test with its message (also in app/build/outputs/build_app/
+#        unit-tests.txt) and stops: no APK, no bundle, no deploy record, builds tag unchanged.
+#        A bump commit and the commit phase's commit stay; a release tag is deleted.
+#     8. Builds in sequence: standard, test, play. The first failure stops everything. They
+#        use the same Gradle daemon as the unit tests, so nothing is compiled twice.
+#     9. The builds tag moves only after every selected build succeeded.
 #
 # Multi-user mode (a smudged project.config): every build, in every mode (--standard, --test,
 # --play, the default), runs as coder_user, so app/build, .gradle and the deliverables always have
@@ -147,8 +156,9 @@ _ba_usage() {
 $USAGE_LINE
 
 The only way to build: commit the named FILEs with MESSAGE, check the tree is clean,
-then build from that one commit and move the builds tag. No build flag selects
-standard, test (unless none) and, with a project.config, play.
+run the unit tests (a failure stops before any packaging), then build from that one
+commit and move the builds tag. No build flag selects standard, test (unless none)
+and, with a project.config, play.
 
 options:
   -h, --help                   show this help message and exit
@@ -725,6 +735,8 @@ keystore_access_report() {
 }
 
 # Resolve every selected build's config before the commit, so a bad config commits nothing.
+# The unit tests run on every run, whatever is selected.
+read -r -a UNIT_TASKS <<< "$("$_BA_INFO" tasks unit)" || exit 1
 if [ "$BUILD_STANDARD" = true ]; then
   read -r -a STD_TASKS <<< "$("$_BA_INFO" tasks standard)" || exit 1
 fi
@@ -1358,34 +1370,85 @@ if [ -e "$DAEMON_REGISTRY" ]; then
   exit 1
 fi
 mkdir "$DAEMON_REGISTRY" || exit 1
-DAEMON_PROPS=( -Dorg.gradle.daemon.registry.base="$DAEMON_REGISTRY" -Dorg.gradle.daemon.idletimeout=600000 )
+# Unit tests call createTempDirectory(), which uses java.io.tmpdir. On this JVM
+# that defaults to /tmp and ignores TMPDIR. Point both at a directory this run
+# removes. /tmp is a ram disk.
+BUILD_APP_TMP="$GRADLE_USER_HOME/build-app-tmp.$$"
+mkdir -p "$BUILD_APP_TMP" || exit 1
+export TMPDIR="$BUILD_APP_TMP" BUILD_APP_TMP
+cat > "$GRADLE_USER_HOME/test-tmpdir.init.gradle" << 'EOF' || exit 1
+def dir = System.getenv("BUILD_APP_TMP")
+if (dir != null && !dir.isEmpty()) {
+    gradle.taskGraph.whenReady { g ->
+        g.allTasks.each { t ->
+            if (t instanceof org.gradle.api.tasks.testing.Test) {
+                t.systemProperty("java.io.tmpdir", dir)
+                t.environment("TMPDIR", dir)
+            }
+        }
+    }
+}
+EOF
+# The unit-test call's init script (only that call uses it). It lists every Test task in the
+# graph (path, JUnit XML dir, HTML report dir) in $BUILD_APP_UNIT_DIR/graph, makes each one
+# fail on a failing test (ignoreFailures off, failFast off: a project cannot silence it) and
+# marks the ones that actually run (ran.<path>), so only this run's XML is ever read.
+cat > "$GRADLE_USER_HOME/unit-tests.init.gradle" << 'EOF' || exit 1
+def out = System.getenv("BUILD_APP_UNIT_DIR")
+if (out == null || out.isEmpty()) {
+    throw new GradleException("unit-tests.init.gradle: BUILD_APP_UNIT_DIR is not set")
+}
+gradle.taskGraph.whenReady { g ->
+    def tests = g.allTasks.findAll { it instanceof org.gradle.api.tasks.testing.Test }
+    new File(out, "graph").text = tests.collect { t ->
+        t.path + "\t" + t.reports.junitXml.outputLocation.get().asFile + "\t" +
+            t.reports.html.outputLocation.get().asFile + "\n"
+    }.join("")
+    tests.each { t ->
+        t.ignoreFailures = false
+        t.failFast = false
+        t.doFirst { new File(out, "ran." + t.path.replace(":", "_")).text = t.path + "\n" }
+    }
+}
+EOF
+DAEMON_PROPS=( -Dorg.gradle.daemon.registry.base="$DAEMON_REGISTRY" -Dorg.gradle.daemon.idletimeout=600000 -Djava.io.tmpdir="$BUILD_APP_TMP" )
 stop_gradle_daemon() {
-  local rc=$? out
+  # One exit at the end: a failed --stop or removal must not skip the remaining cleanup.
+  local rc=$? out status
   trap - EXIT INT TERM
   play_bump_note "$rc"
+  status=$rc
   if [ -n "$(find "$DAEMON_REGISTRY" -name registry.bin)" ]; then
     if ! out=$( (umask "$BUILD_UMASK"; ./gradlew "${DAEMON_PROPS[@]}" --stop) 2>&1); then
       echo "ERROR: could not stop this run's Gradle daemon (registry $DAEMON_REGISTRY):" >&2
       printf '%s\n' "$out" >&2
-      if [ "$rc" -eq 0 ]; then
-        exit 1
+      if [ "$status" -eq 0 ]; then
+        status=1
+      else
+        echo "ERROR: (the build had already failed, exit $rc)" >&2
       fi
-      echo "ERROR: (the build had already failed, exit $rc)" >&2
-      exit "$rc"
+    else
+      echo "Gradle daemon stopped (this run's only)."
     fi
-    echo "Gradle daemon stopped (this run's only)."
   fi
   if ! rm -rf "$DAEMON_REGISTRY"; then
     echo "ERROR: cannot remove $DAEMON_REGISTRY" >&2
-    if [ "$rc" -eq 0 ]; then exit 1; fi
+    if [ "$status" -eq 0 ]; then status=1; fi
   fi
-  exit "$rc"
+  if [ -n "${BUILD_APP_TMP:-}" ] && [ -d "$BUILD_APP_TMP" ]; then
+    if ! rm -rf "$BUILD_APP_TMP"; then
+      echo "ERROR: cannot remove $BUILD_APP_TMP" >&2
+      if [ "$status" -eq 0 ]; then status=1; fi
+    fi
+  fi
+  exit "$status"
 }
 trap stop_gradle_daemon EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
 
 GRADLE_BASE=( ./gradlew --daemon "${DAEMON_PROPS[@]}" --no-configuration-cache
+  --init-script "$GRADLE_USER_HOME/test-tmpdir.init.gradle"
   -Pandroid.aapt2FromMavenOverride="$_AAPT2"
   -Pkotlin.compiler.execution.strategy=in-process
   -Dkotlin.compiler.execution.strategy=in-process )
@@ -1443,6 +1506,32 @@ publish_deliverables() {
     exit 1
   }
   echo "Deliverables readable by $PRIMARY_USER without group membership: ${files[*]}"
+}
+
+# Unit tests: one gradle call of the declared unit-test tasks with --continue (every test task
+# runs even when one fails), and no packaging task in its graph. A separate call rather than
+# packaging tasks that depend on the tests: with --continue Gradle would still run every
+# packaging step that does not depend on a test (resources, dex, R8 of other variants), and the
+# Play call carries its own signing environment. Same daemon as the builds that follow, so they
+# reuse what this call compiled. Any failure exits 1 before any packaging.
+run_unit_tests() {
+  local ret unit_dir="$BUILD_APP_TMP/unit-tests"
+  echo "=== unit tests: ${UNIT_TASKS[*]} (before any packaging) ==="
+  rm -f app/build/outputs/build_app/unit-tests.txt || exit 1
+  mkdir "$unit_dir" || exit 1
+  (umask "$BUILD_UMASK"; export BUILD_APP_UNIT_DIR="$unit_dir"
+   "${GRADLE_BASE[@]}" --init-script "$GRADLE_USER_HOME/unit-tests.init.gradle" --continue \
+     "${GRADLE_ARGS[@]}" "${UNIT_TASKS[@]}")
+  ret=$?
+  ve_reset_gradle_daemon_dir || exit 1
+  (umask "$BUILD_UMASK"; "$_BA_INFO" unit-report "$unit_dir" "$ret" "${UNIT_TASKS[@]}")
+  ret=$?
+  repair_build_perms
+  if [ "$ret" -ne 0 ]; then
+    echo "Build failed (unit tests)."
+    exit 1
+  fi
+  echo "=== unit tests OK ==="
 }
 
 # APK build: $1 = standard|test; remaining args = gradle tasks. Previous outputs of that build's
@@ -1563,8 +1652,9 @@ os.execvp(sys.argv[1], sys.argv[1:])
   echo "=== play build OK ==="
 }
 
-# Builds in a fixed sequence; any failure exits before the tag moves.
+# Unit tests first, then the builds in a fixed sequence; any failure exits before the tag moves.
 PLAY_SUMMARY=""
+run_unit_tests
 if [ "$BUILD_STANDARD" = true ]; then
   build_apks standard "${STD_TASKS[@]}"
 fi
