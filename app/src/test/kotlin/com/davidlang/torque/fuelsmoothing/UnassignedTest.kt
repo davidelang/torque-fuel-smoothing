@@ -29,7 +29,7 @@ class UnassignedTest {
         val q = session(Quarantine.dir(root, 3000L), 3000L)
         val parked = Unassigned.park(root, q, "Van", "Unassigned drive", "held", emptyList(), null, 3000L, 4000L)
         assertTrue(parked != null)
-        assertEquals(emptyList<File>(), File(root, "profiles/van/raw").listFiles()?.toList() ?: emptyList())
+        assertEquals(emptyList<File>(), File(root, "profiles/van/raw").listFiles()?.toList() ?: emptyList<File>())
         val moved = Unassigned.assign(root, parked!!.id, "van")
         assertEquals(1, moved.size)
         assertEquals(File(root, "profiles/van/raw/3000-abcd.jsonl").path, moved.single().path)
