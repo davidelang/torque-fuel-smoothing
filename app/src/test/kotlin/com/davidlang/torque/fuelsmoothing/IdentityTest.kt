@@ -73,9 +73,9 @@ class IdentityTest {
         // A complete, declared-length CAN 0902 block is a VIN.
         val can = listOf("014", "0: 49 02 01 31 46 54", "1: 42 57 33 58 4D 35 48", "2: 4B 41 31 32 33 34 35")
         assertEquals("1FTBW3XM5HKA12345", ProfileStore.parseVin(can))
-        // Per-line packets are never concatenated into a VIN (no ECU address; fail closed, 80422781).
+        // Pre-CAN per-line packets: one complete numbered set is a VIN (more cases in test150).
         val lines = listOf("49 02 01 31 46 54 42", "49 02 02 57 33 58 4D", "49 02 03 35 48 4B 41", "49 02 04 31 32 33 34", "49 02 05 35")
-        assertNull(ProfileStore.parseVin(lines))
+        assertEquals("1FTBW3XM5HKA12345", ProfileStore.parseVin(lines))
         // A block that is short of its declared length is not a VIN either.
         assertNull(ProfileStore.parseVin(listOf("014", "0: 49 02 01 31 46 54", "1: 42 57 33 58 4D 35 48")))
         assertEquals("BE3FA813", Fingerprint.parseBitmap(listOf("41 00 BE 3F A8 13"), "0100"))
@@ -214,6 +214,43 @@ class IdentityTest {
         assertEquals("", identityHeader("2216C1", ""))
         assertEquals("", identityHeader("2216C1", "CAN"))
         assertEquals("", identityHeader("0902", "J1850 PWM"))
+    }
+
+    @Test
+    fun test150PreCanVinOnlyFromOneCompleteNumberedSet() {
+        val vin = "1FTBW3XM5HKA12345"
+        // J1979 layout: 5 packets x 4 bytes, packet 1 = 3 bytes of 00 fill + the first character.
+        val set = listOf(
+            "49 02 01 00 00 00 31", "49 02 02 46 54 42 57", "49 02 03 33 58 4D 35",
+            "49 02 04 48 4B 41 31", "49 02 05 32 33 34 35",
+        )
+        assertEquals(vin, ProfileStore.parseVin(set))
+        // Out of order but complete and unique: every packet carries its number, so the set is unambiguous.
+        assertEquals(vin, ProfileStore.parseVin(listOf(set[3], set[0], set[4], set[2], set[1])))
+        // Missing packet (gap) -> no VIN.
+        assertNull(ProfileStore.parseVin(set - set[2]))
+        // Duplicate number with different data (two ECUs mixed) -> no VIN, even with the set otherwise complete.
+        assertNull(ProfileStore.parseVin(set.take(4) + "49 02 04 48 4B 41 32"))
+        // Any repeated number is ambiguous, even with the same data.
+        assertNull(ProfileStore.parseVin(set.take(4) + set[3]))
+        // A second ECU's extra packet, or a whole second set -> no VIN.
+        assertNull(ProfileStore.parseVin(set + "49 02 03 33 58 4D 36"))
+        assertNull(ProfileStore.parseVin(set + set))
+        // A foreign line mixed in -> no VIN.
+        assertNull(ProfileStore.parseVin(set.take(4) + "41 00 BE 3F A8 13"))
+        // Wrong numbering (0-based, or a 6th packet instead of the 5th).
+        assertNull(ProfileStore.parseVin(set.mapIndexed { i, l -> l.replaceRange(6, 8, "0$i") }))
+        assertNull(ProfileStore.parseVin(set.take(4) + "49 02 06 32 33 34 35"))
+        // A short middle packet, or more than 3 fill bytes / missing fill -> not 17 characters -> no VIN.
+        assertNull(ProfileStore.parseVin(set.toMutableList().also { it[1] = "49 02 02 46 54 42" }))
+        assertNull(ProfileStore.parseVin(set.toMutableList().also { it[0] = "49 02 01 41 00 00 31" }))
+        // Same VIN checks as the CAN block path: no I/O/Q, not one repeated character.
+        assertNull(ProfileStore.parseVin(set.toMutableList().also { it[4] = "49 02 05 32 33 34 49" }))
+        assertNull(ProfileStore.parseVin(listOf("49 02 01 00 00 00 31") + (2..5).map { "49 02 0$it 31 31 31 31" }))
+        // The van's real 0902 replies: none, or the 7F 09 negative response (service not supported) -> no VIN.
+        assertNull(ProfileStore.parseVin(emptyList()))
+        assertNull(ProfileStore.parseVin(listOf("7F0902000011")))
+        assertNull(ProfileStore.parseVin(listOf("7F 09 02 00 00 11")))
     }
 
     @Test
