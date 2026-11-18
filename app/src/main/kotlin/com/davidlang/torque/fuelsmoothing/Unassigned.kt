@@ -3,6 +3,7 @@ package com.davidlang.torque.fuelsmoothing
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
+import java.security.MessageDigest
 
 /**
  * Holding area for drive data that was recorded while the vehicle was unknown, and that the user
@@ -16,6 +17,8 @@ internal object Unassigned {
     const val META = "unassigned.json"
     const val DISCARD_MARK = "discarded.json"
     const val REASON_USER = "user"
+    /** Written (never deletes) when every session file in a holding dir is already in a profile's raw. */
+    const val RECOVERED_MARK = "recovered.json"
 
     data class Choice(val target: String, val label: String)
     data class Entry(
@@ -38,7 +41,8 @@ internal object Unassigned {
 
     fun list(files: File): List<Entry> {
         val dirs = root(files).listFiles { f -> f.isDirectory }?.sortedByDescending { it.name } ?: return emptyList()
-        return dirs.mapNotNull { read(it) }
+        // A holding dir whose drives are all already in a profile's raw is done: hidden, not deleted.
+        return dirs.filterNot { markRecoveredIfDuplicate(files, it) }.mapNotNull { read(it) }
     }
 
     fun hasAny(files: File): Boolean = list(files).isNotEmpty()
@@ -119,12 +123,18 @@ internal object Unassigned {
                 ?: continue
             for (f in filesToMove) {
                 val d = File(dest, f.name)
-                if (d.exists()) continue
+                if (d.exists()) {
+                    // Byte-identical copy already in raw: that drive is already assigned (done).
+                    // A different file with the same name is left here, still unassigned.
+                    if (sameBytes(f, d)) moved.add(d)
+                    continue
+                }
                 if (f.renameTo(d)) moved.add(d)
             }
         }
-        // Remove the holding dir only when no session jsonl remains.
-        if (!hasSessionJsonl(src)) src.deleteRecursively()
+        // Remove the holding dir only when no session jsonl remains. If what remains is only
+        // byte-identical copies of files already in raw, mark it recovered (hidden) and keep it.
+        if (!hasSessionJsonl(src)) src.deleteRecursively() else markRecoveredIfDuplicate(files, src)
         return moved
     }
 
@@ -156,6 +166,7 @@ internal object Unassigned {
                 if (child.name == "discarded" || child.name == "unassigned") continue
                 if (skipPath != null && child.canonicalPath == skipPath) continue
                 if (!hasSessionJsonl(child)) continue
+                if (markRecoveredIfDuplicate(files, child)) continue
                 if (park(files, child, null, "Unassigned drive", "", emptyList(), null,
                         child.name.toLongOrNull() ?: 0L, 0L) != null) n++
             }
@@ -164,6 +175,7 @@ internal object Unassigned {
         if (discarded.isDirectory) {
             for (child in discarded.listFiles { f -> f.isDirectory } ?: emptyArray()) {
                 if (isUserDiscard(child) || !hasSessionJsonl(child)) continue
+                if (markRecoveredIfDuplicate(files, child)) continue
                 if (park(files, child, null, "Unassigned drive", "", emptyList(), null,
                         child.name.toLongOrNull() ?: 0L, 0L) != null) n++
             }
@@ -176,6 +188,78 @@ internal object Unassigned {
         if (!f.isFile) return false
         val o = runCatching { JSONObject(f.readText()) }.getOrNull() ?: return false
         return o.optString("reason") == REASON_USER
+    }
+
+    /** Session jsonl files directly under t<N>/ (diagnostics sidecars and metadata excluded). */
+    fun sessionFiles(dir: File): List<Pair<Int, File>> {
+        val tanks = dir.listFiles { f -> f.isDirectory && f.name.matches(Regex("t[0-9]+")) } ?: return emptyList()
+        val out = ArrayList<Pair<Int, File>>()
+        for (t in tanks.sortedBy { it.name }) {
+            val tank = t.name.removePrefix("t").toIntOrNull() ?: continue
+            t.listFiles { f -> f.isFile && f.name.endsWith(".jsonl") }?.sortedBy { it.name }?.forEach { out.add(tank to it) }
+        }
+        return out
+    }
+
+    /**
+     * True when [dir] has at least one session file and every one of them already exists, with the
+     * same name and the same SHA-256, in some profile's raw dir for the same tank. Such a folder is a
+     * leftover copy of a drive that was already recovered or assigned.
+     */
+    fun isRecoveredDuplicate(files: File, dir: File): Boolean {
+        val sessions = sessionFiles(dir)
+        if (sessions.isEmpty()) return false
+        val profiles = File(files, "profiles").listFiles { f -> f.isDirectory } ?: return false
+        return sessions.all { (tank, f) ->
+            profiles.any { p ->
+                val copy = File(File(ProfileStore.tankDir(files, p.name, tank), "raw"), f.name)
+                copy.isFile && sameBytes(f, copy)
+            }
+        }
+    }
+
+    /**
+     * Mark [dir] recovered when [isRecoveredDuplicate]. Writes [RECOVERED_MARK] listing the matched
+     * files; nothing is moved or deleted. Returns true when the folder is (now) marked recovered.
+     */
+    fun markRecoveredIfDuplicate(files: File, dir: File): Boolean {
+        if (isMarkedRecovered(dir)) return true
+        if (!isRecoveredDuplicate(files, dir)) return false
+        val names = JSONArray()
+        for ((tank, f) in sessionFiles(dir)) names.put("t$tank/${f.name}")
+        AtomicFile.write(File(dir, RECOVERED_MARK), JSONObject().put("reason", "already_in_raw")
+            .put("files", names).put("t", System.currentTimeMillis()).toString())
+        return true
+    }
+
+    /**
+     * A recovered marker counts only while it still lists exactly the session files present, so a
+     * drive merged in later (not yet in raw) makes the folder visible again.
+     */
+    fun isMarkedRecovered(dir: File): Boolean {
+        val f = File(dir, RECOVERED_MARK)
+        if (!f.isFile) return false
+        val o = runCatching { JSONObject(f.readText()) }.getOrNull() ?: return false
+        val arr = o.optJSONArray("files") ?: return false
+        val listed = (0 until arr.length()).map { arr.optString(it) }.toSet()
+        val present = sessionFiles(dir).map { (tank, file) -> "t$tank/${file.name}" }.toSet()
+        return present.isNotEmpty() && listed == present
+    }
+
+    fun sameBytes(a: File, b: File): Boolean =
+        a.isFile && b.isFile && a.length() == b.length() && sha256(a) == sha256(b)
+
+    private fun sha256(file: File): String {
+        val md = MessageDigest.getInstance("SHA-256")
+        file.inputStream().use { input ->
+            val buf = ByteArray(8192)
+            while (true) {
+                val n = input.read(buf)
+                if (n < 0) break
+                md.update(buf, 0, n)
+            }
+        }
+        return md.digest().joinToString("") { "%02x".format(it) }
     }
 
     fun hasSessionJsonl(dir: File): Boolean {
