@@ -29,6 +29,8 @@ internal data class FixFuelConfig(
     val feed012f: FeedMode = FeedMode.CORRECTED,
     /** Optional phone-sensor diagnostic rows in the session sidecar ([SensorLog]); off by default. */
     val sensorLog: Boolean = false,
+    /** Low-range data mode switch ([LowRange.KEY_MODE]); on by default (3 tanks per vehicle, then it stops). */
+    val lowRangeMode: Boolean = true,
     /** Stored values that failed validation: pref key -> raw stored text. Runtime uses defaults for these. */
     val invalid: Map<String, String> = emptyMap(),
 ) {
@@ -187,6 +189,7 @@ internal object FixFuelPrefs {
             selectPidName = p.getString(KEY_SELECT_PID, "") ?: "",
             showFuelNotification = p.getBoolean(KEY_SHOW_NOTICE, true),
             sensorLog = p.getBoolean(SensorLog.KEY, false),
+            lowRangeMode = p.getBoolean(LowRange.KEY_MODE, true),
             feed012f = run {
                 val m = feedMode(p.getString(KEY_FEED_012F, null), if (p.contains(KEY_WRITE_012F)) p.getBoolean(KEY_WRITE_012F, true) else null)
                 if (p.getBoolean(KEY_FEED_V2, false)) m else {

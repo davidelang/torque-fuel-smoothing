@@ -91,6 +91,24 @@ internal class DiagnosticCapture {
             disableAfterFailure(e)
         }
     }
+    /** One caller-built row (low-range data mode, no bus traffic) into the open session sidecar, on the worker. */
+    fun row(row: JSONObject) {
+        val s = current ?: return
+        if (closed || failed) return
+        try {
+            worker.execute {
+                try {
+                    if (closed || current !== s || !s.opened) return@execute
+                    write(s, row)
+                } catch (e: Exception) {
+                    if (current === s) disableAfterFailure(e)
+                }
+            }
+        } catch (e: Exception) {
+            disableAfterFailure(e)
+        }
+    }
+
     fun shutdown() {
         closed = true
         current = null

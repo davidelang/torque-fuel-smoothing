@@ -204,12 +204,32 @@ class PluginService : Service() {
         sourceStatus = "",
     )
 
+    /** Wall time of the last sampleOnce (ms) and the delay chosen after it. */
+    private var lastSampleMs = 0L
+    private var lastPollDelayMs = POLL_MS
+
     private val poll = object : Runnable {
         override fun run() {
             if (!polling) return
+            val t0 = SystemClock.elapsedRealtime()
             sampleOnce()
-            if (polling) handler.postDelayed(this, POLL_MS)
+            lastSampleMs = SystemClock.elapsedRealtime() - t0
+            lastPollDelayMs = nextPollMs()
+            if (polling) handler.postDelayed(this, lastPollDelayMs)
         }
+    }
+
+    /**
+     * Low-range data mode polls the level every FAST_POLL_MS, but only when that adds no bus traffic (the level is a
+     * Torque PID read from Torque's own poll), nothing else is using the bus or counting ticks (identity, detect,
+     * ID probe, auto-match), and the last sample was quick; otherwise the normal POLL_MS.
+     */
+    private fun nextPollMs(): Long {
+        if (!lowModeOn() || lastSampleMs > LowRange.FAST_POLL_BUDGET_MS) return POLL_MS
+        if (identity != null || fuelDetect != null || detectQueue != null || vehicleProbe != null || autoMatch != null || quarantineDir != null) return POLL_MS
+        val src = FuelSources.byId(cfg.sourceId)
+        if (src.longName == null && src.id != "custom_name") return POLL_MS
+        return LowRange.FAST_POLL_MS
     }
 
     /** Poll only while the ECU is connected; OBD_CONNECTED (or isConnectedToECU at bind) starts it. */
@@ -733,7 +753,8 @@ class PluginService : Service() {
                         .put("torqueFlowPid", rt.lastFlowPid ?: org.json.JSONObject.NULL)
                         .put("primaryLevelPct", number(lastRawPct)))
                     // Short-term diagnostic, off by default: phone accelerometer + GPS heading/speed/height change.
-                    diagnosticCapture.sensors(t, now, cfg.sensorLog)
+                    // Low-range data mode turns the sensor rows on by itself (still never position).
+                    diagnosticCapture.sensors(t, now, cfg.sensorLog || lowModeOn())
                 } catch (e: Exception) {
                     diagnosticCapture.disableAfterFailure(e)
                 }
@@ -834,7 +855,10 @@ class PluginService : Service() {
                 )
                 stepLive(rt, dF)
             }
-            if (lowSt != null) lowAfter(rt, lowSt, raw, false, speedKmh, now, dF, logging)
+            if (lowSt != null) {
+                lowAfter(rt, lowSt, raw, false, speedKmh, now, dF, logging)
+                lowModeStep(rt, lowSt, raw, false, whyHold, speedKmh, now, dF, levelPid, logging)
+            }
             if (held != null) {
                 if (id == 1) publishFromSmoothed(t, raw ?: held, held) else publishExtraFrom(t, id, rt, held)
             }
@@ -878,7 +902,10 @@ class PluginService : Service() {
             FsLog.i(TAG, "tank$id fill end raw=$live smoothed=$smoothed")
             onFillEnd(rt, smoothed, now, logging)
         }
-        if (lowSt != null) lowAfter(rt, lowSt, live, true, speedKmh, now, dF, logging)
+        if (lowSt != null) {
+            lowAfter(rt, lowSt, live, true, speedKmh, now, dF, logging)
+            lowModeStep(rt, lowSt, live, true, null, speedKmh, now, dF, levelPid, logging)
+        }
         if (logging) {
             rt.sessions.append(
                 sampleRow(
@@ -2484,6 +2511,88 @@ class PluginService : Service() {
     private var lowStateProfile: String? = null
     private var lowLastMs: Long? = null
     private var lowWasSolid = false
+    private var lowDtSec = 0.0
+    private val lowRaw60 = ArrayDeque<Pair<Long, Double>>()
+    private var lowRateMs: Long? = null
+    private var lowRatePolls = 0L
+    private var lowRateFresh = 0L
+    private var lowLevelUpd: Long? = null
+    private var lowMarkedSession: String? = null
+
+    /** Low-range data mode is on for the vehicle being recorded (switch on, confirmed vehicle, tanks left). */
+    private fun lowModeOn(): Boolean =
+        cfg.lowRangeMode && trustedVehicle() && lowStateProfile == profileId && lowState?.active == true
+
+    /**
+     * Low-range data mode (3 tanks per vehicle, settings switch): on below 20 % smoothed or a 60 s raw median below
+     * 15 %, until the next fill. While on: sensor rows, a per-sample diagnostics row (no bus traffic), the fast level
+     * poll when safe ([nextPollMs]), the achieved fresh-level rate every minute, and "lowRange" session marks.
+     */
+    private fun lowModeStep(rt: TankRt, st: LowRangeState, raw: Double?, valid: Boolean, why: String?, speedKmh: Double,
+        now: Long, dF: Double, levelPid: String?, logging: Boolean) {
+        val sm = rt.math.smoothed ?: return
+        val u = rt.math.unit
+        if (valid && raw != null) lowRaw60.addLast(now to raw)
+        while (lowRaw60.isNotEmpty() && now - lowRaw60.first().first > LowRange.MODE_RAW_MS) lowRaw60.removeFirst()
+        val med60 = if (lowRaw60.size >= 10) lowRaw60.map { it.second }.sorted().let { it[it.size / 2] / u } else null
+        if (!cfg.lowRangeMode && st.active) {
+            st.active = false
+            saveLowState()
+            if (logging) rt.sessions.mark("lowRangeOff", now)
+            FsLog.i(TAG, "low-range data mode switched off in settings")
+        }
+        if (LowRange.maybeActivate(st, cfg.lowRangeMode, sm / u, med60, now)) {
+            saveLowState()
+            lowRateMs = now
+            lowRatePolls = 0L
+            lowRateFresh = 0L
+            FsLog.i(TAG, "low-range data mode on (${st.tanksLeft} tanks left): sensors, per-sample diagnostics, fast level poll")
+        }
+        if (!st.active) return
+        val tk = st.tank
+        val sid = rt.sessions.sessionId
+        if (logging && sid != null && sid != lowMarkedSession) {
+            lowMarkedSession = sid
+            rt.sessions.mark("lowRange", now, "\"tanksLeft\":${st.tanksLeft}")
+            if (tk.sessions.size < LowRange.MAX_SESSIONS && sid !in tk.sessions) tk.sessions.add(sid)
+        }
+        // Freshness from Torque's update time for the level PID: one binder read, no bus traffic.
+        val upd = levelPid?.let { pid -> torque?.let { t -> updateTime(t, pid) } }
+        val fresh = upd != null && upd != lowLevelUpd
+        if (upd != null) lowLevelUpd = upd
+        tk.polls++
+        lowRatePolls++
+        if (fresh) {
+            tk.fresh++
+            lowRateFresh++
+        }
+        tk.modeSec += lowDtSec
+        val start = lowRateMs ?: now.also { lowRateMs = it }
+        if (now - start >= LowRange.RATE_LOG_MS) {
+            val sec = (now - start) / 1000.0
+            val hz = lowRateFresh / sec
+            if (logging) rt.sessions.mark("lowRate", now, "\"polls\":$lowRatePolls,\"fresh\":$lowRateFresh," +
+                "\"levelHz\":${"%.3f".format(java.util.Locale.ROOT, hz)},\"pollMs\":$lastPollDelayMs")
+            FsLog.i(TAG, "low-range level rate: $lowRateFresh fresh of $lowRatePolls polls in ${"%.0f".format(sec)} s " +
+                "(${"%.2f".format(hz)} Hz, poll $lastPollDelayMs ms, sample $lastSampleMs ms)")
+            lowRateMs = now
+            lowRatePolls = 0L
+            lowRateFresh = 0L
+        }
+        if (logging) {
+            fun num(x: Double?): Any = x?.takeIf { it.isFinite() } ?: org.json.JSONObject.NULL
+            val per = priorFor(rt.id).gpp(sm / u).takeIf { it.isFinite() && it > 0.0 }?.let { 1.0 / it }
+            diagnosticCapture.row(org.json.JSONObject().put("event", "lowRange").put("t", now)
+                .put("raw", num(raw)).put("valid", valid).put("why", why ?: org.json.JSONObject.NULL).put("sm", num(sm))
+                .put("mode", rt.math.mode.name).put("lowPath", rt.math.lowPath).put("steady", rt.math.steadyNow)
+                .put("solidZero", rt.math.solidZero).put("speedKmh", num(speedKmh)).put("burnGal", num(dF))
+                .put("sessionFuelGal", num(rt.usedGal)).put("flowRaw", num(rt.lastFlowRaw)).put("flowUnit", rt.lastFlowUnit)
+                .put("median30", num(rt.math.rawMedian(now - FuelMath.LOW_MEDIAN_MS))).put("median60Pct", num(med60))
+                .put("bandSdPct", num(BandNoise.sd(st.bands, sm / u))).put("pctPerGal", num(per))
+                .put("levelUpdMs", upd ?: org.json.JSONObject.NULL).put("fresh", fresh)
+                .put("pollMs", lastPollDelayMs).put("sampleMs", lastSampleMs).put("tanksLeft", st.tanksLeft))
+        }
+    }
 
     /** The confirmed profile's low-range state (loaded once per profile; the previous profile's is saved first). */
     private fun lowStateFor(): LowRangeState? {
@@ -2522,6 +2631,7 @@ class PluginService : Service() {
         val tk = st.tank
         val dt = lowLastMs?.let { (now - it).coerceIn(0L, 15_000L) / 1000.0 } ?: 0.0
         lowLastMs = now
+        lowDtSec = dt
         if (sm < FuelMath.LOW_RANGE_PCT * u && tk.lowSinceMs == null) tk.lowSinceMs = now
         if (tk.lowSinceMs != null) tk.minSmoothed = minOf(tk.minSmoothed ?: sm, sm)
         if (tk.firstZeroMs != null) {
@@ -2560,10 +2670,14 @@ class PluginService : Service() {
         val st = lowStateFor() ?: return
         val summary = LowRange.closeTank(st, now, why)
         lowWasSolid = false
+        lowMarkedSession = null
         saveLowState()
+        runCatching { LowRange.appendSummary(ProfileStore.profileDir(filesDir, profileId), summary) }
+            .onFailure { FsLog.w(TAG, "low-range summary not written: ${it.javaClass.simpleName}") }
         val tk = summary.optJSONObject("tank")
         FsLog.i(TAG, "tank1 low-range tank closed ($why): solid0 ${"%.3f".format(tk?.optDouble("solidGal", 0.0) ?: 0.0)} gal, " +
-            "since first 0 ${"%.3f".format(tk?.optDouble("sinceFirstZeroGal", 0.0) ?: 0.0)} gal, reserveMin=${st.reserveMinGal}")
+            "since first 0 ${"%.3f".format(tk?.optDouble("sinceFirstZeroGal", 0.0) ?: 0.0)} gal, reserveMin=${st.reserveMinGal}, " +
+            "data mode ${if (summary.optBoolean("lowRangeMode")) "logged this tank" else "off this tank"}, tanks left ${st.tanksLeft}")
         if (logging) rt.sessions.mark("lowTankClose", now, "\"why\":\"$why\"")
     }
 

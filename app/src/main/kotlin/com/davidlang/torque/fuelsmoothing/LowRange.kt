@@ -20,8 +20,17 @@ internal class TankLow {
     var solidEntries = 0
     var solidEnterMs: Long? = null
     var minSmoothed: Double? = null
+    /** Low-range data mode this tank: when it turned on, level polls / fresh level updates seen, seconds on, sessions. */
+    var modeSinceMs: Long? = null
+    var polls = 0L
+    var fresh = 0L
+    var modeSec = 0.0
+    val sessions: MutableList<String> = ArrayList()
 
     fun json(): JSONObject = JSONObject().put("bands", bands.json())
+        .put("modeSinceMs", modeSinceMs ?: JSONObject.NULL).put("polls", polls).put("fresh", fresh).put("modeSec", modeSec)
+        .put("sessions", JSONArray(sessions))
+        .put("levelHz", if (modeSec > 0.0) fresh / modeSec else JSONObject.NULL)
         .put("lowSinceMs", lowSinceMs ?: JSONObject.NULL).put("firstZeroMs", firstZeroMs ?: JSONObject.NULL)
         .put("sinceFirstZeroGal", sinceFirstZeroGal).put("solidGal", solidGal).put("solidSec", solidSec)
         .put("solidKm", solidKm).put("solidEntries", solidEntries).put("solidEnterMs", solidEnterMs ?: JSONObject.NULL)
@@ -43,6 +52,11 @@ internal class TankLow {
             t.solidEntries = o.optInt("solidEntries", 0).coerceAtLeast(0)
             t.solidEnterMs = long("solidEnterMs")
             t.minSmoothed = if (o.isNull("minSmoothed") || !o.has("minSmoothed")) null else o.optDouble("minSmoothed").takeIf { it.isFinite() }
+            t.modeSinceMs = long("modeSinceMs")
+            t.polls = o.optLong("polls", 0L).coerceAtLeast(0L)
+            t.fresh = o.optLong("fresh", 0L).coerceAtLeast(0L)
+            t.modeSec = dbl("modeSec")
+            o.optJSONArray("sessions")?.let { a -> for (i in 0 until a.length()) a.optString(i, "").takeIf { it.isNotEmpty() }?.let { t.sessions.add(it) } }
             return t
         }
     }
@@ -55,6 +69,9 @@ internal class LowRangeState(
     var tank: TankLow = TankLow(),
     /** One entry per closed tank that reached a raw 0: fillMs, solidGal, sinceFirstZeroGal (last MAX_RESERVES). */
     val reserves: MutableList<JSONObject> = ArrayList(),
+    /** Low-range data mode: tanks still to log (counts down at each fill of a tank where it was on), and on now. */
+    var tanksLeft: Int = LowRange.TANKS,
+    var active: Boolean = false,
 ) {
     /**
      * Lower bound on fuel below the sender's 0% point (gal, counter): the most burned while held at a solid 0 in
@@ -65,6 +82,7 @@ internal class LowRangeState(
 
     fun json(): JSONObject = JSONObject().put("v", 1).put("bands", bands.json()).put("tank", tank.json())
         .put("reserves", JSONArray(reserves)).put("reserveMinGal", reserveMinGal ?: JSONObject.NULL)
+        .put("tanksLeft", tanksLeft).put("active", active)
 }
 
 internal object LowRange {
@@ -73,6 +91,39 @@ internal object LowRange {
     const val MAX_RESERVES = 20
     /** A level back at or above this (SKEW) after low-range data, with no live fill seen, ends the tank (fill while away). */
     const val MISSED_FILL_PCT = 50.0
+    const val SUMMARIES = "summaries.jsonl"
+    /** Global switch (settings), on by default. Off stops the data mode only; the low-range smoothing stays. */
+    const val KEY_MODE = "low_range_mode"
+    /** Tanks the data mode logs per vehicle. */
+    const val TANKS = 3
+    /** Data mode turns on below this smoothed level, or when the 60 s raw median is below MODE_RAW_PCT. */
+    const val MODE_SMOOTHED_PCT = 20.0
+    const val MODE_RAW_PCT = 15.0
+    const val MODE_RAW_MS = 60_000L
+    /** Level poll period while on, when the level is a Torque PID read (no extra bus traffic) and sampling is quick. */
+    const val FAST_POLL_MS = 500L
+    /** A sample slower than this falls back to the normal 1 s poll for the next tick (do not stall Torque). */
+    const val FAST_POLL_BUDGET_MS = 150L
+    const val RATE_LOG_MS = 60_000L
+    const val MAX_SESSIONS = 100
+
+    fun summariesFile(profileDir: File): File = File(dir(profileDir), SUMMARIES)
+
+    /** Turns the data mode on (switch on, tanks left). Returns true when it changed. */
+    fun maybeActivate(st: LowRangeState, enabled: Boolean, smoothed: Double, rawMedian60: Double?, nowMs: Long): Boolean {
+        if (!enabled || st.active || st.tanksLeft <= 0) return false
+        if (!(smoothed < MODE_SMOOTHED_PCT) && !(rawMedian60 != null && rawMedian60 < MODE_RAW_PCT)) return false
+        st.active = true
+        if (st.tank.modeSinceMs == null) st.tank.modeSinceMs = nowMs
+        return true
+    }
+
+    /** One closed-tank summary line (every fill); the file is append-only. */
+    fun appendSummary(profileDir: File, summary: JSONObject) {
+        val f = summariesFile(profileDir)
+        f.parentFile?.mkdirs()
+        f.appendText(summary.toString() + "\n")
+    }
 
     fun dir(profileDir: File): File = File(profileDir, DIR)
     fun stateFile(profileDir: File): File = File(dir(profileDir), STATE)
@@ -85,6 +136,8 @@ internal object LowRange {
         st.bands = BandNoise.Acc.parse(o.optJSONObject("bands"))
         st.tank = TankLow.parse(o.optJSONObject("tank"))
         o.optJSONArray("reserves")?.let { a -> for (i in 0 until a.length()) a.optJSONObject(i)?.let { st.reserves.add(it) } }
+        st.tanksLeft = o.optInt("tanksLeft", TANKS).coerceIn(0, TANKS)
+        st.active = o.optBoolean("active", false)
         return st
     }
 
@@ -101,6 +154,9 @@ internal object LowRange {
     fun closeTank(st: LowRangeState, nowMs: Long, why: String): JSONObject {
         val tk = st.tank
         val learned = BandNoise.learned(tk.bands)
+        val wasMode = tk.modeSinceMs != null
+        if (wasMode) st.tanksLeft = (st.tanksLeft - 1).coerceAtLeast(0)
+        st.active = false
         BandNoise.fold(st.bands, tk.bands)
         if (tk.firstZeroMs != null || tk.solidGal > 0.0) {
             st.reserves.add(JSONObject().put("fillMs", nowMs).put("solidGal", tk.solidGal).put("sinceFirstZeroGal", tk.sinceFirstZeroGal))
@@ -110,6 +166,7 @@ internal object LowRange {
             .put("tankSd", JSONArray(learned.map { it ?: JSONObject.NULL }))
             .put("profileSd", JSONArray((0 until BandNoise.BANDS).map { Math.round(BandNoise.sd(st.bands, it * BandNoise.WIDTH_PCT) * 1000.0) / 1000.0 }))
             .put("reserveMinGal", st.reserveMinGal ?: JSONObject.NULL)
+            .put("lowRangeMode", wasMode).put("tanksLeft", st.tanksLeft)
         st.tank = TankLow()
         return summary
     }

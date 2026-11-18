@@ -405,6 +405,23 @@ class PluginActivity : Activity() {
         }
         col.addView(sensorLog)
 
+        // Low-range data mode: on by default, logs the next LowRange.TANKS near-empty tanks per vehicle, then stops.
+        val lowMode = android.widget.CheckBox(this)
+        val left = if (editProfileExists()) {
+            runCatching { LowRange.load(ProfileStore.profileDir(filesDir, editProfileId)).tanksLeft }.getOrNull() ?: LowRange.TANKS
+        } else LowRange.TANKS
+        lowMode.text = if (left > 0) {
+            S("Low-range data mode (extra logging near empty): %1\$d of %2\$d tanks left", left, LowRange.TANKS)
+        } else {
+            S("Low-range data mode: finished (%1\$d tanks logged)", LowRange.TANKS)
+        }
+        lowMode.primary()
+        lowMode.isChecked = FixFuelPrefs.prefs(this).getBoolean(LowRange.KEY_MODE, true)
+        lowMode.setOnCheckedChangeListener { _, on ->
+            FixFuelPrefs.prefs(this).edit().putBoolean(LowRange.KEY_MODE, on).apply()
+        }
+        col.addView(lowMode)
+
         // Details (below the settings).
         col.addView(label(S("Details")))
         live = TextView(this)
