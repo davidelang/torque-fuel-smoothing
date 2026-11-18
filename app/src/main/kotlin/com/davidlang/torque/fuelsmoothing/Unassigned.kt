@@ -163,7 +163,7 @@ internal object Unassigned {
         if (qroot.isDirectory) {
             val skipPath = skip?.canonicalPath
             for (child in qroot.listFiles { f -> f.isDirectory } ?: emptyArray()) {
-                if (child.name == "discarded" || child.name == "unassigned") continue
+                if (child.name == "discarded" || child.name == "unassigned" || child.name == Quarantine.ARCHIVE) continue
                 if (skipPath != null && child.canonicalPath == skipPath) continue
                 if (!hasSessionJsonl(child)) continue
                 if (markRecoveredIfDuplicate(files, child)) continue

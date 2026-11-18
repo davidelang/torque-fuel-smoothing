@@ -239,6 +239,35 @@ internal object Fingerprint {
 internal object Quarantine {
     fun dir(root: File, stamp: Long): File = File(root, "quarantine/$stamp")
 
+    const val ARCHIVE = "archive"
+
+    /** True when [dir] holds no drive data: no t<N>/ directory with any file in it (sessions or sidecars). */
+    fun isIdentityOnly(dir: File): Boolean {
+        val tanks = dir.listFiles { f -> f.isDirectory && f.name.matches(Regex("t[0-9]+")) } ?: return true
+        return tanks.none { t -> t.walkTopDown().any { it.isFile } }
+    }
+
+    /**
+     * Moves identity-only quarantine/<stamp> folders (left by older builds' identity checks) into
+     * quarantine/archive/identity-only-<date>/<stamp>. Never deletes; any folder with drive data stays put.
+     * Returns the number moved.
+     */
+    fun archiveIdentityOnly(root: File, nowMs: Long = System.currentTimeMillis()): Int {
+        val q = File(root, "quarantine")
+        val dirs = q.listFiles { f -> f.isDirectory && f.name.all { it.isDigit() } } ?: return 0
+        val day = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.ROOT).format(java.util.Date(nowMs))
+        val dest = File(q, "$ARCHIVE/identity-only-$day")
+        var n = 0
+        for (d in dirs.sortedBy { it.name }) {
+            if (!isIdentityOnly(d)) continue
+            val to = File(dest, d.name)
+            if (to.exists()) continue
+            dest.mkdirs()
+            if (d.renameTo(to)) n++
+        }
+        return n
+    }
+
     fun rawDir(qdir: File, tank: Int): File = File(qdir, "t$tank")
 
     /** Resolves a notification choice to a plugin profile id. NEW_PROFILE creates one named [newName]. */

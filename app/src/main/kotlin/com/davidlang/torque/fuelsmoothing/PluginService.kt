@@ -477,6 +477,10 @@ class PluginService : Service() {
         )
         profileId = ProfileStore.activeId(filesDir)
         IdentityPending.clear(filesDir) // no live identity prompt before this service reads one
+        // Identity-only crumbs from older builds' once-a-minute checks: archived (never deleted).
+        runCatching { Quarantine.archiveIdentityOnly(filesDir) }
+            .onSuccess { if (it > 0) FsLog.i(TAG, "archived $it identity-only quarantine folders") }
+            .onFailure { FsLog.warn(TAG, "quarantineArchive", "identity-only archive failed: ${it.javaClass.simpleName}") }
         Unassigned.adoptOrphans(filesDir)
         migrateLegacySource()
         tanks[1] = makeRuntime(1)
@@ -1153,8 +1157,7 @@ class PluginService : Service() {
                         queue.add("2216C1")
                 }
             }
-            // Preserve partial observations too if the process ends before the decision.
-            persistIdentityEvidence(Quarantine.dir(filesDir, startMs), this, obs(t))
+            // No per-step file: the result is recorded once, in the profile's check ring, when the read ends.
             if (queue.isEmpty() && needsFinalVin && !confirmingVin) {
                 confirmingVin = true
                 queue.add("0902") // bracket fresh capabilities with consistent physical identity
@@ -1178,7 +1181,7 @@ class PluginService : Service() {
         if (!r.step(t)) return
         if (r.retired) {
             closeSession()
-            persistIdentityEvidence(Quarantine.dir(filesDir, r.startMs), r, Fingerprint.Fp())
+            persistIdentityEvidence(r.next, r, Fingerprint.Fp(), "retired")
             identity = null
             identityReady = false
             observedIdentity = Fingerprint.Fp()
@@ -1189,7 +1192,7 @@ class PluginService : Service() {
         if (r.checkOnly && r.vin == r.expectedVin) {
             identity = null
             nextIdentityCheckMs = SystemClock.elapsedRealtime() + if (quarantineDir == null) 60_000L else 30_000L
-            persistIdentityEvidence(quarantineDir ?: ProfileStore.profileDir(filesDir, profileId), r, r.obs(t))
+            persistIdentityEvidence(profileId, r, r.obs(t), "check")
             return
         }
         try {
@@ -1203,13 +1206,17 @@ class PluginService : Service() {
         }
     }
 
-    private fun persistIdentityEvidence(dir: File, r: IdentityRead, obs: Fingerprint.Fp) {
+    /**
+     * One identity read -> one entry in profiles/<profile>/identity/checks.jsonl (20-entry ring). Never creates a
+     * quarantine folder: a pending read only names the quarantine id it will use if a session opens there.
+     */
+    private fun persistIdentityEvidence(profile: String, r: IdentityRead, obs: Fingerprint.Fp, outcome: String, q: File? = null) {
         try {
-            val data = org.json.JSONObject().put("v", 1).put("t", r.startMs).put("observed", org.json.JSONObject(Fingerprint.toJson(obs)))
+            val data = org.json.JSONObject().put("v", 2).put("id", r.evidenceId).put("kind", "connect").put("t", r.startMs)
+                .put("outcome", outcome).put("observed", org.json.JSONObject(Fingerprint.toJson(obs)))
+                .put("quarantineId", q?.name ?: org.json.JSONObject.NULL)
                 .put("responses", r.evidence).put("retired", r.retired).put("source", "Torque.sendCommandGetResponse")
-            val file = File(dir, "identity/${r.evidenceId}.json")
-            file.parentFile?.mkdirs()
-            AtomicFile.write(file, data.toString())
+            IdentityChecks.record(ProfileStore.profileDir(filesDir, profile), data)
         } catch (e: Exception) {
             FsLog.warn(TAG, "identityEvidence", "private identity evidence write failed: ${e.javaClass.simpleName}")
         }
@@ -1249,7 +1256,7 @@ class PluginService : Service() {
         if (!pending) {
             Fingerprint.save(ProfileStore.profileDir(filesDir, target), Fingerprint.merge(Fingerprint.load(ProfileStore.profileDir(filesDir, target)), obs))
         }
-        persistIdentityEvidence(nextQ ?: ProfileStore.profileDir(filesDir, target), r, obs)
+        persistIdentityEvidence(target, r, obs, if (pending) "pending" else "resolved", nextQ)
         FsLog.i(TAG, "physical identity ${if (pending) "pending" else "resolved"} profile=$target obs=${Fingerprint.redacted(obs)}")
         if (!pending) {
             clearPendingIdentity()
@@ -1386,12 +1393,18 @@ class PluginService : Service() {
         quarantineConfirm = id
         closeSession() // existing explicit Keep action, never an automatic migration of held evidence
         torque?.let { invalidateVehicleOutputs(it) }
-        // Preserve why a VIN-less profile was trusted, privately and only for this connection.
-        val evidenceFile = File(evidenceDir, if (automatic != null) "match-confirmation.json" else "manual-confirmation.json")
-        evidenceFile.parentFile?.mkdirs()
-        AtomicFile.write(evidenceFile, (automatic ?: org.json.JSONObject()).put("t", now).put("profileId", id)
+        // Preserve why a VIN-less profile was trusted, privately and only for this connection. Beside the drive
+        // when a session opened in the quarantine folder; otherwise in the profile's check ring (no new folder).
+        val confirmation = (automatic ?: org.json.JSONObject()).put("t", now).put("profileId", id)
             .put("resolution", if (automatic != null) "automatic_fingerprint_match_for_connection"
-                else "explicit_user_confirmation_for_connection").toString())
+                else "explicit_user_confirmation_for_connection")
+        if (evidenceDir.isDirectory) {
+            AtomicFile.write(File(evidenceDir, if (automatic != null) "match-confirmation.json" else "manual-confirmation.json"),
+                confirmation.toString())
+        } else {
+            IdentityChecks.record(ProfileStore.profileDir(filesDir, id), org.json.JSONObject(confirmation.toString())
+                .put("v", 2).put("id", "confirm-$now").put("kind", "confirmation").put("quarantineId", evidenceDir.name))
+        }
         val torqueName = selectedTorqueProfile
         quarantineDir = null; quarantineObs = null; quarantineSuggest = null; quarantineConfirm = null
         clearPendingIdentity()
