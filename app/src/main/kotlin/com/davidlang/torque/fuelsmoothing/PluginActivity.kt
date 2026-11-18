@@ -339,6 +339,16 @@ class PluginActivity : Activity() {
         showNotice.primary()
         col.addView(showNotice)
 
+        // Identity is read once per connection; this is the only way to re-check, gather identity data, or change it.
+        col.addView(smallButton(S("Check / change / detect vehicle")) {
+            val i = Intent(this, PluginService::class.java).setAction(PluginService.ACTION_VEHICLE_CHECK)
+            try {
+                if (Build.VERSION.SDK_INT >= 26) startForegroundService(i) else startService(i)
+            } catch (t: Throwable) {
+                FsLog.w(TAG, "vehicle check start ignored: ${t.javaClass.simpleName} ${t.message}")
+            }
+        })
+
         col.addView(info(S("Smoothing τ seconds"), S("Time constant of the smoothing filter (0 = no smoothing).")))
         tau = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
         col.addView(tau)

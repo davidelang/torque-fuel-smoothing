@@ -500,6 +500,9 @@ class PluginService : Service() {
             ACTION_PID_QUERY, ACTION_PID_PLUGIN -> bindTorque()
             ACTION_OBD_DISCONNECTED -> onEcu(false)
             ACTION_Q_CONFIRM -> confirmQuarantine(intent.getStringExtra(EXTRA_TARGET))
+            ACTION_VEHICLE_CHECK -> startVehicleCheck()
+            ACTION_VEHICLE_KEEP -> keepVehicle()
+            ACTION_VEHICLE_CHANGE -> changeVehicle()
             ACTION_UNASSIGNED_ASSIGN -> assignUnassigned(intent.getStringExtra(EXTRA_UNASSIGNED_ID), intent.getStringExtra(EXTRA_TARGET))
             ACTION_UNASSIGNED_DISCARD -> discardUnassigned(intent.getStringExtra(EXTRA_UNASSIGNED_ID))
             ACTION_CONFIRM_SOURCE -> {
@@ -671,15 +674,13 @@ class PluginService : Service() {
         if (ecu != null && ecu != lastEcuConnected) onEcu(ecu)
         if (ecu != true) return // disconnected cached values must never be published as a new car
         if (!syncTorqueProfile(t, now)) return
-        if (identity == null && SystemClock.elapsedRealtime() >= nextIdentityCheckMs && fuelDetect == null && detectQueue == null) {
-            // A swap can occur without Torque changing profiles or reporting a connection edge.
-            // One paced VIN recheck/minute (pending identity retries/30s), not a vendor scan.
-            // A same-vehicle monitor keeps the dash live; a detected change invalidates in IdentityRead.
-            // Do not blank gauges here: starting a check is not a vehicle change, and a NaN write
-            // with the wrong short name was minting empty twin entries.
+        if (identity == null && !identityReady && SystemClock.elapsedRealtime() >= nextIdentityCheckMs && fuelDetect == null && detectQueue == null) {
+            // The vehicle cannot change while connected: identity is read once per connection (selectProfile)
+            // and only retried here (30 s) when that read failed or was retired. No periodic recheck; the
+            // Check vehicle button (ACTION_VEHICLE_CHECK / ACTION_VEHICLE_CHANGE) is the only other trigger.
+            // Do not blank gauges here: a NaN write with the wrong short name was minting empty twin entries.
             try {
-                identity = IdentityRead(profileId, selectedTorqueProfile, Fingerprint.loadAll(filesDir)[profileId],
-                    checkOnly = identityReady)
+                identity = IdentityRead(profileId, selectedTorqueProfile, Fingerprint.loadAll(filesDir)[profileId])
             } catch (e: Exception) {
                 identityReady = false
                 nextIdentityCheckMs = SystemClock.elapsedRealtime() + 30_000L
@@ -1075,7 +1076,7 @@ class PluginService : Service() {
      * fingerprint never supplies another physical vehicle's diagnostic capabilities.
      */
     private inner class IdentityRead(val next: String, val torqueName: String?, stored: Fingerprint.Fp?,
-        var checkOnly: Boolean = false, val freshProfile: String? = null) {
+        var checkOnly: Boolean = false, val freshProfile: String? = null, val forceAsk: Boolean = false) {
         val startMs = System.currentTimeMillis()
         private val startMono = SystemClock.elapsedRealtime()
         val evidenceId = "$startMs-${java.util.UUID.randomUUID()}"
@@ -1254,6 +1255,7 @@ class PluginService : Service() {
     private fun finishVehicleProbe(p: VehicleProbe) {
         try {
             val dir = ProfileStore.profileDir(filesDir, p.profile)
+            if (p.kind == "manual") p.verdict = verdictFor(p)
             IdentityChecks.record(dir, p.json())
             val stable = p.stable()
             if (stable.isNotEmpty() || p.abortReason == null) {
@@ -1267,8 +1269,96 @@ class PluginService : Service() {
         }
     }
 
-    @Suppress("UNUSED_PARAMETER")
-    private fun onVehicleProbeDone(p: VehicleProbe) {}
+    /** Check vehicle button result: compare with the saved fingerprints, then offer Keep / Change vehicle. */
+    private fun verdictFor(p: VehicleProbe): org.json.JSONObject {
+        val obs = p.observation()
+        val fps = Fingerprint.loadAll(filesDir)
+        val byVin = if (obs.vin != null) Fingerprint.match(obs, fps).id else null
+        val bySolid = Fingerprint.solidMatch(obs, fps, selectedTorqueProfile) { ProfileStore.profileField(filesDir, it, "torqueProfileName") }
+        val match = byVin ?: bySolid
+        val how = when { byVin != null -> "vin"; bySolid != null -> "fingerprint"; else -> "none" }
+        return org.json.JSONObject().put("profile", p.profile).put("matched", match ?: org.json.JSONObject.NULL).put("how", how)
+            .put("vinPresent", obs.vin != null).put("bitmap0100", obs.bitmaps["0100"] ?: org.json.JSONObject.NULL)
+            .put("ford2216C1", obs.probes["ford2216C1"] ?: org.json.JSONObject.NULL)
+    }
+
+    private fun onVehicleProbeDone(p: VehicleProbe) {
+        if (p.kind != "manual") return
+        val v = p.verdict ?: return
+        lastManualObs = p.observation()
+        val name = profileName(p.profile)
+        val matched = v.optString("matched", "")
+        val (title, text) = when {
+            p.abortReason != null -> S("Vehicle check stopped") to S("The check stopped before it finished (%1\$s). Results so far are saved in the vehicle's check history.", p.abortReason ?: "")
+            matched == p.profile -> S("Vehicle check: %1\$s", name) to S("This vehicle matches %1\$s (%2\$s). Results are saved in the vehicle's check history.", name,
+                if (v.optString("how") == "vin") S("VIN") else S("fingerprint"))
+            matched.isNotEmpty() -> S("Vehicle check: %1\$s?", profileName(matched)) to S("This vehicle matches %1\$s, not %2\$s. Tap Change vehicle to choose the vehicle for this drive.", profileName(matched), name)
+            else -> S("Vehicle check: not confirmed") to S("This vehicle does not match a saved fingerprint for %1\$s. Keep it to save this fingerprint for %1\$s, or tap Change vehicle.", name)
+        }
+        notifyVehicleCheck(title, text, keep = p.abortReason == null && quarantineDir == null)
+    }
+
+    /** Last Check vehicle observation, for the Keep action (makes it this profile's solid fingerprint). */
+    private var lastManualObs: Fingerprint.Fp? = null
+
+    private fun notifyVehicleCheck(title: String, text: String, keep: Boolean) {
+        val nm = notificationManager() ?: return
+        val flags = PendingIntent.FLAG_UPDATE_CURRENT or (if (Build.VERSION.SDK_INT >= 23) PendingIntent.FLAG_IMMUTABLE else 0)
+        val b = if (Build.VERSION.SDK_INT >= 26) Notification.Builder(this, CHANNEL_ID) else @Suppress("DEPRECATION") Notification.Builder(this)
+        b.setSmallIcon(R.drawable.ic_stat_notify).setContentTitle(title).setContentText(text)
+            .setStyle(Notification.BigTextStyle().bigText(text)).setAutoCancel(true)
+        if (keep) {
+            val k = Intent(this, PluginService::class.java).setAction(ACTION_VEHICLE_KEEP)
+            @Suppress("DEPRECATION")
+            b.addAction(android.R.drawable.ic_menu_save, S("Keep %1\$s", profileName(profileId)), PendingIntent.getService(this, 61, k, flags))
+        }
+        val c = Intent(this, PluginService::class.java).setAction(ACTION_VEHICLE_CHANGE)
+        @Suppress("DEPRECATION")
+        b.addAction(android.R.drawable.ic_menu_edit, S("Change vehicle"), PendingIntent.getService(this, 62, c, flags))
+        runCatching { nm.notify(VEHICLE_CHECK_NOTIF_ID, b.build()) }.onFailure { FsLog.warn(TAG, "notify", "notify ignored: ${it.message}") }
+    }
+
+    /** Settings-page button: full identity read + ID probe, recorded in the check ring; nothing changes yet. */
+    private fun startVehicleCheck() {
+        val t = torque
+        if (t == null || !ecuConnected || !identityReady || identity != null) {
+            notifySimple(S("Vehicle check"), S("Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again."))
+            return
+        }
+        stopVehicleProbe("replaced_by_manual_check")
+        val protocol = observedIdentity.protocol ?: runCatching { t.protocolName }.getOrNull()
+        vehicleProbe = VehicleProbe("manual", profileId, protocol, System.currentTimeMillis(), SystemClock.elapsedRealtime(), withIdentity = true)
+        FsLog.i(TAG, "vehicle check started for $profileId")
+    }
+
+    /** Keep: this connection's checked observation becomes the profile's solid fingerprint. */
+    private fun keepVehicle() {
+        notificationManager()?.cancel(VEHICLE_CHECK_NOTIF_ID)
+        val obs = lastManualObs ?: return
+        if (quarantineDir != null) return
+        val dir = ProfileStore.profileDir(filesDir, profileId)
+        val solid = Fingerprint.markSolid(Fingerprint.load(dir), obs)
+        if (solid != null) {
+            Fingerprint.save(dir, solid)
+            IdentityChecks.record(dir, org.json.JSONObject().put("v", 2).put("id", "keep-${System.currentTimeMillis()}")
+                .put("kind", "confirmation").put("t", System.currentTimeMillis()).put("profileId", profileId)
+                .put("resolution", "user_kept_after_vehicle_check"))
+            FsLog.i(TAG, "fingerprint solid for $profileId (kept after vehicle check)")
+        }
+    }
+
+    /** Change vehicle: full identity read that always ends in the choose-vehicle prompt. Data is held, never lost. */
+    private fun changeVehicle() {
+        notificationManager()?.cancel(VEHICLE_CHECK_NOTIF_ID)
+        val t = torque
+        if (t == null || !ecuConnected || identity != null) {
+            notifySimple(S("Vehicle check"), S("Connect to the vehicle in Torque first, then tap Check / change / detect vehicle again."))
+            return
+        }
+        stopVehicleProbe("change_vehicle")
+        identity = IdentityRead(profileId, selectedTorqueProfile, Fingerprint.loadAll(filesDir)[profileId], forceAsk = true)
+        FsLog.i(TAG, "change vehicle: identity read queued for $profileId")
+    }
 
     /**
      * One-time Ford ID probe when [profile]'s fingerprint has none yet. Automatic only on J1850 PWM (the known
@@ -1288,9 +1378,19 @@ class PluginService : Service() {
         val obs = r.obs(t)
         val fps = Fingerprint.loadAll(filesDir)
         val hits = fps.filterValues { obs.vin != null && it.vin?.equals(obs.vin, ignoreCase = true) == true }.keys
-        val target = if (obs.vin != null && hits.size <= 1)
-            ProfileStore.physicalProfile(filesDir, obs.vin, r.torqueName, r.freshProfile, inheritTankFrom = r.next) else r.next
-        val pending = obs.vin == null || hits.size > 1
+        // VIN-less: the solid fingerprint is the one connect-time check; a match needs no prompt or level probe.
+        val solid = if (r.forceAsk) null else Fingerprint.solidMatch(obs, fps, r.torqueName) {
+            ProfileStore.profileField(filesDir, it, "torqueProfileName")
+        }
+        val target = when {
+            solid != null -> solid
+            obs.vin != null && hits.size <= 1 ->
+                ProfileStore.physicalProfile(filesDir, obs.vin, r.torqueName, r.freshProfile, inheritTankFrom = r.next)
+            else -> r.next
+        }
+        // A mismatch (no solid match and no unique VIN) keeps the full check and loud prompt; drive data is held.
+        val pending = r.forceAsk || (solid == null && (obs.vin == null || hits.size > 1))
+        if (solid != null) FsLog.i(TAG, "solid fingerprint match -> $solid (no further identity checks this connection)")
         // VIN-less: saved VIN-less profiles this connection's fingerprint cannot rule out.
         val vinless = if (pending && obs.vin == null) Fingerprint.vinlessCandidates(obs, fps) else emptyList()
         val wasQ = quarantineDir
@@ -1327,7 +1427,7 @@ class PluginService : Service() {
             pendingDisplay = if (vinless.size == 1) vinless.single() else r.next
             planPendingIdentity(r, obs, fps, hits.sorted(), vinless)
         }
-        if (!pending && target != r.next) {
+        if (!pending && solid == null && target != r.next) {
             notifyIdentity(S("Recording to %1\$s", profileName(target)),
                 S("This vehicle is %1\$s (%2\$s), but Torque's profile is '%3\$s'. Data goes to %1\$s; tap to open Torque and switch profiles.",
                     profileName(target), "VIN", r.torqueName.orEmpty()), emptyList())
@@ -1477,6 +1577,11 @@ class PluginService : Service() {
         ProfileStore.setActiveId(filesDir, id)
         val dir = ProfileStore.profileDir(filesDir, id)
         if (Fingerprint.load(dir).empty) Fingerprint.save(dir, observation)
+        // A confirmed VIN-less connection makes the fingerprint solid: later connects that match it are trusted.
+        Fingerprint.markSolid(Fingerprint.load(dir), observation)?.let {
+            Fingerprint.save(dir, it)
+            FsLog.i(TAG, "fingerprint solid for $id")
+        }
         identityReady = true
         nextIdentityCheckMs = SystemClock.elapsedRealtime() + 60_000L
         prefsDirty = true
@@ -1518,6 +1623,8 @@ class PluginService : Service() {
         }
         val one = vinless.singleOrNull()
         when {
+            r.forceAsk -> ask(S("Which vehicle is this?"), S("Vehicle check: choose the vehicle this drive belongs to."),
+                listOf(sel) + ProfileStore.profileIds(filesDir) + NEW_PROFILE)
             hits.size > 1 -> ask(S("Which vehicle is this?"), S("More than one saved profile has this vehicle's VIN."), hits + NEW_PROFILE)
             one != null && one == sel -> {
                 val last = lastRecordedLevel(sel)
@@ -2770,6 +2877,10 @@ class PluginService : Service() {
         const val NEW_PROFILE = Fingerprint.NEW_PROFILE
         const val IDENTITY_NOTIF_ID = 4242
         const val DETECT_NOTIF_ID = 4243
+        const val VEHICLE_CHECK_NOTIF_ID = 4244
+        val ACTION_VEHICLE_CHECK: String get() = BuildConfig.APPLICATION_ID + ".VEHICLE_CHECK"
+        val ACTION_VEHICLE_KEEP: String get() = BuildConfig.APPLICATION_ID + ".VEHICLE_KEEP"
+        val ACTION_VEHICLE_CHANGE: String get() = BuildConfig.APPLICATION_ID + ".VEHICLE_CHANGE"
         const val EXTRA_SOURCE = "source"
         val ACTION_CONFIRM_SOURCE: String get() = BuildConfig.APPLICATION_ID + ".CONFIRM_SOURCE"
         val ACTION_SOURCE_CHANGED: String get() = BuildConfig.APPLICATION_ID + ".SOURCE_CHANGED"

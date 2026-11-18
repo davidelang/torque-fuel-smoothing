@@ -111,6 +111,44 @@ internal object Fingerprint {
         return out
     }
 
+    /** Set ("1") when a VIN-less fingerprint is solid: built from a confirmed connection; see [solidMatch]. */
+    const val SOLID = "solid"
+    const val SOLID_0100 = "fp:0100"
+    const val SOLID_16C1 = "fp:2216C1"
+
+    /**
+     * Marks [f] solid from a confirmed connection's [obs] (protocol and an exact 0100 bitmap are required;
+     * a working 16C1 probe is kept as a gate). Returns null when [obs] is not enough to be solid.
+     */
+    fun markSolid(f: Fp, obs: Fp): Fp? {
+        val protocol = obs.protocol ?: return null
+        val bm = obs.bitmaps["0100"] ?: return null
+        if (obs.vin != null || f.vin != null) return null // VIN vehicles are identified by VIN
+        if (f.protocol != null && f.protocol != protocol) return null
+        val probes = LinkedHashMap(f.probes)
+        probes[SOLID] = "1"
+        probes[SOLID_0100] = bm
+        if (obs.probes["ford2216C1"] == "ok") probes[SOLID_16C1] = "ok" else probes.remove(SOLID_16C1)
+        return f.copy(protocol = protocol, probes = probes)
+    }
+
+    /**
+     * The one connect-time check for a VIN-less vehicle. Exact: no VIN on either side, same protocol, the
+     * same 0100 bitmap, and a 16C1 reply when the profile had one. Tolerant: Torque's selected profile name
+     * equals the profile's Torque name (case-insensitive). Exactly one solid profile must match, else null
+     * (fall back to the full check and prompt).
+     */
+    fun solidMatch(obs: Fp, profiles: Map<String, Fp>, torqueName: String?, torqueNameOf: (String) -> String?): String? {
+        if (obs.vin != null || obs.protocol == null) return null
+        val bm = obs.bitmaps["0100"] ?: return null
+        val hits = profiles.filter { (id, s) ->
+            s.probes[SOLID] == "1" && s.vin == null && s.protocol == obs.protocol && s.probes[SOLID_0100] == bm &&
+                (s.probes[SOLID_16C1] != "ok" || obs.probes["ford2216C1"] == "ok") &&
+                torqueName != null && torqueNameOf(id)?.equals(torqueName, ignoreCase = true) == true
+        }.keys
+        return hits.singleOrNull()
+    }
+
     /** Set (to VehicleProbe.VERSION) once a one-time ID probe has completed for this profile. */
     const val ID_PROBE = "idProbe"
     const val VARIES = "varies"

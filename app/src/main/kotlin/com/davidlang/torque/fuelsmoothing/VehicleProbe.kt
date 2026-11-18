@@ -32,6 +32,10 @@ internal class VehicleProbe(
     private var sent = 0
     val results = JSONArray()
     val classes = LinkedHashMap<String, String>()
+    /** Last raw reply per step (private; e.g. 0902 for a VIN comparison by the caller). */
+    val raw = HashMap<String, List<String>>()
+    /** Caller's verdict for a button run, written into [json]. */
+    var verdict: JSONObject? = null
     var finished = false
         private set
     var abortReason: String? = null
@@ -59,7 +63,7 @@ internal class VehicleProbe(
             .put("raw", JSONArray(parts)).put("class", cls))
         // 0100 is asked once more after an unusable reply (seen as 7F0100..11 on the van in 10 of 44 runs).
         if (s.cmd == "0100" && !cls.startsWith("data:") && reasked.add(s.key)) queue.addFirst(s)
-        else classes[s.key] = cls
+        else { classes[s.key] = cls; raw[s.key] = parts }
         return if (queue.isEmpty()) finish() else false
     }
 
@@ -85,7 +89,20 @@ internal class VehicleProbe(
     fun json(): JSONObject = JSONObject().put("v", 2).put("id", id).put("kind", kind).put("t", startMs)
         .put("protocol", protocol ?: JSONObject.NULL).put("steps", results)
         .put("stable", JSONObject(stable())).put("aborted", abortReason ?: JSONObject.NULL)
+        .put("verdict", verdict ?: JSONObject.NULL)
         .put("source", "Torque.sendCommandGetResponse")
+
+    /** This read as a fingerprint observation (VIN from 0902, the 0100 bitmap, the 16C1 probe). */
+    fun observation(): Fingerprint.Fp {
+        val bm = classes["0100"]?.takeIf { it.startsWith("data:") }?.removePrefix("data:")?.take(8)?.takeIf { it.length == 8 }
+        val c16 = classes["2216C1"]
+        return Fingerprint.Fp(
+            vin = raw["0902"]?.let { ProfileStore.parseVin(it) },
+            protocol = protocol,
+            bitmaps = if (bm != null) mapOf("0100" to bm) else emptyMap(),
+            probes = if (c16 == null) emptyMap() else mapOf("ford2216C1" to if (c16.startsWith("data:")) "ok" else "no"),
+        )
+    }
 
     companion object {
         const val GAP_MS = 5_000L
