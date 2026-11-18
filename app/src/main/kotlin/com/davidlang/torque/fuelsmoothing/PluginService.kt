@@ -838,9 +838,10 @@ class PluginService : Service() {
         }
         val valid = !stale && rt.math.isValidSample(raw, ecu, rt.math.smoothed, lowRange) && !src.missing
         val logging = rt.sessions.isOpen && lastActive == id.toString()
-        // Burn before the level step: in the low range the fuel counter carries the level ([FuelMath.lowStep]).
+        // Burn before the level step: the corrected outputs carry it below the low range ([CorrectedLow]);
+        // smoothed is map-free and only uses it for the parked-fill rule.
         val dF = if (logging) integrateGalHr(t, now, rt) else 0.0
-        val lowIn = lowSt?.let { lowInputFor(rt, dF, it) }
+        val lowIn = lowSt?.let { lowInputFor(it) }
         if (!valid) {
             val whyHold = if (stale) LevelTrust.WHY_STALE else holdWhy(raw, ecu, src.missing, rt.math.smoothed, lowRange)
             if (lowIn != null) rt.math.holdLow(speedKmh, now, lowIn) else rt.math.hold()
@@ -2581,14 +2582,13 @@ class PluginService : Service() {
         }
         if (logging) {
             fun num(x: Double?): Any = x?.takeIf { it.isFinite() } ?: org.json.JSONObject.NULL
-            val per = priorFor(rt.id).gpp(sm / u).takeIf { it.isFinite() && it > 0.0 }?.let { 1.0 / it }
             diagnosticCapture.row(org.json.JSONObject().put("event", "lowRange").put("t", now)
                 .put("raw", num(raw)).put("valid", valid).put("why", why ?: org.json.JSONObject.NULL).put("sm", num(sm))
                 .put("mode", rt.math.mode.name).put("lowPath", rt.math.lowPath).put("steady", rt.math.steadyNow)
                 .put("solidZero", rt.math.solidZero).put("speedKmh", num(speedKmh)).put("burnGal", num(dF))
                 .put("sessionFuelGal", num(rt.usedGal)).put("flowRaw", num(rt.lastFlowRaw)).put("flowUnit", rt.lastFlowUnit)
                 .put("median30", num(rt.math.rawMedian(now - FuelMath.LOW_MEDIAN_MS))).put("median60Pct", num(med60))
-                .put("bandSdPct", num(BandNoise.sd(st.bands, sm / u))).put("pctPerGal", num(per))
+                .put("bandSdPct", num(BandNoise.sd(st.bands, sm / u)))
                 .put("levelUpdMs", upd ?: org.json.JSONObject.NULL).put("fresh", fresh)
                 .put("pollMs", lastPollDelayMs).put("sampleMs", lastSampleMs).put("tanksLeft", st.tanksLeft))
         }
@@ -2613,15 +2613,10 @@ class PluginService : Service() {
             .onFailure { FsLog.w(TAG, "low-range state not saved: ${it.javaClass.simpleName}") }
     }
 
-    /** Counter burn, the chunk map's level-per-gallon (none without a map) and the profile's band noise. */
-    private fun lowInputFor(rt: TankRt, dF: Double, st: LowRangeState): FuelMath.LowInput {
-        val prior = priorFor(rt.id)
-        val u = rt.math.unit
-        return FuelMath.LowInput(
-            burnGal = dF,
-            levelPerGal = { lvl -> prior.gpp(lvl / u).takeIf { it.isFinite() && it > 0.0 }?.let { u / it } },
-            sdPct = { lvl -> BandNoise.sd(st.bands, lvl / u) * u },
-        )
+    /** Map-free low-range inputs: the profile's raw band noise only (no tank map, no burn). */
+    private fun lowInputFor(st: LowRangeState): FuelMath.LowInput {
+        val u = levelUnit(1)
+        return FuelMath.LowInput(sdPct = { lvl -> BandNoise.sd(st.bands, lvl / u) * u })
     }
 
     /** Per sample after the level step: this tank's band noise, first raw 0, solid-0 burn, missed-fill end. */

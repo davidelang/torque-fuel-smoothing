@@ -10,8 +10,8 @@ import kotlin.math.abs
 import kotlin.math.sqrt
 
 class LowRangeTest {
-    /** 0.13 gal per percent (the van's chunk map below 10 %), steady noise 2.0 pt. */
-    private fun low(burnGal: Double = 0.0) = FuelMath.LowInput(burnGal, { 1.0 / 0.13 }, { 2.0 })
+    /** Map-free low-range inputs: steady noise 2.0 pt, default threshold / time constant / noise multiplier. */
+    private fun low() = FuelMath.LowInput({ 2.0 })
 
     @Test
     fun test135RawZeroIsValidInTheLowRangeOnly() {
@@ -28,16 +28,21 @@ class LowRangeTest {
     }
 
     @Test
-    fun test136CounterCarriesTheLevelBelow20AndAbove20NothingChanges() {
+    fun test136SmoothedIsMapFreeBelow20AndAbove20NothingChanges() {
         val m = FuelMath()
         m.ingest(10.0, 0.0, nowMs = 0L, low = low())
-        // Parked/idling is not steady driving: the gauge does not pull, the counter moves the level (0.13 gal = 1 pt).
-        for (i in 1..5) m.ingest(10.0, 0.0, nowMs = i * 1000L, low = low(0.13))
-        assertEquals(5.0, m.smoothed!!, 1e-9)
+        // Parked/idling is not steady driving: the level holds (no burn or map moves smoothed).
+        for (i in 1..5) m.ingest(6.0, 0.0, nowMs = i * 1000L, usedGal = 0.13 * i, low = low())
+        assertEquals(10.0, m.smoothed!!, 1e-9)
+        assertTrue(m.lowPath)
+        assertFalse(m.lowPulled)
+        // A rejected reading holds too (the corrected outputs carry the burn).
+        m.holdLow(0.0, 6000L, low())
+        assertEquals(10.0, m.smoothed!!, 1e-9)
         val n = FuelMath()
         n.ingest(50.0, 60.0, nowMs = 0L, low = low())
-        n.ingest(40.0, 60.0, nowMs = 1000L, low = low(0.13))
-        assertEquals(49.95, n.smoothed!!, 1e-9) // plain 0.05 pt/s slew, no prediction
+        n.ingest(40.0, 60.0, nowMs = 1000L, usedGal = 0.13, low = low())
+        assertEquals(49.95, n.smoothed!!, 1e-9) // plain 0.05 pt/s slew
         assertFalse(n.lowPath)
     }
 

@@ -32,12 +32,26 @@ internal class FuelMath {
 
     /**
      * Range-adaptive inputs for the low end (tank 1 of a confirmed vehicle only). Null keeps the plain slew path
-     * everywhere (extra tanks, pending vehicles).
-     * [burnGal]: fuel counted this tick. [levelPerGal]: level units per gallon at a level (chunk map), null or
-     * returning null when there is no map (then the counter does not move the level). [sdPct]: steady-driving raw
-     * noise (level units) at a level ([BandNoise]).
+     * everywhere (extra tanks, pending vehicles). Map-free: smoothed uses raw readings and non-map signals only
+     * (speed, ingest gaps, raw noise); it never converts burn through a tank map. The burn-driven level below the
+     * low range lives in the corrected outputs ([CorrectedLow]).
+     * [sdPct]: steady-driving raw noise (level units) at a level ([BandNoise]). [rangePct]: low-range threshold
+     * (% of gauge, 0 = off). [tauSec]: base low-range time constant. [noiseMult]: extra smoothing for noisy bands,
+     * f = max(1, 1 + noiseMult x ((sd / LOW_SD_REF_PCT)^2 - 1)); 0 = no band weighting. Settings: [FixFuelPrefs].
      */
-    class LowInput(val burnGal: Double, val levelPerGal: ((Double) -> Double?)?, val sdPct: (Double) -> Double)
+    class LowInput(
+        val sdPct: (Double) -> Double,
+        val rangePct: Double = LOW_RANGE_PCT,
+        val tauSec: Double = LOW_TAU_SEC,
+        val noiseMult: Double = LOW_NOISE_MULT,
+    ) {
+        /** Extra smoothing factor for a band sd (level units). */
+        fun factor(sd: Double, unit: Double): Double {
+            val r = sd / (LOW_SD_REF_PCT * unit)
+            if (!r.isFinite() || !noiseMult.isFinite()) return 1.0
+            return maxOf(1.0, 1.0 + noiseMult * (r * r - 1.0))
+        }
+    }
 
     /** Raw has been a solid 0 (>= SOLID_SHARE zeros over SOLID_MS while moving): level held at 0 ("at/below the 0% point"). */
     var solidZero: Boolean = false
@@ -47,6 +61,12 @@ internal class FuelMath {
         private set
     /** The last update used the low-range path. */
     var lowPath: Boolean = false
+        private set
+    /** The last low-range step was a steady-driving pull toward the raw median (corrected outputs anchor only then). */
+    var lowPulled: Boolean = false
+        private set
+    /** Fast re-acquire after an ingest gap or an untaken rise is running (corrected outputs take their map of it). */
+    var reacquiring: Boolean = false
         private set
     private val speeds = ArrayDeque<Pair<Long, Double>>()
     private var brakeMs: Long? = null
@@ -58,14 +78,20 @@ internal class FuelMath {
 
     /**
      * [lowRange] (range-adaptive tank 1): a raw 0 is a valid reading ("at or below the sender's 0% point") whenever
-     * the level is in the low range (<= LOW_RANGE_PCT): a bouncing 0 is a noisy low reading for the median, a solid
+     * the level is in the low range (<= [lowRangePct], the low-range setting): a bouncing 0 is a noisy low reading for the median, a solid
      * 0 holds the level at 0. Without it the old rule stands (0 only once smoothed <= NEAR_EMPTY_PCT).
      */
-    fun isValidSample(raw: Double?, ecuConnected: Boolean?, lastGood: Double? = smoothed, lowRange: Boolean = false): Boolean {
+    fun isValidSample(
+        raw: Double?,
+        ecuConnected: Boolean?,
+        lastGood: Double? = smoothed,
+        lowRange: Boolean = false,
+        lowRangePct: Double = LOW_RANGE_PCT,
+    ): Boolean {
         if (ecuConnected == false) return false
         if (raw == null || !raw.isFinite()) return false
         if (raw > 100.0 || raw < 0.0) return false
-        val near = nearEmpty(lowRange) * unit
+        val near = nearEmpty(lowRange, lowRangePct) * unit
         if (raw == 0.0) {
             return lastGood != null && lastGood <= near
         }
@@ -75,19 +101,16 @@ internal class FuelMath {
     }
 
     /**
-     * A rejected or missing reading with low-range inputs. Below LOW_RANGE_PCT the fuel counter still moves the
-     * level (no reading is not "no burn"); a solid 0 stays at 0. Otherwise the same as [hold].
+     * A rejected or missing reading with low-range inputs: the level holds (map-free; the corrected outputs carry
+     * the burn), a solid 0 stays at 0. Otherwise the same as [hold].
      */
+    @Suppress("UNUSED_PARAMETER")
     fun holdLow(speedKmh: Double, nowMs: Long, low: LowInput) {
         noteSpeed(nowMs, speedKmh)
         hold()
-        val s = smoothed ?: return
-        if (mode == TrackMode.FILL) return
-        if (solidZero) {
-            smoothed = 0.0
-            return
-        }
-        if (s < LOW_RANGE_PCT * unit) smoothed = predict(s, low)
+        lowPulled = false
+        if (smoothed == null || mode == TrackMode.FILL) return
+        if (solidZero) smoothed = 0.0
     }
 
     /** Median of the raw readings since [fromMs] (inside WINDOW_MS); the smoothed level when there are none. */
@@ -183,10 +206,12 @@ internal class FuelMath {
         }
         fillCandMs = null
         val dtSec = if (last == null) 1.0 else ((nowMs - last).coerceAtLeast(0L) / 1000.0).coerceAtLeast(0.001)
-        if (low != null && (prev < LOW_RANGE_PCT * unit || solidZero)) {
+        if (low != null && (prev < low.rangePct * unit || solidZero)) {
             return lowStep(prev, nowMs, dtSec, steady, speedKmh, skewPctPerSec, low)
         }
         lowPath = false
+        lowPulled = false
+        reacquiring = false
         // The sender saturates at 99.9: a reading at the ceiling means "at least full", not that exact number.
         // It may pull the level up to the ceiling but never pulls a level already at/above it down.
         val target = if (raw >= SENDER_CEIL_PCT * unit && prev >= raw) prev else raw
@@ -204,12 +229,12 @@ internal class FuelMath {
     }
 
     /**
-     * Low range (< LOW_RANGE_PCT, replay: sandbox/lowrange-20261118/replay.py). The fuel counter carries the level
-     * (prediction = level - burn x level-per-gallon from the chunk map); the gauge only pulls it, and only:
+     * Low range (< [LowInput.rangePct], replay: sandbox/lowrange-20261118/replay2.py). Map-free: the level holds and
+     * moves only toward the gauge, and only:
      * - toward the 30 s raw MEDIAN (outlier resistant; zeros are censored lows and cannot move a median until they
      *   are half the window),
      * - while driving steadily (LOW_STEADY_KMH, |accel| <= LOW_STEADY_ACC, LOW_BRAKE_HOLD_MS after hard braking),
-     * - slowly: time constant LOW_TAU_SEC x max(1, (band sd / LOW_SD_REF_PCT)^2), within the usual slew limit.
+     * - slowly: time constant [LowInput.tauSec] x [LowInput.factor] (band noise), within the usual slew limit.
      * Solid 0 (>= SOLID_SHARE zeros over SOLID_MS while moving) holds 0 until zeros fall below SOLID_EXIT_SHARE
      * with a median >= SOLID_EXIT_MED_PCT (the caller counts the burn while held as reserve evidence).
      * After an ingest gap > GAP_REACQUIRE_MS, if the first ACQ_WAIT_MS of readings disagree with the carried level by
@@ -218,6 +243,8 @@ internal class FuelMath {
      */
     private fun lowStep(prev: Double, nowMs: Long, dtSec: Double, steady: Boolean, speedKmh: Double, skewPctPerSec: Double, low: LowInput): Double {
         lowPath = true
+        lowPulled = false
+        reacquiring = false
         mode = TrackMode.SKEW
         val n = zeros.size
         val z = zeros.count { it.second }
@@ -238,7 +265,7 @@ internal class FuelMath {
             smoothed = 0.0
             return 0.0
         }
-        val pred = predict(prev, low)
+        val pred = prev
         val d = minOf(dtSec, LOW_DT_CAP_SEC)
         if (!acquiring && med - pred > LIVE_FOLLOW_PCT * unit) {
             // The 30 s median far above the carried level is a rise the fill detector did not take (moving off
@@ -253,6 +280,7 @@ internal class FuelMath {
                 if (abs(median(from) - pred) > ACQ_DIFF_PCT * unit) acquiring = true else acqUntilMs = nowMs
             }
             if (acquiring) {
+                reacquiring = true
                 val y = (pred + (med - pred) * d / (ACQ_TAU_SEC + d)).coerceAtLeast(0.0)
                 smoothed = y
                 return y
@@ -262,19 +290,13 @@ internal class FuelMath {
             smoothed = pred
             return pred
         }
-        val ratio = low.sdPct(prev) / (LOW_SD_REF_PCT * unit)
-        val f = if (ratio.isFinite()) maxOf(1.0, ratio * ratio) else 1.0
-        val a = d / (LOW_TAU_SEC * f + d)
+        val f = low.factor(low.sdPct(prev), unit)
+        val a = d / (low.tauSec.coerceAtLeast(0.0) * f + d)
+        lowPulled = true
         val maxStep = skewPctPerSec.coerceAtLeast(0.0) * unit * dtSec
         val y = (pred + (a * (med - pred)).coerceIn(-maxStep, maxStep)).coerceAtLeast(0.0)
         smoothed = y
         return y
-    }
-
-    private fun predict(prev: Double, low: LowInput): Double {
-        val per = low.levelPerGal?.invoke(prev)
-        if (per == null || !per.isFinite() || per <= 0.0 || !(low.burnGal > 0.0) || !low.burnGal.isFinite()) return prev
-        return (prev - low.burnGal * per).coerceAtLeast(0.0)
     }
 
     /** Speed history for the steady-driving gate; accel = speed change over the last ACCEL_SPAN_MS. */
@@ -394,8 +416,13 @@ internal class FuelMath {
         const val LOW_RANGE_PCT = 20.0
         /** Band sd that gets the base time constant (the quietest steady bands, 10-15 % and 80-95 %). */
         const val LOW_SD_REF_PCT = 1.3
-        /** Base gauge time constant in the low range; tuned by replay over the 08-27/09-11/10-08/11-18 tanks. */
-        const val LOW_TAU_SEC = 40.0
+        /**
+         * Default base time constant in the low range (setting); map-free replay over the 08-27/09-11/10-08/11-18
+         * tanks (sandbox/lowrange-20261118/grid2.txt): 20 s with noise multiplier 1 and threshold 20 %.
+         */
+        const val LOW_TAU_SEC = 20.0
+        /** Default noise multiplier (setting); 1 = f = max(1, (sd / LOW_SD_REF_PCT)^2). */
+        const val LOW_NOISE_MULT = 1.0
         const val LOW_STEADY_KMH = 30.0
         /** m/s^2 */
         const val LOW_STEADY_ACC = 0.3
@@ -417,7 +444,8 @@ internal class FuelMath {
         const val ACQ_TAU_SEC = 5.0
         const val ACQ_DIFF_PCT = 5.0
 
-        fun nearEmpty(lowRange: Boolean): Double = if (lowRange) LOW_RANGE_PCT else NEAR_EMPTY_PCT
+        fun nearEmpty(lowRange: Boolean, lowRangePct: Double = LOW_RANGE_PCT): Double =
+            if (lowRange) maxOf(lowRangePct, NEAR_EMPTY_PCT) else NEAR_EMPTY_PCT
         const val GLITCH_RAW_PCT = 1.0
         const val DROP_HOLD_PT = 15.0
         /**
