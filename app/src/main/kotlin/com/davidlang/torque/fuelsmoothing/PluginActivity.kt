@@ -385,6 +385,16 @@ class PluginActivity : Activity() {
         }
         col.addView(verbose)
 
+        // Short-term diagnostic only (off by default). Never logs position.
+        val sensorLog = android.widget.CheckBox(this)
+        sensorLog.text = S("Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position")
+        sensorLog.primary()
+        sensorLog.isChecked = FixFuelPrefs.prefs(this).getBoolean(SensorLog.KEY, false)
+        sensorLog.setOnCheckedChangeListener { _, on ->
+            FixFuelPrefs.prefs(this).edit().putBoolean(SensorLog.KEY, on).apply()
+        }
+        col.addView(sensorLog)
+
         // Details (below the settings).
         col.addView(label(S("Details")))
         live = TextView(this)

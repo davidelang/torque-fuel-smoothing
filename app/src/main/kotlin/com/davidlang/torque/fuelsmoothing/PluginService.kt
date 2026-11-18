@@ -725,6 +725,8 @@ class PluginService : Service() {
                         .put("torqueFlowRaw", number(rt.lastFlowRaw)).put("torqueFlowUnit", rt.lastFlowUnit)
                         .put("torqueFlowPid", rt.lastFlowPid ?: org.json.JSONObject.NULL)
                         .put("primaryLevelPct", number(lastRawPct)))
+                    // Short-term diagnostic, off by default: phone accelerometer + GPS heading/speed/height change.
+                    diagnosticCapture.sensors(t, now, cfg.sensorLog)
                 } catch (e: Exception) {
                     diagnosticCapture.disableAfterFailure(e)
                 }

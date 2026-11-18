@@ -27,6 +27,8 @@ internal data class FixFuelConfig(
     val showFuelNotification: Boolean = true,
     /** What the plugin feeds back into Torque's Fuel Level (012F). Default = previous behavior (corrected). */
     val feed012f: FeedMode = FeedMode.CORRECTED,
+    /** Optional phone-sensor diagnostic rows in the session sidecar ([SensorLog]); off by default. */
+    val sensorLog: Boolean = false,
     /** Stored values that failed validation: pref key -> raw stored text. Runtime uses defaults for these. */
     val invalid: Map<String, String> = emptyMap(),
 ) {
@@ -184,6 +186,7 @@ internal object FixFuelPrefs {
             activeTank = normalizeActive(p.getString(KEY_ACTIVE, ACTIVE_TANK1) ?: ACTIVE_TANK1),
             selectPidName = p.getString(KEY_SELECT_PID, "") ?: "",
             showFuelNotification = p.getBoolean(KEY_SHOW_NOTICE, true),
+            sensorLog = p.getBoolean(SensorLog.KEY, false),
             feed012f = run {
                 val m = feedMode(p.getString(KEY_FEED_012F, null), if (p.contains(KEY_WRITE_012F)) p.getBoolean(KEY_WRITE_012F, true) else null)
                 if (p.getBoolean(KEY_FEED_V2, false)) m else {

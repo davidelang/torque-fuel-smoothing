@@ -53,11 +53,44 @@ internal class DiagnosticCapture {
     fun start(profile: String, tank: Int, id: String, torqueName: String, dir: File,
         protocol: String?, bitmaps: Map<String, String>, mode09Known: Boolean = false, pending: Boolean = false) {
         if (closed || failed) return
+        sensorState = SensorLog.State()
         current = Session(profile, tank, id, torqueName, File(File(dir, "diagnostics"), "$id.jsonl"),
             protocol.orEmpty(), bitmaps.toMap(), mode09Known, pending)
     }
 
-    fun end(id: String?) { if (current?.id == id) current = null }
+    fun end(id: String?) { if (current?.id == id) { current = null; sensorState = SensorLog.State() } }
+
+    @Volatile private var sensorState = SensorLog.State()
+
+    /**
+     * Optional phone-sensor rows ([SensorLog], off by default). One binder read of Torque's internal phone PIDs on
+     * the sampling thread (no bus traffic); the file write goes to the diagnostics worker. At most one row per
+     * second, only into an open session sidecar.
+     */
+    fun sensors(torque: ITorqueService, nowMs: Long, enabled: Boolean) {
+        val s = current ?: return
+        if (!enabled || closed || failed) return
+        val st = sensorState
+        if (!SensorLog.due(st, nowMs)) return
+        val row = try {
+            SensorLog.row(nowMs, torque.getPIDValuesAsDouble(SensorLog.request()), st)
+        } catch (e: Exception) {
+            st.lastMs = nowMs
+            null
+        } ?: return
+        try {
+            worker.execute {
+                try {
+                    if (closed || current !== s || !s.opened) return@execute
+                    write(s, row)
+                } catch (e: Exception) {
+                    if (current === s) disableAfterFailure(e)
+                }
+            }
+        } catch (e: Exception) {
+            disableAfterFailure(e)
+        }
+    }
     fun shutdown() {
         closed = true
         current = null
