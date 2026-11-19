@@ -1,6 +1,6 @@
 # Manual screenshots
 
-`capture-manual-screenshots` takes user-manual JPEGs on a phone, a tablet, or both. The walk is `manual-capture.yaml` at the app root. The script is the driver. String ids and the order of steps live in the yaml. Geometry (where a node sits between two anchors, which control is the shutter, how the drawer scrim is found) stays in the script.
+`capture-manual-screenshots` takes user-manual JPEGs on a phone, a tablet, or both. The walk is `manual-capture.yaml` at the app root. `script-android-app` is the driver and runs one device. This command starts one copy of it, or two copies at the same time when two serials are given. String ids and the order of steps live in the yaml. Geometry (where a node sits between two anchors, which control is the shutter, how the drawer scrim is found) stays in the driver.
 
 Deploy copies this script and this manual into an Android project root, the same way it copies `build_app`. Do not put an app's yaml in `build-examples/android-gradle/`. Deploy would install that yaml into every Android app.
 
@@ -51,7 +51,7 @@ From the app root, after this script is installed:
 
 `--config` defaults to `manual-capture.yaml`. `--root` defaults to `.`. Before the script is installed, point `--root` at the app and run the copy under `build-examples/android-gradle/`.
 
-One serial and no `--form`: a physical diagonal under `phone_max_inches` (default 8) is a phone. Anything else is a tablet. Two serials and no `--form`: the larger diagonal is the tablet. A gap under `gap_inches` (default 1.5) exits before any shot. `--form` with two serials is an error. The two devices run at the same time. One failure does not stop the other.
+One serial and no `--form`: a physical diagonal under `phone_max_inches` (default 8) is a phone. Anything else is a tablet. Two serials and no `--form`: the larger diagonal is the tablet, and each device is its own `script-android-app` process. A gap under `gap_inches` (default 1.5) exits before either copy starts. `--form` with two serials is an error. The two copies run at the same time. One failure does not stop the other.
 
 `--locales` is `all` or a comma list of pref tags. Omitted means `en` for one serial and `all` for two. `--shots` is a comma list of group names and filenames. Omitted means every shot. An unknown token exits before any shot. There is no exact pixel-size check.
 

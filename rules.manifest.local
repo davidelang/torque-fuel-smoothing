@@ -27,3 +27,5 @@ local play-publish
 local play-notes-exclude
 local capture-manual-screenshots
 local capture-manual-screenshots.md
+local script-android-app
+local script-android-app.md
