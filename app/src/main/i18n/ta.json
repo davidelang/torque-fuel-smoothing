@@ -5,9 +5,9 @@
     "text": "Fuel Smoothing for Torque"
   },
   {
-    "key": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
-    "source": "https://play.landing.lang.hm/fuel-smoothing/privacy/",
-    "text": "https://play.landing.lang.hm/fuel-smoothing/privacy/"
+    "key": "https://fuel-smoothing.lang.hm/privacy/",
+    "source": "https://fuel-smoothing.lang.hm/privacy/",
+    "text": "https://fuel-smoothing.lang.hm/privacy/"
   },
   {
     "key": "Tips are on the Play Store version",
@@ -25,9 +25,9 @@
     "text": "திறந்த மூல நூலகங்கள்\nஇந்த செயலி கீழுள்ள நூலகங்களைப் பயன்படுத்துகிறது. அவற்றின் உரிமங்கள் மேலுள்ள பதிப்புரிமையிலிருந்து தனி.\n\nGoogle Play Billing (com.android.billingclient:billing and billing-ktx 8.0.0)\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html\n\nAndroidX activity 1.2.3, core 1.2.0, fragment 1.1.0, lifecycle 2.0.0 and 2.3.1, savedstate 1.1.0, versionedparcelable 1.1.0, arch.core 2.1.0, customview 1.0.0, loader 1.0.0, tracing 1.0.0, viewpager 1.0.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nkotlinx-coroutines-core 1.6.0\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nKotlin standard library\nApache License 2.0\nhttps://www.apache.org/licenses/LICENSE-2.0\n\nGoogle Play services (com.google.android.gms), Play Billing க்குத் தேவை\nAndroid Software Development Kit License\nhttps://developer.android.com/studio/terms.html"
   },
   {
-    "key": "https://play.landing.lang.hm/fuel-smoothing/manual/",
-    "source": "https://play.landing.lang.hm/fuel-smoothing/manual/",
-    "text": "https://play.landing.lang.hm/fuel-smoothing/manual/"
+    "key": "https://fuel-smoothing.lang.hm/manual/",
+    "source": "https://fuel-smoothing.lang.hm/manual/",
+    "text": "https://fuel-smoothing.lang.hm/manual/"
   },
   {
     "key": "Full manual (online)",

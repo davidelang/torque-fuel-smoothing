@@ -1,6 +1,6 @@
 Fuel Smoothing for Torque
-https://play.landing.lang.hm/fuel-smoothing/privacy/
-https://play.landing.lang.hm/fuel-smoothing/manual/
+https://fuel-smoothing.lang.hm/privacy/
+https://fuel-smoothing.lang.hm/manual/
 Fuel Smoothing
 Chunk
 Band

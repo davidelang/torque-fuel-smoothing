@@ -20,7 +20,7 @@ Quick start
 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.
 11. All data stays on this phone. No GPS or location is recorded.
 
-[Full manual (online)] → https://play.landing.lang.hm/fuel-smoothing/manual/ (placeholder; publish docs/MANUAL.md there)
+[Full manual (online)] → https://fuel-smoothing.lang.hm/manual/ (placeholder; publish docs/MANUAL.md there)
 
 ## About
 Fuel Smoothing for Torque
@@ -54,5 +54,5 @@ Google Play services (com.google.android.gms), required by Play Billing
 Android Software Development Kit License
 https://developer.android.com/studio/terms.html
 
-Privacy policy: https://play.landing.lang.hm/fuel-smoothing/privacy/
+Privacy policy: https://fuel-smoothing.lang.hm/privacy/
 Feedback: Send feedback (opens email to david+fuelsmoothing@lang.hm)

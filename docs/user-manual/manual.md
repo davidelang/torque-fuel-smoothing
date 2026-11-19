@@ -148,7 +148,7 @@ ECU identity (VIN, calibration ID, supported-PID lists) is stored per profile, o
 
 No data is uploaded. The internet and billing permissions come from Google Play Billing (optional tips). The app connects to Google Play only after you tap **Tip**. **Send feedback** opens your email app with the app version, Android version, and device model filled in. You decide whether to send it.
 
-Privacy policy: https://play.landing.lang.hm/fuel-smoothing/privacy/
+Privacy policy: https://fuel-smoothing.lang.hm/privacy/
 
 ## Troubleshooting
 

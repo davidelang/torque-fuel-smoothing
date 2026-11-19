@@ -1,13 +1,13 @@
 # Privacy Policy: Fuel Smoothing for Torque
 
-> DRAFT for David. It replaces the page at https://play.landing.lang.hm/fuel-smoothing/privacy/.
+> DRAFT for David. It replaces the page at https://fuel-smoothing.lang.hm/privacy/.
 > Fill in before publishing: **[EFFECTIVE DATE]**. Package confirmed as `com.davidlang.torque.fuelsmoothing` (official build ID).
 > It assumes patch3 is shipped, so billing connects only when Tip is tapped. If it isn't, change §2 to "connects to Google Play when you open the app's screen".
 
 **Effective date:** [EFFECTIVE DATE]
 **App:** Fuel Smoothing for Torque (`com.davidlang.torque.fuelsmoothing`), a plugin for the Torque Pro OBD-II app
 **Developer:** David Lang (Google Play developer name: "David E Lang")
-**Website:** https://play.landing.lang.hm/fuel-smoothing/
+**Website:** https://fuel-smoothing.lang.hm/
 **Contact:** david+fuelsmoothing@lang.hm
 
 Not affiliated with or endorsed by the developer of Torque or any vehicle manufacturer. "Torque" and vehicle brand names are trademarks of their respective owners.

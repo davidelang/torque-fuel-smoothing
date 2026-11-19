@@ -239,7 +239,7 @@ class PluginActivity : Activity() {
         val manual = Button(this)
         manual.text = S("Full manual (online)")
         manual.setOnClickListener {
-            runCatching { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(S("https://play.landing.lang.hm/fuel-smoothing/manual/")))) }
+            runCatching { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(S("https://fuel-smoothing.lang.hm/manual/")))) }
         }
         helpPage.addView(manual)
 
@@ -254,7 +254,7 @@ class PluginActivity : Activity() {
         val privacy = Button(this)
         privacy.text = S("Privacy")
         privacy.setOnClickListener {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(S("https://play.landing.lang.hm/fuel-smoothing/privacy/"))))
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(S("https://fuel-smoothing.lang.hm/privacy/"))))
         }
         aboutPage.addView(privacy)
         val feedback = Button(this)
