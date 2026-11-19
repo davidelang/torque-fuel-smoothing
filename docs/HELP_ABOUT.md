@@ -20,7 +20,7 @@ Quick start
 10. Keep driving and filling up; accuracy builds over several partial tanks. If a Wrong vehicle profile? notification appears, choose what to do with that drive.
 11. All data stays on this phone. No GPS or location is recorded.
 
-[Full manual (online)] → https://fuel-smoothing.lang.hm/manual/ (placeholder; publish docs/MANUAL.md there)
+[Full manual (online)] → https://fuel-smoothing.lang.hm/manual/ (the full manual is published there)
 
 ## About
 Fuel Smoothing for Torque
