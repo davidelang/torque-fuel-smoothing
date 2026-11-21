@@ -54,7 +54,11 @@
 #     -h, --help   Print this usage and exit.
 #
 #   Devices: tablet, emulator -> emulator-5554; phone -> deploy_serial= in project.config;
-#   anything else is an adb serial. With no device arguments, every online device.
+#   anything else is an adb serial or a usb:<path> from adb devices -l. With no device
+#   arguments, every online device. Two entries with the same serial (adb -s SERIAL is then
+#   ambiguous, even when one is unauthorized) are addressed by their usb:<path>; naming such a
+#   serial (or deploy_serial= set to one) fails and lists the usb: addresses to pass instead.
+#   A repeated serial with no usb: path is an error: unplug one.
 #   Flags may follow a device (deploy tablet --clean). -- ends options; the rest are gradle flags.
 #
 #   deploy stops before any adb call if aapt2 is missing or fails, if the APKs name different
@@ -73,7 +77,8 @@ usage() {
 $USAGE_LINE
 
 Install the last-built APKs with adb install -r (no compile), or with -p upload the
-last Play bundle. DEVICE: tablet, emulator, phone, or an adb serial (default: all online).
+last Play bundle. DEVICE: tablet, emulator, phone, an adb serial, or usb:<path> from
+adb devices -l (needed when two devices share a serial). Default: all online devices.
 
 options:
   -h, --help             show this help message and exit
@@ -525,19 +530,106 @@ pkg_installed() {
 }
 
 # ---------------------------------------------------------------------------
-# Devices.
-if ! devices_text=$(adb devices); then
-  echo "ERROR: adb devices failed" >&2
+# Devices. adb devices -l lists every entry with its state and, for USB devices, usb:<path>.
+# Each online device gets an address for adb -s: its serial when no other entry (in any state)
+# has that serial, otherwise its usb:<path> (adb -s SERIAL refuses a serial listed twice).
+if ! devices_text=$(adb devices -l); then
+  echo "ERROR: adb devices -l failed" >&2
   exit 1
 fi
-connected=()
-while read -r serial state _; do
-  serial=${serial//$'\r'/}
-  state=${state//$'\r'/}
-  if [ "$state" = "device" ]; then
-    connected+=("$serial")
-  fi
+dev_serial=() dev_state=() dev_usb=() dev_model=() dev_line=()
+while IFS= read -r _line; do
+  _line=${_line//$'\r'/}
+  case "$_line" in
+    ''|'List of devices attached'|'* '*) continue ;;
+  esac
+  read -r _serial _state _rest <<< "$_line"
+  _usb="" _model=""
+  read -r -a _fields <<< "$_rest"
+  for _f in ${_fields[@]+"${_fields[@]}"}; do
+    case "$_f" in
+      usb:*) _usb=$_f ;;
+      model:*) _model=${_f#model:} ;;
+    esac
+  done
+  dev_serial+=("$_serial"); dev_state+=("$_state"); dev_usb+=("$_usb"); dev_model+=("$_model")
+  dev_line+=("$_line")
 done <<< "$devices_text"
+
+# Number of adb devices -l entries (any state) with serial $1.
+serial_count() {
+  local i n=0
+  for i in "${!dev_serial[@]}"; do
+    if [ "${dev_serial[$i]}" = "$1" ]; then
+      n=$((n + 1))
+    fi
+  done
+  printf '%s\n' "$n"
+}
+
+# dev_addr[i]: the adb -s address of online entry i (empty when not online, or when its serial
+# is listed twice and it has no usb: path; dup_nousb lists those).
+dev_addr=() dup_nousb=()
+for i in "${!dev_serial[@]}"; do
+  dev_addr+=("")
+  [ "${dev_state[$i]}" = device ] || continue
+  if [ "$(serial_count "${dev_serial[$i]}")" -eq 1 ]; then
+    dev_addr[$i]=${dev_serial[$i]}
+  elif [ -n "${dev_usb[$i]}" ]; then
+    dev_addr[$i]=${dev_usb[$i]}
+  else
+    dup_nousb+=("$i")
+  fi
+done
+
+# Print the adb -s address for DEVICE argument $1 (a serial or usb:<path>; $2 names where it
+# came from). Unknown or offline names are printed unchanged (the install loop reports them).
+# A serial listed more than once is an error naming the usb: addresses to pass instead.
+resolve_device() {
+  local name="$1" from="$2" i n hints=""
+  case "$name" in
+    usb:*) printf '%s\n' "$name"; return 0 ;;
+  esac
+  n=$(serial_count "$name")
+  if [ "$n" -le 1 ]; then
+    printf '%s\n' "$name"
+    return 0
+  fi
+  for i in "${!dev_serial[@]}"; do
+    [ "${dev_serial[$i]}" = "$name" ] || continue
+    if [ -n "${dev_usb[$i]}" ]; then
+      hints="$hints"$'\n'"  ${dev_usb[$i]}  (${dev_state[$i]}${dev_model[$i]:+, ${dev_model[$i]}})"
+    else
+      hints="$hints"$'\n'"  (no usb: path) ${dev_line[$i]}"
+    fi
+  done
+  echo "ERROR: $from $name matches $n adb devices (adb -s $name is ambiguous). Pass the usb: address of the one you want:$hints" >&2
+  return 1
+}
+
+# Index of the online entry that address $1 (its serial address, or its usb:<path>) names.
+online_entry() {
+  local i
+  for i in "${!dev_addr[@]}"; do
+    if [ -n "${dev_addr[$i]}" ] && { [ "${dev_addr[$i]}" = "$1" ] || [ "${dev_usb[$i]}" = "$1" ]; }; then
+      printf '%s\n' "$i"
+      return 0
+    fi
+  done
+  return 1
+}
+
+# Label for address $1 in output: the address, plus the serial (when the address is a usb:
+# path) and the model, so devices with the same serial can be told apart.
+device_label() {
+  local i
+  i=$(online_entry "$1")
+  if [ "$1" != "${dev_serial[$i]}" ]; then
+    printf '%s (%s%s)\n' "$1" "${dev_serial[$i]}" "${dev_model[$i]:+, ${dev_model[$i]}}"
+  else
+    printf '%s%s\n' "$1" "${dev_model[$i]:+ (${dev_model[$i]})}"
+  fi
+}
 
 map_serial() {
   local s
@@ -549,27 +641,46 @@ map_serial() {
         echo "ERROR: alias 'phone' requires deploy_serial= in project.config" >&2
         return 1
       fi
-      printf '%s\n' "$s"
+      resolve_device "$s" "deploy_serial= (alias 'phone')"
       ;;
-    *) printf '%s\n' "$1" ;;
+    *) resolve_device "$1" "device" ;;
   esac
 }
 
 selected=()
 add_selected() {
   local s
-  for s in "${selected[@]}"; do
-    [ "$s" = "$1" ] && return 0
+  for s in ${selected[@]+"${selected[@]}"}; do
+    if [ "$s" = "$1" ]; then
+      return 0
+    fi
   done
   selected+=("$1")
 }
 if [ "${#device_args[@]}" -eq 0 ]; then
-  for serial in "${connected[@]}"; do
-    add_selected "$serial"
+  if [ "${#dup_nousb[@]}" -gt 0 ]; then
+    echo "ERROR: adb lists more than one device with the same serial and no usb: path to tell them apart:" >&2
+    for i in "${!dev_serial[@]}"; do
+      for j in "${dup_nousb[@]}"; do
+        if [ "${dev_serial[$i]}" = "${dev_serial[$j]}" ]; then
+          echo "  ${dev_line[$i]}" >&2
+          break
+        fi
+      done
+    done
+    echo "  Unplug or disconnect all but one of them, or name the other devices to deploy to." >&2
+    exit 1
+  fi
+  for i in "${!dev_addr[@]}"; do
+    if [ -n "${dev_addr[$i]}" ]; then
+      add_selected "${dev_addr[$i]}"
+    fi
   done
 else
   for name in "${device_args[@]}"; do
-    mapped=$(map_serial "$name")
+    if ! mapped=$(map_serial "$name"); then
+      exit 1
+    fi
     add_selected "$mapped"
   done
 fi
@@ -579,11 +690,7 @@ if [ "${#selected[@]}" -eq 0 ]; then
 fi
 
 is_connected() {
-  local s
-  for s in "${connected[@]}"; do
-    [ "$s" = "$1" ] && return 0
-  done
-  return 1
+  online_entry "$1" >/dev/null
 }
 
 failed=0
@@ -609,7 +716,7 @@ for serial in "${selected[@]}"; do
     failed=1
     continue
   fi
-  echo "== $serial ($abilist): $apk"
+  echo "== $(device_label "$serial") ($abilist): $apk"
 
   if [ "$uninstall_first" -eq 1 ]; then
     if pkg_installed "$serial" "$PKG"; then
