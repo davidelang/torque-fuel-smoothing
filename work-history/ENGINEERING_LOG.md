@@ -365,3 +365,8 @@ Every closed-part update is one full rebuild. Stops are gradient, step, cap 200,
 ## 2026-11-24 - Material 3 look and feel for PluginActivity
 
 - Start execute of sandbox/plans/material3-look-and-feel-20261123-2250-plan.md from 6cb49069. AppCompatActivity, Material 3 theme, Dynamic Color, edge-to-edge insets, and Material view widgets; English S() strings unchanged.
+
+## 2026-11-24 - TextInputLayout is not the field parent
+
+- Review review-diff-ad95815d9a3c: fieldHost cast EditText.parent to TextInputLayout. Material 1.13 addView puts the field in an inner FrameLayout, so the first addField (and markField) threw ClassCastException. Walk parents to the TextInputLayout.
+- Plan sandbox/plans/material3-look-and-feel-20261123-2250-plan.md. Plan Status stays DRAFT: that file is not writable by this role.

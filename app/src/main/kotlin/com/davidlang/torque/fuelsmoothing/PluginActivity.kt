@@ -1092,7 +1092,12 @@ class PluginActivity : AppCompatActivity() {
         return e
     }
 
-    private fun fieldHost(e: EditText): TextInputLayout = e.parent as TextInputLayout
+    /** Material 1.13 parents the field in an inner FrameLayout, not on the TextInputLayout. */
+    private fun fieldHost(e: EditText): TextInputLayout {
+        var p = e.parent
+        while (p is View && p !is TextInputLayout) p = p.parent
+        return p as TextInputLayout
+    }
 
     private fun addField(parent: LinearLayout, field: EditText) {
         parent.addView(fieldHost(field))
