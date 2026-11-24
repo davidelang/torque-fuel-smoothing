@@ -1,12 +1,13 @@
 package com.davidlang.torque.fuelsmoothing
 
 import android.Manifest
-import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.graphics.Canvas
+import android.graphics.Paint
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -15,10 +16,26 @@ import android.provider.Settings
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
-import android.util.Log
-import android.graphics.Canvas
-import android.graphics.Paint
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.ScrollView
+import android.widget.Spinner
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.card.MaterialCardView
+import com.google.android.material.checkbox.MaterialCheckBox
+import com.google.android.material.color.DynamicColors
+import com.google.android.material.color.MaterialColors
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import java.text.DecimalFormatSymbols
 import java.util.Locale
 import kotlin.math.abs
@@ -28,16 +45,6 @@ import kotlin.math.log10
 import kotlin.math.max
 import kotlin.math.pow
 import kotlin.math.roundToInt
-import android.view.WindowInsets
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.ScrollView
-import android.widget.Spinner
-import android.widget.TextView
 import com.android.billingclient.api.AcknowledgePurchaseParams
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
@@ -51,36 +58,37 @@ import com.android.billingclient.api.QueryProductDetailsParams
 import com.android.billingclient.api.QueryPurchasesParams
 import java.io.File
 
-class PluginActivity : Activity() {
+class PluginActivity : AppCompatActivity() {
     private lateinit var sourceSpinner: Spinner
-    private lateinit var customName: EditText
-    private lateinit var tau: EditText
-    private lateinit var skew: EditText
-    private lateinit var lowPct: EditText
-    private lateinit var lowTau: EditText
-    private lateinit var lowNoise: EditText
+    private lateinit var customName: TextInputEditText
+    private lateinit var tau: TextInputEditText
+    private lateinit var skew: TextInputEditText
+    private lateinit var lowPct: TextInputEditText
+    private lateinit var lowTau: TextInputEditText
+    private lateinit var lowNoise: TextInputEditText
     private lateinit var live: TextView
     private lateinit var sizeChunk: TextView
     private lateinit var sizeBand: TextView
     private lateinit var sizeKalman: TextView
     private lateinit var fitChart: FitChart
     private lateinit var extrasCol: LinearLayout
-    private lateinit var addBtn: Button
-    private lateinit var showNotice: CheckBox
+    private lateinit var addBtn: MaterialButton
+    private lateinit var showNotice: MaterialCheckBox
     private lateinit var feed012f: Spinner
     private lateinit var activeSpinner: Spinner
-    private lateinit var selectPid: EditText
+    private lateinit var selectPid: TextInputEditText
     private lateinit var profileNameView: TextView
-    private lateinit var profileName: EditText
+    private lateinit var profileName: TextInputEditText
     private lateinit var settingsProfile: Spinner
     private var editProfileId = ""
     private var profileChoices: List<Pair<String, String>> = emptyList()
     private val editorPrefs by lazy { getSharedPreferences("profile_editor", MODE_PRIVATE) }
     /** Pending vehicle decision: a red banner that stays until answered, plus a popup on every visit. */
-    private lateinit var identityBanner: LinearLayout
+    private lateinit var identityBanner: MaterialCardView
+    private lateinit var identityBannerCol: LinearLayout
     private var identityBannerKey = ""
     private var identityShownKey = ""
-    private var identityDialog: android.app.AlertDialog? = null
+    private var identityDialog: androidx.appcompat.app.AlertDialog? = null
     private val identityHandler = android.os.Handler(android.os.Looper.getMainLooper())
     private val identityTick = object : Runnable {
         override fun run() {
@@ -131,12 +139,12 @@ class PluginActivity : Activity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
     }
-    private lateinit var vehicleMake: EditText
-    private lateinit var detectBtn: Button
-    private lateinit var confirmBtn: Button
-    private lateinit var odoMiles: EditText
+    private lateinit var vehicleMake: TextInputEditText
+    private lateinit var detectBtn: MaterialButton
+    private lateinit var confirmBtn: MaterialButton
+    private lateinit var odoMiles: TextInputEditText
     private lateinit var gapText: TextView
-    private lateinit var tipButton: Button
+    private lateinit var tipButton: MaterialButton
     private lateinit var tipChoices: LinearLayout
     private lateinit var thanksView: TextView
     private var billing: BillingClient? = null
@@ -178,7 +186,9 @@ class PluginActivity : Activity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        DynamicColors.applyToActivityIfAvailable(this)
         super.onCreate(savedInstanceState)
+        WindowCompat.enableEdgeToEdge(window)
         AppStrings.install(this)
         editProfileId = savedInstanceState?.getString("editProfileId")
             ?: editorPrefs.getString("profileId", null)
@@ -203,10 +213,11 @@ class PluginActivity : Activity() {
         head.addView(smallButton(S("About")) { showPage(S("About"), aboutPage) })
         col.addView(head)
 
-        identityBanner = LinearLayout(this)
-        identityBanner.orientation = LinearLayout.VERTICAL
-        identityBanner.setBackgroundColor(0xFFC62828.toInt())
-        identityBanner.setPadding(pad / 2, pad / 2, pad / 2, pad / 2)
+        identityBanner = errorCard()
+        identityBanner.setContentPadding(pad / 2, pad / 2, pad / 2, pad / 2)
+        identityBannerCol = LinearLayout(this)
+        identityBannerCol.orientation = LinearLayout.VERTICAL
+        identityBanner.addView(identityBannerCol)
         identityBanner.visibility = View.GONE
         col.addView(identityBanner)
 
@@ -236,9 +247,7 @@ class PluginActivity : Activity() {
         help.textSize = 14f
         help.primary()
         helpPage.addView(help)
-        val manual = Button(this)
-        manual.text = S("Full manual (online)")
-        manual.setOnClickListener {
+        val manual = actionButton(S("Full manual (online)")) {
             runCatching { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(S("https://fuel-smoothing.lang.hm/manual/")))) }
         }
         helpPage.addView(manual)
@@ -251,19 +260,13 @@ class PluginActivity : Activity() {
         about.textSize = 14f
         about.primary()
         aboutPage.addView(about)
-        val privacy = Button(this)
-        privacy.text = S("Privacy")
-        privacy.setOnClickListener {
+        val privacy = actionButton(S("Privacy")) {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(S("https://fuel-smoothing.lang.hm/privacy/"))))
         }
         aboutPage.addView(privacy)
-        val feedback = Button(this)
-        feedback.text = S("Send feedback")
-        feedback.setOnClickListener { sendFeedback() }
+        val feedback = actionButton(S("Send feedback")) { sendFeedback() }
         aboutPage.addView(feedback)
-        tipButton = Button(this)
-        tipButton.text = S("Tip")
-        tipButton.setOnClickListener { onTipClicked() }
+        tipButton = actionButton(S("Tip")) { onTipClicked() }
         aboutPage.addView(tipButton)
         tipChoices = LinearLayout(this)
         tipChoices.orientation = LinearLayout.VERTICAL
@@ -282,10 +285,10 @@ class PluginActivity : Activity() {
         profileNameView = TextView(this)   // kept for refreshProfile; the name is in the status line
         col.addView(info(S("Profile name"), S("The name of this vehicle profile. Each Torque vehicle profile gets its own plugin profile, data and learned maps.")))
         profileName = edit(InputType.TYPE_CLASS_TEXT)
-        col.addView(profileName)
+        addField(col, profileName)
         col.addView(info(S("Make"), S("Vehicle make (e.g. Ford). Used only to choose which brand-specific fuel PIDs detection may try.")))
         vehicleMake = edit(InputType.TYPE_CLASS_TEXT)
-        col.addView(vehicleMake)
+        addField(col, vehicleMake)
 
         col.addView(info(S("Fuel source"), S("Where the raw fuel level comes from. Detect (needs the ECU connected) tries the candidates read-only and asks you to confirm unless two sources agree. Confirm is on the setup page and in the notification. None = detect on the next connect.")))
         val srcRow = LinearLayout(this)
@@ -323,21 +326,26 @@ class PluginActivity : Activity() {
 
         col.addView(info(S("Custom long name"), S("Only for the source \"Torque extra PID by long name\": the exact long name of the Torque PID that reports the level.")))
         customName = edit(InputType.TYPE_CLASS_TEXT)
-        col.addView(customName)
+        addField(col, customName)
 
-        col.addView(info(S("Learned tank size"), S("Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.")))
-        sizeChunk = sizeLine(col, 0xFF1565C0.toInt())
-        sizeBand = sizeLine(col, 0xFF2E7D32.toInt())
-        sizeKalman = sizeLine(col, 0xFFE65100.toInt())
+        val learned = surfaceCard()
+        val learnedCol = LinearLayout(this)
+        learnedCol.orientation = LinearLayout.VERTICAL
+        learned.addView(learnedCol)
+        learnedCol.addView(info(S("Learned tank size"), S("Each fit's own learned size, reported by the plugin; there is nothing to enter. Torque's own fuel remaining and DTE use the tank size in the Torque vehicle profile.")))
+        sizeChunk = sizeLine(learnedCol, 0xFF1565C0.toInt())
+        sizeBand = sizeLine(learnedCol, 0xFF2E7D32.toInt())
+        sizeKalman = sizeLine(learnedCol, 0xFFE65100.toInt())
         fitChart = FitChart(this)
-        col.addView(fitChart)
+        learnedCol.addView(fitChart)
+        col.addView(learned)
 
         col.addView(info(S("Feed fuel level back to Torque (overrides 012F)"), S("Writes a value onto Torque's stock Fuel Level (012F) so existing gauges show it: Off, Smoothed, or Corrected from the Chunk, Band or Kalman fit. A fit that is not built yet writes the smoothed level.")))
         feed012f = Spinner(this)
         feed012f.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, FeedMode.entries.map { S(it.label) })
         col.addView(feed012f)
 
-        showNotice = CheckBox(this)
+        showNotice = MaterialCheckBox(this)
         showNotice.text = S("Show fuel level in notification")
         showNotice.primary()
         col.addView(showNotice)
@@ -354,26 +362,27 @@ class PluginActivity : Activity() {
 
         col.addView(info(S("Smoothing τ seconds"), S("Time constant of the smoothing filter (0 = no smoothing).")))
         tau = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
-        col.addView(tau)
+        addField(col, tau)
         col.addView(info(S("Max skew %/s"), S("Largest change per second the smoothed level may follow; slosh beyond this is ignored.")))
         skew = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
-        col.addView(skew)
+        addField(col, skew)
         col.addView(info(S("Low-range smoothing below %"), S("Below this level the smoothed level follows only steady-driving readings, more slowly where the gauge is noisy (0 = off).")))
         lowPct = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
-        col.addView(lowPct)
+        addField(col, lowPct)
         col.addView(info(S("Low-range τ seconds"), S("Time constant of the smoothed level in the low range.")))
         lowTau = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
-        col.addView(lowTau)
+        addField(col, lowTau)
         col.addView(info(S("Low-range noise multiplier"), S("Extra smoothing in noisy gauge bands (0 = none, 1 = default, higher = stronger).")))
         lowNoise = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
-        col.addView(lowNoise)
+        addField(col, lowNoise)
 
         col.addView(info(S("Odometer miles"), S("Optional: enter the odometer reading and Save pin to anchor distance for this profile.")))
         val odoRow = LinearLayout(this)
         odoRow.orientation = LinearLayout.HORIZONTAL
         odoMiles = edit(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
-        odoMiles.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-        odoRow.addView(odoMiles)
+        val odoBox = fieldHost(odoMiles)
+        odoBox.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        odoRow.addView(odoBox)
         odoRow.addView(smallButton(S("Save pin")) {
             if (!editProfileExists()) return@smallButton
             val miles = odoMiles.text.toString().toDoubleOrNull() ?: return@smallButton
@@ -386,18 +395,16 @@ class PluginActivity : Activity() {
         extrasCol = LinearLayout(this)
         extrasCol.orientation = LinearLayout.VERTICAL
         col.addView(extrasCol)
-        addBtn = Button(this)
-        addBtn.text = S("Add additional tank")
-        addBtn.setOnClickListener { addExtra() }
+        addBtn = actionButton(S("Add additional tank")) { addExtra() }
         col.addView(addBtn)
         col.addView(info(S("Active tank"), S("Which tank the fuel burn (gal/hr) is charged to. From PID: a Torque PID chooses it (1-based tank id).")))
         activeSpinner = Spinner(this)
         col.addView(activeSpinner)
         col.addView(info(S("Select-PID long name"), S("Only when Active tank = From PID: the long name of the Torque PID whose value is the tank id.")))
         selectPid = edit(InputType.TYPE_CLASS_TEXT)
-        col.addView(selectPid)
+        addField(col, selectPid)
 
-        val verbose = android.widget.CheckBox(this)
+        val verbose = MaterialCheckBox(this)
         verbose.text = S("Verbose logging (debug; per-second log lines)")
         verbose.primary()
         verbose.isChecked = FixFuelPrefs.prefs(this).getBoolean(FsLog.KEY_VERBOSE, false)
@@ -408,7 +415,7 @@ class PluginActivity : Activity() {
         col.addView(verbose)
 
         // Short-term diagnostic only (off by default). Never logs position.
-        val sensorLog = android.widget.CheckBox(this)
+        val sensorLog = MaterialCheckBox(this)
         sensorLog.text = S("Log phone sensors (diagnostic): accelerometer, GPS heading, speed and height change; never position")
         sensorLog.primary()
         sensorLog.isChecked = FixFuelPrefs.prefs(this).getBoolean(SensorLog.KEY, false)
@@ -418,7 +425,7 @@ class PluginActivity : Activity() {
         col.addView(sensorLog)
 
         // Low-range data mode: on by default, logs the next LowRange.TANKS near-empty tanks per vehicle, then stops.
-        val lowMode = android.widget.CheckBox(this)
+        val lowMode = MaterialCheckBox(this)
         val left = if (editProfileExists()) {
             runCatching { LowRange.load(ProfileStore.profileDir(filesDir, editProfileId)).tanksLeft }.getOrNull() ?: LowRange.TANKS
         } else LowRange.TANKS
@@ -460,16 +467,13 @@ class PluginActivity : Activity() {
         feed012f.onItemSelectedListener = spinListen
 
         scroll.addView(col)
-        scroll.setOnApplyWindowInsetsListener { v, insets ->
-            if (Build.VERSION.SDK_INT >= 30) {
-                val types = android.view.WindowInsets.Type.statusBars() or WindowInsets.Type.captionBar()
-                val bars = insets.getInsets(types)
-                col.setPadding(pad + bars.left, pad + bars.top, pad + bars.right, pad + bars.bottom)
-            }
+        ViewCompat.setOnApplyWindowInsetsListener(scroll) { _, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime())
+            col.setPadding(pad + bars.left, pad + bars.top, pad + bars.right, pad + bars.bottom)
             insets
         }
         setContentView(scroll)
-        scroll.requestApplyInsets()
+        ViewCompat.requestApplyInsets(scroll)
         loadIntoForm()
         loading = false
     }
@@ -597,18 +601,18 @@ class PluginActivity : Activity() {
     }
 
     private fun buildCard(t: ExtraTank): ExtraCard {
+        val cardView = surfaceCard()
         val root = LinearLayout(this)
         root.orientation = LinearLayout.VERTICAL
-        root.setPadding(0, 16, 0, 8)
         val head = LinearLayout(this)
         head.orientation = LinearLayout.HORIZONTAL
+        head.gravity = android.view.Gravity.CENTER_VERTICAL
         val title = TextView(this)
         title.text = S("Tank %1\$d", t.id)
         title.textSize = 16f
         title.primary()
         title.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-        val remove = Button(this)
-        remove.text = S("Remove")
+        val remove = actionButton(S("Remove")) { }
         head.addView(title)
         head.addView(remove)
         root.addView(head)
@@ -618,13 +622,14 @@ class PluginActivity : Activity() {
         root.addView(source)
         root.addView(label(S("Tank %1\$d custom long name (e.g. [FuelSmooth] Tank%1\$d Level)", t.id)))
         val name = edit(InputType.TYPE_CLASS_TEXT)
-        root.addView(name)
-        val card = ExtraCard(t.id, root, source, name)
+        addField(root, name)
+        cardView.addView(root)
+        val card = ExtraCard(t.id, cardView, source, name)
         bindCard(card, t)
         name.addTextChangedListener(watch)
         source.onItemSelectedListener = extraSourceListen(card)
         remove.setOnClickListener { removeExtra(card) }
-        extrasCol.addView(root)
+        extrasCol.addView(cardView)
         return card
     }
 
@@ -739,17 +744,15 @@ class PluginActivity : Activity() {
         }
     }
 
-    private val normalColors = HashMap<EditText, android.content.res.ColorStateList>()
-
-    /** Red text + error hint when invalid; restores the original colour when valid. Returns ok. */
+    /** Outlined field error (M3 colorError) when invalid; clears it when valid. Returns ok. */
     private fun markField(e: EditText, ok: Boolean, msg: String): Boolean {
-        val normal = normalColors.getOrPut(e) { e.textColors }
+        val box = fieldHost(e)
         if (ok) {
-            if (e.error != null) e.error = null
-            e.setTextColor(normal)
+            box.error = null
+            box.isErrorEnabled = false
         } else {
-            e.setTextColor(android.graphics.Color.RED)
-            e.error = msg
+            box.isErrorEnabled = true
+            box.error = msg
         }
         return ok
     }
@@ -831,14 +834,14 @@ class PluginActivity : Activity() {
         val key = (live?.t?.toString() ?: "") + ":" + held.joinToString(",") { "${it.id}:${it.endedMs}" }
         if (identityBannerKey != key) {
             identityBannerKey = key
-            identityBanner.removeAllViews()
-            if (live != null) identityBanner.addView(decisionBlock(live.title, live.text, live.choices.map { it.label to { answerIdentity(it.target) } }))
+            identityBannerCol.removeAllViews()
+            if (live != null) identityBannerCol.addView(decisionBlock(live.title, live.text, live.choices.map { it.label to { answerIdentity(it.target) } }))
             for (e in held) {
                 val actions = ArrayList<Pair<String, () -> Unit>>()
                 val choices = if (e.choices.isNotEmpty()) e.choices else defaultUnassignedChoices()
                 for (c in choices) actions.add(c.label to { answerUnassigned(e.id, c.target) })
                 actions.add(S("Discard this drive") to { confirmDiscardUnassigned(e.id) })
-                identityBanner.addView(decisionBlock(e.title.ifBlank { S("Unassigned drive") }, e.text, actions))
+                identityBannerCol.addView(decisionBlock(e.title.ifBlank { S("Unassigned drive") }, e.text, actions))
             }
         }
         identityBanner.visibility = View.VISIBLE
@@ -858,15 +861,16 @@ class PluginActivity : Activity() {
     private fun decisionBlock(title: String, bodyText: String, actions: List<Pair<String, () -> Unit>>): LinearLayout {
         val block = LinearLayout(this)
         block.orientation = LinearLayout.VERTICAL
+        val onError = MaterialColors.getColor(block, com.google.android.material.R.attr.colorOnErrorContainer)
         val head = TextView(this)
         head.text = S("Vehicle decision pending: %1\$s", title)
         head.textSize = 18f
-        head.setTextColor(0xFFFFFFFF.toInt())
+        head.setTextColor(onError)
         head.setTypeface(head.typeface, android.graphics.Typeface.BOLD)
         block.addView(head)
         val body = TextView(this)
         body.text = bodyText
-        body.setTextColor(0xFFFFFFFF.toInt())
+        body.setTextColor(onError)
         block.addView(body)
         val row = LinearLayout(this)
         row.orientation = if (actions.size > 2) LinearLayout.VERTICAL else LinearLayout.HORIZONTAL
@@ -887,7 +891,7 @@ class PluginActivity : Activity() {
         body.addView(text)
         val scroll = android.widget.ScrollView(this)
         scroll.addView(body)
-        val dialog = android.app.AlertDialog.Builder(this).setTitle(p.title).setView(scroll).setCancelable(false)
+        val dialog = MaterialAlertDialogBuilder(this).setTitle(p.title).setView(scroll).setCancelable(false)
             .setNegativeButton(S("Decide later"), null).create()
         for (c in p.choices) body.addView(smallButton(c.label) { dialog.dismiss(); answerIdentity(c.target) })
         dialog.setCanceledOnTouchOutside(false)
@@ -910,7 +914,7 @@ class PluginActivity : Activity() {
         val scroll = android.widget.ScrollView(this)
         scroll.addView(body)
         val title = e.title.ifBlank { S("Unassigned drive") }
-        val dialog = android.app.AlertDialog.Builder(this).setTitle(title).setView(scroll).setCancelable(false)
+        val dialog = MaterialAlertDialogBuilder(this).setTitle(title).setView(scroll).setCancelable(false)
             .setNegativeButton(S("Decide later"), null).create()
         val choices = if (e.choices.isNotEmpty()) e.choices else defaultUnassignedChoices()
         for (c in choices) body.addView(smallButton(c.label) { dialog.dismiss(); answerUnassigned(e.id, c.target) })
@@ -931,7 +935,7 @@ class PluginActivity : Activity() {
     }
 
     private fun confirmDiscardUnassigned(id: String) {
-        android.app.AlertDialog.Builder(this)
+        MaterialAlertDialogBuilder(this)
             .setTitle(S("Discard this drive"))
             .setMessage(S("Discard this unassigned drive? It will not be used for learning."))
             .setNegativeButton(S("Decide later"), null)
@@ -950,14 +954,54 @@ class PluginActivity : Activity() {
         }
     }
 
-    private fun smallButton(text: String, onClick: () -> Unit): Button {
-        val b = Button(this)
+    private fun smallButton(text: String, onClick: () -> Unit): MaterialButton {
+        val b = MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle)
         b.text = text
         b.isAllCaps = false
-        b.minWidth = 0; b.minimumWidth = 0
+        b.minWidth = 0
+        b.minimumWidth = 0
+        b.insetTop = 0
+        b.insetBottom = 0
         b.setPadding(24, 0, 24, 0)
         b.setOnClickListener { onClick() }
         return b
+    }
+
+    private fun actionButton(text: String, onClick: () -> Unit): MaterialButton {
+        val b = MaterialButton(this)
+        b.text = text
+        b.isAllCaps = false
+        b.setOnClickListener { onClick() }
+        return b
+    }
+
+    private fun surfaceCard(): MaterialCardView {
+        val d = resources.displayMetrics.density
+        val card = MaterialCardView(this)
+        card.radius = 12f * d
+        card.cardElevation = d
+        val inset = (16f * d).toInt()
+        card.setContentPadding(inset, inset, inset, inset)
+        card.setCardBackgroundColor(
+            MaterialColors.getColor(card, com.google.android.material.R.attr.colorSurfaceContainer),
+        )
+        card.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+        ).apply {
+            topMargin = (8f * d).toInt()
+            bottomMargin = (8f * d).toInt()
+        }
+        return card
+    }
+
+    private fun errorCard(): MaterialCardView {
+        val card = surfaceCard()
+        card.cardElevation = 0f
+        card.setCardBackgroundColor(
+            MaterialColors.getColor(card, com.google.android.material.R.attr.colorErrorContainer),
+        )
+        return card
     }
 
     /** Label with a small (i) button that explains the option in a dialog. */
@@ -980,7 +1024,7 @@ class PluginActivity : Activity() {
             body.textSize = 14f
             body.primary()
             body.setPadding(PAD, PAD / 2, PAD, 0)
-            android.app.AlertDialog.Builder(this).setTitle(text).setView(body).setPositiveButton(S("OK"), null).show()
+            MaterialAlertDialogBuilder(this).setTitle(text).setView(body).setPositiveButton(S("OK"), null).show()
         }
         row.addView(i)
         return row
@@ -992,7 +1036,7 @@ class PluginActivity : Activity() {
         val sv = ScrollView(this)
         page.setPadding(PAD, PAD / 2, PAD, 0)
         sv.addView(page)
-        android.app.AlertDialog.Builder(this).setTitle(title).setView(sv).setPositiveButton(S("Close"), null)
+        MaterialAlertDialogBuilder(this).setTitle(title).setView(sv).setPositiveButton(S("Close"), null)
             .setOnDismissListener { sv.removeView(page) }.show()
     }
 
@@ -1014,12 +1058,8 @@ class PluginActivity : Activity() {
         return t
     }
 
-    private fun textPrimary(): Int {
-        val a = obtainStyledAttributes(intArrayOf(android.R.attr.textColorPrimary))
-        val c = a.getColor(0, android.graphics.Color.BLACK)
-        a.recycle()
-        return c
-    }
+    private fun textPrimary(): Int =
+        MaterialColors.getColor(this, com.google.android.material.R.attr.colorOnSurface, android.graphics.Color.BLACK)
 
     private fun TextView.primary(): TextView {
         setTextColor(textPrimary())
@@ -1032,11 +1072,30 @@ class PluginActivity : Activity() {
 
     private fun oneDecimal(v: Double): String = String.format(activityLocale(), "%.1f", v)
 
-    private fun edit(input: Int): EditText {
-        val e = EditText(this)
+    private fun edit(input: Int): TextInputEditText {
+        val box = TextInputLayout(this, null, com.google.android.material.R.attr.textInputOutlinedStyle)
+        box.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+        )
+        box.isHintEnabled = false
+        val e = TextInputEditText(box.context)
         e.inputType = input
         e.setSingleLine()
+        box.addView(
+            e,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+            ),
+        )
         return e
+    }
+
+    private fun fieldHost(e: EditText): TextInputLayout = e.parent as TextInputLayout
+
+    private fun addField(parent: LinearLayout, field: EditText) {
+        parent.addView(fieldHost(field))
     }
 
     private fun requestGrants() {
@@ -1173,9 +1232,7 @@ class PluginActivity : Activity() {
     private fun showTipProducts(details: List<ProductDetails>) {
         tipChoices.removeAllViews()
         for (detailsItem in details) {
-            val b = Button(this)
-            b.text = detailsItem.name.ifBlank { detailsItem.productId }
-            b.setOnClickListener { launchTip(detailsItem) }
+            val b = actionButton(detailsItem.name.ifBlank { detailsItem.productId }) { launchTip(detailsItem) }
             tipChoices.addView(b)
         }
     }
@@ -1311,13 +1368,10 @@ class PluginActivity : Activity() {
         }
         private val zero = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             style = Paint.Style.STROKE
-            color = android.graphics.Color.GRAY
             strokeWidth = 2f * d
         }
         private val grid = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             style = Paint.Style.STROKE
-            color = android.graphics.Color.GRAY
-            alpha = 64
             strokeWidth = 1f * d
         }
         private val labelPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { textSize = 12f * d }
@@ -1379,9 +1433,10 @@ class PluginActivity : Activity() {
             val span = (yHi - yLo).takeIf { it > 0.0 } ?: 1.0
             fun px(x: Int) = plotL + (plotR - plotL) * x / 100f
             fun py(y: Double) = (plotT + (plotB - plotT) * ((yHi - y) / span)).toFloat()
-            val ink = textPrimary()
-            labelPaint.color = ink
-            titlePaint.color = ink
+            labelPaint.color = MaterialColors.getColor(this, com.google.android.material.R.attr.colorOnSurfaceVariant)
+            titlePaint.color = MaterialColors.getColor(this, com.google.android.material.R.attr.colorOnSurface)
+            zero.color = labelPaint.color
+            grid.color = MaterialColors.getColor(this, com.google.android.material.R.attr.colorOutlineVariant)
             for (x in X_TICKS) canvas.drawLine(px(x), plotT, px(x), plotB, grid)
             for (y in yTicks()) canvas.drawLine(plotL, py(y), plotR, py(y), grid)
             canvas.drawLine(plotL, py(0.0), plotR, py(0.0), zero)
@@ -1526,7 +1581,7 @@ class PluginActivity : Activity() {
 
     private data class ExtraCard(
         val id: Int,
-        val root: LinearLayout,
+        val root: View,
         val source: Spinner,
         val customName: EditText,
     )

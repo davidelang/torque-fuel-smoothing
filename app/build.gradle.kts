@@ -211,6 +211,9 @@ kotlin {
 dependencies {
     // Changing billing-ktx requires the same version in the open-source notices sentence.
     implementation("com.android.billingclient:billing-ktx:8.0.0")
+    // Material 1.13 depends on androidx.core 1.6.0. WindowCompat.enableEdgeToEdge needs 1.17.0.
+    implementation("androidx.core:core:1.17.0")
+    implementation("com.google.android.material:material:1.13.0")
     testImplementation("junit:junit:4.13.2")
     // Real org.json for unit tests (android.jar ships stubs only); profile.json is edited with JSONObject.
     testImplementation("org.json:json:20240303")

@@ -361,3 +361,7 @@ Every closed-part update is one full rebuild. Stops are gradient, step, cap 200,
 - .gitignore un-ignores third_party/VERSION (and the other kit tools where they were still ignored).
 - Pin tomls updated as needed for the new kit (example: source_kind=seed-src, default=false, sha256; heavy pins rclone/paddle/paddle-opt/opencv: default=false).
 
+
+## 2026-11-24 - Material 3 look and feel for PluginActivity
+
+- Start execute of sandbox/plans/material3-look-and-feel-20261123-2250-plan.md from 6cb49069. AppCompatActivity, Material 3 theme, Dynamic Color, edge-to-edge insets, and Material view widgets; English S() strings unchanged.
